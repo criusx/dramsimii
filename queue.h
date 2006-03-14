@@ -25,7 +25,7 @@ public:
     delete[] entry;
   }
 
-  queue(int size, bool preallocate = false)
+  queue(const int size, const bool preallocate = false)
   {
     depth = size;
     count = 0;
@@ -42,7 +42,7 @@ public:
       entry[i] = NULL;
   }
 
-  void init(int size)
+  void init(const int size)
   {
     depth = size;
     count = 0;
@@ -96,12 +96,12 @@ input_status_t enqueue(T *item)
     }
   }
 
-  int get_count()
+  int get_count() const
   {
     return count;
   }
 
-  T *read(int offset)
+  T *read(int offset) const
   {
     if((offset >= count) || (offset < 0))
       return NULL;
@@ -137,7 +137,7 @@ input_status_t enqueue(T *item)
     }
   }
 
-  int freecount()
+  int freecount() const
   {
     return depth - count;
   }
