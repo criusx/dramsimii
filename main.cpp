@@ -1,6 +1,6 @@
 
 #ifdef WIN32
-#ifndef RELEASE
+#ifndef _DEBUG
 #ifndef VLD_CONFIG_AGGREGATE_DUPLICATES
 #define VLD_CONFIG_AGGREGATE_DUPLICATES
 #endif

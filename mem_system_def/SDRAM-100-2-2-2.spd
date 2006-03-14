@@ -1,0 +1,34 @@
+//  100 MHz SDRAM memory system.  
+//  Composed of 256 Mbit chips.  2 ranks, each rank has 8 256 Mbit (x8) chips.
+//  This is a 64 bit wide interface.
+//  Total is 512 MB
+//  Bandwidth is  800 MB/s
+//  The parameters contained in this file are from Micron datasheet for MT48LC32M8A2 -75
+//
+// Sanity check.  t_ras = t_rcd + t_cwd + t_int_burst + t_wr
+//                 5    =  2    +  0    + 1           +  2
+type            	sdram			// 
+datarate       		100
+clock_granularity	1			// 
+channel_count   	1			// Logical channel
+channel_width   	8			// Byte width
+PA_mapping_policy	close_page_baseline	// Comments are allowed here
+row_buffer_policy	close_page
+rank_count		2
+bank_count		4			// 4 banks per chip
+row_count		8192			// 13 bits row address space
+col_count		1024			// 10 bits col address space
+t_burst			8			// burst length of 1, 2, 4, 8
+t_cas			2			// 
+t_ras			5			// 50 ns
+t_rc			7			// 70 ns  
+t_rcd			2			// 20 ns
+t_rfc			7			// 70 ns
+t_rp			2			// 20 ns
+t_rtp			1			// 10 ns
+t_wr             	2         		// 20 ns
+posted_cas		FALSE			// posted CAS
+auto_refresh     	FALSE 			// Enable auto refresh
+auto_refresh_policy 	refresh_one_chan_all_rank_all_bank
+refresh_time  		64000 			// 64 ms refresh time
+

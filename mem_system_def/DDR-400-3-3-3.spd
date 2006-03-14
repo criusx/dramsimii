@@ -1,0 +1,36 @@
+//  DDR 400 Mbps memory system.  
+//  Composed of 256 Mbit chips.  2 ranks, each rank has 8 2 Gbit (x8) chips.
+//  This is a 64 bit wide interface.
+//  Total is 512 MB
+//  Bandwidth is 3.2 GB/s 
+//  The parameters contained in this file are from Micron datasheet for MT46V32M8 -5B
+//
+// Sanity check.  t_ras = t_rcd + t_cwd + t_int_burst + t_wr
+//                16    =  6    +  2    +      2      +  6
+type            	ddr			// 
+datarate       		400
+clock_granularity	2			// 2 half cycles per cycle (timing listed in half cycles)
+channel_count   	1			// Logical channel
+channel_width   	8			// Byte width
+PA_mapping_policy	close_page_baseline	// Comments are allowed here
+row_buffer_policy	close_page
+rank_count		2
+bank_count		4			// 8 banks per chip
+row_count		4096			// 12 bits row address space
+col_count		1024			// 10 bits col address space
+t_burst			8			// burst length of 2, 4, 8, available
+t_cas			6			// 3 * 2
+t_ras			16			// 40 ns
+t_rc			22			// 55 ns  
+t_rcd			6			// 15 ns
+t_rfc			28			// takes 70 ns to do one refresh
+t_rp			6			// 20 ns
+t_rtp			2			// 5 ns
+t_rtrs           	2			// 1 * 2
+t_wr             	6         		// 15 ns
+t_wtr             	4         		// 10 ns
+posted_cas		FALSE			// no such thing
+auto_refresh     	FALSE 			// Enable auto refresh
+auto_refresh_policy 	refresh_one_chan_all_rank_all_bank
+refresh_time  		64000 			// 64 ms refresh time
+
