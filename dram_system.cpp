@@ -903,8 +903,10 @@ void dram_system::execute_command(command *this_c, int gap)
 		break;
 	}
 	/* transaction complete? if so, put in completion queue */
-	if(host_t != NULL) {
-		if(channel.completion_q.enqueue(host_t) == FAILURE){
+	if(host_t != NULL)
+	{
+		if(channel.completion_q.enqueue(host_t) == FAILURE)
+		{
 			cerr << "Fatal error, cannot insert transaction into completion queue" << endl <<
 				"Increase execution q depth and resume. Should not occur. Check logic" << endl;
 			_exit(2);
@@ -915,10 +917,10 @@ void dram_system::execute_command(command *this_c, int gap)
 	//history_q	= ;
 	//history_q_count = history_q.get_count();
 	//queue &history_q = channel.history_q;
-	if(channel.history_q.get_count() == system_config.history_queue_depth){
-		temp_c 	=  channel.history_q.dequeue();
+	if(channel.history_q.get_count() == system_config.history_queue_depth)
+	{
 		/*done with this command, release into pool */
-		free_command_pool.release_item(temp_c);
+		free_command_pool.release_item(channel.history_q.dequeue(););
 	}
 	channel.history_q.enqueue(this_c);
 }
