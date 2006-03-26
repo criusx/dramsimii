@@ -904,7 +904,8 @@ void dram_system::execute_command(command *this_c, int gap)
 	}
 	/* transaction complete? if so, put in completion queue */
 	if(host_t != NULL) {
-		if(channel.completion_q.enqueue(host_t) == FAILURE){
+		if(channel.completion_q.enqueue(host_t) == FAILURE)
+		{
 			cerr << "Fatal error, cannot insert transaction into completion queue" << endl <<
 				"Increase execution q depth and resume. Should not occur. Check logic" << endl;
 			_exit(2);
