@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DRAMSimII", "DRAMSimII.vcproj", "{65A5B23B-7F7D-4848-82BE-B9155E072660}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Debug|Win32.ActiveCfg = Debug|Win32
+		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Debug|Win32.Build.0 = Debug|Win32
+		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Release|Win32.ActiveCfg = Release|Win32
+		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		AMDCaProjectFile = C:\Documents and Settings\CriuS\My Documents\Visual Studio 2005\Projects\DRAMSimII\CodeAnalyst\DRAMSimII.caw
+	EndGlobalSection
+EndGlobal
