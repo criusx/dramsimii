@@ -60,28 +60,25 @@ enum transaction_type_t	dram_channel::set_read_write_type(int rank_id,int bank_c
   int read_count = 0;
   int write_count = 0;
   int empty_count = 0;
-  //queue &temp_q = rank[rank_id].bank[0].per_bank_q;
-  //queue_t *temp_q;
-  command *temp_c;
 
-  for(int i=0;i<bank_count;i++)
+  for(int i = 0; i < bank_count; ++i)
   {
-    //temp_q = ((rank[rank_id]).bank[i]).per_bank_q;
-    temp_c =  rank[rank_id].bank[i].per_bank_q.read(1);
+    command *temp_c =  rank[rank_id].bank[i].per_bank_q.read(1);
+
     if(temp_c != NULL)
     {
       if(temp_c->this_command == CAS_AND_PRECHARGE_COMMAND)
       {
-        read_count++;
+        ++read_count;
       }
       else
       {
-        write_count++;
+        ++write_count;
       }
     }
     else
     {
-      empty_count++;
+      ++empty_count;
     }
   }
 #ifdef DEBUG_FLAG

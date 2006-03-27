@@ -9,8 +9,6 @@
 #include <cmath>
 #include <map>
 
-
-
 #include "dramsim2.h"
 
 int dram_system::convert_address(addresses &this_a)
@@ -391,7 +389,9 @@ int dram_system::convert_address(addresses &this_a)
 		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
 			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
 		}
-	} else {
+	} 
+	else 
+	{
 		cerr << system_config.addr_mapping_scheme << endl;
 		this_a.chan_id = 0;				/* don't know what this policy is.. Map everything to 0 */
 		this_a.rank_id = 0;
@@ -429,7 +429,8 @@ command *dram_system::get_next_command(int chan_id)
 	tick_t oldest_command_time;
 
 	//tail_offset = history_q.get_count() - 1;
-	if((last_c = channel->history_q.read(channel->history_q.get_count() - 1)) == NULL){		/* nothing in history q, start from rank 0, bank 0 */
+	if((last_c = channel->history_q.read(channel->history_q.get_count() - 1)) == NULL)		/* nothing in history q, start from rank 0, bank 0 */
+	{
 		last_c = free_command_pool.acquire_item();
 		last_c->addr.rank_id = system_config.rank_count - 1;
 		last_c->addr.bank_id = system_config.bank_count - 1;
@@ -697,13 +698,16 @@ void dram_system::update_system_time()
 	int oldest_chan_id = 0;
 	tick_t oldest_time = channel[0].time;
 
-	for(int chan_id = 1; chan_id < system_config.chan_count ; ++chan_id)
-		if((channel[chan_id]).time < oldest_time)
+	for (int chan_id = 1; chan_id < system_config.chan_count ; ++chan_id)
+	{
+		if (channel[chan_id].time < oldest_time)
 		{
 			oldest_chan_id = chan_id;
-			oldest_time = (channel[chan_id]).time;
+			oldest_time = channel[chan_id].time;
 		}
-		time = oldest_time;
+	}
+	
+	time = oldest_time;
 }
 
 
@@ -815,10 +819,10 @@ transaction *dram_system::get_next_random_request()
 }
 
 
-void dram_system::execute_command(command *this_c, int gap)
+void dram_system::execute_command(command *this_c,const int gap)
 {
 	tick_t *this_ras_time;
-	command *temp_c;
+	
 	int &chan_id 	= this_c->addr.chan_id;
 	dram_channel	&channel= dram_system::channel[chan_id];
 	tick_t now = channel.time+gap;
@@ -830,19 +834,13 @@ void dram_system::execute_command(command *this_c, int gap)
 	rank_c &this_r = channel.rank[rank_id];
 	bank_c &this_b = this_r.bank[bank_id];
 
-	const transaction *host_t = NULL;
+	transaction *host_t = NULL;
 	//queue &history_q = channel.history_q;
 	//  queue *complete_q;
 
 	this_r.last_bank_id = bank_id;
-	if(this_c->posted_cas == true)
-	{
-		t_al = timing_specification.t_al;
-	}
-	else
-	{
-		t_al = 0;
-	}
+
+	t_al = this_c->posted_cas ? timing_specification.t_al : 0;
 
 	channel.time += gap;
 
@@ -868,15 +866,15 @@ void dram_system::execute_command(command *this_c, int gap)
 		this_r.last_cas_time = now;
 		this_b.last_cas_length = this_c->length;
 		this_r.last_cas_length = this_c->length;
-		this_b.cas_count++;
+		++this_b.cas_count;
 		host_t = this_c->host_t;
 		host_t->completion_time	= now + timing_specification.t_cas;
 		break;
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 		this_b.last_prec_time = max(now + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_b.last_ras_time + timing_specification.t_ras);
 	case CAS_WRITE_COMMAND:
-		this_b.last_casw_time 	= now;
-		this_r.last_casw_time	= now;
+		this_b.last_casw_time = now;
+		this_r.last_casw_time = now;
 		this_b.last_casw_length= this_c->length;
 		this_r.last_casw_length= this_c->length;
 		this_b.casw_count++;
@@ -913,13 +911,11 @@ void dram_system::execute_command(command *this_c, int gap)
 	}
 
 	/* record command history. Check to see if this can be removed */
-	//history_q	= ;
-	//history_q_count = history_q.get_count();
-	//queue &history_q = channel.history_q;
-	if(channel.history_q.get_count() == system_config.history_queue_depth){
-		temp_c 	=  channel.history_q.dequeue();
+	
+	if (channel.history_q.get_count() == system_config.history_queue_depth)
+	{		
 		/*done with this command, release into pool */
-		free_command_pool.release_item(temp_c);
+		free_command_pool.release_item(channel.history_q.dequeue());
 	}
 	channel.history_q.enqueue(this_c);
 }
@@ -955,12 +951,12 @@ enum input_status_t dram_system::get_next_input_transaction(transaction *&this_t
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// Function:	dram_system::min_protocol_gap()
-// Arguments:	dram_channel *channel: the channel by which the gap to the next command
-//                                      will be computed
-//            this_c: the command that the gap will be calculated for
-// Purpose:		find the protocol gap between a command and current system state
-//
+/// Function:	dram_system::min_protocol_gap()
+/// Arguments:	dram_channel *channel: the channel by which the gap to the next command
+///                                      will be computed
+///            this_c: the command that the gap will be calculated for
+/// Purpose:		find the protocol gap between a command and current system state
+///
 ////////////////////////////////////////////////////////////////////////////////////////
 int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 { //FIXME: some max() functions take uninit values
@@ -970,8 +966,8 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 	//int     rank_id;
 	int     bank_id;
 	int     row_id;
-	const int     &this_rank_id = this_c->addr.rank_id;
-	const int     &this_bank_id = this_c->addr.bank_id;
+	const int &this_rank_id = this_c->addr.rank_id;
+	const int &this_bank_id = this_c->addr.bank_id;
 	rank_c	&this_r= channel.rank[this_rank_id];
 	bank_c	&this_b= this_r.bank[this_bank_id];
 	tick_t 	now = channel.time;
@@ -1019,15 +1015,21 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 
 		/* respect t_rrd of all other banks of same rank*/
 		ras_q_count	= this_r.last_ras_times.get_count();
-		if(ras_q_count == 0){
+		if(ras_q_count == 0)
+		{
 			t_rrd_gap = 0;
-		} else {
+		}
+		else 
+		{
 			last_ras_time	= (tick_t *)this_r.last_ras_times.read(ras_q_count - 1);	/* read tail end of ras history */
 			t_rrd_gap = max(t_rrd_gap,(int)(*last_ras_time + timing_specification.t_rrd - now));
 		}
-		if(ras_q_count < 4){
+		if(ras_q_count < 4)
+		{
 			t_faw_gap	= 0;
-		} else {
+		}
+		else
+		{
 			fourth_ras_time= (tick_t *)this_r.last_ras_times.read(0);	/* read head of ras history */
 			t_faw_gap 	= max(0,(int)(*fourth_ras_time + timing_specification.t_faw - now));
 		}
@@ -1144,13 +1146,18 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 	case RETIRE_COMMAND:
 		break;
 	case PRECHARGE_COMMAND:
+
 		/* respect t_ras of same bank */
 		t_ras_gap	= max(0,(int)(this_b.last_ras_time + timing_specification.t_ras - now));
+		
 		/* respect t_cas of same bank */
 		t_cas_gap	= max(0,(int)(this_b.last_cas_time + t_al + timing_specification.t_cas + timing_specification.t_burst + max(0,timing_specification.t_rtp - timing_specification.t_cmd)- now));
+		
 		/* respect t_casw of same bank */
 		t_cas_gap	= max(t_cas_gap,(int)(this_b.last_casw_time + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr - now));
+		
 		min_gap		= max(t_ras_gap,t_cas_gap);
+
 		break;
 	case PRECHARGE_ALL_COMMAND:
 		break;
@@ -1191,17 +1198,23 @@ enum input_status_t dram_system::transaction2commands(const transaction *this_t)
 	if (system_config.row_buffer_management_policy == CLOSE_PAGE)
 	{
 		if(empty_command_slot_count < 2)
+		{
 			return FAILURE;
+		}
 		else if((system_config.auto_precharge == false) && (empty_command_slot_count < 3))
+		{
 			return FAILURE;
+		}
 		else
 		{
 			free_c = free_command_pool.acquire_item();
+
 			free_c->this_command = RAS_COMMAND;
 			free_c->start_time = this_t->arrival_time;
 			free_c->enqueue_time = time;
-			free_c->addr = this_t->addr;		/* copy the addr stuff over */
+			free_c->addr = this_t->addr; /// copy the addr stuff over
 			free_c->host_t = NULL;
+
 			bank_q.enqueue(free_c);
 
 			if(system_config.auto_precharge == false)
@@ -1233,6 +1246,7 @@ enum input_status_t dram_system::transaction2commands(const transaction *this_t)
 			else
 			{
 				free_c = free_command_pool.acquire_item();
+
 				if(this_t->type == WRITE_TRANSACTION)
 				{
 					free_c->this_command= CAS_WRITE_AND_PRECHARGE_COMMAND;
@@ -1245,49 +1259,53 @@ enum input_status_t dram_system::transaction2commands(const transaction *this_t)
 				{
 					free_c->this_command = PRECHARGE_COMMAND;
 				}
-				free_c->start_time 	= this_t->arrival_time;
-				free_c->enqueue_time 	= time;
-				free_c->addr		= this_t->addr;		/* copy the addr stuff over */
-				free_c->posted_cas	= system_config.posted_cas;
-				free_c->host_t		= this_t;
-				//this_t->count_up(); // there is one more pointer to this out there somewhere
-				free_c->length		= this_t->length;
+				free_c->start_time = this_t->arrival_time;
+				free_c->enqueue_time = time;
+				free_c->addr = this_t->addr;		/* copy the addr stuff over */
+				free_c->posted_cas = system_config.posted_cas;
+				free_c->host_t = this_t;				
+				free_c->length = this_t->length;
+
 				bank_q.enqueue(free_c);
 			}
 		}
 	}
 	else if(system_config.row_buffer_management_policy == OPEN_PAGE)
 	{
-		/* look in the bank_q and see if there's a precharge for this row */
+		/// look in the bank_q and see if there's a precharge for this row
 		bypass_allowed 	= true;
-		/* go from tail to head */
+		/// go from tail to head
 		for(tail_offset = queued_command_count -1 ;(tail_offset >= 0) && (bypass_allowed == true);tail_offset--)
 		{	
 			temp_c = bank_q.read(tail_offset);
-			if(temp_c->this_command == PRECHARGE_COMMAND)	/* found a precharge command */
+			if(temp_c->this_command == PRECHARGE_COMMAND)	/// found a precharge command
 			{
-				if(temp_c->addr.row_id == this_t->addr.row_id)	/* same row, insert here */
+				if(temp_c->addr.row_id == this_t->addr.row_id)	/// same row, insert here 
 				{
 					if(empty_command_slot_count < 1)
 						return FAILURE;
+
 					free_c = free_command_pool.acquire_item();
+
 					if(this_t->type == WRITE_TRANSACTION)
 						free_c->this_command = CAS_WRITE_COMMAND;
 					else if (this_t->type == READ_TRANSACTION)
 						free_c->this_command = CAS_COMMAND;
 					free_c->start_time = this_t->arrival_time;
 					free_c->enqueue_time = time;
-					free_c->addr = this_t->addr;		/* copy the addr stuff over */
+					free_c->addr = this_t->addr; /// copy the addr stuff over
 					free_c->host_t = this_t;
-					//this_t->count_up(); // there is one more pointer to this out there somewhere
+					
 					free_c->length = this_t->length;
+
 					bank_q.insert(free_c, tail_offset);	/* insert at this location */
 					return SUCCESS;
 				}
 			}
-			/* even STRICT ORDER allows you to look at the tail of the queue to see if that's the precharge
-			* command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
-			*/
+
+			/// even STRICT ORDER allows you to look at the tail of the queue to see if that's the precharge
+			/// command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
+
 			if((system_config.command_ordering_algorithm == STRICT_ORDER) || ((int)(time-temp_c->enqueue_time) > system_config.seniority_age_limit))
 			{
 				bypass_allowed = false;
@@ -1298,11 +1316,13 @@ enum input_status_t dram_system::transaction2commands(const transaction *this_t)
 			return FAILURE;
 		}
 		free_c = free_command_pool.acquire_item();
+
 		free_c->this_command = RAS_COMMAND;
 		free_c->start_time = this_t->arrival_time;
 		free_c->enqueue_time = time;
 		free_c->addr = this_t->addr;		/* copy the addr stuff over */
 		free_c->host_t = NULL;
+
 		bank_q.enqueue(free_c);
 
 		free_c = free_command_pool.acquire_item();
@@ -1528,9 +1548,11 @@ free_command_pool(4*COMMAND_QUEUE_SIZE,true), /// place to temporarily dump unus
 free_transaction_pool(4*COMMAND_QUEUE_SIZE,true), /// ditto, but for transactions, avoid system calls during runtime
 free_event_pool(COMMAND_QUEUE_SIZE,true), /// create enough events, transactions and commands ahead of time
 event_q(COMMAND_QUEUE_SIZE),
-input_stream(parameter)
+input_stream(parameter),
+time(0) /// start the clock
+
 {
-	time = 0;                  /* start the clock */
+	//time = 0;                  /* start the clock */
 
 	map<file_io_token_t, string>::iterator temp;
 	stringstream temp2;
@@ -1542,7 +1564,7 @@ input_stream(parameter)
 	// create as many channels as were specified, all of the same type
 	// now that the parameters for each have been set
 	channel =  new dram_channel[system_config.chan_count];
-	for (int i=0;i<system_config.chan_count;i++)
+	for (int i = 0; i < system_config.chan_count; ++i)
 		channel[i].init_controller(system_config.transaction_queue_depth,
 		system_config.history_queue_depth,
 		system_config.completion_queue_depth,
@@ -1556,12 +1578,12 @@ input_stream(parameter)
 
 
 
-int dram_system::find_oldest_channel()
+int dram_system::find_oldest_channel() const
 {
 	int oldest_chan_id = 0;
 	tick_t oldest_time = channel[0].time;
 
-	for(int chan_id = 1; chan_id < system_config.chan_count ; chan_id++)
+	for (int chan_id = 1; chan_id < system_config.chan_count ; ++chan_id)
 	{
 		if(channel[chan_id].time < oldest_time)
 		{
@@ -1571,225 +1593,3 @@ int dram_system::find_oldest_channel()
 	}
 	return oldest_chan_id;
 }
-
-/*
-void dram_system::read_dram_config_from_file()
-{
-char 	c;
-string input_string;
-int	input_int;
-enum file_io_token_t dram_config_token;
-size_t length;
-ifstream &spd_file_ptr = system_config.spd_file_ptr;
-
-while (!system_config.spd_file_ptr.eof())
-{		
-spd_file_ptr >> input_string;
-
-switch(file_io_token(input_string)){
-case dram_type_token:				
-spd_file_ptr >> input_string;
-if (input_string == "sdram")
-system_config.dram_type = SDRAM;	
-else if (input_string == "ddrsdram")
-system_config.dram_type = DDR;	
-else if (input_string == "drdram")
-system_config.dram_type = DRDRAM;	
-else if (input_string == "ddr2")
-system_config.dram_type = DDR2;	
-else if (input_string == "ddr3")
-system_config.dram_type = DDR3;	
-else
-system_config.dram_type = SDRAM;	
-
-set_dram_timing_specification(system_config.dram_type);
-break;
-case clock_granularity_token:				
-spd_file_ptr >> input_int;
-break;
-case datarate_token:				/// aka memory_frequency: units is MBPS 
-spd_file_ptr >> system_config.datarate;				
-break;
-case row_buffer_management_policy_token:
-spd_file_ptr >> input_string;
-if (input_string == "open_page")
-system_config.row_buffer_management_policy = OPEN_PAGE;
-else if (input_string == "close_page")
-system_config.row_buffer_management_policy = CLOSE_PAGE;
-else
-{
-cerr << endl << "Expecting buffer management policy, found " << input_string << "instead" << endl;
-cerr << "Setting policy to OPEN_PAGE." << endl;
-system_config.row_buffer_management_policy = OPEN_PAGE;
-}
-break;
-case auto_precharge_token:				
-spd_file_ptr >> input_string;
-if (input_string == "TRUE" || input_string == "true")
-system_config.auto_precharge = true;
-else
-system_config.auto_precharge = false;
-break;
-case addr_mapping_scheme_token:
-spd_file_ptr >> input_string;
-if (input_string == "close_page_baseline")
-system_config.addr_mapping_scheme = CLOSE_PAGE_BASELINE;
-else if (input_string == "open_page_baseline")
-system_config.addr_mapping_scheme = OPEN_PAGE_BASELINE;
-else if (input_string == "sdram_hiperf_map")
-system_config.addr_mapping_scheme = OPEN_PAGE_BASELINE;
-else
-cerr << endl << "Expecting mapping policy, found " << input_string << "instead" << endl;
-system_config.addr_mapping_scheme = OPEN_PAGE_BASELINE;
-break;
-case transaction_ordering_policy_token:				
-spd_file_ptr >> input_string;
-if (input_string == "strict_order")
-system_config.command_ordering_algorithm = STRICT_ORDER;
-else if (input_string == "bank_round_robin")
-system_config.command_ordering_algorithm = BANK_ROUND_ROBIN;
-else if (input_string == "rank_round_robin")
-system_config.command_ordering_algorithm = RANK_ROUND_ROBIN;
-else if (input_string == "wang_hop")
-system_config.command_ordering_algorithm = WANG_RANK_HOP;
-break;
-case refresh_time_token:				
-// refresh time is specified in spd file in terms of microseconds. Expect datarate expressed in MHz.
-// convert refresh time to total number of cycles per refresh loop
-spd_file_ptr >> input_int;				
-system_config.refresh_time = input_int * system_config.datarate;	
-break;
-case refresh_policy_token:				
-spd_file_ptr >> input_string;
-if (input_string == "no_refresh")
-system_config.refresh_policy = NO_REFRESH;
-else if (input_string == "refresh_one_chan_all_rank_all_bank")
-system_config.refresh_policy = BANK_CONCURRENT;
-else if (input_string == "bank_concurrent")
-system_config.refresh_policy = BANK_CONCURRENT;
-else if (input_string == "bank_staggered")
-system_config.refresh_policy = BANK_STAGGERED_HIDDEN;
-break;
-case posted_cas_token:				
-spd_file_ptr >> input_string;
-if (input_string == "TRUE" || input_string == "true")
-system_config.posted_cas = true;
-else
-system_config.posted_cas = false;
-break;
-case chan_count_token:				
-spd_file_ptr >> system_config.chan_count;				
-break;
-case channel_width_token:				
-spd_file_ptr >> input_int;
-if(system_config.dram_type != DRDRAM)
-system_config.col_size = input_int;
-else
-cerr << "Not DRDRAM, ignoring col_size" << endl;
-break;
-case rank_count_token:
-spd_file_ptr >> system_config.rank_count;
-break;
-case bank_count_token:
-spd_file_ptr >> system_config.bank_count;
-break;
-case row_count_token:
-spd_file_ptr >> system_config.row_count;
-break;
-case col_count_token:				
-spd_file_ptr >> system_config.col_count;				
-break;
-case col_size_token:				
-spd_file_ptr >> system_config.col_size;
-break;
-case row_size_token:				
-spd_file_ptr >> system_config.row_size;
-break;
-case cacheline_size_token:
-spd_file_ptr >> system_config.cacheline_size;
-break;
-case per_bank_queue_depth_token:
-spd_file_ptr >> system_config.per_bank_queue_depth;
-break;
-case t_al_token:
-spd_file_ptr >> t_al;
-break;
-case t_burst_token:
-spd_file_ptr >> t_burst;
-break;
-case t_cas_token:
-spd_file_ptr >> t_cas;
-switch(system_config.dram_type)		/// also set t_cwd 
-{
-case SDRAM:
-t_cwd = 0;
-break;	
-case DDR:
-t_cwd = 2;
-break;	
-case DDR2:
-case DDR3:
-t_cwd = t_cas - 2;
-break;	
-case DRDRAM:
-cerr << "No specific t_cwd parameters for DRDRAM yet" << endl; //FIXME:what should this be?
-}	
-break;
-case t_cmd_token:
-spd_file_ptr >> input_int; /// t_cmd is protocol specific, not settable here 
-cerr << "(mild warning) t_cmd is protocol specific, not settable here" << endl;
-break;
-case t_cwd_token:
-spd_file_ptr >> input_int;
-cerr << "(mild warning) t_cwd is protocol specific, not settable here" << endl;
-break;
-case t_faw_token:
-spd_file_ptr >> t_faw;
-break;
-case t_ras_token:
-spd_file_ptr >> t_ras;
-break;
-case t_rc_token:
-spd_file_ptr >> t_rc;
-break;
-case t_rcd_token:
-spd_file_ptr >> t_rcd;
-break;
-case t_rfc_token:
-spd_file_ptr >> t_rfc;
-break;
-case t_rp_token:
-spd_file_ptr >> t_rp;
-break;
-case t_rrd_token:
-spd_file_ptr >> t_rrd;
-break;
-case t_rtp_token:
-spd_file_ptr >> t_rtp;
-break;
-case t_rtrs_token:
-spd_file_ptr >> t_rtrs;
-break;
-case t_wr_token:
-spd_file_ptr >> t_wr;
-break;
-case t_wtr_token:
-spd_file_ptr >> t_wtr;
-break;
-case comment_token:
-spd_file_ptr.ignore(65536,'\n');
-break;
-default:
-case unknown_token:
-cerr << "Unknown Token " << input_string << endl;
-break;
-case deprecated_ignore_token:
-spd_file_ptr >> input_int;
-cerr << input_string << "is no longer supported" << endl;
-break;
-}
-}
-}
-
-
-*/
