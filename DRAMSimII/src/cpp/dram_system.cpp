@@ -713,30 +713,28 @@ void dram_system::update_system_time()
 
 transaction *dram_system::get_next_random_request()
 {
-	int chan_id;
-	int rank_id;
-	int bank_id;
-	int row_id;
-	bool arrival;
-	int time_gap;
 	transaction *this_t = free_transaction_pool.acquire_item();
 
 	if(input_stream.type == RANDOM)
 	{
 		unsigned int j;
+
 		rand_s(&j);
+
 		/* check against last transaction to see what the chan_id was, and whether we need to change channels or not */
-		if (input_stream.chan_locality < (double)j/(double)UINT_MAX)
+		if (input_stream.chan_locality * UINT_MAX < j)
 		{
 			rand_s(&j);
 			this_t->addr.chan_id = (this_t->addr.chan_id + 1 + (int) ((double)j/(double)UINT_MAX * (system_config.chan_count - 1))) % system_config.chan_count;
 		}
-		/* check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
-		or keep to this rank_id */
-		chan_id = this_t->addr.chan_id;
-		rank_id = (channel[chan_id]).last_rank_id;
+
+		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
+		// or keep to this rank_id 
+
+		int rank_id = channel[this_t->addr.chan_id].last_rank_id;
+
 		rand_s(&j);
-		if (input_stream.rank_locality < (double)j/(double)UINT_MAX)
+		if (input_stream.rank_locality * UINT_MAX < j)
 		{
 			rand_s(&j);
 			this_t->addr.rank_id = (rank_id + 1 + (int) ((double)j/(double)UINT_MAX * (double)(system_config.rank_count - 1))) % system_config.rank_count;
@@ -746,9 +744,12 @@ transaction *dram_system::get_next_random_request()
 		{
 			this_t->addr.rank_id = rank_id;
 		}
-		bank_id = ((channel[chan_id]).rank[rank_id]).last_bank_id;
+
+		int bank_id = ((channel[this_t->addr.chan_id]).rank[rank_id]).last_bank_id;
+
 		rand_s(&j);
-		if (input_stream.bank_locality < (double)j/(double)UINT_MAX)
+		
+		if (input_stream.bank_locality * UINT_MAX < j)
 		{
 			rand_s(&j);
 			this_t->addr.bank_id = (bank_id + 1 + (int) ((double)j/(double)UINT_MAX * (double)(system_config.bank_count - 1))) % system_config.bank_count;
@@ -758,9 +759,12 @@ transaction *dram_system::get_next_random_request()
 		{
 			this_t->addr.bank_id = bank_id;
 		}
-		row_id = (((channel[chan_id]).rank[rank_id]).bank[bank_id]).row_id;
+		
+		int row_id = (((channel[this_t->addr.chan_id]).rank[rank_id]).bank[bank_id]).row_id;
+		
 		rand_s(&j);
-		if (input_stream.row_locality < (double)j/(double)UINT_MAX)
+		
+		if (input_stream.row_locality * UINT_MAX < j)
 		{
 			rand_s(&j);
 			this_t->addr.row_id = (row_id + 1 + (int) ((double)j/(double)UINT_MAX * (double)(system_config.row_count - 1))) % system_config.row_count;
@@ -770,13 +774,19 @@ transaction *dram_system::get_next_random_request()
 			this_t->addr.row_id = row_id;
 
 		rand_s(&j);
-		if(input_stream.read_percentage > (double)j/(double)UINT_MAX)
+		
+		if (input_stream.read_percentage * UINT_MAX > j)
+		{
 			this_t->type = READ_TRANSACTION;
+		}
 		else
+		{
 			this_t->type = WRITE_TRANSACTION;
+		}
 
 		rand_s(&j);
-		if(input_stream.short_burst_ratio > (double)j/(double)UINT_MAX)
+
+		if (input_stream.short_burst_ratio * UINT_MAX > j)
 		{
 			this_t->length = 4;
 		}
@@ -785,12 +795,13 @@ transaction *dram_system::get_next_random_request()
 			this_t->length = 8;
 		}
 
-		arrival = false;
-		time_gap = 0;
-		while(arrival == false)
+		int time_gap = 0;
+
+		while(true)
 		{
 			rand_s(&j);
-			if( (double)j/(double)UINT_MAX > input_stream.arrival_thresh_hold) /* interarrival probability function */
+
+			if (j > input_stream.arrival_thresh_hold * UINT_MAX) /* interarrival probability function */
 			{
 
 				//gaussian distribution function
@@ -803,18 +814,18 @@ transaction *dram_system::get_next_random_request()
 				{
 					input_stream.arrival_thresh_hold = 1.0 - (1.0 / input_stream.poisson_rng((double)input_stream.average_interarrival_cycle_count));
 				}
-				arrival = true;
+				break;
 			}
 			else
 			{
-				++time_gap;
+				++input_stream.time;
 			}
 		}
 
-		input_stream.time += time_gap;
 		this_t->arrival_time = input_stream.time;
 		this_t->addr.col_id = 0;
 	}
+
 	return this_t;
 }
 
@@ -1180,7 +1191,7 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 }
 
 
-enum input_status_t dram_system::transaction2commands(const transaction *this_t)
+enum input_status_t dram_system::transaction2commands( transaction *this_t)
 {
 	//const tick_t now = time;
 	const int &chan_id = this_t->addr.chan_id;

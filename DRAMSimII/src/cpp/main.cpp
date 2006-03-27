@@ -4,7 +4,7 @@
 #ifndef VLD_CONFIG_AGGREGATE_DUPLICATES
 #define VLD_CONFIG_AGGREGATE_DUPLICATES
 #endif
-#include <vld.h>
+//#include <vld.h>
 #endif
 #endif
 
@@ -34,4 +34,5 @@ int main(int argc, char *argv[])
   cerr << ds << endl;
   //cerr << ds.timing_specification;
   //cerr << (dram_statistics) ds;
+  return 0;
 }

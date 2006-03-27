@@ -101,12 +101,6 @@ input_stream_c::input_stream_c(map<file_io_token_t,string> &parameter)
 }
 
 
-enum input_type_t input_stream_c::get_type()
-{
-	return type;
-}
-
-
 ///
 /// from the book "Numerical Recipes in C: The Art of Scientific Computing"///
 
