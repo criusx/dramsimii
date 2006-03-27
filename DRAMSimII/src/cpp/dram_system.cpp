@@ -402,7 +402,7 @@ int dram_system::convert_address(addresses &this_a)
 	return 1;
 }
 
-command *dram_system::get_next_command(int chan_id)
+command *dram_system::get_next_command(const int chan_id)
 {
 	dram_channel	*channel= &(dram_system::channel[chan_id]);
 	//queue &history_q  = channel->history_q;
