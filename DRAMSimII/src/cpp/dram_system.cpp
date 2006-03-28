@@ -706,7 +706,7 @@ void dram_system::update_system_time()
 			oldest_time = channel[chan_id].time;
 		}
 	}
-	
+
 	time = oldest_time;
 }
 
@@ -748,7 +748,7 @@ transaction *dram_system::get_next_random_request()
 		int bank_id = ((channel[this_t->addr.chan_id]).rank[rank_id]).last_bank_id;
 
 		rand_s(&j);
-		
+
 		if (input_stream.bank_locality * UINT_MAX < j)
 		{
 			rand_s(&j);
@@ -759,11 +759,11 @@ transaction *dram_system::get_next_random_request()
 		{
 			this_t->addr.bank_id = bank_id;
 		}
-		
+
 		int row_id = (((channel[this_t->addr.chan_id]).rank[rank_id]).bank[bank_id]).row_id;
-		
+
 		rand_s(&j);
-		
+
 		if (input_stream.row_locality * UINT_MAX < j)
 		{
 			rand_s(&j);
@@ -774,7 +774,7 @@ transaction *dram_system::get_next_random_request()
 			this_t->addr.row_id = row_id;
 
 		rand_s(&j);
-		
+
 		if (input_stream.read_percentage * UINT_MAX > j)
 		{
 			this_t->type = READ_TRANSACTION;
@@ -833,7 +833,7 @@ transaction *dram_system::get_next_random_request()
 void dram_system::execute_command(command *this_c,const int gap)
 {
 	tick_t *this_ras_time;
-	
+
 	int &chan_id 	= this_c->addr.chan_id;
 	dram_channel	&channel= dram_system::channel[chan_id];
 	tick_t now = channel.time+gap;
@@ -922,7 +922,7 @@ void dram_system::execute_command(command *this_c,const int gap)
 	}
 
 	/* record command history. Check to see if this can be removed */
-	
+
 	if (channel.history_q.get_count() == system_config.history_queue_depth)
 	{		
 		/*done with this command, release into pool */
@@ -1160,13 +1160,13 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 
 		/* respect t_ras of same bank */
 		t_ras_gap	= max(0,(int)(this_b.last_ras_time + timing_specification.t_ras - now));
-		
+
 		/* respect t_cas of same bank */
 		t_cas_gap	= max(0,(int)(this_b.last_cas_time + t_al + timing_specification.t_cas + timing_specification.t_burst + max(0,timing_specification.t_rtp - timing_specification.t_cmd)- now));
-		
+
 		/* respect t_casw of same bank */
 		t_cas_gap	= max(t_cas_gap,(int)(this_b.last_casw_time + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr - now));
-		
+
 		min_gap		= max(t_ras_gap,t_cas_gap);
 
 		break;
@@ -1306,7 +1306,7 @@ enum input_status_t dram_system::transaction2commands( transaction *this_t)
 					free_c->enqueue_time = time;
 					free_c->addr = this_t->addr; /// copy the addr stuff over
 					free_c->host_t = this_t;
-					
+
 					free_c->length = this_t->length;
 
 					bank_q.insert(free_c, tail_offset);	/* insert at this location */
