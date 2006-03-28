@@ -18,6 +18,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaProjectFile = C:\Documents and Settings\CriuS\My Documents\Visual Studio 2005\Projects\DRAMSimII\CodeAnalyst\DRAMSimII.caw
+		AMDCaProjectFile = C:\Documents and Settings\Administrator\My Documents\Visual Studio 2005\Projects\DRAMSimII\CodeAnalyst\DRAMSimII.caw
 	EndGlobalSection
 EndGlobal

@@ -724,8 +724,8 @@ transaction *dram_system::get_next_random_request()
 		/* check against last transaction to see what the chan_id was, and whether we need to change channels or not */
 		if (input_stream.chan_locality * UINT_MAX < j)
 		{
-			rand_s(&j);
-			this_t->addr.chan_id = (this_t->addr.chan_id + 1 + (int) ((double)j/(double)UINT_MAX * (system_config.chan_count - 1))) % system_config.chan_count;
+			//rand_s(&j);
+			this_t->addr.chan_id = (this_t->addr.chan_id + (j % (system_config.chan_count - 1))) % system_config.chan_count;
 		}
 
 		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
@@ -736,8 +736,8 @@ transaction *dram_system::get_next_random_request()
 		rand_s(&j);
 		if (input_stream.rank_locality * UINT_MAX < j)
 		{
-			rand_s(&j);
-			this_t->addr.rank_id = (rank_id + 1 + (int) ((double)j/(double)UINT_MAX * (double)(system_config.rank_count - 1))) % system_config.rank_count;
+			//rand_s(&j);
+			this_t->addr.rank_id = (rank_id + 1 + (j % (system_config.rank_count - 1))) % system_config.rank_count;
 			rank_id = this_t->addr.rank_id ;
 		}
 		else
@@ -751,8 +751,8 @@ transaction *dram_system::get_next_random_request()
 
 		if (input_stream.bank_locality * UINT_MAX < j)
 		{
-			rand_s(&j);
-			this_t->addr.bank_id = (bank_id + 1 + (int) ((double)j/(double)UINT_MAX * (double)(system_config.bank_count - 1))) % system_config.bank_count;
+			//rand_s(&j);
+			this_t->addr.bank_id = (bank_id + 1 + (j % (system_config.bank_count - 1))) % system_config.bank_count;
 			bank_id = this_t->addr.bank_id ;
 		}
 		else
@@ -766,8 +766,8 @@ transaction *dram_system::get_next_random_request()
 
 		if (input_stream.row_locality * UINT_MAX < j)
 		{
-			rand_s(&j);
-			this_t->addr.row_id = (row_id + 1 + (int) ((double)j/(double)UINT_MAX * (double)(system_config.row_count - 1))) % system_config.row_count;
+			//rand_s(&j);
+			this_t->addr.row_id = (row_id + 1 + (j % (system_config.row_count - 1))) % system_config.row_count;
 			row_id = this_t->addr.row_id;
 		}
 		else
