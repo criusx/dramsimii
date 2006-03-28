@@ -467,7 +467,7 @@ namespace WJ2
             this.tabPage4.Controls.Add(this.ownerLbl);
             this.tabPage4.Location = new System.Drawing.Point(0, 0);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(232, 268);
+            this.tabPage4.Size = new System.Drawing.Size(240, 271);
             this.tabPage4.Text = "GPS";
             // 
             // satBox
@@ -491,7 +491,7 @@ namespace WJ2
             this.longBox.Location = new System.Drawing.Point(71, 31);
             this.longBox.Name = "longBox";
             this.longBox.ReadOnly = true;
-            this.longBox.Size = new System.Drawing.Size(100, 21);
+            this.longBox.Size = new System.Drawing.Size(162, 21);
             this.longBox.TabIndex = 12;
             // 
             // latBox
@@ -499,7 +499,7 @@ namespace WJ2
             this.latBox.Location = new System.Drawing.Point(71, 4);
             this.latBox.Name = "latBox";
             this.latBox.ReadOnly = true;
-            this.latBox.Size = new System.Drawing.Size(100, 21);
+            this.latBox.Size = new System.Drawing.Size(162, 21);
             this.latBox.TabIndex = 12;
             // 
             // label13

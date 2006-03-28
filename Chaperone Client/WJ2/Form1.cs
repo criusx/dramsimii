@@ -20,7 +20,6 @@ using RFIDProtocolLib;
 //using Oracle.Lite.Data;
 //using Oracle.DataAccess.Lite;
 
-
 namespace WJ2
 {
     public partial class Form1 : Form
@@ -38,15 +37,24 @@ namespace WJ2
         //private OracleConnection conn = new OracleConnection();
         //public const string authError = "[POL-3013]";
 
+        private const int latLongArraySize = 128;
+
         private MPRReader Reader;
         private Browser webBr;
         private ArrayList inventoryTags;
         private int totalTags;
         private string gpsBuffer;
         private string utcTime;
-        private string latitude;
-        private string longitude;
-        private string numberOfSatellites;
+        private double latitude;
+        private double longitude;
+        private char EorW;
+        private char NorS;
+        private bool fullOnce = false;
+        private int latLongPtr = 0;
+        private double[] latitudeValues = new double[latLongArraySize];
+        private double[] longitudeValues = new double[latLongArraySize];
+
+        //private string numberOfSatellites;
         private event EventHandler eh;
         private ClientConnection cc;
         private static Mutex gpsBufLock = new Mutex();
@@ -207,10 +215,10 @@ namespace WJ2
                         // handshake
                         cc.SendConnectPacket();
                         cc.WaitForConnectResponsePacket();
-                        if (latitude == null)
+                        /*if (latitude == null)
                             latitude = "00.000";
                         if (longitude == null)
-                            longitude = "00.000";
+                            longitude = "00.000"; */
                         //cc.SendQueryPacket(new QueryRequest())
 
                         byte locL = byte.Parse(waypointBox.SelectedIndex.ToString());
@@ -228,7 +236,7 @@ namespace WJ2
                         // correlate names with tag IDs and add to the list
                         for (int i = 0; i < inventoryTags.Count; ++i)
                         {   
-                            cc.SendQueryPacket(new QueryRequest(new RFID(inventoryTags[i].ToString()), latitude, longitude, locL));
+                            cc.SendQueryPacket(new QueryRequest(new RFID(inventoryTags[i].ToString()), latBox.Text.ToString(), longBox.Text.ToString(), locL));
 
                             QueryResponse qr = cc.WaitForQueryResponsePacket();
                             inventoryListBox.Items.Insert(i, qr.ShortDesc);
@@ -624,48 +632,64 @@ namespace WJ2
                 gpsBuffer = "";
                 gpsBufLock.ReleaseMutex(); // release the lock
 
-                string utcTimeL = code.Substring(7, 71);
-                utcTime = utcTimeL.Substring(0, 2) + ":"
-                    + utcTimeL.Substring(2, 2) + ":"
-                    + utcTimeL.Substring(4, 6);
-                string lat = utcTimeL.Substring(11);
-                latitude = lat.Substring(0, 2) + "° "
-                    + lat.Substring(2, 2) + "\'" + lat.Substring(5, 2) + "."
-                    + lat.Substring(7, 2);
-                string NorS = lat.Substring(10);
-                latitude += NorS.Substring(0, 1);
-                string longitudeL = NorS.Substring(2);
-                if (longitudeL[0] == '0')
-                    longitude = longitudeL.Substring(1, 2);
-                else
-                    longitude = longitudeL.Substring(0, 3);
-                longitude += "° "
-                    + longitudeL.Substring(3, 2) + "\'"
-                    + longitudeL.Substring(6, 2) + "."
-                    + longitudeL.Substring(8, 2);
+                char[] sep = { ',' };
+                string[] fields = code.Split(sep);
 
-                string EorW = longitudeL.Substring(11);
-                longitude += EorW.Substring(0, 1);
-                string satsUsed = "";
-                if (EorW[1] == ',')
-                    satsUsed = EorW.Substring(2, 1);
-                else
-                    satsUsed = EorW.Substring(2, 2);
-                string comma = ",";
-                if (latitude.LastIndexOf(comma) < 0)
+                if (fields[1].Length == 0)
+                    return;
+
+                // set the time
+                utcBox.Text = int.Parse(fields[1].Substring(0, 2)) % 12 + ":"
+                    + fields[1].Substring(2, 2) + ":"
+                    + fields[1].Substring(4, 2) + " "
+                    + ((int.Parse(fields[1].Substring(0, 2)) / 12) == 1 ? "PM" : "AM");
+
+                // calculate latitude, longitude, and add into running average
+                double latitudeL = double.Parse (fields[2].Substring(0,2)) 
+                    + double.Parse(fields[2].Substring(2)) / 60.0;
+
+                double longitudeL = double.Parse(fields[4].Substring(0,3)) +
+                    double.Parse(fields[4].Substring(3)) / 60.0;
+
+                EorW = fields[5][0];
+                NorS = fields[3][0];
+
+                latitudeValues[latLongPtr] = latitudeL;
+                longitudeValues[latLongPtr] = longitudeL;
+
+                latLongPtr = (latLongPtr + 1) % latLongArraySize;
+
+                if (latLongPtr == 0)
                 {
-                    numberOfSatellites = satsUsed;
-                    satBox.Text = numberOfSatellites;                    
-                    latBox.Text = latitude;
-                    longBox.Text = longitude;
+                    fullOnce = true;
                 }
-                else
+                double avgLat = 0;
+                double avgLong = 0;
+                for (int i = 0; i < (fullOnce ? latLongArraySize : latLongPtr); ++i)
                 {
-                    satBox.Text = "0";
-                    latBox.Text = "00° 00' 00.00";
-                    longBox.Text = "00° 00' 00.00";
+                    avgLat += latitudeValues[i];
+                    avgLong += longitudeValues[i];
                 }
-                utcBox.Text = utcTime;
+                latitude = avgLat / ((fullOnce ? latLongArraySize : latLongPtr) * 1.0);
+                longitude = avgLong / ((fullOnce ? latLongArraySize : latLongPtr) * 1.0);
+
+                //double fraction = latitude - int.Parse(latitude.ToString());
+
+                latBox.Text = System.Math.Floor(latitude) + "° " 
+                    + (latitude - System.Math.Floor(latitude)).ToString().Substring(2) + "' "
+                    + NorS;
+                
+                //fraction = longitude - int.Parse(longitude.ToString());
+
+                longBox.Text = System.Math.Floor(longitude) + "° "
+                    + (longitude - System.Math.Floor(longitude)).ToString().Substring(2) + "' "
+                    + EorW;
+            
+                satBox.Text = fields[7];
+
+                return;
+
+
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -675,19 +699,11 @@ namespace WJ2
         #endregion
 
         private void mapButton_Click(object sender, EventArgs e)
-        {
-            //long freq = 0;
-            //QueryPerformanceCounter(out freq);
-            string latitudeL = latitude;
-            string longitudeL = longitude;
-            float lat = float.Parse(latitudeL.Substring(0, 2))
-                + float.Parse(latitudeL.Substring(4, 2)) / 60
-                + float.Parse(latitudeL.Substring(7, 4)) / 3600;
-            float lon = float.Parse(longitudeL.Substring(0, 2))
-                + float.Parse(longitudeL.Substring(4, 2)) / 60
-                + float.Parse(longitudeL.Substring(7, 4)) / 3600;
-            
-            webBr.setUrlAndShow(new Uri("http://terraserver.microsoft.com/image.aspx?PgSrh:NavLon=-" + lon.ToString() + "&PgSrh:NavLat=" + lat.ToString()));
+        {   
+            //webBr.setUrlAndShow(new Uri("http://terraserver.microsoft.com/image.aspx?PgSrh:NavLon=-" + lon.ToString() + "&PgSrh:NavLat=" + lat.ToString()));
+            webBr.setUrlAndShow(new Uri("http://maps.google.com/maps?f=q&hl=en&q=" 
+                + latitude.ToString() + NorS + "+" 
+                + longitude.ToString() + EorW + "&t=h"));
         }
 
     }
