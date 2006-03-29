@@ -795,9 +795,12 @@ dram_statistics::dram_statistics()
 
 void dram_statistics::collect_transaction_stats(transaction *this_t)
 {
-	if(this_t->length == 8){
+	if(this_t->length == 8)
+	{
 		bo8_count++;
-	} else {
+	}
+	else
+	{
 		bo4_count++;
 	}
 }
