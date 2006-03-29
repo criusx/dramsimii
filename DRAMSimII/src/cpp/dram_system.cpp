@@ -657,9 +657,9 @@ command *dram_system::get_next_command(const int chan_id)
 	{
 		command *candidate_command = NULL;
 		int candidate_gap = INT_MAX;
-		for (rank_id = 0; rank_id < system_config.rank_count; ++rank_id)
+		for (rank_id = system_config.rank_count; rank_id >= 0; --rank_id)
 		{
-			for (bank_id = 0; bank_id < system_config.bank_count; ++bank_id)
+			for (bank_id = system_config.bank_count; bank_id >= 0; --bank_id)
 			{
 				command *challenger_command = channel->rank[rank_id].bank[bank_id].per_bank_q.read(0);
 				if (challenger_command != NULL)
@@ -970,7 +970,8 @@ enum input_status_t dram_system::get_next_input_transaction(transaction *&this_t
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
 int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
-{ //FIXME: some max() functions take uninit values
+{ 
+	//FIXME: some max() functions take uninit values
 	int     min_gap;
 	dram_channel &channel = dram_system::channel[channel_no];
 	//int     debug;
@@ -983,16 +984,16 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 	bank_c	&this_b= this_r.bank[this_bank_id];
 	tick_t 	now = channel.time;
 	int     t_cas_gap = 0;
-	int     t_faw_gap = 0;
+	//int     t_faw_gap = 0;
 	int     t_ras_gap = 0;
 	int     t_rcd_gap = 0;
 	int     t_rfc_gap = 0;
-	int     t_rp_gap = 0;
-	int     t_rrd_gap = 0;
+	//int     t_rp_gap = 0;
+	//int     t_rrd_gap = 0;
 	int     casw_to_rp_gap;
 	int     cas_to_rp_gap;
 	tick_t	*last_ras_time;		/* for t_rrd computations */
-	tick_t	*fourth_ras_time;	/* for t_faw computations */
+	//tick_t	*fourth_ras_time;	/* for t_faw computations */
 	tick_t	temp_time;
 	tick_t	this_r_last_cas_time;
 	tick_t	this_r_last_casw_time;
@@ -1007,7 +1008,7 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 	int     i,j;
 	int	time_inserted;
 	//int	t_al;
-	int	ras_q_count;
+	//int	ras_q_count;
 	//int	t_burst; Removed 3/9/06 JG
 	int cas_length;
 	int casw_length;
@@ -1022,10 +1023,12 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 	{
 	case RAS_COMMAND:
 		/* respect t_rp of same bank*/
-		t_rp_gap	= max(0,(int)(this_b.last_prec_time + timing_specification.t_rp - now));
+		int t_rp_gap = max(0 , this_b.last_prec_time + timing_specification.t_rp - now);
 
 		/* respect t_rrd of all other banks of same rank*/
-		ras_q_count	= this_r.last_ras_times.get_count();
+		int ras_q_count	= this_r.last_ras_times.get_count();
+
+		int t_rrd_gap;
 		if(ras_q_count == 0)
 		{
 			t_rrd_gap = 0;
@@ -1035,17 +1038,20 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 			last_ras_time	= (tick_t *)this_r.last_ras_times.read(ras_q_count - 1);	/* read tail end of ras history */
 			t_rrd_gap = max(t_rrd_gap,(int)(*last_ras_time + timing_specification.t_rrd - now));
 		}
+
+		int t_faw_gap;
 		if(ras_q_count < 4)
 		{
 			t_faw_gap	= 0;
 		}
 		else
 		{
-			fourth_ras_time= (tick_t *)this_r.last_ras_times.read(0);	/* read head of ras history */
-			t_faw_gap 	= max(0,(int)(*fourth_ras_time + timing_specification.t_faw - now));
+			tick_t *fourth_ras_time = this_r.last_ras_times.read(0); /// read head of ras history
+			t_faw_gap = max(0,(*fourth_ras_time + timing_specification.t_faw - now));
 		}
 
-		min_gap = max(t_rp_gap,max(t_rrd_gap,t_faw_gap));
+		min_gap = max(t_rp_gap , max(t_rrd_gap , t_faw_gap));
+
 		break;
 
 	case CAS_AND_PRECHARGE_COMMAND:
@@ -1191,7 +1197,7 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 }
 
 
-enum input_status_t dram_system::transaction2commands( transaction *this_t)
+enum input_status_t dram_system::transaction2commands(transaction *this_t) 
 {
 	//const tick_t now = time;
 	const int &chan_id = this_t->addr.chan_id;
