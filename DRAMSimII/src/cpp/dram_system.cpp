@@ -711,10 +711,8 @@ void dram_system::update_system_time()
 }
 
 
-transaction *dram_system::get_next_random_request()
+void dram_system::get_next_random_request(transaction *this_t)
 {
-	transaction *this_t = free_transaction_pool.acquire_item();
-
 	if(input_stream.type == RANDOM)
 	{
 		unsigned int j;
@@ -825,8 +823,6 @@ transaction *dram_system::get_next_random_request()
 		this_t->arrival_time = input_stream.time;
 		this_t->addr.col_id = 0;
 	}
-
-	return this_t;
 }
 
 
@@ -935,23 +931,28 @@ void dram_system::execute_command(command *this_c,const int gap)
 
 enum input_status_t dram_system::get_next_input_transaction(transaction *&this_t)
 {
+	this_t = free_transaction_pool.acquire_item();
+
 	if (input_stream.type == RANDOM)
-	this_t = get_next_random_request();
+	{
+		get_next_random_request(this_t);
+	}
 	else if((input_stream.type == K6_TRACE) || (input_stream.type == MASE_TRACE))
 	{
-		bus_event this_e;
+		static bus_event this_e;
+
 		if(input_stream.get_next_bus_event(this_e) == FAILURE)
 		{
 			/* EOF reached */
 			return FAILURE;
-		} else {
-			//this_t = (transaction *)free_transaction_pool.acquire_item(TRANSACTION);
-			/* proceed normally */
+		} 
+		else
+		{
 			this_t->addr.phys_addr = this_e.address;
 			// FIXME: ignores return type
 			convert_address(this_t->addr);
 			++(this_t->event_no);
-			this_t->type= this_e.attributes;
+			this_t->type = this_e.attributes;
 			this_t->length = 8;			/* assume burst length of 8 */
 			this_t->arrival_time = this_e.timestamp;
 			/* need to adjust arrival time for K6 traces to cycles */
@@ -988,8 +989,8 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 	int     t_ras_gap = 0;
 	int     t_rcd_gap = 0;
 	int     t_rfc_gap = 0;
-	//int     t_rp_gap = 0;
-	//int     t_rrd_gap = 0;
+	int     t_rp_gap = 0;
+	int     t_rrd_gap = 0;
 	int     casw_to_rp_gap;
 	int     cas_to_rp_gap;
 	tick_t	*last_ras_time;		/* for t_rrd computations */
@@ -1008,7 +1009,7 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 	int     i,j;
 	int	time_inserted;
 	//int	t_al;
-	//int	ras_q_count;
+	int	ras_q_count;
 	//int	t_burst; Removed 3/9/06 JG
 	int cas_length;
 	int casw_length;
@@ -1023,12 +1024,12 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 	{
 	case RAS_COMMAND:
 		/* respect t_rp of same bank*/
-		int t_rp_gap = max(0 , this_b.last_prec_time + timing_specification.t_rp - now);
+		t_rp_gap = max(0 , (int)(this_b.last_prec_time - now) + timing_specification.t_rp);
 
 		/* respect t_rrd of all other banks of same rank*/
-		int ras_q_count	= this_r.last_ras_times.get_count();
+		ras_q_count	= this_r.last_ras_times.get_count();
 
-		int t_rrd_gap;
+		t_rrd_gap;
 		if(ras_q_count == 0)
 		{
 			t_rrd_gap = 0;
@@ -1047,7 +1048,7 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 		else
 		{
 			tick_t *fourth_ras_time = this_r.last_ras_times.read(0); /// read head of ras history
-			t_faw_gap = max(0,(*fourth_ras_time + timing_specification.t_faw - now));
+			t_faw_gap = max(0,(int)(*fourth_ras_time - now) + timing_specification.t_faw );
 		}
 
 		min_gap = max(t_rp_gap , max(t_rrd_gap , t_faw_gap));
@@ -1104,21 +1105,14 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 		}
 		min_gap = max(t_ras_gap,t_cas_gap);
 		/*
-		fprintf(stderr,"   [%8d] [%8d] [%8d] [%8d] [%8d] [%2d]\n",
-		(int)now,
-		(int)this_r_last_cas_time,
-		(int)this_r_last_casw_time,
-		(int)other_r_last_cas_time,
-		(int)other_r_last_casw_time,
-		min_gap);
+		fprintf(stderr,"   [%8d] [%8d] [%8d] [%8d] [%8d] [%2d]\n",(int)now,(int)this_r_last_cas_time,(int)this_r_last_casw_time,(int)other_r_last_cas_time,(int)other_r_last_casw_time,min_gap);
 		*/
 		break;
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-		/* Auto precharge will be issued as part of command, so
-		* Since commodity DRAM devices are write-cycle limited, we don't have to worry if
-		* the precharge will met tRAS timing or not. So CAS_WRITE_AND_PRECHARGE_COMMAND
-		* has the exact same timing requirements as a simple CAS COMMAND.
-		*/
+		/// Auto precharge will be issued as part of command, so
+		/// Since commodity DRAM devices are write-cycle limited, we don't have to worry if
+		/// the precharge will met tRAS timing or not. So CAS_WRITE_AND_PRECHARGE_COMMAND
+		/// has the exact same timing requirements as a simple CAS COMMAND.
 	case CAS_WRITE_COMMAND:
 		/* respect last ras of same rank */
 		t_ras_gap	= max(0,(int)(this_b.last_ras_time + timing_specification.t_rcd - t_al - now));
@@ -1489,7 +1483,7 @@ void dram_system::run_simulations()
 	//tick_t		master_time;
 	//tick_t		channel_time;
 
-	for(int i=0;(i<sim_parameters.get_request_count()) && (EOF_reached == false);i++)
+	for(int i = 0; (i < sim_parameters.get_request_count()) && (EOF_reached == false); ++i)
 	{
 		transaction 	*input_t;
 		if(get_next_input_transaction(input_t) == SUCCESS)

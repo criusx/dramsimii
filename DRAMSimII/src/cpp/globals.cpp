@@ -108,7 +108,7 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 		_exit(0);
 	}
 
-	// go fine the spd file first, read in all params if it was specified (and it should be)
+	// go find the spd file first, read in all params if it was specified (and it should be)
 	for (argc_index = 1; argc_index < argc; ++argc_index)
 	{
 		string temp = argv[argc_index];
@@ -128,6 +128,7 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 		}
 	}
 
+	// then go lookup other parameters and override the spd file inputs, this is why reading the spd file first is necessary
 	argc_index = 1;
 	while (argc_index < argc)
 	{
@@ -141,7 +142,7 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 			parameters[input_type_token]=temp2;
 			argc_index += 2;
 		} else if (temp == "-trace_file") {
-			parameters[trace_file_token]=temp2;
+			parameters[trace_file_token] = temp2;
 			argc_index += 2;
 		} else if (temp == "-dram:spd_input") {
 			// already been read, bypass it this time

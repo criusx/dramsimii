@@ -29,7 +29,7 @@ input_stream_c::input_stream_c(map<file_io_token_t,string> &parameter)
 
 	if ((temp=parameter.find(input_type_token))!=parameter.end())
 	{
-		enum input_type_t type=input_token(temp->second);
+		type=input_token(temp->second);
 		if ((type != RANDOM) && (type != K6_TRACE) && (type != MASE_TRACE))
 			cerr << "Unknown input type" << temp2;
 	}
@@ -204,45 +204,39 @@ double input_stream_c::box_muller(double m, double s) {
 
 
 enum input_status_t input_stream_c::get_next_bus_event(bus_event &this_e)
-{
-	int		address;
-	enum file_io_token_t control;
-	int base_control;
-	enum transaction_type_t attributes;
-	int burst_length = 4; /* Socket 7 cachelines are 32 byte long, burst of 4 */
-	int burst_count;
-	bool bursting = true;
-	string input;
-	//char		input[1024];
-	bool EOF_reached = false;
-	tick_t timestamp;
-	double multiplier;
+{	
+	enum file_io_token_t control;	
+	string input;	
 
 	if(type == K6_TRACE)
 	{
-		while((bursting == true) && (EOF_reached == false))
+		int base_control;
+		enum transaction_type_t attributes;
+		int burst_length = 4; /* Socket 7 cachelines are 32 byte long, burst of 4 */
+		int burst_count;
+		bool bursting = true;
+		double multiplier;
+		tick_t timestamp;
+		int address;
+
+		while((bursting == true) && trace_file.good())
 		{
-			trace_file >> address;
-			if(trace_file.eof()) /// found starting hex address
-			{ 
-				cout << "EOF Reached" << endl;
-				return FAILURE;
-			}
+			trace_file >> std::hex >> address >> input >> timestamp;
 
-			trace_file >> input;
-
-			if(trace_file.eof()) 
+			if(trace_file.good())
 			{
 				cout << "Unexpected EOF, Please fix input trace file" << endl;
 				return FAILURE;
 			}
 
 			control = file_io_token(input);
+
 			if(control == unknown_token)
 			{
 				cout << "Unknown Token Found" << input << endl;
 				return FAILURE;
 			}
+
 			if(control == MEM_WR)
 			{
 				attributes = WRITE_TRANSACTION;
@@ -252,12 +246,6 @@ enum input_status_t input_stream_c::get_next_bus_event(bus_event &this_e)
 				attributes = READ_TRANSACTION;
 			}
 
-			trace_file >> timestamp;
-			if(trace_file.eof()) 
-			{
-				cout << "Unexpected EOF, Please fix input trace file" << endl;
-				return FAILURE;
-			}
 			trace_file >> input;
 			if(trace_file.eof())
 			{
@@ -280,25 +268,27 @@ enum input_status_t input_stream_c::get_next_bus_event(bus_event &this_e)
 				burst_count++;
 			}
 		}
+		this_e.address = address;
+		this_e.timestamp = timestamp;
 	} 
 	else if (type == MASE_TRACE)
 	{
-		trace_file >> address >> input >> timestamp;
+		trace_file >> std::hex >> this_e.address >> input >> this_e.timestamp;
 		control = file_io_token(input);
-		if(trace_file.eof()) /// found starting Hex address 
+		if(!trace_file.good()) /// found starting Hex address 
 		{
-			cout << "Unexpected EOF, Please fix input trace file" << endl;
+			cerr << "Unexpected EOF, Please fix input trace file" << endl;
 			return FAILURE;
 		}
 		if(control == unknown_token) 
 		{
-			cout << "Unknown Token Found " << input << endl;
+			cerr << "Unknown Token Found " << input << endl;
 			return FAILURE;
 		}
 	}
-	this_e.address = address;
+	
 	this_e.attributes = CONTROL_TRANSACTION;
-	this_e.timestamp = timestamp;
+	
 	return SUCCESS;
 }
 
