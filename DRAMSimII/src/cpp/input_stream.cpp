@@ -10,14 +10,13 @@
 
 #include "dramsim2.h"
 
-input_stream_c::input_stream_c(map<file_io_token_t,string> &parameter)
+input_stream_c::input_stream_c(map<file_io_token_t,string> &parameter):
+time(0),
+type(RANDOM),
+row_locality(0.2),
+average_interarrival_cycle_count(10),
+interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 {
-	type = RANDOM;
-	time = 0;
-	row_locality = 0.2;
-	average_interarrival_cycle_count = 10;
-	interarrival_distribution_model = UNIFORM_DISTRIBUTION;
-
 	if (interarrival_distribution_model == UNIFORM_DISTRIBUTION)
 		arrival_thresh_hold = 1.0 - (1.0 / (double)average_interarrival_cycle_count);
 	else if (interarrival_distribution_model == GAUSSIAN_DISTRIBUTION)
