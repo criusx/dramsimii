@@ -617,10 +617,10 @@ private:
 	dram_algorithm algorithm;
 
 	string output_filename;
-	input_stream_c input_stream; // FIXME: change this to be a member once maps for parameters is done
+	input_stream_c input_stream;
 	dram_channel *channel;
-	tick_t time;                  /* master clock */
-	queue<command> free_command_pool;
+	tick_t time; // master clock
+	queue<command> free_command_pool; // contains a pool of command objects which may be used
 	queue<transaction> free_transaction_pool;		
 	queue<event> free_event_pool;
 	queue<event> event_q;                /* pending event queue */
