@@ -72,7 +72,9 @@ enum row_buffer_policy_t
 	CLOSE_PAGE
 };
 
-/* This section defines the address mapping scheme */
+/// This section defines the address mapping scheme
+/// The scheme dictates how a memory address is converted
+/// to rank, bank, row, col, byte
 enum address_mapping_scheme_t
 {
 	BURGER_BASE_MAP,
@@ -90,8 +92,7 @@ enum system_configuration_type_t
 	FBD_CONFIG          /* fully buffered DIMMS */
 };
 
-/* we can define various algorithms previously explored by Rixner, McKee et al. here. */
-
+/// we can define various algorithms previously explored by Rixner, McKee et al. here.
 enum ordering_algorithm_t
 {
 	STRICT_ORDER,
@@ -137,13 +138,6 @@ enum transaction_type_t
 	PER_BANK_REFRESH_TRANSACTION,
 	AUTO_PRECHARGE_TRANSACTION,
 	CONTROL_TRANSACTION
-};
-
-enum queue_type_t
-{
-	TRANSACTION,
-	COMMAND,
-	EVENT
 };
 
 enum command_type_t
@@ -346,7 +340,7 @@ public:
 class bus_event    /* 6 DWord per event */
 {
 public:
-	/* FIXME: should be an enum type */enum transaction_type_t     attributes;
+	enum transaction_type_t     attributes;
 	/* read/write/Fetch type stuff.  Not overloaded with other stuff */
 	int     address;        /* assume to be <= 32 bits for now */
 	tick_t  timestamp;      /* time stamp will now have a large dynamic range, but only 53 bit precision */
@@ -361,18 +355,27 @@ ostream &operator<<(ostream &, const command_type_t &);
 ostream &operator<<(ostream &, const command &);
 ostream &operator<<(ostream &, const addresses &);
 ostream &operator<<(ostream &, const transaction *&);
+ostream &operator<<(ostream &, const address_mapping_scheme_t &);
 // converts a string to a file_io_token
 file_io_token_t file_io_token(const std::string &);
 // converts a string to its corresponding magnitude representation
 double ascii2multiplier(const string);
-int log2(int);
+//int log2(unsigned int);
 // maps the inputs to file_io_tokens and corresponding strings to simplify initialization
 void create_input_map(int ,char *[],map<enum file_io_token_t, string> &);
 void create_input_map_from_input_file(map<enum file_io_token_t,string> &,ifstream &);
 /// class declarations
 class dram_system;
 //////////////////////////////////////////////////////////////////////////
-
+int inline log2(unsigned int input)
+{
+	int l2 = 0;
+	for (input >>= 1; input > 0; input >>= 1)
+	{
+		++ l2;
+	}
+	return l2;
+}
 
 
 

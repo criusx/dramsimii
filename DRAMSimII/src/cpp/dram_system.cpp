@@ -42,10 +42,20 @@ int dram_system::convert_address(addresses &this_a)
 	int col_size_depth	= log2(col_size);
 
 	//input_a = this_a->phys_addr;
+	// strip away the byte address portion
 	input_a = this_a.phys_addr >> col_size_depth;
 
-	if(system_config.addr_mapping_scheme == BURGER_BASE_MAP)		/* Good for only Rambus memory really */
+	int cacheline_size;
+	int cacheline_size_depth;	/* address bit depth */
+	int col_id_lo;
+	int col_id_lo_depth;
+	int col_id_hi;
+	int col_id_hi_depth;
+	
+	switch (system_config.addr_mapping_scheme)
 	{
+	case BURGER_BASE_MAP:		/* Good for only Rambus memory really */
+	
 		/* BURGER BASE :
 		* |<-------------------------------->|<------>|<------>|<---------------->|<----------------->|<----------->|
 		*                           row id     bank id   Rank id   Column id         Channel id          Byte Address
@@ -86,10 +96,14 @@ int dram_system::convert_address(addresses &this_a)
 		input_a = input_a >> row_addr_depth;
 		temp_a  = input_a << row_addr_depth;
 		this_a.row_id = temp_a ^ temp_b;		/* this should strip out the row address */
-		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
+		if(input_a != 0)				/* If there is still "stuff" left, the input address is out of range */
+		{
 			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
 		}
-	} else if((system_config.addr_mapping_scheme == SDRAM_HIPERF_MAP) || (system_config.addr_mapping_scheme == OPEN_PAGE_BASELINE)){	/* works for SDRAM, DDR, DDR2 and DDR3 ! */
+		break;
+
+	case SDRAM_HIPERF_MAP:
+	case OPEN_PAGE_BASELINE:	/* works for SDRAM, DDR, DDR2 and DDR3 ! */
 
 		/*
 		*               High performance SDRAM Mapping scheme
@@ -135,14 +149,9 @@ int dram_system::convert_address(addresses &this_a)
 		*
 		*/
 
-		//int cacheline_size;
-		int cacheline_size_depth;	/* address bit depth */
-		int col_id_lo;
-		int col_id_lo_depth;
-		int col_id_hi;
-		int col_id_hi_depth;
+		//
 
-		int cacheline_size = system_config.cacheline_size;
+		cacheline_size = system_config.cacheline_size;
 		cacheline_size_depth = log2(cacheline_size);
 
 		col_id_lo_depth = cacheline_size_depth - col_size_depth;
@@ -183,7 +192,8 @@ int dram_system::convert_address(addresses &this_a)
 			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl << this_a << endl;
 			//print_addresses(this_a);
 		}
-	} else if(system_config.addr_mapping_scheme == SDRAM_BASE_MAP){		/* works for SDRAM and DDR SDRAM too! */
+		break;
+	case SDRAM_BASE_MAP:		/* works for SDRAM and DDR SDRAM too! */
 
 		/*
 		*               Basic SDRAM Mapping scheme (As found on user-upgradable memory systems)
@@ -216,12 +226,7 @@ int dram_system::convert_address(addresses &this_a)
 		*
 		*/
 
-		int cacheline_size;
-		int cacheline_size_depth;	/* address bit depth */
-		int col_id_lo;
-		int col_id_lo_depth;
-		int col_id_hi;
-		int col_id_hi_depth;
+		
 
 		cacheline_size = system_config.cacheline_size;
 		cacheline_size_depth = log2(cacheline_size);
@@ -264,7 +269,8 @@ int dram_system::convert_address(addresses &this_a)
 		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
 			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
 		}
-	} else if(system_config.addr_mapping_scheme == INTEL845G_MAP){
+		break;
+	case INTEL845G_MAP:
 
 		/*  Data comes from Intel's 845G Datasheets.  Table 5-5
 		*  DDR SDRAM mapping only.
@@ -316,8 +322,9 @@ int dram_system::convert_address(addresses &this_a)
 		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
 			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
 		}
-
-	} else if(system_config.addr_mapping_scheme == SDRAM_CLOSE_PAGE_MAP){	
+		break;
+	case CLOSE_PAGE_BASELINE:
+	case SDRAM_CLOSE_PAGE_MAP:
 		/*
 		*               High performance closed page SDRAM Mapping scheme
 		*                                                                    5
@@ -342,12 +349,7 @@ int dram_system::convert_address(addresses &this_a)
 		*                    row id                         Column id high     rank  bank    col_id  (8B wide)
 		*                                                   1KB     / 8B        id    id      low    Byte Addr
 		*/
-		//int cacheline_size;
-		int cacheline_size_depth;	/* address bit depth */
-		int col_id_lo;
-		int col_id_lo_depth;
-		int col_id_hi;
-		int col_id_hi_depth;
+		
 
 		//cacheline_size = config->cacheline_size;
 		cacheline_size_depth = log2(system_config.cacheline_size);
@@ -363,7 +365,7 @@ int dram_system::convert_address(addresses &this_a)
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> chan_addr_depth;
 		temp_a  = input_a << chan_addr_depth;
-		this_a.chan_id = temp_a ^ temp_b;     		/* strip out the channel address */
+		this_a.chan_id = temp_a ^ temp_b;   		/* strip out the channel address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> bank_addr_depth;
@@ -389,15 +391,15 @@ int dram_system::convert_address(addresses &this_a)
 		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
 			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
 		}
-	} 
-	else 
-	{
-		cerr << system_config.addr_mapping_scheme << endl;
+		break;
+	default:
+		cerr << "Unknown address mapping scheme, mapping chan, rank, bank to zero: " << system_config.addr_mapping_scheme << endl;
 		this_a.chan_id = 0;				/* don't know what this policy is.. Map everything to 0 */
 		this_a.rank_id = 0;
 		this_a.bank_id = 0;
 		this_a.row_id  = 0;
 		this_a.col_id  = 0;
+		break;
 	}
 	return 1;
 }
@@ -1233,9 +1235,18 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 				free_c = free_command_pool.acquire_item();
 
 				if(this_t->type == WRITE_TRANSACTION)
-					free_c->this_command 	= CAS_WRITE_COMMAND;
-				else if (this_t->type == READ_TRANSACTION)
-					free_c->this_command 	= CAS_COMMAND;
+				{
+					free_c->this_command = CAS_WRITE_COMMAND;
+				}
+				else if (this_t->type == READ_TRANSACTION || this_t->type == IFETCH_TRANSACTION)
+				{
+					free_c->this_command = CAS_COMMAND;
+				}
+				else
+				{
+					cerr << "Unhandled transaction type: " << this_t->type;
+					exit(-8);
+				}
 
 				free_c->start_time = this_t->arrival_time;
 				free_c->enqueue_time = time;
@@ -1262,13 +1273,18 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 				{
 					free_c->this_command= CAS_WRITE_AND_PRECHARGE_COMMAND;
 				}
-				else if (this_t->type == READ_TRANSACTION)
+				else if (this_t->type == READ_TRANSACTION || this_t->type == IFETCH_TRANSACTION)
 				{
 					free_c->this_command = CAS_AND_PRECHARGE_COMMAND;
 				}
 				else if (this_t->type == PER_BANK_REFRESH_TRANSACTION)
 				{
 					free_c->this_command = PRECHARGE_COMMAND;
+				}
+				else
+				{
+					cerr << "Unhandled transaction type: " << this_t->type;
+					exit(-8);
 				}
 				free_c->start_time = this_t->arrival_time;
 				free_c->enqueue_time = time;

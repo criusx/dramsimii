@@ -273,20 +273,38 @@ enum input_status_t input_stream_c::get_next_bus_event(bus_event &this_e)
 	else if (type == MASE_TRACE)
 	{
 		trace_file >> std::hex >> this_e.address >> input >> this_e.timestamp;
-		control = file_io_token(input);
+		
 		if(!trace_file.good()) /// found starting Hex address 
 		{
 			cerr << "Unexpected EOF, Please fix input trace file" << endl;
 			return FAILURE;
 		}
-		if(control == unknown_token) 
+
+		control = file_io_token(input);
+
+		switch (control)
 		{
+		case unknown_token:
 			cerr << "Unknown Token Found " << input << endl;
 			return FAILURE;
+			break;
+		case FETCH:
+			this_e.attributes = IFETCH_TRANSACTION;
+			break;
+		case MEM_RD:
+			this_e.attributes = READ_TRANSACTION;
+			break;
+		case MEM_WR:
+			this_e.attributes = WRITE_TRANSACTION;
+			break;
+		default:
+			cerr << "Unexpected transaction type: " << input;
+			exit(-7);
+			break;
 		}
 	}
 	
-	this_e.attributes = CONTROL_TRANSACTION;
+	//this_e.attributes = CONTROL_TRANSACTION;
 	
 	return SUCCESS;
 }

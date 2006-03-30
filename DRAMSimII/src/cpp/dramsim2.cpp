@@ -489,8 +489,6 @@ dram_timing_specification::dram_timing_specification(map<file_io_token_t,string>
 
 }
 
-
-
 rank_c::rank_c():
 last_ras_times(4)
 {
@@ -768,17 +766,6 @@ simulation_parameters::simulation_parameters(map<file_io_token_t,string> &parame
 		stringstream temp2(temp->second);
 		temp2 >> request_count;
 	}
-}
-
-
-ostream &operator<<(ostream &os, const addresses &this_a)
-{
-	os << "addr[0x" << setbase(16) << this_a.phys_addr <<
-		"] chan[" << setbase(16) << this_a.chan_id << "] rank[" <<
-		this_a.rank_id << "] bank[" << setw(2) << setbase(16) << this_a.bank_id <<
-		"] row[" << setw(4) << setbase(16) << this_a.row_id << "] col[" <<
-		setbase(16) << this_a.col_id << "]";
-	return os;
 }
 
 dram_statistics::dram_statistics()

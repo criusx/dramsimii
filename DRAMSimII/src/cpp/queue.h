@@ -8,21 +8,25 @@ private:
 	int head_ptr;
 	int tail_ptr;
 	T **entry;
+
 public:
-	queue()
+	queue(): depth(0),count(0)
 	{
-		depth = 0;
-		count = 0;
-		head_ptr = 0;
-		tail_ptr = 0;
-		entry = NULL;
+		//depth = 0;
+		//count = 0;
+		//head_ptr = 0;
+		//tail_ptr = 0;
+		//entry = NULL;
 	}
 
 	~queue()
 	{
-		for (int i = head_ptr; i != tail_ptr; i = (i + 1) % depth)
-			delete entry[i];
-		delete[] entry;
+		if (depth > 0)
+		{
+			for (int i = head_ptr; i != tail_ptr; i = (i + 1) % depth)
+				delete entry[i];
+			delete[] entry;
+		}
 	}
 
 	queue(int size, bool preallocate = false)
@@ -52,9 +56,12 @@ public:
 		count = 0;
 		head_ptr = 0;
 		tail_ptr = 0;
-		entry = new T *[size];
-		for (int i=0 ; i<size ; i++)
-			entry[i] = NULL;
+		if (size > 0)
+		{
+			entry = new T *[size];
+			for (int i=0 ; i<size ; i++)
+				entry[i] = NULL;
+		}
 	}
 
 	/* queue: When you add stuff, tail pointer increments, if full, return FAILURE flag */
@@ -95,7 +102,7 @@ public:
 		{
 			count--;
 			T *item = entry[head_ptr];
-			head_ptr	= (head_ptr+1) % depth; 	/*advance head_ptr */
+			head_ptr = (head_ptr+1) % depth; 	/*advance head_ptr */
 			return item;
 		}
 	}
@@ -121,7 +128,7 @@ public:
 	}
 
 	// this function makes this queue a non-FIFO queue.  Allows insertion in middle
-	input_status_t insert(T *item, int offset)
+	input_status_t insert(T *item,int offset)
 	{
 		if(count == depth)
 			return FAILURE;
@@ -141,18 +148,16 @@ public:
 		}
 	}
 
-	int freecount()
+	int freecount() const
 	{
 		return depth - count;
 	}
 
 	queue(const queue<T>& a): depth(a.depth), count(0), head_ptr(0), tail_ptr(0)
 	{
-		T *temp = a.dequeue();
-		while (temp)
+		while (a.count > 0)
 		{
-			enqueue(temp);
-			temp = a.dequeue();
+			enqueue(a.dequeue());			
 		}   
 	}
 };
