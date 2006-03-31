@@ -8,6 +8,7 @@
 
 #include "dramsim2.h"
 
+
 dram_channel::dram_channel()
 {
 	//int chan_count = this_c->chan_count;

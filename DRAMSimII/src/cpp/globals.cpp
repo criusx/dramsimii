@@ -8,7 +8,7 @@
 
 #include "dramsim2.h"
 
-ostream &operator<<(ostream &os, const command_type_t &command)
+ostream &DRAMSim2::operator<<(ostream &os, const command_type_t &command)
 {
 	switch(command)
 	{
@@ -54,7 +54,7 @@ ostream &operator<<(ostream &os, const command_type_t &command)
 	}
 	return os;
 }
-ostream &operator<<(ostream &os, const command &this_c)
+ostream &DRAMSim2::operator<<(ostream &os, const command &this_c)
 //void print_command(command *this_c)
 {
 	os << this_c.this_command << this_c.addr;
@@ -64,7 +64,7 @@ ostream &operator<<(ostream &os, const command &this_c)
 }
 
 
-double ascii2multiplier(const string input)
+double DRAMSim2::ascii2multiplier(const string &input)
 {
 	switch(file_io_token(input))
 	{
@@ -90,7 +90,7 @@ double ascii2multiplier(const string input)
 	}
 }
 
-void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &parameters)
+void DRAMSim2::create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &parameters)
 {
 	int argc_index=1;
 	string trace_filename;
@@ -191,7 +191,7 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 	}
 }
 
-void create_input_map_from_input_file(map<enum file_io_token_t,string> &parameters,ifstream &cfg_file)
+void DRAMSim2::create_input_map_from_input_file(map<enum file_io_token_t,string> &parameters,ifstream &cfg_file)
 {
 
 	while (!cfg_file.eof())
@@ -254,13 +254,13 @@ void create_input_map_from_input_file(map<enum file_io_token_t,string> &paramete
 	}
 }
 
-ostream &operator<<(ostream &os, const dram_timing_specification &this_a)
+ostream &DRAMSim2::operator<<(ostream &os, const dram_timing_specification &this_a)
 {
 	os << "rtrs[" << this_a.t_rtrs << "] ";
 	return os;
 }
 
-ostream &operator<<(ostream &os, const dram_statistics &this_a)
+ostream &DRAMSim2::operator<<(ostream &os, const dram_statistics &this_a)
 {
 	os << "RR[" << setw(6) << setprecision(6) << (double)this_a.end_time/max(1,this_a.bo4_count + this_a.bo8_count);
 	os << "] BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick_t)1);
@@ -269,10 +269,7 @@ ostream &operator<<(ostream &os, const dram_statistics &this_a)
 
 }
 
-
-
-
-file_io_token_t file_io_token(const string &input)
+file_io_token_t DRAMSim2::file_io_token(const string &input)
 {
 	if (input.length() == 0)
 		return unknown_token;
@@ -442,9 +439,9 @@ file_io_token_t file_io_token(const string &input)
 }
 
 
-ostream &operator<<(ostream &os, const transaction *this_t)
+ostream &DRAMSim2::operator<<(ostream &os, const transaction *this_t)
 {
-	os << "[" << setw(8) << this_t->arrival_time << "] ";
+	os << "S[" << setw(8) << this_t->arrival_time << "] ";
 	switch(this_t->type)
 	{
 	case IFETCH_TRANSACTION:
@@ -469,12 +466,13 @@ ostream &operator<<(ostream &os, const transaction *this_t)
 		os << "AUTOP ";
 		break;
 	}
-	os << "[" << setw(8) << setbase(10) << this_t->completion_time << "]" << endl;
+	os << "E[" << setw(8) << std::setbase(10) << this_t->completion_time << "]" 
+		<< " PA[0x" <<  std::hex << this_t->addr.phys_addr << "]";
 	return os;
 }
 
 
-ostream &operator<<(ostream &os, const dram_system &this_a)
+ostream &DRAMSim2::operator<<(ostream &os, const dram_system &this_a)
 {
 	os << "SYS[";
 	switch(this_a.system_config.config_type)
@@ -520,7 +518,7 @@ ostream &operator<<(ostream &os, const dram_system &this_a)
 	return os;
 }
 
-ostream &operator<<(ostream &os, const addresses &this_a)
+ostream &DRAMSim2::operator<<(ostream &os, const addresses &this_a)
 {
 	os << "addr[0x" << setbase(16) << this_a.phys_addr <<
 		"] chan[" << setbase(16) << this_a.chan_id << "] rank[" <<
@@ -530,7 +528,7 @@ ostream &operator<<(ostream &os, const addresses &this_a)
 	return os;
 }
 
-ostream &operator<<(ostream &os, const address_mapping_scheme_t &this_ams)
+ostream &DRAMSim2::operator<<(ostream &os, const address_mapping_scheme_t &this_ams)
 {
 	switch (this_ams)
 	{

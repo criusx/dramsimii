@@ -272,7 +272,7 @@ enum input_status_t input_stream_c::get_next_bus_event(bus_event &this_e)
 	} 
 	else if (type == MASE_TRACE)
 	{
-		trace_file >> std::hex >> this_e.address >> input >> this_e.timestamp;
+		trace_file >> std::hex >> this_e.address >> input >> std::dec >> this_e.timestamp;
 		
 		if(!trace_file.good()) /// found starting Hex address 
 		{

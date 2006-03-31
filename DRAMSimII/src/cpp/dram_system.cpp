@@ -45,6 +45,8 @@ int dram_system::convert_address(addresses &this_a)
 	// strip away the byte address portion
 	input_a = this_a.phys_addr >> col_size_depth;
 
+	unsigned int address = this_a.phys_addr;
+
 	int cacheline_size;
 	int cacheline_size_depth;	/* address bit depth */
 	int col_id_lo;
@@ -348,48 +350,63 @@ int dram_system::convert_address(addresses &this_a)
 		*       |<------------------------------------->| |<---------------->|  ^  |<--->|  |<--->|  |<--->|
 		*                    row id                         Column id high     rank  bank    col_id  (8B wide)
 		*                                                   1KB     / 8B        id    id      low    Byte Addr
-		*/
-		
+		*/		
 
-		//cacheline_size = config->cacheline_size;
 		cacheline_size_depth = log2(system_config.cacheline_size);
 
+		// this is really cacheline_size / col_size
 		col_id_lo_depth = cacheline_size_depth - col_size_depth;
+		// col_addr / col_id_lo
 		col_id_hi_depth = col_addr_depth - col_id_lo_depth;
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> col_id_lo_depth;
-		temp_a  = input_a << col_id_lo_depth;
-		col_id_lo = temp_a ^ temp_b;     		/* strip out the column low address */
+		input_a >>= col_id_lo_depth;
+		//temp_a  = input_a << col_id_lo_depth;
+		//col_id_lo = temp_a ^ temp_b;
+		// strip out the column low address
+		col_id_lo = temp_b ^ (input_a << col_id_lo_depth); 
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> chan_addr_depth;
-		temp_a  = input_a << chan_addr_depth;
-		this_a.chan_id = temp_a ^ temp_b;   		/* strip out the channel address */
+		//temp_a  = input_a << chan_addr_depth;
+		//this_a.chan_id = temp_a ^ temp_b;
+		// strip out the channel address 
+		this_a.chan_id = temp_b ^ (input_a << chan_addr_depth); 
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> bank_addr_depth;
-		temp_a  = input_a << bank_addr_depth;
-		this_a.bank_id = temp_a ^ temp_b;     		/* strip out the bank address */
+		input_a >>= bank_addr_depth;
+		//temp_a  = input_a << bank_addr_depth;
+		//this_a.bank_id = temp_a ^ temp_b;
+		// strip out the bank address 
+		this_a.bank_id = temp_b ^ (input_a << bank_addr_depth);
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> rank_addr_depth;
-		temp_a  = input_a << rank_addr_depth;
-		this_a.rank_id = temp_a ^ temp_b;     		/* strip out the rank address */
+		input_a >>= rank_addr_depth;
+		//temp_a  = input_a << rank_addr_depth;
+		//this_a.rank_id = temp_a ^ temp_b;
+		// strip out the rank address 
+		this_a.rank_id = temp_b ^ (input_a << rank_addr_depth);
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> col_id_hi_depth;
-		temp_a  = input_a << col_id_hi_depth;
-		col_id_hi = temp_a ^ temp_b;     		/* strip out the column hi address */
+		input_a >>= col_id_hi_depth;
+		//temp_a  = input_a << col_id_hi_depth;
+		//col_id_hi = temp_a ^ temp_b;
+		// strip out the column hi address
+		col_id_hi = temp_b ^ (input_a << col_id_hi_depth);
 
 		this_a.col_id = (col_id_hi << col_id_lo_depth) | col_id_lo;
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> row_addr_depth;
-		temp_a  = input_a << row_addr_depth;
-		this_a.row_id = temp_a ^ temp_b;		/* this should strip out the row address */
-		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
-			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
+		input_a >>= row_addr_depth;
+		//temp_a  = input_a << row_addr_depth;
+		//this_a.row_id = temp_a ^ temp_b;		
+		// this should strip out the row address
+		this_a.row_id = temp_b ^ (input_a << row_addr_depth);
+
+		// If there is still "stuff" left, the input address is out of range
+		if(input_a != 0)
+		{
+			cerr << "Mem address out of range[" << std::hex << this_a.phys_addr << "] of available physical memory." << endl;
 		}
 		break;
 	default:
@@ -697,10 +714,10 @@ dram_system::~dram_system()
 
 void dram_system::update_system_time()
 {
-	int oldest_chan_id = 0;
-	tick_t oldest_time = channel[0].time;
+	int oldest_chan_id = system_config.chan_count;
+	tick_t oldest_time = channel[system_config.chan_count].time;
 
-	for (int chan_id = 1; chan_id < system_config.chan_count ; ++chan_id)
+	for (int chan_id = system_config.chan_count - 1; chan_id > 0; --chan_id)
 	{
 		if (channel[chan_id].time < oldest_time)
 		{
@@ -832,12 +849,14 @@ void dram_system::execute_command(command *this_c,const int gap)
 {
 	tick_t *this_ras_time;
 
-	int &chan_id 	= this_c->addr.chan_id;
+	
+	unsigned int chan_id 	= this_c->addr.chan_id;
+	unsigned int rank_id 	= this_c->addr.rank_id;
+	unsigned int bank_id 	= this_c->addr.bank_id;
+	unsigned int row_id = this_c->addr.row_id;
+
 	dram_channel	&channel= dram_system::channel[chan_id];
 	tick_t now = channel.time+gap;
-	int &rank_id 	= this_c->addr.rank_id;
-	int &bank_id 	= this_c->addr.bank_id;
-	int &row_id = this_c->addr.row_id;
 	int t_al;
 	//int history_q_count;
 	rank_c &this_r = channel.rank[rank_id];
@@ -1514,9 +1533,7 @@ void dram_system::run_simulations()
 				int oldest_chan_id = find_oldest_channel();
 				transaction *temp_t = channel[oldest_chan_id].channel_q.dequeue();
 #ifdef DEBUG_FLAG
-				cerr << "[" << setw(8) << oldest_chan_id << "] ";
-				cerr << temp_t;
-				//print_transaction(temp_t);
+				cerr << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
 #endif
 				if(temp_t != NULL)
 				{
@@ -1529,7 +1546,6 @@ void dram_system::run_simulations()
 						int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
 #ifdef DEBUG_FLAG
 						cerr << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
-						//print_command(temp_c);
 #endif
 						execute_command(temp_c, min_gap);
 						update_system_time();

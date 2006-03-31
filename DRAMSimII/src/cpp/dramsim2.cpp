@@ -521,13 +521,6 @@ void bank_c::init_banks(int per_bank_queue_depth) {
 	per_bank_q.init(per_bank_queue_depth);
 }
 
-/*
-*  	DRAM System has the configuration, timing, state, the transaction queue and the dram controller
-*/
-
-
-
-
 dram_algorithm::dram_algorithm()
 {
 	rank_id[0] = 0;
@@ -784,11 +777,11 @@ void dram_statistics::collect_transaction_stats(transaction *this_t)
 {
 	if(this_t->length == 8)
 	{
-		bo8_count++;
+		++bo8_count;
 	}
 	else
 	{
-		bo4_count++;
+		++bo4_count;
 	}
 }
 
