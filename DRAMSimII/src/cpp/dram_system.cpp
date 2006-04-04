@@ -100,7 +100,7 @@ int dram_system::convert_address(addresses &this_a)
 		this_a.row_id = temp_a ^ temp_b;		/* this should strip out the row address */
 		if(input_a != 0)				/* If there is still "stuff" left, the input address is out of range */
 		{
-			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
+			cerr << "Address out of range[" << std::hex << this_a.phys_addr << "] of available physical memory" << endl;
 		}
 		break;
 
@@ -356,41 +356,32 @@ int dram_system::convert_address(addresses &this_a)
 
 		// this is really cacheline_size / col_size
 		col_id_lo_depth = cacheline_size_depth - col_size_depth;
+
 		// col_addr / col_id_lo
 		col_id_hi_depth = col_addr_depth - col_id_lo_depth;
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= col_id_lo_depth;
-		//temp_a  = input_a << col_id_lo_depth;
-		//col_id_lo = temp_a ^ temp_b;
 		// strip out the column low address
 		col_id_lo = temp_b ^ (input_a << col_id_lo_depth); 
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> chan_addr_depth;
-		//temp_a  = input_a << chan_addr_depth;
-		//this_a.chan_id = temp_a ^ temp_b;
 		// strip out the channel address 
 		this_a.chan_id = temp_b ^ (input_a << chan_addr_depth); 
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= bank_addr_depth;
-		//temp_a  = input_a << bank_addr_depth;
-		//this_a.bank_id = temp_a ^ temp_b;
 		// strip out the bank address 
 		this_a.bank_id = temp_b ^ (input_a << bank_addr_depth);
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= rank_addr_depth;
-		//temp_a  = input_a << rank_addr_depth;
-		//this_a.rank_id = temp_a ^ temp_b;
 		// strip out the rank address 
 		this_a.rank_id = temp_b ^ (input_a << rank_addr_depth);
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= col_id_hi_depth;
-		//temp_a  = input_a << col_id_hi_depth;
-		//col_id_hi = temp_a ^ temp_b;
 		// strip out the column hi address
 		col_id_hi = temp_b ^ (input_a << col_id_hi_depth);
 
@@ -398,9 +389,7 @@ int dram_system::convert_address(addresses &this_a)
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= row_addr_depth;
-		//temp_a  = input_a << row_addr_depth;
-		//this_a.row_id = temp_a ^ temp_b;		
-		// this should strip out the row address
+		// strip out the row address
 		this_a.row_id = temp_b ^ (input_a << row_addr_depth);
 
 		// If there is still "stuff" left, the input address is out of range
@@ -693,9 +682,11 @@ command *dram_system::get_next_command(const int chan_id)
 			}
 		}
 		temp_c = channel->rank[candidate_command->addr.rank_id].bank[candidate_command->addr.bank_id].per_bank_q.dequeue();
+
 #ifdef DEBUG
 		cerr << "R[" << candidate_command->addr.rank_id << "] B[" << candidate_command->addr.bank_id << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << channel->time << "]" << endl;
 #endif
+
 		return temp_c;
 	}
 	else
@@ -929,11 +920,12 @@ void dram_system::execute_command(command *this_c,const int gap)
 		break;
 	}
 	/* transaction complete? if so, put in completion queue */
-	if(host_t != NULL) {
+	if(host_t != NULL) 
+	{
 		if(channel.completion_q.enqueue(host_t) == FAILURE)
 		{
-			cerr << "Fatal error, cannot insert transaction into completion queue" << endl <<
-				"Increase execution q depth and resume. Should not occur. Check logic" << endl;
+			cerr << "Fatal error, cannot insert transaction into completion queue" << endl
+				<< "Increase execution q depth and resume. Should not occur. Check logic" << endl;
 			_exit(2);
 		}
 	}
@@ -991,7 +983,7 @@ enum input_status_t dram_system::get_next_input_transaction(transaction *&this_t
 /// Purpose:		find the protocol gap between a command and current system state
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
-int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
+int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 { 
 	//FIXME: some max() functions take uninit values
 	int     min_gap;
@@ -1212,23 +1204,14 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c)
 }
 
 
-enum input_status_t dram_system::transaction2commands(transaction *this_t) 
+enum input_status_t DRAMSim2::dram_system::transaction2commands(transaction *this_t) 
 {
-	//const tick_t now = time;
-	const int &chan_id = this_t->addr.chan_id;
-	const int &rank_id = this_t->addr.rank_id;
-	const int &bank_id = this_t->addr.bank_id;
-	//  int &row_id = this_t->addr.row_id;
-	int tail_offset;
-	bool bypass_allowed;
-	queue<command> &bank_q = channel[chan_id].rank[rank_id].bank[bank_id].per_bank_q;
-	int queued_command_count = bank_q.get_count();
-	int empty_command_slot_count = bank_q.freecount();
-	command	*free_c;
-	command	*temp_c;
-
+	queue<command> *bank_q = &(channel[this_t->addr.chan_id].rank[this_t->addr.rank_id].bank[this_t->addr.bank_id].per_bank_q);
+	
 	if (system_config.row_buffer_management_policy == CLOSE_PAGE)
 	{
+		int empty_command_slot_count = bank_q->freecount();
+
 		if(empty_command_slot_count < 2)
 		{
 			return FAILURE;
@@ -1239,69 +1222,72 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 		}
 		else
 		{
-			free_c = free_command_pool.acquire_item();
+			command *free_c = free_command_pool.acquire_item();
 
+			// command one
 			free_c->this_command = RAS_COMMAND;
 			free_c->start_time = this_t->arrival_time;
 			free_c->enqueue_time = time;
 			free_c->addr = this_t->addr; /// copy the addr stuff over
 			free_c->host_t = NULL;
 
-			bank_q.enqueue(free_c);
+			bank_q->enqueue(free_c);
 
+			
 			if(system_config.auto_precharge == false)
 			{
 				free_c = free_command_pool.acquire_item();
 
-				if(this_t->type == WRITE_TRANSACTION)
+				// command two
+				switch (this_t->type)
 				{
+				case WRITE_TRANSACTION:
 					free_c->this_command = CAS_WRITE_COMMAND;
-				}
-				else if (this_t->type == READ_TRANSACTION || this_t->type == IFETCH_TRANSACTION)
-				{
+					break;
+				case READ_TRANSACTION:
+				case IFETCH_TRANSACTION:
 					free_c->this_command = CAS_COMMAND;
-				}
-				else
-				{
+					break;
+				default:
 					cerr << "Unhandled transaction type: " << this_t->type;
 					exit(-8);
 				}
 
 				free_c->start_time = this_t->arrival_time;
 				free_c->enqueue_time = time;
-				free_c->addr = this_t->addr;		/* copy the addr stuff over */
+				free_c->addr = this_t->addr;
 				free_c->posted_cas = system_config.posted_cas;
-				free_c->host_t = this_t;
-				//this_t->count_up(); // there is one more pointer to this out there somewhere
+				free_c->host_t = this_t;				
 				free_c->length = this_t->length;
-				bank_q.enqueue(free_c);
+				bank_q->enqueue(free_c);
 
+				// command three
 				free_c = free_command_pool.acquire_item();
 				free_c->this_command = PRECHARGE_COMMAND;
 				free_c->start_time = this_t->arrival_time;
 				free_c->enqueue_time = time;
-				free_c->addr = this_t->addr;		/* copy the addr stuff over */
-				free_c->host_t = NULL;
-				bank_q.enqueue(free_c);
+				free_c->addr = this_t->addr;
+				free_c->host_t = NULL; // only one of these commands has a pointer to the original transaction
+				bank_q->enqueue(free_c);
 			}
-			else
+			else // precharge is implied, only need two commands
 			{
 				free_c = free_command_pool.acquire_item();
 
-				if(this_t->type == WRITE_TRANSACTION)
+				// command two
+				switch(this_t->type)
 				{
+				case WRITE_TRANSACTION:
 					free_c->this_command= CAS_WRITE_AND_PRECHARGE_COMMAND;
-				}
-				else if (this_t->type == READ_TRANSACTION || this_t->type == IFETCH_TRANSACTION)
-				{
+					break;
+				case READ_TRANSACTION:
+				case IFETCH_TRANSACTION:
 					free_c->this_command = CAS_AND_PRECHARGE_COMMAND;
-				}
-				else if (this_t->type == PER_BANK_REFRESH_TRANSACTION)
-				{
+					break;
+				case PER_BANK_REFRESH_TRANSACTION:
 					free_c->this_command = PRECHARGE_COMMAND;
-				}
-				else
-				{
+					break;
+				default:
 					cerr << "Unhandled transaction type: " << this_t->type;
 					exit(-8);
 				}
@@ -1312,18 +1298,21 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 				free_c->host_t = this_t;				
 				free_c->length = this_t->length;
 
-				bank_q.enqueue(free_c);
+				bank_q->enqueue(free_c);
 			}
 		}
 	}
 	else if(system_config.row_buffer_management_policy == OPEN_PAGE)
 	{
+		int queued_command_count = bank_q->get_count();
+		int empty_command_slot_count = bank_q->freecount();
 		/// look in the bank_q and see if there's a precharge for this row
-		bypass_allowed 	= true;
+		bool bypass_allowed 	= true;
 		/// go from tail to head
-		for(tail_offset = queued_command_count -1 ;(tail_offset >= 0) && (bypass_allowed == true);tail_offset--)
+		for(int tail_offset = queued_command_count -1 ;(tail_offset >= 0) && (bypass_allowed == true); --tail_offset)
 		{	
-			temp_c = bank_q.read(tail_offset);
+			command *temp_c = bank_q->read(tail_offset);
+
 			if(temp_c->this_command == PRECHARGE_COMMAND)	/// found a precharge command
 			{
 				if(temp_c->addr.row_id == this_t->addr.row_id)	/// same row, insert here 
@@ -1331,7 +1320,7 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 					if(empty_command_slot_count < 1)
 						return FAILURE;
 
-					free_c = free_command_pool.acquire_item();
+					command *free_c = free_command_pool.acquire_item();
 
 					if(this_t->type == WRITE_TRANSACTION)
 						free_c->this_command = CAS_WRITE_COMMAND;
@@ -1344,7 +1333,7 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 
 					free_c->length = this_t->length;
 
-					bank_q.insert(free_c, tail_offset);	/* insert at this location */
+					bank_q->insert(free_c, tail_offset);	/* insert at this location */
 					return SUCCESS;
 				}
 			}
@@ -1361,7 +1350,7 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 		{
 			return FAILURE;
 		}
-		free_c = free_command_pool.acquire_item();
+		command *free_c = free_command_pool.acquire_item();
 
 		free_c->this_command = RAS_COMMAND;
 		free_c->start_time = this_t->arrival_time;
@@ -1369,24 +1358,30 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 		free_c->addr = this_t->addr;		/* copy the addr stuff over */
 		free_c->host_t = NULL;
 
-		bank_q.enqueue(free_c);
+		bank_q->enqueue(free_c);
 
 		free_c = free_command_pool.acquire_item();
 		if(this_t->type == WRITE_TRANSACTION)
 		{
-			free_c->this_command 	= CAS_WRITE_COMMAND;
+			free_c->this_command = CAS_WRITE_COMMAND;
 		}
 		else if (this_t->type == READ_TRANSACTION)
 		{
-			free_c->this_command 	= CAS_COMMAND;
+			free_c->this_command = CAS_COMMAND;
 		}
+		else
+		{
+			cerr << "Unhandled transaction type: " << this_t->type;
+			exit(-8);
+		}
+
 		free_c->start_time = this_t->arrival_time;
 		free_c->enqueue_time = time;
 		free_c->posted_cas = system_config.posted_cas;
 		free_c->addr = this_t->addr;		/* copy the addr stuff over */
 		free_c->length = this_t->length;
 		// FIXME: not initializing the host_t value?
-		bank_q.enqueue(free_c);
+		bank_q->enqueue(free_c);
 
 		free_c = free_command_pool.acquire_item();
 		free_c->this_command = PRECHARGE_COMMAND;
@@ -1394,7 +1389,7 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 		free_c->enqueue_time = time;
 		free_c->addr = this_t->addr;		/* copy the addr stuff over */
 		free_c->host_t = NULL;
-		bank_q.enqueue(free_c);
+		bank_q->enqueue(free_c);
 	}
 	else
 	{
@@ -1540,6 +1535,7 @@ void dram_system::run_simulations()
 					//rank_id = temp_t->addr.rank_id;
 					//bank_id = temp_t->addr.bank_id;
 					//bank_q = (((channel[oldest_chan_id]).rank[temp_t->addr.rank_id]).bank[bank_id]).per_bank_q;
+					// if it can't fit in the transaction queue, drain the queue
 					while(transaction2commands(temp_t) != SUCCESS)
 					{
 						command *temp_c = get_next_command(oldest_chan_id);
@@ -1553,6 +1549,7 @@ void dram_system::run_simulations()
 						if(completed_t != NULL)
 							free_transaction_pool.release_item(completed_t);
 					}
+					//free_transaction_pool.release_item(temp_t);
 					//delete temp_t;
 					// FIXME: memory leak here, temp_t gets removed from queues and is never deleted
 				}
