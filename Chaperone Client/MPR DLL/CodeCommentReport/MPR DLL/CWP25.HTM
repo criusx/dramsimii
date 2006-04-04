@@ -1,0 +1,496 @@
+<!-- saved from url=(0007)http:// -->
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>WJ.Serial.Port</TITLE>
+<LINK REL=STYLESHEET HREF="../CommentReport.css" TYPE="text/css">
+</HEAD>
+<BODY topmargin=0 rightmargin=0 leftmargin=0 style="background-image: url(../titletile.jpg); background-repeat:repeat-x; background-position: 0 0;" >
+<DIV CLASS="PageHeading">WJ.Serial.Port Class</DIV>
+<DIV CLASS="Description">
+
+A class wrapper for serial port communications.
+Derived from OpenNETCF.org's : OpenNETCF.IO.Serial.Port
+See the Source Code for more documentation, and differences to original OpenNETCF source.
+<P>
+
+</DIV>
+<IMG src="../GradLeft.jpg" width=7 height=378 alt="" border="0" style="position:absolute; left:10; top:18;z-Index:2">
+<IMG src="../GradTop.jpg" width=352 height=7 alt="" border="0" align="top" style="position:absolute; left:10; top:18; z-index:1">
+<DIV CLASS="Remarks">
+<SPAN CLASS="RemarkHdrX">Access: </SPAN>Public</DIV>
+<DIV CLASS="Remarks">
+<SPAN CLASS="RemarkHdrX">Base Classes: </SPAN>Object</DIV>
+<DIV CLASS="Remarks">
+<SPAN CLASS="RemarkHdrX">Implemented interfaces:  </SPAN>IDisposable</DIV>
+<TABLE CLASS="InfoTable" cellpadding=0 cellspacing=0>
+<TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD valign=top align=left width=9 bgcolor="#cccc66"><IMG SRC="../graycorner.jpg" align=top></TD>
+<TD CLASS="TableLightLabel" WIDTH=206>Members</TD>
+<TD CLASS="TableLightLabel" >Description</TD>
+<TD width=20>&nbsp;</TD>
+</TR>
+<TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP655.HTM" TARGET="CNTFRAME">LocalAlloc</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP656.HTM" TARGET="CNTFRAME">LocalFree</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP657.HTM" TARGET="CNTFRAME">portName</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP658.HTM" TARGET="CNTFRAME">hPort</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP659.HTM" TARGET="CNTFRAME">rxBufferSize</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP660.HTM" TARGET="CNTFRAME">rxFIFO</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP661.HTM" TARGET="CNTFRAME">rthreshold</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP662.HTM" TARGET="CNTFRAME">txBufferSize</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP663.HTM" TARGET="CNTFRAME">txBuffer</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP664.HTM" TARGET="CNTFRAME">ptxBuffer</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP665.HTM" TARGET="CNTFRAME">sthreshold</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP666.HTM" TARGET="CNTFRAME">rxBufferBusy</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP667.HTM" TARGET="CNTFRAME">inputLength</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP668.HTM" TARGET="CNTFRAME">dcb</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP669.HTM" TARGET="CNTFRAME">portSettings</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP670.HTM" TARGET="CNTFRAME">eventThread</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP671.HTM" TARGET="CNTFRAME">threadStarted</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP672.HTM" TARGET="CNTFRAME">closeEvent</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP673.HTM" TARGET="CNTFRAME">closeEventName</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP674.HTM" TARGET="CNTFRAME">rts</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP675.HTM" TARGET="CNTFRAME">rtsavail</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP676.HTM" TARGET="CNTFRAME">dtr</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP677.HTM" TARGET="CNTFRAME">dtravail</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP678.HTM" TARGET="CNTFRAME">brk</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP679.HTM" TARGET="CNTFRAME">setir</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP680.HTM" TARGET="CNTFRAME">txOverlapped</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP681.HTM" TARGET="CNTFRAME">rxOverlapped</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP682.HTM" TARGET="CNTFRAME">m_CommAPI</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP683.HTM" TARGET="CNTFRAME">Init</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP684.HTM" TARGET="CNTFRAME">Port</A></TD>
+<TD CLASS="TableLightDesc">
+Create a serial port class.  The port will be created with defualt settings.
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP685.HTM" TARGET="CNTFRAME">Port</A></TD>
+<TD CLASS="TableLightDesc">
+Create a serial port class.
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP687.HTM" TARGET="CNTFRAME">Port</A></TD>
+<TD CLASS="TableLightDesc">
+Create a serial port class.
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP688.HTM" TARGET="CNTFRAME">Port</A></TD>
+<TD CLASS="TableLightDesc">
+Create a serial port class.
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP689.HTM" TARGET="CNTFRAME">Port</A></TD>
+<TD CLASS="TableLightDesc">
+Create a serial port class.
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP690.HTM" TARGET="CNTFRAME">Port</A></TD>
+<TD CLASS="TableLightDesc">
+Create a serial port class.
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP691.HTM" TARGET="CNTFRAME">Dispose</A></TD>
+<TD CLASS="TableLightDesc">
+Dispose the object's resources
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP692.HTM" TARGET="CNTFRAME">~Port</A></TD>
+<TD CLASS="TableLightDesc">
+Class destructor
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP693.HTM" TARGET="CNTFRAME">PortName</A></TD>
+<TD CLASS="TableLightDesc">
+The name of the Port (i.e. "COM1:")
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP695.HTM" TARGET="CNTFRAME">IsOpen</A></TD>
+<TD CLASS="TableLightDesc">
+Returns whether or not the port is currently open
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP697.HTM" TARGET="CNTFRAME">isOpenInternal</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP695.HTM" TARGET="CNTFRAME">isOpen</A></TD>
+<TD CLASS="TableLightDesc">
+Internal private property used to generate IsOpenChanged events when a port is opened or closed.
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP698.HTM" TARGET="CNTFRAME">Open</A></TD>
+<TD CLASS="TableLightDesc">
+Open the current port
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP699.HTM" TARGET="CNTFRAME">Query</A></TD>
+<TD CLASS="TableLightDesc">
+Query the current port's capabilities without accessing it. You can only call the Close()
+method after reading the capabilities. This method does neither initialize nor Open() the
+port.
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP700.HTM" TARGET="CNTFRAME">UpdateSettings</A></TD>
+<TD CLASS="TableLightDesc">
+Updates communication settings of the port
+parameters without closing and reopening the port
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP701.HTM" TARGET="CNTFRAME">Close</A></TD>
+<TD CLASS="TableLightDesc">
+Close the current serial port
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP702.HTM" TARGET="CNTFRAME">Output</A></TD>
+<TD CLASS="TableLightDesc">
+The Port's output buffer.  Set this property to send data.
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP704.HTM" TARGET="CNTFRAME">Input</A></TD>
+<TD CLASS="TableLightDesc">
+The Port's input buffer.  Incoming data is read from here and a read will pull InputLen bytes from the buffer
+&lt;seealso cref="InputLen"/&gt;
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP706.HTM" TARGET="CNTFRAME">InputLen</A></TD>
+<TD CLASS="TableLightDesc">
+The length of the input buffer
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP708.HTM" TARGET="CNTFRAME">InBufferCount</A></TD>
+<TD CLASS="TableLightDesc">
+The actual amount of data in the input buffer
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP710.HTM" TARGET="CNTFRAME">OutBufferCount</A></TD>
+<TD CLASS="TableLightDesc">
+The actual amount of data in the output buffer
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP712.HTM" TARGET="CNTFRAME">RThreshold</A></TD>
+<TD CLASS="TableLightDesc">
+The number of bytes that the receive buffer must exceed to trigger a Receive event
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP714.HTM" TARGET="CNTFRAME">SThreshold</A></TD>
+<TD CLASS="TableLightDesc">
+The number of bytes that the transmit buffer must exceed to trigger a Transmit event
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP716.HTM" TARGET="CNTFRAME">Break</A></TD>
+<TD CLASS="TableLightDesc">
+Send or check for a communications BREAK event
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP718.HTM" TARGET="CNTFRAME">DTRAvailable</A></TD>
+<TD CLASS="TableLightDesc">
+Returns whether or not the current port support a DTR signal
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP720.HTM" TARGET="CNTFRAME">DTREnable</A></TD>
+<TD CLASS="TableLightDesc">
+Gets or sets the current DTR line state (true = 1, false = 0)
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP722.HTM" TARGET="CNTFRAME">RTSAvailable</A></TD>
+<TD CLASS="TableLightDesc">
+Returns whether or not the current port support an RTS signal
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP724.HTM" TARGET="CNTFRAME">RTSEnable</A></TD>
+<TD CLASS="TableLightDesc">
+Gets or sets the current RTS line state (true = 1, false = 0)
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP726.HTM" TARGET="CNTFRAME">IREnable</A></TD>
+<TD CLASS="TableLightDesc">
+Gets or sets the com port for IR use (true = 1, false = 0)
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP728.HTM" TARGET="CNTFRAME">DetailedSettings</A></TD>
+<TD CLASS="TableLightDesc">
+Get or Set the Port's DetailedPortSettings
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP730.HTM" TARGET="CNTFRAME">Settings</A></TD>
+<TD CLASS="TableLightDesc">
+Get or Set the Port's BasicPortSettings
+<P>
+</TD>
+<TD width=20>&nbsp;</TD>
+</TR><TR height=20>
+<TD width=20>&nbsp;</TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD CLASS="TableLightDesc"><A HREF="CWP732.HTM" TARGET="CNTFRAME">CommEventThread</A></TD>
+<TD CLASS="TableLightDesc">&nbsp;</TD>
+<TD width=20>&nbsp;</TD>
+</TR></TABLE>
+</BODY>
+</HTML>

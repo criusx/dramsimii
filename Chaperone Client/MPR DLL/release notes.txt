@@ -1,0 +1,12 @@
+MPR DLL
+
+02/25/2005 - r2.0.0 
+- Initial Public Release
+- DLL for MS .NET
+- classes to access serial port, registry, sounds compatible with Compact Framework
+- classes to access the MPR Reader, and send & receive messages
+- classes to handle tags, and inventories
+- Other
+- Used by MPR Demo, Demo PPC and Demo CE, Snap-Ins, FWUpdater
+- Fully commented, including Comment WebPages
+- Released as Open Source
