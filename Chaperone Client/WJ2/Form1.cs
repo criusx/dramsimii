@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using WJ.MPR.Reader;
 using WJ.MPR.Util;
 using RFIDProtocolLib;
+using Bluetooth;
 //using InTheHand.Net.Bluetooth;
 //using InTheHand.Net.Sockets;
 //using InTheHand.Net;
@@ -53,6 +54,11 @@ namespace WJ2
         private int latLongPtr = 0;
         private double[] latitudeValues = new double[latLongArraySize];
         private double[] longitudeValues = new double[latLongArraySize];
+        private double avgLat = 0;
+        private double avgLong = 0;
+        private static byte[] mac = { 0x00, 0x03, 0x7a, 0x23, 0xc6, 0xd6 };
+        private RadiationSensor radSensor = new RadiationSensor(mac);
+        bool firstScan = true;
 
         //private string numberOfSatellites;
         private event EventHandler eh;
@@ -108,7 +114,10 @@ namespace WJ2
             cc = new ClientConnection();
             inventoryTags = new ArrayList();
             //cursor = new ();
-           
+            Reader.Class1InventoryEnabled = true;
+            Reader.Class0InventoryEnabled = true;
+            Reader.PersistTime = TimeSpan.MaxValue;
+            
             string[] COMPorts = System.IO.Ports.SerialPort.GetPortNames();
             cbComPort.Items.Clear();
             btComPort.Items.Clear();
@@ -159,15 +168,41 @@ namespace WJ2
 
         /// <summary>
         /// This event is fired when the DLL starts or stops an inventory loop.
+        /// Also fired when the inventory timer runs out
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void startInventoryButton_Click(object sender, EventArgs e)
         {
-            Reader.Class1InventoryEnabled = true;
-            Reader.Class0InventoryEnabled = true;
-            Reader.PersistTime = new TimeSpan(0, 5, 5, 0);
-            readerConnect(false);
+            if (!Reader.IsConnected)
+                readerConnect(false);
+            if (sender == invTimer)
+            {
+                invTimer.Enabled = !invTimer.Enabled;
+
+                if (repeatCheckBox.Checked)
+                {
+                    breakTimer.Enabled = !breakTimer.Enabled;                    
+                }                
+            }
+            else if (sender == breakTimer)
+            {
+                invTimer.Enabled = !invTimer.Enabled;
+                breakTimer.Enabled = !breakTimer.Enabled;
+            }
+            else
+            {
+                if (breakTimer.Enabled)
+                {
+                    breakTimer.Enabled = !breakTimer.Enabled;
+                }
+                else // starting a new scan
+                {
+                    firstScan = true;
+                    invTimer.Enabled = !invTimer.Enabled;
+                }
+            }                
+            
             Reader.InvTimerEnabled = !Reader.InvTimerEnabled;
         }
 
@@ -189,6 +224,7 @@ namespace WJ2
                     startInventoryButton.ForeColor = Color.White;
                     invProgressBar.Value = 0;
                     inventoryTags.Clear();
+                    breakBox.Hide();
                     invProgressBar.Show();
                     waypointBox.Hide();
                     inventoryListBox.Items.Clear();
@@ -196,56 +232,56 @@ namespace WJ2
                 }
                 else /// stopping an inventory loop
                 {
-                    startInventoryButton.Text = "Start Inventory";
+                    startInventoryButton.Text = "Working...";
                     startInventoryButton.BackColor = Color.LightGreen;
                     startInventoryButton.ForeColor = Color.Black;
                     invProgressBar.Hide();
                     waypointBox.Show();
+                    breakBox.Show();
 
-                    //for (int i = 0; i < inventoryTags.Count; ++i)
-                    //    inventoryListBox.Items.Insert(i, inventoryTags[i]);
-                    //return;
+//                     for (int i = 0; i < inventoryTags.Count; ++i)
+//                         inventoryListBox.Items.Insert(i, inventoryTags[i]);
+//                     startInventoryButton.Text = "Start Inventory";
+//                     return;
                     try
                     {
                         cc = new ClientConnection();
                         // inventory has ended, now go submit manifest
                         // connect to the server
-                        cc.Connect("66.171.240.43", 1555);
+                        cc.Connect(hostnameBox.Text, 1555);
 
                         // handshake
                         cc.SendConnectPacket();
                         cc.WaitForConnectResponsePacket();
-                        /*if (latitude == null)
-                            latitude = "00.000";
-                        if (longitude == null)
-                            longitude = "00.000"; */
-                        //cc.SendQueryPacket(new QueryRequest())
 
-                        byte locL = byte.Parse(waypointBox.SelectedIndex.ToString());
-                        if (locL == 0)
+                        byte locL;
+                        if (firstScan == true)
                         {
-                            originItems = (byte)inventoryTags.Count;
+                            locL = 0;
                         }
                         else
                         {
-                            if (inventoryTags.Count != originItems)
-                            {
-                                locL = 2;
-                            }
+                            locL = 1;
                         }
+                        
                         // correlate names with tag IDs and add to the list
                         for (int i = 0; i < inventoryTags.Count; ++i)
                         {   
                             cc.SendQueryPacket(new QueryRequest(new RFID(inventoryTags[i].ToString()), latBox.Text.ToString(), longBox.Text.ToString(), locL));
 
                             QueryResponse qr = cc.WaitForQueryResponsePacket();
+
                             inventoryListBox.Items.Insert(i, qr.ShortDesc);
+                            
                         }
                         cc.Close();
                     }
                     catch (Exception ex)
                     {
+                        inventoryListBox.Items.Clear();
 
+                        for (int i = 0; i < inventoryTags.Count; ++i)
+                            inventoryListBox.Items.Insert(i, inventoryTags[i].ToString());
                     }
 
                     return;
@@ -404,7 +440,7 @@ namespace WJ2
             int lastTwoI = Convert.ToInt32(lastTwo,16);            
             string location = waypointBox.SelectedItem.ToString() == "A" ? "a_pda" : "b_pda";
             
-            webBr.setUrlAndShow(new Uri("http://tbk.ece.umd.edu/" + lastTwoI.ToString() + location +".html"));
+            webBr.setUrlAndShow(new Uri("http://" + hostnameBox.Text + "/pda.html?rfid="+ lastTwoI.ToString()));
         }
 
         /// <summary>
@@ -654,7 +690,12 @@ namespace WJ2
                 EorW = fields[5][0];
                 NorS = fields[3][0];
 
+                avgLat -= latitudeValues[latLongPtr];
+                avgLat += latitudeL;
                 latitudeValues[latLongPtr] = latitudeL;
+
+                avgLong -= longitudeValues[latLongPtr];
+                avgLong += longitudeL;
                 longitudeValues[latLongPtr] = longitudeL;
 
                 latLongPtr = (latLongPtr + 1) % latLongArraySize;
@@ -662,34 +703,24 @@ namespace WJ2
                 if (latLongPtr == 0)
                 {
                     fullOnce = true;
-                }
-                double avgLat = 0;
-                double avgLong = 0;
-                for (int i = 0; i < (fullOnce ? latLongArraySize : latLongPtr); ++i)
-                {
-                    avgLat += latitudeValues[i];
-                    avgLong += longitudeValues[i];
-                }
+                }                
+                
                 latitude = avgLat / ((fullOnce ? latLongArraySize : latLongPtr) * 1.0);
                 longitude = avgLong / ((fullOnce ? latLongArraySize : latLongPtr) * 1.0);
 
-                //double fraction = latitude - int.Parse(latitude.ToString());
-
                 latBox.Text = System.Math.Floor(latitude) + "° " 
-                    + (latitude - System.Math.Floor(latitude)).ToString().Substring(2) + "' "
+                    + (latitude - System.Math.Floor(latitude)).ToString().Substring(2,2) + "."
+                    + (latitude - System.Math.Floor(latitude)).ToString().Substring(4) + "' "
                     + NorS;
-                
-                //fraction = longitude - int.Parse(longitude.ToString());
 
                 longBox.Text = System.Math.Floor(longitude) + "° "
-                    + (longitude - System.Math.Floor(longitude)).ToString().Substring(2) + "' "
+                    + (longitude - System.Math.Floor(longitude)).ToString().Substring(2,2) + "."
+                    + (longitude - System.Math.Floor(longitude)).ToString().Substring(4) + "' "
                     + EorW;
             
-                satBox.Text = fields[7];
+                satBox.Text = fields[7].TrimStart('0');
 
                 return;
-
-
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -704,6 +735,55 @@ namespace WJ2
             webBr.setUrlAndShow(new Uri("http://maps.google.com/maps?f=q&hl=en&q=" 
                 + latitude.ToString() + NorS + "+" 
                 + longitude.ToString() + EorW + "&t=h"));
+        }
+
+        private void waypointBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            invTimer.Interval = 1000 * int.Parse(waypointBox.SelectedItem.ToString().TrimEnd('s'));
+        }
+
+        private void breakBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            breakTimer.Interval = 1000 * int.Parse(breakBox.SelectedItem.ToString().TrimEnd('s'));
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!radTimer.Enabled)
+                {
+                    radSensor.connect();
+                    radTimer.Interval = int.Parse(radUpDown.Value.ToString()) * 1000;
+                    radTimer.Enabled = true;
+                    button1.BackColor = Color.DarkMagenta;
+                }
+                else
+                {
+                    radSensor.disconnect();
+                    radTimer.Enabled = false;
+                    button1.BackColor = Color.Cyan;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void radTimer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (radSensor.poll())
+                {
+                    // send warning packet
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
     }

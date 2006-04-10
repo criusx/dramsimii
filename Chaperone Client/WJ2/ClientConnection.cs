@@ -3,59 +3,59 @@ using System.Net.Sockets;
 
 namespace RFIDProtocolLib
 {
-	/// <summary>
-	/// This is a client connection to the server.
-	/// </summary>
-	public class ClientConnection
-	{
-		private TcpClient c;
+    /// <summary>
+    /// This is a client connection to the server.
+    /// </summary>
+    public class ClientConnection
+    {
+        private TcpClient c;
 
-		/// <summary>
-		/// Normal constructor.
-		/// </summary>
-		public ClientConnection()
-		{
-			c = new TcpClient();
-		}
+        /// <summary>
+        /// Normal constructor.
+        /// </summary>
+        public ClientConnection()
+        {
+            c = new TcpClient();
+        }
 
-		/// <summary>
-		/// Connects to a remote host.
-		/// </summary>
-		/// <param name="host">The host to connect to.</param>
-		/// <param name="port">Its port.</param>
-		public void Connect(string host, int port)
-		{
-			c.Connect(host, port);
-		}
+        /// <summary>
+        /// Connects to a remote host.
+        /// </summary>
+        /// <param name="host">The host to connect to.</param>
+        /// <param name="port">Its port.</param>
+        public void Connect(string host, int port)
+        {
+            c.Connect(host, port);
+        }
 
-		/// <summary>
-		/// Close the connection.
-		/// </summary>
-		public void Close()
-		{
-			c.Close();
-		}
+        /// <summary>
+        /// Close the connection.
+        /// </summary>
+        public void Close()
+        {
+            c.Close();
+        }
 
-		#region Connect
-		/// <summary>
-		/// Send a connect packet to the server.  This initializes the handshake.
-		/// </summary>
-		public void SendConnectPacket()
-		{
-			TLV connectPacket = new TLV(0);
-			connectPacket.WriteToStream(c.GetStream());
-		}
+        #region Connect
+        /// <summary>
+        /// Send a connect packet to the server.  This initializes the handshake.
+        /// </summary>
+        public void SendConnectPacket()
+        {
+            TLV connectPacket = new TLV(0);
+            connectPacket.WriteToStream(c.GetStream());
+        }
 
-		/// <summary>
-		/// Wait for the response from the server saying we're ready to communicate.
-		/// </summary>
-		public void WaitForConnectResponsePacket()
-		{
-			TLV connectResponsePacket = new TLV();
-			while (connectResponsePacket.Type != 1)
-				connectResponsePacket.ReadFromStream(c.GetStream());
-		}
-		#endregion
+        /// <summary>
+        /// Wait for the response from the server saying we're ready to communicate.
+        /// </summary>
+        public void WaitForConnectResponsePacket()
+        {
+            TLV connectResponsePacket = new TLV();
+            while (connectResponsePacket.Type != 1)
+                connectResponsePacket.ReadFromStream(c.GetStream());
+        }
+        #endregion
 
         #region Query
         /// <summary>
@@ -84,8 +84,38 @@ namespace RFIDProtocolLib
         }
         #endregion
 
+        #region SetPhoneNumber
+        public void SendSetPhoneNumberPacket(SetPhoneNumberRequest req)
+        {
+            TLV packet = new TLV(SetPhoneNumberRequest.Type, req.ToTLVList().GetBytes());
+            packet.WriteToStream(c.GetStream());
+        }
+
+        public void WaitForSetPhoneNumberResponsePacket()
+        {
+            TLV responsePacket = new TLV();
+            while (responsePacket.Type != SetPhoneNumberResponse.Type)
+                responsePacket.ReadFromStream(c.GetStream());
+        }
+        #endregion
+
+        #region RaiseAlert
+        public void SendRaiseAlertPacket(RaiseAlertRequest req)
+        {
+            TLV packet = new TLV(RaiseAlertRequest.Type, req.ToTLVList().GetBytes());
+            packet.WriteToStream(c.GetStream());
+        }
+
+        public void WaitForRaiseAlertResponsePacket()
+        {
+            TLV responsePacket = new TLV();
+            while (responsePacket.Type != RaiseAlertResponse.Type)
+                responsePacket.ReadFromStream(c.GetStream());
+        }
+        #endregion
+
 #if DONTUSETHIS
-		#region Scan
+        #region Scan
 		/// <summary>
 		/// Sent when the PDA scan's an RFID tag.  This updates the DB saying
 		/// that a scan happened.
@@ -108,9 +138,9 @@ namespace RFIDProtocolLib
 			while (scanResponsePacket.Type != ScanResponse.Type)
 				scanResponsePacket.ReadFromStream(c.GetStream());
 		}
-		#endregion
+        #endregion
 
-		#region Query
+        #region Query
 		/// <summary>
 		/// Sent when the PDA quryies an RFID tag for info about it.
 		/// </summary>
@@ -135,7 +165,7 @@ namespace RFIDProtocolLib
 
 			return new QueryResponse(responsePacket.Value);
 		}
-		#endregion
+        #endregion
 
         #region Alert
         /// <summary>
@@ -191,5 +221,5 @@ namespace RFIDProtocolLib
         }
         #endregion
 #endif
-	}
+    }
 }

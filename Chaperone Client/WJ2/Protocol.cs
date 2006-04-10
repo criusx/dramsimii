@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace RFIDProtocolLib
 {
+    #region Query
     public struct QueryRequest
     {
         public const ushort Type = 2;
@@ -10,14 +11,14 @@ namespace RFIDProtocolLib
         public RFID Rfid;
         public string Latitude;
         public string Longitude;
-        public byte Location;
+        public byte IsScan;
 
-        public QueryRequest(RFID rfid, string lat, string longitude, byte location)
+        public QueryRequest(RFID rfid, string lat, string longitude, byte isScan)
         {
             Rfid = rfid;
             Latitude = lat;
             Longitude = longitude;
-            Location = location;
+            IsScan = isScan;
         }
 
         public QueryRequest(byte[] buf)
@@ -25,7 +26,7 @@ namespace RFIDProtocolLib
             Rfid = null;
             Latitude = null;
             Longitude = null;
-            Location = 0;
+            IsScan = 0;
 
             TLVList l = new TLVList(buf);
             IEnumerator e = l.GetEnumerator();
@@ -37,7 +38,7 @@ namespace RFIDProtocolLib
                     case 0: Rfid = new RFID(tlv.Value); break;
                     case 1: Latitude = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
                     case 2: Longitude = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
-                    case 3: Location = tlv.Value[0]; break;
+                    case 3: IsScan = tlv.Value[0]; break;
                 }
             }
         }
@@ -48,7 +49,7 @@ namespace RFIDProtocolLib
             l.Add(new TLV(0, Rfid.GetBytes()));
             l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(Latitude)));
             l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(Longitude)));
-            l.Add(new TLV(3, new byte[] { Location }));
+            l.Add(new TLV(3, new byte[] { IsScan }));
 
             return l;
         }
@@ -122,6 +123,87 @@ namespace RFIDProtocolLib
             return l;
         }
     }
+    #endregion
+
+    #region SetPhoneNumber
+    public struct SetPhoneNumberRequest
+    {
+        public const ushort Type = 4;
+
+        public string PhoneNumber;
+
+        public SetPhoneNumberRequest(string phoneNumber)
+        {
+            PhoneNumber = phoneNumber;
+        }
+
+        public SetPhoneNumberRequest(byte[] buf)
+        {
+            PhoneNumber = null;
+
+            TLVList l = new TLVList(buf);
+            IEnumerator e = l.GetEnumerator();
+            while (e.MoveNext())
+            {
+                TLV tlv = (TLV)e.Current;
+                switch (tlv.Type)
+                {
+                    case 0: PhoneNumber = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                }
+            }
+        }
+
+        public TLVList ToTLVList()
+        {
+            TLVList l = new TLVList(Type);
+            l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(PhoneNumber)));
+
+            return l;
+        }
+    }
+
+    /// <summary>
+    /// A SetPhoneNumber Response.
+    /// </summary>
+    public struct SetPhoneNumberResponse
+    {
+        public const ushort Type = 5;
+
+        public TLVList ToTLVList()
+        {
+            return new TLVList();
+        }
+    }
+    #endregion
+
+    #region RaiseAlert
+    public struct RaiseAlertRequest
+    {
+        public const ushort Type = 6;
+
+        public RaiseAlertRequest(byte[] buf)
+        {
+        }
+
+        public TLVList ToTLVList()
+        {
+            return new TLVList();
+        }
+    }
+
+    /// <summary>
+    /// A SetPhoneNumber Response.
+    /// </summary>
+    public struct RaiseAlertResponse
+    {
+        public const ushort Type = 7;
+
+        public TLVList ToTLVList()
+        {
+            return new TLVList();
+        }
+    }
+    #endregion
 
 #if DONTUSETHIS
 	/// <summary>

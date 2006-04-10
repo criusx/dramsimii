@@ -20,3 +20,4 @@ bin\Debug\MPR DLL.dll
 bin\Debug\MPR DLL.pdb
 obj\Debug\WJ2.exe
 obj\Debug\WJ2.pdb
+bin\Debug\Bluetooth.dll
