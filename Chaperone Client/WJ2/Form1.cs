@@ -238,6 +238,10 @@ namespace WJ2
                     invProgressBar.Hide();
                     waypointBox.Show();
                     breakBox.Show();
+                    bool oldInvTimer = invTimer.Enabled;
+                    bool oldBreakTimer = breakTimer.Enabled;
+                    invTimer.Enabled = false;
+                    breakTimer.Enabled = false;
 
 //                     for (int i = 0; i < inventoryTags.Count; ++i)
 //                         inventoryListBox.Items.Insert(i, inventoryTags[i]);
@@ -257,6 +261,7 @@ namespace WJ2
                         byte locL;
                         if (firstScan == true)
                         {
+                            firstScan = false;
                             locL = 0;
                         }
                         else
@@ -284,6 +289,8 @@ namespace WJ2
                             inventoryListBox.Items.Insert(i, inventoryTags[i].ToString());
                     }
 
+                    invTimer.Enabled = oldInvTimer;
+                    breakTimer.Enabled = oldBreakTimer;
                     return;
 
 
@@ -436,11 +443,12 @@ namespace WJ2
             //RFIDTag a a.ToByteArray
             
             string selectedTag = inventoryTags[inventoryListBox.SelectedIndex].ToString();
+            selectedTag.Replace(" ","");
             string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
             int lastTwoI = Convert.ToInt32(lastTwo,16);            
             string location = waypointBox.SelectedItem.ToString() == "A" ? "a_pda" : "b_pda";
             
-            webBr.setUrlAndShow(new Uri("http://" + hostnameBox.Text + "/pda.html?rfid="+ lastTwoI.ToString()));
+            webBr.setUrlAndShow(new Uri("http://" + "128.8.46.235/pda_item.jsp?" + selectedTag));
         }
 
         /// <summary>
@@ -767,7 +775,8 @@ namespace WJ2
             }
             catch (Exception ex)
             {
-
+                radTimer.Enabled = false;
+                button1.BackColor = Color.Green;
             }
         }
 
@@ -775,14 +784,28 @@ namespace WJ2
         {
             try
             {
+                radTimer.Enabled = false;
                 if (radSensor.poll())
                 {
                     // send warning packet
+                    cc = new ClientConnection();
+                    cc.Connect(hostnameBox.Text, 1555);
+                    cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(textBox1.Text));
+                    cc.SendRaiseAlertPacket(new RaiseAlertRequest());
+                    cc.Close();
                 }
+                radTimer.Enabled = true;
             }
             catch (Exception ex)
             {
-
+                try
+                {
+                    cc.Close();
+                }
+                catch (Exception ex2)
+                {
+                    radTimer.Enabled = false;
+                }
             }
         }
 

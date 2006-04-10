@@ -90,6 +90,7 @@ namespace WJ2
             this.invTimer = new System.Windows.Forms.Timer();
             this.breakTimer = new System.Windows.Forms.Timer();
             this.radTimer = new System.Windows.Forms.Timer();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -630,12 +631,13 @@ namespace WJ2
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.textBox1);
             this.tabPage5.Controls.Add(this.label15);
             this.tabPage5.Controls.Add(this.button1);
             this.tabPage5.Controls.Add(this.radUpDown);
             this.tabPage5.Location = new System.Drawing.Point(0, 0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(232, 268);
+            this.tabPage5.Size = new System.Drawing.Size(240, 271);
             this.tabPage5.Text = "Rad";
             // 
             // label15
@@ -704,6 +706,14 @@ namespace WJ2
             // 
             this.radTimer.Interval = 30000;
             this.radTimer.Tick += new System.EventHandler(this.radTimer_Tick);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(133, 117);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 21);
+            this.textBox1.TabIndex = 20;
+            this.textBox1.Text = "textBox1";
             // 
             // Form1
             // 
@@ -790,6 +800,7 @@ namespace WJ2
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.NumericUpDown radUpDown;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
