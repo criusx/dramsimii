@@ -11,7 +11,7 @@
 
 #include "dramsim2.h"
 
-int dram_system::convert_address(addresses &this_a)
+int dram_system::convert_address(__inout addresses &this_a)
 {
 	unsigned int input_a;
 	unsigned int temp_a, temp_b;
@@ -454,7 +454,7 @@ command *dram_system::get_next_command(const int chan_id)
 		{
 			for(int bank_id = 0; bank_id< system_config.rank_count; ++bank_id)
 			{
-				temp_c =  channel->rank[rank_id].bank[bank_id].per_bank_q.read(0);
+				temp_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
 				if(temp_c != NULL)
 				{
 					if((oldest_command_time < 0) || (oldest_command_time > temp_c->enqueue_time))
@@ -466,7 +466,7 @@ command *dram_system::get_next_command(const int chan_id)
 				}
 			}
 		}
-		return  channel->rank[oldest_rank_id].bank[oldest_bank_id].per_bank_q.dequeue();
+		return  channel->get_rank(oldest_rank_id)->bank[oldest_bank_id].per_bank_q.dequeue();
 	}
 	// alternate ranks as we go down banks
 	else if(system_config.command_ordering_algorithm == RANK_ROUND_ROBIN)
@@ -475,11 +475,11 @@ command *dram_system::get_next_command(const int chan_id)
 		rank_id 	= last_c->addr.rank_id;
 		if(last_c->this_command == RAS_COMMAND)
 		{
-			temp_c =  channel->rank[rank_id].bank[bank_id].per_bank_q.read(0);
+			temp_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
 			if((temp_c != NULL) &&
 				((temp_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->this_command == CAS_AND_PRECHARGE_COMMAND)))
 			{
-				return  channel->rank[rank_id].bank[bank_id].per_bank_q.dequeue();
+				return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 			}
 			else
 			{
@@ -516,20 +516,20 @@ command *dram_system::get_next_command(const int chan_id)
 					}
 				}
 			}
-			temp_c =  channel->rank[rank_id].bank[bank_id].per_bank_q.read(0);
+			temp_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
 			if(temp_c != NULL)
 			{
 				if(system_config.read_write_grouping == false)
 				{
-					return ((channel->rank[rank_id]).bank[bank_id]).per_bank_q.dequeue();
+					return channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 				}
 				else					/* have to follow read_write grouping considerations */
 				{
-					next_c =  channel->rank[rank_id].bank[bank_id].per_bank_q.read(1);	/* look at the second command */
+					next_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(1);	/* look at the second command */
 					if (((next_c->this_command == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
 						((next_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION)))
 					{
-						return  channel->rank[rank_id].bank[bank_id].per_bank_q.dequeue();
+						return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 					}
 				}
 #ifdef DEBUG_FLAG_2
@@ -537,7 +537,7 @@ command *dram_system::get_next_command(const int chan_id)
 				cerr << temp_c->this_command;
 				cerr << " followed by ";
 				cerr << next_c->this_command;
-				cerr << "count [" << channel->rank[rank_id].bank[bank_id].per_bank_q.get_count() << "]" << endl;
+				cerr << "count [" << channel->get_rank(rank_id)->bank[bank_id].per_bank_q.get_count() << "]" << endl;
 #endif
 			}
 #ifdef DEBUG_FLAG_2
@@ -552,10 +552,10 @@ command *dram_system::get_next_command(const int chan_id)
 		rank_id = last_c->addr.rank_id;
 		if(last_c->this_command == RAS_COMMAND)
 		{
-			temp_c = (command*) channel->rank[rank_id].bank[bank_id].per_bank_q.read(0);
+			temp_c = (command*) channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
 			if((temp_c != NULL) &&
 				((temp_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->this_command == CAS_AND_PRECHARGE_COMMAND))){
-					return (command*) channel->rank[rank_id].bank[bank_id].per_bank_q.dequeue();
+					return (command*) channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 			}
 			else
 			{
@@ -589,7 +589,7 @@ command *dram_system::get_next_command(const int chan_id)
 					}
 				}
 			}
-			temp_c = ((channel->rank[rank_id]).bank[bank_id]).per_bank_q.read(0);
+			temp_c = channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
 			if(temp_c != NULL)
 			{	
 				if(system_config.read_write_grouping == false)
@@ -598,10 +598,10 @@ command *dram_system::get_next_command(const int chan_id)
 				}
 				else					/* have to follow read_write grouping considerations */
 				{
-					next_c =  channel->rank[rank_id].bank[bank_id].per_bank_q.read(1);	/* look at the second command */
+					next_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(1);	/* look at the second command */
 					if (((next_c->this_command == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
 						((next_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION))){
-							return  channel->rank[rank_id].bank[bank_id].per_bank_q.dequeue();
+							return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 					}
 				}
 #ifdef DEBUG_FLAG_2
@@ -621,7 +621,7 @@ command *dram_system::get_next_command(const int chan_id)
 			algorithm.WHCC_offset[0] = (algorithm.WHCC_offset[0] + 1) % algorithm.WHCC.get_count();
 			rank_id 	= ptr_c->addr.rank_id;
 			bank_id 	= ptr_c->addr.bank_id;
-			candidate_c =  channel->rank[rank_id].bank[bank_id].per_bank_q.read(0);
+			candidate_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
 
 			if((candidate_c != NULL) && (candidate_c->this_command == RAS_COMMAND))
 			{
@@ -629,11 +629,11 @@ command *dram_system::get_next_command(const int chan_id)
 				{
 					if(bank_id == 0)	// see if this rank needs a R/W switch around
 						algorithm.transaction_type[rank_id] = channel->set_read_write_type(rank_id,system_config.bank_count);
-					next_c =  channel->rank[rank_id].bank[bank_id].per_bank_q.read(1);
+					next_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(1);
 					if(((algorithm.transaction_type[rank_id] == READ_TRANSACTION) && (next_c->this_command == CAS_AND_PRECHARGE_COMMAND)) ||
 						((algorithm.transaction_type[rank_id] == WRITE_TRANSACTION) && (next_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND))){
 							candidate_found = true;
-							return  channel->rank[rank_id].bank[bank_id].per_bank_q.dequeue();
+							return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 					}
 				}
 			}
@@ -642,7 +642,7 @@ command *dram_system::get_next_command(const int chan_id)
 				if((ptr_c->this_command == CAS_COMMAND) && (algorithm.transaction_type[rank_id] == READ_TRANSACTION))
 				{
 					candidate_found = true;
-					return  channel->rank[rank_id].bank[bank_id].per_bank_q.dequeue();
+					return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 				}
 			}
 			else if((candidate_c != NULL) && (candidate_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND))
@@ -650,7 +650,7 @@ command *dram_system::get_next_command(const int chan_id)
 				if((ptr_c->this_command == CAS_COMMAND) && (algorithm.transaction_type[rank_id] == WRITE_TRANSACTION))
 				{
 					candidate_found = false;
-					return  channel->rank[rank_id].bank[bank_id].per_bank_q.dequeue();
+					return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 				}
 			}
 			else
@@ -669,7 +669,7 @@ command *dram_system::get_next_command(const int chan_id)
 		{
 			for (bank_id = system_config.bank_count; bank_id >= 0; --bank_id)
 			{
-				command *challenger_command = channel->rank[rank_id].bank[bank_id].per_bank_q.read(0);
+				command *challenger_command = channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
 				if (challenger_command != NULL)
 				{
 					int challenger_gap = min_protocol_gap(chan_id,challenger_command);
@@ -681,7 +681,7 @@ command *dram_system::get_next_command(const int chan_id)
 				}
 			}
 		}
-		temp_c = channel->rank[candidate_command->addr.rank_id].bank[candidate_command->addr.bank_id].per_bank_q.dequeue();
+		temp_c = channel->get_rank(candidate_command->addr.rank_id)->bank[candidate_command->addr.bank_id].per_bank_q.dequeue();
 
 #ifdef DEBUG
 		cerr << "R[" << candidate_command->addr.rank_id << "] B[" << candidate_command->addr.bank_id << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << channel->time << "]" << endl;
@@ -706,14 +706,14 @@ dram_system::~dram_system()
 void dram_system::update_system_time()
 {
 	int oldest_chan_id = system_config.chan_count;
-	tick_t oldest_time = channel[system_config.chan_count].time;
+	tick_t oldest_time = channel[system_config.chan_count].get_time();
 
 	for (int chan_id = system_config.chan_count - 1; chan_id > 0; --chan_id)
 	{
-		if (channel[chan_id].time < oldest_time)
+		if (channel[chan_id].get_time() < oldest_time)
 		{
 			oldest_chan_id = chan_id;
-			oldest_time = channel[chan_id].time;
+			oldest_time = channel[chan_id].get_time();
 		}
 	}
 
@@ -739,7 +739,7 @@ void dram_system::get_next_random_request(transaction *this_t)
 		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
 		// or keep to this rank_id 
 
-		int rank_id = channel[this_t->addr.chan_id].last_rank_id;
+		int rank_id = channel[this_t->addr.chan_id].get_last_rank_id();
 
 		rand_s(&j);
 		if (input_stream.rank_locality * UINT_MAX < j)
@@ -753,7 +753,7 @@ void dram_system::get_next_random_request(transaction *this_t)
 			this_t->addr.rank_id = rank_id;
 		}
 
-		int bank_id = ((channel[this_t->addr.chan_id]).rank[rank_id]).last_bank_id;
+		int bank_id = channel[this_t->addr.chan_id].get_rank(rank_id)->last_bank_id;
 
 		rand_s(&j);
 
@@ -768,7 +768,7 @@ void dram_system::get_next_random_request(transaction *this_t)
 			this_t->addr.bank_id = bank_id;
 		}
 
-		int row_id = (((channel[this_t->addr.chan_id]).rank[rank_id]).bank[bank_id]).row_id;
+		int row_id = channel[this_t->addr.chan_id].get_rank(rank_id)->bank[bank_id].row_id;
 
 		rand_s(&j);
 
@@ -846,22 +846,22 @@ void dram_system::execute_command(command *this_c,const int gap)
 	unsigned int bank_id 	= this_c->addr.bank_id;
 	unsigned int row_id = this_c->addr.row_id;
 
-	dram_channel	&channel= dram_system::channel[chan_id];
-	tick_t now = channel.time+gap;
+	dram_channel &channel= dram_system::channel[chan_id];
+	tick_t now = channel.get_time()+gap;
 	int t_al;
 	//int history_q_count;
-	rank_c &this_r = channel.rank[rank_id];
-	bank_c &this_b = this_r.bank[bank_id];
+	rank_c *this_r = channel.get_rank(rank_id);
+	bank_c &this_b = this_r->bank[bank_id];
 
 	transaction *host_t = NULL;
 	//queue &history_q = channel.history_q;
 	//  queue *complete_q;
 
-	this_r.last_bank_id = bank_id;
+	this_r->last_bank_id = bank_id;
 
 	t_al = this_c->posted_cas ? timing_specification.t_al : 0;
 
-	channel.time += gap;
+	channel.set_time(channel.get_time() + gap);
 
 	switch(this_c->this_command)
 	{
@@ -870,21 +870,21 @@ void dram_system::execute_command(command *this_c,const int gap)
 		this_b.row_id = row_id;
 		++this_b.ras_count;
 
-		if(this_r.last_ras_times.get_count() == 4)	/* ras time history queue, per rank */
-			this_ras_time	= (tick_t *) this_r.last_ras_times.dequeue();
+		if(this_r->last_ras_times.get_count() == 4)	/* ras time history queue, per rank */
+			this_ras_time	= (tick_t *) this_r->last_ras_times.dequeue();
 		else
 			this_ras_time = new tick_t;
 
 		*this_ras_time	= now;
-		this_r.last_ras_times.enqueue(this_ras_time);
+		this_r->last_ras_times.enqueue(this_ras_time);
 		break;
 	case CAS_AND_PRECHARGE_COMMAND:
 		this_b.last_prec_time = max(now + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_b.last_ras_time + timing_specification.t_ras);
 	case CAS_COMMAND:
 		this_b.last_cas_time = now;
-		this_r.last_cas_time = now;
+		this_r->last_cas_time = now;
 		this_b.last_cas_length = this_c->length;
-		this_r.last_cas_length = this_c->length;
+		this_r->last_cas_length = this_c->length;
 		++this_b.cas_count;
 		host_t = this_c->host_t;
 		host_t->completion_time	= now + timing_specification.t_cas;
@@ -893,9 +893,9 @@ void dram_system::execute_command(command *this_c,const int gap)
 		this_b.last_prec_time = max(now + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_b.last_ras_time + timing_specification.t_ras);
 	case CAS_WRITE_COMMAND:
 		this_b.last_casw_time = now;
-		this_r.last_casw_time = now;
+		this_r->last_casw_time = now;
 		this_b.last_casw_length= this_c->length;
-		this_r.last_casw_length= this_c->length;
+		this_r->last_casw_length= this_c->length;
 		this_b.casw_count++;
 		host_t = this_c->host_t;
 		host_t->completion_time	= now;
@@ -922,7 +922,7 @@ void dram_system::execute_command(command *this_c,const int gap)
 	/* transaction complete? if so, put in completion queue */
 	if(host_t != NULL) 
 	{
-		if(channel.completion_q.enqueue(host_t) == FAILURE)
+		if(channel.complete(host_t) == FAILURE)
 		{
 			cerr << "Fatal error, cannot insert transaction into completion queue" << endl
 				<< "Increase execution q depth and resume. Should not occur. Check logic" << endl;
@@ -988,15 +988,14 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 	//FIXME: some max() functions take uninit values
 	int     min_gap;
 	dram_channel &channel = dram_system::channel[channel_no];
-	//int     debug;
 	//int     rank_id;
 	int     bank_id;
 	int     row_id;
-	const int &this_rank_id = this_c->addr.rank_id;
-	const int &this_bank_id = this_c->addr.bank_id;
-	rank_c	&this_r= channel.rank[this_rank_id];
+	const int this_rank_id = this_c->addr.rank_id;
+	const int this_bank_id = this_c->addr.bank_id;
+	rank_c	*this_r= channel.get_rank(this_rank_id);
 	bank_c	&this_b= this_r.bank[this_bank_id];
-	tick_t 	now = channel.time;
+	tick_t 	now = channel.get_time();
 	int     t_cas_gap = 0;
 	//int     t_faw_gap = 0;
 	int     t_ras_gap = 0;
@@ -1085,12 +1084,12 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 		{
 			if(rank_id != this_rank_id)
 			{
-				if((channel.rank[rank_id]).last_cas_time > other_r_last_cas_time)
+				if(channel.get_rank(rank_id)->last_cas_time > other_r_last_cas_time)
 				{
-					other_r_last_cas_time   = (channel.rank[rank_id]).last_cas_time;
-					other_r_last_cas_length = (channel.rank[rank_id]).last_cas_length;
+					other_r_last_cas_time   = channel.get_rank(rank_id).last_cas_time;
+					other_r_last_cas_length = channel.get_rank(rank_id).last_cas_length;
 				}
-				if((channel.rank[rank_id]).last_casw_time > other_r_last_casw_time)
+				if((channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
 				{
 					other_r_last_casw_time   = (channel.rank[rank_id]).last_casw_time;
 					other_r_last_casw_length = (channel.rank[rank_id]).last_casw_length;
@@ -1138,15 +1137,15 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 		{
 			if (rank_id != this_rank_id)
 			{
-				if((channel.rank[rank_id]).last_cas_time > other_r_last_cas_time)
+				if (channel.get_rank(rank_id).last_cas_time > other_r_last_cas_time)
 				{
 					other_r_last_cas_time   = (channel.rank[rank_id]).last_cas_time;
 					other_r_last_cas_length = (channel.rank[rank_id]).last_cas_length;
 				}
-				if((channel.rank[rank_id]).last_casw_time > other_r_last_casw_time)
+				if( channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
 				{
-					other_r_last_casw_time   = channel.rank[rank_id].last_casw_time;
-					other_r_last_casw_length = channel.rank[rank_id].last_casw_length;
+					other_r_last_casw_time   = channel.get_rank(rank_id)->last_casw_time;
+					other_r_last_casw_length = channel.get_rank(rank_id)->last_casw_length;
 				}
 			}
 		}
@@ -1206,7 +1205,7 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 
 enum input_status_t DRAMSim2::dram_system::transaction2commands(transaction *this_t) 
 {
-	queue<command> *bank_q = &(channel[this_t->addr.chan_id].rank[this_t->addr.rank_id].bank[this_t->addr.bank_id].per_bank_q);
+	queue<command> *bank_q = &(channel[this_t->addr.chan_id].get_rank(this_t->addr.rank_id).bank[this_t->addr.bank_id].per_bank_q);
 	
 	if (system_config.row_buffer_management_policy == CLOSE_PAGE)
 	{
@@ -1520,7 +1519,7 @@ void dram_system::run_simulations()
 		{
 			statistics.collect_transaction_stats(input_t);
 
-			while(channel[input_t->addr.chan_id].channel_q.enqueue(input_t) != SUCCESS)
+			while(channel[input_t->addr.chan_id].enqueue(input_t) != SUCCESS)
 			{
 				/* tried to stuff req in channel queue, stalled, so try to drain channel queue first */
 				/* and drain it completely */

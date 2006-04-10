@@ -457,16 +457,25 @@ namespace DRAMSim2
 
 	class dram_channel
 	{
+	private:
+		tick_t time;					// channel time, allow for channel concurrency
+		rank_c *rank;					// pointer to the array of ranks
+		int refresh_row_index;			// the row index to be refreshed
+		tick_t last_refresh_time;		// tells me when last refresh was done
+		int last_rank_id;				// id of the last accessed rank of this channel
+		queue<transaction>transaction_q;// unified system queue
+		queue<transaction>refresh_q;	// queue of refresh transactions
+		queue<command> history_q;		// what were the last N commands to this channel?
+		queue<transaction> completion_q;// completed_q, can send status back to memory controller
+
 	public:
-		tick_t time;              /* channel time, allow for channel concurrency */
-		rank_c *rank;
-		int refresh_row_index;    /* the row index to be refreshed */
-		tick_t last_refresh_time; /* tells me when last refresh was done */
-		int last_rank_id;         /* id of the last accessed rank of this channel */
-		queue<transaction> channel_q;          /* unified system queue */
-		queue<transaction> refresh_q;   // FIXME: transaction is a guess
-		queue<command> history_q;          /* what were the last N commands to this channel? */
-		queue<transaction> completion_q;       /* completed_q, can send status back to BIU */
+		// the get_ functions
+		rank_c *get_rank(const unsigned rank_num) const { return &(rank[rank_num]); }
+		tick_t get_time() const { return time; }
+		void set_time(tick_t new_time) { time = new_time; }
+		int get_last_rank_id() const { return last_rank_id; }
+		input_status_t enqueue(transaction *in) { return transaction_q.enqueue(in); }
+		input_status_t complete(transaction *in) { return completion_q.enqueue(in); }
 
 		dram_channel();
 		~dram_channel();
@@ -635,7 +644,7 @@ namespace DRAMSim2
 		command *get_next_command(int);
 		//void print_transaction(transaction*);
 		enum input_status_t transaction2commands( transaction*);
-		int min_protocol_gap(int,const command *);
+		int min_protocol_gap(const int,const command *);
 		int find_oldest_channel() const;
 		void execute_command(command *, int );
 		void update_system_time();

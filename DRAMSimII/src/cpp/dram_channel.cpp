@@ -40,7 +40,7 @@ void dram_channel::init_controller(int transaction_queue_depth,
 								   int bank_count,
 								   int per_bank_queue_depth)
 {
-	channel_q.init(transaction_queue_depth);
+	transaction_q.init(transaction_queue_depth);
 	history_q.init(history_queue_depth);
 	completion_q.init(completion_queue_depth);
 	refresh_q.init(refresh_queue_depth);
