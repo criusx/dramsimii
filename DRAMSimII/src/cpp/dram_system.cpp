@@ -58,21 +58,21 @@ int dram_system::convert_address(__inout addresses &this_a)
 	{
 	case BURGER_BASE_MAP:		/* Good for only Rambus memory really */
 	
-		/* BURGER BASE :
-		* |<-------------------------------->|<------>|<------>|<---------------->|<----------------->|<----------->|
-		*                           row id     bank id   Rank id   Column id         Channel id          Byte Address
-		*                                                          DRAM page size/   intlog2(chan. count)   within packet
-		*                                                          Bus Width         used if chan. > 1
-		*
-		*               As applied to system (1 chan) using 256 Mbit RDRAM chips:
-		*               512 rows X 32 banks X 128 columns X 16 bytes per column.
-		*		 16 ranks gets us to 512 MByte.	
-		*
-		*    31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
-		*             |<---------------------->| |<---------->| |<------->| |<---------------->|  |<------>|
-		*                      row id                 bank         rank          Col id            16 byte
-		*                      (512 rows)              id           id           2KB/16B            packet
-		*/
+	// BURGER BASE :
+	// |<-------------------------------->|<------>|<------>|<---------------->|<----------------->|<----------->|
+	//                          row id     bank id   Rank id   Column id         Channel id          Byte Address
+	//                                                         DRAM page size/   intlog2(chan. count)   within packet
+	//                                                         Bus Width         used if chan. > 1
+	//
+	//               As applied to system (1 chan) using 256 Mbit RDRAM chips:
+	//               512 rows X 32 banks X 128 columns X 16 bytes per column.
+	//		 16 ranks gets us to 512 MByte.	
+	//
+	//    31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+	//             |<---------------------->| |<---------->| |<------->| |<---------------->|  |<------>|
+	//                      row id                 bank         rank          Col id            16 byte
+	//                      (512 rows)              id           id           2KB/16B            packet
+		
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> chan_addr_depth;
@@ -437,7 +437,9 @@ command *dram_system::get_next_command(const int chan_id)
 	tick_t oldest_command_time;
 
 	//tail_offset = history_q.get_count() - 1;
-	if((last_c = channel->history_q.read(channel->history_q.get_count() - 1)) == NULL)		/* nothing in history q, start from rank 0, bank 0 */
+
+	// nothing in history q, start from rank 0, bank 0
+	if((last_c = channel->history_q.read(channel->history_q.get_count() - 1)) == NULL)		
 	{
 		last_c = free_command_pool.acquire_item();
 		last_c->addr.rank_id = system_config.rank_count - 1;
@@ -931,7 +933,6 @@ void dram_system::execute_command(command *this_c,const int gap)
 	}
 
 	/* record command history. Check to see if this can be removed */
-
 	if (channel.history_q.get_count() == system_config.history_queue_depth)
 	{		
 		/*done with this command, release into pool */
@@ -1525,7 +1526,7 @@ void dram_system::run_simulations()
 				/* and drain it completely */
 				/* unfortunately, we may have to drain another channel first. */
 				int oldest_chan_id = find_oldest_channel();
-				transaction *temp_t = channel[oldest_chan_id].transaction_q.dequeue();
+				transaction *temp_t = channel[oldest_chan_id].get_transaction();
 #ifdef DEBUG_FLAG
 				cerr << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
 #endif

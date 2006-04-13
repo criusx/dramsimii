@@ -254,11 +254,6 @@ namespace DRAMSim2
 		DRAM_COMMAND_EXECUTE		/* schedule DRAM command for execution */
 	};
 
-
-
-	
-
-
 	// include the template code for queues
 #include "queue.h"
 
@@ -301,13 +296,13 @@ namespace DRAMSim2
 	class command
 	{
 	public:
-		enum command_type_t this_command;                        /* which command is this? */
-		tick_t start_time;                     /* when did the transaction start? */
-		tick_t enqueue_time;			/* when did it make it into the queues? */
+		enum command_type_t this_command;	// which command is this?
+		tick_t start_time;					// when did the transaction start?
+		tick_t enqueue_time;				// when did it make it into the queues?
 		tick_t completion_time;
 		addresses	addr;
-		transaction *host_t;	/* backward pointer to the original transaction */
-		/** Added list of completion times in order to clean up code */
+		transaction *host_t;				// backward pointer to the original transaction
+		/// Added list of completion times in order to clean up code 
 		tick_t  link_comm_tran_comp_time;
 		tick_t  amb_proc_comp_time;
 		tick_t  dimm_comm_tran_comp_time;
@@ -318,13 +313,14 @@ namespace DRAMSim2
 
 		/* Variables added for the FB-DIMM */
 		int bundle_id;              /* Bundle into which command is being sent - Do we need this ?? */
-		unsigned int tran_id;                /*      The transaction id number */
+		unsigned tran_id;                /*      The transaction id number */
 		int data_word;              /* Which portion of data is returned i.e. entire cacheline or fragment thereof which portions are being sent*/
 		int data_word_position;     /** Which part of the data transmission are we doing : postions include FIRST , MIDDLE, LAST **/
 		int refresh;                /** This is used to determine if the ras/prec are part of refresh **/
 		bool posted_cas;             /** This is used to determine if the ras + cas were in the same bundle **/
 		int length;
 		command();
+		explicit command(const command &);
 	};
 
 
@@ -474,6 +470,7 @@ namespace DRAMSim2
 		tick_t get_time() const { return time; }
 		void set_time(tick_t new_time) { time = new_time; }
 		int get_last_rank_id() const { return last_rank_id; }
+		transaction *get_transaction() { return transaction_q.dequeue(); }
 		input_status_t enqueue(transaction *in) { return transaction_q.enqueue(in); }
 		input_status_t complete(transaction *in) { return completion_q.enqueue(in); }
 		transaction * complete() { return completion_q.dequeue(); }
