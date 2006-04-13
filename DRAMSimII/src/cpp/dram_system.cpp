@@ -994,7 +994,7 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 	const int this_rank_id = this_c->addr.rank_id;
 	const int this_bank_id = this_c->addr.bank_id;
 	rank_c	*this_r= channel.get_rank(this_rank_id);
-	bank_c	&this_b= this_r.bank[this_bank_id];
+	bank_c	&this_b= this_r->bank[this_bank_id];
 	tick_t 	now = channel.get_time();
 	int     t_cas_gap = 0;
 	//int     t_faw_gap = 0;
@@ -1039,7 +1039,7 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 		t_rp_gap = max(0 , (int)(this_b.last_prec_time - now) + timing_specification.t_rp);
 
 		/* respect t_rrd of all other banks of same rank*/
-		ras_q_count	= this_r.last_ras_times.get_count();
+		ras_q_count	= this_r->last_ras_times.get_count();
 
 		t_rrd_gap;
 		if(ras_q_count == 0)
@@ -1048,7 +1048,7 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 		}
 		else 
 		{
-			last_ras_time	= (tick_t *)this_r.last_ras_times.read(ras_q_count - 1);	/* read tail end of ras history */
+			last_ras_time	= this_r->last_ras_times.read(ras_q_count - 1);	/* read tail end of ras history */
 			t_rrd_gap = max(t_rrd_gap,(int)(*last_ras_time + timing_specification.t_rrd - now));
 		}
 
@@ -1059,7 +1059,7 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 		}
 		else
 		{
-			tick_t *fourth_ras_time = this_r.last_ras_times.read(0); /// read head of ras history
+			tick_t *fourth_ras_time = this_r->last_ras_times.read(0); /// read head of ras history
 			t_faw_gap = max(0,(int)(*fourth_ras_time - now) + timing_specification.t_faw );
 		}
 
@@ -1086,13 +1086,13 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 			{
 				if(channel.get_rank(rank_id)->last_cas_time > other_r_last_cas_time)
 				{
-					other_r_last_cas_time   = channel.get_rank(rank_id).last_cas_time;
-					other_r_last_cas_length = channel.get_rank(rank_id).last_cas_length;
+					other_r_last_cas_time   = channel.get_rank(rank_id)->last_cas_time;
+					other_r_last_cas_length = channel.get_rank(rank_id)->last_cas_length;
 				}
-				if((channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
+				if(channel.get_rank(rank_id)->last_casw_time > other_r_last_casw_time)
 				{
-					other_r_last_casw_time   = (channel.rank[rank_id]).last_casw_time;
-					other_r_last_casw_length = (channel.rank[rank_id]).last_casw_length;
+					other_r_last_casw_time   = channel.get_rank(rank_id)->last_casw_time;
+					other_r_last_casw_length = channel.get_rank(rank_id)->last_casw_length;
 				}
 			}
 		}
@@ -1103,11 +1103,11 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 		//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 		//  DW 3/9/2006  replace the line after next with the next line
 		//t_cas_gap	= max(0,(int)(this_r.last_cas_time + cas_length - now));
-		t_cas_gap	= max(0,(int)(this_r.last_cas_time + timing_specification.t_burst - now));
+		t_cas_gap	= max(0,(int)(this_r->last_cas_time + timing_specification.t_burst - now));
 		/* respect last cas write of same rank */
 		//  DW 3/9/2006 replace the line after next with the next line
 		//t_cas_gap	= max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
-		t_cas_gap	= max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wtr - now));
+		t_cas_gap	= max(t_cas_gap,(int)(this_r->last_casw_time + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wtr - now));
 
 		if(system_config.rank_count > 1) {
 			/* respect most recent cas of different rank */
@@ -1137,12 +1137,12 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 		{
 			if (rank_id != this_rank_id)
 			{
-				if (channel.get_rank(rank_id).last_cas_time > other_r_last_cas_time)
+				if (channel.get_rank(rank_id)->last_cas_time > other_r_last_cas_time)
 				{
-					other_r_last_cas_time   = (channel.rank[rank_id]).last_cas_time;
-					other_r_last_cas_length = (channel.rank[rank_id]).last_cas_length;
+					other_r_last_cas_time   = channel.get_rank(rank_id)->last_cas_time;
+					other_r_last_cas_length = channel.get_rank(rank_id)->last_cas_length;
 				}
-				if( channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
+				if( channel.get_rank(rank_id)->last_casw_time > other_r_last_casw_time)
 				{
 					other_r_last_casw_time   = channel.get_rank(rank_id)->last_casw_time;
 					other_r_last_casw_length = channel.get_rank(rank_id)->last_casw_length;
@@ -1155,13 +1155,13 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 		/* respect last cas to same rank */
 		//  DW 3/9/2006  replace the line after next with the next line
 		//t_cas_gap	= max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-		t_cas_gap	= max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtrs - timing_specification.t_cwd - now));
+		t_cas_gap	= max(0,(int)(this_r->last_cas_time + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtrs - timing_specification.t_cwd - now));
 		/* respect last cas to different ranks */
 		t_cas_gap	= max(t_cas_gap,(int)(other_r_last_cas_time + timing_specification.t_cas + other_r_last_cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
 		/* respect last cas write to same rank */
 		//  DW 3/9/2006  replace the line after next with the next line
 		//t_cas_gap	= max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
-		t_cas_gap	= max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_burst - now));
+		t_cas_gap	= max(t_cas_gap,(int)(this_r->last_casw_time + timing_specification.t_burst - now));
 		/* respect last cas write to different ranks */
 		t_cas_gap	= max(t_cas_gap,(int)(other_r_last_casw_time + other_r_last_casw_length - now));
 		min_gap		= max(t_ras_gap,t_cas_gap);
@@ -1205,7 +1205,7 @@ int DRAMSim2::dram_system::min_protocol_gap(const int channel_no,const command *
 
 enum input_status_t DRAMSim2::dram_system::transaction2commands(transaction *this_t) 
 {
-	queue<command> *bank_q = &(channel[this_t->addr.chan_id].get_rank(this_t->addr.rank_id).bank[this_t->addr.bank_id].per_bank_q);
+	queue<command> *bank_q = &(channel[this_t->addr.chan_id].get_rank(this_t->addr.rank_id)->bank[this_t->addr.bank_id].per_bank_q);
 	
 	if (system_config.row_buffer_management_policy == CLOSE_PAGE)
 	{
@@ -1525,7 +1525,7 @@ void dram_system::run_simulations()
 				/* and drain it completely */
 				/* unfortunately, we may have to drain another channel first. */
 				int oldest_chan_id = find_oldest_channel();
-				transaction *temp_t = channel[oldest_chan_id].channel_q.dequeue();
+				transaction *temp_t = channel[oldest_chan_id].transaction_q.dequeue();
 #ifdef DEBUG_FLAG
 				cerr << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
 #endif
@@ -1543,8 +1543,8 @@ void dram_system::run_simulations()
 						cerr << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 						execute_command(temp_c, min_gap);
-						update_system_time();
-						transaction *completed_t = channel[oldest_chan_id].completion_q.dequeue();
+						update_system_time(); 
+						transaction *completed_t = channel[oldest_chan_id].complete();
 						if(completed_t != NULL)
 							free_transaction_pool.release_item(completed_t);
 					}
@@ -1620,14 +1620,14 @@ time(0) /// start the clock
 int dram_system::find_oldest_channel() const
 {
 	int oldest_chan_id = 0;
-	tick_t oldest_time = channel[0].time;
+	tick_t oldest_time = channel[0].get_time();
 
 	for (int chan_id = 1; chan_id < system_config.chan_count ; ++chan_id)
 	{
-		if(channel[chan_id].time < oldest_time)
+		if(channel[chan_id].get_time() < oldest_time)
 		{
 			oldest_chan_id = chan_id;
-			oldest_time = channel[chan_id].time;
+			oldest_time = channel[chan_id].get_time();
 		}
 	}
 	return oldest_chan_id;
