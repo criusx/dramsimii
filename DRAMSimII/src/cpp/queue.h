@@ -108,12 +108,12 @@ public:
 		}
 	}
 
-	inline int get_count()
+	inline int get_count() const
 	{
 		return count;
 	}
 
-	T *read(int offset)
+	T *read(int offset) const
 	{
 		if((offset >= count) || (offset < 0))
 			return NULL;
@@ -152,6 +152,11 @@ public:
 	int freecount() const
 	{
 		return depth - count;
+	}
+
+	T* newest() const
+	{
+		return read(count - 1);
 	}
 
 	queue(const queue<T>& a): depth(a.depth), count(0), head_ptr(0), tail_ptr(0)

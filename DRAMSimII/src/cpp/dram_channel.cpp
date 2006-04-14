@@ -54,6 +54,15 @@ void dram_channel::init_controller(int transaction_queue_depth,
 		rank[i].init_ranks(bank_count,per_bank_queue_depth);
 }
 
+void DRAMSim2::dram_channel::record_command(command *latest_command, queue<command> &free_command_pool)
+{
+	if (history_q.enqueue(latest_command) == FAILURE)
+	{
+		free_command_pool.release_item(history_q.dequeue());
+		history_q.enqueue(latest_command); //FIXME: assert that this is != FAILURE
+	}
+
+}
 
 
 enum transaction_type_t	dram_channel::set_read_write_type(int rank_id,int bank_count)

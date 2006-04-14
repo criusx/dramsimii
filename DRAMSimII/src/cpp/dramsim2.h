@@ -473,7 +473,9 @@ namespace DRAMSim2
 		transaction *get_transaction() { return transaction_q.dequeue(); }
 		input_status_t enqueue(transaction *in) { return transaction_q.enqueue(in); }
 		input_status_t complete(transaction *in) { return completion_q.enqueue(in); }
-		transaction * complete() { return completion_q.dequeue(); }
+		transaction *complete() { return completion_q.dequeue(); }
+		command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue
+		void record_command( command *, queue<command> &);
 
 		dram_channel();
 		~dram_channel();

@@ -439,7 +439,9 @@ command *dram_system::get_next_command(const int chan_id)
 	//tail_offset = history_q.get_count() - 1;
 
 	// nothing in history q, start from rank 0, bank 0
-	if((last_c = channel->history_q.read(channel->history_q.get_count() - 1)) == NULL)		
+
+	// look at the most recently retired command in this channel's history
+	if((last_c = channel->get_most_recent_command()) == NULL)		
 	{
 		last_c = free_command_pool.acquire_item();
 		last_c->addr.rank_id = system_config.rank_count - 1;
@@ -525,7 +527,7 @@ command *dram_system::get_next_command(const int chan_id)
 				{
 					return channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 				}
-				else					/* have to follow read_write grouping considerations */
+				else // have to follow read_write grouping considerations 
 				{
 					next_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(1);	/* look at the second command */
 					if (((next_c->this_command == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
@@ -630,10 +632,15 @@ command *dram_system::get_next_command(const int chan_id)
 				if(ptr_c->this_command == RAS_COMMAND)
 				{
 					if(bank_id == 0)	// see if this rank needs a R/W switch around
+					{
 						algorithm.transaction_type[rank_id] = channel->set_read_write_type(rank_id,system_config.bank_count);
+					}
+
 					next_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(1);
+
 					if(((algorithm.transaction_type[rank_id] == READ_TRANSACTION) && (next_c->this_command == CAS_AND_PRECHARGE_COMMAND)) ||
-						((algorithm.transaction_type[rank_id] == WRITE_TRANSACTION) && (next_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND))){
+						((algorithm.transaction_type[rank_id] == WRITE_TRANSACTION) && (next_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND)))
+					{
 							candidate_found = true;
 							return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 					}
@@ -880,8 +887,10 @@ void dram_system::execute_command(command *this_c,const int gap)
 		*this_ras_time	= now;
 		this_r->last_ras_times.enqueue(this_ras_time);
 		break;
+
 	case CAS_AND_PRECHARGE_COMMAND:
 		this_b.last_prec_time = max(now + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_b.last_ras_time + timing_specification.t_ras);
+
 	case CAS_COMMAND:
 		this_b.last_cas_time = now;
 		this_r->last_cas_time = now;
@@ -933,12 +942,13 @@ void dram_system::execute_command(command *this_c,const int gap)
 	}
 
 	/* record command history. Check to see if this can be removed */
-	if (channel.history_q.get_count() == system_config.history_queue_depth)
-	{		
+	channel.record_command(this_c, free_command_pool);
+	//if (channel.history_q.get_count() == system_config.history_queue_depth)
+	//{		
 		/*done with this command, release into pool */
-		free_command_pool.release_item(channel.history_q.dequeue());
-	}
-	channel.history_q.enqueue(this_c);
+	//	free_command_pool.release_item(channel.history_q.dequeue());
+	//}
+	//channel.history_q.enqueue(this_c);
 }
 
 
