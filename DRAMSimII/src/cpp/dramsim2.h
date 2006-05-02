@@ -459,8 +459,8 @@ namespace DRAMSim2
 		int refresh_row_index;			// the row index to be refreshed
 		tick_t last_refresh_time;		// tells me when last refresh was done
 		int last_rank_id;				// id of the last accessed rank of this channel
-		queue<transaction>transaction_q;// unified system queue
-		queue<transaction>refresh_q;	// queue of refresh transactions
+		queue<transaction> transaction_q;// unified system queue
+		queue<transaction> refresh_q;	// queue of refresh transactions
 		queue<command> history_q;		// what were the last N commands to this channel?
 		queue<transaction> completion_q;// completed_q, can send status back to memory controller
 
@@ -657,6 +657,7 @@ namespace DRAMSim2
 		~dram_system();
 		friend ostream &operator<<(ostream &, const dram_system &);
 		void run_simulations();
+		void run_simulations2();
 	};
 }
 

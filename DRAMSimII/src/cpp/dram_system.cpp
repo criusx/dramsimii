@@ -428,7 +428,7 @@ command *dram_system::get_next_command(const int chan_id)
 	int rank_id;
 	int bank_id;
 	int section_id;
-	int transaction_type;
+	transaction_type_t transaction_type;
 	bool candidate_found = false;
 	int start_bank_id;
 	int count;
@@ -500,7 +500,10 @@ command *dram_system::get_next_command(const int chan_id)
 			transaction_type = WRITE_TRANSACTION;
 		}
 		else
+		{
+			transaction_type = READ_TRANSACTION;
 			cerr << "Did not find a CAS or RAS command when it was expected" << endl;
+		}
 
 		while(candidate_found == false)
 		{
@@ -510,7 +513,7 @@ command *dram_system::get_next_command(const int chan_id)
 				bank_id = (bank_id + 1) % system_config.bank_count;
 				if(bank_id == 0)
 				{
-					if(transaction_type == WRITE_TRANSACTION)
+					if (transaction_type == WRITE_TRANSACTION)
 					{
 						transaction_type = READ_TRANSACTION;
 					}
@@ -536,6 +539,7 @@ command *dram_system::get_next_command(const int chan_id)
 						return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
 					}
 				}
+
 #ifdef DEBUG_FLAG_2
 				cerr << "Looked in ["<< temp_c->addr.rank_id << "] [" << temp_c->addr.bank_id << "] but wrong type, We want [" << transaction_type << "]. Candidate command type ";
 				cerr << temp_c->this_command;
@@ -543,10 +547,13 @@ command *dram_system::get_next_command(const int chan_id)
 				cerr << next_c->this_command;
 				cerr << "count [" << channel->get_rank(rank_id)->bank[bank_id].per_bank_q.get_count() << "]" << endl;
 #endif
+
 			}
+
 #ifdef DEBUG_FLAG_2
 			cerr << "Looked in [" << rank_id << "] [" << bank_id << "] but Q empty" << endl;
 #endif
+
 		}
 	}
 	// keep rank id as long as possible, go round robin down a given rank
@@ -556,7 +563,7 @@ command *dram_system::get_next_command(const int chan_id)
 		rank_id = last_c->addr.rank_id;
 		if(last_c->this_command == RAS_COMMAND)
 		{
-			temp_c = (command*) channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
+			temp_c = channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
 			if((temp_c != NULL) &&
 				((temp_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->this_command == CAS_AND_PRECHARGE_COMMAND))){
 					return (command*) channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
@@ -712,7 +719,7 @@ dram_system::~dram_system()
 	//delete input_stream;
 }
 
-void dram_system::update_system_time()
+void DRAMSim2::dram_system::update_system_time()
 {
 	int oldest_chan_id = system_config.chan_count;
 	tick_t oldest_time = channel[system_config.chan_count].get_time();
@@ -845,18 +852,18 @@ void dram_system::get_next_random_request(transaction *this_t)
 }
 
 
-void dram_system::execute_command(command *this_c,const int gap)
+void DRAMSim2::dram_system::execute_command(command *this_c,const int gap)
 {
 	tick_t *this_ras_time;
 
 	
-	unsigned int chan_id 	= this_c->addr.chan_id;
-	unsigned int rank_id 	= this_c->addr.rank_id;
-	unsigned int bank_id 	= this_c->addr.bank_id;
+	unsigned int chan_id = this_c->addr.chan_id;
+	unsigned int rank_id = this_c->addr.rank_id;
+	unsigned int bank_id = this_c->addr.bank_id;
 	unsigned int row_id = this_c->addr.row_id;
 
 	dram_channel &channel= dram_system::channel[chan_id];
-	tick_t now = channel.get_time()+gap;
+	tick_t now = channel.get_time() + gap;
 	int t_al;
 	//int history_q_count;
 	rank_c *this_r = channel.get_rank(rank_id);
@@ -880,18 +887,20 @@ void dram_system::execute_command(command *this_c,const int gap)
 		++this_b.ras_count;
 
 		if(this_r->last_ras_times.get_count() == 4)	/* ras time history queue, per rank */
-			this_ras_time	= (tick_t *) this_r->last_ras_times.dequeue();
+			this_ras_time = (tick_t *) this_r->last_ras_times.dequeue();
 		else
 			this_ras_time = new tick_t;
 
-		*this_ras_time	= now;
+		*this_ras_time = now;
 		this_r->last_ras_times.enqueue(this_ras_time);
 		break;
 
 	case CAS_AND_PRECHARGE_COMMAND:
+
 		this_b.last_prec_time = max(now + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_b.last_ras_time + timing_specification.t_ras);
 
 	case CAS_COMMAND:
+
 		this_b.last_cas_time = now;
 		this_r->last_cas_time = now;
 		this_b.last_cas_length = this_c->length;
@@ -900,9 +909,13 @@ void dram_system::execute_command(command *this_c,const int gap)
 		host_t = this_c->host_t;
 		host_t->completion_time	= now + timing_specification.t_cas;
 		break;
+
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+
 		this_b.last_prec_time = max(now + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_b.last_ras_time + timing_specification.t_ras);
+
 	case CAS_WRITE_COMMAND:
+
 		this_b.last_casw_time = now;
 		this_r->last_casw_time = now;
 		this_b.last_casw_length= this_c->length;
@@ -911,22 +924,35 @@ void dram_system::execute_command(command *this_c,const int gap)
 		host_t = this_c->host_t;
 		host_t->completion_time	= now;
 		break;
+
 	case RETIRE_COMMAND:
+
 		break;
+
 	case PRECHARGE_COMMAND:
+
 		this_b.last_prec_time = now;
 		break;
+
 	case PRECHARGE_ALL_COMMAND:
+
 		break;
+
 	case RAS_ALL_COMMAND:
+
 		break;
 	case DRIVE_COMMAND:
+
 		break;
+
 	case DATA_COMMAND:
+
 		break;
 	case CAS_WITH_DRIVE_COMMAND:
+
 		break;
 	case REFRESH_ALL_COMMAND:
+
 		this_b.last_refresh_all_time = now;
 		break;
 	}
@@ -935,8 +961,8 @@ void dram_system::execute_command(command *this_c,const int gap)
 	{
 		if(channel.complete(host_t) == FAILURE)
 		{
-			cerr << "Fatal error, cannot insert transaction into completion queue" << endl
-				<< "Increase execution q depth and resume. Should not occur. Check logic" << endl;
+			cerr << "Fatal error, cannot insert transaction into completion queue." << endl
+				<< "Increase execution q depth and resume. Should not occur. Check logic." << endl;
 			_exit(2);
 		}
 	}
@@ -1288,7 +1314,7 @@ enum input_status_t DRAMSim2::dram_system::transaction2commands(transaction *thi
 				switch(this_t->type)
 				{
 				case WRITE_TRANSACTION:
-					free_c->this_command= CAS_WRITE_AND_PRECHARGE_COMMAND;
+					free_c->this_command = CAS_WRITE_AND_PRECHARGE_COMMAND;
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
@@ -1513,33 +1539,29 @@ void dram_system::set_dram_timing_specification(enum dram_type_t dram_type)
 }
 
 
-void dram_system::run_simulations()
+void DRAMSim2::dram_system::run_simulations()
 {
-	//int min_gap;
 	bool EOF_reached = false;
-	//int chan_id,rank_id,bank_id,oldest_chan_id;
-	//int oldest_chan_id;
-	//int cas_count;
-	//tick_t		master_time;
-	//tick_t		channel_time;
 
 	for(int i = 0; (i < sim_parameters.get_request_count()) && (EOF_reached == false); ++i)
 	{
 		transaction 	*input_t;
-		if(get_next_input_transaction(input_t) == SUCCESS)
+		if (get_next_input_transaction(input_t) == SUCCESS)
 		{
 			statistics.collect_transaction_stats(input_t);
 
-			while(channel[input_t->addr.chan_id].enqueue(input_t) != SUCCESS)
+			while (channel[input_t->addr.chan_id].enqueue(input_t) == FAILURE)
 			{
 				/* tried to stuff req in channel queue, stalled, so try to drain channel queue first */
 				/* and drain it completely */
 				/* unfortunately, we may have to drain another channel first. */
 				int oldest_chan_id = find_oldest_channel();
 				transaction *temp_t = channel[oldest_chan_id].get_transaction();
+
 #ifdef DEBUG_FLAG
 				cerr << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
 #endif
+
 				if(temp_t != NULL)
 				{
 					//rank_id = temp_t->addr.rank_id;
@@ -1550,18 +1572,17 @@ void dram_system::run_simulations()
 					{
 						command *temp_c = get_next_command(oldest_chan_id);
 						int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
+
 #ifdef DEBUG_FLAG
 						cerr << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
+
 						execute_command(temp_c, min_gap);
 						update_system_time(); 
 						transaction *completed_t = channel[oldest_chan_id].complete();
 						if(completed_t != NULL)
 							free_transaction_pool.release_item(completed_t);
 					}
-					//free_transaction_pool.release_item(temp_t);
-					//delete temp_t;
-					// FIXME: memory leak here, temp_t gets removed from queues and is never deleted
 				}
 				/* randomness check
 				for(rank_id = 0; rank_id < config->rank_count;rank_id++){
@@ -1628,7 +1649,7 @@ time(0) /// start the clock
 
 
 
-int dram_system::find_oldest_channel() const
+int DRAMSim2::dram_system::find_oldest_channel() const
 {
 	int oldest_chan_id = 0;
 	tick_t oldest_time = channel[0].get_time();
@@ -1643,3 +1664,78 @@ int dram_system::find_oldest_channel() const
 	}
 	return oldest_chan_id;
 }
+
+
+void DRAMSim2::dram_system::run_simulations2()
+{
+	bool EOF_reached = false;
+
+	for(int i = 0; (i < sim_parameters.get_request_count()) ; ++i)
+	{
+		transaction 	*input_t;
+
+		// see if it is time for the channel to arrive, if so, put in the channel
+		// queue
+		// if not, either make the channels wait and move time to the point where
+		// the transaction should arrive or execute commands until that time happens
+		// make sure not to overshoot the time by looking at when a transaction would end
+		// so that executing one more command doesn't go too far forward
+		// this only happens when there is the option to move time or execute commands
+		if (get_next_input_transaction(input_t) == SUCCESS)
+		{
+			// record stats
+			statistics.collect_transaction_stats(input_t);
+
+			// decide whether to move time ahead by waiting or executing
+			int oldest_chan_id = find_oldest_channel();
+			transaction *temp_t = channel[oldest_chan_id].get_transaction();
+			command *temp_c = get_next_command(oldest_chan_id);
+			// min gap is how long until the next command finishes
+			int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
+
+			while (channel[input_t->addr.chan_id].enqueue(input_t) == FAILURE)
+			{
+				/* tried to stuff req in channel queue, stalled, so try to drain channel queue first */
+				/* and drain it completely */
+				/* unfortunately, we may have to drain another channel first. */
+				
+				int oldest_chan_id = find_oldest_channel();
+				transaction *temp_t = channel[oldest_chan_id].get_transaction();
+
+#ifdef DEBUG_FLAG
+				cerr << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
+#endif
+
+				if(temp_t != NULL)
+				{
+					// if it can't fit in the transaction queue, drain the queue
+					while(transaction2commands(temp_t) != SUCCESS)
+					{
+						command *temp_c = get_next_command(oldest_chan_id);
+						int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
+
+#ifdef DEBUG_FLAG
+						cerr << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+#endif
+
+						execute_command(temp_c, min_gap);
+						update_system_time(); 
+						transaction *completed_t = channel[oldest_chan_id].complete();
+						if(completed_t != NULL)
+							free_transaction_pool.release_item(completed_t);
+					}
+				}
+			}
+		}
+		else
+			// EOF reached, quit the loop
+			break;
+	}
+
+	statistics.set_end_time(time);
+	statistics.set_valid_trans_count(sim_parameters.get_request_count());
+}
+
+
+
+
