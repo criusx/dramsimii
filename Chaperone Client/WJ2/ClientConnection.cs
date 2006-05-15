@@ -33,7 +33,8 @@ namespace RFIDProtocolLib
         /// </summary>
         public void Close()
         {
-            c.Close();
+			c.Client.Close(); 
+			c.Close(); 
         }
 
         #region Connect

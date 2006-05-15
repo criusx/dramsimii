@@ -9,15 +9,15 @@ bin\Release\MPR DLL.dll
 bin\Release\MPR DLL.xml
 obj\Release\WJ2.exe
 obj\Release\WJ2.pdb
+bin\Debug\WJ2.exe
+bin\Debug\WJ2.pdb
+bin\Debug\Bluetooth.dll
+bin\Debug\MPR DLL.dll
+bin\Debug\MPR DLL.pdb
 obj\Debug\ResolveAssemblyReference.cache
 obj\Debug\WJ2.Browser.resources
 obj\Debug\WJ2.Form1.resources
 obj\Debug\WJ2.Properties.Resources.resources
 obj\Debug\WJ2.csproj.GenerateResource.Cache
-bin\Debug\WJ2.exe
-bin\Debug\WJ2.pdb
-bin\Debug\MPR DLL.dll
-bin\Debug\MPR DLL.pdb
 obj\Debug\WJ2.exe
 obj\Debug\WJ2.pdb
-bin\Debug\Bluetooth.dll

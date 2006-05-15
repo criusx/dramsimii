@@ -27,6 +27,9 @@ namespace WJ2
     {
         [DllImport("coredll.dll")]
         private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
+		[DllImport("coredll.dll")]
+		private static extern bool SipShowIM(int dwFlag);
+
 
         static void Main()
         {
@@ -59,7 +62,8 @@ namespace WJ2
         private static byte[] mac = { 0x00, 0x03, 0x7a, 0x23, 0xc6, 0xd6 };
         private RadiationSensor radSensor = new RadiationSensor(mac);
         bool firstScan = true;
-
+		private string serverAddress;
+		private string phoneNumber;
         //private string numberOfSatellites;
         private event EventHandler eh;
         private ClientConnection cc;
@@ -233,6 +237,7 @@ namespace WJ2
                 else /// stopping an inventory loop
                 {
                     startInventoryButton.Text = "Working...";
+					startInventoryButton.Enabled = false;
                     startInventoryButton.BackColor = Color.LightGreen;
                     startInventoryButton.ForeColor = Color.Black;
                     invProgressBar.Hide();
@@ -257,7 +262,7 @@ namespace WJ2
                         // handshake
                         cc.SendConnectPacket();
                         cc.WaitForConnectResponsePacket();
-
+						cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(textBox1.Text));
                         byte locL;
                         if (firstScan == true)
                         {
@@ -268,7 +273,10 @@ namespace WJ2
                         {
                             locL = 1;
                         }
-                        
+						if (latBox.Text == "")
+							latBox.Text = "00 00.00N";
+						if (longBox.Text == "")
+							longBox.Text = "00 00.00W";
                         // correlate names with tag IDs and add to the list
                         for (int i = 0; i < inventoryTags.Count; ++i)
                         {   
@@ -279,16 +287,20 @@ namespace WJ2
                             inventoryListBox.Items.Insert(i, qr.ShortDesc);
                             
                         }
+						cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest("00000000"));
                         cc.Close();
                     }
                     catch (Exception ex)
                     {
+						Console.Out.WriteLine("catch" + ex.ToString());
+
                         inventoryListBox.Items.Clear();
 
                         for (int i = 0; i < inventoryTags.Count; ++i)
                             inventoryListBox.Items.Insert(i, inventoryTags[i].ToString());
                     }
-
+					startInventoryButton.Text = "Start Inventory";
+					startInventoryButton.Enabled = true;
                     invTimer.Enabled = oldInvTimer;
                     breakTimer.Enabled = oldBreakTimer;
                     return;
@@ -443,12 +455,13 @@ namespace WJ2
             //RFIDTag a a.ToByteArray
             
             string selectedTag = inventoryTags[inventoryListBox.SelectedIndex].ToString();
-            selectedTag.Replace(" ","");
+            selectedTag = selectedTag.Replace(" ","");
             string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
-            int lastTwoI = Convert.ToInt32(lastTwo,16);            
+            int lastTwoI = Convert.ToInt32(lastTwo,16);
+			selectedTag = selectedTag.Substring(0, selectedTag.Length - 2)+  lastTwoI.ToString();
             string location = waypointBox.SelectedItem.ToString() == "A" ? "a_pda" : "b_pda";
             
-            webBr.setUrlAndShow(new Uri("http://" + "128.8.46.235/pda_item.jsp?" + selectedTag));
+            webBr.setUrlAndShow(new Uri("http://" + "tbk.ece.umd.edu/pda_item.jsp?rfid=" + selectedTag));
         }
 
         /// <summary>
@@ -782,32 +795,71 @@ namespace WJ2
 
         private void radTimer_Tick(object sender, EventArgs e)
         {
-            try
-            {
-                radTimer.Enabled = false;
-                if (radSensor.poll())
-                {
-                    // send warning packet
-                    cc = new ClientConnection();
-                    cc.Connect(hostnameBox.Text, 1555);
-                    cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(textBox1.Text));
-                    cc.SendRaiseAlertPacket(new RaiseAlertRequest());
-                    cc.Close();
-                }
-                radTimer.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                    cc.Close();
-                }
-                catch (Exception ex2)
-                {
-                    radTimer.Enabled = false;
-                }
-            }
+			//Thread t = new Thread(new ThreadStart(radiationCaller));
+			//t.Start();
+			radiationCaller();
         }
 
+		private void radiationCaller()
+		{
+			try
+			{
+				radTimer.Enabled = false;
+				if (radSensor.poll())
+				{
+					phoneNumber = textBox1.Text;
+					serverAddress = hostnameBox.Text;
+					Thread alert = new Thread(new ThreadStart(sendAlert));
+					alert.Start();
+				}
+				else
+				{
+					radTimer.Enabled = true;
+				}
+				
+			}
+			catch (Exception ex)
+			{
+				button1.BackColor = Color.Green;
+				radSensor.disconnect();
+			}
+		}
+
+		private void sendAlert()
+		{
+			try
+			{
+				// send warning packet
+				ClientConnection cc = new ClientConnection();
+				cc.Connect(serverAddress, 1555);
+				cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(phoneNumber));
+				cc.SendRaiseAlertPacket(new RaiseAlertRequest());
+				cc.Close();
+				radTimer.Enabled = true;
+			}
+			catch (Exception ex)
+			{
+				try
+				{
+					cc.Close();
+				}
+				catch (Exception ex2)
+				{
+					radTimer.Enabled = false;
+					button1.BackColor = Color.Green;
+					radSensor.disconnect();
+				}
+			}
+		}
+
+		private void textBox1_GotFocus(object sender, EventArgs e)
+		{
+			SipShowIM(1);
+		}
+
+		private void textBox1_LostFocus(object sender, EventArgs e)
+		{
+			SipShowIM(0);
+		}
     }
 }
