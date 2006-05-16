@@ -795,35 +795,28 @@ namespace WJ2
 
         private void radTimer_Tick(object sender, EventArgs e)
         {
-			//Thread t = new Thread(new ThreadStart(radiationCaller));
-			//t.Start();
-			radiationCaller();
-        }
+            try
+            {
+                radTimer.Enabled = false;
+                if (radSensor.poll())
+                {
+                    phoneNumber = textBox1.Text;
+                    serverAddress = hostnameBox.Text;
+                    Thread alert = new Thread(new ThreadStart(sendAlert));
+                    alert.Start();
+                }
+                else
+                {
+                    radTimer.Enabled = true;
+                }
 
-		private void radiationCaller()
-		{
-			try
-			{
-				radTimer.Enabled = false;
-				if (radSensor.poll())
-				{
-					phoneNumber = textBox1.Text;
-					serverAddress = hostnameBox.Text;
-					Thread alert = new Thread(new ThreadStart(sendAlert));
-					alert.Start();
-				}
-				else
-				{
-					radTimer.Enabled = true;
-				}
-				
-			}
-			catch (Exception ex)
-			{
-				button1.BackColor = Color.Green;
-				radSensor.disconnect();
-			}
-		}
+            }
+            catch (Exception ex)
+            {
+                button1.BackColor = Color.Green;
+                radSensor.disconnect();
+            }
+        }
 
 		private void sendAlert()
 		{
