@@ -852,7 +852,7 @@ command::command()
 	length = 0;
 }
 
-DRAMSim2::command::command(const command &rhs)
+command::command(const command &rhs)
 {
 	this_command = rhs.this_command;
 	start_time = rhs.start_time;
