@@ -70,6 +70,26 @@ namespace RFIDProtocolLib
         }
 
         /// <summary>
+        /// Send a commit to let the server know that it has all the RFIDs
+        /// for the current inventory and may begin analysis
+        /// </summary>
+        public void SendCommitPacket()
+        {
+            TLV commitPacket = new TLV(8);
+            commitPacket.WriteToStream(c.GetStream());
+        }
+
+        /// <summary>
+        /// Send the latitude, longitude and whether a manifest should be
+        /// created or not
+        /// </summary>
+        public void SendInfoPacket(InfoPacket req)
+        {
+            TLV commitPacket = new TLV(9, req.ToTLVList().GetBytes());
+            commitPacket.WriteToStream(c.GetStream());
+        }
+
+        /// <summary>
         /// Sent from the server back after a Query packet is sent.
         /// This doesn't do it yet, but will throw an exception if it receives
         /// an ERROR packet.

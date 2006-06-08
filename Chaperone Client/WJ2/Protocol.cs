@@ -3,30 +3,24 @@ using System.Collections;
 
 namespace RFIDProtocolLib
 {
+    
+
     #region Query
+
     public struct QueryRequest
     {
         public const ushort Type = 2;
 
         public RFID Rfid;
-        public string Latitude;
-        public string Longitude;
-        public byte IsScan;
 
-        public QueryRequest(RFID rfid, string lat, string longitude, byte isScan)
+        public QueryRequest(RFID rfid)
         {
             Rfid = rfid;
-            Latitude = lat;
-            Longitude = longitude;
-            IsScan = isScan;
         }
 
         public QueryRequest(byte[] buf)
         {
             Rfid = null;
-            Latitude = null;
-            Longitude = null;
-            IsScan = 0;
 
             TLVList l = new TLVList(buf);
             IEnumerator e = l.GetEnumerator();
@@ -36,9 +30,6 @@ namespace RFIDProtocolLib
                 switch (tlv.Type)
                 {
                     case 0: Rfid = new RFID(tlv.Value); break;
-                    case 1: Latitude = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
-                    case 2: Longitude = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
-                    case 3: IsScan = tlv.Value[0]; break;
                 }
             }
         }
@@ -47,9 +38,6 @@ namespace RFIDProtocolLib
         {
             TLVList l = new TLVList(Type);
             l.Add(new TLV(0, Rfid.GetBytes()));
-            l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(Latitude)));
-            l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(Longitude)));
-            l.Add(new TLV(3, new byte[] { IsScan }));
 
             return l;
         }
@@ -174,6 +162,40 @@ namespace RFIDProtocolLib
             return new TLVList();
         }
     }
+    #endregion
+
+
+    #region InfoPacket
+
+    public struct InfoPacket
+    {
+        public const ushort Type = 9;
+
+        public string Latitude;
+
+        public string Longitude;
+
+        public int isScan;
+
+        public InfoPacket(string La, string Lo, int iS)
+        {
+            Latitude = La;
+            Longitude = Lo;
+            isScan = iS;
+        }       
+
+        public TLVList ToTLVList()
+        {
+            TLVList l = new TLVList(Type);
+            l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(Latitude)));
+            l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(Longitude)));
+            l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(isScan.ToString())));
+
+            return l;
+        }
+    }
+
+ 
     #endregion
 
     #region RaiseAlert

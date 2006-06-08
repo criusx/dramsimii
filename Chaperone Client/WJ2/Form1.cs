@@ -15,11 +15,6 @@ using WJ.MPR.Reader;
 using WJ.MPR.Util;
 using RFIDProtocolLib;
 using Bluetooth;
-//using InTheHand.Net.Bluetooth;
-//using InTheHand.Net.Sockets;
-//using InTheHand.Net;
-//using Oracle.Lite.Data;
-//using Oracle.DataAccess.Lite;
 
 namespace WJ2
 {
@@ -44,6 +39,7 @@ namespace WJ2
         private const int latLongArraySize = 128;
 
         private MPRReader Reader;
+        private byte isScan;
         private Browser webBr;
         private ArrayList inventoryTags;
         private int totalTags;
@@ -114,13 +110,18 @@ namespace WJ2
             Reader.TagRemoved += new TagEventHandler(Reader_TagRemoved);
             webBr = new Browser();
             webBr.Visible = false;
-            waypointBox.SelectedIndex = 0;
+            invTimerBox.SelectedIndex = 0;
             cc = new ClientConnection();
             inventoryTags = new ArrayList();
             //cursor = new ();
             Reader.Class1InventoryEnabled = true;
             Reader.Class0InventoryEnabled = true;
             Reader.PersistTime = TimeSpan.MaxValue;
+
+            NorS = 'N';
+            EorW = 'E';
+            latitude = 0;
+            longitude = 0;
             
             string[] COMPorts = System.IO.Ports.SerialPort.GetPortNames();
             cbComPort.Items.Clear();
@@ -180,32 +181,11 @@ namespace WJ2
         {
             if (!Reader.IsConnected)
                 readerConnect(false);
-            if (sender == invTimer)
-            {
-                invTimer.Enabled = !invTimer.Enabled;
 
-                if (repeatCheckBox.Checked)
-                {
-                    breakTimer.Enabled = !breakTimer.Enabled;                    
-                }                
-            }
-            else if (sender == breakTimer)
-            {
-                invTimer.Enabled = !invTimer.Enabled;
-                breakTimer.Enabled = !breakTimer.Enabled;
-            }
+            if (sender == scanButton)
+                isScan = 1;
             else
-            {
-                if (breakTimer.Enabled)
-                {
-                    breakTimer.Enabled = !breakTimer.Enabled;
-                }
-                else // starting a new scan
-                {
-                    firstScan = true;
-                    invTimer.Enabled = !invTimer.Enabled;
-                }
-            }                
+                isScan = 0;
             
             Reader.InvTimerEnabled = !Reader.InvTimerEnabled;
         }
@@ -223,130 +203,69 @@ namespace WJ2
             {
                 if (Reader.InvTimerEnabled) /// starting an inventory loop
                 {
-                    startInventoryButton.Text = "Stop Inventory";
+                    startInventoryButton.Text = "Stop";
                     startInventoryButton.BackColor = Color.Red;
                     startInventoryButton.ForeColor = Color.White;
                     invProgressBar.Value = 0;
                     inventoryTags.Clear();
-                    breakBox.Hide();
                     invProgressBar.Show();
-                    waypointBox.Hide();
+                    invTimerBox.Hide();
                     inventoryListBox.Items.Clear();
                     Reader.ClearInventory();
                 }
                 else /// stopping an inventory loop
                 {
-                    startInventoryButton.Text = "Working...";
+                    startInventoryButton.Text = "Wait";
 					startInventoryButton.Enabled = false;
                     startInventoryButton.BackColor = Color.LightGreen;
                     startInventoryButton.ForeColor = Color.Black;
                     invProgressBar.Hide();
-                    waypointBox.Show();
-                    breakBox.Show();
-                    bool oldInvTimer = invTimer.Enabled;
-                    bool oldBreakTimer = breakTimer.Enabled;
-                    invTimer.Enabled = false;
-                    breakTimer.Enabled = false;
+                    invTimerBox.Show();
 
-//                     for (int i = 0; i < inventoryTags.Count; ++i)
-//                         inventoryListBox.Items.Insert(i, inventoryTags[i]);
-//                     startInventoryButton.Text = "Start Inventory";
-//                     return;
                     try
                     {
                         cc = new ClientConnection();
+
                         // inventory has ended, now go submit manifest
+
                         // connect to the server
                         cc.Connect(hostnameBox.Text, 1555);
 
                         // handshake
                         cc.SendConnectPacket();
                         cc.WaitForConnectResponsePacket();
-						cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(textBox1.Text));
-                        byte locL;
-                        if (firstScan == true)
-                        {
-                            firstScan = false;
-                            locL = 0;
-                        }
-                        else
-                        {
-                            locL = 1;
-                        }
-						if (latBox.Text == "")
-							latBox.Text = "00 00.00N";
-						if (longBox.Text == "")
-							longBox.Text = "00 00.00W";
-                        // correlate names with tag IDs and add to the list
+
+                        // send all the RFIDs to the server
                         for (int i = 0; i < inventoryTags.Count; ++i)
-                        {   
-                            cc.SendQueryPacket(new QueryRequest(new RFID(inventoryTags[i].ToString()), latBox.Text.ToString(), longBox.Text.ToString(), locL));
+                        {
+                            cc.SendQueryPacket(new QueryRequest(new RFID(inventoryTags[i].ToString())));
 
-                            QueryResponse qr = cc.WaitForQueryResponsePacket();
+                            //QueryResponse qr = cc.WaitForQueryResponsePacket();
 
-                            inventoryListBox.Items.Insert(i, qr.ShortDesc);
-                            
+                            //inventoryListBox.Items.Insert(i, qr.ShortDesc);
+
                         }
-						cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest("00000000"));
+                        cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0,15) + NorS.ToString(), longitude.ToString("N15").Substring(0,15) + EorW.ToString(), isScan));
+
+                        cc.SendCommitPacket();
+
+                        //cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest("00000000"));
                         cc.Close();
                     }
                     catch (Exception ex)
                     {
-						Console.Out.WriteLine("catch" + ex.ToString());
+                        Console.Out.WriteLine(ex.ToString());
 
                         inventoryListBox.Items.Clear();
 
                         for (int i = 0; i < inventoryTags.Count; ++i)
                             inventoryListBox.Items.Insert(i, inventoryTags[i].ToString());
                     }
-					startInventoryButton.Text = "Start Inventory";
-					startInventoryButton.Enabled = true;
-                    invTimer.Enabled = oldInvTimer;
-                    breakTimer.Enabled = oldBreakTimer;
-                    return;
-
-
-                    //for (int i = 0; i < inventoryTags.Count; ++i)
-                    //    inventoryListBox.Items.Insert(i, inventoryTags[i]);
-                    
-                    // old server code
-                    // form the packet
-//                     Byte[] packet = new Byte[16];
-//                     try
-//                     {
-//                         Socket conn2 =
-//                             new Socket(AddressFamily.InterNetwork,
-//                             SocketType.Stream,
-//                             ProtocolType.Tcp);
-//                         IPAddress server = IPAddress.Parse("192.168.1.100");
-//                         int port = 2000;
-//                         IPEndPoint endpoint = new IPEndPoint(server, port);
-//                         conn2.Connect(endpoint);
-//                         if (conn2.Connected)
-//                         {
-//                             conn2.SendTo(packet, endpoint);
-//                         }
-//                         conn2.Close();
-//                     }
-//                     catch (SocketException ex)
-//                     {
-//                         MessageBox.Show(ex.Message);
-//                     }
-//                     string InsertString =
-//                         "INSERT INTO "
-//                         + dbTableBox.Text
-//                         + "VALUES ('"
-//                         + Tag.TagID + "', "
-//                         + locationBox1.SelectedValue.ToString() + "', "
-//                         + ownerBox1.SelectedValue.ToString() + "')";
-// 
-// 
-//                     command.CommandText = InsertString;
-//                     OracleCommand myCommand = new OracleCommand(InsertString);
-// 
-//                     conn.Open();
-//                     myCommand.ExecuteNonQuery();
-//                     conn.Close();
+                    finally
+                    {
+                        startInventoryButton.Text = "M/R";
+                        startInventoryButton.Enabled = true;
+                    }
                  }
             }
         }
@@ -391,42 +310,7 @@ namespace WJ2
             Reader.TxPower = (byte)numericUpDown1.Value;
         }
         
-        /// <summary>
-        /// Event fired when the connect button is pressed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void connectBtn_Click(object sender, EventArgs e)
-        {
-            /*conn.ConnectionString = "Data Source=(DESCRIPTION="
-                + "(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST="
-                + hostnameBox.Text + ")(PORT="
-                + portBox.Text + ")))"
-                + "(CONNECT_DATA=(SERVER=DEDICATED)(SID=LN1)));"
-                + "User Id=" + userIDBox.Text + ";Password=" + passwordBox.Text + ";";*/
-            /* "Data Source=Oracle9i"
-             + ";Integrated Security=false"
-             + ";Server="
-             + hostnameBox.Text
-             + ";User ID="
-             + userIDBox.Text
-             + ";Password="
-             + passwordBox.Text; */
-            try
-            {
-                //conn.Open();
-                //conn.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-            }
-            finally
-            {
-                //conn.Dispose();
-            }
-
-        }
+        
 
         /// <summary>
         /// Event fired when the clear button is pressed, gives the user the option to not
@@ -452,14 +336,12 @@ namespace WJ2
         /// <param name="e"></param>
         private void inventoryListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //RFIDTag a a.ToByteArray
-            
             string selectedTag = inventoryTags[inventoryListBox.SelectedIndex].ToString();
             selectedTag = selectedTag.Replace(" ","");
             string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
             int lastTwoI = Convert.ToInt32(lastTwo,16);
 			selectedTag = selectedTag.Substring(0, selectedTag.Length - 2)+  lastTwoI.ToString();
-            string location = waypointBox.SelectedItem.ToString() == "A" ? "a_pda" : "b_pda";
+            
             
             webBr.setUrlAndShow(new Uri("http://" + "tbk.ece.umd.edu/pda_item.jsp?rfid=" + selectedTag));
         }
@@ -757,17 +639,8 @@ namespace WJ2
                 + latitude.ToString() + NorS + "+" 
                 + longitude.ToString() + EorW + "&t=h"));
         }
-
-        private void waypointBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            invTimer.Interval = 1000 * int.Parse(waypointBox.SelectedItem.ToString().TrimEnd('s'));
-        }
-
-        private void breakBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            breakTimer.Interval = 1000 * int.Parse(breakBox.SelectedItem.ToString().TrimEnd('s'));
-        }
-
+        
+        
         private void button1_Click(object sender, EventArgs e)
         {
             try

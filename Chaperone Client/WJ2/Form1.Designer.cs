@@ -33,11 +33,10 @@ namespace WJ2
             this.inventoryListBox = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.repeatCheckBox = new System.Windows.Forms.CheckBox();
-            this.breakBox = new System.Windows.Forms.ComboBox();
-            this.waypointBox = new System.Windows.Forms.ComboBox();
+            this.invTimerBox = new System.Windows.Forms.ComboBox();
             this.invProgressBar = new System.Windows.Forms.ProgressBar();
             this.clearBtn = new System.Windows.Forms.Button();
+            this.scanButton = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.numTags = new System.Windows.Forms.NumericUpDown();
             this.lblOnline = new System.Windows.Forms.Label();
@@ -89,8 +88,6 @@ namespace WJ2
             this.button1 = new System.Windows.Forms.Button();
             this.radUpDown = new System.Windows.Forms.NumericUpDown();
             this.gpsSerialPort = new System.IO.Ports.SerialPort(this.components);
-            this.invTimer = new System.Windows.Forms.Timer();
-            this.breakTimer = new System.Windows.Forms.Timer();
             this.radTimer = new System.Windows.Forms.Timer();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -107,9 +104,9 @@ namespace WJ2
             this.startInventoryButton.ForeColor = System.Drawing.Color.Black;
             this.startInventoryButton.Location = new System.Drawing.Point(5, 246);
             this.startInventoryButton.Name = "startInventoryButton";
-            this.startInventoryButton.Size = new System.Drawing.Size(90, 20);
+            this.startInventoryButton.Size = new System.Drawing.Size(35, 20);
             this.startInventoryButton.TabIndex = 0;
-            this.startInventoryButton.Text = "Start Inventory";
+            this.startInventoryButton.Text = "M/R";
             this.startInventoryButton.Click += new System.EventHandler(this.startInventoryButton_Click);
             // 
             // inventoryListBox
@@ -135,55 +132,30 @@ namespace WJ2
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.repeatCheckBox);
-            this.tabPage1.Controls.Add(this.breakBox);
-            this.tabPage1.Controls.Add(this.waypointBox);
+            this.tabPage1.Controls.Add(this.invTimerBox);
             this.tabPage1.Controls.Add(this.invProgressBar);
             this.tabPage1.Controls.Add(this.inventoryListBox);
             this.tabPage1.Controls.Add(this.clearBtn);
+            this.tabPage1.Controls.Add(this.scanButton);
             this.tabPage1.Controls.Add(this.startInventoryButton);
             this.tabPage1.Location = new System.Drawing.Point(0, 0);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Size = new System.Drawing.Size(240, 271);
             this.tabPage1.Text = "Inv";
             // 
-            // repeatCheckBox
+            // invTimerBox
             // 
-            this.repeatCheckBox.Location = new System.Drawing.Point(100, 245);
-            this.repeatCheckBox.Name = "repeatCheckBox";
-            this.repeatCheckBox.Size = new System.Drawing.Size(20, 20);
-            this.repeatCheckBox.TabIndex = 5;
-            this.repeatCheckBox.Text = "checkBox1";
-            // 
-            // breakBox
-            // 
-            this.breakBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.breakBox.Items.Add("20s");
-            this.breakBox.Items.Add("40s");
-            this.breakBox.Items.Add("60s");
-            this.breakBox.Items.Add("80s");
-            this.breakBox.Items.Add("120s");
-            this.breakBox.Items.Add("240s");
-            this.breakBox.Location = new System.Drawing.Point(166, 245);
-            this.breakBox.Name = "breakBox";
-            this.breakBox.Size = new System.Drawing.Size(40, 20);
-            this.breakBox.TabIndex = 3;
-            this.breakBox.SelectedIndexChanged += new System.EventHandler(this.breakBox_SelectedIndexChanged);
-            // 
-            // waypointBox
-            // 
-            this.waypointBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.waypointBox.Items.Add("20s");
-            this.waypointBox.Items.Add("40s");
-            this.waypointBox.Items.Add("60s");
-            this.waypointBox.Items.Add("80s");
-            this.waypointBox.Items.Add("120s");
-            this.waypointBox.Items.Add("240s");
-            this.waypointBox.Location = new System.Drawing.Point(125, 245);
-            this.waypointBox.Name = "waypointBox";
-            this.waypointBox.Size = new System.Drawing.Size(40, 20);
-            this.waypointBox.TabIndex = 3;
-            this.waypointBox.SelectedIndexChanged += new System.EventHandler(this.waypointBox_SelectedIndexChanged);
+            this.invTimerBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.invTimerBox.Items.Add("20s");
+            this.invTimerBox.Items.Add("40s");
+            this.invTimerBox.Items.Add("60s");
+            this.invTimerBox.Items.Add("80s");
+            this.invTimerBox.Items.Add("120s");
+            this.invTimerBox.Items.Add("240s");
+            this.invTimerBox.Location = new System.Drawing.Point(125, 245);
+            this.invTimerBox.Name = "invTimerBox";
+            this.invTimerBox.Size = new System.Drawing.Size(40, 20);
+            this.invTimerBox.TabIndex = 3;
             // 
             // invProgressBar
             // 
@@ -206,6 +178,18 @@ namespace WJ2
             this.clearBtn.TabIndex = 2;
             this.clearBtn.Text = "Clear";
             this.clearBtn.Click += new System.EventHandler(this.clearBtn_Click);
+            // 
+            // scanButton
+            // 
+            this.scanButton.BackColor = System.Drawing.Color.Turquoise;
+            this.scanButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.scanButton.ForeColor = System.Drawing.Color.Black;
+            this.scanButton.Location = new System.Drawing.Point(46, 245);
+            this.scanButton.Name = "scanButton";
+            this.scanButton.Size = new System.Drawing.Size(35, 20);
+            this.scanButton.TabIndex = 0;
+            this.scanButton.Text = "Scan";
+            this.scanButton.Click += new System.EventHandler(this.startInventoryButton_Click);
             // 
             // tabPage2
             // 
@@ -395,7 +379,6 @@ namespace WJ2
             this.connectBtn.Size = new System.Drawing.Size(113, 31);
             this.connectBtn.TabIndex = 4;
             this.connectBtn.Text = "Test";
-            this.connectBtn.Click += new System.EventHandler(this.connectBtn_Click);
             // 
             // dbTableLbl
             // 
@@ -639,7 +622,7 @@ namespace WJ2
             this.tabPage5.Controls.Add(this.radUpDown);
             this.tabPage5.Location = new System.Drawing.Point(0, 0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(240, 271);
+            this.tabPage5.Size = new System.Drawing.Size(232, 268);
             this.tabPage5.Text = "Rad";
             // 
             // textBox1
@@ -713,16 +696,6 @@ namespace WJ2
             this.gpsSerialPort.ReceivedBytesThreshold = 1024;
             this.gpsSerialPort.WriteBufferSize = 512;
             this.gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort_DataReceived);
-            // 
-            // invTimer
-            // 
-            this.invTimer.Interval = 30000;
-            this.invTimer.Tick += new System.EventHandler(this.startInventoryButton_Click);
-            // 
-            // breakTimer
-            // 
-            this.breakTimer.Interval = 30000;
-            this.breakTimer.Tick += new System.EventHandler(this.startInventoryButton_Click);
             // 
             // radTimer
             // 
@@ -806,11 +779,7 @@ namespace WJ2
         private System.Windows.Forms.Label label14;
         private System.IO.Ports.SerialPort gpsSerialPort;
         private System.Windows.Forms.Button mapButton;
-        private System.Windows.Forms.ComboBox waypointBox;
-        private System.Windows.Forms.Timer invTimer;
-        private System.Windows.Forms.CheckBox repeatCheckBox;
-        private System.Windows.Forms.ComboBox breakBox;
-        private System.Windows.Forms.Timer breakTimer;
+        private System.Windows.Forms.ComboBox invTimerBox;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.Timer radTimer;
         private System.Windows.Forms.Button button1;
@@ -818,6 +787,7 @@ namespace WJ2
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button scanButton;
     }
 }
 
