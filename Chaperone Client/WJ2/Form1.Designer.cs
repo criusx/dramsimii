@@ -115,7 +115,7 @@ namespace WJ2
             this.inventoryListBox.Name = "inventoryListBox";
             this.inventoryListBox.Size = new System.Drawing.Size(240, 240);
             this.inventoryListBox.TabIndex = 1;
-            this.inventoryListBox.SelectedIndexChanged += new System.EventHandler(this.inventoryListBox_SelectedIndexChanged);
+            
             // 
             // tabControl1
             // 
@@ -172,9 +172,9 @@ namespace WJ2
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.clearBtn.BackColor = System.Drawing.Color.Red;
             this.clearBtn.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Bold);
-            this.clearBtn.Location = new System.Drawing.Point(210, 244);
+            this.clearBtn.Location = new System.Drawing.Point(208, 244);
             this.clearBtn.Name = "clearBtn";
-            this.clearBtn.Size = new System.Drawing.Size(30, 20);
+            this.clearBtn.Size = new System.Drawing.Size(32, 20);
             this.clearBtn.TabIndex = 2;
             this.clearBtn.Text = "Clear";
             this.clearBtn.Click += new System.EventHandler(this.clearBtn_Click);

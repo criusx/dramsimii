@@ -15,6 +15,8 @@ using WJ.MPR.Reader;
 using WJ.MPR.Util;
 using RFIDProtocolLib;
 using Bluetooth;
+using OpenNETCF.Windows.Forms;
+using OwnerDrawnListFWProject;
 
 namespace WJ2
 {
@@ -32,10 +34,7 @@ namespace WJ2
         }
 
         #region Form1 Properties (variables)
-
-        //private OracleConnection conn = new OracleConnection();
-        //public const string authError = "[POL-3013]";
-
+        
         private const int latLongArraySize = 128;
 
         private MPRReader Reader;
@@ -60,13 +59,26 @@ namespace WJ2
         bool firstScan = true;
 		private string serverAddress;
 		private string phoneNumber;
-        //private string numberOfSatellites;
+
+        CustomListBox custList;
+
         private event EventHandler eh;
         private ClientConnection cc;
         private static Mutex gpsBufLock = new Mutex();
         private byte originItems;
         private Cursor cursor;
+
         public delegate void GPSTextModifiedEventHandler(object sender, EventArgs e);
+
+        public delegate void DrawItemEventHandler(object sender, DrawItemEventArgs e);
+
+        public enum DrawItemState
+        {
+            None = 0,
+            Selected = 1,
+            Disabled = 4,
+            Focus = 16
+        }
 
         public event GPSTextModifiedEventHandler gpsMod;
 
@@ -80,6 +92,15 @@ namespace WJ2
         public Form1()
         {
             InitializeComponent();
+
+            custList = new CustomListBox();
+            custList.Width = this.Width;
+            custList.Height = 250;
+            custList.Location = new Point(0, 0);
+            custList.Font = inventoryListBox.Font;
+            custList.MouseDown += new MouseEventHandler(inventoryListBox_SelectedIndexChanged);
+            
+            this.tabPage1.Controls.Add(this.custList);
         }
 
         /// <summary>
@@ -108,18 +129,23 @@ namespace WJ2
             Reader.StatusEvent += new WJ.MPR.Util.StringEventHandler(Reader_StatusEvent);
             Reader.TagAdded += new TagEventHandler(Reader_TagAdded);
             Reader.TagRemoved += new TagEventHandler(Reader_TagRemoved);
+            Reader.Class1InventoryEnabled = true;
+            Reader.Class0InventoryEnabled = true;
+            Reader.PersistTime = TimeSpan.MaxValue;
+            
+            inventoryListBox.Visible = false;
+
+
+
             webBr = new Browser();
             webBr.Visible = false;
             invTimerBox.SelectedIndex = 0;
             cc = new ClientConnection();
             inventoryTags = new ArrayList();
-            //cursor = new ();
-            Reader.Class1InventoryEnabled = true;
-            Reader.Class0InventoryEnabled = true;
-            Reader.PersistTime = TimeSpan.MaxValue;
 
             NorS = 'N';
             EorW = 'E';
+
             latitude = 0;
             longitude = 0;
             
@@ -203,22 +229,45 @@ namespace WJ2
             {
                 if (Reader.InvTimerEnabled) /// starting an inventory loop
                 {
-                    startInventoryButton.Text = "Stop";
-                    startInventoryButton.BackColor = Color.Red;
-                    startInventoryButton.ForeColor = Color.White;
+                    if (isScan == 1)
+                    {
+                        scanButton.Text = "Stop";
+                        scanButton.BackColor = Color.Red;
+                        scanButton.ForeColor = Color.White;
+                        startInventoryButton.Enabled = false;
+                    }
+                    else
+                    {
+                        startInventoryButton.Text = "Stop";
+                        startInventoryButton.BackColor = Color.Red;
+                        startInventoryButton.ForeColor = Color.White;
+                        scanButton.Enabled = false;
+                    }
+
                     invProgressBar.Value = 0;
                     inventoryTags.Clear();
                     invProgressBar.Show();
                     invTimerBox.Hide();
-                    inventoryListBox.Items.Clear();
+                    custList.Items.Clear();
+                    custList.Refresh();
                     Reader.ClearInventory();
                 }
                 else /// stopping an inventory loop
                 {
-                    startInventoryButton.Text = "Wait";
-					startInventoryButton.Enabled = false;
-                    startInventoryButton.BackColor = Color.LightGreen;
-                    startInventoryButton.ForeColor = Color.Black;
+                    if (isScan == 1)
+                    {
+                        scanButton.Text = "Wait";
+                        scanButton.Enabled = false;
+                        scanButton.BackColor = Color.LightGreen;
+                        scanButton.ForeColor = Color.Black;
+                    }
+                    else
+                    {
+                        startInventoryButton.Text = "Wait";
+                        startInventoryButton.Enabled = false;
+                        startInventoryButton.BackColor = Color.LightGreen;
+                        startInventoryButton.ForeColor = Color.Black;
+                    }
                     invProgressBar.Hide();
                     invTimerBox.Show();
 
@@ -235,6 +284,8 @@ namespace WJ2
                         cc.SendConnectPacket();
                         cc.WaitForConnectResponsePacket();
 
+                        //cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest("00000000"));
+
                         // send all the RFIDs to the server
                         for (int i = 0; i < inventoryTags.Count; ++i)
                         {
@@ -248,22 +299,37 @@ namespace WJ2
                         cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0,15) + NorS.ToString(), longitude.ToString("N15").Substring(0,15) + EorW.ToString(), isScan));
 
                         cc.SendCommitPacket();
+                        
+                        // receive descriptions of items submitted
+                        
+                        for (int j = 0; j < inventoryTags.Count; ++j)
+                        {
+                            QueryResponse qr = cc.WaitForQueryResponsePacket();
 
-                        //cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest("00000000"));
-                        cc.Close();
+                            //custList.Items.Insert(j,new ListItem(qr.ShortDesc,1));
+                            custList.Insert(j,new ListItem(qr.ShortDesc, 1));                            
+                        }
+
+                        cc.Close();                        
                     }
                     catch (Exception ex)
                     {
-                        Console.Out.WriteLine(ex.ToString());
+                        Console.Out.WriteLine(ex.Message);
 
-                        inventoryListBox.Items.Clear();
+                        custList.Clear();
 
                         for (int i = 0; i < inventoryTags.Count; ++i)
-                            inventoryListBox.Items.Insert(i, inventoryTags[i].ToString());
+                        {
+                            custList.Insert(i, new ListItem(inventoryTags[i].ToString(),-1));
+                        }
                     }
                     finally
                     {
                         startInventoryButton.Text = "M/R";
+                        scanButton.Text = "Scan";
+                        scanButton.BackColor = Color.Turquoise;
+                        startInventoryButton.BackColor = Color.LightGreen;
+                        scanButton.Enabled = true;
                         startInventoryButton.Enabled = true;
                     }
                  }
@@ -321,9 +387,7 @@ namespace WJ2
         private void clearBtn_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Really clear inventory?", "Inventory will be removed", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-            {
-                inventoryTags.Clear();
-                inventoryListBox.Items.Clear();
+            {   custList.Clear();
                 Reader.ClearInventory();
             }
         }
@@ -334,14 +398,24 @@ namespace WJ2
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void inventoryListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void inventoryListBox_SelectedIndexChanged(object sender, MouseEventArgs e)
         {
-            string selectedTag = inventoryTags[inventoryListBox.SelectedIndex].ToString();
-            selectedTag = selectedTag.Replace(" ","");
-            string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
-            int lastTwoI = Convert.ToInt32(lastTwo,16);
-			selectedTag = selectedTag.Substring(0, selectedTag.Length - 2)+  lastTwoI.ToString();
+            if (custList.Items.Count == 0)
+                return;
+
+            //int selectedIndex = this.vScroll.Value + (e.Y / 250);
+            int selectedIndex = (e.Y / custList.ItemHeight);
+
+            if (selectedIndex >= custList.Items.Count)
+                return;
+
+            string selectedTag = inventoryTags[selectedIndex].ToString().Replace(" ","");
             
+            string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
+
+            int lastTwoI = Convert.ToInt32(lastTwo,16);
+
+			selectedTag = selectedTag.Substring(0, selectedTag.Length - 2)+  lastTwoI.ToString();            
             
             webBr.setUrlAndShow(new Uri("http://" + "tbk.ece.umd.edu/pda_item.jsp?rfid=" + selectedTag));
         }
@@ -535,6 +609,8 @@ namespace WJ2
                 MessageBox.Show(ex.Message);
             }
         }
+
+        
 
         /// <summary>
         /// Does the actual updating of the GPS information values, which will be put into boxes later
