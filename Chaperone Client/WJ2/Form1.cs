@@ -24,8 +24,8 @@ namespace WJ2
     {
         [DllImport("coredll.dll")]
         private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
-		[DllImport("coredll.dll")]
-		private static extern bool SipShowIM(int dwFlag);
+        [DllImport("coredll.dll")]
+        private static extern bool SipShowIM(int dwFlag);
 
 
         static void Main()
@@ -34,7 +34,7 @@ namespace WJ2
         }
 
         #region Form1 Properties (variables)
-        
+
         private const int latLongArraySize = 128;
 
         private MPRReader Reader;
@@ -57,10 +57,14 @@ namespace WJ2
         private static byte[] mac = { 0x00, 0x03, 0x7a, 0x23, 0xc6, 0xd6 };
         private RadiationSensor radSensor = new RadiationSensor(mac);
         bool firstScan = true;
-		private string serverAddress;
-		private string phoneNumber;
+        private string serverAddress;
+        private string phoneNumber;
 
-        CustomListBox custList;
+        private int selectedIndex;
+
+        private CustomListBox custList;
+
+        private CustomMenu custMenu;
 
         private event EventHandler eh;
         private ClientConnection cc;
@@ -85,7 +89,7 @@ namespace WJ2
         #endregion
 
         #region GUI Event Handlers
-        
+
         /// <summary>
         /// The constructor for the class, sets a few things up
         /// </summary>
@@ -97,10 +101,21 @@ namespace WJ2
             custList.Width = this.Width;
             custList.Height = 250;
             custList.Location = new Point(0, 0);
-            custList.Font = inventoryListBox.Font;
-            custList.MouseDown += new MouseEventHandler(inventoryListBox_SelectedIndexChanged);
-            
+            custList.MouseUp += new MouseEventHandler(inventoryListBox_SelectedIndexChanged);
+
             this.tabPage1.Controls.Add(this.custList);
+
+            custMenu = new CustomMenu();
+            custMenu.Location = new Point(5, 20);
+            custMenu.Width = 100;
+            custMenu.BackColor = Color.LightSkyBlue;
+            custMenu.Items.Add("Add");
+            custMenu.Items.Add("Remove");
+            custMenu.Items.Add("Show WWW");
+            custMenu.Height += 2;
+            custMenu.MouseUp += new MouseEventHandler(inventoryItemOptionMenuClicked);
+
+            this.tabPage1.Controls.Add(custMenu);
         }
 
         /// <summary>
@@ -132,10 +147,6 @@ namespace WJ2
             Reader.Class1InventoryEnabled = true;
             Reader.Class0InventoryEnabled = true;
             Reader.PersistTime = TimeSpan.MaxValue;
-            
-            inventoryListBox.Visible = false;
-
-
 
             webBr = new Browser();
             webBr.Visible = false;
@@ -148,7 +159,7 @@ namespace WJ2
 
             latitude = 0;
             longitude = 0;
-            
+
             string[] COMPorts = System.IO.Ports.SerialPort.GetPortNames();
             cbComPort.Items.Clear();
             btComPort.Items.Clear();
@@ -183,7 +194,7 @@ namespace WJ2
                 //Logit(Message);
             }
         }
-        
+
         /// <summary>
         /// This event is fired when a the DLL loses contact with an MPR.
         /// </summary>
@@ -212,7 +223,7 @@ namespace WJ2
                 isScan = 1;
             else
                 isScan = 0;
-            
+
             Reader.InvTimerEnabled = !Reader.InvTimerEnabled;
         }
 
@@ -248,7 +259,7 @@ namespace WJ2
                     inventoryTags.Clear();
                     invProgressBar.Show();
                     invTimerBox.Hide();
-                    custList.Items.Clear();
+                    custList.Clear();
                     custList.Refresh();
                     Reader.ClearInventory();
                 }
@@ -296,21 +307,26 @@ namespace WJ2
                             //inventoryListBox.Items.Insert(i, qr.ShortDesc);
 
                         }
-                        cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0,15) + NorS.ToString(), longitude.ToString("N15").Substring(0,15) + EorW.ToString(), isScan));
+                        cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0, 15) + NorS.ToString(), longitude.ToString("N15").Substring(0, 15) + EorW.ToString(), isScan));
 
                         cc.SendCommitPacket();
-                        
+
                         // receive descriptions of items submitted
-                        
-                        for (int j = 0; j < inventoryTags.Count; ++j)
+                        bool more = true;
+                        int j = 0;
+
+                        while (more)
                         {
                             QueryResponse qr = cc.WaitForQueryResponsePacket();
 
-                            //custList.Items.Insert(j,new ListItem(qr.ShortDesc,1));
-                            custList.Insert(j,new ListItem(qr.ShortDesc, 1));                            
+                            custList.Insert(j, new ListItem(qr.ShortDesc, qr.addedRemoved));
+
+                            j++;
+
+                            more = qr.more;
                         }
 
-                        cc.Close();                        
+                        cc.Close();
                     }
                     catch (Exception ex)
                     {
@@ -320,7 +336,7 @@ namespace WJ2
 
                         for (int i = 0; i < inventoryTags.Count; ++i)
                         {
-                            custList.Insert(i, new ListItem(inventoryTags[i].ToString(),-1));
+                            custList.Insert(i, new ListItem(inventoryTags[i].ToString(), -1));
                         }
                     }
                     finally
@@ -332,7 +348,7 @@ namespace WJ2
                         scanButton.Enabled = true;
                         startInventoryButton.Enabled = true;
                     }
-                 }
+                }
             }
         }
 
@@ -375,8 +391,7 @@ namespace WJ2
         {
             Reader.TxPower = (byte)numericUpDown1.Value;
         }
-        
-        
+
 
         /// <summary>
         /// Event fired when the clear button is pressed, gives the user the option to not
@@ -387,7 +402,8 @@ namespace WJ2
         private void clearBtn_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Really clear inventory?", "Inventory will be removed", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-            {   custList.Clear();
+            {
+                custList.Clear();
                 Reader.ClearInventory();
             }
         }
@@ -400,25 +416,38 @@ namespace WJ2
         /// <param name="e"></param>
         private void inventoryListBox_SelectedIndexChanged(object sender, MouseEventArgs e)
         {
-            if (custList.Items.Count == 0)
-                return;
-
-            //int selectedIndex = this.vScroll.Value + (e.Y / 250);
-            int selectedIndex = (e.Y / custList.ItemHeight);
-
-            if (selectedIndex >= custList.Items.Count)
-                return;
-
-            string selectedTag = inventoryTags[selectedIndex].ToString().Replace(" ","");
-            
-            string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
-
-            int lastTwoI = Convert.ToInt32(lastTwo,16);
-
-			selectedTag = selectedTag.Substring(0, selectedTag.Length - 2)+  lastTwoI.ToString();            
-            
-            webBr.setUrlAndShow(new Uri("http://" + "tbk.ece.umd.edu/pda_item.jsp?rfid=" + selectedTag));
+            selectedIndex = custList.vscrollValue + (e.Y / custList.ItemHeight);
+            custList.SelectedIndex = -1;
+            custMenu.Show(new Point(10, 20));
+            base.OnMouseUp(e);
         }
+
+        /// <summary>
+        /// Event fired when the user clicks on a new item
+        /// Pulls up a built-in web browser that shows the web page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void inventoryItemOptionMenuClicked(object sender, MouseEventArgs e)
+        {
+            switch (custMenu.SelectedIndex)
+            {
+                case 0: break;
+                case 1: break;
+                case 2:
+                    string selectedTag = inventoryTags[selectedIndex].ToString().Replace(" ", "");
+
+                    string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
+
+                    int lastTwoI = Convert.ToInt32(lastTwo, 16);
+
+                    selectedTag = selectedTag.Substring(0, selectedTag.Length - 2) + lastTwoI.ToString();
+
+                    webBr.setUrlAndShow(new Uri("http://" + "tbk.ece.umd.edu/pda_item.jsp?rfid=" + selectedTag));
+                    break;
+            }
+        }
+
 
         /// <summary>
         /// Event fired when the GPS connect button is pressed
@@ -445,23 +474,7 @@ namespace WJ2
                     gpsButton.Text = "GPSConnect";
                 }
             }
-            catch (System.InvalidOperationException ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-            }
-            catch (System.ArgumentOutOfRangeException ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-            }
-            catch (System.ArgumentException ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-            }
-            catch (System.UnauthorizedAccessException ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-            }
-            catch (System.IO.IOException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString());
             }
@@ -484,6 +497,7 @@ namespace WJ2
                 gpsBuffer += gpsSerialPort.ReadExisting();
                 gpsBufLock.ReleaseMutex();
                 gpsSerialPort.DiscardInBuffer();
+
                 // fire off an event to signal the other thread to process this event
                 GPSTextModifiedEventHandler handler = gpsMod;
                 EventArgs a = new EventArgs();
@@ -491,7 +505,7 @@ namespace WJ2
                 {
                     handler(this, a);
                 }
-            }            
+            }
         }
 
         /// <summary>
@@ -508,7 +522,7 @@ namespace WJ2
             {
                 updateGPSBoxes();
             }
-        }       
+        }
 
         /// <summary>
         /// Event fired when the number of known tags changes, so that the progress bar will be accurate
@@ -528,10 +542,10 @@ namespace WJ2
         private void wjConnectButton_Click(object sender, EventArgs e)
         {
             readerConnect(true);
-        }        
+        }
 
-#endregion
-                
+        #endregion
+
         #region Functions
 
         /// <summary>
@@ -610,7 +624,7 @@ namespace WJ2
             }
         }
 
-        
+
 
         /// <summary>
         /// Does the actual updating of the GPS information values, which will be put into boxes later
@@ -624,7 +638,7 @@ namespace WJ2
                 gpsBufLock.WaitOne();
 
                 int start = gpsBuffer.LastIndexOf(startCode);
-                
+
                 if (start < 0)
                 {
                     gpsBufLock.ReleaseMutex();
@@ -632,7 +646,7 @@ namespace WJ2
                 }
 
                 string code = gpsBuffer.Substring(start, 78);
-                
+
                 if (code.Length < 78)
                 {
                     start = gpsBuffer.IndexOf(startCode);
@@ -660,10 +674,10 @@ namespace WJ2
                     + ((int.Parse(fields[1].Substring(0, 2)) / 12) == 1 ? "PM" : "AM");
 
                 // calculate latitude, longitude, and add into running average
-                double latitudeL = double.Parse (fields[2].Substring(0,2)) 
+                double latitudeL = double.Parse(fields[2].Substring(0, 2))
                     + double.Parse(fields[2].Substring(2)) / 60.0;
 
-                double longitudeL = double.Parse(fields[4].Substring(0,3)) +
+                double longitudeL = double.Parse(fields[4].Substring(0, 3)) +
                     double.Parse(fields[4].Substring(3)) / 60.0;
 
                 EorW = fields[5][0];
@@ -682,21 +696,21 @@ namespace WJ2
                 if (latLongPtr == 0)
                 {
                     fullOnce = true;
-                }                
-                
+                }
+
                 latitude = avgLat / ((fullOnce ? latLongArraySize : latLongPtr) * 1.0);
                 longitude = avgLong / ((fullOnce ? latLongArraySize : latLongPtr) * 1.0);
 
-                latBox.Text = System.Math.Floor(latitude) + "° " 
-                    + (latitude - System.Math.Floor(latitude)).ToString().Substring(2,2) + "."
+                latBox.Text = System.Math.Floor(latitude) + "° "
+                    + (latitude - System.Math.Floor(latitude)).ToString().Substring(2, 2) + "."
                     + (latitude - System.Math.Floor(latitude)).ToString().Substring(4) + "' "
                     + NorS;
 
                 longBox.Text = System.Math.Floor(longitude) + "° "
-                    + (longitude - System.Math.Floor(longitude)).ToString().Substring(2,2) + "."
+                    + (longitude - System.Math.Floor(longitude)).ToString().Substring(2, 2) + "."
                     + (longitude - System.Math.Floor(longitude)).ToString().Substring(4) + "' "
                     + EorW;
-            
+
                 satBox.Text = fields[7].TrimStart('0');
 
                 return;
@@ -709,14 +723,14 @@ namespace WJ2
         #endregion
 
         private void mapButton_Click(object sender, EventArgs e)
-        {   
+        {
             //webBr.setUrlAndShow(new Uri("http://terraserver.microsoft.com/image.aspx?PgSrh:NavLon=-" + lon.ToString() + "&PgSrh:NavLat=" + lat.ToString()));
-            webBr.setUrlAndShow(new Uri("http://maps.google.com/maps?f=q&hl=en&q=" 
-                + latitude.ToString() + NorS + "+" 
+            webBr.setUrlAndShow(new Uri("http://maps.google.com/maps?f=q&hl=en&q="
+                + latitude.ToString() + NorS + "+"
                 + longitude.ToString() + EorW + "&t=h"));
         }
-        
-        
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -767,41 +781,41 @@ namespace WJ2
             }
         }
 
-		private void sendAlert()
-		{
-			try
-			{
-				// send warning packet
-				ClientConnection cc = new ClientConnection();
-				cc.Connect(serverAddress, 1555);
-				cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(phoneNumber));
-				cc.SendRaiseAlertPacket(new RaiseAlertRequest());
-				cc.Close();
-				radTimer.Enabled = true;
-			}
-			catch (Exception ex)
-			{
-				try
-				{
-					cc.Close();
-				}
-				catch (Exception ex2)
-				{
-					radTimer.Enabled = false;
-					button1.BackColor = Color.Green;
-					radSensor.disconnect();
-				}
-			}
-		}
+        private void sendAlert()
+        {
+            try
+            {
+                // send warning packet
+                ClientConnection cc = new ClientConnection();
+                cc.Connect(serverAddress, 1555);
+                cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(phoneNumber));
+                cc.SendRaiseAlertPacket(new RaiseAlertRequest());
+                cc.Close();
+                radTimer.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    cc.Close();
+                }
+                catch (Exception ex2)
+                {
+                    radTimer.Enabled = false;
+                    button1.BackColor = Color.Green;
+                    radSensor.disconnect();
+                }
+            }
+        }
 
-		private void textBox1_GotFocus(object sender, EventArgs e)
-		{
-			SipShowIM(1);
-		}
+        private void textBox1_GotFocus(object sender, EventArgs e)
+        {
+            SipShowIM(1);
+        }
 
-		private void textBox1_LostFocus(object sender, EventArgs e)
-		{
-			SipShowIM(0);
-		}
+        private void textBox1_LostFocus(object sender, EventArgs e)
+        {
+            SipShowIM(0);
+        }
     }
 }

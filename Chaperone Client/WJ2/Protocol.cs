@@ -62,15 +62,25 @@ namespace RFIDProtocolLib
         /// A pointer to the icon.
         /// </summary>
         public string IconName;
+        /// <summary>
+        /// Whether there are more to come
+        /// </summary>
+        public bool more;
+        /// <summary>
+        /// Added(1), missing(-1) or expected(0)
+        /// </summary>
+        public int addedRemoved;
 
         /// <summary>
         /// Server uses this to construct a query response.
         /// </summary>
-        public QueryResponse(string shortDesc, string longDesc, string iconName)
+        public QueryResponse(string shortDesc, string longDesc, string iconName, bool m, int type)
         {
             ShortDesc = shortDesc;
             LongDesc = "doesnt' matter";
             IconName = "doesn't matter";
+            more = m;
+            addedRemoved = type;
         }
 
         /// <summary>
@@ -82,6 +92,8 @@ namespace RFIDProtocolLib
             ShortDesc = null;
             LongDesc = null;
             IconName = null;
+            more = false;
+            addedRemoved = -2;
 
             TLVList l = new TLVList(buf);
             IEnumerator e = l.GetEnumerator();
@@ -93,6 +105,8 @@ namespace RFIDProtocolLib
                     case 0: ShortDesc = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
                     case 1: LongDesc = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
                     case 2: IconName = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 3: more = bool.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
+                    case 4: addedRemoved = int.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
                 }
             }
         }
@@ -107,6 +121,8 @@ namespace RFIDProtocolLib
             l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(ShortDesc)));
             l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(LongDesc)));
             l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(IconName)));
+            l.Add(new TLV(3, System.Text.Encoding.ASCII.GetBytes(more.ToString())));
+            l.Add(new TLV(4, System.Text.Encoding.ASCII.GetBytes(addedRemoved.ToString())));
 
             return l;
         }

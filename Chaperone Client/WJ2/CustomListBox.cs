@@ -17,7 +17,7 @@ namespace OwnerDrawnListFWProject
 
         private ImageList imageList = null;
         private bool wrapText = false;
-        ImageAttributes imageAttr = new ImageAttributes();
+        ImageAttributes imageAttr = new ImageAttributes();       
 
         public bool WrapText
         {
@@ -55,9 +55,7 @@ namespace OwnerDrawnListFWProject
                 this.ItemHeight = Math.Max((int)(g.MeasureString("A", this.Font).Height), this.ItemHeight) + 4;
 
             g.Dispose();
-        }
-
-        
+        }       
 
         protected override void OnDrawItem(object sender, DrawItemEventArgs e)
         {
@@ -74,16 +72,26 @@ namespace OwnerDrawnListFWProject
             else
                 return;
 
-            if (item.missingAdded == -1)
-                e.DrawBackground(Color.Tomato);
-            else if (item.missingAdded == 0)
-                e.DrawBackground(this.BackColor);
+            if (e.State == DrawItemState.Selected)
+            {
+                //Highlighted
+                e.DrawBackground();
+                textBrush = new SolidBrush(SystemColors.HighlightText);
+            }
             else
-                e.DrawBackground(Color.LightGreen);
+            {
+
+                if (item.missingAdded == -1)
+                    e.DrawBackground(Color.Tomato);
+                else if (item.missingAdded == 0)
+                    e.DrawBackground(this.BackColor);
+                else
+                    e.DrawBackground(Color.LightGreen);
+            }
 
             textBrush = new SolidBrush(this.ForeColor);
 
-            
+
             //Check if the item has a image
             if (item.ImageIndex > -1)
             {
@@ -91,10 +99,10 @@ namespace OwnerDrawnListFWProject
                 if (img != null)
                 {
                     imageAttr = new ImageAttributes();
-                    
+
                     //Set the transparency key
                     imageAttr.SetColorKey(BackgroundImageColor(img), BackgroundImageColor(img));
-                    
+
                     //Image's rectangle
                     Rectangle imgRect = new Rectangle(2, rc.Y + 1, img.Width, img.Height);
                     //Draw the image
@@ -115,20 +123,24 @@ namespace OwnerDrawnListFWProject
         private Color BackgroundImageColor(Image image)
         {
             Bitmap bmp = new Bitmap(image);
-            Color ret = bmp.GetPixel(0, 0);
-            return ret;
+            return bmp.GetPixel(0, 0);
         }
 
         public void Insert(int index, object value)
         {
             Items.Insert(index, value);
-            Graphics gxTemp = this.CreateGraphics();
-            PaintItem(gxTemp, index);
+            
+            EventArgs a = new EventArgs();
+            OnResize(a);
+            this.Invalidate();
+            this.Refresh();            
         }
 
         public void Clear()
         {
             Items.Clear();
+            EventArgs a = new EventArgs();
+            OnResize(a);
             this.Invalidate();
             this.Refresh();
         }

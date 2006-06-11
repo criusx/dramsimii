@@ -30,7 +30,6 @@ namespace WJ2
         {
             this.components = new System.ComponentModel.Container();
             this.startInventoryButton = new System.Windows.Forms.Button();
-            this.inventoryListBox = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.invTimerBox = new System.Windows.Forms.ComboBox();
@@ -109,14 +108,6 @@ namespace WJ2
             this.startInventoryButton.Text = "M/R";
             this.startInventoryButton.Click += new System.EventHandler(this.startInventoryButton_Click);
             // 
-            // inventoryListBox
-            // 
-            this.inventoryListBox.Location = new System.Drawing.Point(0, 0);
-            this.inventoryListBox.Name = "inventoryListBox";
-            this.inventoryListBox.Size = new System.Drawing.Size(240, 240);
-            this.inventoryListBox.TabIndex = 1;
-            
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
@@ -134,7 +125,6 @@ namespace WJ2
             // 
             this.tabPage1.Controls.Add(this.invTimerBox);
             this.tabPage1.Controls.Add(this.invProgressBar);
-            this.tabPage1.Controls.Add(this.inventoryListBox);
             this.tabPage1.Controls.Add(this.clearBtn);
             this.tabPage1.Controls.Add(this.scanButton);
             this.tabPage1.Controls.Add(this.startInventoryButton);
@@ -729,7 +719,6 @@ namespace WJ2
         #endregion
 
         private System.Windows.Forms.Button startInventoryButton;
-        private System.Windows.Forms.ListBox inventoryListBox;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
