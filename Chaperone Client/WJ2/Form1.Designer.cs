@@ -132,6 +132,7 @@ namespace WJ2
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Size = new System.Drawing.Size(240, 271);
             this.tabPage1.Text = "Inv";
+            this.tabPage1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tabPage1_MouseUp);
             // 
             // invTimerBox
             // 

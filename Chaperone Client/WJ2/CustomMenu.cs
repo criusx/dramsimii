@@ -39,7 +39,7 @@ namespace OwnerDrawnListFWProject
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            //Make a tracking behaviour
+            //Make a tracking behavior
             if (this.ClientRectangle.Contains(e.X, e.Y))
             {
                 this.SelectedIndex = e.Y / this.ItemHeight;
@@ -69,17 +69,20 @@ namespace OwnerDrawnListFWProject
 
         protected override void OnDrawItem(object sender, DrawItemEventArgs e)
         {
+            if (e.Index < 0)
+                return;
+
             Rectangle rc = e.Bounds;
 
             rc.X += DRAW_OFFSET;
 
             //Check if the item's selected
-            if (e.State == DrawItemState.Selected)
-            {
-                e.DrawBackground(Color.DarkKhaki);
-                //rc.X += 1;
-                //rc.Y += 1;
-            }
+            //if (e.State == DrawItemState.Selected)
+            //{
+            //    e.DrawBackground(Color.DarkKhaki);
+            //    rc.X += 1;
+            //    rc.Y += 1;
+            //}
 
             Brush textBrush = new SolidBrush(SystemColors.ControlText);
 
@@ -90,6 +93,30 @@ namespace OwnerDrawnListFWProject
             e.Graphics.DrawLine(new Pen(Color.Gray), 0, e.Bounds.Bottom, e.Bounds.Width, e.Bounds.Bottom);
             //Call the base's OnDrawEvent	
             base.OnDrawItem(sender, e);
+        }
+
+        public void Insert(int index, object value)
+        {
+            Items.Insert(index, value);
+
+            EventArgs a = new EventArgs();
+            OnResize(a);
+            this.Invalidate();
+            this.Refresh();
+        }
+
+        public void Add(object value)
+        {
+            Insert(Items.Count, value);
+        }
+
+        public void Clear()
+        {
+            Items.Clear();
+            EventArgs a = new EventArgs();
+            OnResize(a);
+            this.Invalidate();
+            this.Refresh();
         }
 
     }

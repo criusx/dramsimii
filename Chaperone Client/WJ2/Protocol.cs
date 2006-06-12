@@ -198,14 +198,38 @@ namespace RFIDProtocolLib
             Latitude = La;
             Longitude = Lo;
             isScan = iS;
-        }       
+        } 
+      
+        /// <summary>
+        /// Client uses this to parse the incoming info packet.
+        /// </summary>
+        /// <param name="buf"></param>
+        public InfoPacket(byte[] buf)
+        {
+            Latitude = "";
+            Longitude = "";
+            isScan = -1;
+
+            TLVList l = new TLVList(buf);
+            IEnumerator e = l.GetEnumerator();
+            while (e.MoveNext())
+            {
+                TLV tlv = (TLV)e.Current;
+                switch (tlv.Type)
+                {
+                    case 0: Latitude = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 1: Longitude = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 2: isScan = int.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
+                }
+            }
+        }
 
         public TLVList ToTLVList()
         {
             TLVList l = new TLVList(Type);
             l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(Latitude)));
-            l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(Longitude)));
-            l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(isScan.ToString())));
+            l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(Longitude)));
+            l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(isScan.ToString())));
 
             return l;
         }

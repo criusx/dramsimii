@@ -109,8 +109,8 @@ namespace WJ2
             custMenu.Location = new Point(5, 20);
             custMenu.Width = 100;
             custMenu.BackColor = Color.LightSkyBlue;
-            custMenu.Items.Add("Add");
-            custMenu.Items.Add("Remove");
+            //custMenu.Items.Add("Add");
+            //custMenu.Items.Add("Remove");
             custMenu.Items.Add("Show WWW");
             custMenu.Height += 2;
             custMenu.MouseUp += new MouseEventHandler(inventoryItemOptionMenuClicked);
@@ -178,6 +178,10 @@ namespace WJ2
                 btComPort.SelectedIndex = 1;
                 btComPort.Enabled = true;
             }
+
+            // try to connect to the gps device
+            EventArgs a = new EventArgs();
+            BTbutton_Click(this, a);
 
         }
 
@@ -284,49 +288,47 @@ namespace WJ2
 
                     try
                     {
-                        cc = new ClientConnection();
-
-                        // inventory has ended, now go submit manifest
-
-                        // connect to the server
-                        cc.Connect(hostnameBox.Text, 1555);
-
-                        // handshake
-                        cc.SendConnectPacket();
-                        cc.WaitForConnectResponsePacket();
-
-                        //cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest("00000000"));
-
-                        // send all the RFIDs to the server
-                        for (int i = 0; i < inventoryTags.Count; ++i)
+                        if (inventoryTags.Count > 0)
                         {
-                            cc.SendQueryPacket(new QueryRequest(new RFID(inventoryTags[i].ToString())));
 
-                            //QueryResponse qr = cc.WaitForQueryResponsePacket();
+                            cc = new ClientConnection();
 
-                            //inventoryListBox.Items.Insert(i, qr.ShortDesc);
+                            // connect to the server
+                            cc.Connect(hostnameBox.Text, 1555);
 
+                            // handshake
+                            cc.SendConnectPacket();
+                            cc.WaitForConnectResponsePacket();
+
+                            //cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest("3012330583"));
+                            //cc.WaitForSetPhoneNumberResponsePacket();
+                            //cc.SendRaiseAlertPacket(new RaiseAlertRequest());
+
+                            // send all the RFIDs to the server
+                            for (int i = 0; i < inventoryTags.Count; ++i)
+                                cc.SendQueryPacket(new QueryRequest(new RFID(inventoryTags[i].ToString())));
+
+                            cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0, 15) + NorS.ToString(), longitude.ToString("N15").Substring(0, 15) + EorW.ToString(), isScan));
+
+                            cc.SendCommitPacket();
+
+                            // receive descriptions of items submitted
+                            bool more = true;
+                            int j = 0;
+
+                            while (more)
+                            {
+                                QueryResponse qr = cc.WaitForQueryResponsePacket();
+
+                                custList.Insert(j, new ListItem(qr.ShortDesc, qr.addedRemoved));
+
+                                j++;
+
+                                more = qr.more;
+                            }
+
+                            cc.Close();
                         }
-                        cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0, 15) + NorS.ToString(), longitude.ToString("N15").Substring(0, 15) + EorW.ToString(), isScan));
-
-                        cc.SendCommitPacket();
-
-                        // receive descriptions of items submitted
-                        bool more = true;
-                        int j = 0;
-
-                        while (more)
-                        {
-                            QueryResponse qr = cc.WaitForQueryResponsePacket();
-
-                            custList.Insert(j, new ListItem(qr.ShortDesc, qr.addedRemoved));
-
-                            j++;
-
-                            more = qr.more;
-                        }
-
-                        cc.Close();
                     }
                     catch (Exception ex)
                     {
@@ -416,9 +418,25 @@ namespace WJ2
         /// <param name="e"></param>
         private void inventoryListBox_SelectedIndexChanged(object sender, MouseEventArgs e)
         {
+            custMenu.Hide();
+
             selectedIndex = custList.vscrollValue + (e.Y / custList.ItemHeight);
+
+            if (selectedIndex >= custList.Items.Count)
+                return;
+
             custList.SelectedIndex = -1;
-            custMenu.Show(new Point(10, 20));
+            
+            custMenu.Clear();
+            
+            if (((ListItem)custList.Items[selectedIndex]).missingAdded == -1)
+                custMenu.Add("Remove");
+            else if (((ListItem)custList.Items[selectedIndex]).missingAdded == 1)
+                custMenu.Add("Add");
+            custMenu.Add("Show WWW");
+
+            custMenu.Show(new Point(10, e.Y));
+
             base.OnMouseUp(e);
         }
 
@@ -789,6 +807,7 @@ namespace WJ2
                 ClientConnection cc = new ClientConnection();
                 cc.Connect(serverAddress, 1555);
                 cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(phoneNumber));
+                cc.WaitForSetPhoneNumberResponsePacket();
                 cc.SendRaiseAlertPacket(new RaiseAlertRequest());
                 cc.Close();
                 radTimer.Enabled = true;
@@ -816,6 +835,11 @@ namespace WJ2
         private void textBox1_LostFocus(object sender, EventArgs e)
         {
             SipShowIM(0);
+        }
+
+        private void tabPage1_MouseUp(object sender, MouseEventArgs e)
+        {
+            custMenu.Hide();
         }
     }
 }
