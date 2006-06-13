@@ -54,7 +54,7 @@ namespace WJ2
         private double[] longitudeValues = new double[latLongArraySize];
         private double avgLat = 0;
         private double avgLong = 0;
-        private static byte[] mac = { 0x00, 0x03, 0x7a, 0x23, 0xc6, 0xd6 };
+        private static byte[] mac = { 0x00, 0x03, 0x7a, 0x23, 0xc6, 0xd6 }; // mac address for the DAQ
         private RadiationSensor radSensor = new RadiationSensor(mac);
         bool firstScan = true;
         private string serverAddress;
@@ -109,9 +109,7 @@ namespace WJ2
             custMenu.Location = new Point(5, 20);
             custMenu.Width = 100;
             custMenu.BackColor = Color.LightSkyBlue;
-            //custMenu.Items.Add("Add");
-            //custMenu.Items.Add("Remove");
-            custMenu.Items.Add("Show WWW");
+            custMenu.Add("default");
             custMenu.Height += 2;
             custMenu.MouseUp += new MouseEventHandler(inventoryItemOptionMenuClicked);
 
@@ -320,7 +318,7 @@ namespace WJ2
                             {
                                 QueryResponse qr = cc.WaitForQueryResponsePacket();
 
-                                custList.Insert(j, new ListItem(qr.ShortDesc, qr.addedRemoved));
+                                custList.Insert(j, new ListItem(qr.rfidNum,qr.ShortDesc, qr.addedRemoved));
 
                                 j++;
 
@@ -338,7 +336,7 @@ namespace WJ2
 
                         for (int i = 0; i < inventoryTags.Count; ++i)
                         {
-                            custList.Insert(i, new ListItem(inventoryTags[i].ToString(), -1));
+                            custList.Insert(i, new ListItem(inventoryTags[i].ToString(), "", -1));
                         }
                     }
                     finally
@@ -429,7 +427,7 @@ namespace WJ2
             
             custMenu.Clear();
             
-            if (((ListItem)custList.Items[selectedIndex]).missingAdded == -1)
+            if (((ListItem)custList.Items[selectedIndex]).missingAdded <= 0)
                 custMenu.Add("Remove");
             else if (((ListItem)custList.Items[selectedIndex]).missingAdded == 1)
                 custMenu.Add("Add");
@@ -448,7 +446,9 @@ namespace WJ2
         /// <param name="e"></param>
         private void inventoryItemOptionMenuClicked(object sender, MouseEventArgs e)
         {
-            switch (custMenu.SelectedIndex)
+            if (!custMenu.ClientRectangle.Contains(e.X, e.Y))
+                return;
+            switch (custMenu.action)
             {
                 case 0: break;
                 case 1: break;

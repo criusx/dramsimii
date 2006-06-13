@@ -80,7 +80,8 @@ namespace OwnerDrawnListFWProject
             }
             else
             {
-
+                if (item.missingAdded == -2)
+                    e.DrawBackground(Color.DarkRed);
                 if (item.missingAdded == -1)
                     e.DrawBackground(Color.Tomato);
                 else if (item.missingAdded == 0)
@@ -113,7 +114,10 @@ namespace OwnerDrawnListFWProject
             }
 
             //Draw item's text
-            e.Graphics.DrawString(item.Text, e.Font, textBrush, rc);
+            if (item.shortDesc != "")
+                e.Graphics.DrawString(item.shortDesc, e.Font, textBrush, rc);
+            else
+                e.Graphics.DrawString(item.RFIDNum, e.Font, textBrush, rc);
             //Draw the line
             e.Graphics.DrawLine(new Pen(Color.Navy), 0, e.Bounds.Bottom, e.Bounds.Width, e.Bounds.Bottom);
             //Call the base's OnDrawEvent	
@@ -126,48 +130,45 @@ namespace OwnerDrawnListFWProject
             return bmp.GetPixel(0, 0);
         }
 
-        public void Insert(int index, object value)
-        {
-            Items.Insert(index, value);
-            
-            EventArgs a = new EventArgs();
-            OnResize(a);
-            this.Invalidate();
-            this.Refresh();            
-        }
-
-        public void Clear()
-        {
-            Items.Clear();
-            EventArgs a = new EventArgs();
-            OnResize(a);
-            this.Invalidate();
-            this.Refresh();
-        }
+        
     }
 
     //ListItem class
     public class ListItem
     {
-        private string text = "";
+        private string ShortDesc = "";
+        private string rfidNum = "";
         private int imageIndex = -1;
         private int MissingAdded = 0;
 
-        public ListItem(string a, int b)
+        public ListItem(string rfid, string shortdesc, int b)
         {
-            text = a;
+            rfidNum = rfid;
+            ShortDesc = shortdesc;
             MissingAdded = b;
         }
 
-        public string Text
+        public string shortDesc
         {
             get
             {
-                return text;
+                return ShortDesc;
             }
             set
             {
-                text = value;
+                ShortDesc = value;
+            }
+        }
+
+        public string RFIDNum
+        {
+            get
+            {
+                return rfidNum;
+            }
+            set
+            {
+                rfidNum = value;
             }
         }
 

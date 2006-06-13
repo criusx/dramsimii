@@ -12,6 +12,7 @@ namespace OwnerDrawnListFWProject
     public class CustomMenu : OwnerDrawnList
     {
         const int DRAW_OFFSET = 4;
+        public int action = 0;
 
         public CustomMenu()
         {
@@ -43,6 +44,13 @@ namespace OwnerDrawnListFWProject
             if (this.ClientRectangle.Contains(e.X, e.Y))
             {
                 this.SelectedIndex = e.Y / this.ItemHeight;
+                if (this.SelectedIndex == 0)
+                    if (this.Items[0].ToString() == "Add")
+                        this.action = 1;
+                    else
+                        this.action = -1;
+                else
+                    this.action = 0;
                 this.Invalidate();
             }
 
@@ -95,29 +103,39 @@ namespace OwnerDrawnListFWProject
             base.OnDrawItem(sender, e);
         }
 
-        public void Insert(int index, object value)
-        {
-            Items.Insert(index, value);
-
-            EventArgs a = new EventArgs();
-            OnResize(a);
-            this.Invalidate();
-            this.Refresh();
-        }
-
         public void Add(object value)
         {
-            Insert(Items.Count, value);
+            this.Insert(Items.Count, value);
+            ////Adjust the height
+            //this.Height = ((int)this.Height / ItemHeight) * ItemHeight;
+
+            ////How many items are visible
+            //int viewableItemCount = this.ClientSize.Height / this.ItemHeight;
+
+            //this.vScroll.Bounds = new Rectangle(this.ClientSize.Width - SCROLL_WIDTH,
+            //    0,
+            //    SCROLL_WIDTH,
+            //    this.ClientSize.Height);
+
+
+            //// Determine if scrollbars are needed
+            //if (this.listItems.Count > viewableItemCount)
+            //{
+            //    this.vScroll.Visible = true;
+            //    this.vScroll.LargeChange = viewableItemCount;
+            //    this.m_bmpOffscreen = new Bitmap(this.ClientSize.Width - SCROLL_WIDTH, this.ClientSize.Height);
+            //}
+            //else
+            //{
+            //    //showScrollbar = false;
+            //    this.vScroll.Visible = false;
+            //    this.vScroll.LargeChange = this.listItems.Count;
+            //    this.m_bmpOffscreen = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+            //}
+
+            //this.vScroll.Maximum = this.listItems.Count - 1;
         }
 
-        public void Clear()
-        {
-            Items.Clear();
-            EventArgs a = new EventArgs();
-            OnResize(a);
-            this.Invalidate();
-            this.Refresh();
-        }
 
     }
 }

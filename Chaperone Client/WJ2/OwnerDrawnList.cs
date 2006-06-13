@@ -559,6 +559,29 @@ namespace OpenNETCF.Windows.Forms
 
         }
 
+        public void Insert(int index, object value)
+        {
+            Items.Insert(index, value);
+
+            EventArgs a = new EventArgs();
+            OnResize(a);
+            OnParentChanged(a);
+            this.Invalidate();
+            this.Refresh();
+        }
+
+        public void Clear()
+        {
+            Items.Clear();
+            EventArgs a = new EventArgs();
+            OnResize(a);
+            //OnParentChanged(a);
+            this.Invalidate();
+            this.Refresh();
+        }
+
+        
+
     }
 
     #endregion

@@ -69,6 +69,11 @@ namespace RFIDProtocolLib
             packet.WriteToStream(c.GetStream());
         }
 
+        public void SendDeletePacket()
+        {
+
+        }
+
         /// <summary>
         /// Send a commit to let the server know that it has all the RFIDs
         /// for the current inventory and may begin analysis
