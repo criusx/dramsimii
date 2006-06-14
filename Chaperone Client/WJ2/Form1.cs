@@ -433,8 +433,8 @@ namespace WJ2
                 custMenu.Add("Add");
             custMenu.Add("Show WWW");
 
-            custMenu.Show(new Point(10, e.Y));
-
+            custMenu.Show(new Point(Screen.PrimaryScreen.Bounds.Right - 5 - custMenu.Width, e.Y));
+            
             base.OnMouseUp(e);
         }
 

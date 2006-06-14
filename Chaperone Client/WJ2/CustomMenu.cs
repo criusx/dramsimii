@@ -53,7 +53,10 @@ namespace OwnerDrawnListFWProject
                     this.action = 0;
                 this.Invalidate();
             }
-
+            else
+            {
+                this.Hide();
+            }
         }
 
         //Implement a Click event
@@ -106,34 +109,6 @@ namespace OwnerDrawnListFWProject
         public void Add(object value)
         {
             this.Insert(Items.Count, value);
-            ////Adjust the height
-            //this.Height = ((int)this.Height / ItemHeight) * ItemHeight;
-
-            ////How many items are visible
-            //int viewableItemCount = this.ClientSize.Height / this.ItemHeight;
-
-            //this.vScroll.Bounds = new Rectangle(this.ClientSize.Width - SCROLL_WIDTH,
-            //    0,
-            //    SCROLL_WIDTH,
-            //    this.ClientSize.Height);
-
-
-            //// Determine if scrollbars are needed
-            //if (this.listItems.Count > viewableItemCount)
-            //{
-            //    this.vScroll.Visible = true;
-            //    this.vScroll.LargeChange = viewableItemCount;
-            //    this.m_bmpOffscreen = new Bitmap(this.ClientSize.Width - SCROLL_WIDTH, this.ClientSize.Height);
-            //}
-            //else
-            //{
-            //    //showScrollbar = false;
-            //    this.vScroll.Visible = false;
-            //    this.vScroll.LargeChange = this.listItems.Count;
-            //    this.m_bmpOffscreen = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
-            //}
-
-            //this.vScroll.Maximum = this.listItems.Count - 1;
         }
 
 
