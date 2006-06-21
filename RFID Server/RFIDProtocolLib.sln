@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RFIDProtocolLib", "RFIDProtocolLib\RFIDProtocolLib.csproj", "{A49E770C-ABF3-4C2D-B8A4-89148F2417CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RFIDProtocolServer", "RFIDProtocolServer\RFIDProtocolServer.csproj", "{697C18C5-1CF3-493C-9A16-1ACF1D2E324B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A49E770C-ABF3-4C2D-B8A4-89148F2417CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A49E770C-ABF3-4C2D-B8A4-89148F2417CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A49E770C-ABF3-4C2D-B8A4-89148F2417CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A49E770C-ABF3-4C2D-B8A4-89148F2417CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{697C18C5-1CF3-493C-9A16-1ACF1D2E324B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{697C18C5-1CF3-493C-9A16-1ACF1D2E324B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{697C18C5-1CF3-493C-9A16-1ACF1D2E324B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{697C18C5-1CF3-493C-9A16-1ACF1D2E324B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
