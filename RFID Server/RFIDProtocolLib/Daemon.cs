@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace RFIDProtocolLib
@@ -19,7 +20,7 @@ namespace RFIDProtocolLib
 		/// <param name="port">The port to listen on.</param>
 		public Daemon(int port)
 		{
-			listener = new TcpListener(System.Net.IPAddress.Any, port);
+			listener = new TcpListener(Dns.GetHostByName(Dns.GetHostName()).AddressList[0], port);
 		}
 
 		/// <summary>
@@ -47,15 +48,5 @@ namespace RFIDProtocolLib
 		{
 			return new ServerConnection(listener.AcceptTcpClient());
 		}
-
-        public void BeginAcceptClientConnection(AsyncCallback callback, object state)
-        {
-            listener.BeginAcceptTcpClient(callback, state);
-        }
-
-        public ServerConnection EndAcceptClientConnection(IAsyncResult asyncResult)
-        {
-            return new ServerConnection(listener.EndAcceptTcpClient(asyncResult));
-        }
 	}
 }

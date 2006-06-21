@@ -39,7 +39,7 @@ namespace RFIDProtocolLib
 			s.Stop();
 		}
 
-		/*[Test]
+		[Test]
 		public void ClientServerConnect()
 		{
 			Daemon daemon = new Daemon(PORT);
@@ -59,66 +59,8 @@ namespace RFIDProtocolLib
 			s.Close();
 
 			daemon.Stop();
-		}*/
+		}
 
-        [Test]
-        public void QueryTest()
-        {
-            Daemon daemon = new Daemon(1554);
-            daemon.Start();
-            ClientConnection c = new ClientConnection();
-            ServerConnection s = null;
-            ClientConnection c2 = new ClientConnection();
-            ServerConnection s2 = null;
-
-            try
-            {                
-                c.Connect(HOST, 1554);
-
-                s = daemon.AcceptClientConnection();
-
-                c.SendConnectPacket();
-                s.WaitForConnectPacket();
-                s.SendConnectResponsePacket();
-                c.WaitForConnectResponsePacket();
-
-                QueryRequest req1 = new QueryRequest(new RFID("31 32 33 34 35 36 00 00 00 00 00 2A"), "123.44325", "33.432155", 0);
-                c.SendQueryPacket(req1);
-                QueryRequest req2 = s.WaitForQueryPacket();
-                QueryResponse resp1 = DBBackend.QueryRFID(req2, s);
-                s.SendQueryResponsePacket(resp1);
-                QueryResponse resp2 = c.WaitForQueryResponsePacket();
-
-                Assert.AreEqual("LRU Type Alpha #243", resp2.ShortDesc);
-
-
-
-                c2.Connect(HOST, 1554);
-
-                s2 = daemon.AcceptClientConnection();
-
-                c2.SendConnectPacket();
-                s2.WaitForConnectPacket();
-                s2.SendConnectResponsePacket();
-                c2.WaitForConnectResponsePacket();
-
-                QueryRequest req3 = new QueryRequest(new RFID("31 32 33 34 35 36 00 00 00 00 00 2A"), "123.44325", "33.432155", 1);
-                c2.SendQueryPacket(req3);
-                QueryRequest req4 = s2.WaitForQueryPacket();
-                QueryResponse resp3 = DBBackend.QueryRFID(req4, s2);
-                s2.SendQueryResponsePacket(resp3);
-                QueryResponse resp4 = c2.WaitForQueryResponsePacket();
-            }
-            finally
-            {
-                c.Close();
-                s.Close();
-
-                daemon.Stop();
-            }
-        }
-
-#if DONTUSETHIS
 		[Test]
 		public void ScanProtocolTest()
 		{
@@ -195,7 +137,7 @@ namespace RFIDProtocolLib
 			daemon.Stop();
 		}
 
-		public void UpdateTransitHistoryTest()
+		/*public void UpdateTransitHistoryTest()
 		{
 			Daemon daemon = new Daemon(PORT);
 			daemon.Start();
@@ -230,7 +172,7 @@ namespace RFIDProtocolLib
 			s.Close();
 
 			daemon.Stop();
-		}
+		}*/
 
         [Test]
         public void VoIPTest()
@@ -270,7 +212,7 @@ namespace RFIDProtocolLib
             }
             catch
             {
-            }
+            }*/
 
             s.SendAlertResponsePacket(resp);
             AlertResponse resp2 = c.WaitForAlertResponsePacket();
@@ -318,7 +260,6 @@ namespace RFIDProtocolLib
 
             daemon.Stop();
         }
-#endif
 	}
 }
 

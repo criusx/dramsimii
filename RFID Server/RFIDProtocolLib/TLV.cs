@@ -114,8 +114,7 @@ namespace RFIDProtocolLib
 		/// <param name="s">The stream to read from.</param>
 		public void ReadFromStream(System.IO.Stream s)
 		{
-            s.Read(header, 0, HEADER_SIZE);
-
+			s.Read(header, 0, HEADER_SIZE);
 			if (Length > 0)
 			{
 				data = new byte[Length];
