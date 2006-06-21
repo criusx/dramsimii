@@ -1,0 +1,5 @@
+bin\Debug\RFIDProtocolLib.dll
+bin\Debug\RFIDProtocolLib.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\RFIDProtocolLib.dll
+obj\Debug\RFIDProtocolLib.pdb
