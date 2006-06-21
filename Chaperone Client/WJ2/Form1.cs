@@ -450,9 +450,13 @@ namespace WJ2
                 return;
             switch (custMenu.action)
             {
-                case 0: break;
-                case 1: break;
-                case 2:
+                case -1: // remove
+					// send command to remove this item
+					break;
+				case 1: // add
+					// send command to add this item to the manifest
+					break;
+                case 0:
                     string selectedTag = inventoryTags[selectedIndex].ToString().Replace(" ", "");
 
                     string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
@@ -463,6 +467,7 @@ namespace WJ2
 
                     webBr.setUrlAndShow(new Uri("http://" + "tbk.ece.umd.edu/pda_item.jsp?rfid=" + selectedTag));
                     break;
+				default: break;
             }
         }
 
