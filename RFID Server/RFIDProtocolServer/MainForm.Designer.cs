@@ -28,22 +28,37 @@ namespace RFIDProtocolServer
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // MainForm
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(272, 102);
-            this.Name = "MainForm";
-            this.Text = "RFID Protocol Server";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.ResumeLayout(false);
+			this.textBox1 = new System.Windows.Forms.ListBox();
+			this.SuspendLayout();
+			// 
+			// textBox1
+			// 
+			this.textBox1.FormattingEnabled = true;
+			this.textBox1.Location = new System.Drawing.Point(12, 50);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(642, 888);
+			this.textBox1.TabIndex = 0;
+			// 
+			// MainForm
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(666, 954);
+			this.Controls.Add(this.textBox1);
+			this.Name = "MainForm";
+			this.Text = "RFID Protocol Server";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+			this.Load += new System.EventHandler(this.MainForm_Load);
+			this.ResumeLayout(false);
 
         }
 
         #endregion
-    }
+
+		private System.Windows.Forms.ListBox textBox1;
+
+
+
+	}
 }
 

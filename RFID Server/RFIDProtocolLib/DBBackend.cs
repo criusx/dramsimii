@@ -1,8 +1,7 @@
 using System;
-//using System.Data.Odbc;
 using System.Diagnostics;
-using System.Net;
 using Oracle.DataAccess.Client;
+using System.Net;
 
 #if USING_NUNIT
 using NUnit.Framework;
