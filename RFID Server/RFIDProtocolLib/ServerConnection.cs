@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Net.Sockets;
+using System.Collections;
 
 namespace RFIDProtocolLib
 {
@@ -9,9 +11,14 @@ namespace RFIDProtocolLib
 	public class ServerConnection
 	{
 		private TcpClient c;
+		
+
+        public static int SessionIdStat = 0;
+        public int SessionId;
 
 		public ServerConnection(TcpClient client)
 		{
+            SessionId = SessionIdStat++;
 			c = client;
 		}
 
@@ -19,6 +26,16 @@ namespace RFIDProtocolLib
 		{
 			c.Close();
 		}
+
+        public bool Connected
+        {
+            get { return c.Connected; }
+        }
+
+        public NetworkStream GetStream()
+        {
+            return c.GetStream();
+        }
 
 		#region Connect
 		public void WaitForConnectPacket()
@@ -35,6 +52,68 @@ namespace RFIDProtocolLib
 		}
 		#endregion
 
+        #region Query
+        public QueryRequest WaitForQueryPacket()
+        {
+            if (!c.GetStream().DataAvailable)
+                throw new IOException("Data not there!");
+
+            TLV packet = new TLV();
+            while (packet.Type != QueryRequest.Type)
+                packet.ReadFromStream(c.GetStream());
+
+
+            return new QueryRequest(packet.Value);
+        }
+
+        public void SendQueryResponsePacket(QueryResponse resp)
+        {
+            TLV responsePacket = new TLV(QueryResponse.Type, resp.ToTLVList().GetBytes());
+            responsePacket.WriteToStream(c.GetStream());
+        }
+        #endregion
+
+        #region SetPhoneNumber
+        public SetPhoneNumberRequest WaitForSetPhoneNumberPacket()
+        {
+            if (!c.GetStream().DataAvailable)
+                throw new IOException("Data not there!");
+
+            TLV packet = new TLV();
+            while (packet.Type != QueryRequest.Type)
+                packet.ReadFromStream(c.GetStream());
+
+            return new SetPhoneNumberRequest(packet.Value);
+        }
+
+        public void SendSetPhoneNumberPacket(SetPhoneNumberResponse resp)
+        {
+            TLV responsePacket = new TLV(SetPhoneNumberResponse.Type, resp.ToTLVList().GetBytes());
+            responsePacket.WriteToStream(c.GetStream());
+        }
+        #endregion
+
+        #region RaiseAlert
+        public RaiseAlertRequest WaitForSRaiseAlertPacket()
+        {
+            if (!c.GetStream().DataAvailable)
+                throw new IOException("Data not there!");
+
+            TLV packet = new TLV();
+            while (packet.Type != RaiseAlertRequest.Type)
+                packet.ReadFromStream(c.GetStream());
+
+            return new RaiseAlertRequest(packet.Value);
+        }
+
+        public void SendRaiseAlertPacket(RaiseAlertResponse resp)
+        {
+            TLV responsePacket = new TLV(RaiseAlertResponse.Type, resp.ToTLVList().GetBytes());
+            responsePacket.WriteToStream(c.GetStream());
+        }
+        #endregion
+
+#if DONTUSETHIS 
 		#region Scan
 		public ScanRequest WaitForScanPacket()
 		{
@@ -102,5 +181,6 @@ namespace RFIDProtocolLib
             responsePacket.WriteToStream(c.GetStream());
         }
         #endregion
+#endif
 	}
 }
