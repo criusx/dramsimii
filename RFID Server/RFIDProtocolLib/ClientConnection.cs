@@ -57,7 +57,65 @@ namespace RFIDProtocolLib
 		}
 		#endregion
 
-		#region Scan
+        #region Query
+        /// <summary>
+        /// Sent when the PDA quryies an RFID tag for info about it.
+        /// </summary>
+        /// <param name="req">The query request.</param>
+        public void SendQueryPacket(QueryRequest req)
+        {
+            TLV packet = new TLV(QueryRequest.Type, req.ToTLVList().GetBytes());
+            packet.WriteToStream(c.GetStream());
+        }
+
+        /// <summary>
+        /// Sent from the server back after a Query packet is sent.
+        /// This doesn't do it yet, but will throw an exception if it receives
+        /// an ERROR packet.
+        /// </summary>
+        /// <returns>A QueryResponse describing the RFID.</returns>
+        public QueryResponse WaitForQueryResponsePacket()
+        {
+            TLV responsePacket = new TLV();
+            while (responsePacket.Type != QueryResponse.Type)
+                responsePacket.ReadFromStream(c.GetStream());
+
+            return new QueryResponse(responsePacket.Value);
+        }
+        #endregion
+
+        #region SetPhoneNumber
+        public void SendSetPhoneNumberPacket(SetPhoneNumberRequest req)
+        {
+            TLV packet = new TLV(SetPhoneNumberRequest.Type, req.ToTLVList().GetBytes());
+            packet.WriteToStream(c.GetStream());
+        }
+
+        public void WaitForSetPhoneNumberResponsePacket()
+        {
+            TLV responsePacket = new TLV();
+            while (responsePacket.Type != SetPhoneNumberResponse.Type)
+                responsePacket.ReadFromStream(c.GetStream());
+        }
+        #endregion
+
+        #region RaiseAlert
+        public void SendRaiseAlertPacket(RaiseAlertRequest req)
+        {
+            TLV packet = new TLV(RaiseAlertRequest.Type, req.ToTLVList().GetBytes());
+            packet.WriteToStream(c.GetStream());
+        }
+
+        public void WaitForRaiseAlertResponsePacket()
+        {
+            TLV responsePacket = new TLV();
+            while (responsePacket.Type != RaiseAlertResponse.Type)
+                responsePacket.ReadFromStream(c.GetStream());
+        }
+        #endregion
+
+#if DONTUSETHIS
+        #region Scan
 		/// <summary>
 		/// Sent when the PDA scan's an RFID tag.  This updates the DB saying
 		/// that a scan happened.
@@ -80,9 +138,9 @@ namespace RFIDProtocolLib
 			while (scanResponsePacket.Type != ScanResponse.Type)
 				scanResponsePacket.ReadFromStream(c.GetStream());
 		}
-		#endregion
+        #endregion
 
-		#region Query
+        #region Query
 		/// <summary>
 		/// Sent when the PDA quryies an RFID tag for info about it.
 		/// </summary>
@@ -107,7 +165,7 @@ namespace RFIDProtocolLib
 
 			return new QueryResponse(responsePacket.Value);
 		}
-		#endregion
+        #endregion
 
         #region Alert
         /// <summary>
@@ -162,5 +220,6 @@ namespace RFIDProtocolLib
             return new CheckManifestResponse(responsePacket.Value);
         }
         #endregion
-	}
+#endif
+    }
 }
