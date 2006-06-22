@@ -21,12 +21,17 @@ namespace RFIDProtocolServer
         public MainForm()
         {
             InitializeComponent();
+			messages = new ArrayList();
+			messagesLock = new Mutex();
         }
 
         Daemon d;
         bool isRunning;
 		int port = 5060;
         string PhoneNumber = "3012330583";
+
+		private ArrayList messages;
+		private Mutex messagesLock;
 
 		private const string DBSERVER = "SRL";
 		private const string DATABASE = "RFID";
@@ -39,6 +44,9 @@ namespace RFIDProtocolServer
 
             Thread t = new Thread(new ThreadStart(RunDaemon));
             t.Start();
+			//timer1.Interval = 1000;
+			//timer1.`
+			timer1.Enabled = true;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -87,9 +95,9 @@ namespace RFIDProtocolServer
             Console.Out.WriteLine("Client thread running");
             ServerConnection s = (ServerConnection)obj;
 
-			string MyConString = "User Id=rfid;" +
-				"Password=rfid#srl#13rfid;" +
-				"Data Source=" + DBSERVER;
+			string MyConString = "User Id=" + usernameBox.Text +";" +
+				"Password=" + passwordBox.Text + ";" +
+				"Data Source=" + dataSourceBox.Text;
 
 			string Latitude = "00 00.00N";
 			string Longitude = "00 00.00W";
@@ -182,15 +190,13 @@ namespace RFIDProtocolServer
                                 voip.call(PhoneNumber, "temp1.raw");
 								port++;
                             } break;
-						case 9: //InfoPacket Type
+						case InfoPacket.Type: //InfoPacket Type, also signals the end of the tag stream
 							{
 								InfoPacket iP = new InfoPacket(newPacket.Value);
 								Latitude = iP.Latitude;
 								Longitude = iP.Longitude;
 								IsScan = iP.isScan;								
-							} break;
-						case 8: // CommitPacket type
-							{
+							
 								try
 								{
 									// now go do requests
@@ -208,7 +214,11 @@ namespace RFIDProtocolServer
 											"FROM Descriptions WHERE rfid='" +
 											inventoryTags[i].ToString() + "'";
 										System.Console.WriteLine(cmd.CommandText);
-										textBox1.Items.Add(cmd.CommandText);
+
+										messagesLock.WaitOne();
+										messages.Add(cmd.CommandText);
+										messagesLock.ReleaseMutex();
+										
 
 										OracleDataReader reader = cmd.ExecuteReader();
 										while (reader.Read())
@@ -220,7 +230,10 @@ namespace RFIDProtocolServer
 												continue;
 											}
 										System.Console.WriteLine(inventoryTags[i].ToString());
-										textBox1.Items.Add(inventoryTags[i].ToString());
+
+										messagesLock.WaitOne();
+										messages.Add(inventoryTags[i].ToString());
+										messagesLock.ReleaseMutex();
 									}
 
 									ArrayList oldInvList = new ArrayList(); // the items checked in or added in the last scan
@@ -239,7 +252,11 @@ namespace RFIDProtocolServer
 												inventoryTags[containerFound].ToString() + "',TO_DATE('" +
 												currentTime + "','MM/DD/YY HH:MI:SS AM'))";
 											System.Console.WriteLine(cmd.CommandText);
-											textBox1.Items.Add(cmd.CommandText);
+
+											messagesLock.WaitOne();
+											messages.Add(cmd.CommandText);
+											messagesLock.ReleaseMutex();
+
 											cmd.ExecuteNonQuery();
 
 											// insert items as child scans
@@ -253,7 +270,9 @@ namespace RFIDProtocolServer
 													Longitude + "'," +
 													"0,0,0)";
 												System.Console.WriteLine(cmd.CommandText);
-												textBox1.Items.Add(cmd.CommandText);
+												messagesLock.WaitOne();
+												messages.Add(cmd.CommandText);
+												messagesLock.ReleaseMutex();
 												cmd.ExecuteNonQuery();
 											}
 										}
@@ -264,7 +283,9 @@ namespace RFIDProtocolServer
 												"FROM manifest " +
 												"WHERE rfid = '" + inventoryTags[containerFound].ToString() + "'";
 											System.Console.WriteLine(cmd.CommandText);
-											textBox1.Items.Add(cmd.CommandText);
+											messagesLock.WaitOne();
+											messages.Add(cmd.CommandText);
+											messagesLock.ReleaseMutex();
 											OracleDataReader reader = cmd.ExecuteReader();
 											reader.Read();
 											decimal manifestNum;
@@ -274,7 +295,9 @@ namespace RFIDProtocolServer
 											else
 											{
 												System.Console.WriteLine("Subsequent scan without manifest");
-												textBox1.Text += "Subsequent scan without manifest\n";
+												messagesLock.WaitOne();
+												messages.Add("Subsequent scan without manifest");
+												messagesLock.ReleaseMutex();
 												return;
 											}
 											reader.Close();
@@ -288,7 +311,9 @@ namespace RFIDProtocolServer
 												"FROM scans " +
 												"WHERE manifest_num = " + manifestNum.ToString() + ")";
 											System.Console.WriteLine(cmd.CommandText);
-											textBox1.Items.Add(cmd.CommandText);
+											messagesLock.WaitOne();
+											messages.Add(cmd.CommandText);
+											messagesLock.ReleaseMutex();
 
 											reader = cmd.ExecuteReader();
 
@@ -328,7 +353,9 @@ namespace RFIDProtocolServer
 													"',2,0,'root@localhost','From " + inventoryTags[containerFound].ToString() +
 													" RFID " + oldInvList[j].ToString() + "is missing.'," + oldInvList[j].ToString() + ")";												
 												System.Console.WriteLine(cmd.CommandText);
-												textBox1.Items.Add(cmd.CommandText);
+												messagesLock.WaitOne();
+												messages.Add(cmd.CommandText);
+												messagesLock.ReleaseMutex();
 												cmd.ExecuteNonQuery();
 											}
 											// insert items as child scans
@@ -342,13 +369,17 @@ namespace RFIDProtocolServer
 													Longitude + "'," +
 													"0,0,0)";
 												System.Console.WriteLine(cmd.CommandText);
-												textBox1.Items.Add(cmd.CommandText);
+												messagesLock.WaitOne();
+												messages.Add(cmd.CommandText);
+												messagesLock.ReleaseMutex();
 												cmd.ExecuteNonQuery();
 											}										
 										}
 										cmd.CommandText = "commit";
 										System.Console.WriteLine(cmd.CommandText);
-										textBox1.Items.Add(cmd.CommandText);
+										messagesLock.WaitOne();
+										messages.Add(cmd.CommandText);
+										messagesLock.ReleaseMutex();
 										cmd.ExecuteNonQuery();
 									}
 
@@ -369,6 +400,9 @@ namespace RFIDProtocolServer
 									{
 										cmd.CommandText = "SELECT shortDesc FROM descriptions WHERE rfid='" + oldInvList[l].ToString() + "'";
 										OracleDataReader reader = cmd.ExecuteReader();
+										messagesLock.WaitOne();
+										messages.Add(cmd.CommandText);
+										messagesLock.ReleaseMutex();
 										reader.Read();
 										string desc;
 										if (!reader.IsDBNull(0))
@@ -401,21 +435,42 @@ namespace RFIDProtocolServer
             catch (Exception e)
             {
 				Console.Out.WriteLine(e.Message);
-				textBox1.Text += e.Message + "\n";
+				messagesLock.WaitOne();
+				messages.Add(e.Message);
+				messagesLock.ReleaseMutex();
             }
 
-            if (numberOfQueries > 0 && numberOfQueries != 4)
+            /*if (numberOfQueries > 0 && numberOfQueries != 4)
             {
                 Console.Out.WriteLine("Manifest wrong!");
                 DBBackend.Status = 3;
                 VoIP.VoIPConnection voip = new VoIP.VoIPConnection("3796001", "bello", "inphonex.com", "5060", "300");
                 voip.call(PhoneNumber, "temp1.raw");
-            }
+            } */
 
             s.Close();
             Console.Out.WriteLine("Client closed");
-			textBox1.Text += "Client closed.\n";
+			messagesLock.WaitOne();
+			messages.Add("Client Closed");
+			messagesLock.ReleaseMutex();
         }
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			if (textBox1.InvokeRequired)
+			{
+				textBox1.BeginInvoke(new EventHandler(timer1_Tick), new object[] { sender, e });
+			}
+			else
+			{
+				messagesLock.WaitOne();
+				for (int i = 0; i < messages.Count; i++)
+					textBox1.Items.Add(messages[i]);
+				messages.Clear();
+				messagesLock.ReleaseMutex();
+			}
+		}
+
     }
 
 	//ListItem class
