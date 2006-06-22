@@ -58,9 +58,9 @@ namespace RFIDProtocolLib
         }
         #endregion
 
-        #region Query
+        #region QueryPacket
         /// <summary>
-        /// Sent when the PDA quryies an RFID tag for info about it.
+        /// Sent when the PDA uploads an RFID from an RFID stream.
         /// </summary>
         /// <param name="req">The query request.</param>
         public void SendQueryPacket(QueryRequest req)
@@ -69,32 +69,7 @@ namespace RFIDProtocolLib
             packet.WriteToStream(c.GetStream());
         }
 
-        public void SendDeletePacket()
-        {
-
-        }
-
-        /// <summary>
-        /// Send a commit to let the server know that it has all the RFIDs
-        /// for the current inventory and may begin analysis
-        /// </summary>
-        public void SendCommitPacket()
-        {
-            TLV commitPacket = new TLV(8);
-            commitPacket.WriteToStream(c.GetStream());
-        }
-
-        /// <summary>
-        /// Send the latitude, longitude and whether a manifest should be
-        /// created or not
-        /// </summary>
-        public void SendInfoPacket(InfoPacket req)
-        {
-            TLV commitPacket = new TLV(9, req.ToTLVList().GetBytes());
-            commitPacket.WriteToStream(c.GetStream());
-        }
-
-        /// <summary>
+		/// <summary>
         /// Sent from the server back after a Query packet is sent.
         /// This doesn't do it yet, but will throw an exception if it receives
         /// an ERROR packet.
@@ -108,6 +83,40 @@ namespace RFIDProtocolLib
 
             return new QueryResponse(responsePacket.Value);
         }
+#endregion
+
+		#region DeletePacket
+		/// <summary>
+		/// Delete this packet from the manifest
+		/// </summary>
+		public void SendDeletePacket(QueryRequest req, QueryRequest owner)
+        {
+
+        }
+#endregion
+
+		#region AddPacket
+		/// <summary>
+		/// Add this to the current manifest  
+		///</summary>
+		public void SendAddPacket(QueryRequest req, QueryRequest owner)
+		{
+
+		}
+#endregion
+
+		#region InfoPacket
+		/// <summary>
+        /// Send the latitude, longitude and whether a manifest should be
+        /// created or not
+        /// </summary>
+        public void SendInfoPacket(InfoPacket req)
+        {
+            TLV commitPacket = new TLV(9, req.ToTLVList().GetBytes());
+            commitPacket.WriteToStream(c.GetStream());
+        }
+
+        
         #endregion
 
         #region SetPhoneNumber

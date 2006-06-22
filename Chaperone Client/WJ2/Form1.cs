@@ -308,7 +308,7 @@ namespace WJ2
 
                             cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0, 15) + NorS.ToString(), longitude.ToString("N15").Substring(0, 15) + EorW.ToString(), isScan));
 
-                            cc.SendCommitPacket();
+                            //cc.SendCommitPacket();
 
                             // receive descriptions of items submitted
                             bool more = true;
