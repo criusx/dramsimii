@@ -108,6 +108,14 @@ public:
 		}
 	}
 
+	T *read_back() const
+	{
+		if (count == 0)
+			return NULL;
+
+		return entry[head_ptr];
+	}
+
 	inline int get_count() const
 	{
 		return count;

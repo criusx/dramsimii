@@ -798,20 +798,8 @@ transaction::transaction()
 	completion_time = 0;
 	status = 0;
 	event_no = 0;
-	count = 0;
+
 	type = CONTROL_TRANSACTION;
-}
-
-int transaction::count_up()
-{
-	count++;
-	return count;
-}
-
-int transaction::count_down()
-{
-	count--;
-	return count;
 }
 
 bus_event::bus_event()

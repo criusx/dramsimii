@@ -35,7 +35,7 @@ namespace DRAMSim2
 
 #define COMMAND_QUEUE_SIZE 32
 
-	#define DEBUG_FLAG
+#define DEBUG_FLAG
 
 	//#define DEBUG_RAND
 
@@ -276,19 +276,15 @@ namespace DRAMSim2
 
 	class transaction
 	{
-	private:
-		int count;
 	public:
-		int		event_no;
+		int event_no;
 		transaction_type_t type;			/* transaction type */
-		int		status;
-		int		length;			/* how long? */
-		tick_t		arrival_time;		/* time when first seen by memory controller in DRAM ticks */
-		tick_t		completion_time;	/* time when transaction has completed in DRAM ticks */
-		addresses	addr;
+		int status;
+		int length;			/* how long? */
+		tick_t arrival_time;		/* time when first seen by memory controller in DRAM ticks */
+		tick_t completion_time;	/* time when transaction has completed in DRAM ticks */
+		addresses addr;
 		transaction();
-		int count_up();
-		int count_down();
 		friend ostream &operator<<(ostream &, const transaction *);
 	};
 
@@ -296,13 +292,13 @@ namespace DRAMSim2
 	class command
 	{
 	public:
-		enum command_type_t this_command;	// which command is this?
-		tick_t start_time;					// when did the transaction start?
-		tick_t enqueue_time;				// when did it make it into the queues?
+		command_type_t this_command;	// which command is this?
+		tick_t start_time;				// when did the command start?
+		tick_t enqueue_time;			// when did it make it into the per bank command queue?
 		tick_t completion_time;
 		addresses	addr;
-		transaction *host_t;				// backward pointer to the original transaction
-		/// Added list of completion times in order to clean up code 
+		transaction *host_t;			// backward pointer to the original transaction
+
 		tick_t  link_comm_tran_comp_time;
 		tick_t  amb_proc_comp_time;
 		tick_t  dimm_comm_tran_comp_time;
@@ -312,13 +308,14 @@ namespace DRAMSim2
 		tick_t  link_data_tran_comp_time;
 
 		/* Variables added for the FB-DIMM */
-		int bundle_id;              /* Bundle into which command is being sent - Do we need this ?? */
-		unsigned tran_id;                /*      The transaction id number */
-		int data_word;              /* Which portion of data is returned i.e. entire cacheline or fragment thereof which portions are being sent*/
-		int data_word_position;     /** Which part of the data transmission are we doing : postions include FIRST , MIDDLE, LAST **/
-		int refresh;                /** This is used to determine if the ras/prec are part of refresh **/
-		bool posted_cas;             /** This is used to determine if the ras + cas were in the same bundle **/
+		int bundle_id;			//Bundle into which command is being sent - Do we need this ?? */
+		unsigned tran_id;		//The transaction id number */
+		int data_word;			// Which portion of data is returned i.e. entire cacheline or fragment thereof which portions are being sent*/
+		int data_word_position;	// Which part of the data transmission are we doing : postions include FIRST , MIDDLE, LAST **/
+		int refresh;			// This is used to determine if the ras/prec are part of refresh **/
+		bool posted_cas;		// This is used to determine if the ras + cas were in the same bundle **/
 		int length;
+		
 		command();
 		explicit command(const command &);
 	};
@@ -409,8 +406,6 @@ namespace DRAMSim2
 
 	class bank_c
 	{
-		//private:
-
 	public:
 		tick_t last_ras_time;		/* when did last ras start? */
 		tick_t last_cas_time;		/* when did last cas start? */
@@ -432,7 +427,6 @@ namespace DRAMSim2
 
 	class rank_c
 	{
-		//private:
 	public:
 		int bank_count;
 
@@ -442,8 +436,7 @@ namespace DRAMSim2
 		tick_t last_casw_time;
 		int last_cas_length;
 		int last_casw_length;
-		queue<tick_t> last_ras_times;	/* ras time queue. make tfaw computation easier */
-		//public:
+		queue<tick_t> last_ras_times; // ras time queue. useful to determine if t_faw is met
 		bank_c *bank;
 
 		~rank_c();
@@ -470,7 +463,8 @@ namespace DRAMSim2
 		tick_t get_time() const { return time; }
 		void set_time(tick_t new_time) { time = new_time; }
 		int get_last_rank_id() const { return last_rank_id; }
-		transaction *get_transaction() { return transaction_q.dequeue(); }
+		transaction *get_transaction() { return transaction_q.dequeue(); } // remove and return the oldest transaction
+		transaction *read_transaction() { return transaction_q.read_back(); } // read the oldest transaction without affecting the queue
 		input_status_t enqueue(transaction *in) { return transaction_q.enqueue(in); }
 		input_status_t complete(transaction *in) { return completion_q.enqueue(in); }
 		transaction *complete() { return completion_q.dequeue(); }
@@ -615,7 +609,7 @@ namespace DRAMSim2
 	public:
 		dram_system_configuration(map<file_io_token_t,string> &);
 
-	// friends
+		// friends
 		friend dram_system;
 		friend ostream &operator<<(ostream &, const dram_system &);
 	};
@@ -632,10 +626,10 @@ namespace DRAMSim2
 		string output_filename;
 		input_stream_c input_stream;
 		dram_channel *channel;
-		tick_t time; // master clock
-		queue<command> free_command_pool; // contains a pool of command objects which may be used
-		queue<transaction> free_transaction_pool;		
-		queue<event> free_event_pool;
+		tick_t time;						// master clock
+		queue<command> free_command_pool;	// command objects are stored here to avoid allocating memory at runtime
+		queue<transaction> free_transaction_pool;	// same for transactions
+		queue<event> free_event_pool;		// same for events
 		queue<event> event_q;                /* pending event queue */
 
 		void read_dram_config_from_file();
@@ -643,8 +637,8 @@ namespace DRAMSim2
 		void set_dram_timing_specification(enum dram_type_t);
 		command *get_next_command(int);
 		//void print_transaction(transaction*);
-		enum input_status_t transaction2commands( transaction*);
-		int min_protocol_gap(const int,const command *);
+		enum input_status_t transaction2commands(transaction*);
+		int min_protocol_gap(const int,const command *) const;
 		int find_oldest_channel() const;
 		void execute_command(command *, int );
 		void update_system_time();
