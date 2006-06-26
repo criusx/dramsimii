@@ -54,7 +54,7 @@ void dram_channel::init_controller(int transaction_queue_depth,
 		rank[i].init_ranks(bank_count,per_bank_queue_depth);
 }
 
-void DRAMSim2::dram_channel::record_command(command *latest_command, queue<command> &free_command_pool)
+void dram_channel::record_command(command *latest_command, queue<command> &free_command_pool)
 {
 	if (history_q.enqueue(latest_command) == FAILURE)
 	{
@@ -65,7 +65,7 @@ void DRAMSim2::dram_channel::record_command(command *latest_command, queue<comma
 }
 
 
-enum transaction_type_t	dram_channel::set_read_write_type(int rank_id,int bank_count)
+enum transaction_type_t	dram_channel::set_read_write_type(const int rank_id,const int bank_count)
 {
 	int read_count = 0;
 	int write_count = 0;
@@ -79,16 +79,16 @@ enum transaction_type_t	dram_channel::set_read_write_type(int rank_id,int bank_c
 		{
 			if(temp_c->this_command == CAS_AND_PRECHARGE_COMMAND)
 			{
-				++read_count;
+				read_count++;
 			}
 			else
 			{
-				++write_count;
+				write_count++;
 			}
 		}
 		else
 		{
-			++empty_count;
+			empty_count++;
 		}
 	}
 #ifdef DEBUG_FLAG

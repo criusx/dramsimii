@@ -252,8 +252,7 @@ enum input_status_t input_stream_c::get_next_bus_event(bus_event &this_e)
 				return FAILURE;
 			}
 			if((this_e.attributes != control) || 
-				(((this_e.address ^ address) & 0xFFFFFFE0) != 0) ||
-				(burst_count == burst_length))
+				(((this_e.address ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
 			{
 				bursting = false;
 				timestamp = timestamp * ascii2multiplier(input);

@@ -742,10 +742,10 @@ dram_system::~dram_system()
 /// </summary>
 void dram_system::update_system_time()
 {
-	int oldest_chan_id = system_config.chan_count;
-	tick_t oldest_time = channel[system_config.chan_count].get_time();
+	int oldest_chan_id = system_config.chan_count - 1;
+	tick_t oldest_time = channel[oldest_chan_id].get_time();
 
-	for (int chan_id = system_config.chan_count - 1; chan_id > 0; --chan_id)
+	for (int chan_id = system_config.chan_count - 2; chan_id >= 0; chan_id--)
 	{
 		if (channel[chan_id].get_time() < oldest_time)
 		{
@@ -888,15 +888,11 @@ void dram_system::execute_command(command *this_c,const int gap)
 
 	dram_channel *channel= &(dram_system::channel[chan_id]);
 
-	//tick_t now = channel.get_time() + gap;
-
-	
-	//int history_q_count;
 	rank_c *this_r = channel->get_rank(rank_id);
 	
 	bank_c *this_b = &(this_r->bank[bank_id]);
 
-	transaction *host_t = NULL;
+	//transaction *host_t = NULL;
 	//queue &history_q = channel.history_q;
 	//  queue *complete_q;
 
@@ -904,9 +900,17 @@ void dram_system::execute_command(command *this_c,const int gap)
 
 	int t_al = this_c->posted_cas ? timing_specification.t_al : 0;
 
-	// update the channel's idea of what time it is
-	channel->set_time(channel->get_time() + gap);
+	// new
+	//this_c->start_time = channel->get_time();
 
+
+	// update the channel's idea of what time it is
+	//channel->set_time(channel->get_time() + gap);
+	channel->set_time(max(channel->get_time(),this_c->start_time) + gap);
+
+	// new
+	this_c->completion_time = channel->get_time();
+	
 	switch(this_c->this_command)
 	{
 	case RAS_COMMAND:
@@ -923,6 +927,7 @@ void dram_system::execute_command(command *this_c,const int gap)
 
 		*this_ras_time = channel->get_time();
 		this_r->last_ras_times.enqueue(this_ras_time);
+		//this_c->completion_time = *this_ras_time + timing_specification.t_ras;
 		break;
 
 	case CAS_AND_PRECHARGE_COMMAND:
@@ -937,8 +942,9 @@ void dram_system::execute_command(command *this_c,const int gap)
 		this_b->last_cas_length = this_c->length;
 		this_r->last_cas_length = this_c->length;
 		this_b->cas_count++;
-		host_t = this_c->host_t;
-		host_t->completion_time	= channel->get_time() + timing_specification.t_cas;
+		//host_t = this_c->host_t;
+		this_c->host_t->completion_time	= channel->get_time() + timing_specification.t_cas;
+		//this_c->completion_time = channel->get_time() + timing_specification.t_cas;
 		break;
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
@@ -953,8 +959,9 @@ void dram_system::execute_command(command *this_c,const int gap)
 		this_b->last_casw_length= this_c->length;
 		this_r->last_casw_length= this_c->length;
 		this_b->casw_count++;
-		host_t = this_c->host_t;
-		host_t->completion_time	= channel->get_time();
+		//host_t = this_c->host_t;
+		this_c->host_t->completion_time	= channel->get_time();
+		//this_c->completion_time = channel->get_time();
 		break;
 
 	case RETIRE_COMMAND:
@@ -985,13 +992,14 @@ void dram_system::execute_command(command *this_c,const int gap)
 		this_b->last_refresh_all_time = channel->get_time();
 		break;
 	}
+
 	// transaction complete? if so, put in completion queue
-	if (host_t != NULL) 
+	if (this_c->host_t != NULL) 
 	{
-		if(channel->complete(host_t) == FAILURE)
+		if(channel->complete(this_c->host_t) == FAILURE)
 		{
-			cerr << "Fatal error, cannot insert transaction into completion queue." << endl
-				<< "Increase execution q depth and resume. Should not occur. Check logic." << endl;
+			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
+			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;
 			_exit(2);
 		}
 	}
@@ -1614,7 +1622,7 @@ void dram_system::run_simulations()
 				int oldest_chan_id = find_oldest_channel();
 				transaction *temp_t = channel[oldest_chan_id].get_transaction();
 
-#ifdef DEBUG_FLAG
+#ifdef DEBUG_TRANSACTION
 				cerr << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
 #endif
 
@@ -1629,7 +1637,7 @@ void dram_system::run_simulations()
 						command *temp_c = get_next_command(oldest_chan_id);
 						int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
 
-#ifdef DEBUG_FLAG
+#ifdef DEBUG_COMMAND
 						cerr << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
@@ -1740,42 +1748,18 @@ void dram_system::run_simulations2()
 		if (get_next_input_transaction(input_t) == SUCCESS)
 		{
 			// record stats
-			statistics.collect_transaction_stats(input_t);
-
-			// update each channel's per bank command queues
-			// so if a transaction cannot fit, it is only because of space restrictions
-			for (int i = system_config.chan_count; i > 0; --i)
-			{
-				transaction *temp_transaction;
-				while ( temp_transaction = channel[i].read_transaction() )
-				{
-					if (transaction2commands(temp_transaction))
-					{
-						channel[i].get_transaction();
-					}
-					else
-						break;
-				}
-				//command *temp_command = get_next_command(i);
-			}
-
-			// decide whether to move time ahead by waiting or executing
-			int oldest_chan_id = find_oldest_channel();
-			transaction *temp_t = channel[oldest_chan_id].get_transaction();
-			command *temp_c = get_next_command(oldest_chan_id);
-			// min gap is how long until the next command finishes
-			int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
-
+			statistics.collect_transaction_stats(input_t);			
+			
 			while (channel[input_t->addr.chan_id].enqueue(input_t) == FAILURE)
 			{
-				/* tried to stuff req in channel queue, stalled, so try to drain channel queue first */
-				/* and drain it completely */
-				/* unfortunately, we may have to drain another channel first. */
+				// tried to stuff req in channel queue, stalled, so try to drain channel queue first
+				// and drain it completely
+				// unfortunately, we may have to drain another channel first.
 				
 				int oldest_chan_id = find_oldest_channel();
 				transaction *temp_t = channel[oldest_chan_id].get_transaction();
 
-#ifdef DEBUG_FLAG
+#ifdef DEBUG_TRANSACTION
 				cerr << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
 #endif
 
@@ -1787,17 +1771,19 @@ void dram_system::run_simulations2()
 						command *temp_c = get_next_command(oldest_chan_id);
 						int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
 
-#ifdef DEBUG_FLAG
-						cerr << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
-#endif
-
 						execute_command(temp_c, min_gap);
 						update_system_time(); 
 						transaction *completed_t = channel[oldest_chan_id].complete();
 						if(completed_t != NULL)
 							free_transaction_pool.release_item(completed_t);
+
+#ifdef DEBUG_COMMAND
+						cerr << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+#endif
+
 					}
 				}
+				input_t->arrival_time = max(input_t->arrival_time,channel[input_t->addr.chan_id].get_time());
 			}
 		}
 		else

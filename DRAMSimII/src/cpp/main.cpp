@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	//simulation_parameters sp;
 	//dram_statistics stats;
 	//ds.read_command_line_config(argc,argv)
-	ds.run_simulations();
+	ds.run_simulations2();
 
 	cerr << ds << endl;
 	//cerr << ds.timing_specification;
