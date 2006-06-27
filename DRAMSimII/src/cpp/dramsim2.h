@@ -382,24 +382,23 @@ int inline log2(unsigned int input)
 class dram_timing_specification
 {
 private:
-	int   t_rtrs;     /* rank hand off penalty. */
-	int   t_al;				/* additive latency, used with posted cas */
-	int   t_burst;    /* number of cycles utilized per cacheline burst */
-	int   t_cas;      /* delay between start of CAS and start of burst */
-	int   t_cwd;      /* delay between end of CASW and start of burst */
-	int   t_faw;      /* four bank activation */
-	int   t_ras;      /* interval between ACT and PRECHARGE to same bank */
-	int   t_rc;       /* t_rc is simply t_ras + t_rp */
-	int   t_rcd;      /* RAS to CAS delay of same bank */
-	int   t_rfc;      /* refresh cycle time */
-	int   t_rp;       /* interval between PRECHARGE and ACT to same bank */
-	int   t_rrd;      /* Row to row activation delay */
-	int   t_rtp;      /* read to precharge delay,  */
-	int   t_wr;       /* write recovery time , time to restore data */
-	int   t_wtr;      /* write to read turnaround time */
-	int   t_cmd;      /* command bus duration... */
-	int   t_int_burst;  /* internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3 */
-	//int convert_address(addresses &);
+	int   t_rtrs;		// rank hand off penalty.
+	int   t_al;			// additive latency, used with posted cas
+	int   t_burst;		// number of cycles utilized per cacheline burst
+	int   t_cas;		// delay between start of CAS and start of burst
+	int   t_cwd;		// delay between end of CASW and start of burst
+	int   t_faw;		// four bank activation
+	int   t_ras;		// interval between ACT and PRECHARGE to same bank
+	int   t_rc;			// t_rc is simply t_ras + t_rp
+	int   t_rcd;		// RAS to CAS delay of same bank
+	int   t_rfc;		// refresh cycle time
+	int   t_rp;			// interval between PRECHARGE and ACT to same bank
+	int   t_rrd;		// Row to row activation delay
+	int   t_rtp;		// read to precharge delay
+	int   t_wr;			// write recovery time , time to restore data
+	int   t_wtr;		// write to read turnaround time
+	int   t_cmd;		// command bus duration...
+	int   t_int_burst;	// internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3
 
 public:
 	dram_timing_specification(map<file_io_token_t, string> &);
@@ -578,34 +577,34 @@ class dram_system_configuration
 
 private:
 	ifstream spd_file_ptr;
-	ordering_algorithm_t command_ordering_algorithm;	/* strict or round robin? */
-	int per_bank_queue_depth;		/* how deep? per bank */
+	ordering_algorithm_t command_ordering_algorithm;// strict or round robin 
+	int per_bank_queue_depth;						// command queue size
 	system_configuration_type_t config_type;
-	int refresh_time;			/* loop time of refresh */
-	refresh_policy_t refresh_policy;			/*  */
+	int refresh_time;								// loop time of refresh 
+	refresh_policy_t refresh_policy;				//  
 	int col_size;
-	int row_size;			/* how many bytes per row? (across one rank) */
-	int row_count;			/* how many rows per bank? */
-	int col_count;			/* Hwo many columns per row? */
-	int cacheline_size;			/* 32/64/128 etc */
-	int history_queue_depth;		/* keep track of per channel command history */
-	int completion_queue_depth;		/* keep track of per channel command history */
-	int transaction_queue_depth;	/* input transaction queue depth */
-	int event_queue_depth;		/* pending event queue depth */
-	int refresh_queue_depth;		/* loop time of refresh */
+	int row_size;									// bytes per row (across one rank) 
+	int row_count;									// rows per bank
+	int col_count;									// columns per row
+	int cacheline_size;								// 32/64/128 etc 
+	int history_queue_depth;						// keep track of per channel command history 
+	int completion_queue_depth;						// keep track of per channel command history 
+	int transaction_queue_depth;					// input transaction queue depth 
+	int event_queue_depth;							// pending event queue depth 
+	int refresh_queue_depth;						// loop time of refresh 
 	int seniority_age_limit;
-	enum dram_type_t dram_type;	
-	enum row_buffer_policy_t row_buffer_management_policy;   /* row buffer management policy? OPEN/CLOSE, etc */	
-	enum address_mapping_scheme_t addr_mapping_scheme;		/* addr mapping scheme for physical to DRAM addr */
+	dram_type_t dram_type;	
+	row_buffer_policy_t row_buffer_management_policy;	// row buffer management policy? OPEN/CLOSE, etc 	
+	address_mapping_scheme_t addr_mapping_scheme;		// addr mapping scheme for physical to DRAM addr 
 	double datarate;
-	bool posted_cas;			/* TRUE/FALSE */
+	bool posted_cas;								// TRUE/FALSE 
 	bool read_write_grouping;
-	bool auto_precharge;			/* issue cas and prec separately or together? */
+	bool auto_precharge;							// issue cas and prec separately or together? 
 	int clock_granularity;		
-	int cachelines_per_row;		/* dependent variable */
-	int chan_count;			/* How many logical channels are there ? */
-	int rank_count;			/* How many ranks are there per channel ? */
-	int bank_count;			/* How many banks per device? */
+	int cachelines_per_row;							// dependent variable 
+	int chan_count;									// How many logical channels are there ? 
+	int rank_count;									// How many ranks are there per channel ? 
+	int bank_count;									// How many banks per device? 
 	double short_burst_ratio;
 	double read_percentage;
 

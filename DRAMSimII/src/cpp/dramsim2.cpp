@@ -22,7 +22,7 @@ dram_system_configuration::dram_system_configuration(map<file_io_token_t,string>
 	{
 		if (temp->second == "sdram")
 			dram_type = SDRAM;
-		else if (temp->second == "ddr")
+		else if (temp->second == "ddr" || temp->second == "ddrsdram")
 			dram_type = DDR;
 		else if (temp->second == "ddr2")
 			dram_type = DDR2;
@@ -329,23 +329,26 @@ dram_timing_specification::dram_timing_specification(map<file_io_token_t,string>
 		t_rtrs = 0;		/* no such thing in SDRAM */
 		t_wr = 2;		
 
-	} else if (temp->second == "ddr"){					/* @ 200 MHz (400 Mbps) */
-		t_al = 0;		/* no such thing in DDR */
-		t_burst = 8;		/* depending on system config! can be 2, 4, or 8 */
+	} 
+	// @ 200 MHz (400 Mbps)
+	else if (temp->second == "ddr" || temp->second == "ddrsdram")					
+	{
+		t_al = 0;		// no such thing in DDR 
+		t_burst = 8;	// depending on system config! can be 2, 4, or 8
 		t_cas = 6;
-		t_cmd = 2;		/* protocol specific, cannot be changed */
-		t_cwd = 2;		/* protocol specific, cannot be changed */
-		t_int_burst = 2;		/* protocol specific, cannot be changed */
-		t_faw = 0;		/* no such thing in DDR */
-		t_ras = 16;		/* 40 ns @ 2.5 ns per beat == 16 beats */
-		t_rc = 22;		/* 55 ns t_rc */
+		t_cmd = 2;		// protocol specific, cannot be changed
+		t_cwd = 2;		// protocol specific, cannot be changed
+		t_int_burst = 2;// protocol specific, cannot be changed
+		t_faw = 0;		// no such thing in DDR
+		t_ras = 16;		// 40 ns @ 2.5 ns per beat == 16 beats
+		t_rc = 22;		// 55 ns t_rc
 		t_rcd = 6;
-		t_rfc = 28;		/* 70 ns @ 2.5 ns per beat == 28 beats */
-		t_rp = 6;		/* 15 ns @ 2.5ns per beat = 6 beats */
+		t_rfc = 28;		// 70 ns @ 2.5 ns per beat == 28 beats
+		t_rp = 6;		// 15 ns @ 2.5ns per beat = 6 beats
 		t_rrd = 0;
 		t_rtp = 2;
 		t_rtrs = 2;
-		t_wr = 6;		/* 15 ns @ 2.5 ns per beat = 6 beats */
+		t_wr = 6;		// 15 ns @ 2.5 ns per beat = 6 beats
 		t_wtr = 4;
 
 	}

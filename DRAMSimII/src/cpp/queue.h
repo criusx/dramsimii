@@ -13,11 +13,7 @@ private:
 public:
 	queue(): depth(0),count(0)
 	{
-		//depth = 0;
-		//count = 0;
-		//head_ptr = 0;
-		//tail_ptr = 0;
-		//entry = NULL;
+
 	}
 
 	~queue()
@@ -102,8 +98,11 @@ public:
 		else
 		{
 			count--;
+
 			T *item = entry[head_ptr];
+
 			head_ptr = (head_ptr+1) % depth; 	/*advance head_ptr */
+
 			return item;
 		}
 	}
@@ -130,13 +129,16 @@ public:
 	}
 
 	// release item into pool
+	// This is useful for when the queue holds preallocated pieces of memory
+	// and one would like to store them when they are not in use
 	void release_item(T *item)
 	{
 		if(enqueue(item) == FAILURE)
 			delete item;
 	}
 
-	// this function makes this queue a non-FIFO queue.  Allows insertion in middle
+	// this function makes this queue a non-FIFO queue.  
+	// Allows insertion into the middle or at any end
 	input_status_t insert(T *item,int offset)
 	{
 		if(count == depth)
@@ -148,11 +150,16 @@ public:
 		}
 		else
 		{
-			for (int i = count-1 ; i >= offset ; ++i)		/* move everything back by one unit */
+			// move everything back by one unit
+			for (int i = count-1 ; i >= offset ; ++i)
 				entry[(head_ptr+i+1) % depth] = entry[(head_ptr+i) % depth];
+
 			count++;
+
 			entry[(head_ptr+offset) % depth] = item;
-			tail_ptr	= (tail_ptr+1) % depth; 	/*advance tail_ptr */
+
+			tail_ptr	= (tail_ptr+1) % depth; 	// advance tail_ptr
+
 			return SUCCESS;
 		}
 	}

@@ -901,7 +901,7 @@ void dram_system::execute_command(command *this_c,const int gap)
 	int t_al = this_c->posted_cas ? timing_specification.t_al : 0;
 
 	// new
-	//this_c->start_time = channel->get_time();
+	this_c->start_time = max(channel->get_time(),this_c->start_time);
 
 
 	// update the channel's idea of what time it is
@@ -920,7 +920,7 @@ void dram_system::execute_command(command *this_c,const int gap)
 		this_b->ras_count++;
 
 		// RAS time history queue, per rank
-		if(this_r->last_ras_times.get_count() == 4)	// FIXME: this is not very general
+		if(this_r->last_ras_times.freecount() == 0)	// FIXME: this is not very general
 			this_ras_time = this_r->last_ras_times.dequeue();
 		else
 			this_ras_time = new tick_t;
@@ -1759,9 +1759,7 @@ void dram_system::run_simulations2()
 				int oldest_chan_id = find_oldest_channel();
 				transaction *temp_t = channel[oldest_chan_id].get_transaction();
 
-#ifdef DEBUG_TRANSACTION
-				cerr << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
-#endif
+
 
 				if(temp_t != NULL)
 				{
@@ -1772,14 +1770,20 @@ void dram_system::run_simulations2()
 						int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
 
 						execute_command(temp_c, min_gap);
-						update_system_time(); 
-						transaction *completed_t = channel[oldest_chan_id].complete();
-						if(completed_t != NULL)
-							free_transaction_pool.release_item(completed_t);
 
 #ifdef DEBUG_COMMAND
 						cerr << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
+
+						update_system_time(); 
+						transaction *completed_t = channel[oldest_chan_id].complete();
+						if(completed_t != NULL)
+						{
+							free_transaction_pool.release_item(completed_t);
+#ifdef DEBUG_TRANSACTION
+							cerr << "CH[" << setw(2) << oldest_chan_id << "] " << completed_t << endl;
+#endif
+						}
 
 					}
 				}
