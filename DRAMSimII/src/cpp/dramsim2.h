@@ -21,6 +21,9 @@ To do list:
 #define DRAMSIM2_H
 #pragma once
 
+#include <map>
+#include <fstream>
+
 using namespace std;
 
 #define   ABS(a)      ((a) < 0 ? (-a) : (a))
@@ -94,18 +97,18 @@ enum address_mapping_scheme_t
 
 enum system_configuration_type_t
 {
-	BASELINE_CONFIG,    /* direct control. 1 or 2 ranks in DDR3 */
-	FBD_CONFIG          /* fully buffered DIMMS */
+	BASELINE_CONFIG,	// direct control. 1 or 2 ranks in DDR3
+	FBD_CONFIG			// fully buffered DIMMS
 };
 
 /// we can define various algorithms previously explored by Rixner, McKee et al. here.
 enum ordering_algorithm_t
 {
-	STRICT_ORDER,
-	RANK_ROUND_ROBIN,   /* alternate ranks */
-	BANK_ROUND_ROBIN,   /* keep same ranks as long as possible, go down banks */
-	GREEDY,				/// greedy algorithm
-	WANG_RANK_HOP       /* Patented stuff. davewang202@yahoo.com  ;) */
+	STRICT_ORDER,		// maintains original ordering
+	RANK_ROUND_ROBIN,	// alternate ranks 
+	BANK_ROUND_ROBIN,	// keep same ranks as long as possible, go down banks
+	GREEDY,				// greedy algorithm
+	WANG_RANK_HOP		// Patented stuff. davewang202@yahoo.com  ;)
 };
 
 enum input_type_t
@@ -251,9 +254,9 @@ enum distribution_type_t
 
 enum event_type_t
 {
-	TRANSACTION_ENQUEUE,		/* put transaction into channel queue */
-	DRAM_COMMAND_ENQUEUE,		/* put DRAM command into per-bank queue */
-	DRAM_COMMAND_EXECUTE		/* schedule DRAM command for execution */
+	TRANSACTION_ENQUEUE,	// put transaction into channel queue
+	DRAM_COMMAND_ENQUEUE,	// put DRAM command into per-bank queue
+	DRAM_COMMAND_EXECUTE	// schedule DRAM command for execution
 };
 
 // include the template code for queues
@@ -263,13 +266,13 @@ enum event_type_t
 class addresses
 {
 public:
-	unsigned int		virt_addr;	
-	unsigned int		phys_addr;
-	unsigned int		chan_id;		/* logical channel id */
-	unsigned int		rank_id;		/* device id */
-	unsigned int		bank_id;
-	unsigned int		row_id;
-	unsigned int		col_id;			/* column address */
+	unsigned virt_addr;	
+	unsigned phys_addr;
+	unsigned chan_id;	// logical channel id
+	unsigned rank_id;	// device id
+	unsigned bank_id;
+	unsigned row_id;
+	unsigned col_id;	// column address
 	addresses();
 	//friend ostream &operator<<(ostream &, const addresses &);
 	//ostream &operator<<(ostream &, const addresses &);
@@ -280,11 +283,11 @@ class transaction
 {
 public:
 	int event_no;
-	transaction_type_t type;			/* transaction type */
+	transaction_type_t type;	// transaction type
 	int status;
-	int length;			/* how long? */
-	tick_t arrival_time;		/* time when first seen by memory controller in DRAM ticks */
-	tick_t completion_time;	/* time when transaction has completed in DRAM ticks */
+	int length;					// how long?
+	tick_t arrival_time;		// time when first seen by memory controller in DRAM ticks
+	tick_t completion_time;		// time when transaction has completed in DRAM ticks
 	addresses addr;
 	transaction();
 	friend ostream &operator<<(ostream &, const transaction *);
@@ -470,14 +473,14 @@ public:
 	transaction *read_transaction() { return transaction_q.read_back(); } // read the oldest transaction without affecting the queue
 	input_status_t enqueue(transaction *in) { return transaction_q.enqueue(in); }
 	input_status_t complete(transaction *in) { return completion_q.enqueue(in); }
-	transaction *complete() { return completion_q.dequeue(); }
+	transaction *get_oldest_completed() { return completion_q.dequeue(); }
 	command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue
 	void record_command( command *, queue<command> &);
 
 	dram_channel();
 	~dram_channel();
 	void init_controller(int, int, int, int, int, int, int);
-	enum transaction_type_t	set_read_write_type(const int,const int);
+	enum transaction_type_t	set_read_write_type(const int,const int) const;
 };
 
 /* simulation parameters */
@@ -637,12 +640,11 @@ private:
 	void read_dram_config_from_file();
 
 	void set_dram_timing_specification(enum dram_type_t);
-	command *get_next_command(int);
-	//void print_transaction(transaction*);
+	command *getNextCommand(const int);
 	enum input_status_t transaction2commands(transaction*);
 	int min_protocol_gap(const int,const command *) const;
 	int find_oldest_channel() const;
-	void execute_command(command *, int );
+	void executeCommand(command *, const int);
 	void update_system_time();
 	int convert_address(addresses &);
 	enum input_status_t get_next_input_transaction(transaction *&);

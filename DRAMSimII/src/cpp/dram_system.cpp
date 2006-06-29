@@ -195,6 +195,7 @@ int dram_system::convert_address(addresses &this_a)
 			//print_addresses(this_a);
 		}
 		break;
+
 	case SDRAM_BASE_MAP:		/* works for SDRAM and DDR SDRAM too! */
 
 		/*
@@ -272,6 +273,7 @@ int dram_system::convert_address(addresses &this_a)
 			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
 		}
 		break;
+
 	case INTEL845G_MAP:
 
 		/*  Data comes from Intel's 845G Datasheets.  Table 5-5
@@ -325,6 +327,7 @@ int dram_system::convert_address(addresses &this_a)
 			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
 		}
 		break;
+
 	case CLOSE_PAGE_BASELINE:
 	case SDRAM_CLOSE_PAGE_MAP:
 		/*
@@ -362,6 +365,7 @@ int dram_system::convert_address(addresses &this_a)
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= col_id_lo_depth;
+
 		// strip out the column low address
 		col_id_lo = temp_b ^ (input_a << col_id_lo_depth); 
 
@@ -398,6 +402,7 @@ int dram_system::convert_address(addresses &this_a)
 			cerr << "Mem address out of range[" << std::hex << this_a.phys_addr << "] of available physical memory." << endl;
 		}
 		break;
+
 	default:
 		cerr << "Unknown address mapping scheme, mapping chan, rank, bank to zero: " << system_config.addr_mapping_scheme << endl;
 		this_a.chan_id = 0;				/* don't know what this policy is.. Map everything to 0 */
@@ -410,324 +415,7 @@ int dram_system::convert_address(addresses &this_a)
 	return 1;
 }
 
-/// <summary>
-/// Chooses the command which should be executed next from the given channel
-/// Choice is made based on command_ordering_algorithm from system config
-/// Command returned has already been removed from the per_bank_command_queue
-/// from which it was selected
-/// </summary>
-command *dram_system::get_next_command(const int chan_id)
-{
-	dram_channel *channel= &(dram_system::channel[chan_id]);
-	//queue &history_q  = channel->history_q;
 
-	command	*last_c;
-	command	*temp_c;
-	command	*candidate_c;
-	command	*next_c;
-	//command	*ptr_c;
-
-	int offset;
-	//int tail_offset;
-	int oldest_rank_id;
-	int oldest_bank_id;
-	//int rank_id;
-	//int bank_id;
-	int section_id;
-	transaction_type_t transaction_type;
-	bool candidate_found = false;
-	int start_bank_id;
-	int count;
-	int i,j,k;
-	bool candidate_count;
-	tick_t oldest_command_time;
-
-	//tail_offset = history_q.get_count() - 1;
-
-	// nothing in history q, start from rank 0, bank 0
-
-	// look at the most recently retired command in this channel's history
-	if ((last_c = channel->get_most_recent_command()) == NULL)		
-	{
-		last_c = free_command_pool.acquire_item();
-		last_c->addr.rank_id = system_config.rank_count - 1;
-		last_c->addr.bank_id = system_config.bank_count - 1;
-		last_c->this_command = CAS_WRITE_AND_PRECHARGE_COMMAND;
-	}
-
-	// look for oldest command, execute that
-	switch (system_config.command_ordering_algorithm)
-	{
-	case STRICT_ORDER:
-		{
-			oldest_command_time = -1;
-			oldest_rank_id = -1;
-			oldest_bank_id = -1;
-			for (int rank_id = system_config.rank_count; rank_id > 0; --rank_id)
-			{
-				for (int bank_id = system_config.bank_count; bank_id > 0; --bank_id)
-				{
-					temp_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
-					if (temp_c != NULL)
-					{
-						if ((oldest_command_time < 0) || (oldest_command_time > temp_c->enqueue_time))
-						{
-							oldest_command_time = temp_c->enqueue_time;
-							oldest_rank_id 	= rank_id;
-							oldest_bank_id 	= bank_id;
-						}
-					}
-				}
-			}
-			return channel->get_rank(oldest_rank_id)->bank[oldest_bank_id].per_bank_q.dequeue();
-		}
-		break;
-		// alternate ranks as we go down banks
-	case RANK_ROUND_ROBIN:
-		{
-			unsigned bank_id = last_c->addr.bank_id;
-			unsigned rank_id = last_c->addr.rank_id;
-			if(last_c->this_command == RAS_COMMAND)
-			{
-				temp_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
-				if ((temp_c != NULL) &&
-					((temp_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->this_command == CAS_AND_PRECHARGE_COMMAND)))
-				{
-					return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
-				}
-				else
-				{
-					cerr << "Serious problems. RAS not followed by CAS" << endl;
-					_exit(2);
-				}
-			}
-			else if (last_c->this_command == CAS_AND_PRECHARGE_COMMAND)
-			{
-				transaction_type = READ_TRANSACTION;
-			}
-			else if (last_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND)
-			{
-				transaction_type = WRITE_TRANSACTION;
-			}
-			else
-			{
-				transaction_type = READ_TRANSACTION;
-				cerr << "Did not find a CAS or RAS command when it was expected" << endl;
-			}
-
-			while(candidate_found == false)
-			{
-				rank_id = (rank_id + 1) % system_config.rank_count;
-				if(rank_id == 0)
-				{
-					bank_id = (bank_id + 1) % system_config.bank_count;
-					if(bank_id == 0)
-					{
-						if (transaction_type == WRITE_TRANSACTION)
-						{
-							transaction_type = READ_TRANSACTION;
-						}
-						else
-						{
-							transaction_type = WRITE_TRANSACTION;
-						}
-					}
-				}
-				temp_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
-				if(temp_c != NULL)
-				{
-					if(system_config.read_write_grouping == false)
-					{
-						return channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
-					}
-					else // have to follow read_write grouping considerations 
-					{
-						next_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(1);	/* look at the second command */
-						if (((next_c->this_command == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
-							((next_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION)))
-						{
-							return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
-						}
-					}
-
-#ifdef DEBUG_FLAG_2
-					cerr << "Looked in ["<< temp_c->addr.rank_id << "] [" << temp_c->addr.bank_id << "] but wrong type, We want [" << transaction_type << "]. Candidate command type ";
-					cerr << temp_c->this_command;
-					cerr << " followed by ";
-					cerr << next_c->this_command;
-					cerr << "count [" << channel->get_rank(rank_id)->bank[bank_id].per_bank_q.get_count() << "]" << endl;
-#endif
-
-				}
-
-#ifdef DEBUG_FLAG_2
-				cerr << "Looked in [" << rank_id << "] [" << bank_id << "] but Q empty" << endl;
-#endif
-
-			}
-		}
-		break;
-		// keep rank id as long as possible, go round robin down a given rank
-	case BANK_ROUND_ROBIN:
-		{
-			unsigned bank_id = last_c->addr.bank_id;
-			unsigned rank_id = last_c->addr.rank_id;
-			if(last_c->this_command == RAS_COMMAND)
-			{
-				temp_c = channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
-				if((temp_c != NULL) &&
-					((temp_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->this_command == CAS_AND_PRECHARGE_COMMAND))){
-						return (command*) channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
-				}
-				else
-				{
-					cerr << "Serious problems. RAS not followed by CAS" << endl;
-					_exit(2);
-				}
-			}
-			else if (last_c->this_command == CAS_AND_PRECHARGE_COMMAND)
-			{
-				transaction_type = READ_TRANSACTION;
-			}
-			else if (last_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND)
-			{
-				transaction_type = WRITE_TRANSACTION;
-			}
-			while (candidate_found == false)
-			{
-				bank_id = (bank_id + 1) % system_config.bank_count;
-				if (bank_id == 0)
-				{
-					rank_id = (rank_id + 1) % system_config.rank_count;
-					if (rank_id == 0)
-					{
-						if (transaction_type == WRITE_TRANSACTION)
-						{
-							transaction_type = READ_TRANSACTION;
-						}
-						else
-						{
-							transaction_type = WRITE_TRANSACTION;
-						}
-					}
-				}
-				temp_c = channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
-				if(temp_c != NULL)
-				{	
-					if(system_config.read_write_grouping == false)
-					{
-						return temp_c;
-					}
-					else					/* have to follow read_write grouping considerations */
-					{
-						next_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(1);	/* look at the second command */
-						if (((next_c->this_command == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
-							((next_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION))){
-								return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
-						}
-					}
-#ifdef DEBUG_FLAG_2
-					cerr << "Looked in [" << temp_c->addr.rank_id << "] [" << temp_c->addr.bank_id << "] but wrong type, We want [" << transaction_type << "] Candidate command type [" << next_c->this_command << "]" << endl;
-#endif
-				}
-#ifdef DEBUG_FLAG_2
-				cerr << "Looked in [" << rank_id << "] [" << bank_id << "] but Q empty" << endl;
-#endif
-			}
-		}
-		break;
-	case WANG_RANK_HOP:	
-		if(system_config.config_type == BASELINE_CONFIG)	/* baseline*/
-		{
-			while(candidate_found == false)
-			{
-				command *ptr_c = algorithm.WHCC.read(algorithm.WHCC_offset[0]);
-				algorithm.WHCC_offset[0] = (algorithm.WHCC_offset[0] + 1) % algorithm.WHCC.get_count();
-				unsigned rank_id 	= ptr_c->addr.rank_id;
-				unsigned bank_id 	= ptr_c->addr.bank_id;
-				candidate_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
-
-				if((candidate_c != NULL) && (candidate_c->this_command == RAS_COMMAND))
-				{
-					if(ptr_c->this_command == RAS_COMMAND)
-					{
-						if(bank_id == 0)	// see if this rank needs a R/W switch around
-						{
-							algorithm.transaction_type[rank_id] = channel->set_read_write_type(rank_id,system_config.bank_count);
-						}
-
-						next_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(1);
-
-						if(((algorithm.transaction_type[rank_id] == READ_TRANSACTION) && (next_c->this_command == CAS_AND_PRECHARGE_COMMAND)) ||
-							((algorithm.transaction_type[rank_id] == WRITE_TRANSACTION) && (next_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND)))
-						{
-							candidate_found = true;
-							return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
-						}
-					}
-				}
-				else if((candidate_c != NULL) && (candidate_c->this_command == CAS_AND_PRECHARGE_COMMAND))
-				{
-					if((ptr_c->this_command == CAS_COMMAND) && (algorithm.transaction_type[rank_id] == READ_TRANSACTION))
-					{
-						candidate_found = true;
-						return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
-					}
-				}
-				else if((candidate_c != NULL) && (candidate_c->this_command == CAS_WRITE_AND_PRECHARGE_COMMAND))
-				{
-					if((ptr_c->this_command == CAS_COMMAND) && (algorithm.transaction_type[rank_id] == WRITE_TRANSACTION))
-					{
-						candidate_found = false;
-						return  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.dequeue();
-					}
-				}
-				else
-				{
-#ifdef DEBUG_FLAG_1
-					cerr << "some debug message" << endl;
-#endif
-				}
-			}
-		}
-		break;
-	case GREEDY:
-		{
-			command *candidate_command = NULL;
-			int candidate_gap = INT_MAX;
-			for (unsigned rank_id = system_config.rank_count; rank_id >= 0; --rank_id)
-			{
-				for (unsigned bank_id = system_config.bank_count; bank_id >= 0; --bank_id)
-				{
-					command *challenger_command = channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
-					if (challenger_command != NULL)
-					{
-						int challenger_gap = min_protocol_gap(chan_id,challenger_command);
-						if (challenger_gap < candidate_gap || (candidate_gap == challenger_gap && challenger_command->enqueue_time < candidate_command->enqueue_time))
-						{
-							candidate_gap = challenger_gap;
-							candidate_command = challenger_command;
-						}
-					}
-				}
-			}
-			temp_c = channel->get_rank(candidate_command->addr.rank_id)->bank[candidate_command->addr.bank_id].per_bank_q.dequeue();
-
-#ifdef DEBUG
-			cerr << "R[" << candidate_command->addr.rank_id << "] B[" << candidate_command->addr.bank_id << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << channel->time << "]" << endl;
-#endif
-
-			return temp_c;
-		}
-		break;
-	default:
-		{
-			cerr << "This configuration and algorithm combination is not supported" << endl;
-			_exit(0);
-		}
-		break;
-	}
-}
 
 
 dram_system::~dram_system()
@@ -870,150 +558,7 @@ void dram_system::get_next_random_request(transaction *this_t)
 	}
 }
 
-/// <summary>
-/// Updates the channel time to what it would be had this command been executed
-/// Updates the rank and bank records of the most recent RAS, CAS, etc. times
-/// Enqueues RAS times to allow t_faw to be determined later
-/// Updates rank and bank records of CAS, RAS lengths for later calculations in 
-/// min_protocol_gap()
-/// </summary>
-void dram_system::execute_command(command *this_c,const int gap)
-{
-	tick_t *this_ras_time;
-	
-	unsigned chan_id = this_c->addr.chan_id;
-	unsigned rank_id = this_c->addr.rank_id;
-	unsigned bank_id = this_c->addr.bank_id;
-	unsigned row_id = this_c->addr.row_id;
 
-	dram_channel *channel= &(dram_system::channel[chan_id]);
-
-	rank_c *this_r = channel->get_rank(rank_id);
-	
-	bank_c *this_b = &(this_r->bank[bank_id]);
-
-	//transaction *host_t = NULL;
-	//queue &history_q = channel.history_q;
-	//  queue *complete_q;
-
-	this_r->last_bank_id = bank_id;
-
-	int t_al = this_c->posted_cas ? timing_specification.t_al : 0;
-
-	// new
-	this_c->start_time = max(channel->get_time(),this_c->start_time);
-
-
-	// update the channel's idea of what time it is
-	//channel->set_time(channel->get_time() + gap);
-	channel->set_time(max(channel->get_time(),this_c->start_time) + gap);
-
-	// new
-	this_c->completion_time = channel->get_time();
-	
-	switch(this_c->this_command)
-	{
-	case RAS_COMMAND:
-
-		this_b->last_ras_time = channel->get_time();
-		this_b->row_id = row_id;
-		this_b->ras_count++;
-
-		// RAS time history queue, per rank
-		if(this_r->last_ras_times.freecount() == 0)	// FIXME: this is not very general
-			this_ras_time = this_r->last_ras_times.dequeue();
-		else
-			this_ras_time = new tick_t;
-
-		*this_ras_time = channel->get_time();
-		this_r->last_ras_times.enqueue(this_ras_time);
-		//this_c->completion_time = *this_ras_time + timing_specification.t_ras;
-		break;
-
-	case CAS_AND_PRECHARGE_COMMAND:
-
-		this_b->last_prec_time = max(channel->get_time() + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_b->last_ras_time + timing_specification.t_ras);
-		// lack of break is intentional
-
-	case CAS_COMMAND:
-
-		this_b->last_cas_time = channel->get_time();
-		this_r->last_cas_time = channel->get_time();
-		this_b->last_cas_length = this_c->length;
-		this_r->last_cas_length = this_c->length;
-		this_b->cas_count++;
-		//host_t = this_c->host_t;
-		this_c->host_t->completion_time	= channel->get_time() + timing_specification.t_cas;
-		//this_c->completion_time = channel->get_time() + timing_specification.t_cas;
-		break;
-
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-
-		this_b->last_prec_time = max(channel->get_time() + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_b->last_ras_time + timing_specification.t_ras);
-		// missing break is intentional
-
-	case CAS_WRITE_COMMAND:
-
-		this_b->last_casw_time = channel->get_time();
-		this_r->last_casw_time = channel->get_time();
-		this_b->last_casw_length= this_c->length;
-		this_r->last_casw_length= this_c->length;
-		this_b->casw_count++;
-		//host_t = this_c->host_t;
-		this_c->host_t->completion_time	= channel->get_time();
-		//this_c->completion_time = channel->get_time();
-		break;
-
-	case RETIRE_COMMAND:
-
-		break;
-
-	case PRECHARGE_COMMAND:
-
-		this_b->last_prec_time = channel->get_time();
-		break;
-
-	case PRECHARGE_ALL_COMMAND:
-		break;
-		
-	case RAS_ALL_COMMAND:
-		break;
-
-	case DRIVE_COMMAND:
-		break;
-
-	case DATA_COMMAND:
-		break;
-
-	case CAS_WITH_DRIVE_COMMAND:
-		break;
-
-	case REFRESH_ALL_COMMAND:
-		this_b->last_refresh_all_time = channel->get_time();
-		break;
-	}
-
-	// transaction complete? if so, put in completion queue
-	if (this_c->host_t != NULL) 
-	{
-		if(channel->complete(this_c->host_t) == FAILURE)
-		{
-			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
-			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;
-			_exit(2);
-		}
-	}
-
-	// record command history. Check to see if this can be removed
-	channel->record_command(this_c, free_command_pool);
-
-	//if (channel.history_q.get_count() == system_config.history_queue_depth)
-	//{		
-		/*done with this command, release into pool */
-	//	free_command_pool.release_item(channel.history_q.dequeue());
-	//}
-	//channel.history_q.enqueue(this_c);
-}
 
 
 
@@ -1276,219 +821,7 @@ int dram_system::min_protocol_gap(const int channel_no,const command *this_c) co
 	return max(min_gap,timing_specification.t_cmd);
 }
 
-/// <summary>
-/// Converts a transaction in a particular channel into commands,
-/// then inserts them in the bank queues.
-/// Functionality similar to that of the memory controller moving between the
-/// transaction queue and the per bank command queues 
-/// </summary>
-enum input_status_t dram_system::transaction2commands(transaction *this_t) 
-{
-	queue<command> *bank_q = &(channel[this_t->addr.chan_id].get_rank(this_t->addr.rank_id)->bank[this_t->addr.bank_id].per_bank_q);
-	
-	// with closed page, all transactions convert into one of the following:
-	// RAS, CAS, Precharge
-	// RAS, CAS+Precharge
-	if (system_config.row_buffer_management_policy == CLOSE_PAGE)
-	{
-		int empty_command_slot_count = bank_q->freecount();
 
-		// every transaction translates into at least two commands
-		if(empty_command_slot_count < 2)
-		{
-			return FAILURE;
-		}
-		// or three commands if the CAS+Precharge command is not available
-		else if((system_config.auto_precharge == false) && (empty_command_slot_count < 3))
-		{
-			return FAILURE;
-		}
-		// if there is enough space to insert the commands that this transaction becomes
-		else
-		{
-			// command one, the RAS command to activate the row
-			command *free_c = free_command_pool.acquire_item();
-
-			free_c->this_command = RAS_COMMAND;
-			// start time of the command is the same as the arrival time of the transaction
-			// because it is assumed that the movement from the transaction queue to the per
-			// bank queue is instantaneous
-			free_c->start_time = this_t->arrival_time;
-			free_c->enqueue_time = time;
-			free_c->addr = this_t->addr; // copy the addr stuff over
-			free_c->host_t = NULL;
-
-			bank_q->enqueue(free_c);
-
-			// command two, CAS or CAS+Precharge
-			free_c = free_command_pool.acquire_item();
-
-			// if CAS+Precharge is available
-			if(system_config.auto_precharge == false)
-			{
-				switch (this_t->type)
-				{
-				case WRITE_TRANSACTION:
-					free_c->this_command = CAS_WRITE_COMMAND;
-					break;
-				case READ_TRANSACTION:
-				case IFETCH_TRANSACTION:
-					free_c->this_command = CAS_COMMAND;
-					break;
-				default:
-					cerr << "Unhandled transaction type: " << this_t->type;
-					exit(-8);
-					break;
-				}
-
-				free_c->start_time = this_t->arrival_time;
-				free_c->enqueue_time = time;
-				free_c->addr = this_t->addr;
-				free_c->posted_cas = system_config.posted_cas;
-				free_c->host_t = this_t;				
-				free_c->length = this_t->length;
-				bank_q->enqueue(free_c);
-
-				// command three, the Precharge command
-				free_c = free_command_pool.acquire_item();
-				free_c->this_command = PRECHARGE_COMMAND;
-				free_c->start_time = this_t->arrival_time;
-				free_c->enqueue_time = time;
-				free_c->addr = this_t->addr;
-				free_c->host_t = NULL; // only one of these commands has a pointer to the original transaction
-				bank_q->enqueue(free_c);
-			}
-			else // precharge is implied, only need two commands
-			{
-				switch(this_t->type)
-				{
-				case WRITE_TRANSACTION:
-					free_c->this_command = CAS_WRITE_AND_PRECHARGE_COMMAND;
-					break;
-				case READ_TRANSACTION:
-				case IFETCH_TRANSACTION:
-					free_c->this_command = CAS_AND_PRECHARGE_COMMAND;
-					break;
-				case PER_BANK_REFRESH_TRANSACTION:
-					free_c->this_command = PRECHARGE_COMMAND;
-					break;
-				default:
-					cerr << "Unhandled transaction type: " << this_t->type;
-					exit(-8);
-					break;
-				}
-
-				free_c->start_time = this_t->arrival_time;
-				free_c->enqueue_time = time;
-				free_c->addr = this_t->addr;		/* copy the addr stuff over */
-				free_c->posted_cas = system_config.posted_cas;
-				free_c->host_t = this_t;				
-				free_c->length = this_t->length;
-
-				bank_q->enqueue(free_c);
-			}
-		}
-	}
-	
-	// open page systems may, in the best case, add a CAS command to an already open row
-	// closing the row and precharging may be delayed
-	else if(system_config.row_buffer_management_policy == OPEN_PAGE)
-	{
-		int queued_command_count = bank_q->get_count();
-		int empty_command_slot_count = bank_q->freecount();
-		// look in the bank_q and see if there's a precharge for this row
-		bool bypass_allowed = true;
-		// go from tail to head
-		for(int tail_offset = queued_command_count -1 ;(tail_offset >= 0) && (bypass_allowed == true); --tail_offset)
-		{	
-			command *temp_c = bank_q->read(tail_offset);
-
-			if(temp_c->this_command == PRECHARGE_COMMAND) // found a precharge command
-			{
-				if(temp_c->addr.row_id == this_t->addr.row_id) // same row, insert here 
-				{
-					if(empty_command_slot_count < 1)
-						return FAILURE;
-
-					command *free_c = free_command_pool.acquire_item();
-
-					if(this_t->type == WRITE_TRANSACTION)
-						free_c->this_command = CAS_WRITE_COMMAND;
-					else if (this_t->type == READ_TRANSACTION)
-						free_c->this_command = CAS_COMMAND;
-					free_c->start_time = this_t->arrival_time;
-					free_c->enqueue_time = time;
-					free_c->addr = this_t->addr; /// copy the addr stuff over
-					free_c->host_t = this_t;
-
-					free_c->length = this_t->length;
-
-					bank_q->insert(free_c, tail_offset);	/* insert at this location */
-					return SUCCESS;
-				}
-			}
-
-			// even STRICT ORDER allows you to look at the tail of the queue to see if that's the precharge
-			// command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
-
-			if ((system_config.command_ordering_algorithm == STRICT_ORDER) 
-				|| ((int)(time-temp_c->enqueue_time) > system_config.seniority_age_limit))
-			{
-				bypass_allowed = false;
-			}
-		}
-		if (empty_command_slot_count < 3)
-		{
-			return FAILURE;
-		}
-		command *free_c = free_command_pool.acquire_item();
-
-		free_c->this_command = RAS_COMMAND;
-		free_c->start_time = this_t->arrival_time;
-		free_c->enqueue_time = time;
-		free_c->addr = this_t->addr;		/* copy the addr stuff over */
-		free_c->host_t = NULL;
-
-		bank_q->enqueue(free_c);
-
-		free_c = free_command_pool.acquire_item();
-		if(this_t->type == WRITE_TRANSACTION)
-		{
-			free_c->this_command = CAS_WRITE_COMMAND;
-		}
-		else if (this_t->type == READ_TRANSACTION)
-		{
-			free_c->this_command = CAS_COMMAND;
-		}
-		else
-		{
-			cerr << "Unhandled transaction type: " << this_t->type;
-			exit(-8);
-		}
-
-		free_c->start_time = this_t->arrival_time;
-		free_c->enqueue_time = time;
-		free_c->posted_cas = system_config.posted_cas;
-		free_c->addr = this_t->addr;		/* copy the addr stuff over */
-		free_c->length = this_t->length;
-		// FIXME: not initializing the host_t value?
-		bank_q->enqueue(free_c);
-
-		free_c = free_command_pool.acquire_item();
-		free_c->this_command = PRECHARGE_COMMAND;
-		free_c->start_time = this_t->arrival_time;
-		free_c->enqueue_time = time;
-		free_c->addr = this_t->addr;		/* copy the addr stuff over */
-		free_c->host_t = NULL;
-		bank_q->enqueue(free_c);
-	}
-	else
-	{
-		cerr << "Unhandled row buffer management policy" << endl;
-		return FAILURE;
-	}
-	return SUCCESS;
-}
 
 
 void dram_system::set_dram_timing_specification(enum dram_type_t dram_type)
@@ -1634,16 +967,16 @@ void dram_system::run_simulations()
 					// if it can't fit in the transaction queue, drain the queue
 					while(transaction2commands(temp_t) != SUCCESS)
 					{
-						command *temp_c = get_next_command(oldest_chan_id);
+						command *temp_c = getNextCommand(oldest_chan_id);
 						int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
 
 #ifdef DEBUG_COMMAND
 						cerr << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
-						execute_command(temp_c, min_gap);
+						executeCommand(temp_c, min_gap);
 						update_system_time(); 
-						transaction *completed_t = channel[oldest_chan_id].complete();
+						transaction *completed_t = channel[oldest_chan_id].get_oldest_completed();
 						if(completed_t != NULL)
 							free_transaction_pool.release_item(completed_t);
 					}
@@ -1718,9 +1051,9 @@ int dram_system::find_oldest_channel() const
 	int oldest_chan_id = 0;
 	tick_t oldest_time = channel[0].get_time();
 
-	for (int chan_id = 1; chan_id < system_config.chan_count ; ++chan_id)
+	for (int chan_id = 1; chan_id < system_config.chan_count ; chan_id++)
 	{
-		if(channel[chan_id].get_time() < oldest_time)
+		if (channel[chan_id].get_time() < oldest_time)
 		{
 			oldest_chan_id = chan_id;
 			oldest_time = channel[chan_id].get_time();
@@ -1748,46 +1081,132 @@ void dram_system::run_simulations2()
 		if (get_next_input_transaction(input_t) == SUCCESS)
 		{
 			// record stats
-			statistics.collect_transaction_stats(input_t);			
-			
-			while (channel[input_t->addr.chan_id].enqueue(input_t) == FAILURE)
+			statistics.collect_transaction_stats(input_t);
+
+			int chan = input_t->addr.chan_id;
+
+			// first try to update the channel so that it is one command past this
+			// transaction's start time
+			while (channel[chan].get_time() < input_t->arrival_time)
 			{
-				// tried to stuff req in channel queue, stalled, so try to drain channel queue first
-				// and drain it completely
-				// unfortunately, we may have to drain another channel first.
-				
-				int oldest_chan_id = find_oldest_channel();
-				transaction *temp_t = channel[oldest_chan_id].get_transaction();
+				// attempt first to move transactions out of the transactions queue and
+				// convert them into commands
+				transaction *temp_t = channel[chan].get_transaction();
 
-
-
-				if(temp_t != NULL)
+				if (temp_t != NULL)
 				{
 					// if it can't fit in the transaction queue, drain the queue
-					while(transaction2commands(temp_t) != SUCCESS)
+					while (transaction2commands(temp_t) != SUCCESS)
 					{
-						command *temp_c = get_next_command(oldest_chan_id);
+						// this is guaranteed to find something due to the fact that
+						// transactions2commands() just returned FAILURE, indicating
+						// that there was not enough room for more commands, so we know
+						// that there are many commands to choose from
+						command *temp_c = getNextCommand(i);
+
 						int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
 
-						execute_command(temp_c, min_gap);
+						executeCommand(temp_c, min_gap);
 
 #ifdef DEBUG_COMMAND
 						cerr << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
 						update_system_time(); 
-						transaction *completed_t = channel[oldest_chan_id].complete();
+
+						transaction *completed_t = channel[i].get_oldest_completed();
+
 						if(completed_t != NULL)
 						{
 							free_transaction_pool.release_item(completed_t);
 #ifdef DEBUG_TRANSACTION
-							cerr << "CH[" << setw(2) << oldest_chan_id << "] " << completed_t << endl;
+							cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
 #endif
 						}
 
 					}
 				}
-				input_t->arrival_time = max(input_t->arrival_time,channel[input_t->addr.chan_id].get_time());
+				else
+				{
+					command *temp_c = getNextCommand(i);
+
+					if (temp_c != NULL)
+					{
+						int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
+
+						executeCommand(temp_c, min_gap);
+
+#ifdef DEBUG_COMMAND
+						cerr << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+#endif
+
+						update_system_time(); 
+						transaction *completed_t = channel[i].get_oldest_completed();
+						if(completed_t != NULL)
+						{
+							free_transaction_pool.release_item(completed_t);
+#ifdef DEBUG_TRANSACTION
+							cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
+#endif
+						}
+						else
+						{
+							// the transaction queue and all the per bank queues are empty,
+							// so just move time forward to the point where the transaction starts
+							channel[chan].set_time(input_t->arrival_time);
+						}
+					}
+					else
+						break;
+
+				}
+
+			}
+			
+			// so now the channel time should be >= to the enqueue time
+			// however, there may still not be room, in which case, time must be moved forward,
+			// along with the arrival time of the transaction, simulating a retry request
+			while (channel[input_t->addr.chan_id].enqueue(input_t) == FAILURE)
+			{
+				// tried to stuff req in channel queue, stalled, so try to drain channel queue first
+				// and drain it completely
+				// unfortunately, we may have to drain another channel first.
+
+				while (channel[chan].get_time() < input_t->arrival_time)
+				{
+					transaction *temp_t = channel[chan].get_transaction();
+
+					if(temp_t != NULL)
+					{
+						// if it can't fit in the transaction queue, drain the queue
+						while (transaction2commands(temp_t) != SUCCESS)
+						{
+							command *temp_c = getNextCommand(i);
+							int min_gap = min_protocol_gap(input_t->addr.chan_id, temp_c);
+
+							executeCommand(temp_c, min_gap);
+
+#ifdef DEBUG_COMMAND
+							cerr << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+#endif
+
+							update_system_time(); 
+							transaction *completed_t = channel[i].get_oldest_completed();
+							if(completed_t != NULL)
+							{
+								free_transaction_pool.release_item(completed_t);
+#ifdef DEBUG_TRANSACTION
+								cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
+#endif
+							}
+
+						}
+					}
+					else
+						break;
+					input_t->arrival_time = max(input_t->arrival_time,channel[input_t->addr.chan_id].get_time());
+				}
+				//}
 			}
 		}
 		else

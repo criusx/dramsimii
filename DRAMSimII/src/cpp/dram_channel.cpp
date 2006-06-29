@@ -46,10 +46,12 @@ void dram_channel::init_controller(int transaction_queue_depth,
 	refresh_q.init(refresh_queue_depth);
 
 	time = 0;
-	last_refresh_time	= 0;
-	refresh_row_index	= 0;
+	last_refresh_time = 0;
+	refresh_row_index = 0;
 	last_rank_id = 0;
-	rank = new rank_c[rank_count];
+
+	rank = new rank_c[rank_count]; // FIXME: consider converting this array to a vector
+	// std::vector<rank_c> rank(rank_count, rank_c(bank_count,per_bank_queue_depth));
 	for (int i=0;i<rank_count;i++)
 		rank[i].init_ranks(bank_count,per_bank_queue_depth);
 }
@@ -65,7 +67,7 @@ void dram_channel::record_command(command *latest_command, queue<command> &free_
 }
 
 
-enum transaction_type_t	dram_channel::set_read_write_type(const int rank_id,const int bank_count)
+enum transaction_type_t	dram_channel::set_read_write_type(const int rank_id,const int bank_count) const
 {
 	int read_count = 0;
 	int write_count = 0;
@@ -73,7 +75,7 @@ enum transaction_type_t	dram_channel::set_read_write_type(const int rank_id,cons
 
 	for(int i = 0; i < bank_count; ++i)
 	{
-		command *temp_c =  rank[rank_id].bank[i].per_bank_q.read(1);
+		command *temp_c = rank[rank_id].bank[i].per_bank_q.read(1);
 
 		if(temp_c != NULL)
 		{
@@ -92,9 +94,10 @@ enum transaction_type_t	dram_channel::set_read_write_type(const int rank_id,cons
 		}
 	}
 #ifdef DEBUG_FLAG
-	cerr << "Rank [" << rank_id << "] Read[" << read_count << "] Write[" << write_count << "]" << endl;
+	cerr << "Rank[" << rank_id << "] Read[" << read_count << "] Write[" << write_count << "] Empty[" << empty_count << "]" << endl;
 #endif
-	if(read_count >= write_count)
+
+	if (read_count >= write_count)
 		return READ_TRANSACTION;
 	else
 		return WRITE_TRANSACTION;

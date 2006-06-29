@@ -197,6 +197,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cpp\executeCommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cpp\getNextCommand.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\cpp\globals.cpp"
 				>
 			</File>
@@ -206,6 +214,10 @@
 			</File>
 			<File
 				RelativePath=".\src\cpp\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cpp\transaction2commands.cpp"
 				>
 			</File>
 		</Filter>
