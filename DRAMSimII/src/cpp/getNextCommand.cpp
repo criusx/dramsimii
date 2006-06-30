@@ -32,9 +32,9 @@ command *dram_system::getNextCommand(const int chan_id)
 			int oldest_rank_id = -1;
 			int oldest_bank_id = -1;
 
-			for (int rank_id = system_config.rank_count - 1; rank_id > 0; rank_id--)
+			for (int rank_id = system_config.rank_count - 1; rank_id >= 0; rank_id--)
 			{
-				for (int bank_id = system_config.bank_count - 1; bank_id > 0; bank_id--)
+				for (int bank_id = system_config.bank_count - 1; bank_id >= 0; bank_id--)
 				{
 					command *temp_c =  channel->get_rank(rank_id)->bank[bank_id].per_bank_q.read(0);
 
@@ -308,7 +308,7 @@ command *dram_system::getNextCommand(const int chan_id)
 
 					if (challenger_command != NULL)
 					{
-						int challenger_gap = min_protocol_gap(chan_id,challenger_command);
+						int challenger_gap = minProtocolGap(chan_id,challenger_command);
 						if (challenger_gap < candidate_gap || (candidate_gap == challenger_gap && challenger_command->enqueue_time < candidate_command->enqueue_time))
 						{
 							candidate_gap = challenger_gap;

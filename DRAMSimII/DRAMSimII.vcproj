@@ -217,6 +217,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cpp\minProtocolGap.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\cpp\transaction2commands.cpp"
 				>
 			</File>

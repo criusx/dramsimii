@@ -4,7 +4,7 @@ CCFLAGS =
 CFLAGS = -Wall -O3 -c
 LDFLAGS = $(OPT)
 
-dramsim2: dramsim2.o dram_system.o dram_channel.o globals.o input_stream.o main.o
+dramsim2: dramsim2.o dram_system.o dram_channel.o globals.o input_stream.o main.o executeCommand.o transaction2commands.o getNextCommand.o
 	$(CC) $(CCFLAGS) -o dramsim2 dramsim2.o dram_system.o dram_channel.o globals.o input_stream.o main.o
 
 clean: 

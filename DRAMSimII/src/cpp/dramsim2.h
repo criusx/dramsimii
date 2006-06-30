@@ -642,7 +642,7 @@ private:
 	void set_dram_timing_specification(enum dram_type_t);
 	command *getNextCommand(const int);
 	enum input_status_t transaction2commands(transaction*);
-	int min_protocol_gap(const int,const command *) const;
+	int minProtocolGap(const int,const command *) const;
 	int find_oldest_channel() const;
 	void executeCommand(command *, const int);
 	void update_system_time();
