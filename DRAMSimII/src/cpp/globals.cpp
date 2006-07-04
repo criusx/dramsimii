@@ -12,51 +12,51 @@ ostream &operator<<(ostream &os, const command_type_t &command)
 {
 	switch(command)
 	{
-	case	RAS_COMMAND:
-		os << "RAS    ";
+	case RAS_COMMAND:
+		os << "RAS ";
 		break;
-	case 	CAS_COMMAND:
-		os << "CAS    ";
+	case CAS_COMMAND:
+		os << "CAS ";
 		break;
-	case 	CAS_AND_PRECHARGE_COMMAND:
-		os << "CAS+P  ";
+	case CAS_AND_PRECHARGE_COMMAND:
+		os << "CAS+P ";
 		break;
-	case 	CAS_WRITE_COMMAND:
-		os << "CASW   ";
+	case CAS_WRITE_COMMAND:
+		os << "CASW ";
 		break;
-	case 	CAS_WRITE_AND_PRECHARGE_COMMAND:
+	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 		os << "CASW+P ";
 		break;
-	case 	RETIRE_COMMAND:
+	case RETIRE_COMMAND:
 		os << "RETIRE ";
 		break;
-	case 	PRECHARGE_COMMAND:
-		os << "PREC   ";
+	case PRECHARGE_COMMAND:
+		os << "PREC ";
 		break;
-	case 	PRECHARGE_ALL_COMMAND:
+	case PRECHARGE_ALL_COMMAND:
 		os << "PREC_A ";
 		break;
-	case 	RAS_ALL_COMMAND:
-		os << "RAS_A  ";
+	case RAS_ALL_COMMAND:
+		os << "RAS_A ";
 		break;
-	case 	DRIVE_COMMAND:
-		os << "DRIVE  ";
+	case DRIVE_COMMAND:
+		os << "DRIVE ";
 		break;
-	case 	DATA_COMMAND:
-		os << "DATA   ";
+	case DATA_COMMAND:
+		os << "DATA ";
 		break;
-	case 	CAS_WITH_DRIVE_COMMAND:
-		os << "CAS+D  ";
+	case CAS_WITH_DRIVE_COMMAND:
+		os << "CAS+D ";
 		break;
-	case 	REFRESH_ALL_COMMAND:
-		os << "REF_A  ";
+	case REFRESH_ALL_COMMAND:
+		os << "REF_A ";
 		break;
 	}
 	return os;
 }
 ostream &operator<<(ostream &os, const command &this_c)
 {
-	os << this_c.this_command << this_c.addr << " S[" << std::hex << this_c.start_time << "] Q[" << std::hex << this_c.enqueue_time << "] E[" << std::hex << this_c.completion_time << "]";
+	os << this_c.this_command << this_c.addr << " S[" << std::hex << this_c.start_time << "] Q[" << std::hex << this_c.enqueue_time << "] E[" << std::hex << this_c.completion_time << "] T[" << this_c.completion_time - this_c.start_time << "]";
 	return os;
 }
 
@@ -150,16 +150,16 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 		} else if(temp == "-config:rank") {
 			parameters[rank_count_token] = temp2;
 			argc_index += 2;
-		} else if(temp ==  "-config:bank") {
+		} else if(temp == "-config:bank") {
 			parameters[bank_count_token] = temp2;
 			argc_index += 2;
-		} else if(temp ==  "-config:queue_depth") {
+		} else if(temp == "-config:queue_depth") {
 			parameters[per_bank_queue_depth_token] = temp2;
 			argc_index += 2;
-		} else if(temp ==  "-config:ordering_algorithm") {
+		} else if(temp == "-config:ordering_algorithm") {
 			parameters[ordering_algorithm_token] = temp2;
 			argc_index += 2;
-		} else if(temp == "-config:system_config") {      
+		} else if(temp == "-config:system_config") { 
 			parameters[system_configuration_type_token] = temp2;
 			argc_index += 2;
 		} else if(temp == "-config:read_percentage") {
@@ -182,7 +182,7 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 			parameters[t_rtrs_token] = temp2;
 			argc_index += 2;
 		} else {
-			cerr << temp <<  " is not a recognized option" << endl;
+			cerr << temp << " is not a recognized option" << endl;
 			argc_index ++;
 		}
 	}
@@ -192,7 +192,7 @@ void create_input_map_from_input_file(map<enum file_io_token_t,string> &paramete
 {
 
 	while (!cfg_file.eof())
-	{		
+	{ 
 		string input_string;
 		cfg_file >> input_string;
 		file_io_token_t temp;
@@ -200,22 +200,22 @@ void create_input_map_from_input_file(map<enum file_io_token_t,string> &paramete
 		{
 		case dram_type_token:
 		case clock_granularity_token:
-		case datarate_token: /* aka memory_frequency: units is MBPS */				
+		case datarate_token: /* aka memory_frequency: units is MBPS */ 
 		case row_buffer_management_policy_token:
-		case auto_precharge_token:				
+		case auto_precharge_token: 
 		case addr_mapping_scheme_token:
-		case transaction_ordering_policy_token:				
-		case refresh_time_token:				
-		case refresh_policy_token:				
-		case posted_cas_token:				
-		case chan_count_token:				
-		case channel_width_token:				
+		case transaction_ordering_policy_token: 
+		case refresh_time_token: 
+		case refresh_policy_token: 
+		case posted_cas_token: 
+		case chan_count_token: 
+		case channel_width_token: 
 		case rank_count_token:
 		case bank_count_token:
 		case row_count_token:
-		case col_count_token:				
-		case col_size_token:				
-		case row_size_token:				
+		case col_count_token: 
+		case col_size_token: 
+		case row_size_token: 
 		case cacheline_size_token:
 		case per_bank_queue_depth_token:
 		case t_al_token:
@@ -448,10 +448,10 @@ ostream &operator<<(ostream &os, const transaction *this_t)
 		os << "WRITE ";
 		break;
 	case READ_TRANSACTION:
-		os << "READ  ";
+		os << "READ ";
 		break;
 	case PREFETCH_TRANSACTION:
-		os << "PREF  ";
+		os << "PREF ";
 		break;
 	case AUTO_REFRESH_TRANSACTION:
 		os << "AUTOR ";
@@ -464,7 +464,7 @@ ostream &operator<<(ostream &os, const transaction *this_t)
 		break;
 	}
 	os << "E[" << setw(8) << std::hex << this_t->completion_time << "]" 
-		<< " PA[0x" <<  std::hex << this_t->addr.phys_addr << "]";
+		<< " PA[0x" << std::hex << this_t->addr.phys_addr << "]";
 	return os;
 }
 

@@ -221,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cpp\runSimulations.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\cpp\transaction2commands.cpp"
 				>
 			</File>
