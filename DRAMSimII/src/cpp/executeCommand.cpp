@@ -23,13 +23,14 @@ void dram_system::executeCommand(command *this_command,const int gap)
 
 	// new
 	this_command->start_time = max(channel->get_time(),this_command->start_time);
+	this_command->completion_time = channel->get_time();
 
 	// update the channel's idea of what time it is
 	//channel->set_time(channel->get_time() + gap);
 	channel->set_time(this_command->start_time + gap);
 
 	// new, this is not right, this only shows how long until the next command could execute
-	this_command->completion_time = channel->get_time();
+	//this_command->completion_time = channel->get_time();
 
 	switch(this_command->this_command)
 	{
@@ -49,6 +50,8 @@ void dram_system::executeCommand(command *this_command,const int gap)
 
 		*this_ras_time = channel->get_time();
 		this_row->last_ras_times.enqueue(this_ras_time);
+		// specific for RAS command
+		this_command->completion_time += timing_specification.t_ras;
 		break;
 
 	case CAS_AND_PRECHARGE_COMMAND:
@@ -64,6 +67,8 @@ void dram_system::executeCommand(command *this_command,const int gap)
 		this_row->last_cas_length = this_command->length;
 		this_bank->cas_count++;
 		this_command->host_t->completion_time = channel->get_time() + timing_specification.t_cas;
+		// specific for CAS command
+		this_command->completion_time += timing_specification.t_cas;
 		break;
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
@@ -79,15 +84,16 @@ void dram_system::executeCommand(command *this_command,const int gap)
 		this_row->last_casw_length = this_command->length;
 		this_bank->casw_count++;
 		this_command->host_t->completion_time = channel->get_time();
+		// for the CAS write command
+		this_command->completion_time += timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr;
 		break;
 
 	case RETIRE_COMMAND:
-
 		break;
 
 	case PRECHARGE_COMMAND:
-
 		this_bank->last_prec_time = channel->get_time();
+		this_command->completion_time += timing_specification.t_cmd + timing_specification.t_rp;
 		break;
 
 	case PRECHARGE_ALL_COMMAND:

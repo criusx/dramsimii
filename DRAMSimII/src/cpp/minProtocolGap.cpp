@@ -193,8 +193,10 @@ int dram_system::minProtocolGap(const int channel_id,const command *this_c) cons
 		t_cas_gap = max(t_cas_gap,(int)(other_r_last_casw_time + other_r_last_casw_length - now));
 		min_gap = max(t_ras_gap,t_cas_gap);
 		break;
+
 	case RETIRE_COMMAND:
 		break;
+
 	case PRECHARGE_COMMAND:
 
 		// respect t_ras of same bank
