@@ -43,7 +43,7 @@ void dram_channel::init_controller(int transaction_queue_depth,
 	transaction_q.init(transaction_queue_depth);
 	history_q.init(history_queue_depth);
 	completion_q.init(completion_queue_depth);
-	refresh_q.init(refresh_queue_depth);
+	
 
 	time = 0;
 	last_refresh_time = 0;
@@ -54,6 +54,26 @@ void dram_channel::init_controller(int transaction_queue_depth,
 	// std::vector<rank_c> rank(rank_count, rank_c(bank_count,per_bank_queue_depth));
 	for (int i=0;i<rank_count;i++)
 		rank[i].init_ranks(bank_count,per_bank_queue_depth);
+
+	refreshQueue.init(refresh_queue_depth,  true);
+}
+
+void dram_channel::initRefreshQueue(const int rowCount, const int rankCount, const int refreshTime, const int chan)
+{
+	int step = 3.0 / 4.0 * (refreshTime / (rowCount * rankCount));
+	int count = 0;
+
+	for (int i = rowCount - 1; i >= 0; i--)
+		for (int j = rankCount - 1; j >= 0; j--)
+		{
+			refreshQueue.read(count)->arrival_time = count * step;
+			refreshQueue.read(count)->type = AUTO_REFRESH_TRANSACTION;
+			refreshQueue.read(count)->addr.rank_id = j;
+			refreshQueue.read(count)->addr.row_id = i;
+			refreshQueue.read(count)->addr.chan_id = chan;
+			count++;
+		}
+
 }
 
 void dram_channel::record_command(command *latest_command, queue<command> &free_command_pool)

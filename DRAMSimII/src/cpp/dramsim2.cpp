@@ -121,7 +121,7 @@ dram_system_configuration::dram_system_configuration(map<file_io_token_t,string>
 		temp2 >> seniority_age_limit;
 	}
 	else
-		seniority_age_limit = 200;/* prevent against starvation */
+		seniority_age_limit = 200;// prevent against starvation
 
 	if ((temp=parameter.find(posted_cas_token))!=parameter.end())
 	{
@@ -213,14 +213,6 @@ dram_system_configuration::dram_system_configuration(map<file_io_token_t,string>
 	else
 		transaction_queue_depth = 32;
 
-	if ((temp=parameter.find(refresh_queue_depth_token))!=parameter.end())
-	{
-		stringstream temp2(temp->second);
-		temp2 >> refresh_queue_depth;
-	}
-	else
-		refresh_queue_depth = 0;
-
 	if ((temp=parameter.find(event_queue_depth_token))!=parameter.end())
 	{
 		stringstream temp2(temp->second);
@@ -301,6 +293,14 @@ dram_system_configuration::dram_system_configuration(map<file_io_token_t,string>
 	}
 	else
 		bank_count = 16;
+
+	if ((temp=parameter.find(refresh_queue_depth_token))!=parameter.end())
+	{
+		stringstream temp2(temp->second);
+		temp2 >> refresh_queue_depth;
+	}
+	else
+		refresh_queue_depth = row_count * rank_count;
 }
 
 
@@ -805,7 +805,7 @@ transaction::transaction()
 	type = CONTROL_TRANSACTION;
 }
 
-bus_event::bus_event()
+busEvent::busEvent()
 {
 	timestamp = 0;
 	attributes = CONTROL_TRANSACTION;

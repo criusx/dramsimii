@@ -11,7 +11,7 @@
 
 #include "dramsim2.h"
 
-int dram_system::convert_address(addresses &this_a)
+int dramSystem::convert_address(addresses &this_a)
 {
 	unsigned int input_a;
 	unsigned int temp_a, temp_b;
@@ -418,7 +418,7 @@ int dram_system::convert_address(addresses &this_a)
 
 
 
-dram_system::~dram_system()
+dramSystem::~dramSystem()
 {
 	delete[] channel;
 }
@@ -428,7 +428,7 @@ dram_system::~dram_system()
 /// Although some channels may be farther along, selecting the oldest channel
 /// when doing updates ensures that all channels stay reasonably close to one another
 /// </summary>
-void dram_system::update_system_time()
+void dramSystem::update_system_time()
 {
 	int oldest_chan_id = system_config.chan_count - 1;
 	tick_t oldest_time = channel[oldest_chan_id].get_time();
@@ -446,7 +446,7 @@ void dram_system::update_system_time()
 }
 
 
-void dram_system::get_next_random_request(transaction *this_t)
+void dramSystem::get_next_random_request(transaction *this_t)
 {
 	if (input_stream.type == RANDOM)
 	{
@@ -562,34 +562,51 @@ void dram_system::get_next_random_request(transaction *this_t)
 
 
 
-enum input_status_t dram_system::get_next_input_transaction(transaction *&this_t)
+enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
 {
-	this_t = free_transaction_pool.acquire_item();
+	static transaction *temp_t;
 
-	if (input_stream.type == RANDOM)
+	if (temp_t == NULL)
 	{
-		get_next_random_request(this_t);
-	}
-	else if((input_stream.type == K6_TRACE) || (input_stream.type == MASE_TRACE))
-	{
-		static bus_event this_e;
+		temp_t = free_transaction_pool.acquire_item();	
 
-		if(input_stream.get_next_bus_event(this_e) == FAILURE)
+		if (input_stream.type == RANDOM)
 		{
-			/* EOF reached */
-			return FAILURE;
-		} 
-		else
-		{
-			this_t->addr.phys_addr = this_e.address;
-			// FIXME: ignores return type
-			convert_address(this_t->addr);
-			++(this_t->event_no);
-			this_t->type = this_e.attributes;
-			this_t->length = 8;			/* assume burst length of 8 */
-			this_t->arrival_time = this_e.timestamp;
-			/* need to adjust arrival time for K6 traces to cycles */
+			get_next_random_request(temp_t);
 		}
+		else if((input_stream.type == K6_TRACE) || (input_stream.type == MASE_TRACE))
+		{
+			static busEvent this_e;
+
+			if(input_stream.get_next_bus_event(this_e) == FAILURE)
+			{
+				/* EOF reached */
+				return FAILURE;
+			} 
+			else
+			{
+				temp_t->addr.phys_addr = this_e.address;
+				// FIXME: ignores return type
+				convert_address(temp_t->addr);
+				++(temp_t->event_no);
+				temp_t->type = this_e.attributes;
+				temp_t->length = 8;			// assume burst length of 8
+				temp_t->arrival_time = this_e.timestamp;
+				// need to adjust arrival time for K6 traces to cycles
+
+			}
+		}
+	}
+
+	// read but do not remove
+	transaction *refresh_t = channel[temp_t->addr.chan_id].read_refresh();
+
+	if (refresh_t->arrival_time < temp_t->arrival_time)
+		this_t = channel[temp_t->addr.chan_id].get_refresh();
+	else
+	{
+		this_t = temp_t;
+		temp_t = NULL;
 	}
 	return SUCCESS;
 }
@@ -600,7 +617,7 @@ enum input_status_t dram_system::get_next_input_transaction(transaction *&this_t
 
 
 
-void dram_system::set_dram_timing_specification(enum dram_type_t dram_type)
+void dramSystem::set_dram_timing_specification(enum dram_type_t dram_type)
 {
 	/// references to make reading this function easier
 	int &t_al = timing_specification.t_al;
@@ -713,37 +730,30 @@ void dram_system::set_dram_timing_specification(enum dram_type_t dram_type)
 	}
 }
 
-
-
-
-
-
-
-dram_system::dram_system(map<file_io_token_t,string> &parameter):
+dramSystem::dramSystem(map<file_io_token_t,string> &parameter):
 system_config(parameter),
 timing_specification(parameter),
 sim_parameters(parameter),
-free_command_pool(4*COMMAND_QUEUE_SIZE,true), /// place to temporarily dump unused command structures */
-free_transaction_pool(4*COMMAND_QUEUE_SIZE,true), /// ditto, but for transactions, avoid system calls during runtime
-free_event_pool(COMMAND_QUEUE_SIZE,true), /// create enough events, transactions and commands ahead of time
+free_command_pool(4*COMMAND_QUEUE_SIZE,true), // place to temporarily dump unused command structures */
+free_transaction_pool(4*COMMAND_QUEUE_SIZE,true), // ditto, but for transactions, avoid system calls during runtime
+free_event_pool(COMMAND_QUEUE_SIZE,true), // create enough events, transactions and commands ahead of time
 event_q(COMMAND_QUEUE_SIZE),
 input_stream(parameter),
-time(0) /// start the clock
+time(0) // start the clock
 
 {
-	//time = 0;                  /* start the clock */
-
 	map<file_io_token_t, string>::iterator temp;
 	stringstream temp2;
 
 	if ((temp=parameter.find(output_file_token))!=parameter.end())
 		output_filename = parameter[output_file_token];
 
-
 	// create as many channels as were specified, all of the same type
 	// now that the parameters for each have been set
 	channel =  new dram_channel[system_config.chan_count];
-	for (int i = 0; i < system_config.chan_count; ++i)
+
+	for (int i = system_config.chan_count - 1; i >= 0; i--)
+	{
 		channel[i].init_controller(system_config.transaction_queue_depth,
 		system_config.history_queue_depth,
 		system_config.completion_queue_depth,
@@ -751,13 +761,16 @@ time(0) /// start the clock
 		system_config.rank_count,
 		system_config.bank_count,
 		system_config.per_bank_queue_depth);
-	algorithm.init(free_command_pool, system_config.rank_count, system_config.bank_count, system_config.config_type);
 
+		channel[i].initRefreshQueue(system_config.row_count, system_config.rank_count, system_config.refresh_time, i);
+	}
+
+	algorithm.init(free_command_pool, system_config.rank_count, system_config.bank_count, system_config.config_type);	
 }
 
 
 
-int dram_system::find_oldest_channel() const
+int dramSystem::find_oldest_channel() const
 {
 	int oldest_chan_id = 0;
 	tick_t oldest_time = channel[0].get_time();

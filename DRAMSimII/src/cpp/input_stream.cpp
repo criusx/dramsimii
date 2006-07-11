@@ -202,7 +202,7 @@ double input_stream_c::box_muller(double m, double s) {
 }
 
 
-enum input_status_t input_stream_c::get_next_bus_event(bus_event &this_e)
+enum input_status_t input_stream_c::get_next_bus_event(busEvent &this_e)
 {	
 	enum file_io_token_t control;	
 	string input;	
@@ -255,7 +255,7 @@ enum input_status_t input_stream_c::get_next_bus_event(bus_event &this_e)
 				(((this_e.address ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
 			{
 				bursting = false;
-				timestamp = timestamp * ascii2multiplier(input);
+				timestamp *= ascii2multiplier(input);
 				this_e.address 	= 0x3FFFFFFF & address;		/* mask out top addr bit */
 				this_e.attributes 	= CONTROL_TRANSACTION;
 				this_e.timestamp 	= timestamp;

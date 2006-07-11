@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	//simulation_parameters_t	*simulation_parameters;
 	//dram_statistics_t	*dram_stats;
 
-	dram_system ds(parameters); // combines read_command line and other inits
+	dramSystem ds(parameters); // combines read_command line and other inits
 	//input_stream	is(ds);
 	//simulation_parameters sp;
 	//dram_statistics stats;

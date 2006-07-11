@@ -5,7 +5,6 @@ To do list:
 2. add open page support
 3. Look at power up/down models.
 4. re-add power models.
-5. convert to event driven model
 6. attach BIU, port to alpha-sim
 7. convert passed pointers/values to references
 8. standardize time variables
@@ -65,7 +64,7 @@ using namespace std;
 #define rand_s(a) *a=lrand48()*2
 #endif
 
-/* This section defines the refresh policy */
+// This section defines the refresh policy
 
 enum refresh_policy_t
 {
@@ -76,14 +75,14 @@ enum refresh_policy_t
 
 enum row_buffer_policy_t
 {
-	AUTO_PAGE, /* same as OPEN PAGE, but close page after timer expires */
-	OPEN_PAGE, /* keep page open indefinitely */
+	AUTO_PAGE, // same as OPEN PAGE, but close page after timer expires
+	OPEN_PAGE, // keep page open indefinitely
 	CLOSE_PAGE
 };
 
-/// This section defines the address mapping scheme
-/// The scheme dictates how a memory address is converted
-/// to rank, bank, row, col, byte
+// This section defines the address mapping scheme
+// The scheme dictates how a memory address is converted
+// to rank, bank, row, col, byte
 enum address_mapping_scheme_t
 {
 	BURGER_BASE_MAP,
@@ -254,9 +253,9 @@ enum distribution_type_t
 
 enum event_type_t
 {
-	TRANSACTION_ENQUEUE, // put transaction into channel queue
-	DRAM_COMMAND_ENQUEUE, // put DRAM command into per-bank queue
-	DRAM_COMMAND_EXECUTE // schedule DRAM command for execution
+	TRANSACTION_ENQUEUE,	// put transaction into channel queue
+	DRAM_COMMAND_ENQUEUE,	// put DRAM command into per-bank queue
+	DRAM_COMMAND_EXECUTE	// schedule DRAM command for execution
 };
 
 // include the template code for queues
@@ -272,28 +271,9 @@ enum event_type_t
 #include "command.h"
 
 
-/* pending event queue */
+#include "event.h"
 
-class event
-{
-public:
-	int event_type; /* what kind of event is this? */
-	tick_t time;
-	void *event_ptr; /* point to a transaction or command to be enqueued or executed */
-	event();
-};
-
-/* bus_event_t is used with the file I/O interface to get bus events from input trace files */
-
-class bus_event /* 6 DWord per event */
-{
-public:
-	enum transaction_type_t attributes;
-	/* read/write/Fetch type stuff. Not overloaded with other stuff */
-	int address; /* assume to be <= 32 bits for now */
-	tick_t timestamp; /* time stamp will now have a large dynamic range, but only 53 bit precision */
-	bus_event();
-};
+#include "busEvent.h"
 
 //////////////////////////////////////////////////////////////////////////
 /// global functions
@@ -315,63 +295,65 @@ void create_input_map(int ,char *[],map<enum file_io_token_t, string> &);
 void create_input_map_from_input_file(map<enum file_io_token_t, string> &,ifstream &);
 
 /// class declarations
-class dram_system;
+class dramSystem;
 //////////////////////////////////////////////////////////////////////////
 int inline log2(unsigned int input)
 {
 	int l2 = 0;
 	for (input >>= 1; input > 0; input >>= 1)
 	{
-		++ l2;
+		l2++;
 	}
 	return l2;
 }
 
-/* t_pp (min prec to prec of any bank) ignored */
+// t_pp (min prec to prec of any bank) ignored
 class dram_timing_specification
 {
 private:
-	int t_rtrs; // rank hand off penalty.
-	int t_al; // additive latency, used with posted cas
-	int t_burst; // number of cycles utilized per cacheline burst
-	int t_cas; // delay between start of CAS and start of burst
-	int t_cwd; // delay between end of CASW and start of burst
-	int t_faw; // four bank activation
-	int t_ras; // interval between ACT and PRECHARGE to same bank
-	int t_rc; // t_rc is simply t_ras + t_rp
-	int t_rcd; // RAS to CAS delay of same bank
-	int t_rfc; // refresh cycle time
-	int t_rp; // interval between PRECHARGE and ACT to same bank
-	int t_rrd; // Row to row activation delay
-	int t_rtp; // read to precharge delay
-	int t_wr; // write recovery time , time to restore data
-	int t_wtr; // write to read turnaround time
-	int t_cmd; // command bus duration...
-	int t_int_burst; // internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3
+	int t_rtrs;			// rank hand off penalty, also t_dqs
+	int t_al;			// additive latency, used with posted cas
+	int t_burst;		// number of cycles utilized per cacheline burst
+	int t_cas;			// delay between start of CAS and start of burst
+	int t_cwd;			// delay between end of CASW and start of burst
+	int t_faw;			// four bank activation
+	int t_ras;			// interval between ACT and PRECHARGE to same bank
+	int t_rc;			// t_rc is simply t_ras + t_rp
+	int t_rcd;			// RAS to CAS delay of same bank
+	int t_rfc;			// refresh cycle time
+	int t_rp;			// interval between PRECHARGE and ACT to same bank
+	int t_rrd;			// Row to row activation delay
+	int t_rtp;			// read to precharge delay
+	int t_wr;			// write recovery time , time to restore data
+	int t_wtr;			// write to read turnaround time
+	int t_cmd;			// command bus duration...
+	int t_int_burst;	// internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3
 
 public:
 	dram_timing_specification(map<file_io_token_t, string> &);
 	friend ostream &operator<<( ostream&, const dram_timing_specification &);
-	friend dram_system;
+	friend dramSystem;
 };
 
 
 class bank_c
 {
 public:
-	tick_t last_ras_time; // when did last ras start?
-	tick_t last_cas_time; // when did last cas start?
-	tick_t last_casw_time; // when did last cas write start?
-	tick_t last_prec_time; // when did last prec start?
-	tick_t last_refresh_all_time; // must respect t_rfc. concurrent refresh takes time
+	tick_t last_ras_time;			// when did last ras start?
+	tick_t last_cas_time;			// when did last cas start?
+	tick_t last_casw_time;			// when did last cas write start?
+	tick_t last_prec_time;			// when did last precharge start?
+	tick_t last_refresh_all_time;	// must respect t_rfc. concurrent refresh takes time
 	int last_cas_length;
 	int last_casw_length;
-	int row_id; // if the bank is open, what is the row id?
-	queue<command> per_bank_q; // per bank queue
+	int row_id;						// if the bank is open, what is the row id?
+	queue<command> per_bank_q;		// per bank queue
+	
 	// stats
 	int ras_count;
 	int cas_count;
 	int casw_count;
+	
 	//public:
 	bank_c();
 	void init_banks(int);
@@ -404,8 +386,8 @@ private:
 	int refresh_row_index; // the row index to be refreshed
 	tick_t last_refresh_time; // tells me when last refresh was done
 	int last_rank_id; // id of the last accessed rank of this channel
-	queue<transaction> transaction_q;// unified system queue
-	queue<transaction> refresh_q; // queue of refresh transactions
+	queue<transaction> transaction_q;// transaction queue for the channel
+	queue<transaction> refreshQueue; // queue of refresh transactions
 	queue<command> history_q; // what were the last N commands to this channel?
 	queue<transaction> completion_q;// completed_q, can send status back to memory controller
 
@@ -417,11 +399,15 @@ public:
 	int get_last_rank_id() const { return last_rank_id; }
 	transaction *get_transaction() { return transaction_q.dequeue(); } // remove and return the oldest transaction
 	transaction *read_transaction() { return transaction_q.read_back(); } // read the oldest transaction without affecting the queue
+	transaction *get_refresh() { return refreshQueue.dequeue(); }
+	transaction *read_refresh() { return refreshQueue.read_back(); }
+	input_status_t enqueueRefresh(transaction *in) { return refreshQueue.enqueue(in); }
 	input_status_t enqueue(transaction *in) { return transaction_q.enqueue(in); }
 	input_status_t complete(transaction *in) { return completion_q.enqueue(in); }
 	transaction *get_oldest_completed() { return completion_q.dequeue(); }
 	command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue
 	void record_command( command *, queue<command> &);
+	void initRefreshQueue(const int rowCount, const int rankCount, const int refreshTime, const int chan); // init the RefreshQueue using selected algorithm
 
 	dram_channel();
 	~dram_channel();
@@ -446,21 +432,21 @@ class input_stream_c
 {
 private:
 	enum input_type_t input_token(const string&) const;
-	enum input_type_t type; /* trace type or random number generator */
+	enum input_type_t type; // trace type or random number generator
 	double chan_locality;
 	double rank_locality;
 	double bank_locality;
-	tick_t time; /* time reported by trace or recorded by random number generator */
+	tick_t time; // time reported by trace or recorded by random number generator
 	double row_locality; 
-	double read_percentage; /* the percentage of accesses that are reads. should replace with access_distribution[] */
-	double short_burst_ratio; /* long burst or short burst? */
+	double read_percentage; // the percentage of accesses that are reads. should replace with access_distribution[]
+	double short_burst_ratio; // long burst or short burst?
 	double arrival_thresh_hold;
-	int average_interarrival_cycle_count; /* used by random number generator */
+	int average_interarrival_cycle_count; // used by random number generator
 	distribution_type_t interarrival_distribution_model;
 	double box_muller(double, double);
 	double poisson_rng (double);
 	double gammaln(double) const;
-	enum input_status_t get_next_bus_event(bus_event &);
+	enum input_status_t get_next_bus_event(busEvent &);
 	//enum input_status_t get_next_input_transaction(transaction*);
 	ifstream trace_file;
 
@@ -469,16 +455,11 @@ public:
 	inline enum input_type_t getType() { return type; }
 
 	//friends
-	friend class dram_system;
+	friend class dramSystem;
 };
 
 
-
-
-/*
-* Algorithm specific data structures should go in here.
-*/
-
+// Algorithm specific data structures should go in here.
 class dram_algorithm
 {
 
@@ -494,7 +475,7 @@ public:
 	dram_algorithm();
 	dram_algorithm(const dram_algorithm &);
 	void init(queue<command> &, int, int, int); 
-	friend dram_system;
+	friend dramSystem;
 };
 
 class dram_statistics
@@ -526,34 +507,34 @@ class dram_system_configuration
 
 private:
 	ifstream spd_file_ptr;
-	ordering_algorithm_t command_ordering_algorithm;// strict or round robin 
-	int per_bank_queue_depth; // command queue size
+	ordering_algorithm_t command_ordering_algorithm;	// strict or round robin 
+	int per_bank_queue_depth;							// command queue size
 	system_configuration_type_t config_type;
-	int refresh_time; // loop time of refresh 
-	refresh_policy_t refresh_policy; // 
+	int refresh_time;									// loop time of refresh 
+	refresh_policy_t refresh_policy;					// 
 	int col_size;
-	int row_size; // bytes per row (across one rank) 
-	int row_count; // rows per bank
-	int col_count; // columns per row
-	int cacheline_size; // 32/64/128 etc 
-	int history_queue_depth; // keep track of per channel command history 
-	int completion_queue_depth; // keep track of per channel command history 
-	int transaction_queue_depth; // input transaction queue depth 
-	int event_queue_depth; // pending event queue depth 
-	int refresh_queue_depth; // loop time of refresh 
+	int row_size;										// bytes per row (across one rank) 
+	int row_count;										// rows per bank
+	int col_count;										// columns per row
+	int cacheline_size;									// 32/64/128 etc 
+	int history_queue_depth;							// keep track of per channel command history 
+	int completion_queue_depth;							// keep track of per channel command history 
+	int transaction_queue_depth;						// input transaction queue depth 
+	int event_queue_depth;								// pending event queue depth 
+	int refresh_queue_depth;							// loop time of refresh 
 	int seniority_age_limit;
 	dram_type_t dram_type; 
-	row_buffer_policy_t row_buffer_management_policy; // row buffer management policy? OPEN/CLOSE, etc 
-	address_mapping_scheme_t addr_mapping_scheme; // addr mapping scheme for physical to DRAM addr 
+	row_buffer_policy_t row_buffer_management_policy;	// row buffer management policy? OPEN/CLOSE, etc 
+	address_mapping_scheme_t addr_mapping_scheme;		// addr mapping scheme for physical to DRAM addr 
 	double datarate;
-	bool posted_cas; // TRUE/FALSE 
+	bool posted_cas;									// TRUE/FALSE, so the CAS command may be stored and run later
 	bool read_write_grouping;
-	bool auto_precharge; // issue cas and prec separately or together? 
+	bool auto_precharge;								// issue cas and prec separately or together? 
 	int clock_granularity; 
-	int cachelines_per_row; // dependent variable 
-	int chan_count; // How many logical channels are there ? 
-	int rank_count; // How many ranks are there per channel ? 
-	int bank_count; // How many banks per device? 
+	int cachelines_per_row;								// dependent variable 
+	int chan_count;										// How many logical channels are there ? 
+	int rank_count;										// How many ranks are there per channel ? 
+	int bank_count;										// How many banks per device? 
 	double short_burst_ratio;
 	double read_percentage;
 
@@ -561,47 +542,12 @@ public:
 	dram_system_configuration(map<file_io_token_t,string> &);
 
 	// friends
-	friend dram_system;
-	friend ostream &operator<<(ostream &, const dram_system &);
+	friend dramSystem;
+	friend ostream &operator<<(ostream &, const dramSystem &);
 };
 
-class dram_system
-{
-private:
-	dram_system_configuration system_config;
-	dram_timing_specification timing_specification;
-	simulation_parameters sim_parameters;
-	dram_statistics statistics;
-	dram_algorithm algorithm;
+#include "dramSystem.h"
 
-	string output_filename;
-	input_stream_c input_stream;
-	dram_channel *channel;
-	tick_t time; // master clock
-	queue<command> free_command_pool; // command objects are stored here to avoid allocating memory at runtime
-	queue<transaction> free_transaction_pool; // same for transactions
-	queue<event> free_event_pool; // same for events
-	queue<event> event_q; /* pending event queue */
 
-	void read_dram_config_from_file();
-
-	void set_dram_timing_specification(enum dram_type_t);
-	command *getNextCommand(const int);
-	enum input_status_t transaction2commands(transaction*);
-	int minProtocolGap(const int,const command *) const;
-	int find_oldest_channel() const;
-	void executeCommand(command *, const int);
-	void update_system_time();
-	int convert_address(addresses &);
-	enum input_status_t get_next_input_transaction(transaction *&);
-	void get_next_random_request(transaction *);
-
-public:
-	explicit dram_system(map<file_io_token_t,string> &);
-	~dram_system();
-	friend ostream &operator<<(ostream &, const dram_system &);
-	void run_simulations();
-	void run_simulations2();
-};
 
 #endif

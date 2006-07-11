@@ -7,9 +7,9 @@
 /// Command returned has already been removed from the per_bank_command_queue
 /// from which it was selected
 /// </summary>
-command *dram_system::getNextCommand(const int chan_id)
+command *dramSystem::getNextCommand(const int chan_id)
 {
-	dram_channel *channel= &(dram_system::channel[chan_id]);
+	dram_channel *channel= &(dramSystem::channel[chan_id]);
 
 	// look at the most recently retired command in this channel's history
 

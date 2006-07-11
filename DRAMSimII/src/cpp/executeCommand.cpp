@@ -9,9 +9,9 @@
 /// Updates rank and bank records of CAS, RAS lengths for later calculations in 
 /// min_protocol_gap()
 /// </summary>
-void dram_system::executeCommand(command *this_command,const int gap)
+void dramSystem::executeCommand(command *this_command,const int gap)
 {
-	dram_channel *channel= &dram_system::channel[this_command->addr.chan_id];
+	dram_channel *channel= &dramSystem::channel[this_command->addr.chan_id];
 
 	rank_c *this_row = channel->get_rank(this_command->addr.rank_id);
 

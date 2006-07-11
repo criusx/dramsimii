@@ -33,6 +33,7 @@ public:
 		head_ptr = 0;
 		tail_ptr = 0;
 		entry = new T *[size];
+
 		if (preallocate)
 		{      
 			for (int i = 0; i < size; i++)
@@ -47,17 +48,25 @@ public:
 		}
 	}
 
-	void init(int size)
+	void init(int size, bool preallocate = false)
 	{
 		depth = size;
 		count = 0;
 		head_ptr = 0;
 		tail_ptr = 0;
-		if (size > 0)
+		entry = new T *[size];
+
+		if (preallocate)
+		{      
+			for (int i = 0; i < size; i++)
+				enqueue(new T);
+		}
+		else
 		{
-			entry = new T *[size];
 			for (int i=0 ; i<size ; i++)
+			{
 				entry[i] = NULL;
+			}
 		}
 	}
 

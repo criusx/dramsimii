@@ -2,18 +2,18 @@
 #include "dramsim2.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// Function: dram_system::min_protocol_gap()
+/// Function: dramSystem::min_protocol_gap()
 /// Arguments: dram_channel *channel: the channel by which the gap to the next command
 /// will be computed
 /// this_c: the command that the gap will be calculated for
 /// Purpose: find the protocol gap between a command and current system state
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
-int dram_system::minProtocolGap(const int channel_id,const command *this_c) const
+int dramSystem::minProtocolGap(const int channel_id,const command *this_c) const
 { 
 	//FIXME: some max() functions take uninit values
 	int min_gap;
-	dram_channel &channel = dram_system::channel[channel_id];
+	dram_channel &channel = dramSystem::channel[channel_id];
 	//int rank_id;
 	// int bank_id;
 	// int row_id;

@@ -469,7 +469,7 @@ ostream &operator<<(ostream &os, const transaction *this_t)
 }
 
 
-ostream &operator<<(ostream &os, const dram_system &this_a)
+ostream &operator<<(ostream &os, const dramSystem &this_a)
 {
 	os << "SYS[";
 	switch(this_a.system_config.config_type)

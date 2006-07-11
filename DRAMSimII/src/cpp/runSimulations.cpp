@@ -4,13 +4,13 @@
 
 #include "dramsim2.h"
 
-void dram_system::run_simulations2()
+void dramSystem::run_simulations2()
 {
 	//bool EOF_reached = false;
 
 	for(int i = sim_parameters.get_request_count(); i > 0; --i)
 	{
-		transaction 	*input_t;
+		transaction *input_t;
 
 		// see if it is time for the channel to arrive, if so, put in the channel
 		// queue
@@ -55,7 +55,13 @@ void dram_system::run_simulations2()
 
 						if(completed_t != NULL)
 						{
-							free_transaction_pool.release_item(completed_t);
+							if (completed_t->type == AUTO_REFRESH_TRANSACTION)
+							{
+								completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
+								channel[completed_t->addr.rank_id].enqueueRefresh(completed_t);
+							}
+							else
+								free_transaction_pool.release_item(completed_t);
 #ifdef DEBUG_TRANSACTION
 							cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
 #endif
@@ -100,7 +106,13 @@ void dram_system::run_simulations2()
 
 						if(completed_t != NULL)
 						{
-							free_transaction_pool.release_item(completed_t);
+							if (completed_t->type == AUTO_REFRESH_TRANSACTION)
+							{
+								completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
+								channel[completed_t->addr.rank_id].enqueueRefresh(completed_t);
+							}
+							else
+								free_transaction_pool.release_item(completed_t);
 #ifdef DEBUG_TRANSACTION
 							cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
 #endif
@@ -124,7 +136,7 @@ void dram_system::run_simulations2()
 }
 
 
-void dram_system::run_simulations()
+void dramSystem::run_simulations()
 {
 	for (int i = sim_parameters.get_request_count(); i > 0; --i)
 	{

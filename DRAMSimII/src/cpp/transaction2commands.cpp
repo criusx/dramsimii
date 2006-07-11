@@ -8,7 +8,7 @@
 /// Functionality similar to that of the memory controller moving between the
 /// transaction queue and the per bank command queues 
 /// </summary>
-enum input_status_t dram_system::transaction2commands(transaction *this_t) 
+enum input_status_t dramSystem::transaction2commands(transaction *this_t) 
 {
 	if (this_t == NULL)
 	return FAILURE;
@@ -22,13 +22,19 @@ enum input_status_t dram_system::transaction2commands(transaction *this_t)
 	{
 		int empty_command_slot_count = bank_q->freecount();
 
+		// refresh transactions become only one command and are handled differently
+		if (this_t->type == AUTO_REFRESH_TRANSACTION)
+		{
+			// check to see if every per bank command queue has room for one command
+			rank_c *rank = channel[this_t->addr.chan_id].get_rank(this_t->addr.rank_id);
+		}
 		// every transaction translates into at least two commands
-		if(empty_command_slot_count < 2)
+		else if (empty_command_slot_count < 2)
 		{
 			return FAILURE;
 		}
 		// or three commands if the CAS+Precharge command is not available
-		else if((system_config.auto_precharge == false) && (empty_command_slot_count < 3))
+		else if ((system_config.auto_precharge == false) && (empty_command_slot_count < 3))
 		{
 			return FAILURE;
 		}
