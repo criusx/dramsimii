@@ -185,6 +185,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\cpp\bank_c.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\cpp\dram_channel.cpp"
 				>
 			</File>
@@ -218,6 +222,10 @@
 			</File>
 			<File
 				RelativePath=".\src\cpp\minProtocolGap.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cpp\rank_c.cpp"
 				>
 			</File>
 			<File

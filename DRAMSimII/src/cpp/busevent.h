@@ -1,3 +1,7 @@
+#ifndef BUSEVENT_H
+#define BUSEVENT_H
+#pragma once
+
 // bus_event_t is used with the file I/O interface to get bus events from input trace files
 
 class busEvent /* 6 DWord per event */
@@ -9,3 +13,5 @@ public:
 	tick_t timestamp; // time stamp will now have a large dynamic range, but only 53 bit precision
 	busEvent();
 };
+
+#endif

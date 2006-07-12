@@ -9,7 +9,10 @@
 #include <cmath>
 #include <map>
 
-#include "dramsim2.h"
+#include "dramSystem.h"
+
+
+using namespace std;
 
 int dramSystem::convert_address(addresses &this_a)
 {
@@ -190,7 +193,8 @@ int dramSystem::convert_address(addresses &this_a)
 		input_a = input_a >> row_addr_depth;
 		temp_a  = input_a << row_addr_depth;
 		this_a.row_id = temp_a ^ temp_b;		/* this should strip out the row address */
-		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
+		if (input_a != 0) // If there is still "stuff" left, the input address is out of range
+		{
 			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl << this_a << endl;
 			//print_addresses(this_a);
 		}
@@ -420,7 +424,7 @@ int dramSystem::convert_address(addresses &this_a)
 
 dramSystem::~dramSystem()
 {
-	delete[] channel;
+	//delete[] channel;
 }
 
 /// <summary>
@@ -476,7 +480,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 			this_t->addr.rank_id = rank_id;
 		}
 
-		int bank_id = channel[this_t->addr.chan_id].get_rank(rank_id)->last_bank_id;
+		int bank_id = channel[this_t->addr.chan_id].get_rank(rank_id).last_bank_id;
 
 		rand_s(&j);
 
@@ -490,7 +494,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 			this_t->addr.bank_id = bank_id;
 		}
 
-		int row_id = channel[this_t->addr.chan_id].get_rank(rank_id)->bank[bank_id].row_id;
+		int row_id = channel[this_t->addr.chan_id].get_rank(rank_id).bank[bank_id].row_id;
 
 		rand_s(&j);
 
@@ -740,7 +744,6 @@ free_event_pool(COMMAND_QUEUE_SIZE,true), // create enough events, transactions 
 event_q(COMMAND_QUEUE_SIZE),
 input_stream(parameter),
 time(0) // start the clock
-
 {
 	map<file_io_token_t, string>::iterator temp;
 	stringstream temp2;
@@ -750,17 +753,17 @@ time(0) // start the clock
 
 	// create as many channels as were specified, all of the same type
 	// now that the parameters for each have been set
-	channel =  new dram_channel[system_config.chan_count];
+	//channel = new dram_channel[system_config.chan_count];
 
 	for (int i = system_config.chan_count - 1; i >= 0; i--)
 	{
-		channel[i].init_controller(system_config.transaction_queue_depth,
+		channel.push_back(dramChannel(system_config.transaction_queue_depth,
 		system_config.history_queue_depth,
 		system_config.completion_queue_depth,
 		system_config.refresh_queue_depth,
 		system_config.rank_count,
 		system_config.bank_count,
-		system_config.per_bank_queue_depth);
+		system_config.per_bank_queue_depth));
 
 		channel[i].initRefreshQueue(system_config.row_count, system_config.rank_count, system_config.refresh_time, i);
 	}

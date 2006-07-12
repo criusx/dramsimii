@@ -11,9 +11,9 @@
 /// </summary>
 void dramSystem::executeCommand(command *this_command,const int gap)
 {
-	dram_channel *channel= &dramSystem::channel[this_command->addr.chan_id];
+	dram_channel &channel= dramSystem::channel[this_command->addr.chan_id];
 
-	rank_c *this_row = channel->get_rank(this_command->addr.rank_id);
+	rank_c *this_row = channel.get_rank(this_command->addr.rank_id);
 
 	bank_c *this_bank = &this_row->bank[this_command->addr.bank_id];
 
@@ -22,21 +22,21 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	int t_al = this_command->posted_cas ? timing_specification.t_al : 0;
 
 	// new
-	this_command->start_time = max(channel->get_time(),this_command->start_time);
-	this_command->completion_time = channel->get_time();
+	this_command->start_time = max(channel.get_time(),this_command->start_time);
+	this_command->completion_time = channel.get_time();
 
 	// update the channel's idea of what time it is
-	//channel->set_time(channel->get_time() + gap);
+	//channel->set_time(channel.get_time() + gap);
 	channel->set_time(this_command->start_time + gap);
 
 	// new, this is not right, this only shows how long until the next command could execute
-	//this_command->completion_time = channel->get_time();
+	//this_command->completion_time = channel.get_time();
 
 	switch(this_command->this_command)
 	{
 	case RAS_COMMAND:
 
-		this_bank->last_ras_time = channel->get_time();
+		this_bank->last_ras_time = channel.get_time();
 		this_bank->row_id = this_command->addr.row_id;
 		this_bank->ras_count++;
 
@@ -48,7 +48,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		else
 			this_ras_time = new tick_t;
 
-		*this_ras_time = channel->get_time();
+		*this_ras_time = channel.get_time();
 		this_row->last_ras_times.enqueue(this_ras_time);
 		// specific for RAS command
 		this_command->completion_time += timing_specification.t_ras;
@@ -56,34 +56,34 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 
 	case CAS_AND_PRECHARGE_COMMAND:
 
-		this_bank->last_prec_time = max(channel->get_time() + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_bank->last_ras_time + timing_specification.t_ras);
+		this_bank->last_prec_time = max(channel.get_time() + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_bank->last_ras_time + timing_specification.t_ras);
 		// lack of break is intentional
 
 	case CAS_COMMAND:
 
-		this_bank->last_cas_time = channel->get_time();
-		this_row->last_cas_time = channel->get_time();
+		this_bank->last_cas_time = channel.get_time();
+		this_row->last_cas_time = channel.get_time();
 		this_bank->last_cas_length = this_command->length;
 		this_row->last_cas_length = this_command->length;
 		this_bank->cas_count++;
-		this_command->host_t->completion_time = channel->get_time() + timing_specification.t_cas;
+		this_command->host_t->completion_time = channel.get_time() + timing_specification.t_cas;
 		// specific for CAS command
 		this_command->completion_time += timing_specification.t_cas;
 		break;
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 
-		this_bank->last_prec_time = max(channel->get_time() + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_bank->last_ras_time + timing_specification.t_ras);
+		this_bank->last_prec_time = max(channel.get_time() + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_bank->last_ras_time + timing_specification.t_ras);
 		// missing break is intentional
 
 	case CAS_WRITE_COMMAND:
 
-		this_bank->last_casw_time = channel->get_time();
-		this_row->last_casw_time = channel->get_time();
+		this_bank->last_casw_time = channel.get_time();
+		this_row->last_casw_time = channel.get_time();
 		this_bank->last_casw_length = this_command->length;
 		this_row->last_casw_length = this_command->length;
 		this_bank->casw_count++;
-		this_command->host_t->completion_time = channel->get_time();
+		this_command->host_t->completion_time = channel.get_time();
 		// for the CAS write command
 		this_command->completion_time += timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr;
 		break;
@@ -92,7 +92,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		break;
 
 	case PRECHARGE_COMMAND:
-		this_bank->last_prec_time = channel->get_time();
+		this_bank->last_prec_time = channel.get_time();
 		this_command->completion_time += timing_specification.t_cmd + timing_specification.t_rp;
 		break;
 
@@ -112,7 +112,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		break;
 
 	case REFRESH_ALL_COMMAND:
-		this_bank->last_refresh_all_time = channel->get_time();
+		this_bank->last_refresh_all_time = channel.get_time();
 		break;
 	}
 

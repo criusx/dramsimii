@@ -1,4 +1,9 @@
+#ifndef QUEUE_H
+#define QUEUE_H
 #pragma once
+
+#include "enumTypes.h"
+#include <iostream>
 
 template <class T>
 class queue
@@ -11,20 +16,18 @@ private:
 	T **entry;
 
 public:
-	queue(): depth(0),count(0)
+	queue(): depth(0),count(0), head_ptr(0), tail_ptr(0)
 	{
 
 	}
 
-	~queue()
+	queue(queue<T>& a): depth(a.depth), count(0), head_ptr(0), tail_ptr(0)
 	{
-		if (depth > 0)
+		while (a.count > 0)
 		{
-			for (int i = head_ptr; i != tail_ptr; i = (i + 1) % depth)
-				delete entry[i];
-			delete[] entry;
-		}
-	}
+			enqueue(a.dequeue());			
+		}   
+	}	
 
 	queue(int size, bool preallocate = false)
 	{
@@ -45,6 +48,16 @@ public:
 			{
 				entry[i] = NULL;
 			}
+		}
+	}
+
+	~queue()
+	{
+		if (depth > 0)
+		{
+			for (int i = head_ptr; i != tail_ptr; i = (i + 1) % depth)
+				delete entry[i];
+			delete[] entry;
 		}
 	}
 
@@ -78,7 +91,7 @@ public:
 			return FAILURE;
 		else if (item == NULL)
 		{
-			cerr << "input transaction pointer is NULL" << endl;
+			std::cerr << "input transaction pointer is NULL" << std::endl;
 			_exit(2);
 		}
 		else
@@ -181,13 +194,7 @@ public:
 	T* newest() const
 	{
 		return read(count - 1);
-	}
-
-	queue(const queue<T>& a): depth(a.depth), count(0), head_ptr(0), tail_ptr(0)
-	{
-		while (a.count > 0)
-		{
-			enqueue(a.dequeue());			
-		}   
-	}
+	}	
 };
+
+#endif

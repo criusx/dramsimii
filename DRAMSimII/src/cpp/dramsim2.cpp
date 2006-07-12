@@ -492,37 +492,9 @@ dram_timing_specification::dram_timing_specification(map<file_io_token_t,string>
 
 }
 
-rank_c::rank_c():
-last_ras_times(4)
-{
-	last_refresh_time = 0;
-	last_cas_time = -100;
-	last_casw_time = -100;
-}
 
-void rank_c::init_ranks(int bank_count, int per_bank_queue_depth)
-{
-	this->bank_count = bank_count;
-	last_bank_id = bank_count-1;
-	bank = new bank_c[bank_count];
-	for (int i=0;i<bank_count;i++)
-		bank[i].init_banks(per_bank_queue_depth);
-}
 
-bank_c::bank_c() {
-	last_ras_time = -100;
-	last_cas_time = -100;
-	last_casw_time = -100;
-	last_prec_time = -100;
-	last_refresh_all_time = -100;
-	row_id = 0;
-	ras_count = 0;
-	cas_count = 0;
-}
 
-void bank_c::init_banks(int per_bank_queue_depth) {
-	per_bank_q.init(per_bank_queue_depth);
-}
 
 dram_algorithm::dram_algorithm()
 {
@@ -878,7 +850,4 @@ event::event()
 
 
 
-rank_c::~rank_c()
-{
-	delete[] bank;
-}
+

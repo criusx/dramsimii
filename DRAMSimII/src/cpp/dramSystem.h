@@ -1,15 +1,33 @@
+#ifndef DRAMSYSTEM_H
+#define DRAMSYSTEM_H
+#pragma once
+
+#include <vector>
+#include <iostream>
+#include "addresses.h"
+#include "globals.h"
+#include "dramSystemConfiguration.h"
+#include "dramTimingSpecification.h"
+#include "simulationParameters.h"
+#include "dramStatistics.h"
+#include "dramAlgorithm.h"
+#include "inputStream.h"
+#include "event.h"
+#include "dramChannel.h"
+#include "enumTypes.h"
+
 class dramSystem
 {
 private:
-	dram_system_configuration system_config;
-	dram_timing_specification timing_specification;
-	simulation_parameters sim_parameters;
-	dram_statistics statistics;
-	dram_algorithm algorithm;
+	dramSystemConfiguration system_config;
+	dramTimingSpecification timing_specification;
+	simulationParameters sim_parameters;
+	dramStatistics statistics;
+	dramAlgorithm algorithm;
+	inputStream input_stream;
 
-	string output_filename;
-	input_stream_c input_stream;
-	dram_channel *channel;
+	std::string output_filename;	
+	std::vector<dramChannel> channel;
 	tick_t time; // master clock
 	queue<command> free_command_pool;	// command objects are stored here to avoid allocating memory after initialization
 	queue<transaction> free_transaction_pool;	// transactions are stored here to avoid allocating memory after initialization
@@ -30,9 +48,11 @@ private:
 	void get_next_random_request(transaction *);
 
 public:
-	explicit dramSystem(map<file_io_token_t,string> &);
+	explicit dramSystem(std::map<file_io_token_t,std::string> &);
 	~dramSystem();
-	friend ostream &operator<<(ostream &, const dramSystem &);
+	friend std::ostream &operator<<(std::ostream &, const dramSystem &);
 	void run_simulations();
 	void run_simulations2();
 };
+
+#endif

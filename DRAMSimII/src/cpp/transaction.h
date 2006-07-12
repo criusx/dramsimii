@@ -1,3 +1,13 @@
+#ifndef TRANSACTION_H
+#define TRANSACTION_H
+#pragma once
+
+#include <fstream>
+#include "addresses.h"
+#include "enumTypes.h"
+#include "globals.h"
+
+
 class transaction
 {
 public:
@@ -9,5 +19,7 @@ public:
 	tick_t completion_time;		// time when transaction has completed in DRAM ticks
 	addresses addr;
 	transaction();
-	friend ostream &operator<<(ostream &, const transaction *);
+	friend std::ostream &operator<<(std::ostream &, const transaction *);
 };
+
+#endif

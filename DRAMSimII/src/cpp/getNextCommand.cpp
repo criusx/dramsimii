@@ -9,7 +9,7 @@
 /// </summary>
 command *dramSystem::getNextCommand(const int chan_id)
 {
-	dram_channel *channel= &(dramSystem::channel[chan_id]);
+	dramChannel *channel= &(dramSystem::channel[chan_id]);
 
 	// look at the most recently retired command in this channel's history
 
