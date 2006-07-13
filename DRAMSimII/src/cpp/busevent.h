@@ -2,6 +2,8 @@
 #define BUSEVENT_H
 #pragma once
 
+#include "globals.h"
+
 // bus_event_t is used with the file I/O interface to get bus events from input trace files
 
 class busEvent /* 6 DWord per event */

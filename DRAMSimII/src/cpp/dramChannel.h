@@ -24,7 +24,7 @@ private:
 
 public:
 	// the get_ functions
-	const rank_c& get_rank(const unsigned rank_num) const { return rank[rank_num]; }
+	rank_c& get_rank(const unsigned rank_num) { return rank[rank_num]; }
 	tick_t get_time() const { return time; }
 	void set_time(tick_t new_time) { time = new_time; }
 	int get_last_rank_id() const { return last_rank_id; }
@@ -37,11 +37,12 @@ public:
 	input_status_t complete(transaction *in) { return completion_q.enqueue(in); }
 	transaction *get_oldest_completed() { return completion_q.dequeue(); }
 	command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue
-	void record_command( command *, queue<command> &);
+	void record_command(command *, queue<command> &);
 	void initRefreshQueue(const int rowCount, const int rankCount, const int refreshTime, const int chan); // init the RefreshQueue using selected algorithm
 
 	dramChannel();
-	dramChannel(int, int, int, int, int, int, int);	
+	dramChannel(int, int, int, int, int, int, int);
+	dramChannel(const dramChannel &);
 	void init_controller(int, int, int, int, int, int, int);
 	enum transaction_type_t set_read_write_type(const int,const int) const;
 };

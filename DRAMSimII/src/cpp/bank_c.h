@@ -28,6 +28,7 @@ public:
 
 	//public:
 	bank_c(unsigned);
+	bank_c(const bank_c &);
 	//void init_banks(int);
 	queue<command> per_bank_q;		// per bank queue
 };

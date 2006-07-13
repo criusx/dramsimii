@@ -8,9 +8,11 @@
 #include <map>
 #include <fstream>
 
-#include "dramsim2.h"
+#include "InputStream.h"
 
-input_stream_c::input_stream_c(map<file_io_token_t,string> &parameter):
+using namespace std;
+
+inputStream::inputStream(map<file_io_token_t,string> &parameter):
 time(0),
 type(RANDOM),
 row_locality(0.2),
@@ -103,7 +105,7 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 ///
 /// from the book "Numerical Recipes in C: The Art of Scientific Computing"///
 
-double input_stream_c::poisson_rng (double xm)
+double inputStream::poisson_rng (double xm)
 {	
 	static double sq, alxm, g, oldm = (-1.0);
 	double em, t, y;
@@ -152,7 +154,7 @@ double input_stream_c::poisson_rng (double xm)
 	return em;
 }
 
-double input_stream_c::gammaln(const double xx) const
+double inputStream::gammaln(const double xx) const
 {
 	static double cof[6] = 
 	{76.18009172947146, -86.50532032941677,
@@ -170,7 +172,7 @@ double input_stream_c::gammaln(const double xx) const
 
 }
 
-double input_stream_c::box_muller(double m, double s) {
+double inputStream::box_muller(double m, double s) {
 	double w, y1;
 	static double y2;
 	static int use_last = 0;
@@ -202,7 +204,7 @@ double input_stream_c::box_muller(double m, double s) {
 }
 
 
-enum input_status_t input_stream_c::get_next_bus_event(busEvent &this_e)
+enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 {	
 	enum file_io_token_t control;	
 	string input;	
@@ -308,7 +310,7 @@ enum input_status_t input_stream_c::get_next_bus_event(busEvent &this_e)
 	return SUCCESS;
 }
 
-enum input_type_t input_stream_c::input_token(const string &input) const
+enum input_type_t inputStream::input_token(const string &input) const
 {
 	if (input == "k6" || input == "K6")
 		return K6_TRACE;

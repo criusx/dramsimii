@@ -23,6 +23,7 @@ public:
 
 	
 	rank_c();
+	rank_c(const rank_c &);
 	void init_ranks(int,int);
 };
 

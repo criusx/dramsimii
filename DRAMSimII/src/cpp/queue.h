@@ -53,12 +53,14 @@ public:
 
 	~queue()
 	{
-		if (depth > 0)
+		while (count > 0)
 		{
-			for (int i = head_ptr; i != tail_ptr; i = (i + 1) % depth)
-				delete entry[i];
-			delete[] entry;
+			/*for (int i = head_ptr; i != tail_ptr; i = (i + 1) % depth)
+				delete entry[i];*/
+			delete dequeue();
+			
 		}
+		delete[] entry;
 	}
 
 	void init(int size, bool preallocate = false)

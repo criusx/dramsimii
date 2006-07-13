@@ -1,5 +1,8 @@
 #include <iostream>
-#include "dramsim2.h"
+
+#include "dramSystem.h"
+
+using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 /// Function: dramSystem::min_protocol_gap()
@@ -9,18 +12,18 @@
 /// Purpose: find the protocol gap between a command and current system state
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
-int dramSystem::minProtocolGap(const int channel_id,const command *this_c) const
+int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 { 
 	//FIXME: some max() functions take uninit values
 	int min_gap;
-	dram_channel &channel = dramSystem::channel[channel_id];
+	dramChannel &channel = dramSystem::channel[channel_id];
 	//int rank_id;
 	// int bank_id;
 	// int row_id;
 	const int this_rank = this_c->addr.rank_id;
 	const int this_bank = this_c->addr.bank_id;
-	rank_c *this_r= channel.get_rank(this_rank);
-	bank_c &this_b= this_r->bank[this_bank];
+	rank_c &this_r = channel.get_rank(this_rank);
+	bank_c &this_b = this_r.bank[this_bank];
 	tick_t now = channel.get_time();
 	int t_cas_gap = 0;
 	//int t_faw_gap = 0;
@@ -61,7 +64,7 @@ int dramSystem::minProtocolGap(const int channel_id,const command *this_c) const
 		t_rp_gap = max(0 , (int)(this_b.last_prec_time - now) + timing_specification.t_rp);
 
 		// respect t_rrd of all other banks of same rank
-		ras_q_count = this_r->last_ras_times.get_count();
+		ras_q_count = this_r.last_ras_times.get_count();
 
 		if(ras_q_count == 0)
 		{
@@ -70,7 +73,7 @@ int dramSystem::minProtocolGap(const int channel_id,const command *this_c) const
 		else 
 		{
 			// read tail end of ras history
-			last_ras_time = this_r->last_ras_times.read(ras_q_count - 1); 
+			last_ras_time = this_r.last_ras_times.read(ras_q_count - 1); 
 			t_rrd_gap = max(t_rrd_gap,(int)(*last_ras_time + timing_specification.t_rrd - now));
 		}
 
@@ -83,7 +86,7 @@ int dramSystem::minProtocolGap(const int channel_id,const command *this_c) const
 		else
 		{
 			// read head of ras history
-			tick_t *fourth_ras_time = this_r->last_ras_times.read(0); 
+			tick_t *fourth_ras_time = this_r.last_ras_times.read(0); 
 			t_faw_gap = max(0,(int)(*fourth_ras_time - now) + timing_specification.t_faw);
 		}
 
@@ -108,15 +111,15 @@ int dramSystem::minProtocolGap(const int channel_id,const command *this_c) const
 		{
 			if(rank_id != this_rank)
 			{
-				if(channel.get_rank(rank_id)->last_cas_time > other_r_last_cas_time)
+				if(channel.get_rank(rank_id).last_cas_time > other_r_last_cas_time)
 				{
-					other_r_last_cas_time = channel.get_rank(rank_id)->last_cas_time;
-					other_r_last_cas_length = channel.get_rank(rank_id)->last_cas_length;
+					other_r_last_cas_time = channel.get_rank(rank_id).last_cas_time;
+					other_r_last_cas_length = channel.get_rank(rank_id).last_cas_length;
 				}
-				if(channel.get_rank(rank_id)->last_casw_time > other_r_last_casw_time)
+				if(channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
 				{
-					other_r_last_casw_time = channel.get_rank(rank_id)->last_casw_time;
-					other_r_last_casw_length = channel.get_rank(rank_id)->last_casw_length;
+					other_r_last_casw_time = channel.get_rank(rank_id).last_casw_time;
+					other_r_last_casw_length = channel.get_rank(rank_id).last_casw_length;
 				}
 			}
 		}
@@ -127,11 +130,11 @@ int dramSystem::minProtocolGap(const int channel_id,const command *this_c) const
 		//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 		// DW 3/9/2006 replace the line after next with the next line
 		//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-		t_cas_gap = max(0,(int)(this_r->last_cas_time + timing_specification.t_burst - now));
+		t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_burst - now));
 		//respect last cas write of same rank
 		// DW 3/9/2006 replace the line after next with the next line
 		//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
-		t_cas_gap = max(t_cas_gap,(int)(this_r->last_casw_time + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wtr - now));
+		t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wtr - now));
 
 		if (system_config.rank_count > 1) 
 		{
@@ -164,15 +167,15 @@ int dramSystem::minProtocolGap(const int channel_id,const command *this_c) const
 		{
 			if (rank_id != this_rank)
 			{
-				if (channel.get_rank(rank_id)->last_cas_time > other_r_last_cas_time)
+				if (channel.get_rank(rank_id).last_cas_time > other_r_last_cas_time)
 				{
-					other_r_last_cas_time = channel.get_rank(rank_id)->last_cas_time;
-					other_r_last_cas_length = channel.get_rank(rank_id)->last_cas_length;
+					other_r_last_cas_time = channel.get_rank(rank_id).last_cas_time;
+					other_r_last_cas_length = channel.get_rank(rank_id).last_cas_length;
 				}
-				if( channel.get_rank(rank_id)->last_casw_time > other_r_last_casw_time)
+				if( channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
 				{
-					other_r_last_casw_time = channel.get_rank(rank_id)->last_casw_time;
-					other_r_last_casw_length = channel.get_rank(rank_id)->last_casw_length;
+					other_r_last_casw_time = channel.get_rank(rank_id).last_casw_time;
+					other_r_last_casw_length = channel.get_rank(rank_id).last_casw_length;
 				}
 			}
 		}
@@ -182,13 +185,13 @@ int dramSystem::minProtocolGap(const int channel_id,const command *this_c) const
 		// respect last cas to same rank
 		// DW 3/9/2006 replace the line after next with the next line
 		// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-		t_cas_gap = max(0,(int)(this_r->last_cas_time + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtrs - timing_specification.t_cwd - now));
+		t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtrs - timing_specification.t_cwd - now));
 		// respect last cas to different ranks
 		t_cas_gap = max(t_cas_gap,(int)(other_r_last_cas_time + timing_specification.t_cas + other_r_last_cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
 		// respect last cas write to same rank
 		// DW 3/9/2006 replace the line after next with the next line
 		// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
-		t_cas_gap = max(t_cas_gap,(int)(this_r->last_casw_time + timing_specification.t_burst - now));
+		t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_burst - now));
 		// respect last cas write to different ranks
 		t_cas_gap = max(t_cas_gap,(int)(other_r_last_casw_time + other_r_last_casw_length - now));
 		min_gap = max(t_ras_gap,t_cas_gap);

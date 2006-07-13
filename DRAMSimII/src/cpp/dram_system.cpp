@@ -11,7 +11,6 @@
 
 #include "dramSystem.h"
 
-
 using namespace std;
 
 int dramSystem::convert_address(addresses &this_a)

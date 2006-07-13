@@ -7,13 +7,21 @@
 #include <map>
 #include <sstream>
 
+#include "globals.h"
+#include "dramSystemConfiguration.h"
+#include "dramTimingSpecification.h"
+#include "dramAlgorithm.h"
+#include "simulationParameters.h"
+#include "dramStatistics.h"
+#include "busevent.h"
+#include "event.h"
 
-#include "dramsim2.h"
+using namespace std;
 
 ///
 /// Contains all of the configuration information.
 /// Constructor for the dram_system_configuration class
-dram_system_configuration::dram_system_configuration(map<file_io_token_t,string> &parameter)
+dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &parameter)
 {
 	/// set standards for typical memory config
 	map<file_io_token_t, string>::iterator temp;
@@ -305,7 +313,7 @@ dram_system_configuration::dram_system_configuration(map<file_io_token_t,string>
 
 
 
-dram_timing_specification::dram_timing_specification(map<file_io_token_t,string> &parameter)
+dramTimingSpecification::dramTimingSpecification(map<file_io_token_t,string> &parameter)
 {
 	map<file_io_token_t,string>::iterator temp;
 	if ((temp=parameter.find(dram_type_token))==parameter.end())
@@ -496,7 +504,7 @@ dram_timing_specification::dram_timing_specification(map<file_io_token_t,string>
 
 
 
-dram_algorithm::dram_algorithm()
+dramAlgorithm::dramAlgorithm()
 {
 	rank_id[0] = 0;
 	rank_id[1] = 3;
@@ -516,7 +524,7 @@ dram_algorithm::dram_algorithm()
 	transaction_type[3] = READ_TRANSACTION;
 }
 
-dram_algorithm::dram_algorithm(const dram_algorithm &a)
+dramAlgorithm::dramAlgorithm(const dramAlgorithm &a)
 {
 	rank_id[0] = a.rank_id[0];
 	rank_id[1] = a.rank_id[1];
@@ -539,7 +547,7 @@ dram_algorithm::dram_algorithm(const dram_algorithm &a)
 
 
 
-void dram_algorithm::init(queue<command> &free_command_pool,
+void dramAlgorithm::init(queue<command> &free_command_pool,
 						  int rank_count,
 						  int bank_count,
 						  int config_type)
@@ -724,7 +732,7 @@ void dram_algorithm::init(queue<command> &free_command_pool,
 
 
 
-simulation_parameters::simulation_parameters(map<file_io_token_t,string> &parameter)
+simulationParameters::simulationParameters(map<file_io_token_t,string> &parameter)
 {
 	request_count = 0;
 	input_type = RANDOM;
@@ -736,7 +744,7 @@ simulation_parameters::simulation_parameters(map<file_io_token_t,string> &parame
 	}
 }
 
-dram_statistics::dram_statistics()
+dramStatistics::dramStatistics()
 {
 	//fout.o    = std::cout;
 	start_no = 0;
@@ -748,7 +756,7 @@ dram_statistics::dram_statistics()
 	bo4_count = 0;
 }
 
-void dram_statistics::collect_transaction_stats(transaction *this_t)
+void dramStatistics::collect_transaction_stats(transaction *this_t)
 {
 	if(this_t->length == 8)
 	{
@@ -847,7 +855,3 @@ event::event()
 	time = 0;
 	event_ptr = NULL;
 }
-
-
-
-

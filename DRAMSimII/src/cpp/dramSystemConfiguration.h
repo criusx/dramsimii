@@ -3,7 +3,9 @@
 #pragma once
 
 #include <fstream>
+#include "globals.h"
 #include "enumTypes.h"
+
 
 class dramSystemConfiguration
 { 

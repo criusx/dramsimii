@@ -1,6 +1,8 @@
 #include <iostream>
 
-#include "dramsim2.h"
+#include "dramSystem.h"
+
+using namespace std;
 
 /// <summary>
 /// Updates the channel time to what it would be had this command been executed
@@ -11,13 +13,13 @@
 /// </summary>
 void dramSystem::executeCommand(command *this_command,const int gap)
 {
-	dram_channel &channel= dramSystem::channel[this_command->addr.chan_id];
+	dramChannel &channel= dramSystem::channel[this_command->addr.chan_id];
 
-	rank_c *this_row = channel.get_rank(this_command->addr.rank_id);
+	rank_c &this_rank = channel.get_rank(this_command->addr.rank_id);
 
-	bank_c *this_bank = &this_row->bank[this_command->addr.bank_id];
+	bank_c *this_bank = &this_rank.bank[this_command->addr.bank_id];
 
-	this_row->last_bank_id = this_command->addr.bank_id;
+	this_rank.last_bank_id = this_command->addr.bank_id;
 
 	int t_al = this_command->posted_cas ? timing_specification.t_al : 0;
 
@@ -27,7 +29,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 
 	// update the channel's idea of what time it is
 	//channel->set_time(channel.get_time() + gap);
-	channel->set_time(this_command->start_time + gap);
+	channel.set_time(this_command->start_time + gap);
 
 	// new, this is not right, this only shows how long until the next command could execute
 	//this_command->completion_time = channel.get_time();
@@ -43,13 +45,13 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		// RAS time history queue, per rank
 		tick_t *this_ras_time;
 
-		if(this_row->last_ras_times.freecount() == 0)	// FIXME: this is not very general
-			this_ras_time = this_row->last_ras_times.dequeue();
+		if(this_rank.last_ras_times.freecount() == 0)	// FIXME: this is not very general
+			this_ras_time = this_rank.last_ras_times.dequeue();
 		else
 			this_ras_time = new tick_t;
 
 		*this_ras_time = channel.get_time();
-		this_row->last_ras_times.enqueue(this_ras_time);
+		this_rank.last_ras_times.enqueue(this_ras_time);
 		// specific for RAS command
 		this_command->completion_time += timing_specification.t_ras;
 		break;
@@ -62,9 +64,9 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	case CAS_COMMAND:
 
 		this_bank->last_cas_time = channel.get_time();
-		this_row->last_cas_time = channel.get_time();
+		this_rank.last_cas_time = channel.get_time();
 		this_bank->last_cas_length = this_command->length;
-		this_row->last_cas_length = this_command->length;
+		this_rank.last_cas_length = this_command->length;
 		this_bank->cas_count++;
 		this_command->host_t->completion_time = channel.get_time() + timing_specification.t_cas;
 		// specific for CAS command
@@ -79,9 +81,9 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	case CAS_WRITE_COMMAND:
 
 		this_bank->last_casw_time = channel.get_time();
-		this_row->last_casw_time = channel.get_time();
+		this_rank.last_casw_time = channel.get_time();
 		this_bank->last_casw_length = this_command->length;
-		this_row->last_casw_length = this_command->length;
+		this_rank.last_casw_length = this_command->length;
 		this_bank->casw_count++;
 		this_command->host_t->completion_time = channel.get_time();
 		// for the CAS write command
@@ -121,7 +123,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	// since this is when a transaction is done from the standpoint of the requestor
 	if (this_command->host_t != NULL) 
 	{
-		if(channel->complete(this_command->host_t) == FAILURE)
+		if(channel.complete(this_command->host_t) == FAILURE)
 		{
 			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
 			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;
@@ -130,7 +132,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	}
 
 	// record command history. Check to see if this can be removed
-	channel->record_command(this_command, free_command_pool);
+	channel.record_command(this_command, free_command_pool);
 
 	//if (channel.history_q.get_count() == system_config.history_queue_depth)
 	//{		

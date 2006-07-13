@@ -2,6 +2,16 @@
 #define GLOBALS_H
 #pragma once
 
+#define tick_t unsigned long long
+// class forward declarations
+class dramSystem;
+class dramSystemConfiguration;
+class dramTimingSpecification;
+class dramAlgorithm;
+class rank_c;
+class bank_c;
+class transaction;
+
 #include <iostream>
 #include <map>
 #include "addresses.h"
@@ -70,9 +80,10 @@ double ascii2multiplier(const std::string &);
 void create_input_map(int ,char *[],std::map<file_io_token_t, std::string> &);
 void create_input_map_from_input_file(std::map<file_io_token_t, std::string> &,std::ifstream &);
 
-class dramSystem;
 
-#define tick_t unsigned long long
+
+
+
 //typedef unsigned long long tick_t
 
 
