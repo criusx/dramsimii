@@ -5,8 +5,7 @@
 #include "addresses.h"
 #include "enumTypes.h"
 #include "globals.h"
-
-class transaction;
+#include "transaction.h"
 
 class command
 {

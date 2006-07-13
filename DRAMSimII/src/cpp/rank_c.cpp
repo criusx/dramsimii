@@ -1,4 +1,4 @@
-#include "dramsim2.h"
+#include "rank_c.h"
 
 rank_c::rank_c():
 last_ras_times(4)

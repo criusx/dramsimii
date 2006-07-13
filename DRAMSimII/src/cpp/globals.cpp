@@ -6,7 +6,9 @@
 #include <map>
 #include <fstream>
 
-#include "dramsim2.h"
+#include "globals.h"
+
+using namespace std;
 
 ostream &operator<<(ostream &os, const command_type_t &command)
 {
@@ -251,7 +253,7 @@ void create_input_map_from_input_file(map<enum file_io_token_t,string> &paramete
 	}
 }
 
-ostream &operator<<(ostream &os, const dram_timing_specification &this_a)
+ostream &operator<<(ostream &os, const dramTimingSpecification &this_a)
 {
 	os << "rtrs[" << this_a.t_rtrs << "] ";
 	return os;

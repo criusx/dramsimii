@@ -26,9 +26,6 @@
 
 #define ABS(a) ((a) < 0 ? (-a) : (a))
 
-#define tick_t unsigned long long
-//typedef unsigned long long tick_t
-
 #define INVALID -1
 
 #define PI 3.1415926535897932384626433832795
@@ -74,5 +71,9 @@ void create_input_map(int ,char *[],std::map<file_io_token_t, std::string> &);
 void create_input_map_from_input_file(std::map<file_io_token_t, std::string> &,std::ifstream &);
 
 class dramSystem;
+
+#define tick_t unsigned long long
+//typedef unsigned long long tick_t
+
 
 #endif

@@ -3,9 +3,9 @@
 #pragma once
 
 #include <vector>
+#include "bank_c.h"
 #include "globals.h"
 #include "queue.h"
-#include "bank_c.h"
 
 class rank_c
 {

@@ -12,8 +12,10 @@
 #include <iostream>
 #include <fstream>
 
-#include "dramsim2.h"
+#include "dramSystem.h"
+#include "globals.h"
 
+using namespace std;
 
 int main(int argc, char *argv[])
 {
