@@ -7,6 +7,9 @@
 #include <fstream>
 
 #include "globals.h"
+#include "dramTimingSpecification.h"
+#include "dramStatistics.h"
+#include "dramSystem.h"
 
 using namespace std;
 
@@ -259,7 +262,7 @@ ostream &operator<<(ostream &os, const dramTimingSpecification &this_a)
 	return os;
 }
 
-ostream &operator<<(ostream &os, const dram_statistics &this_a)
+ostream &operator<<(ostream &os, const dramStatistics &this_a)
 {
 	os << "RR[" << setw(6) << setprecision(6) << (double)this_a.end_time/max(1,this_a.bo4_count + this_a.bo8_count);
 	os << "] BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick_t)1);
