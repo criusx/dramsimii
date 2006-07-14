@@ -19,7 +19,7 @@ protected:
 	int cas_count[4];
 
 public:
-	dramAlgorithm();
+	dramAlgorithm(queue<command> &,	int , int ,	int);
 	dramAlgorithm(const dramAlgorithm &);
 	void init(queue<command> &, int, int, int); 
 	friend dramSystem;

@@ -239,7 +239,7 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 
 	if ((temp=parameter.find(ordering_algorithm_token))!=parameter.end())
 	{
-		if (temp->second == "strict_order")
+		if (temp->second == "strict_order" || temp->second == "strict")
 			command_ordering_algorithm = STRICT_ORDER;
 		else if (temp->second == "bank_round_robin")
 			command_ordering_algorithm = BANK_ROUND_ROBIN;
@@ -504,7 +504,10 @@ dramTimingSpecification::dramTimingSpecification(map<file_io_token_t,string> &pa
 
 
 
-dramAlgorithm::dramAlgorithm()
+dramAlgorithm::dramAlgorithm(queue<command> &free_command_pool,
+							 int rank_count,
+							 int bank_count,
+							 int config_type)
 {
 	rank_id[0] = 0;
 	rank_id[1] = 3;
@@ -522,6 +525,184 @@ dramAlgorithm::dramAlgorithm()
 	transaction_type[1] = READ_TRANSACTION;
 	transaction_type[2] = READ_TRANSACTION;
 	transaction_type[3] = READ_TRANSACTION;
+
+
+	WHCC.init(rank_count * bank_count * 2);
+
+	command *temp_c;
+
+	if((config_type == BASELINE_CONFIG) && (rank_count == 2))
+	{
+		if(bank_count == 8)
+		{
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		}
+		else if (bank_count == 16)
+		{
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  8; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  9; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 10; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 11; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  8; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 12; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  9; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 10; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 13; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 11; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 12; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 14; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 13; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 14; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 15; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 15; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  8; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  9; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 10; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 11; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 12; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  8; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  9; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 13; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 10; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 11; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 14; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 12; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 13; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 15; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 14; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 15; WHCC.enqueue(temp_c);
+		}
+	}
+	else if((config_type == BASELINE_CONFIG) && (rank_count == 4))
+	{
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = free_command_pool.acquire_item(); temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+	}
 }
 
 dramAlgorithm::dramAlgorithm(const dramAlgorithm &a)

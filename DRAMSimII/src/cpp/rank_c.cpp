@@ -14,11 +14,9 @@ last_refresh_time(0),
 last_cas_time(-100),
 last_casw_time(-100),
 bank_count(bank_cnt),
-last_bank_id(bank_count-1)
+last_bank_id(bank_count-1),
+bank(bank_cnt,bank_c(per_bank_queue_depth))
 {
-	for (int i=0;i<bank_count;i++)
-		bank.push_back(bank_c(per_bank_queue_depth));
-	//	bank[i].init_banks(per_bank_queue_depth);
 }
 
 void rank_c::init_ranks(int bank_cnt, int per_bank_queue_depth)
