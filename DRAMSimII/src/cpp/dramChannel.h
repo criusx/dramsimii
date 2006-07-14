@@ -40,8 +40,8 @@ public:
 	void record_command(command *, queue<command> &);
 	void initRefreshQueue(const int rowCount, const int rankCount, const int refreshTime, const int chan); // init the RefreshQueue using selected algorithm
 
-	dramChannel();
-	dramChannel(int, int, int, int, int, int, int);
+	explicit dramChannel();
+	explicit dramChannel(int, int, int, int, int, int, int);
 	dramChannel(const dramChannel &);
 	void init_controller(int, int, int, int, int, int, int);
 	enum transaction_type_t set_read_write_type(const int,const int) const;

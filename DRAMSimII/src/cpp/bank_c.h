@@ -9,8 +9,8 @@
 class bank_c
 {
 
-public:
-	
+public:	
+	queue<command> per_bank_q;		// per bank queue
 	tick_t last_ras_time;			// when did last ras start?
 	tick_t last_cas_time;			// when did last cas start?
 	tick_t last_casw_time;			// when did last cas write start?
@@ -19,18 +19,13 @@ public:
 	int last_cas_length;
 	int last_casw_length;
 	int row_id;						// if the bank is open, what is the row id?
-	
-
 	// stats
 	int ras_count;
 	int cas_count;
 	int casw_count;
 
-	//public:
-	bank_c(unsigned);
-	bank_c(const bank_c &);
-	//void init_banks(int);
-	queue<command> per_bank_q;		// per bank queue
+	explicit bank_c(unsigned);
+	bank_c(const bank_c &);	
 };
 
 #endif

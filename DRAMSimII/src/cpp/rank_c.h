@@ -9,9 +9,10 @@
 
 class rank_c
 {
+
+
 public:
 	int bank_count;
-
 	int last_bank_id; // id of the last accessed bank of this rank
 	tick_t last_refresh_time;
 	tick_t last_cas_time;
@@ -22,8 +23,10 @@ public:
 	std::vector<bank_c> bank;
 
 	
-	rank_c();
+	explicit rank_c();
 	rank_c(const rank_c &);
+	explicit rank_c(const int,const int);
+	//rank_c &operator=(const rank_c &);
 	void init_ranks(int,int);
 };
 

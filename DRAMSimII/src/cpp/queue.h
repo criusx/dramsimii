@@ -16,31 +16,33 @@ private:
 	T **entry;
 
 public:
-	queue(): depth(0),count(0), head_ptr(0), tail_ptr(0)
+	explicit queue(): depth(0),count(0), head_ptr(0), tail_ptr(0), entry(NULL)
 	{
-
 	}
 
-	queue(queue<T>& a): depth(a.depth), count(0), head_ptr(0), tail_ptr(0)
+	explicit queue(const queue<T>& a): depth(a.depth), count(a.count), head_ptr(a.head_ptr), tail_ptr(a.tail_ptr)
 	{
-		while (a.count > 0)
+		entry = new T *[a.depth];
+		
+		for (int i = a.depth - 1; i >= 0; i--)
 		{
-			enqueue(a.dequeue());			
-		}   
+			if (a.entry[i] == NULL)
+				entry[i] = NULL;
+			else
+				entry[i] = new T(*a.entry[i]);
+		}   		
 	}	
 
-	queue(int size, bool preallocate = false)
+	explicit queue(int size, bool preallocate = false): depth(size), count(0), head_ptr(0), tail_ptr(0)
 	{
-		depth = size;
-		count = 0;
-		head_ptr = 0;
-		tail_ptr = 0;
 		entry = new T *[size];
 
 		if (preallocate)
 		{      
 			for (int i = 0; i < size; i++)
+			{
 				enqueue(new T);
+			}
 		}
 		else
 		{
@@ -55,12 +57,13 @@ public:
 	{
 		while (count > 0)
 		{
-			/*for (int i = head_ptr; i != tail_ptr; i = (i + 1) % depth)
-				delete entry[i];*/
-			delete dequeue();
-			
+			delete dequeue();			
 		}
-		delete[] entry;
+		if (entry != NULL)
+		{
+			delete[] entry;
+			entry = NULL;
+		}
 	}
 
 	void init(int size, bool preallocate = false)
@@ -83,10 +86,10 @@ public:
 				entry[i] = NULL;
 			}
 		}
-	}
+	}	
 
-	/* queue: When you add stuff, tail pointer increments, if full, return FAILURE flag */
-	/* I'm adding to the tail and removing from the head */
+	// queue: When you add stuff, tail pointer increments, if full, return FAILURE flag
+	// I'm adding to the tail and removing from the head
 	input_status_t enqueue(T *item)
 	{
 		if (count == depth)
@@ -106,7 +109,7 @@ public:
 	}
 
 
-	/// acquire an item from the pool, same as new, but does not involve allocating new memory
+	// acquire an item from the pool, same as new, but does not involve allocating new memory
 	T *acquire_item()
 	{
 		if (count == 0)

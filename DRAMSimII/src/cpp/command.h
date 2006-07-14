@@ -34,7 +34,7 @@ public:
 	bool posted_cas;		// This is used to determine if the ras + cas were in the same bundle
 	int length;
 
-	command();
+	explicit command();
 	explicit command(const command &);
 };
 

@@ -2,7 +2,7 @@
 #define GLOBALS_H
 #pragma once
 
-#define tick_t unsigned long long
+#define tick_t long long
 // class forward declarations
 class dramSystem;
 class dramSystemConfiguration;
