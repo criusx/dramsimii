@@ -67,7 +67,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 			unsigned rank_id = last_c->addr.rank_id;
 			transaction_type_t transaction_type;
 
-			if(last_c->this_command == RAS_COMMAND)
+			if (last_c->this_command == RAS_COMMAND)
 			{
 				command *temp_c =  channel.get_rank(rank_id).bank[bank_id].per_bank_q.read(0);
 

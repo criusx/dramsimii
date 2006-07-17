@@ -44,7 +44,7 @@ class transaction;
 
 #define DEBUG_FLAG
 
-#define DEBUG_COMMAND
+//#define DEBUG_COMMAND
 
 //#define DEBUG_TRANSACTION
 

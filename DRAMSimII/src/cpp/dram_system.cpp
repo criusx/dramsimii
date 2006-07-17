@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <cmath>
 #include <map>
+#include <vector>
 
 #include "dramSystem.h"
 
@@ -760,12 +761,10 @@ time(0) // start the clock
 
 	// create as many channels as were specified, all of the same type
 	// now that the parameters for each have been set
-	for (int i = system_config.chan_count - 1; i >= 0; i--)
+	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); ++i)
 	{
-		channel[i].initRefreshQueue(system_config.row_count, system_config.rank_count, system_config.refresh_time, i);
+		i->initRefreshQueue(system_config.row_count, system_config.refresh_time);
 	}
-
-	//algorithm.init(free_command_pool, system_config.rank_count, system_config.bank_count, system_config.config_type);	
 }
 
 
@@ -775,7 +774,7 @@ int dramSystem::find_oldest_channel() const
 	int oldest_chan_id = 0;
 	tick_t oldest_time = channel[0].get_time();
 
-	for (int chan_id = 1; chan_id < system_config.chan_count ; chan_id++)
+	for (int chan_id = 1; chan_id < channel.size() ; ++chan_id)
 	{
 		if (channel[chan_id].get_time() < oldest_time)
 		{

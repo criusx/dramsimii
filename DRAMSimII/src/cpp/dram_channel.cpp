@@ -91,19 +91,21 @@ void dramChannel::init_controller(int transaction_queue_depth,
 	refreshQueue.init(refresh_queue_depth,  true);
 }
 
-void dramChannel::initRefreshQueue(const int rowCount, const int rankCount, const int refreshTime, const int chan)
+void dramChannel::initRefreshQueue(const unsigned rowCount, const unsigned refreshTime)
 {
-	int step = 3.0 / 4.0 * (refreshTime / (rowCount * rankCount));
+	unsigned step = refreshTime;
+	step /= rowCount;
+	step /= rank.size();
 	int count = 0;
 
 	for (int i = rowCount - 1; i >= 0; i--)
-		for (int j = rankCount - 1; j >= 0; j--)
+		for (int j = rank.size() - 1; j >= 0; j--)
 		{
 			refreshQueue.read(count)->arrival_time = count * step;
 			refreshQueue.read(count)->type = AUTO_REFRESH_TRANSACTION;
 			refreshQueue.read(count)->addr.rank_id = j;
 			refreshQueue.read(count)->addr.row_id = i;
-			refreshQueue.read(count)->addr.chan_id = chan;
+			//refreshQueue.read(count)->addr.chan_id = this;
 			count++;
 		}
 

@@ -16,7 +16,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 	return FAILURE;
 	
 	queue<command> *bank_q = &(channel[this_t->addr.chan_id].get_rank(this_t->addr.rank_id).bank[this_t->addr.bank_id].per_bank_q);
-
+	
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
 	// RAS, CAS+Precharge
@@ -28,7 +28,27 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		if (this_t->type == AUTO_REFRESH_TRANSACTION)
 		{
 			// check to see if every per bank command queue has room for one command
-			rank_c *rank = &channel[this_t->addr.chan_id].get_rank(this_t->addr.rank_id);
+			rank_c &rank = channel[this_t->addr.chan_id].get_rank(this_t->addr.rank_id);
+			// make sure that there is room in all the queues for one command
+			// refresh commands refresh a row, but kill everything currently in the sense amps
+			// therefore, we need to make sure that the refresh commands happen when all banks
+			// are available
+			for (vector<bank_c>::iterator i = rank.bank.begin(); i != rank.bank.end(); i++)
+			{
+				if (i->per_bank_q.freecount() < 1)
+					return FAILURE;
+			}
+			// then add the command to all queues
+			for (vector<bank_c>::iterator i = rank.bank.begin(); i != rank.bank.end(); i++)
+			{
+				command *temp_c = free_command_pool.acquire_item();
+				temp_c->addr = this_t->addr;
+				temp_c->enqueue_time = time;
+				temp_c->start_time = channel[this_t->addr.chan_id].get_time();
+				temp_c->this_command = REFRESH_ALL_COMMAND;
+				temp_c->host_t = this_t;
+				i->per_bank_q.enqueue(new command);
+			}
 		}
 		// every transaction translates into at least two commands
 		else if (empty_command_slot_count < 2)
@@ -129,7 +149,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 
 	// open page systems may, in the best case, add a CAS command to an already open row
 	// closing the row and precharging may be delayed
-	else if(system_config.row_buffer_management_policy == OPEN_PAGE)
+	else if (system_config.row_buffer_management_policy == OPEN_PAGE)
 	{
 		int queued_command_count = bank_q->get_count();
 		int empty_command_slot_count = bank_q->freecount();
@@ -183,13 +203,13 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		free_c->this_command = RAS_COMMAND;
 		free_c->start_time = this_t->arrival_time;
 		free_c->enqueue_time = time;
-		free_c->addr = this_t->addr;		/* copy the addr stuff over */
+		free_c->addr = this_t->addr;		// copy the addr stuff over
 		free_c->host_t = NULL;
 
 		bank_q->enqueue(free_c);
 
 		free_c = free_command_pool.acquire_item();
-		if(this_t->type == WRITE_TRANSACTION)
+		if (this_t->type == WRITE_TRANSACTION)
 		{
 			free_c->this_command = CAS_WRITE_COMMAND;
 		}
@@ -206,7 +226,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		free_c->start_time = this_t->arrival_time;
 		free_c->enqueue_time = time;
 		free_c->posted_cas = system_config.posted_cas;
-		free_c->addr = this_t->addr;		/* copy the addr stuff over */
+		free_c->addr = this_t->addr;		// copy the addr stuff over
 		free_c->length = this_t->length;
 		// FIXME: not initializing the host_t value?
 		bank_q->enqueue(free_c);
@@ -215,7 +235,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		free_c->this_command = PRECHARGE_COMMAND;
 		free_c->start_time = this_t->arrival_time;
 		free_c->enqueue_time = time;
-		free_c->addr = this_t->addr;		/* copy the addr stuff over */
+		free_c->addr = this_t->addr;		// copy the addr stuff over
 		free_c->host_t = NULL;
 		bank_q->enqueue(free_c);
 	}
