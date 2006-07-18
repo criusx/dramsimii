@@ -444,7 +444,15 @@ file_io_token_t file_io_token(const string &input)
 ostream &operator<<(ostream &os, const transaction *this_t)
 {
 	os << "S[" << setw(8) << std::hex << this_t->arrival_time << "] ";
-	switch(this_t->type)
+	os << this_t->type;
+	os << "E[" << setw(8) << std::hex << this_t->completion_time << "]" 
+		<< " PA[0x" << std::hex << this_t->addr.phys_addr << "]";
+	return os;
+}
+
+ostream &operator<<(ostream &os, const transaction_type_t type)
+{
+	switch(type)
 	{
 	case IFETCH_TRANSACTION:
 		os << "FETCH ";
@@ -467,9 +475,13 @@ ostream &operator<<(ostream &os, const transaction *this_t)
 	case AUTO_PRECHARGE_TRANSACTION:
 		os << "AUTOP ";
 		break;
+	case CONTROL_TRANSACTION:
+		os << "CTRL  ";
+		break;
+	default:
+		os << "Unknown";
+		break;
 	}
-	os << "E[" << setw(8) << std::hex << this_t->completion_time << "]" 
-		<< " PA[0x" << std::hex << this_t->addr.phys_addr << "]";
 	return os;
 }
 

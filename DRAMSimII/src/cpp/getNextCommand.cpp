@@ -31,21 +31,25 @@ command *dramSystem::getNextCommand(const int chan_id)
 	case STRICT_ORDER: // look for oldest command, execute that
 		{
 			tick_t oldest_command_time = -1;
-			int oldest_rank_id = -1;
-			int oldest_bank_id = -1;
+			//int oldest_rank_id = -1;
+			bool foundSomething = false;
 
-			for (int rank_id = system_config.rank_count - 1; rank_id >= 0; rank_id--)
+			vector<bank_c>::iterator oldest_bank_id;
+
+			for (vector<rank_c>::iterator rank_id = channel.get_rank().begin(); rank_id != channel.get_rank().end(); rank_id++)
 			{
-				for (int bank_id = system_config.bank_count - 1; bank_id >= 0; bank_id--)
+				for (vector<bank_c>::iterator bank_id = rank_id->bank.begin(); bank_id != rank_id->bank.end(); bank_id++)
 				{
-					command *temp_c =  channel.get_rank(rank_id).bank[bank_id].per_bank_q.read(0);
+					command *temp_c = bank_id->per_bank_q.read_back();
+						//channel.get_rank(rank_id).bank[bank_id].per_bank_q.read(0);
 
 					if (temp_c != NULL)
 					{
 						if ((oldest_command_time < 0) || (oldest_command_time > temp_c->enqueue_time))
 						{
 							oldest_command_time = temp_c->enqueue_time;
-							oldest_rank_id = rank_id;
+							foundSomething = true;
+							//oldest_rank_id = rank_id;
 							oldest_bank_id = bank_id;
 						}
 					}
@@ -53,10 +57,13 @@ command *dramSystem::getNextCommand(const int chan_id)
 			}
 
 			// if there were no commands found
-			if (oldest_rank_id == -1)
-				return NULL;
+			if (foundSomething)
+				return oldest_bank_id->per_bank_q.dequeue();
 			else
-				return channel.get_rank(oldest_rank_id).bank[oldest_bank_id].per_bank_q.dequeue();
+				return NULL;
+			//else
+				//return channel.get_rank(oldest_rank_id).bank[oldest_bank_id].per_bank_q.dequeue();
+				
 		}
 		break;
 

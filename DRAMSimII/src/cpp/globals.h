@@ -70,6 +70,7 @@ std::ostream &operator<<(std::ostream &, const command &);
 std::ostream &operator<<(std::ostream &, const addresses &);
 std::ostream &operator<<(std::ostream &, const transaction *&);
 std::ostream &operator<<(std::ostream &, const address_mapping_scheme_t &);
+std::ostream &operator<<(std::ostream &, const transaction_type_t );
 // converts a string to a file_io_token
 file_io_token_t file_io_token(const std::string &);
 
