@@ -47,7 +47,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 				temp_c->start_time = channel[this_t->addr.chan_id].get_time();
 				temp_c->this_command = REFRESH_ALL_COMMAND;
 				temp_c->host_t = this_t;
-				i->per_bank_q.enqueue(new command);
+				i->per_bank_q.enqueue(temp_c);
 			}
 		}
 		// every transaction translates into at least two commands
