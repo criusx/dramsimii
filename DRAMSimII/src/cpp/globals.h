@@ -1,8 +1,27 @@
+/*
+To do list:
+
+1. add refresh
+2. add open page support
+3. Look at power up/down models.
+4. re-add power models.
+6. attach BIU, port to alpha-sim
+7. convert passed pointers/values to references
+8. standardize time variables
+9. organize classes better, divide work more intelligently
+10. move away from srand48, drand48 functions, they are deprecated
+11. switch from machine dependent vars to definite types. e.g. unsigned int -> UINT32, __int64, etc
+12. make vars private again and declare various functions as friends
+*/
+
 #ifndef GLOBALS_H
 #define GLOBALS_H
 #pragma once
 
+#include <limits>
+
 #define tick_t long long
+#define TICK_T_MAX LLONG_MAX
 // class forward declarations
 class dramSystem;
 class dramSystemConfiguration;
@@ -44,9 +63,9 @@ class transaction;
 
 #define DEBUG_FLAG
 
-//#define DEBUG_COMMAND
+#define DEBUG_COMMAND
 
-//#define DEBUG_TRANSACTION
+#define DEBUG_TRANSACTION
 
 //#define DEBUG_RAND
 

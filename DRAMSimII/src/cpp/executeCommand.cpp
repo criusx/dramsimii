@@ -115,6 +115,8 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 
 	case REFRESH_ALL_COMMAND:
 		this_bank->last_refresh_all_time = channel.get_time();
+		this_command->completion_time += timing_specification.t_rfc;
+		this_command->host_t->completion_time = this_command->completion_time;
 		break;
 	}
 
@@ -123,7 +125,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	// since this is when a transaction is done from the standpoint of the requestor
 	if (this_command->host_t != NULL) 
 	{
-		if(channel.complete(this_command->host_t) == FAILURE)
+		if (channel.complete(this_command->host_t) == FAILURE)
 		{
 			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
 			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;

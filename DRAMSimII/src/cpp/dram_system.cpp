@@ -761,9 +761,11 @@ time(0) // start the clock
 
 	// create as many channels as were specified, all of the same type
 	// now that the parameters for each have been set
+	unsigned cnt = 0;
 	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); ++i)
 	{
-		i->initRefreshQueue(system_config.row_count, system_config.refresh_time);
+		i->initRefreshQueue(system_config.row_count, system_config.refresh_time, cnt);
+		cnt++;
 	}
 }
 

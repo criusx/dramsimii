@@ -48,7 +48,7 @@ void dramSystem::run_simulations2()
 						executeCommand(temp_c, min_gap);
 
 #ifdef DEBUG_COMMAND
-						cerr << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+						cerr << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
 						update_system_time(); 
@@ -60,7 +60,8 @@ void dramSystem::run_simulations2()
 							if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 							{
 								completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
-								channel[completed_t->addr.rank_id].enqueueRefresh(completed_t);
+								//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
+								channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
 							}
 							else
 								free_transaction_pool.release_item(completed_t);
@@ -111,7 +112,7 @@ void dramSystem::run_simulations2()
 							if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 							{
 								completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
-								channel[completed_t->addr.rank_id].enqueueRefresh(completed_t);
+								channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
 							}
 							else
 								free_transaction_pool.release_item(completed_t);

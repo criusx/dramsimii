@@ -455,31 +455,31 @@ ostream &operator<<(ostream &os, const transaction_type_t type)
 	switch(type)
 	{
 	case IFETCH_TRANSACTION:
-		os << "FETCH ";
+		os << "FETCH  ";
 		break;
 	case WRITE_TRANSACTION:
-		os << "WRITE ";
+		os << "WRITE  ";
 		break;
 	case READ_TRANSACTION:
-		os << "READ ";
+		os << "READ   ";
 		break;
 	case PREFETCH_TRANSACTION:
-		os << "PREF ";
+		os << "PREFET ";
 		break;
 	case AUTO_REFRESH_TRANSACTION:
-		os << "AUTOR ";
+		os << "REFRSH ";
 		break;
 	case PER_BANK_REFRESH_TRANSACTION:
-		os << "BANKR ";
+		os << "BNKREF ";
 		break;
 	case AUTO_PRECHARGE_TRANSACTION:
-		os << "AUTOP ";
+		os << "AUTOPR ";
 		break;
 	case CONTROL_TRANSACTION:
-		os << "CTRL  ";
+		os << "CTRL   ";
 		break;
 	default:
-		os << "Unknown";
+		os << "UNKWN  ";
 		break;
 	}
 	return os;

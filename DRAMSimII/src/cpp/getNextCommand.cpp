@@ -32,8 +32,8 @@ command *dramSystem::getNextCommand(const int chan_id)
 	{
 	case STRICT_ORDER: // look for oldest command, execute that
 		{
-			tick_t oldest_command_time = LLONG_MAX;
-			bool foundSomething = false;			
+			tick_t oldest_command_time = TICK_T_MAX;
+			//bool foundSomething = false;			
 			vector<bank_c>::iterator oldest_bank_id;
 			vector<rank_c>::iterator oldest_rank_id;
 			
@@ -51,30 +51,33 @@ command *dramSystem::getNextCommand(const int chan_id)
 						{
 							// if it's a refresh_all command and
 							// we haven't proven that all the queues aren't refresh_all commands, search
-							if ((temp_c->this_command == REFRESH_ALL_COMMAND) && (!notAllRefresh))
+							if (temp_c->this_command == REFRESH_ALL_COMMAND)
 							{
-								for (vector<bank_c>::iterator cur_bank = rank_id->bank.begin(); cur_bank != rank_id->bank.end(); cur_bank++)
-								{
-									if (cur_bank->per_bank_q.read_back()->this_command != REFRESH_ALL_COMMAND)
-									{
-										notAllRefresh = true;
-										break;
-									}
-
-								}
-
 								if (!notAllRefresh)
 								{
-									oldest_command_time = temp_c->enqueue_time;
-									foundSomething = true;
-									oldest_bank_id = bank_id;
-									oldest_rank_id = rank_id;
+									for (vector<bank_c>::iterator cur_bank = rank_id->bank.begin(); cur_bank != rank_id->bank.end(); cur_bank++)
+									{
+										if (cur_bank->per_bank_q.read_back()->this_command != REFRESH_ALL_COMMAND)
+										{
+											notAllRefresh = true;
+											break;
+										}
+
+									}
+
+									if (!notAllRefresh)
+									{
+										oldest_command_time = temp_c->enqueue_time;
+										//foundSomething = true;
+										oldest_bank_id = bank_id;
+										oldest_rank_id = rank_id;
+									}
 								}
 							}
 							else
 							{
 								oldest_command_time = temp_c->enqueue_time;
-								foundSomething = true;
+								//foundSomething = true;
 								oldest_bank_id = bank_id;
 							}
 						}
@@ -82,8 +85,8 @@ command *dramSystem::getNextCommand(const int chan_id)
 				}
 			}
 
-			// if there were no commands found
-			if (foundSomething)
+			// if there was a command found
+			if (oldest_command_time < TICK_T_MAX)
 			{
 				// if it was a refresh all command, then dequeue all n banks worth of commands
 				if (oldest_bank_id->per_bank_q.read_back()->this_command == REFRESH_ALL_COMMAND)
