@@ -88,6 +88,10 @@ namespace WJ2
             this.radUpDown = new System.Windows.Forms.NumericUpDown();
             this.gpsSerialPort = new System.IO.Ports.SerialPort(this.components);
             this.radTimer = new System.Windows.Forms.Timer();
+            this.label17 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.tagServerBox2 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -189,8 +193,10 @@ namespace WJ2
             this.tabPage2.Controls.Add(this.numericUpDown1);
             this.tabPage2.Controls.Add(this.radioButton2);
             this.tabPage2.Controls.Add(this.radioButton1);
+            this.tabPage2.Controls.Add(this.comboBox1);
             this.tabPage2.Controls.Add(this.cbComPort);
             this.tabPage2.Controls.Add(this.wjConnectButton);
+            this.tabPage2.Controls.Add(this.label17);
             this.tabPage2.Controls.Add(this.label14);
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.label3);
@@ -200,7 +206,7 @@ namespace WJ2
             this.tabPage2.Controls.Add(this.domainUpDown2);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(232, 268);
+            this.tabPage2.Size = new System.Drawing.Size(240, 271);
             this.tabPage2.Text = "Setup";
             // 
             // numTags
@@ -346,11 +352,13 @@ namespace WJ2
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.connectBtn);
+            this.tabPage3.Controls.Add(this.label18);
             this.tabPage3.Controls.Add(this.dbTableLbl);
             this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Controls.Add(this.dbNameLbl);
             this.tabPage3.Controls.Add(this.label7);
             this.tabPage3.Controls.Add(this.label6);
+            this.tabPage3.Controls.Add(this.tagServerBox2);
             this.tabPage3.Controls.Add(this.dbTableBox);
             this.tabPage3.Controls.Add(this.label5);
             this.tabPage3.Controls.Add(this.dbNameBox);
@@ -360,8 +368,8 @@ namespace WJ2
             this.tabPage3.Controls.Add(this.userIDBox);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(232, 268);
-            this.tabPage3.Text = "DB";
+            this.tabPage3.Size = new System.Drawing.Size(240, 271);
+            this.tabPage3.Text = "Server";
             // 
             // connectBtn
             // 
@@ -693,6 +701,40 @@ namespace WJ2
             this.radTimer.Interval = 30000;
             this.radTimer.Tick += new System.EventHandler(this.radTimer_Tick);
             // 
+            // label17
+            // 
+            this.label17.Location = new System.Drawing.Point(17, 158);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(100, 20);
+            this.label17.Text = "Reader Selected";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Items.Add("Symbol");
+            this.comboBox1.Items.Add("Intermec");
+            this.comboBox1.Items.Add("WJ");
+            this.comboBox1.Location = new System.Drawing.Point(123, 156);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(100, 22);
+            this.comboBox1.TabIndex = 6;
+            // 
+            // label18
+            // 
+            this.label18.Location = new System.Drawing.Point(7, 184);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(82, 20);
+            this.label18.Text = "Tag Server";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // tagServerBox2
+            // 
+            this.tagServerBox2.Location = new System.Drawing.Point(95, 183);
+            this.tagServerBox2.Name = "tagServerBox2";
+            this.tagServerBox2.Size = new System.Drawing.Size(138, 21);
+            this.tagServerBox2.TabIndex = 0;
+            this.tagServerBox2.Text = "192.168.10.2";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -778,6 +820,10 @@ namespace WJ2
         private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Button scanButton;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox tagServerBox2;
     }
 }
 

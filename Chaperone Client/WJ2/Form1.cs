@@ -13,6 +13,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using WJ.MPR.Reader;
 using WJ.MPR.Util;
+using System.Xml;
 using RFIDProtocolLib;
 using Bluetooth;
 using OpenNETCF.Windows.Forms;
@@ -114,6 +115,7 @@ namespace WJ2
             custMenu.MouseUp += new MouseEventHandler(inventoryItemOptionMenuClicked);
 
             this.tabPage1.Controls.Add(custMenu);
+            comboBox1.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -178,8 +180,8 @@ namespace WJ2
             }
 
             // try to connect to the gps device
-            EventArgs a = new EventArgs();
-            BTbutton_Click(this, a);
+            //EventArgs a = new EventArgs();
+            //BTbutton_Click(this, a);
 
         }
 
@@ -218,15 +220,67 @@ namespace WJ2
         /// <param name="e"></param>
         private void startInventoryButton_Click(object sender, EventArgs e)
         {
-            if (!Reader.IsConnected)
-                readerConnect(false);
-
             if (sender == scanButton)
                 isScan = 1;
             else
                 isScan = 0;
 
-            Reader.InvTimerEnabled = !Reader.InvTimerEnabled;
+            if (comboBox1.SelectedItem == "WJ")
+            {
+                if (!Reader.IsConnected)
+                    readerConnect(false);                
+
+                Reader.InvTimerEnabled = !Reader.InvTimerEnabled;            
+            }
+            else if (comboBox1.SelectedItem == "Symbol")
+            {
+                invProgressBar.Value = 0;
+                inventoryTags.Clear();
+                invProgressBar.Show();
+                invTimerBox.Hide();
+                custList.Clear();
+                custList.Refresh();
+
+                Cursor.Current = Cursors.WaitCursor;
+                scanButton.Enabled = false;
+                startInventoryButton.Enabled = false;
+
+                // go get the xml
+                string url = "http://" +
+                    tagServerBox2.Text +
+                    "/cgi-bin/dataProxy?oper=queryTags&invis=1&showLastRP=1&raw=1";
+                XmlTextReader reader = new XmlTextReader(url);
+                int i = 0;
+
+                while (reader.Read())
+                {
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Attribute:
+                            break;
+                        case XmlNodeType.Element:
+                            if (reader.Name == "Tag")
+                                if (reader.AttributeCount > 0)
+                                {
+                                    reader.MoveToAttribute(0);
+                                    inventoryTags.Add(reader.Value.ToString());                                    
+                                }
+                            break;
+                    }
+                }
+
+                EventArgs eA = new EventArgs();
+                Reader_InvTimerEnabledChanged(sender, eA);
+                string clearTags = "http://" +
+                    tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryEvents&raw=1&invis=1";
+                clearTags = "http://" + 
+                    tagServerBox2.Text + "/cgi-bin/dataProxy?oper=purgeAllTags";
+                XmlTextReader clearer = new XmlTextReader(clearTags);
+
+                scanButton.Enabled = true;
+                startInventoryButton.Enabled = true;
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         /// <summary>
@@ -244,16 +298,10 @@ namespace WJ2
                 {
                     if (isScan == 1)
                     {
-                        scanButton.Text = "Stop";
-                        scanButton.BackColor = Color.Red;
-                        scanButton.ForeColor = Color.White;
                         startInventoryButton.Enabled = false;
                     }
                     else
                     {
-                        startInventoryButton.Text = "Stop";
-                        startInventoryButton.BackColor = Color.Red;
-                        startInventoryButton.ForeColor = Color.White;
                         scanButton.Enabled = false;
                     }
 
@@ -267,20 +315,17 @@ namespace WJ2
                 }
                 else /// stopping an inventory loop
                 {
+                    Cursor.Current = Cursors.WaitCursor;
+
                     if (isScan == 1)
-                    {
-                        scanButton.Text = "Wait";
+                    {                        
                         scanButton.Enabled = false;
-                        scanButton.BackColor = Color.LightGreen;
-                        scanButton.ForeColor = Color.Black;
                     }
                     else
-                    {
-                        startInventoryButton.Text = "Wait";
+                    {                        
                         startInventoryButton.Enabled = false;
-                        startInventoryButton.BackColor = Color.LightGreen;
-                        startInventoryButton.ForeColor = Color.Black;
                     }
+
                     invProgressBar.Hide();
                     invTimerBox.Show();
 
@@ -339,15 +384,11 @@ namespace WJ2
                             custList.Insert(i, new ListItem(inventoryTags[i].ToString(), "", -1));
                         }
                     }
-                    finally
-                    {
-                        startInventoryButton.Text = "M/R";
-                        scanButton.Text = "Scan";
-                        scanButton.BackColor = Color.Turquoise;
-                        startInventoryButton.BackColor = Color.LightGreen;
-                        scanButton.Enabled = true;
-                        startInventoryButton.Enabled = true;
-                    }
+                    scanButton.Enabled = true;
+                    startInventoryButton.Enabled = true;
+                    inventoryTags.Clear();
+                        
+                    Cursor.Current = Cursors.Default;
                 }
             }
         }
@@ -564,7 +605,8 @@ namespace WJ2
         /// <param name="e"></param>
         private void wjConnectButton_Click(object sender, EventArgs e)
         {
-            readerConnect(true);
+            if (comboBox1.SelectedItem == "WJ")
+                readerConnect(true);
         }
 
         #endregion
