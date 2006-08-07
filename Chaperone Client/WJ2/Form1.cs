@@ -61,6 +61,9 @@ namespace WJ2
         private string serverAddress;
         private string phoneNumber;
 
+        private string containerID;
+        private string lastDateTime;
+
         private int selectedIndex;
 
         private CustomListBox custList;
@@ -96,26 +99,7 @@ namespace WJ2
         /// </summary>
         public Form1()
         {
-            InitializeComponent();
-
-            custList = new CustomListBox();
-            custList.Width = this.Width;
-            custList.Height = 250;
-            custList.Location = new Point(0, 0);
-            custList.MouseUp += new MouseEventHandler(inventoryListBox_SelectedIndexChanged);
-
-            this.tabPage1.Controls.Add(this.custList);
-
-            custMenu = new CustomMenu();
-            custMenu.Location = new Point(5, 20);
-            custMenu.Width = 100;
-            custMenu.BackColor = Color.LightSkyBlue;
-            custMenu.Add("default");
-            custMenu.Height += 2;
-            custMenu.MouseUp += new MouseEventHandler(inventoryItemOptionMenuClicked);
-
-            this.tabPage1.Controls.Add(custMenu);
-            comboBox1.SelectedIndex = 0;
+            InitializeComponent();            
         }
 
         /// <summary>
@@ -135,6 +119,25 @@ namespace WJ2
         /// <param name="e"></param>
         private void Form1_Load(object sender, System.EventArgs e)
         {
+            custList = new CustomListBox();
+            custList.Width = this.Width;
+            custList.Height = 250;
+            custList.Location = new Point(0, 0);
+            custList.MouseUp += new MouseEventHandler(inventoryListBox_SelectedIndexChanged);
+
+            this.tabPage1.Controls.Add(this.custList);
+
+            custMenu = new CustomMenu();
+            custMenu.Location = new Point(5, 20);
+            custMenu.Width = 100;
+            custMenu.BackColor = Color.LightSkyBlue;
+            custMenu.Add("default");
+            custMenu.Height += 2;
+            custMenu.MouseUp += new MouseEventHandler(inventoryItemOptionMenuClicked);
+
+            this.tabPage1.Controls.Add(custMenu);
+            comboBox1.SelectedIndex = 0;
+
             gpsMod += new GPSTextModifiedEventHandler(GPSTextModifiedEvent);
             Reader = new MPRReader();
             Reader.DisconnectEvent += new EventHandler(Reader_DisconnectEvent);
@@ -234,53 +237,56 @@ namespace WJ2
             }
             else if (comboBox1.SelectedItem == "Symbol")
             {
-                invProgressBar.Value = 0;
-                inventoryTags.Clear();
-                invProgressBar.Show();
-                invTimerBox.Hide();
-                custList.Clear();
-                custList.Refresh();
-
-                Cursor.Current = Cursors.WaitCursor;
                 scanButton.Enabled = false;
                 startInventoryButton.Enabled = false;
+                getInventorySymbol(sender);
+            }
+        }
 
-                // go get the xml
-                string url = "http://" +
-                    tagServerBox2.Text +
-                    "/cgi-bin/dataProxy?oper=queryTags&invis=1&showLastRP=1&raw=1";
-                XmlTextReader reader = new XmlTextReader(url);
+        private void getInventorySymbol(object sender)
+        {
+            invProgressBar.Value = 0;
+            inventoryTags.Clear();
+            invProgressBar.Show();
+            invTimerBox.Hide();
+            custList.Clear();
+            custList.Refresh();
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
+            {
+                // go get the xml                
+                XmlTextReader reader = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryTags&invis=1&showLastRP=1&raw=1");
+                XmlTextReader clearer = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryEvents&raw=1&invis=1");
+                XmlTextReader clearer2 = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=purgeAllTags");
+
                 int i = 0;
 
                 while (reader.Read())
                 {
-                    switch (reader.NodeType)
-                    {
-                        case XmlNodeType.Attribute:
-                            break;
-                        case XmlNodeType.Element:
-                            if (reader.Name == "Tag")
-                                if (reader.AttributeCount > 0)
-                                {
-                                    reader.MoveToAttribute(0);
-                                    inventoryTags.Add(reader.Value.ToString());                                    
-                                }
-                            break;
-                    }
+                    if (reader.NodeType == XmlNodeType.Element)
+                        if (reader.Name == "Tag")
+                            if (reader.AttributeCount > 0)
+                            {
+                                reader.MoveToAttribute(0);
+                                inventoryTags.Add(reader.Value.ToString());
+                            }
                 }
-
                 EventArgs eA = new EventArgs();
                 Reader_InvTimerEnabledChanged(sender, eA);
-                string clearTags = "http://" +
-                    tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryEvents&raw=1&invis=1";
-                clearTags = "http://" + 
-                    tagServerBox2.Text + "/cgi-bin/dataProxy?oper=purgeAllTags";
-                XmlTextReader clearer = new XmlTextReader(clearTags);
 
-                scanButton.Enabled = true;
-                startInventoryButton.Enabled = true;
-                Cursor.Current = Cursors.Default;
+                clearer.Read();
+                clearer2.Read();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+
+            scanButton.Enabled = true;
+            startInventoryButton.Enabled = true;
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
@@ -343,17 +349,13 @@ namespace WJ2
                             cc.SendConnectPacket();
                             cc.WaitForConnectResponsePacket();
 
-                            //cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest("3012330583"));
-                            //cc.WaitForSetPhoneNumberResponsePacket();
-                            //cc.SendRaiseAlertPacket(new RaiseAlertRequest());
-
                             // send all the RFIDs to the server
                             for (int i = 0; i < inventoryTags.Count; ++i)
                                 cc.SendQueryPacket(new QueryRequest(new RFID(inventoryTags[i].ToString())));
 
-                            cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0, 15) + NorS.ToString(), longitude.ToString("N15").Substring(0, 15) + EorW.ToString(), isScan));
+                            lastDateTime = DateTime.Now.ToString();
 
-                            //cc.SendCommitPacket();
+                            cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0, 15) + NorS, longitude.ToString("N15").Substring(0, 15) + EorW, lastDateTime, isScan));
 
                             // receive descriptions of items submitted
                             bool more = true;
@@ -362,6 +364,9 @@ namespace WJ2
                             while (more)
                             {
                                 QueryResponse qr = cc.WaitForQueryResponsePacket();
+
+                                if (qr.ShortDesc == "Shipping Container 42D")
+                                    containerID = qr.rfidNum;
 
                                 custList.Insert(j, new ListItem(qr.rfidNum,qr.ShortDesc, qr.addedRemoved));
 
@@ -489,13 +494,34 @@ namespace WJ2
         {
             if (!custMenu.ClientRectangle.Contains(e.X, e.Y))
                 return;
+
             switch (custMenu.action)
             {
                 case -1: // remove
-					// send command to remove this item
+                    cc = new ClientConnection();
+
+                    // connect to the server
+                    cc.Connect(hostnameBox.Text, 1555);
+
+                    // handshake
+                    cc.SendConnectPacket();
+                    cc.WaitForConnectResponsePacket();
+					
+                    // send command to remove this item
+                    cc.sendAddRemovePacket(new addRemoveItem(lastDateTime,((ListItem)custList.Items[selectedIndex]).RFIDNum,containerID,true));
 					break;
 				case 1: // add
+                    cc = new ClientConnection();
+
+                    // connect to the server
+                    cc.Connect(hostnameBox.Text, 1555);
+
+                    // handshake
+                    cc.SendConnectPacket();
+                    cc.WaitForConnectResponsePacket();
+
 					// send command to add this item to the manifest
+                    cc.sendAddRemovePacket(new addRemoveItem(lastDateTime, ((ListItem)custList.Items[selectedIndex]).RFIDNum, containerID, false));
 					break;
                 case 0:
                     string selectedTag = inventoryTags[selectedIndex].ToString().Replace(" ", "");

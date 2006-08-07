@@ -112,11 +112,24 @@ namespace RFIDProtocolLib
         /// </summary>
         public void SendInfoPacket(InfoPacket req)
         {
-            TLV commitPacket = new TLV(9, req.ToTLVList().GetBytes());
+            TLV commitPacket = new TLV(InfoPacket.Type, req.ToTLVList().GetBytes());
             commitPacket.WriteToStream(c.GetStream());
         }
 
         
+        #endregion
+
+        #region sendAddRemovePacket
+        /// <summary>
+        /// Send an add or remove command
+        /// </summary>
+        /// <param name="req"></param>
+        public void sendAddRemovePacket(addRemoveItem req)
+        {
+            TLV addRemovePacket = new TLV(addRemoveItem.Type, req.ToTLVList().GetBytes());
+            addRemovePacket.WriteToStream(c.GetStream());
+        }
+
         #endregion
 
         #region SetPhoneNumber

@@ -200,13 +200,16 @@ namespace RFIDProtocolLib
 
         public string Longitude;
 
+        public string dateTime;
+
         public int isScan;
 
-        public InfoPacket(string La, string Lo, int iS)
+        public InfoPacket(string La, string Lo, string dT, int iS)
         {
             Latitude = La;
             Longitude = Lo;
             isScan = iS;
+            dateTime = dT;
         } 
       
         /// <summary>
@@ -217,10 +220,13 @@ namespace RFIDProtocolLib
         {
             Latitude = "";
             Longitude = "";
+            dateTime = "";
             isScan = -1;
 
             TLVList l = new TLVList(buf);
+
             IEnumerator e = l.GetEnumerator();
+
             while (e.MoveNext())
             {
                 TLV tlv = (TLV)e.Current;
@@ -229,6 +235,7 @@ namespace RFIDProtocolLib
                     case 0: Latitude = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
                     case 1: Longitude = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
                     case 2: isScan = int.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
+                    case 3: dateTime = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
                 }
             }
         }
@@ -236,9 +243,11 @@ namespace RFIDProtocolLib
         public TLVList ToTLVList()
         {
             TLVList l = new TLVList(Type);
+
             l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(Latitude)));
             l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(Longitude)));
             l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(isScan.ToString())));
+            l.Add(new TLV(3, System.Text.Encoding.ASCII.GetBytes(dateTime)));
 
             return l;
         }
@@ -274,6 +283,66 @@ namespace RFIDProtocolLib
             return new TLVList();
         }
     }
+
+
+
+    public struct addRemoveItem
+    {
+        public const ushort Type = 8;
+
+        public string dateTime;
+
+        public string hostID;
+
+        public string containerID;
+
+        public bool remove;
+
+        public addRemoveItem(string dT, string hID, string cID, bool rem)
+        {
+            dateTime = dT;
+            hostID = hID;
+            containerID = cID;
+            remove = rem;
+        }
+
+        public addRemoveItem(byte[] buf)
+        {
+            dateTime = "";
+            hostID = "";
+            containerID = "";
+            remove = false;
+
+            TLVList l = new TLVList(buf);
+
+            IEnumerator e = l.GetEnumerator();
+
+            while (e.MoveNext())
+            {
+                TLV tlv = (TLV)e.Current;
+
+                switch (tlv.Type)
+                {
+                    case 0: dateTime = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 1: hostID = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 2: remove = bool.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
+                    case 3: containerID = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                }
+            }
+        }
+
+        public TLVList ToTLVList()
+        {
+            TLVList l = new TLVList(Type);
+
+            l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(dateTime)));
+            l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(hostID)));
+            l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(remove.ToString())));
+            l.Add(new TLV(3, System.Text.Encoding.ASCII.GetBytes(containerID)));
+
+            return l;
+        }
+    };
     #endregion
 
 #if DONTUSETHIS
