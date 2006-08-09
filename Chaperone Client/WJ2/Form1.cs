@@ -164,13 +164,15 @@ namespace WJ2
             longitude = 0;
 
             string[] COMPorts = System.IO.Ports.SerialPort.GetPortNames();
+			Array.Sort(COMPorts);
             cbComPort.Items.Clear();
-            btComPort.Items.Clear();
+			btComPort.Items.Clear();
             foreach (string sCOMPort in COMPorts)
             {
                 cbComPort.Items.Add(sCOMPort);
                 btComPort.Items.Add(sCOMPort);
             }
+			
             if (cbComPort.Items.Count > 0)
             {
                 cbComPort.SelectedIndex = 0;
@@ -178,7 +180,7 @@ namespace WJ2
             }
             if (btComPort.Items.Count > 0)
             {
-                btComPort.SelectedIndex = 1;
+                btComPort.SelectedIndex = 0;
                 btComPort.Enabled = true;
             }
 
