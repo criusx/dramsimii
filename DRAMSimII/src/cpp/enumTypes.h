@@ -53,6 +53,7 @@ enum input_type_t
 	MASE_TRACE,
 	RANDOM,
 	MASE,
+	MAPPED,
 	ALPHASIM,
 	GEMS,
 	UNKNOWN
