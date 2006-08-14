@@ -31,7 +31,7 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 	if ((temp=parameter.find(input_type_token))!=parameter.end())
 	{
 		type=input_token(temp->second);
-		if ((type != RANDOM) && (type != K6_TRACE) && (type != MASE_TRACE))
+		if ((type != RANDOM) && (type != K6_TRACE) && (type != MASE_TRACE) && (type != MAPPED))
 			cerr << "Unknown input type" << temp2;
 	}
 
@@ -254,11 +254,11 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 				return FAILURE;
 			}
 			if((this_e.attributes != control) || 
-				(((this_e.address ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
+				(((this_e.address.phys_addr ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
 			{
 				bursting = false;
 				timestamp *= ascii2multiplier(input);
-				this_e.address 	= 0x3FFFFFFF & address;		/* mask out top addr bit */
+				this_e.address.phys_addr 	= 0x3FFFFFFF & address;		/* mask out top addr bit */
 				this_e.attributes 	= CONTROL_TRANSACTION;
 				this_e.timestamp 	= timestamp;
 				burst_count 		= 1;
@@ -268,12 +268,12 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 				burst_count++;
 			}
 		}
-		this_e.address = address;
+		this_e.address.phys_addr = address;
 		this_e.timestamp = timestamp;
 	} 
 	else if (type == MASE_TRACE)
 	{
-		trace_file >> std::hex >> this_e.address >> input >> std::dec >> this_e.timestamp;
+		trace_file >> std::hex >> this_e.address.phys_addr >> input >> std::dec >> this_e.timestamp;
 		
 		if(!trace_file.good()) /// found starting Hex address 
 		{
@@ -281,6 +281,39 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 			return FAILURE;
 		}
 
+		control = file_io_token(input);
+
+		switch (control)
+		{
+		case unknown_token:
+			cerr << "Unknown Token Found " << input << endl;
+			return FAILURE;
+			break;
+		case FETCH:
+			this_e.attributes = IFETCH_TRANSACTION;
+			break;
+		case MEM_RD:
+			this_e.attributes = READ_TRANSACTION;
+			break;
+		case MEM_WR:
+			this_e.attributes = WRITE_TRANSACTION;
+			break;
+		default:
+			cerr << "Unexpected transaction type: " << input;
+			exit(-7);
+			break;
+		}
+	}
+	else if (type == MAPPED)
+	{
+		trace_file >> std::dec >> this_e.timestamp >> input >> std::dec >> this_e.address.chan_id >> this_e.address.rank_id >> this_e.address.bank_id >> this_e.address.row_id >> this_e.address.col_id;
+
+		if(!trace_file.good()) /// found starting Hex address 
+		{
+			cerr << "Unexpected EOF, Please fix input trace file" << endl;
+			return FAILURE;
+		}
+		
 		control = file_io_token(input);
 
 		switch (control)
@@ -318,6 +351,8 @@ enum input_type_t inputStream::input_token(const string &input) const
 		return MASE_TRACE;
 	else if (input == "random" || input == "RANDOM" || input == "Random")
 		return RANDOM;
+	else if (input == "mapped" || input == "Mapped" || input == "MAPPED")
+		return MAPPED;
 	else
 		return UNKNOWN;
 }
