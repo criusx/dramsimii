@@ -970,7 +970,6 @@ busEvent::busEvent()
 {
 	timestamp = 0;
 	attributes = CONTROL_TRANSACTION;
-	address = 0;
 }
 
 addresses::addresses()
