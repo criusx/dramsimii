@@ -19,6 +19,9 @@ int dramSystem::convert_address(addresses &this_a)
 	unsigned int input_a;
 	unsigned int temp_a, temp_b;
 	unsigned int bit_15,bit_27,bits_26_to_16;
+
+	if (input_stream.type == MAPPED)
+		return 1;
 	//int	mapping_scheme;
 	//int	chan_count, rank_count, bank_count, col_count, row_count;
 	//int	chan_addr_depth, rank_addr_depth, bank_addr_depth, row_addr_depth, col_addr_depth;
@@ -578,7 +581,7 @@ enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
 		{
 			get_next_random_request(temp_t);
 		}
-		else if((input_stream.type == K6_TRACE) || (input_stream.type == MASE_TRACE))
+		else if((input_stream.type == K6_TRACE) || (input_stream.type == MASE_TRACE) || (input_stream.type == MAPPED))
 		{
 			static busEvent this_e;
 
@@ -589,7 +592,7 @@ enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
 			} 
 			else
 			{
-				temp_t->addr.phys_addr = this_e.address;
+				temp_t->addr = this_e.address;
 				// FIXME: ignores return type
 				convert_address(temp_t->addr);
 				++(temp_t->event_no);
@@ -764,7 +767,7 @@ time(0) // start the clock
 	unsigned cnt = 0;
 	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); ++i)
 	{
-		i->initRefreshQueue(system_config.row_count, system_config.refresh_time, cnt);
+		i->initRefreshQueue(system_config.row_count, system_config.refresh_time);
 		cnt++;
 	}
 }
