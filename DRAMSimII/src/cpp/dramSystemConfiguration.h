@@ -13,7 +13,7 @@ class dramSystemConfiguration
 private:
 	std::ifstream spd_file_ptr;
 	ordering_algorithm_t command_ordering_algorithm;	// strict or round robin 
-	int per_bank_queue_depth;							// command queue size
+	unsigned per_bank_queue_depth;							// command queue size
 	system_configuration_type_t config_type;
 	int refresh_time;									// loop time of refresh 
 	refresh_policy_t refresh_policy;					// 
@@ -21,13 +21,13 @@ private:
 	unsigned row_size;										// bytes per row (across one rank) 
 	unsigned row_count;										// rows per bank
 	unsigned col_count;										// columns per row
-	int cacheline_size;									// 32/64/128 etc 
-	int history_queue_depth;							// keep track of per channel command history 
-	int completion_queue_depth;							// keep track of per channel command history 
-	int transaction_queue_depth;						// input transaction queue depth 
-	int event_queue_depth;								// pending event queue depth 
-	int refresh_queue_depth;							// loop time of refresh 
-	int seniority_age_limit;
+	unsigned cacheline_size;									// 32/64/128 etc 
+	unsigned history_queue_depth;							// keep track of per channel command history 
+	unsigned completion_queue_depth;							// keep track of per channel command history 
+	unsigned transaction_queue_depth;						// input transaction queue depth 
+	unsigned event_queue_depth;								// pending event queue depth 
+	unsigned refresh_queue_depth;							// loop time of refresh 
+	unsigned seniority_age_limit;
 	dram_type_t dram_type; 
 	row_buffer_policy_t row_buffer_management_policy;	// row buffer management policy? OPEN/CLOSE, etc 
 	address_mapping_scheme_t addr_mapping_scheme;		// addr mapping scheme for physical to DRAM addr 
@@ -36,7 +36,7 @@ private:
 	bool read_write_grouping;
 	bool auto_precharge;								// issue cas and prec separately or together? 
 	int clock_granularity; 
-	int cachelines_per_row;								// dependent variable 
+	unsigned cachelines_per_row;								// dependent variable 
 	unsigned chan_count;										// How many logical channels are there ? 
 	unsigned rank_count;										// How many ranks are there per channel ? 
 	unsigned bank_count;										// How many banks per device? 
