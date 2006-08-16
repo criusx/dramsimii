@@ -157,5 +157,3 @@ enum transaction_type_t	dramChannel::set_read_write_type(const int rank_id,const
 	else
 		return WRITE_TRANSACTION;
 }
-
-

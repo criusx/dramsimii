@@ -102,7 +102,7 @@ void create_input_map_from_input_file(std::map<file_io_token_t, std::string> &,s
 
 
 
-
+class dramSystem;
 
 //typedef unsigned long long tick_t
 

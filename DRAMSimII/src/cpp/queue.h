@@ -179,7 +179,7 @@ public:
 			return FAILURE;
 		else if (item == NULL)
 		{
-			cerr << "Attempting to insert NULL into queue" << endl;
+			std::cerr << "Attempting to insert NULL into queue" << std::endl;
 			_exit(2);
 		}
 		else

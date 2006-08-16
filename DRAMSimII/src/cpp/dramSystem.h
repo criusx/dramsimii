@@ -11,7 +11,7 @@
 #include "simulationParameters.h"
 #include "dramStatistics.h"
 #include "dramAlgorithm.h"
-#include "inputStream.h"
+#include "InputStream.h"
 #include "event.h"
 #include "dramChannel.h"
 #include "enumTypes.h"

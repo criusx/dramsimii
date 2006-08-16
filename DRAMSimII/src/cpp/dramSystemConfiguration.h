@@ -47,7 +47,7 @@ public:
 	explicit dramSystemConfiguration(std::map<file_io_token_t,std::string> &);
 
 	// friends
-	friend dramSystem;
+	friend class dramSystem;
 	friend std::ostream &operator<<(std::ostream &, const dramSystem &);
 };
 

@@ -789,10 +789,3 @@ int dramSystem::find_oldest_channel() const
 	}
 	return oldest_chan_id;
 }
-
-
-
-
-
-
-

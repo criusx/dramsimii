@@ -30,7 +30,7 @@ private:
 public:
 	dramTimingSpecification(std::map<file_io_token_t, std::string> &);
 	friend std::ostream &operator<<( std::ostream&, const dramTimingSpecification &);
-	friend dramSystem;
+	friend class dramSystem;
 };
 
 #endif
