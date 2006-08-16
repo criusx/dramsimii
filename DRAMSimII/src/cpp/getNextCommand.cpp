@@ -32,7 +32,8 @@ command *dramSystem::getNextCommand(const int chan_id)
 	{
 	case STRICT_ORDER: // look for oldest command, execute that
 		{
-			tick_t oldest_command_time = TICK_T_MAX;
+			numeric_limits<tick_t> ll;
+			tick_t oldest_command_time = ll.max();
 			//bool foundSomething = false;			
 			vector<bank_c>::iterator oldest_bank_id;
 			vector<rank_c>::iterator oldest_rank_id;
@@ -86,7 +87,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 			}
 
 			// if there was a command found
-			if (oldest_command_time < TICK_T_MAX)
+			if (oldest_command_time < ll.max())
 			{
 				// if it was a refresh all command, then dequeue all n banks worth of commands
 				if (oldest_bank_id->per_bank_q.read_back()->this_command == REFRESH_ALL_COMMAND)

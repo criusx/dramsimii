@@ -21,7 +21,7 @@ To do list:
 #include <limits>
 
 #define tick_t long long
-#define TICK_T_MAX LLONG_MAX
+//#define TICK_T_MAX LLONG_MAX
 // class forward declarations
 class dramSystem;
 class dramSystemConfiguration;

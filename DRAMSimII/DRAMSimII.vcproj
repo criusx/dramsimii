@@ -216,7 +216,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\inputStream.cpp"
+				RelativePath=".\src\cpp\InputStream.cpp"
 				>
 			</File>
 			<File
