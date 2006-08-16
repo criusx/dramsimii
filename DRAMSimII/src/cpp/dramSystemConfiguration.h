@@ -17,10 +17,10 @@ private:
 	system_configuration_type_t config_type;
 	int refresh_time;									// loop time of refresh 
 	refresh_policy_t refresh_policy;					// 
-	int col_size;
-	int row_size;										// bytes per row (across one rank) 
-	int row_count;										// rows per bank
-	int col_count;										// columns per row
+	unsigned col_size;
+	unsigned row_size;										// bytes per row (across one rank) 
+	unsigned row_count;										// rows per bank
+	unsigned col_count;										// columns per row
 	int cacheline_size;									// 32/64/128 etc 
 	int history_queue_depth;							// keep track of per channel command history 
 	int completion_queue_depth;							// keep track of per channel command history 
@@ -37,9 +37,9 @@ private:
 	bool auto_precharge;								// issue cas and prec separately or together? 
 	int clock_granularity; 
 	int cachelines_per_row;								// dependent variable 
-	int chan_count;										// How many logical channels are there ? 
-	int rank_count;										// How many ranks are there per channel ? 
-	int bank_count;										// How many banks per device? 
+	unsigned chan_count;										// How many logical channels are there ? 
+	unsigned rank_count;										// How many ranks are there per channel ? 
+	unsigned bank_count;										// How many banks per device? 
 	double short_burst_ratio;
 	double read_percentage;
 
