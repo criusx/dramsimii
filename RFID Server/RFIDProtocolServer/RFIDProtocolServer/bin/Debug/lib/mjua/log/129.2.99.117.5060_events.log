@@ -1,120 +1,90 @@
 UA: REGISTRATION
-UA: UAC: CALLING 3014059702@inphonex.com
+UA: UAC: CALLING 3012330583@inphonex.com
 RegisterAgent: Registering contact <sip:3796001@129.2.99.117> (it expires in 300 secs)
 
-14:45:24.146 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
+15:17:50.618 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
 
 
-14:45:24.162 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
+15:17:50.618 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
 
 
-14:45:24.193 Tue 13 Jun 2006, 208.239.76.170:5060/udp (553 bytes): INVITE sip:3014059702@inphonex.com SIP/2.0, sent
 
+15:17:51.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
+15:17:51.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
 
-14:45:24.224 Tue 13 Jun 2006, 208.239.76.170:5060/udp (252 bytes): SIP/2.0 100 Trying, received
 
 
-14:45:24.255 Tue 13 Jun 2006, 208.239.76.170:5060/udp (503 bytes): SIP/2.0 407 Proxy Authentication Required, received
 
+15:17:52.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
+15:17:52.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
 
-14:45:24.287 Tue 13 Jun 2006, 208.239.76.170:5060/udp (721 bytes): INVITE sip:3014059702@inphonex.com SIP/2.0, sent
 
 
-14:45:24.287 Tue 13 Jun 2006, 208.239.76.170:5060/udp (334 bytes): ACK sip:3014059702@inphonex.com SIP/2.0, sent
+15:17:52.634 Tue 18 Jul 2006, 208.239.76.170:5060/udp (553 bytes): INVITE sip:3012330583@inphonex.com SIP/2.0, sent
 
 
-14:45:24.318 Tue 13 Jun 2006, 208.239.76.170:5060/udp (252 bytes): SIP/2.0 100 Trying, received
+15:17:52.634 Tue 18 Jul 2006, 208.239.76.170:5060/udp (553 bytes): INVITE sip:3012330583@inphonex.com SIP/2.0, sent
 
 
-14:45:24.646 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
+15:17:52.665 Tue 18 Jul 2006, 208.239.76.170:5060/udp (252 bytes): SIP/2.0 100 Trying, received
 
 
-14:45:24.646 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
+15:17:52.665 Tue 18 Jul 2006, 208.239.76.170:5060/udp (252 bytes): SIP/2.0 100 Trying, received
 
 
-14:45:24.771 Tue 13 Jun 2006, 208.239.76.170:5060/udp (721 bytes): INVITE sip:3014059702@inphonex.com SIP/2.0, sent
+15:17:52.712 Tue 18 Jul 2006, 208.239.76.170:5060/udp (503 bytes): SIP/2.0 407 Proxy Authentication Required, received
 
 
-14:45:24.802 Tue 13 Jun 2006, 208.239.76.170:5060/udp (252 bytes): SIP/2.0 100 Trying, received
+15:17:52.728 Tue 18 Jul 2006, 208.239.76.170:5060/udp (721 bytes): INVITE sip:3012330583@inphonex.com SIP/2.0, sent
 
 
-14:45:25.646 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
+15:17:52.728 Tue 18 Jul 2006, 208.239.76.170:5060/udp (334 bytes): ACK sip:3012330583@inphonex.com SIP/2.0, sent
 
 
-14:45:25.646 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
+15:17:52.775 Tue 18 Jul 2006, 208.239.76.170:5060/udp (252 bytes): SIP/2.0 100 Trying, received
 
 
-14:45:26.708 Tue 13 Jun 2006, 208.239.76.170:5060/udp (816 bytes): SIP/2.0 183 Session Progress, received
+15:17:53.228 Tue 18 Jul 2006, 208.239.76.170:5060/udp (721 bytes): INVITE sip:3012330583@inphonex.com SIP/2.0, sent
 
 
-14:45:27.645 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
+15:17:53.259 Tue 18 Jul 2006, 208.239.76.170:5060/udp (252 bytes): SIP/2.0 100 Trying, received
 
 
-14:45:27.645 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
 
+15:17:54.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
 
-14:45:28.770 Tue 13 Jun 2006, 208.239.76.170:5060/udp (721 bytes): INVITE sip:3014059702@inphonex.com SIP/2.0, sent
+15:17:54.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
 
 
-14:45:28.801 Tue 13 Jun 2006, 208.239.76.170:5060/udp (816 bytes): SIP/2.0 183 Session Progress, received
+15:17:55.290 Tue 18 Jul 2006, 208.239.76.170:5060/udp (818 bytes): SIP/2.0 183 Session Progress, received
 
 
-14:45:29.317 Tue 13 Jun 2006, 208.239.76.170:5060/udp (802 bytes): SIP/2.0 200 OK, received
+15:17:57.228 Tue 18 Jul 2006, 208.239.76.170:5060/udp (721 bytes): INVITE sip:3012330583@inphonex.com SIP/2.0, sent
 
 
-14:45:29.317 Tue 13 Jun 2006, 208.239.76.170:5060/udp (407 bytes): ACK sip:3014059702@208.239.76.170:5060;transport=udp SIP/2.0, sent
+15:17:57.259 Tue 18 Jul 2006, 208.239.76.170:5060/udp (818 bytes): SIP/2.0 183 Session Progress, received
 
-UA: ACCEPTED/CALL
-AudioLauncher: starting java audio..
 
-14:45:31.660 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
+15:17:58.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
 
 
-14:45:31.660 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
+15:17:58.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
 
 
+15:18:01.228 Tue 18 Jul 2006, 208.239.76.170:5060/udp (721 bytes): INVITE sip:3012330583@inphonex.com SIP/2.0, sent
 
-14:45:35.659 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
-14:45:35.659 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
 
+15:18:01.259 Tue 18 Jul 2006, 208.239.76.170:5060/udp (818 bytes): SIP/2.0 183 Session Progress, received
 
 
-14:45:39.658 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
+15:18:02.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
 
 
-14:45:39.658 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
+15:18:02.103 Tue 18 Jul 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
 
 
-14:45:43.657 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
+15:18:02.243 Tue 18 Jul 2006, 208.239.76.170:5060/udp (367 bytes): CANCEL sip:3012330583@inphonex.com SIP/2.0, sent
 
 
-14:45:43.657 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
+15:18:02.275 Tue 18 Jul 2006, 208.239.76.170:5060/udp (273 bytes): SIP/2.0 200 OK, received
 
-
-14:45:47.656 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
-
-
-14:45:47.656 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
-
-
-14:45:51.655 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
-
-
-14:45:51.655 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
-
-
-14:45:55.654 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, sent
-
-
-14:45:55.654 Tue 13 Jun 2006, 129.2.99.117:5060/udp (356 bytes): REGISTER sip:129.2.99.117 SIP/2.0, received
-
-RegisterAgent: Registration failure: No response from server.
-UA: Registration failure: Timeout
-
-14:46:45.768 Tue 13 Jun 2006, 208.239.76.170:5060/udp (412 bytes): BYE sip:3796001@129.2.99.117 SIP/2.0, received
-
-
-14:46:45.768 Tue 13 Jun 2006, 208.239.76.170:5060/udp (311 bytes): SIP/2.0 200 OK, sent
-
-UA: CLOSE
-AudioLauncher: halting java audio..

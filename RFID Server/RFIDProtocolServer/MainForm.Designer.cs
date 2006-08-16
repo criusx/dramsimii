@@ -42,9 +42,9 @@ namespace RFIDProtocolServer
 			// textBox1
 			// 
 			this.textBox1.FormattingEnabled = true;
-			this.textBox1.Location = new System.Drawing.Point(12, 50);
+			this.textBox1.Location = new System.Drawing.Point(1, 50);
 			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(642, 888);
+			this.textBox1.Size = new System.Drawing.Size(636, 641);
 			this.textBox1.TabIndex = 0;
 			// 
 			// usernameBox
@@ -109,7 +109,7 @@ namespace RFIDProtocolServer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(666, 954);
+			this.ClientSize = new System.Drawing.Size(636, 617);
 			this.Controls.Add(this.dataSourceLabel);
 			this.Controls.Add(this.passwordLabel);
 			this.Controls.Add(this.usernameLabel);

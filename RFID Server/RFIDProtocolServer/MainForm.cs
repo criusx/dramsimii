@@ -10,25 +10,26 @@ using System.Windows.Forms;
 using System.Net.Sockets;
 using System.IO;
 using Oracle.DataAccess.Client;
+using Oracle.DataAccess.Types;
 
 
 using RFIDProtocolLib;
 
 namespace RFIDProtocolServer
 {
-    public partial class MainForm : Form
-    {
-        public MainForm()
-        {
-            InitializeComponent();
+	public partial class MainForm : Form
+	{
+		public MainForm()
+		{
+			InitializeComponent();
 			messages = new ArrayList();
 			messagesLock = new Mutex();
-        }
+		}
 
-        Daemon d;
-        bool isRunning;
+		Daemon d;
+		bool isRunning;
 		int port = 5060;
-        string PhoneNumber = "3012330583";
+		string PhoneNumber = "3012330583";
 
 		private ArrayList messages;
 		private Mutex messagesLock;
@@ -38,93 +39,89 @@ namespace RFIDProtocolServer
 
 		//private static OracleConnection c;
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            isRunning = true;
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			isRunning = true;
 
-            Thread t = new Thread(new ThreadStart(RunDaemon));
-            t.Start();
+			Thread t = new Thread(new ThreadStart(RunDaemon));
+			t.Start();
 			//timer1.Interval = 1000;
 			//timer1.`
 			timer1.Enabled = true;
-        }
+		}
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            isRunning = false;
-        }
+		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			isRunning = false;
+		}
 
-        private void RunDaemon()
-        {
-            try
-            {
+		private void RunDaemon()
+		{
+			try
+			{
 
-                d = new Daemon(Daemon.PORT);
-                Console.Out.WriteLine("Starting Daemon...");
-                d.Start();
-                d.BeginAcceptClientConnection(new AsyncCallback(AcceptClient), d);
-                Console.Out.WriteLine("Daemon listening...");
+				d = new Daemon(Daemon.PORT);
+				Console.Out.WriteLine("Starting Daemon...");
+				d.Start();
+				d.BeginAcceptClientConnection(new AsyncCallback(AcceptClient), d);
+				Console.Out.WriteLine("Daemon listening...");
 
-                while (isRunning)
-                {
-                    Thread.Sleep(10);
-                }
-            }
-            catch (Exception)
-            {
-            }
+				while (isRunning)
+				{
+					Thread.Sleep(10);
+				}
+			}
+			catch (Exception)
+			{
+			}
 
-            Console.Out.WriteLine("Closing Daemon...");
+			Console.Out.WriteLine("Closing Daemon...");
 
-            d.Stop();
-        }
+			d.Stop();
+		}
 
-        private void AcceptClient(IAsyncResult result)
-        {
-            Console.Out.WriteLine("Received new client");
-            Daemon d = (Daemon)result.AsyncState;
-            ServerConnection s = d.EndAcceptClientConnection(result);
-            Thread t = new Thread(new ParameterizedThreadStart(RunServer));
-            t.Start(s);
+		private void AcceptClient(IAsyncResult result)
+		{
+			Console.Out.WriteLine("Received new client");
+			Daemon d = (Daemon)result.AsyncState;
+			ServerConnection s = d.EndAcceptClientConnection(result);
+			Thread t = new Thread(new ParameterizedThreadStart(RunServer));
+			t.Start(s);
 
-            d.BeginAcceptClientConnection(new AsyncCallback(AcceptClient), d);
-        }
+			d.BeginAcceptClientConnection(new AsyncCallback(AcceptClient), d);
+		}
 
-        private void RunServer(object obj)
-        {
-            Console.Out.WriteLine("Client thread running");
-            ServerConnection s = (ServerConnection)obj;
+		private void RunServer(object obj)
+		{
+			Console.Out.WriteLine("Client thread running");
+			ServerConnection s = (ServerConnection)obj;
 
-			string MyConString = "User Id=" + usernameBox.Text +";" +
+			string MyConString = "User Id=" + usernameBox.Text + ";" +
 				"Password=" + passwordBox.Text + ";" +
 				"Data Source=" + dataSourceBox.Text;
-
-			string Latitude = "00 00.00N";
-			string Longitude = "00 00.00W";
-			int IsScan = 0;
-
-            int numberOfQueries = -1;
+					
+			int numberOfQueries = -1;
 			ArrayList inventoryTags = new ArrayList();
 			bool done = false;
 
-            s.WaitForConnectPacket();
-			Console.Out.WriteLine("Got conntect packet.");
-            s.SendConnectResponsePacket();
+			s.WaitForConnectPacket();
+			Console.Out.WriteLine("Got connect packet.");
+			s.SendConnectResponsePacket();
 			Console.Out.WriteLine("Sent response connect.");
 
-            try
-            {
-                while (isRunning && s.Connected && !done)
-                {
-                    if (!s.GetStream().DataAvailable)
-                    {
-                        Thread.Sleep(5);
-                        continue;
-                    }
+			try
+			{
+				while (isRunning && s.Connected && !done)
+				{
+					if (!s.GetStream().DataAvailable)
+					{
+						Thread.Sleep(5);
+						continue;
+					}
 
-                    TLV newPacket = new TLV();
+					TLV newPacket = new TLV();
 
-                    newPacket.ReadFromStream(s.GetStream());
+					newPacket.ReadFromStream(s.GetStream());
 
 
 					if (newPacket.Type == 0)
@@ -132,37 +129,34 @@ namespace RFIDProtocolServer
 						continue;
 					}
 
-                    switch (newPacket.Type)
-                    {
-                        case QueryRequest.Type:
-                            {
-                                numberOfQueries += 1;
-                                QueryRequest req = new QueryRequest(newPacket.Value);
+					switch (newPacket.Type)
+					{
+						case QueryRequest.Type:
+							{
+								numberOfQueries += 1;
+								QueryRequest req = new QueryRequest(newPacket.Value);
 								byte[] bytes = new byte[12];
 								bytes = req.Rfid.GetBytes();
 								bytes[11] += 0x18;
 								req.Rfid = new RFID(bytes);
-                                //System.Console.WriteLine("Querying for {0}", req.Rfid.ToString());
+
 								inventoryTags.Add(new ListItem(new RFID(bytes)));
-                                //QueryResponse response = DBBackend.QueryRFID(req, s);
-                                //System.Console.WriteLine("Writing back {0}", response.ShortDesc);
-                                //s.SendQueryResponsePacket(response);
-                            } break;
-                        case SetPhoneNumberRequest.Type:
-                            {
-                                SetPhoneNumberRequest req = new SetPhoneNumberRequest(newPacket.Value);
+							} break;
+						case SetPhoneNumberRequest.Type:
+							{
+								SetPhoneNumberRequest req = new SetPhoneNumberRequest(newPacket.Value);
 								if (req.PhoneNumber == "00000000")
 								{
 									done = true;
 									break;
 								}
-                                System.Console.WriteLine("Setting phone # to {0}", req.PhoneNumber);
-                                PhoneNumber = req.PhoneNumber;
-                                SetPhoneNumberResponse resp = new SetPhoneNumberResponse();
-                                s.SendSetPhoneNumberPacket(resp);
-                            } break;
-                        case RaiseAlertRequest.Type:
-                            {
+								System.Console.WriteLine("Setting phone # to {0}", req.PhoneNumber);
+								PhoneNumber = req.PhoneNumber;
+								SetPhoneNumberResponse resp = new SetPhoneNumberResponse();
+								s.SendSetPhoneNumberPacket(resp);
+							} break;
+						case RaiseAlertRequest.Type:
+							{
 								s.SendRaiseAlertPacket(new RaiseAlertResponse());
 
 								// now go do requests
@@ -170,12 +164,15 @@ namespace RFIDProtocolServer
 								c.Open();
 
 								OracleCommand cmd = new OracleCommand();
-								cmd.Connection = c;                                
+								cmd.Connection = c;
+
+								string currentTime = DateTime.Now.ToString();
 
 								cmd.CommandText = "INSERT INTO alerts VALUES(alertnum_seq.nextval" +
 									",'" + "313233343536000000000046" +
 									"','" + PhoneNumber.ToString() +
-									"',2,0,'root@localhost','Radiation alert.'," + "'313233343536000000000046'" + ")";
+									"',2,0,'root@localhost','Radiation alert.'," + "'313233343536000000000046'" +
+									"TO_DATE('" + currentTime + "','MM/DD/YY HH:MI:SS AM'))" + ")";
 								System.Console.WriteLine(cmd.CommandText);
 								cmd.ExecuteNonQuery();
 
@@ -186,274 +183,317 @@ namespace RFIDProtocolServer
 
 								c.Close();
 								c.Dispose();
-                                VoIP.VoIPConnection voip = new VoIP.VoIPConnection("3796001", "bello", "inphonex.com", port.ToString(), "300");
-                                voip.call(PhoneNumber, "temp1.raw");
+								VoIP.VoIPConnection voip = new VoIP.VoIPConnection("3796001", "bello", "inphonex.com", port.ToString(), "300");
+								voip.call(PhoneNumber, "temp1.raw");
 								port++;
-                            } break;
+							} break;
+
+
 						case InfoPacket.Type: //InfoPacket Type, also signals the end of the tag stream
 							{
 								InfoPacket iP = new InfoPacket(newPacket.Value);
-								Latitude = iP.Latitude;
-								Longitude = iP.Longitude;
-								IsScan = iP.isScan;								
-							
+
+								OracleConnection c = null;
+								OracleTransaction Txn = null;
+								OracleCommand cmd = null;
+								OracleGlobalization info = OracleGlobalization.GetClientInfo();
+								info.DateFormat = "MM/DD/YY HH:MI:SS AM";
+								OracleGlobalization.SetThreadInfo(info);
+
 								try
 								{
 									// now go do requests
-									OracleConnection c = new OracleConnection(MyConString);
+									c = new OracleConnection(MyConString);
 									c.Open();
+									Txn = c.BeginTransaction(IsolationLevel.ReadCommitted);
 
-									// first figure out which of these is a container
-									int containerFound = -1;
-									OracleCommand cmd = new OracleCommand();
+									cmd = new OracleCommand();
 									cmd.Connection = c;
 
-									for (int i = 0; i < inventoryTags.Count; ++i)
+									// determine the container's RFID
+									cmd.CommandText =
+										"SELECT rfid " +
+										"FROM descriptions " +
+										"WHERE shortdesc = 'Shipping Container 42D' AND (";
+
+									for (int j = 0; j < inventoryTags.Count; j++)
 									{
-										cmd.CommandText = "SELECT shortDesc " +
-											"FROM Descriptions WHERE rfid='" +
-											inventoryTags[i].ToString() + "'";
-										System.Console.WriteLine(cmd.CommandText);
+										cmd.CommandText += "rfid='" + inventoryTags[j].ToString();
 
-										messagesLock.WaitOne();
-										messages.Add(cmd.CommandText);
-										messagesLock.ReleaseMutex();
-										
-
-										OracleDataReader reader = cmd.ExecuteReader();
-										while (reader.Read())
-											((ListItem)inventoryTags[i]).shortDesc = (string)reader.GetString(0);
-											if ((containerFound == -1) && (((ListItem)inventoryTags[i]).shortDesc == "Shipping Container 42D"))
-											{
-												System.Console.WriteLine(inventoryTags[i].ToString() + " is a container");
-												containerFound = i;
-												continue;
-											}
-										System.Console.WriteLine(inventoryTags[i].ToString());
-
-										messagesLock.WaitOne();
-										messages.Add(inventoryTags[i].ToString());
-										messagesLock.ReleaseMutex();
+										if (j < inventoryTags.Count - 1)
+											cmd.CommandText += "' OR ";
+										else
+											cmd.CommandText += "')";
 									}
 
-									ArrayList oldInvList = new ArrayList(); // the items checked in or added in the last scan
-									
+									writeLog(ref cmd);
+
+									OracleDataReader reader = cmd.ExecuteReader();
+
+									reader.Read();
+									string containerRFID = reader.GetString(0);
+
+									decimal manifestNum;
+
 									// if a new manifest needs to be made, do so, else
 									// just add to the table
-									if (containerFound >= 0)
+									if (iP.isScan == 0)
 									{
-										string currentTime = DateTime.Now.ToString();
+										// get a new manifestnum for the parent
+										cmd.CommandText =
+											"INSERT INTO manifest " +
+											"VALUES( manifestnum_seq.nextval,'" +
+											containerRFID + "',TO_DATE('" +
+											iP.dateTime + "','MM/DD/YY HH:MI:SS AM'))";
 
-										if (IsScan == 0) // time to autogen a new manifest
+										writeLog(ref cmd);
+
+										cmd.ExecuteNonQuery();
+
+										// insert items as child scans
+										for (int i = 0; i < inventoryTags.Count; ++i)
 										{
-											// get a new manifestnum for the parent
-											cmd.CommandText = "INSERT INTO manifest " +
-												"VALUES( manifestnum_seq.nextval,'" +
-												inventoryTags[containerFound].ToString() + "',TO_DATE('" +
-												currentTime + "','MM/DD/YY HH:MI:SS AM'))";
-											System.Console.WriteLine(cmd.CommandText);
+											cmd.CommandText =
+												"INSERT INTO scans " +
+												"VALUES(manifestnum_seq.currval,'" +
+												inventoryTags[i].ToString() + "','',TO_DATE('" +
+												iP.dateTime + "','MM/DD/YY HH:MI:SS AM'),'" +
+												iP.Latitude + "','" +
+												iP.Longitude + "'," +
+												"0,0,0)";
 
-											messagesLock.WaitOne();
-											messages.Add(cmd.CommandText);
-											messagesLock.ReleaseMutex();
+											writeLog(ref cmd);
 
 											cmd.ExecuteNonQuery();
-
-											// insert items as child scans
-											for (int i = 0; i < inventoryTags.Count; ++i)
-											{
-												cmd.CommandText = "INSERT INTO scans " +
-													"VALUES( manifestnum_seq.currval,'" +
-													inventoryTags[i].ToString() + "','',TO_DATE('" +
-													currentTime + "','MM/DD/YYYY HH:MI:SS AM'),'" +
-													Latitude + "','" +
-													Longitude + "'," +
-													"0,0,0)";
-												System.Console.WriteLine(cmd.CommandText);
-												messagesLock.WaitOne();
-												messages.Add(cmd.CommandText);
-												messagesLock.ReleaseMutex();
-												cmd.ExecuteNonQuery();
-											}
 										}
-										else // else make sure nothing is missing, then add items
+
+										// get the manifest number, to be used in retrieving the whole manifest later
+										cmd.CommandText =
+											"SELECT manifestnum_seq.currval FROM scans";
+
+										writeLog(ref cmd);
+
+										reader = cmd.ExecuteReader();
+
+										if (reader.Read())
+											manifestNum = reader.GetDecimal(0);
+										else
 										{
-											// first determine the manifest number for this shipment
-											cmd.CommandText = "SELECT max(manifest_num) " +
-												"FROM manifest " +
-												"WHERE rfid = '" + inventoryTags[containerFound].ToString() + "'";
-											System.Console.WriteLine(cmd.CommandText);
-											messagesLock.WaitOne();
-											messages.Add(cmd.CommandText);
-											messagesLock.ReleaseMutex();
-											OracleDataReader reader = cmd.ExecuteReader();
-											reader.Read();
-											decimal manifestNum;
-											
-											if (!reader.IsDBNull(0))
-												manifestNum = reader.GetDecimal(0);
-											else
-											{
-												System.Console.WriteLine("Subsequent scan without manifest");
-												messagesLock.WaitOne();
-												messages.Add("Subsequent scan without manifest");
-												messagesLock.ReleaseMutex();
-												return;
-											}
-											reader.Close();
-
-											// then get the manifest as updated at the last stop
-											cmd.CommandText = "SELECT rfid " +
-												"FROM scans " +
-												"WHERE manifest_num = " + manifestNum.ToString() + " " +
-												"AND (added_removed != 'Removed' OR added_removed is null) " +
-												"AND scantime = (SELECT MAX(scantime) " +
-												"FROM scans " +
-												"WHERE manifest_num = " + manifestNum.ToString() + ")";
-											System.Console.WriteLine(cmd.CommandText);
-											messagesLock.WaitOne();
-											messages.Add(cmd.CommandText);
-											messagesLock.ReleaseMutex();
-
-											reader = cmd.ExecuteReader();
-
-											// build an arraylist of the items from the last scan
-											while (reader.Read())
-											{
-												if (!reader.IsDBNull(0))
-													oldInvList.Add(new ListItem(new RFID(reader.GetString(0))));												
-											}
-											reader.Close();
-
-											ArrayList checkedIn = new ArrayList();
-
-											// remove the items from this scan from the list of items
-											// in the last scan, leaving the missing items
-											for (int jj = 0; jj < inventoryTags.Count; ++jj)
-											{
-												((ListItem)inventoryTags[jj]).missingAdded = 1;
-												for (int j = 0; j < oldInvList.Count; ++j)
-													if (oldInvList[j].ToString() == inventoryTags[jj].ToString())
-													{
-														checkedIn.Add(inventoryTags[jj]);
-														((ListItem)inventoryTags[jj]).missingAdded = 0;
-														oldInvList.RemoveAt(j);
-														break;
-													}
-											}
-
-											// if anything is missing, create an alert for now
-											// later this will possibly be "removed"
-											for (int j = 0; j < oldInvList.Count; ++j)
-											{
-												cmd.CommandText =
-													"INSERT INTO alerts VALUES(alertnum_seq.nextval" +
-													",'" + inventoryTags[containerFound].ToString() +
-													"','" + PhoneNumber.ToString() +
-													"',2,0,'root@localhost','From " + inventoryTags[containerFound].ToString() +
-													" RFID " + oldInvList[j].ToString() + "is missing.'," + oldInvList[j].ToString() + ")";												
-												System.Console.WriteLine(cmd.CommandText);
-												messagesLock.WaitOne();
-												messages.Add(cmd.CommandText);
-												messagesLock.ReleaseMutex();
-												cmd.ExecuteNonQuery();
-											}
-											// insert items as child scans
-											for (int i = 0; i < checkedIn.Count; ++i)
-											{
-												cmd.CommandText = "INSERT INTO scans " +
-													"VALUES( " + manifestNum.ToString() + ",'" +
-													checkedIn[i].ToString() + "','',TO_DATE('" +
-													currentTime + "','MM/DD/YYYY HH:MI:SS AM'),'" +
-													Latitude + "','" +
-													Longitude + "'," +
-													"0,0,0)";
-												System.Console.WriteLine(cmd.CommandText);
-												messagesLock.WaitOne();
-												messages.Add(cmd.CommandText);
-												messagesLock.ReleaseMutex();
-												cmd.ExecuteNonQuery();
-											}										
+											writeLog("Scan couldn't generate a manifest_num");
+											return;
 										}
-										cmd.CommandText = "commit";
-										System.Console.WriteLine(cmd.CommandText);
-										messagesLock.WaitOne();
-										messages.Add(cmd.CommandText);
-										messagesLock.ReleaseMutex();
+										reader.Close();
+									}
+									else // then it is a scan and does not create a manifest, but does need to look for added/missing items 
+									{
+										// get manifest number based on container RFID
+										cmd.CommandText =
+											"SELECT max(manifest_num) " +
+											"FROM manifest " +
+											"WHERE rfid = '" + containerRFID + "'";
+
+										writeLog(ref cmd);
+
+										reader = cmd.ExecuteReader();
+										reader.Read();
+
+										if (!reader.IsDBNull(0))
+											manifestNum = reader.GetDecimal(0);
+										else
+										{
+											writeLog("Subsequent scan without container tag");
+											return;
+										}
+										
+										// insert items as child scans, add missing items later
+										// mark items as unexpected later also
+										for (int i = 0; i < inventoryTags.Count; ++i)
+										{
+											cmd.CommandText = "INSERT INTO scans " +
+												"VALUES( " + manifestNum.ToString() + ",'" +
+												inventoryTags[i].ToString() + "','',TO_DATE('" +
+												iP.dateTime + "','MM/DD/YY HH:MI:SS AM'),'" +
+												iP.Latitude + "','" +
+												iP.Longitude + "'," +
+												"0,0,0)";
+
+											writeLog(ref cmd);
+
+											cmd.ExecuteNonQuery();
+										}
+
+										// do the updates using a stored procedure
+										cmd.CommandText = "UpdateScans";
+
+										cmd.BindByName = true;
+										
+										cmd.CommandType = CommandType.StoredProcedure;
+										
+										OracleParameter prm1 = cmd.Parameters.Add("in_manifest_num", OracleDbType.Decimal);
+										prm1.Direction = ParameterDirection.Input;
+										prm1.Value = manifestNum;
+
+										OracleDate in_scantime = new OracleDate(iP.dateTime);
+										OracleParameter prm2 = cmd.Parameters.Add("in_scantime", OracleDbType.Date);
+										prm2.Direction = ParameterDirection.Input;
+										prm2.Value = in_scantime;
+
+										writeLog(ref cmd);
+
 										cmd.ExecuteNonQuery();
 									}
 
-									// finally, send back the short descriptions
-									for (int k = 0; k < inventoryTags.Count; ++k)
+									// now return the manifest, along with descriptions
+									cmd.Parameters.Clear();
+									cmd.CommandType = CommandType.Text;
+									cmd.CommandText =
+										"SELECT scans.rfid,scans.added_removed,descriptions.shortdesc " +
+										"FROM scans,descriptions " +
+										"WHERE scans.scantime=to_date('" + iP.dateTime + "','MM/DD/YY HH:MI:SS AM') " +
+										"AND scans.rfid = descriptions.rfid " +
+										"AND scans.manifest_num=" + manifestNum + " " +
+										"ORDER BY scans.rfid asc";
+
+									writeLog(ref cmd);
+
+									reader = cmd.ExecuteReader();
+
+									if (reader.HasRows)
 									{
-										if (k != inventoryTags.Count - 1)
-											s.SendQueryResponsePacket(new QueryResponse(((ListItem)inventoryTags[k]).shortDesc, "", "", true, ((ListItem)inventoryTags[k]).missingAdded, inventoryTags[k].ToString()));
-										else
+										while (reader.Read())
 										{
-											if (oldInvList.Count > 0)
-												s.SendQueryResponsePacket(new QueryResponse(((ListItem)inventoryTags[k]).shortDesc, "", "", true, ((ListItem)inventoryTags[k]).missingAdded, inventoryTags[k].ToString()));
+											string currentTag = reader.GetString(0);
+											string addedRemoved;
+											if (!reader.IsDBNull(1))
+												addedRemoved = reader.GetString(1);
 											else
-												s.SendQueryResponsePacket(new QueryResponse(((ListItem)inventoryTags[k]).shortDesc, "", "", false, ((ListItem)inventoryTags[k]).missingAdded, inventoryTags[k].ToString()));
+												addedRemoved = "";
+											string currentDesc = reader.GetString(2);
+											int addedRemovedNum;
+
+											if (addedRemoved == "UNEXPECTED")
+												addedRemovedNum = 1;
+											else if (addedRemoved == "MISSING")
+												addedRemovedNum = -1;
+											else
+												addedRemovedNum = 0;
+
+											s.SendQueryResponsePacket(new QueryResponse(currentDesc, -1, "", addedRemovedNum, currentTag));
 										}
 									}
-									for (int l = 0; l < oldInvList.Count; ++l)
-									{
-										cmd.CommandText = "SELECT shortDesc FROM descriptions WHERE rfid='" + oldInvList[l].ToString() + "'";
-										OracleDataReader reader = cmd.ExecuteReader();
-										messagesLock.WaitOne();
-										messages.Add(cmd.CommandText);
-										messagesLock.ReleaseMutex();
-										reader.Read();
-										string desc;
-										if (!reader.IsDBNull(0))
-											desc = reader.GetString(0);
-										else
-											desc = oldInvList[l].ToString();
-
-										if (l != oldInvList.Count -1)
-											s.SendQueryResponsePacket(new QueryResponse(desc, "", "",true,-1,oldInvList[l].ToString()));
-										else
-											s.SendQueryResponsePacket(new QueryResponse(desc, "", "", false, -1, oldInvList[l].ToString()));
-									}
-									inventoryTags.Clear();
-									c.Close();
-									c.Dispose();
+									s.SendQueryResponsePacket(new QueryResponse(" ", int.Parse(manifestNum.ToString()), " ", 0, " "));
+									
+									Txn.Commit();
 								}
 								catch (Exception e)
 								{
-									System.Console.Out.WriteLine(e.Message);
+									writeLog(e.Message);
 								}
-								
-							}break;
+								finally
+								{
+									if (Txn != null)
+										Txn.Dispose();
+									if (cmd != null)
+										cmd.Dispose();
+									if (c != null && c.State == ConnectionState.Open)
+										c.Close();
+									c.Dispose();
+								}
+
+							} break;
+
+						case addRemoveItem.Type:
+
+							addRemoveItem aRI = new addRemoveItem(newPacket.Value);
+							OracleConnection con = null;
+							OracleCommand orCmd = null;
+
+							try
+							{
+
+								// now go do requests
+								con = new OracleConnection(MyConString);
+								con.Open();
+
+								orCmd = new OracleCommand();
+								orCmd.Connection = con;
+
+								if (aRI.remove == true)
+								{
+
+									// for normal items
+									orCmd.CommandText =
+										"UPDATE scans " +
+										"SET added_removed = 'REMOVED' " +
+										"WHERE rfid=" + aRI.hostID + " " +
+										"AND scantime=to_date('" + aRI.dateTime +
+										"','MM/DD/YY HH:MI:SS AM') " +
+										"AND manifest_num=" + aRI.manifestNum;
+									writeLog(ref orCmd);
+									orCmd.ExecuteNonQuery();
+								}
+								else
+								{
+									// for missing items
+									orCmd.CommandText =
+											"UPDATE scans " +
+											"SET added_removed = 'ADDED' " +
+											"WHERE rfid=" + aRI.hostID + " " +
+											"AND scantime=to_date('" + aRI.dateTime +
+											"','MM/DD/YY HH:MI:SS AM') " +
+											"AND manifest_num=" + aRI.manifestNum;
+									writeLog(ref orCmd);
+									orCmd.ExecuteNonQuery();
+								}
+
+							}
+							catch (Exception e)
+							{
+								writeLog(e.Message);
+							}
+							finally
+							{
+								if (orCmd != null)
+									orCmd.Dispose();
+								if (con != null && con.State == ConnectionState.Open)
+									con.Close();
+								con.Dispose();
+							}
+							break;
+
 						default:
 							{
 								throw new Exception("Bad protocol type");
-							} break;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-				Console.Out.WriteLine(e.Message);
-				messagesLock.WaitOne();
-				messages.Add(e.Message);
-				messagesLock.ReleaseMutex();
-            }
+							}
+							break;
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				writeLog(e.Message.ToString());
+			}
 
-            /*if (numberOfQueries > 0 && numberOfQueries != 4)
-            {
-                Console.Out.WriteLine("Manifest wrong!");
-                DBBackend.Status = 3;
-                VoIP.VoIPConnection voip = new VoIP.VoIPConnection("3796001", "bello", "inphonex.com", "5060", "300");
-                voip.call(PhoneNumber, "temp1.raw");
-            } */
+			s.Close();
+			//Console.Out.WriteLine("Client closed");
+			writeLog("Client closed");
+		}
 
-            s.Close();
-            Console.Out.WriteLine("Client closed");
+		private void writeLog(string str)
+		{
+			System.Console.WriteLine(str);
 			messagesLock.WaitOne();
-			messages.Add("Client Closed");
+			messages.Add(str);
 			messagesLock.ReleaseMutex();
-        }
+		}
+
+		private void writeLog(ref OracleCommand cmd)
+		{
+			System.Console.WriteLine(cmd.CommandText);
+			messagesLock.WaitOne();
+			messages.Add(cmd.CommandText);
+			messagesLock.ReleaseMutex();
+		}
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
@@ -471,7 +511,7 @@ namespace RFIDProtocolServer
 			}
 		}
 
-    }
+	}
 
 	//ListItem class
 	public class ListItem

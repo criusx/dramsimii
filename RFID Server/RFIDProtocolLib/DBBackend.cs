@@ -114,7 +114,7 @@ namespace RFIDProtocolLib
 				ldesc = "No entry for this RFID";
 			}
 
-			return new QueryResponse(sdesc, ldesc, "doesn't matter",false,-1,"0");
+			return new QueryResponse(sdesc, 0, "doesn't matter",-1,"0");
 		}
 
 		private static void Close()
