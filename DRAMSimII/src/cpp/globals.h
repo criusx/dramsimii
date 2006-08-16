@@ -30,6 +30,7 @@ class dramAlgorithm;
 class rank_c;
 class bank_c;
 class transaction;
+class command;
 
 #include <iostream>
 #include <map>

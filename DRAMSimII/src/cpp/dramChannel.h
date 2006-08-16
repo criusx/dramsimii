@@ -11,9 +11,8 @@
 class dramChannel
 {
 private:
-	tick_t time; // channel time, allow for channel concurrency
-	//rank_c *rank; // pointer to the array of ranks
-	std::vector<rank_c> rank;// pointer to the array of ranks
+	tick_t time; // channel time, allow for channel concurrency	
+	std::vector<rank_c> rank;// vector of the array of ranks
 	int refresh_row_index; // the row index to be refreshed
 	tick_t last_refresh_time; // tells me when last refresh was done
 	int last_rank_id; // id of the last accessed rank of this channel

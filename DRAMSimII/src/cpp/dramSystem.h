@@ -6,6 +6,7 @@
 #include <iostream>
 #include "globals.h"
 #include "addresses.h"
+#include "command.h"
 #include "dramSystemConfiguration.h"
 #include "dramTimingSpecification.h"
 #include "simulationParameters.h"
@@ -49,7 +50,6 @@ private:
 
 public:
 	explicit dramSystem(std::map<file_io_token_t,std::string> &);
-	~dramSystem();
 	friend std::ostream &operator<<(std::ostream &, const dramSystem &);
 	void run_simulations();
 	void run_simulations2();
