@@ -63,6 +63,7 @@ namespace WJ2
 
         private string containerID;
         private string lastDateTime;
+        private int manifestNum;
 
         private int selectedIndex;
 
@@ -360,21 +361,22 @@ namespace WJ2
                             cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0, 15) + NorS, longitude.ToString("N15").Substring(0, 15) + EorW, lastDateTime, isScan));
 
                             // receive descriptions of items submitted
-                            bool more = true;
+                            manifestNum = -1;
                             int j = 0;
 
-                            while (more)
+                            while (manifestNum == -1)
                             {
                                 QueryResponse qr = cc.WaitForQueryResponsePacket();
 
-                                if (qr.ShortDesc == "Shipping Container 42D")
-                                    containerID = qr.rfidNum;
+                                if ((manifestNum = qr.manifestNum) == -1)
+                                {
+                                    if (qr.ShortDesc == "Shipping Container 42D")
+                                        containerID = qr.rfidNum;
 
-                                custList.Insert(j, new ListItem(qr.rfidNum,qr.ShortDesc, qr.addedRemoved));
+                                    custList.Insert(j, new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
 
-                                j++;
-
-                                more = qr.more;
+                                    j++;
+                                }
                             }
 
                             cc.Close();
@@ -388,7 +390,7 @@ namespace WJ2
 
                         for (int i = 0; i < inventoryTags.Count; ++i)
                         {
-                            custList.Insert(i, new ListItem(inventoryTags[i].ToString(), "", -1));
+                            custList.Insert(i, new ListItem(inventoryTags[i].ToString(), "", -2)); // -2 for unknown status
                         }
                     }
                     scanButton.Enabled = true;
@@ -510,7 +512,9 @@ namespace WJ2
                     cc.WaitForConnectResponsePacket();
 					
                     // send command to remove this item
-                    cc.sendAddRemovePacket(new addRemoveItem(lastDateTime,((ListItem)custList.Items[selectedIndex]).RFIDNum,containerID,true));
+                    cc.sendAddRemovePacket(new addRemoveItem(lastDateTime,((ListItem)custList.Items[selectedIndex]).RFIDNum,containerID,true,manifestNum));
+
+                    cc.Close();
 					break;
 				case 1: // add
                     cc = new ClientConnection();
@@ -523,7 +527,9 @@ namespace WJ2
                     cc.WaitForConnectResponsePacket();
 
 					// send command to add this item to the manifest
-                    cc.sendAddRemovePacket(new addRemoveItem(lastDateTime, ((ListItem)custList.Items[selectedIndex]).RFIDNum, containerID, false));
+                    cc.sendAddRemovePacket(new addRemoveItem(lastDateTime, ((ListItem)custList.Items[selectedIndex]).RFIDNum, containerID, false,manifestNum));
+                    cc.Close();
+                    
 					break;
                 case 0:
                     string selectedTag = inventoryTags[selectedIndex].ToString().Replace(" ", "");
@@ -568,6 +574,7 @@ namespace WJ2
             }
             catch (Exception ex)
             {
+                gpsButton.Text = "GPSConnect";
                 MessageBox.Show(ex.Message.ToString());
             }
         }

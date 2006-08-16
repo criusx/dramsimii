@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace RFIDProtocolLib
 {
-    
+
 
     #region Query
 
@@ -54,22 +54,22 @@ namespace RFIDProtocolLib
         /// The ShortDesc.
         /// </summary>
         public string ShortDesc;
+
         /// <summary>
-        /// The long description.
+        /// The manifest number, for future reference.
         /// </summary>
-        public string LongDesc;
+        public int manifestNum;
+
         /// <summary>
         /// A pointer to the icon.
         /// </summary>
         public string IconName;
-        /// <summary>
-        /// Whether there are more to come
-        /// </summary>
-        public bool more;
+
         /// <summary>
         /// Added(1), missing(-1) or expected(0)
         /// </summary>
         public int addedRemoved;
+
         /// <summary>
         /// the actual RFID number
         /// </summary>
@@ -78,13 +78,12 @@ namespace RFIDProtocolLib
         /// <summary>
         /// Server uses this to construct a query response.
         /// </summary>
-        public QueryResponse(string shortDesc, string longDesc, string iconName, bool m, int type, string rf)
+        public QueryResponse(string shortDesc, int man, string iconName, int type, string rf)
         {
             ShortDesc = shortDesc;
-            LongDesc = "doesnt' matter";
+            manifestNum = man;
             IconName = "doesn't matter";
             rfidNum = "0";
-            more = m;
             addedRemoved = type;
             rfidNum = rf;
         }
@@ -96,9 +95,8 @@ namespace RFIDProtocolLib
         public QueryResponse(byte[] buf)
         {
             ShortDesc = null;
-            LongDesc = null;
+            manifestNum = 0;
             IconName = null;
-            more = false;
             addedRemoved = -2;
             rfidNum = null;
 
@@ -110,11 +108,10 @@ namespace RFIDProtocolLib
                 switch (tlv.Type)
                 {
                     case 0: ShortDesc = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
-                    case 1: LongDesc = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 1: manifestNum = int.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
                     case 2: IconName = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
-                    case 3: more = bool.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
-                    case 4: addedRemoved = int.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
-                    case 5: rfidNum = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 3: addedRemoved = int.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
+                    case 4: rfidNum = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
                 }
             }
         }
@@ -127,11 +124,10 @@ namespace RFIDProtocolLib
         {
             TLVList l = new TLVList(Type);
             l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(ShortDesc)));
-            l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(LongDesc)));
+            l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(manifestNum.ToString())));
             l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(IconName)));
-            l.Add(new TLV(3, System.Text.Encoding.ASCII.GetBytes(more.ToString())));
-            l.Add(new TLV(4, System.Text.Encoding.ASCII.GetBytes(addedRemoved.ToString())));
-            l.Add(new TLV(5, System.Text.Encoding.ASCII.GetBytes(rfidNum)));
+            l.Add(new TLV(3, System.Text.Encoding.ASCII.GetBytes(addedRemoved.ToString())));
+            l.Add(new TLV(4, System.Text.Encoding.ASCII.GetBytes(rfidNum)));
 
             return l;
         }
@@ -210,8 +206,8 @@ namespace RFIDProtocolLib
             Longitude = Lo;
             isScan = iS;
             dateTime = dT;
-        } 
-      
+        }
+
         /// <summary>
         /// Client uses this to parse the incoming info packet.
         /// </summary>
@@ -253,7 +249,74 @@ namespace RFIDProtocolLib
         }
     }
 
- 
+
+    #endregion
+
+    #region addRemoveItem
+    public struct addRemoveItem
+    {
+        public const ushort Type = 8;
+
+        public string dateTime;
+
+        public string hostID;
+
+        public string containerID;
+
+        public bool remove;
+
+        public int manifestNum;
+
+        public addRemoveItem(string dT, string hID, string cID, bool rem, int manifest_num)
+        {
+            dateTime = dT;
+            hostID = hID;
+            containerID = cID;
+            manifestNum = manifest_num;
+            remove = rem;
+        }
+
+        public addRemoveItem(byte[] buf)
+        {
+            dateTime = "";
+            hostID = "";
+            containerID = "";
+            remove = false;
+            manifestNum = 0;
+
+            TLVList l = new TLVList(buf);
+
+            IEnumerator e = l.GetEnumerator();
+
+            while (e.MoveNext())
+            {
+                TLV tlv = (TLV)e.Current;
+
+                switch (tlv.Type)
+                {
+                    case 0: dateTime = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 1: hostID = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 2: remove = bool.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
+                    case 3: containerID = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 4: manifestNum = int.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
+                }
+            }
+        }
+
+        public TLVList ToTLVList()
+        {
+            TLVList l = new TLVList(Type);
+
+            l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(dateTime)));
+            l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(hostID)));
+            l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(remove.ToString())));
+            l.Add(new TLV(3, System.Text.Encoding.ASCII.GetBytes(containerID)));
+            l.Add(new TLV(4, System.Text.Encoding.ASCII.GetBytes(manifestNum.ToString())));
+
+            return l;
+        }
+    };
+
     #endregion
 
     #region RaiseAlert
@@ -283,66 +346,6 @@ namespace RFIDProtocolLib
             return new TLVList();
         }
     }
-
-
-
-    public struct addRemoveItem
-    {
-        public const ushort Type = 8;
-
-        public string dateTime;
-
-        public string hostID;
-
-        public string containerID;
-
-        public bool remove;
-
-        public addRemoveItem(string dT, string hID, string cID, bool rem)
-        {
-            dateTime = dT;
-            hostID = hID;
-            containerID = cID;
-            remove = rem;
-        }
-
-        public addRemoveItem(byte[] buf)
-        {
-            dateTime = "";
-            hostID = "";
-            containerID = "";
-            remove = false;
-
-            TLVList l = new TLVList(buf);
-
-            IEnumerator e = l.GetEnumerator();
-
-            while (e.MoveNext())
-            {
-                TLV tlv = (TLV)e.Current;
-
-                switch (tlv.Type)
-                {
-                    case 0: dateTime = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
-                    case 1: hostID = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
-                    case 2: remove = bool.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
-                    case 3: containerID = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
-                }
-            }
-        }
-
-        public TLVList ToTLVList()
-        {
-            TLVList l = new TLVList(Type);
-
-            l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(dateTime)));
-            l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(hostID)));
-            l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(remove.ToString())));
-            l.Add(new TLV(3, System.Text.Encoding.ASCII.GetBytes(containerID)));
-
-            return l;
-        }
-    };
     #endregion
 
 #if DONTUSETHIS
