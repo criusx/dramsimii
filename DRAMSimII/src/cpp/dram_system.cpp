@@ -25,7 +25,7 @@ int dramSystem::convert_address(addresses &this_a)
 	//int	mapping_scheme;
 	//int	chan_count, rank_count, bank_count, col_count, row_count;
 	//int	chan_addr_depth, rank_addr_depth, bank_addr_depth, row_addr_depth, col_addr_depth;
-	int	col_size;
+	unsigned col_size;
 	//, col_size_depth;
 
 	//mapping_scheme = config->addr_mapping_scheme;
@@ -40,12 +40,12 @@ int dramSystem::convert_address(addresses &this_a)
 	//bank_count = config->bank_count;
 	//row_count  = config->row_count;
 	//col_count  = config->col_count;
-	int chan_addr_depth = log2(system_config.chan_count);
-	int rank_addr_depth = log2(system_config.rank_count);
-	int bank_addr_depth = log2(system_config.bank_count);
-	int row_addr_depth  = log2(system_config.row_count);
-	int col_addr_depth  = log2(system_config.col_count);
-	int col_size_depth	= log2(col_size);
+	unsigned chan_addr_depth = log2(system_config.chan_count);
+	unsigned rank_addr_depth = log2(system_config.rank_count);
+	unsigned bank_addr_depth = log2(system_config.bank_count);
+	unsigned row_addr_depth  = log2(system_config.row_count);
+	unsigned col_addr_depth  = log2(system_config.col_count);
+	unsigned col_size_depth	= log2(col_size);
 
 	//input_a = this_a->phys_addr;
 	// strip away the byte address portion
@@ -53,12 +53,12 @@ int dramSystem::convert_address(addresses &this_a)
 
 	unsigned int address = this_a.phys_addr;
 
-	int cacheline_size;
-	int cacheline_size_depth;	/* address bit depth */
-	int col_id_lo;
-	int col_id_lo_depth;
-	int col_id_hi;
-	int col_id_hi_depth;
+	unsigned cacheline_size;
+	unsigned cacheline_size_depth;	/* address bit depth */
+	unsigned col_id_lo;
+	unsigned col_id_lo_depth;
+	unsigned col_id_hi;
+	unsigned col_id_hi_depth;
 	
 	switch (system_config.addr_mapping_scheme)
 	{

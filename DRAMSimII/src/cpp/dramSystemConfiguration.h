@@ -15,7 +15,7 @@ private:
 	ordering_algorithm_t command_ordering_algorithm;	// strict or round robin 
 	unsigned per_bank_queue_depth;							// command queue size
 	system_configuration_type_t config_type;
-	int refresh_time;									// loop time of refresh 
+	unsigned refresh_time;									// loop time of refresh 
 	refresh_policy_t refresh_policy;					// 
 	unsigned col_size;
 	unsigned row_size;										// bytes per row (across one rank) 

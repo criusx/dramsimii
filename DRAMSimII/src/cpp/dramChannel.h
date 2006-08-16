@@ -39,7 +39,7 @@ public:
 	transaction *get_oldest_completed() { return completion_q.dequeue(); }
 	command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue
 	void record_command(command *, queue<command> &);
-	void initRefreshQueue(const unsigned, const unsigned, const unsigned); // init the RefreshQueue using selected algorithm
+	void initRefreshQueue(const unsigned, const unsigned); // init the RefreshQueue using selected algorithm
 
 	explicit dramChannel();
 	explicit dramChannel(int, int, int, int, int, int, int);
