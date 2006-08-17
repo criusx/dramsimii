@@ -192,15 +192,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\dram_channel.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\cpp\dram_system.cpp"
+				RelativePath=".\src\cpp\dramChannel.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\cpp\dramsim2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cpp\dramSystem.cpp"
 				>
 			</File>
 			<File

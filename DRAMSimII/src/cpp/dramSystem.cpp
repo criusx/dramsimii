@@ -31,9 +31,9 @@ int dramSystem::convert_address(addresses &this_a)
 	//mapping_scheme = config->addr_mapping_scheme;
 
 	if(system_config.dram_type == DRDRAM) //FIXME: shouldn't this already be set appropriately?
-		col_size	= 16;
+		col_size = 16;
 	else
-		col_size 	= system_config.col_size;
+		col_size = system_config.col_size;
 
 	//chan_count = config->chan_count;
 	//rank_count = config->rank_count;
@@ -420,14 +420,6 @@ int dramSystem::convert_address(addresses &this_a)
 		break;
 	}
 	return 1;
-}
-
-
-
-
-dramSystem::~dramSystem()
-{
-	//delete[] channel;
 }
 
 /// <summary>
