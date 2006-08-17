@@ -26,7 +26,6 @@ public:
 	explicit rank_c();
 	rank_c(const rank_c &);
 	explicit rank_c(const int,const int);
-	//rank_c &operator=(const rank_c &);
 	void init_ranks(int,int);
 };
 

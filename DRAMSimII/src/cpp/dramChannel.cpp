@@ -66,12 +66,12 @@ last_rank_id(dc.last_rank_id)
 }
 
 void dramChannel::init_controller(int transaction_queue_depth,
-								   int history_queue_depth,
-								   int completion_queue_depth,
-								   int refresh_queue_depth,
-								   int rank_count,
-								   int bank_count,
-								   int per_bank_queue_depth)
+								  int history_queue_depth,
+								  int completion_queue_depth,
+								  int refresh_queue_depth,
+								  int rank_count,
+								  int bank_count,
+								  int per_bank_queue_depth)
 {
 	transaction_q.init(transaction_queue_depth);
 	history_q.init(history_queue_depth);
@@ -83,15 +83,13 @@ void dramChannel::init_controller(int transaction_queue_depth,
 	refresh_row_index = 0;
 	last_rank_id = 0;
 
-	//rank = new rank_c[rank_count]; // FIXME: consider converting this array to a vector
-	// std::vector<rank_c> rank(rank_count, rank_c(bank_count,per_bank_queue_depth));
-	//for (int i=0;i<rank_count;i++)
-	//	rank[i].init_ranks(bank_count,per_bank_queue_depth);
-
+	
 	refreshQueue.init(refresh_queue_depth,  true);
 }
 
-void dramChannel::initRefreshQueue(const unsigned rowCount, const unsigned refreshTime)
+void dramChannel::initRefreshQueue(const unsigned rowCount,
+								   const unsigned refreshTime,
+								   const unsigned channel)
 {
 	unsigned step = refreshTime;
 	step /= rowCount;
@@ -105,7 +103,7 @@ void dramChannel::initRefreshQueue(const unsigned rowCount, const unsigned refre
 			refreshQueue.read(count)->type = AUTO_REFRESH_TRANSACTION;
 			refreshQueue.read(count)->addr.rank_id = j;
 			refreshQueue.read(count)->addr.row_id = i;
-			refreshQueue.read(count)->addr.chan_id = -1;
+			refreshQueue.read(count)->addr.chan_id = channel;
 			count++;
 		}
 
