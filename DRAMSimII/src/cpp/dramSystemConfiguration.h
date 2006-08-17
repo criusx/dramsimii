@@ -42,6 +42,7 @@ private:
 	unsigned bank_count;										// How many banks per device? 
 	double short_burst_ratio;
 	double read_percentage;
+	bool noRefresh;										// indicates that no refresh commands should be used
 
 public:
 	explicit dramSystemConfiguration(std::map<file_io_token_t,std::string> &);
