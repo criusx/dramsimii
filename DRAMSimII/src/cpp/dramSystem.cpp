@@ -731,7 +731,8 @@ void dramSystem::set_dram_timing_specification(enum dram_type_t dram_type)
 
 dramSystem::dramSystem(map<file_io_token_t,string> &parameter):
 system_config(parameter),
-channel(system_config.chan_count,dramChannel(system_config.transaction_queue_depth,
+channel(system_config.chan_count,
+		dramChannel(system_config.transaction_queue_depth,
 		system_config.history_queue_depth,
 		system_config.completion_queue_depth,
 		system_config.refresh_queue_depth,
@@ -740,13 +741,13 @@ channel(system_config.chan_count,dramChannel(system_config.transaction_queue_dep
 		system_config.per_bank_queue_depth)),
 timing_specification(parameter),
 sim_parameters(parameter),
+algorithm(free_command_pool,system_config.rank_count,system_config.bank_count,system_config.config_type),
+input_stream(parameter),
+time(0), // start the clock
 free_command_pool(4*COMMAND_QUEUE_SIZE,true), // place to temporarily dump unused command structures */
 free_transaction_pool(4*COMMAND_QUEUE_SIZE,true), // ditto, but for transactions, avoid system calls during runtime
 free_event_pool(COMMAND_QUEUE_SIZE,true), // create enough events, transactions and commands ahead of time
-event_q(COMMAND_QUEUE_SIZE),
-algorithm(free_command_pool,system_config.rank_count,system_config.bank_count,system_config.config_type),
-input_stream(parameter),
-time(0) // start the clock
+event_q(COMMAND_QUEUE_SIZE)
 {
 	map<file_io_token_t, string>::iterator temp;
 	stringstream temp2;

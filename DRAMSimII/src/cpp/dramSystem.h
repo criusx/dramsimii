@@ -21,6 +21,7 @@ class dramSystem
 {
 private:
 	dramSystemConfiguration system_config;
+	std::vector<dramChannel> channel;
 	dramTimingSpecification timing_specification;
 	simulationParameters sim_parameters;
 	dramStatistics statistics;
@@ -28,7 +29,7 @@ private:
 	inputStream input_stream;
 
 	std::string output_filename;	
-	std::vector<dramChannel> channel;
+	
 	tick_t time; // master clock
 	queue<command> free_command_pool;	// command objects are stored here to avoid allocating memory after initialization
 	queue<transaction> free_transaction_pool;	// transactions are stored here to avoid allocating memory after initialization
