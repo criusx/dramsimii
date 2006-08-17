@@ -44,6 +44,11 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 	else
 		dram_type = DDR2;
 
+	if ((temp=parameter.find(no_refresh_token)) != parameter.end())
+		noRefresh = true;
+	else
+		noRefresh = false;
+
 	if ((temp=parameter.find(row_buffer_management_policy_token))!=parameter.end())
 	{
 		if (temp->second == "open_page")

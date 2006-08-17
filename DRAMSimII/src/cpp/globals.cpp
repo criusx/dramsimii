@@ -186,6 +186,9 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 		} else if(temp == "-timing:rtrs") {
 			parameters[t_rtrs_token] = temp2;
 			argc_index += 2;
+		} else if (temp == "-no_refresh") {
+			parameters[no_refresh_token] = "";
+			argc_index += 1;
 		} else {
 			cerr << temp << " is not a recognized option" << endl;
 			argc_index ++;

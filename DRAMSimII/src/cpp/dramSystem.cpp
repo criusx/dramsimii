@@ -597,15 +597,23 @@ enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
 		}
 	}
 
-	// read but do not remove
-	transaction *refresh_t = channel[temp_t->addr.chan_id].read_refresh();
-
-	if (refresh_t->arrival_time < temp_t->arrival_time)
-		this_t = channel[temp_t->addr.chan_id].get_refresh();
-	else
+	if (system_config.noRefresh)
 	{
 		this_t = temp_t;
 		temp_t = NULL;
+	}
+	else
+	{
+		// read but do not remove
+		transaction *refresh_t = channel[temp_t->addr.chan_id].read_refresh();
+
+		if (refresh_t->arrival_time < temp_t->arrival_time)
+			this_t = channel[temp_t->addr.chan_id].get_refresh();
+		else
+		{
+			this_t = temp_t;
+			temp_t = NULL;
+		}
 	}
 	return SUCCESS;
 }
