@@ -28,7 +28,6 @@ namespace RFIDProtocolServer
         /// </summary>
         private void InitializeComponent()
         {
-			this.components = new System.ComponentModel.Container();
 			this.textBox1 = new System.Windows.Forms.ListBox();
 			this.usernameBox = new System.Windows.Forms.TextBox();
 			this.passwordBox = new System.Windows.Forms.TextBox();
@@ -36,7 +35,6 @@ namespace RFIDProtocolServer
 			this.passwordLabel = new System.Windows.Forms.Label();
 			this.dataSourceBox = new System.Windows.Forms.TextBox();
 			this.dataSourceLabel = new System.Windows.Forms.Label();
-			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
 			// textBox1
@@ -44,7 +42,7 @@ namespace RFIDProtocolServer
 			this.textBox1.FormattingEnabled = true;
 			this.textBox1.Location = new System.Drawing.Point(1, 50);
 			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(636, 641);
+			this.textBox1.Size = new System.Drawing.Size(636, 563);
 			this.textBox1.TabIndex = 0;
 			// 
 			// usernameBox
@@ -99,12 +97,6 @@ namespace RFIDProtocolServer
 			this.dataSourceLabel.TabIndex = 2;
 			this.dataSourceLabel.Text = "Data Source:";
 			// 
-			// timer1
-			// 
-			this.timer1.Enabled = true;
-			this.timer1.Interval = 1000;
-			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -135,7 +127,7 @@ namespace RFIDProtocolServer
 		private System.Windows.Forms.Label passwordLabel;
 		private System.Windows.Forms.TextBox dataSourceBox;
 		private System.Windows.Forms.Label dataSourceLabel;
-		private System.Windows.Forms.Timer timer1;
+		//private System.Windows.Forms.Timer timer1;
 
 
 
