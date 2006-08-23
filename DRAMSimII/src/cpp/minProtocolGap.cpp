@@ -5,8 +5,8 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// Function: dramSystem::min_protocol_gap()
-/// Arguments: dram_channel *channel: the channel by which the gap to the next command
+/// Function: dramSystem::minProtocolGap()
+/// Arguments: unsigned channel_id: the channel by which the gap to the next command
 /// will be computed
 /// this_c: the command that the gap will be calculated for
 /// Purpose: find the protocol gap between a command and current system state
@@ -16,12 +16,11 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 { 
 	//FIXME: some max() functions take uninit values
 	int min_gap;
+
 	dramChannel &channel = dramSystem::channel[channel_id];
-	//int rank_id;
-	// int bank_id;
-	// int row_id;
-	const int this_rank = this_c->addr.rank_id;
-	const int this_bank = this_c->addr.bank_id;
+
+	const unsigned this_rank = this_c->addr.rank_id;
+	const unsigned this_bank = this_c->addr.bank_id;
 	rank_c &this_r = channel.get_rank(this_rank);
 	bank_c &this_b = this_r.bank[this_bank];
 	tick_t now = channel.get_time();
@@ -66,7 +65,7 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 		// respect t_rrd of all other banks of same rank
 		ras_q_count = this_r.last_ras_times.get_count();
 
-		if(ras_q_count == 0)
+		if (ras_q_count == 0)
 		{
 			t_rrd_gap = 0;
 		}
@@ -107,16 +106,16 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 		other_r_last_cas_length = timing_specification.t_burst;
 		other_r_last_casw_time = now - 1000;
 		other_r_last_casw_length = timing_specification.t_burst;
-		for(int rank_id = system_config.rank_count - 1; rank_id >= 0; rank_id--)
+		for (unsigned rank_id = system_config.rank_count - 1; rank_id >= 0; rank_id--)
 		{
-			if(rank_id != this_rank)
+			if (rank_id != this_rank)
 			{
-				if(channel.get_rank(rank_id).last_cas_time > other_r_last_cas_time)
+				if (channel.get_rank(rank_id).last_cas_time > other_r_last_cas_time)
 				{
 					other_r_last_cas_time = channel.get_rank(rank_id).last_cas_time;
 					other_r_last_cas_length = channel.get_rank(rank_id).last_cas_length;
 				}
-				if(channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
+				if (channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
 				{
 					other_r_last_casw_time = channel.get_rank(rank_id).last_casw_time;
 					other_r_last_casw_length = channel.get_rank(rank_id).last_casw_length;
@@ -163,7 +162,8 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 		other_r_last_cas_length = timing_specification.t_burst;
 		other_r_last_casw_time = now - 1000;
 		other_r_last_casw_length= timing_specification.t_burst;
-		for(int rank_id = 0 ; rank_id < system_config.rank_count ; rank_id++)
+
+		for (unsigned rank_id = 0 ; rank_id < system_config.rank_count ; rank_id++)
 		{
 			if (rank_id != this_rank)
 			{
@@ -172,7 +172,7 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 					other_r_last_cas_time = channel.get_rank(rank_id).last_cas_time;
 					other_r_last_cas_length = channel.get_rank(rank_id).last_cas_length;
 				}
-				if( channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
+				if ( channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
 				{
 					other_r_last_casw_time = channel.get_rank(rank_id).last_casw_time;
 					other_r_last_casw_length = channel.get_rank(rank_id).last_casw_length;

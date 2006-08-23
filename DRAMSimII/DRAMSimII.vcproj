@@ -133,6 +133,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4530"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -226,6 +227,14 @@
 			<File
 				RelativePath=".\src\cpp\minProtocolGap.cpp"
 				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DisableSpecificWarnings="4530"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\cpp\rank_c.cpp"

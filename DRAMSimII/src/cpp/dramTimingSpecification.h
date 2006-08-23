@@ -20,7 +20,7 @@ private:
 	int t_rcd;			// RAS to CAS delay of same bank
 	int t_rfc;			// refresh cycle time
 	int t_rp;			// interval between PRECHARGE and ACT to same bank
-	int t_rrd;			// Row to row activation delay
+	int t_rrd;			// row to row activation delay
 	int t_rtp;			// read to precharge delay
 	int t_wr;			// write recovery time , time to restore data
 	int t_wtr;			// write to read turnaround time
