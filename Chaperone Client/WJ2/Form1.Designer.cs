@@ -42,8 +42,10 @@ namespace WJ2
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.cbComPort = new System.Windows.Forms.ComboBox();
             this.wjConnectButton = new System.Windows.Forms.Button();
+            this.label17 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -53,11 +55,13 @@ namespace WJ2
             this.domainUpDown2 = new System.Windows.Forms.DomainUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.connectBtn = new System.Windows.Forms.Button();
+            this.label18 = new System.Windows.Forms.Label();
             this.dbTableLbl = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.dbNameLbl = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.tagServerBox2 = new System.Windows.Forms.TextBox();
             this.dbTableBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.dbNameBox = new System.Windows.Forms.TextBox();
@@ -88,10 +92,7 @@ namespace WJ2
             this.radUpDown = new System.Windows.Forms.NumericUpDown();
             this.gpsSerialPort = new System.IO.Ports.SerialPort(this.components);
             this.radTimer = new System.Windows.Forms.Timer();
-            this.label17 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.tagServerBox2 = new System.Windows.Forms.TextBox();
+            this.reconcileButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -109,7 +110,7 @@ namespace WJ2
             this.startInventoryButton.Name = "startInventoryButton";
             this.startInventoryButton.Size = new System.Drawing.Size(35, 20);
             this.startInventoryButton.TabIndex = 0;
-            this.startInventoryButton.Text = "M/R";
+            this.startInventoryButton.Text = "Man";
             this.startInventoryButton.Click += new System.EventHandler(this.startInventoryButton_Click);
             // 
             // tabControl1
@@ -130,6 +131,7 @@ namespace WJ2
             this.tabPage1.Controls.Add(this.invTimerBox);
             this.tabPage1.Controls.Add(this.invProgressBar);
             this.tabPage1.Controls.Add(this.clearBtn);
+            this.tabPage1.Controls.Add(this.reconcileButton);
             this.tabPage1.Controls.Add(this.scanButton);
             this.tabPage1.Controls.Add(this.startInventoryButton);
             this.tabPage1.Location = new System.Drawing.Point(0, 0);
@@ -206,7 +208,7 @@ namespace WJ2
             this.tabPage2.Controls.Add(this.domainUpDown2);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(240, 271);
+            this.tabPage2.Size = new System.Drawing.Size(232, 268);
             this.tabPage2.Text = "Setup";
             // 
             // numTags
@@ -275,6 +277,16 @@ namespace WJ2
             this.radioButton1.TabIndex = 11;
             this.radioButton1.Text = "Ant B";
             // 
+            // comboBox1
+            // 
+            this.comboBox1.Items.Add("Symbol");
+            this.comboBox1.Items.Add("Intermec");
+            this.comboBox1.Items.Add("WJ");
+            this.comboBox1.Location = new System.Drawing.Point(123, 156);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(100, 22);
+            this.comboBox1.TabIndex = 6;
+            // 
             // cbComPort
             // 
             this.cbComPort.Location = new System.Drawing.Point(123, 74);
@@ -290,6 +302,14 @@ namespace WJ2
             this.wjConnectButton.TabIndex = 5;
             this.wjConnectButton.Text = "Connect";
             this.wjConnectButton.Click += new System.EventHandler(this.wjConnectButton_Click);
+            // 
+            // label17
+            // 
+            this.label17.Location = new System.Drawing.Point(17, 158);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(100, 20);
+            this.label17.Text = "Reader Selected";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label14
             // 
@@ -379,6 +399,14 @@ namespace WJ2
             this.connectBtn.TabIndex = 4;
             this.connectBtn.Text = "Test";
             // 
+            // label18
+            // 
+            this.label18.Location = new System.Drawing.Point(7, 184);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(82, 20);
+            this.label18.Text = "Tag Server";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // dbTableLbl
             // 
             this.dbTableLbl.Location = new System.Drawing.Point(7, 157);
@@ -418,6 +446,14 @@ namespace WJ2
             this.label6.Size = new System.Drawing.Size(56, 20);
             this.label6.Text = "Password";
             this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // tagServerBox2
+            // 
+            this.tagServerBox2.Location = new System.Drawing.Point(95, 183);
+            this.tagServerBox2.Name = "tagServerBox2";
+            this.tagServerBox2.Size = new System.Drawing.Size(138, 21);
+            this.tagServerBox2.TabIndex = 0;
+            this.tagServerBox2.Text = "192.168.10.9";
             // 
             // dbTableBox
             // 
@@ -701,39 +737,18 @@ namespace WJ2
             this.radTimer.Interval = 30000;
             this.radTimer.Tick += new System.EventHandler(this.radTimer_Tick);
             // 
-            // label17
+            // reconcileButton
             // 
-            this.label17.Location = new System.Drawing.Point(17, 158);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(100, 20);
-            this.label17.Text = "Reader Selected";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Items.Add("Symbol");
-            this.comboBox1.Items.Add("Intermec");
-            this.comboBox1.Items.Add("WJ");
-            this.comboBox1.Location = new System.Drawing.Point(123, 156);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(100, 22);
-            this.comboBox1.TabIndex = 6;
-            // 
-            // label18
-            // 
-            this.label18.Location = new System.Drawing.Point(7, 184);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(82, 20);
-            this.label18.Text = "Tag Server";
-            this.label18.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // tagServerBox2
-            // 
-            this.tagServerBox2.Location = new System.Drawing.Point(95, 183);
-            this.tagServerBox2.Name = "tagServerBox2";
-            this.tagServerBox2.Size = new System.Drawing.Size(138, 21);
-            this.tagServerBox2.TabIndex = 0;
-            this.tagServerBox2.Text = "192.168.10.2";
+            this.reconcileButton.BackColor = System.Drawing.Color.DeepPink;
+            this.reconcileButton.Enabled = false;
+            this.reconcileButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.reconcileButton.ForeColor = System.Drawing.Color.Black;
+            this.reconcileButton.Location = new System.Drawing.Point(84, 244);
+            this.reconcileButton.Name = "reconcileButton";
+            this.reconcileButton.Size = new System.Drawing.Size(35, 20);
+            this.reconcileButton.TabIndex = 0;
+            this.reconcileButton.Text = "Rec";
+            this.reconcileButton.Click += new System.EventHandler(this.reconcileButton_Click);
             // 
             // Form1
             // 
@@ -824,6 +839,7 @@ namespace WJ2
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox tagServerBox2;
+        private System.Windows.Forms.Button reconcileButton;
     }
 }
 

@@ -272,8 +272,15 @@ namespace WJ2
                         if (reader.Name == "Tag")
                             if (reader.AttributeCount > 0)
                             {
-                                reader.MoveToAttribute(0);
-                                inventoryTags.Add(reader.Value.ToString());
+                                try
+                                {
+                                    reader.MoveToAttribute(0);
+                                    inventoryTags.Add(new RFID(reader.Value.ToCharArray()));
+                                }
+                                catch (System.Exception e)
+                                {
+                                    Console.Out.WriteLine(e.Message);	
+                                }
                             }
                 }
                 EventArgs eA = new EventArgs();
@@ -285,10 +292,11 @@ namespace WJ2
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString());
+                scanButton.Enabled = true;
+                startInventoryButton.Enabled = true;
+                reconcileButton.Enabled = false;
             }
-
-            scanButton.Enabled = true;
-            startInventoryButton.Enabled = true;
+            
             Cursor.Current = Cursors.Default;
         }
 
@@ -326,15 +334,9 @@ namespace WJ2
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    if (isScan == 1)
-                    {                        
-                        scanButton.Enabled = false;
-                    }
-                    else
-                    {                        
-                        startInventoryButton.Enabled = false;
-                    }
-
+                    scanButton.Enabled = false;
+                    startInventoryButton.Enabled = false;
+                    
                     invProgressBar.Hide();
                     invTimerBox.Show();
 
@@ -349,16 +351,16 @@ namespace WJ2
                             cc.Connect(hostnameBox.Text, 1555);
 
                             // handshake
-                            cc.SendConnectPacket();
-                            cc.WaitForConnectResponsePacket();
+                            //cc.SendConnectPacket();
+                            //cc.WaitForConnectResponsePacket();
 
                             // send all the RFIDs to the server
                             for (int i = 0; i < inventoryTags.Count; ++i)
-                                cc.SendQueryPacket(new QueryRequest(new RFID(inventoryTags[i].ToString())));
+                                cc.SendPacket(new QueryRequest(new RFID(inventoryTags[i].ToString())));
 
                             lastDateTime = DateTime.Now.ToString();
 
-                            cc.SendInfoPacket(new InfoPacket(latitude.ToString("N15").Substring(0, 15) + NorS, longitude.ToString("N15").Substring(0, 15) + EorW, lastDateTime, isScan));
+                            cc.SendPacket(new Info(latitude.ToString("N15").Substring(0, 15) + NorS, longitude.ToString("N15").Substring(0, 15) + EorW, lastDateTime, isScan));
 
                             // receive descriptions of items submitted
                             manifestNum = -1;
@@ -378,8 +380,17 @@ namespace WJ2
                                     j++;
                                 }
                             }
+                            if (manifestNum == -2)
+                                MessageBox.Show("No container RFID scanned", "Scan aborted");
 
                             cc.Close();
+                        }
+                        if (sender == scanButton)
+                            reconcileButton.Enabled = true;   
+                        else
+                        {
+                            startInventoryButton.Enabled = true;
+                            scanButton.Enabled = true;
                         }
                     }
                     catch (Exception ex)
@@ -392,12 +403,16 @@ namespace WJ2
                         {
                             custList.Insert(i, new ListItem(inventoryTags[i].ToString(), "", -2)); // -2 for unknown status
                         }
+                        scanButton.Enabled = true;
+                        startInventoryButton.Enabled = true;
+                        reconcileButton.Enabled = false;
                     }
-                    scanButton.Enabled = true;
-                    startInventoryButton.Enabled = true;
-                    inventoryTags.Clear();
-                        
-                    Cursor.Current = Cursors.Default;
+                    finally
+                    {
+                        inventoryTags.Clear();
+
+                        Cursor.Current = Cursors.Default;
+                    }
                 }
             }
         }
@@ -499,50 +514,57 @@ namespace WJ2
             if (!custMenu.ClientRectangle.Contains(e.X, e.Y))
                 return;
 
-            switch (custMenu.action)
+            try
             {
-                case -1: // remove
-                    cc = new ClientConnection();
+                switch (custMenu.action)
+                {
+                    case -1: // remove
+                        cc = new ClientConnection();
 
-                    // connect to the server
-                    cc.Connect(hostnameBox.Text, 1555);
+                        // connect to the server
+                        cc.Connect(hostnameBox.Text, 1555);
 
-                    // handshake
-                    cc.SendConnectPacket();
-                    cc.WaitForConnectResponsePacket();
-					
-                    // send command to remove this item
-                    cc.sendAddRemovePacket(new addRemoveItem(lastDateTime,((ListItem)custList.Items[selectedIndex]).RFIDNum,containerID,true,manifestNum));
+                        // handshake
+                        //cc.SendConnectPacket();
+                        //cc.WaitForConnectResponsePacket();
 
-                    cc.Close();
-					break;
-				case 1: // add
-                    cc = new ClientConnection();
+                        // send command to remove this item
+                        cc.SendPacket(new addRemoveItem(lastDateTime, ((ListItem)custList.Items[selectedIndex]).RFIDNum, containerID, true, manifestNum));
 
-                    // connect to the server
-                    cc.Connect(hostnameBox.Text, 1555);
+                        cc.Close();
+                        break;
+                    case 1: // add
+                        cc = new ClientConnection();
 
-                    // handshake
-                    cc.SendConnectPacket();
-                    cc.WaitForConnectResponsePacket();
+                        // connect to the server
+                        cc.Connect(hostnameBox.Text, 1555);
 
-					// send command to add this item to the manifest
-                    cc.sendAddRemovePacket(new addRemoveItem(lastDateTime, ((ListItem)custList.Items[selectedIndex]).RFIDNum, containerID, false,manifestNum));
-                    cc.Close();
-                    
-					break;
-                case 0:
-                    string selectedTag = inventoryTags[selectedIndex].ToString().Replace(" ", "");
+                        // handshake
+                        //cc.SendConnectPacket();
+                        //cc.WaitForConnectResponsePacket();
 
-                    string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
+                        // send command to add this item to the manifest
+                        cc.SendPacket(new addRemoveItem(lastDateTime, ((ListItem)custList.Items[selectedIndex]).RFIDNum, containerID, false, manifestNum));
+                        cc.Close();
 
-                    int lastTwoI = Convert.ToInt32(lastTwo, 16);
+                        break;
+                    case 0:
+                        string selectedTag = inventoryTags[selectedIndex].ToString().Replace(" ", "");
 
-                    selectedTag = selectedTag.Substring(0, selectedTag.Length - 2) + lastTwoI.ToString();
+                        string lastTwo = "0x" + selectedTag.Substring(selectedTag.Length - 2);
 
-                    webBr.setUrlAndShow(new Uri("http://" + "tbk.ece.umd.edu/pda_item.jsp?rfid=" + selectedTag));
-                    break;
-				default: break;
+                        int lastTwoI = Convert.ToInt32(lastTwo, 16);
+
+                        selectedTag = selectedTag.Substring(0, selectedTag.Length - 2) + lastTwoI.ToString();
+
+                        webBr.setUrlAndShow(new Uri("http://" + "tbk.ece.umd.edu/pda_item.jsp?rfid=" + selectedTag));
+                        break;
+                    default: break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Out.WriteLine(ex.Message.ToString());
             }
         }
 
@@ -887,10 +909,10 @@ namespace WJ2
             {
                 // send warning packet
                 ClientConnection cc = new ClientConnection();
-                cc.Connect(serverAddress, 1555);
-                cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(phoneNumber));
-                cc.WaitForSetPhoneNumberResponsePacket();
-                cc.SendRaiseAlertPacket(new RaiseAlertRequest());
+                cc.Connect(hostnameBox.Text, 1555);
+                //cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(phoneNumber));
+                //cc.WaitForSetPhoneNumberResponsePacket();
+                cc.SendPacket(new RaiseAlert());
                 cc.Close();
                 radTimer.Enabled = true;
             }
@@ -922,6 +944,37 @@ namespace WJ2
         private void tabPage1_MouseUp(object sender, MouseEventArgs e)
         {
             custMenu.Hide();
+        }
+
+        private void reconcileButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // send the reconcile complete command
+                ClientConnection cc = new ClientConnection();
+                cc.Connect(hostnameBox.Text, 1555);
+                cc.SendPacket(new ReconcileFinished(lastDateTime, manifestNum));
+                cc.Close();
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message);
+
+                try
+                {
+                    cc.Close();
+                }
+                catch (Exception ex2)
+                {
+                   
+                }
+            }
+            finally
+            {
+                startInventoryButton.Enabled = true;
+                scanButton.Enabled = true;
+                reconcileButton.Enabled = false;
+            }
         }
     }
 }

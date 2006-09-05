@@ -1,9 +1,5 @@
 using System;
 
-#if USING_NUNIT
-using NUnit.Framework;
-#endif
-
 namespace RFIDProtocolLib
 {
     /// <summary>
@@ -26,6 +22,21 @@ namespace RFIDProtocolLib
         }
 
         /// <summary>
+        /// Construct it from a byte array.
+        /// </summary>
+        /// <param name="data">The array.</param>
+        public RFID(char[] data)
+        {
+            if (data.Length != 24)
+                throw new ArgumentException("RFID of invalid length!", "data");
+
+            rfid = new byte[12];
+            
+            for (int i = 0; i < 12; i++)
+                rfid[i] = byte.Parse(new string(new char[] { data[2*i], data[2*i+1] }),System.Globalization.NumberStyles.HexNumber);
+        }
+
+        /// <summary>
         /// Construct it from a string.  Can be with or without spaces.
         /// </summary>
         /// <param name="hexString">The string.</param>
@@ -39,12 +50,9 @@ namespace RFIDProtocolLib
                 c = hexString[i];
                 if (IsHexDigit(c))
                     newString += c;
-            }
-            // if odd number of characters, discard last character
-            if (newString.Length % 2 != 0)
-            {
-                newString = newString.Substring(0, newString.Length - 1);
-            }
+                else
+                    throw new ArgumentException("Non-hex digit in RFID tag value", "data");
+            }            
 
             int byteLength = newString.Length / 2;
             byte[] bytes = new byte[byteLength];
@@ -100,20 +108,4 @@ namespace RFIDProtocolLib
             return newByte;
         }
     }
-
-#if USING_NUNIT
-	[TestFixture]
-	public class RFIDTest
-	{
-		[Test]
-		public void StringTest()
-		{
-			RFID rfid1 = new RFID(new byte[] {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42});
-			RFID rfid2 = new RFID("313233343536000000000042");
-			RFID rfid3 = new RFID("31 32 33 34 35 36 00 00 00 00 00 42");
-			Assert.AreEqual(rfid1.GetBytes(), rfid2.GetBytes());
-			Assert.AreEqual(rfid1.GetBytes(), rfid3.GetBytes());
-		}
-	}
-#endif
 }
