@@ -1,0 +1,3484 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MPR DLL</name>
+    </assembly>
+    <members>
+        <member name="T:WJ.MPR.WinAPI.HiPerfTimer">
+            <summary>
+            A High Resolution Timer for measuring execution time.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Util.byteList">
+            <summary>
+            A strongly-typed collection of byte objects.
+            It can also return a hexstring and has subList capability.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.#ctor(WJ.MPR.Util.byteList,System.Int32,System.Int32)">
+            <summary>
+            Construct a byteList from a subrange of another byteList.
+            </summary>
+            <param name="src">The byteList to copy from.</param>
+            <param name="b">The index to start copying from.</param>
+            <param name="e">One more than the Index of the last element to copy.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.#ctor(WJ.MPR.Util.byteList,System.Int32)">
+            <summary>
+            Construct a byteList from a subrange of another byteList.
+            </summary>
+            <param name="src">The byteList to copy from.</param>
+            <param name="b">The index to start copying from.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.#ctor(System.Byte[])">
+            <summary>
+            Construct a byteList from a byte array.
+            </summary>
+            <param name="src">The byte[] to copy from.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Construct a byteList from a subrange of a byte array.
+            </summary>
+            <param name="src">The byte[] to copy from.</param>
+            <param name="b">The index to start copying from.</param>
+            <param name="e">One more than the Index of the last element to copy.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Construct a byteList from a subrange of a byte array.
+            </summary>
+            <param name="src">The byte[] to copy from.</param>
+            <param name="b">The index to start copying from.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.#ctor(System.Byte)">
+            <summary>
+            Construct a byteList starting with a single byte.
+            </summary>
+            <param name="b">The byte that will be placed in index 0.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.#ctor(System.String)">
+            <summary>
+            Construct a byteList filling it from the characters of a string.
+            Each char of the string is first converted to a byte.
+            If the string is null, 
+            </summary>
+            <param name="s">The string to copy from.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.#ctor(System.Byte,System.Int32)">
+            <summary>
+            Construct a byteList with a N copies of the same byte (b).
+            </summary>
+            <param name="b">The value to copy.</param>
+            <param name="N">The number of copies.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.#ctor">
+            <summary>
+            Construct an empty byteList.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.subList(System.Int32,System.Int32)">
+            <summary>
+            Returns a new byteList consisting of a subset of the original.
+            </summary>
+            <param name="b">The index to start copying from.</param>
+            <param name="e">One more than the Index of the last element to copy.</param>
+            <returns>A new byteList seeded with elements of this byteList.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.subList(System.Int32)">
+            <summary>
+            Returns a new byteList consisting of a subset of the original.
+            </summary>
+            <param name="b">The index to start copying from.</param>
+            <returns>A new byteList seeded with elements of this byteList.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.Add(System.Byte)">
+            <summary>
+            Add a single value to the list.
+            </summary>
+            <param name="val">the value to add.</param>
+            <returns>Index of newly added element.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.Add(System.UInt16)">
+            <summary>
+            Decomposes a ushort to two bytes, and adds them to the list.
+            MSB first, then LSB.  Returns the Index of the LSB.
+            </summary>
+            <param name="us">16-bits to add as two bytes to the list</param>
+            <returns>The index of the Least Significant Byte</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.Add(System.Byte[])">
+            <summary>
+            Adds all the bytes of a byte[].
+            </summary>
+            <param name="bArray">The array to copy from.</param>
+            <returns>The Index of the last byte added.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.Add(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Add a subrange from an array to the end of the list.
+            </summary>
+            <param name="bArray">The array to copy from.</param>
+            <param name="b">The index to start copying from.</param>
+            <param name="e">One more than the Index of the last element to copy.</param>
+            <returns>The Index of the last element added.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.Add(WJ.MPR.Util.byteList)">
+            <summary>
+            Add the elements from one list to this list.
+            </summary>
+            <param name="BL">The list to copy from.</param>
+            <returns>The Index of the last element added.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.IndexOf(System.Byte)">
+            <summary>
+            Determines the index of a specific element in the list.
+            </summary>
+            <param name="val">The element to locate in the list.</param>
+            <returns>The index of b if found in the list; otherwise, -1.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.Insert(System.Int32,System.Byte)">
+            <summary>
+            Inserts an element into the list at the specified Index.
+            </summary>
+            <param name="Index">The zero-based index at which the value should be inserted.</param>
+            <param name="val">The value to insert into the list.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.Remove(System.Byte)">
+            <summary>
+            Removes the first occurrence of a specific value from the list.
+            </summary>
+            <param name="val">The value to remove from the list.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.Contains(System.Byte)">
+            <summary>
+            Determines whether the list contains a specific value.
+            </summary>
+            <param name="val">The value to locate in the list.</param>
+            <returns>true if val is found in the list; otherwise, false.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.ToArray">
+            <summary>
+            Convert the list to an array.
+            </summary>
+            <returns>The values of this list, as an array.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.ToArray(System.Int32,System.Int32)">
+            <summary>
+            Converts a sublist of this list to an array.
+            </summary>
+            <param name="b">The index to start copying from.</param>
+            <param name="e">One more than the Index of the last element to copy.</param>
+            <returns>The values of the sublist, as an array.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.ToHexString">
+            <summary>
+            Method overloaded, defaults sep = " "
+            </summary>
+            <returns>A string of Hexadecimal digits.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.ToHexString(System.String)">
+            <summary>
+            Convert byteList to string of hexadecimal octets, each pair separated by sep.
+            </summary>
+            <param name="sep">The string to separate each byte (pair of hex digits).</param>
+            <returns>The byteList as a string of hex digits pairs.</returns>
+        </member>
+        <member name="M:WJ.MPR.Util.byteList.ToString">
+            <summary>
+            Converts byteList to a string.  Each byte is converted to a char.
+            </summary>
+            <returns>A string.</returns>
+        </member>
+        <member name="P:WJ.MPR.Util.byteList.Item(System.Int32)">
+            <summary>
+            Gets or sets the element at the specified index.
+            This property is the indexer for the list.
+            </summary>
+            <param name="Index">The zero-based index of the element to get or set.</param>
+            <value>The element at the specified index.</value>
+            <exception cref="T:System.ArgumentOutOfRangeException">index is not a valid index in the list.</exception>
+        </member>
+        <member name="T:WJ.Serial.ASCII">
+            <summary>
+            Common ASCII Control Codes
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.NULL">
+            <summary>
+            NULL
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.SOH">
+            <summary>
+            Start of Heading
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.STX">
+            <summary>
+            Start of Text
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.ETX">
+            <summary>
+            End of Text
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.EOT">
+            <summary>
+            End of Transmission
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.ENQ">
+            <summary>
+            Enquiry
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.ACK">
+            <summary>
+            Acknowledge
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.BELL">
+            <summary>
+            Bell
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.BS">
+            <summary>
+            Backspace
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.HT">
+            <summary>
+            Horizontal tab
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.LF">
+            <summary>
+            Line Feed
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.VT">
+            <summary>
+            Vertical tab
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.FF">
+            <summary>
+            Form Feed
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.CR">
+            <summary>
+            Carriage Return
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.SO">
+            <summary>
+            Shift out
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.SI">
+            <summary>
+            Shift in
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.DC1">
+            <summary>
+            Device Control 1
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.DC2">
+            <summary>
+            Device Control 2
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.DC3">
+            <summary>
+            Device Control 3
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.DC4">
+            <summary>
+            Device Control 4
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.NAK">
+            <summary>
+            No Acknowledge
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.SYN">
+            <summary>
+            Synchronization
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.ETB">
+            <summary>
+            End of Transmission Block
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.CAN">
+            <summary>
+            Cancel
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.EM">
+            <summary>
+            End of Medium
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.SUB">
+            <summary>
+            Substitute Character
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.ESC">
+            <summary>
+            Escape
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.FS">
+            <summary>
+            Field Separator
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.GS">
+            <summary>
+            Group Separator
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.RS">
+            <summary>
+            Record Separator
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.US">
+            <summary>
+            Unit Separator
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.SP">
+            <summary>
+            Spare
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.ASCII.DEL">
+            <summary>
+            Delete
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.Handshake">
+            <summary>
+            Common serial handshaking protocols
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.Handshake.none">
+            <summary>
+            No handshaking
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.Handshake.XonXoff">
+            <summary>
+            XOn/XOff handshaking
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.Handshake.CtsRts">
+            <summary>
+            CTS/RTS
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.Handshake.DsrDtr">
+            <summary>
+            DSR/DTR
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.Parity">
+            <summary>
+            Parity
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.Parity.none">
+            <summary>
+            No parity
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.Parity.odd">
+            <summary>
+            Odd parity
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.Parity.even">
+            <summary>
+            Even parity
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.Parity.mark">
+            <summary>
+            Mark parity
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.Parity.space">
+            <summary>
+            Space parity
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.StopBits">
+            <summary>
+            Stop bits
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.StopBits.one">
+            <summary>
+            One stop bit
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.StopBits.onePointFive">
+            <summary>
+            1.5 stop bits
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.StopBits.two">
+            <summary>
+            Two stop bits
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.DTRControlFlows">
+            <summary>
+            DTR Flow Control
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DTRControlFlows.disable">
+            <summary>
+            Disabled
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DTRControlFlows.enable">
+            <summary>
+            Enabled
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DTRControlFlows.handshake">
+            <summary>
+            Determined by handshaking
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.RTSControlFlows">
+            <summary>
+            RTS Flow Control
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.RTSControlFlows.disable">
+            <summary>
+            Disabled
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.RTSControlFlows.enable">
+            <summary>
+            Enabled
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.RTSControlFlows.handshake">
+            <summary>
+            Determined by handshaking
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.RTSControlFlows.toggle">
+            <summary>
+            Toggle
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.BaudRates">
+            <summary>
+            CE-supported baud rates (check your hardware for actual availability)
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_110">
+            <summary>
+            110bpb
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_300">
+            <summary>
+            300bps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_600">
+            <summary>
+            600bps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_1200">
+            <summary>
+            1200bps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_2400">
+            <summary>
+            2400bps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_4800">
+            <summary>
+            4800bps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_9600">
+            <summary>
+            9600bps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_14400">
+            <summary>
+            14.4kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_19200">
+            <summary>
+            19.2kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_38400">
+            <summary>
+            38.4kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_56000">
+            <summary>
+            56kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_57600">
+            <summary>
+            57.6kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_115200">
+            <summary>
+            115kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_128000">
+            <summary>
+            128kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_230400">
+            <summary>
+            225kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_256000">
+            <summary>
+            256kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_460800">
+            <summary>
+            450kbps
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BaudRates.CBR_921600">
+            <summary>
+            900kbps
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.BasicPortSettings">
+            <summary>
+            Used for manipulating several basic Port settings of a Port class
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BasicPortSettings.BaudRate">
+            <summary>
+            Baud rate (default = 19200bps)
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BasicPortSettings.ByteSize">
+            <summary>
+            Byte Size of data (default = 8)
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BasicPortSettings.Parity">
+            <summary>
+            Data Parity (default = none)
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.BasicPortSettings.StopBits">
+            <summary>
+            Number of stop bits (default = 1)
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.DetailedPortSettings">
+            <summary>
+            Used for manipulating all settings of a Port class
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.DetailedPortSettings.#ctor">
+            <summary>
+            Create a DetailedPortSettings class
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.DetailedPortSettings.Init">
+            <summary>
+            These are the default port settings
+            override Init() to create new defaults (i.e. common handshaking)
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.BasicSettings">
+            <summary>
+            Basic port settings
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.OutCTS">
+            <summary>
+            Specifies if the CTS (clear-to-send) signal is monitored for output flow control. If this member is TRUE and CTS is turned off, output is suspended until CTS is sent again.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.OutDSR">
+            <summary>
+            Specifies if the DSR (data-set-ready) signal is monitored for output flow control. If this member is TRUE and DSR is turned off, output is suspended until DSR is sent again. 
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.DTRControl">
+            <summary>
+            Specifies the DTR (data-terminal-ready) flow control.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.DSRSensitive">
+            <summary>
+            Specifies if the communications driver is sensitive to the state of the DSR signal. If this member is TRUE, the driver ignores any bytes received, unless the DSR modem input line is high.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.TxContinueOnXOff">
+            <summary>
+            Specifies if transmission stops when the input buffer is full and the driver has transmitted the XoffChar character. If this member is TRUE, transmission continues after the input buffer has come within XoffLim bytes of being full and the driver has transmitted the XoffChar character to stop receiving bytes. If this member is FALSE, transmission does not continue until the input buffer is within XonLim bytes of being empty and the driver has transmitted the XonChar character to resume reception.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.OutX">
+            <summary>
+            Specifies if XON/XOFF flow control is used during transmission. If this member is TRUE, transmission stops when the XoffChar character is received and starts again when the XonChar character is received.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.InX">
+            <summary>
+            Specifies if XON/XOFF flow control is used during reception. If this member is TRUE, the XoffChar character is sent when the input buffer comes within XoffLim bytes of being full, and the XonChar character is sent when the input buffer comes within XonLim bytes of being empty
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.ReplaceErrorChar">
+            <summary>
+            Specifies if bytes received with parity errors are replaced with the character specified by the ErrorChar member. If this member is TRUE and the fParity member is TRUE, replacement occurs.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.RTSControl">
+            <summary>
+            Specifies the RTS (request-to-send) flow control. If this value is zero, the default is RTS_CONTROL_HANDSHAKE. The following table shows possible values for this member.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.DiscardNulls">
+            <summary>
+            Specifies if null bytes are discarded. If this member is TRUE, null bytes are discarded when received. 
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.AbortOnError">
+            <summary>
+            Specifies if read and write operations are terminated if an error occurs. If this member is TRUE, the driver terminates all read and write operations with an error status if an error occurs. The driver will not accept any further communications operations until the application has acknowledged the error by calling the ClearError function.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.XonChar">
+            <summary>
+            Specifies the value of the XON character for both transmission and reception
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.XoffChar">
+            <summary>
+            Specifies the value of the XOFF character for both transmission and reception.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.ErrorChar">
+            <summary>
+            Specifies the value of the character used to replace bytes received with a parity error.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.EOFChar">
+            <summary>
+            Specifies the value of the character used to signal the end of data. 
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.DetailedPortSettings.EVTChar">
+            <summary>
+            Specifies the value of the character used to signal an event.
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.HandshakeNone">
+            <summary>
+            A common implementation of DetailedPortSettings for non handshaking
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.HandshakeNone.Init">
+            <summary>
+            Initialize the port
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.HandshakeXonXoff">
+            <summary>
+            A common implementation of DetailedPortSettings for XON/XOFF handshaking
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.HandshakeXonXoff.Init">
+            <summary>
+            Initialize the port
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.HandshakeCtsRts">
+            <summary>
+            A common implementation of DetailedPortSettings for CTS/RTS handshaking
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.HandshakeCtsRts.Init">
+            <summary>
+            Initialize the port
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.HandshakeDsrDtr">
+            <summary>
+            A common implementation of DetailedPortSettings for DSR/DTR handshaking
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.HandshakeDsrDtr.Init">
+            <summary>
+            Initialize the port
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.ZumaRow">
+             <summary>
+            	A class for a single row of data in a Zuma (Impinj Class 0 Re-writeable) Tag.
+            	Each row has 18 bits, 0-17, left justified in three bytes. (only bits 0 and 1 of MSB used)
+            	There are 16 rows in a Zuma tag.
+            		Row #			Function
+            		0				Fab Protect
+            		1				Control Word
+            		2..3			Kill Passcode
+            		4..N			EPC Data
+            		N+1				EPC CRC
+            		N+2..15			User Data
+            
+            		EPC length		 N
+            		64				 7
+            		96				 9
+            		128				11
+            	
+            	Includes methods to initialize a ZumaRow object as the correct type of row.
+             </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ZumaRow.RowNumber">
+            <summary>
+            Row Number, 0-15, of this row of the Zuma Tag.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ZumaRow.Byte0">
+            <summary>
+            The MSB, consisting of only 2 bits (17 and 16), of the Row.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ZumaRow.Byte1">
+            <summary>
+            Bits 15-8 of the Row.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ZumaRow.Byte2">
+            <summary>
+            Bits 7-0 of the Row.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.ZumaRow.EPCRow(System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            Fills this Row's bits with EPC data.
+            </summary>
+            <param name="MSB">The MSB of the EPC data for this Row.</param>
+            <param name="LSB">The LSB of the EPC data for this Row.</param>
+            <param name="LockBit">Whether this row is locked or not (bit17). </param>
+        </member>
+        <member name="M:WJ.MPR.Reader.ZumaRow.PassCodeRow(System.UInt16,System.Boolean)">
+            <summary>
+            Fill the Row's bits with half a Kill PassCode (12 bits).
+            </summary>
+            <param name="PassCode">Half a Kill PassCode (12-bits).</param>
+            <param name="LockBit">Whether this row is locked or not (bit 17).</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.ZumaRow.FabProtect(System.Boolean,System.Boolean)">
+            <summary>
+            If Clear == true, fill the Fab Protect bits with 0x0000,
+            else fill it with the Golden Word = 0x997A.
+            Always Row 0.
+            </summary>
+            <param name="Clear">Whether to clear this row, or fill it with the Golden Word.</param>
+            <param name="LockBit">Whether this row is locked.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.ZumaRow.ControlWord(System.Int32,System.Boolean)">
+            <summary>
+            Fill the Row's bits with the proper values for a given
+            EPC length (in bytes).
+            </summary>
+            <param name="Length">Length of the EPC, in bytes: [8, 12, or 16].</param>
+            <param name="LockBit">Whether this row is locked.</param>
+            <returns>true if Length is Valid; otherwise false.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.ZumaRow.UserData(System.Byte,System.Byte,System.Boolean,System.Boolean)">
+            <summary>
+            Fill the Row with 16 bits of user data.
+            bit 16 can be used as a WriteFlag.
+            bit 17 is the lock bit for this row.
+            </summary>
+            <param name="MSB">Most Significant 8 bits of the user data in this row.</param>
+            <param name="LSB">Least Significant 8 bits of the user data in this row.</param>
+            <param name="WriteFlag">Can be used to signify that this row has been written.</param>
+            <param name="LockBit">Whether this row is locked.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.ZumaRow.#ctor(System.Byte)">
+            <summary>
+            Construct a Zuma Row, with just a RowNumber
+            </summary>
+            <param name="RowNumber">The Row Number (0-15).</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.ZumaRow.#ctor(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Construct a Zuma Row with given its 3 bytes of data.
+            </summary>
+            <param name="RowNumber">The Row Number (0-15).</param>
+            <param name="Byte0">Bits 16-17.</param>
+            <param name="Byte1">Bits 8-15.</param>
+            <param name="Byte2">Bits 0-7.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.ZumaRow.#ctor">
+            <summary>
+            Construct an empty Zuma Row.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.ZumaRow.ToArray">
+            <summary>
+            Converts the ZumaRow to an array of three bytes.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.ZumaRow.EPCMSB">
+            <summary>
+            Interpret the Row as an EPC Row and get the MSB.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.ZumaRow.EPCLSB">
+            <summary>
+            Interpret the Row as an EPC Row and get the LSB.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.ZumaRow.LockBit">
+            <summary>
+            Interpret the Row as an EPC Row and get the Lock Bit.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.MPRFrameList">
+            <summary>
+            A strongly-typed collection of MPRFrame objects.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrameList.Add(WJ.MPR.Reader.MPRFrame)">
+            <summary>
+            Add an MPRFrame to the list.
+            </summary>
+            <param name="aFrame">The frame to add.</param>
+            <returns>Index of newly added frame.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrameList.IndexOf(WJ.MPR.Reader.MPRFrame)">
+            <summary>
+            Determines the index of a specific MPRFrame in the MPRFrameList.
+            </summary>
+            <param name="aFrame">The MPRFrame to locate in the MPRFrameList.</param>
+            <returns>The index of aFrame if found in the MPRFrameList; otherwise, -1.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrameList.Insert(System.Int32,WJ.MPR.Reader.MPRFrame)">
+            <summary>
+            Inserts an MPRFrame to the MPRFrameList at the specified Index.
+            </summary>
+            <param name="Index">The zero-based index at which the value should be inserted. </param>
+            <param name="aFrame">The MPRFrame to insert into the MPRFrameList.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrameList.Remove(WJ.MPR.Reader.MPRFrame)">
+            <summary>
+            Removes the first occurrence of a specific MPRFrame from the MPRFrameList
+            </summary>
+            <param name="aFrame">The MPRFrame to remove from the MPRFrameList.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrameList.Contains(WJ.MPR.Reader.MPRFrame)">
+            <summary>
+            Determines whether the MPRFrameList contains a specific value.
+            </summary>
+            <param name="aFrame">The MPRFrame to locate in the MPRFrameList.</param>
+            <returns>true if the MPRFrame is found in the MPRFrameList; otherwise, false.</returns>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRFrameList.Item(System.Int32)">
+            <summary>
+            Gets or sets the element at the specified index.
+            This property is the indexer for the MPRFrameList class.
+            </summary>
+            <param name="Index">The zero-based index of the MPRFrame to get or set.</param>
+            <value>The MPRFrame at the specified index.</value>
+            <exception cref="T:System.ArgumentOutOfRangeException">index is not a valid index in the MPRFrameList.</exception>
+        </member>
+        <member name="T:WJ.Serial.CommEventFlags">
+            <summary>
+            Event Flags
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.NONE">
+            <summary>
+            No flags
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.RXCHAR">
+            <summary>
+            Event on receive
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.RXFLAG">
+            <summary>
+            Event when specific character is received
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.TXEMPTY">
+            <summary>
+            Event when the transmit buffer is empty
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.CTS">
+            <summary>
+            Event on CTS state change
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.DSR">
+            <summary>
+            Event on DSR state change
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.RLSD">
+            <summary>
+            Event on RLSD state change
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.BREAK">
+            <summary>
+            Event on BREAK
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.ERR">
+            <summary>
+            Event on line error
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.RING">
+            <summary>
+            Event on ring detect
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.PERR">
+            <summary>
+            Event on printer error
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.RX80FULL">
+            <summary>
+            Event on 80% high-water
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.EVENT1">
+            <summary>
+            Provider event 1
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.EVENT2">
+            <summary>
+            Provider event 2
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.POWER">
+            <summary>
+            Event on CE power notification
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.ALLCE">
+            <summary>
+            Mask for all flags under CE
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.ALLPC">
+            <summary>
+            Mask for all flags under desktop Windows
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEventFlags.TXRXONLY">
+            <summary>
+            Mask for ERR, RXCHAR and TXEMPTY only
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.CommErrorFlags">
+            <summary>
+            Error flags
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommErrorFlags.RXOVER">
+            <summary>
+            Receive overrun
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommErrorFlags.OVERRUN">
+            <summary>
+            Overrun
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommErrorFlags.RXPARITY">
+            <summary>
+            Parity error
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommErrorFlags.FRAME">
+            <summary>
+            Frame error
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommErrorFlags.BREAK">
+            <summary>
+            BREAK received
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommErrorFlags.TXFULL">
+            <summary>
+            Transmit buffer full
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommErrorFlags.IOE">
+            <summary>
+            IO Error
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommErrorFlags.MODE">
+            <summary>
+            Requested mode not supported
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.CommModemStatusFlags">
+            <summary>
+            Modem status flags
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommModemStatusFlags.MS_CTS_ON">
+            <summary>
+            The CTS (Clear To Send) signal is on.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommModemStatusFlags.MS_DSR_ON">
+            <summary>
+            The DSR (Data Set Ready) signal is on.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommModemStatusFlags.MS_RING_ON">
+            <summary>
+            The ring indicator signal is on.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommModemStatusFlags.MS_RLSD_ON">
+            <summary>
+            The RLSD (Receive Line Signal Detect) signal is on.
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.CommEscapes">
+            <summary>
+            Communication escapes
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.SETXOFF">
+            <summary>
+            Causes transmission to act as if an XOFF character has been received.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.SETXON">
+            <summary>
+            Causes transmission to act as if an XON character has been received.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.SETRTS">
+            <summary>
+            Sends the RTS (Request To Send) signal.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.CLRRTS">
+            <summary>
+            Clears the RTS (Request To Send) signal
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.SETDTR">
+            <summary>
+            Sends the DTR (Data Terminal Ready) signal.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.CLRDTR">
+            <summary>
+            Clears the DTR (Data Terminal Ready) signal.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.SETBREAK">
+            <summary>
+            Suspends character transmission and places the transmission line in a break state until the ClearCommBreak function is called (or EscapeCommFunction is called with the CLRBREAK extended function code). The SETBREAK extended function code is identical to the SetCommBreak function. This extended function does not flush data that has not been transmitted.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.CLRBREAK">
+            <summary>
+            Restores character transmission and places the transmission line in a nonbreak state. The CLRBREAK extended function code is identical to the ClearCommBreak function
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.SETIR">
+            Set the port to IR mode.
+        </member>
+        <member name="F:WJ.Serial.CommEscapes.CLRIR">
+            <summary>
+            Set the port to non-IR mode.
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.APIErrors">
+            <summary>
+            Error values from serial API calls
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.APIErrors.ERROR_FILE_NOT_FOUND">
+            <summary>
+            Port not found
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.APIErrors.ERROR_INVALID_NAME">
+            <summary>
+            Invalid port name
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.APIErrors.ERROR_ACCESS_DENIED">
+            <summary>
+            Access denied
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.APIErrors.ERROR_INVALID_HANDLE">
+            <summary>
+            invalid handle
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.APIErrors.ERROR_OPERATION_ABORTED">
+            <summary>
+            The I/O operation has been aborted because of either a thread exit or an application request.
+            </summary>
+        </member>
+        <member name="F:WJ.Serial.APIErrors.ERROR_IO_PENDING">
+            <summary>
+            Overlapped I/O operation is in progress
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.MPRMsgEventHandler">
+            <summary>
+            Delegate for events with a MPRMsg argument.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.TagEventHandler">
+            <summary>
+            For events that communicate events on Tags
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.MPRFrame">
+             <summary>
+            	The basic unit of communications between the host and the MPR.
+            		
+            	Request Frames are sent from Host to MPR, and Response Frames are received by the Host from the MPR.  
+            
+            	Both Types of frames have a similar format:
+            
+            		[SOF][Payload]
+            		[SOF] = 0x01
+            
+            	For Request Frames:
+            		[Payload] = [NodeAddress][Length][Command][Data][CRC]
+            
+            	For Response Frames:
+            		[Payload] = [NodeAddress][Length][Status][Data][CRC]
+             </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrame.ToHexString">
+            <summary>
+            Converts the Frame to a string of Hexadecimal digits
+            </summary>
+            <returns>string of HEX digits</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrame.ToArray">
+            <summary>
+            Converts the Frame to an array of bytes
+            </summary>
+            <returns>the bytes in the Frame</returns>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRFrame.inFrame">
+            <summary>
+            Bytes are ignored (inFrame = false) until a SOF byte received
+            then bytes are stored (inFrame = true)
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRFrame.CompleteFrame">
+            <summary>
+            bytes are added (CompleteFrame = false),
+            until a complete frame has been received (Count = Length + 1) and can be processed. (CompleteFrame = true)
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRFrame.Processed">
+            <summary>
+            After a Complete Frame has been received it is processed.
+            After processing, Processed is set to true
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrame.Add(System.Byte)">
+            <summary>
+            Add a byte to the frame.
+            bytes are ignored until SOF = true.
+            when Count == Length + 1, A complete Frame has been received and is ready for processing
+            </summary>
+            <param name="b">the byte to add</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrame.#ctor">
+            <summary>
+            construct a new, empty, frame
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrame.#ctor(WJ.MPR.Reader.CmdCode,WJ.MPR.Util.byteList)">
+            <summary>
+            Construct a new request frame with the given opcode (command) and parameters (parameters).
+            </summary>
+            <param name="command">The opcode for the new Request Frame.</param>
+            <param name="parameters">The parameters for this Frame.</param>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRFrame.crctab">
+            <summary>
+            The Frame crc calculation uses a table lookup to generate CCITT CRC values.
+            The CCITT polynomial is: x^16 + x^12 + x^5 + 1
+            Forward direction table - i.e. msbit first
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRFrame.CalculateFrameCRC(WJ.MPR.Util.byteList)">
+            <summary>
+            Compute the MPR crc for a byteList
+            </summary>
+            <param name="buffer">the buffer over which to perform the CRC</param>
+            <returns>the 2-byte crc</returns>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRFrame.Data">
+            <summary>
+            Data Field, Frame[4] to Frame[Length-2]
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRFrame.NodeAddress">
+            <summary>
+            Node Address Field, Frame[1]
+            Should always be 0
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRFrame.Length">
+            <summary>
+            Length Field, Frame[2].
+            Length of all bytes in Frame except SOF
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRFrame.Command">
+            <summary>
+            (Request Frames Only) Command Field, Frame[3] - see CmdCode Enumeration
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRFrame.Status">
+            <summary>
+            (Response Frames Only) Status Field, Frame[3] - see StatusCode Enumeration
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRFrame.crc">
+            <summary>
+            crc Field, Frame[Length-2] and Frame[Length-1]
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRFrame.CRCValid">
+            <summary>
+            Whether or not the CRC of this Frame is valid: {crc == CalculateFrameCRC(Payload)}
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.WinAPI.Registry">
+            <summary>
+            Supplies the base <b>RegistryKeys</b> that access values and subkeys in the registry.
+            </summary>
+            <remarks>This class provides the set of standard root keys found in the registry on
+            machines running Windows CE.  The registry is a storage facility for information about 
+            applications and default system settings. For example, applications can use the 
+            registry for storing information that needs to be preserved once the application is
+            closed, and access that same information when the application is reloaded.
+            For instance, you can store color preferences, screen locations, or the size of the window.
+            The keys exposed by Registry are: 
+            <list type="bullet">
+            <item><term>CurrentUser</term>
+            	<description>Stores information about user preferences.</description></item>
+            <item><term>LocalMachine</term>
+            	<description>Stores configuration information for the local machine.</description></item>
+            <item><term>ClassesRoot</term>
+            	<description>Stores information about types (and classes) and their properties.</description></item>  
+            <item><term>Users</term>
+            	<description>Stores information about the default user configuration.</description></item></list> 
+            Once you have identified the root key under which you want to store/retrieve information 
+            from the registry, you can use the RegistryKey class to add or remove subkeys, and manipulate 
+            the values for a given key.</remarks>
+        </member>
+        <member name="F:WJ.MPR.WinAPI.Registry.LocalMachine">
+            <summary>
+            Contains the configuration data for the local machine. This field reads the Windows registry base key HKEY_LOCAL_MACHINE.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.WinAPI.Registry.CurrentUser">
+            <summary>
+            Contains information about the current user preferences. This field reads the Windows registry base key HKEY_CURRENT_USER.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.WinAPI.Registry.ClassesRoot">
+            <summary>
+             Defines the types (or classes) of documents and the properties associated with those types. This field reads the Windows registry base key HKEY_CLASSES_ROOT.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.WinAPI.Registry.Users">
+            <summary>
+            Contains information about the default user configuration. This field reads the Windows registry base key HKEY_USERS.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.WinAPI.RegistryKey">
+            <summary>
+            Represents a key level node in the Windows registry. This class is a registry encapsulation.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.ToString">
+            <summary>
+            Retrieves a string representation of this key.
+            </summary>
+            <returns>A string representing the key. If the specified key is invalid (cannot be found) then a null value is returned.</returns>
+            <exception cref="T:System.ObjectDisposedException"> The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.Flush">
+            <summary>
+            Writes all the attributes of the specified open registry key into the registry.
+            </summary>
+            <remarks>The Flush method may also write out parts of or all of the other keys.
+            Calling this function excessively can have a negative effect on an application’s performance.</remarks>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.Close">
+            <summary>
+            Closes the key and flushes it to storage if the contents have been modified.
+            </summary>
+            <remarks>Calling this method on system keys will have no effect, since system keys should never be closed.
+            This method does nothing if you call it on an instance of <b>RegistryKey</b> that is already closed.</remarks>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.CreateSubKey(System.String)">
+            <summary>
+             Creates a new subkey or opens an existing subkey.
+             The string subKey is not case-sensitive.
+            </summary>
+            <param name="subkey">Name or path of subkey to create or open.</param>
+            <returns>Returns the subkey, or null if the operation failed.</returns>
+            <exception cref="T:System.ArgumentNullException">The specified subkey is null.</exception>
+            <exception cref="T:System.ArgumentException">The length of the specified subkey is longer than the maximum length allowed (255 characters).</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey on which this method is being invoked is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.OpenSubKey(System.String)">
+            <summary>
+            Retrieves a subkey as read-only.
+            </summary>
+            <param name="name">Name or path of subkey to open.</param>
+            <returns>The subkey requested, or null if the operation failed.</returns>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.OpenSubKey(System.String,System.Boolean)">
+            <summary>
+            Retrieves a specified subkey.
+            </summary>
+            <param name="name">Name or path of subkey to open.</param>
+            <param name="writable">Set to true if you need write access to the key.</param>
+            <returns>The subkey requested, or null if the operation failed.</returns>
+            <exception cref="T:System.ArgumentNullException">name is null.</exception>
+            <exception cref="T:System.ArgumentException">The length of the specified subkey is longer than the maximum length allowed (255 characters).</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.DeleteSubKey(System.String)">
+            <summary>
+            Deletes the specified subkey. The string subkey is not case-sensitive.
+            </summary>
+            <param name="subkey">Name of the subkey to delete.</param>
+            <exception cref="T:System.ArgumentException">The specified subkey is not a valid reference to a registry key.</exception>
+            <exception cref="T:System.ArgumentNullException">The subkey is null.</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey on which this method is being invoked is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.DeleteSubKey(System.String,System.Boolean)">
+            <summary>
+            Deletes the specified subkey. The string subkey is not case-sensitive.
+            </summary>
+            <param name="subkey">Name of the subkey to delete.</param>
+            <param name="throwOnMissingSubKey">Indicates whether an exception should be raised if the specified subkey cannot be found.
+            If this argument is true and the specified subkey does not exist then an exception is raised.
+            If this argument is false and the specified subkey does not exist, then no action is taken</param>
+            <exception cref="T:System.ArgumentException">The specified subkey is not a valid reference to a registry key (and throwOnMissingSubKey is true).</exception>
+            <exception cref="T:System.ArgumentNullException">The subkey is null.</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey on which this method is being invoked is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.DeleteSubKeyTree(System.String)">
+            <summary>
+             Deletes a subkey and any child subkeys recursively.
+             The string subKey is not case-sensitive.
+            </summary>
+            <param name="subkey">Subkey to delete.</param>
+            <exception cref="T:System.ArgumentNullException">The subkey parameter is null.</exception>
+            <exception cref="T:System.ArgumentException">Deletion of a root hive is attempted. 
+            The subkey parameter does not match a valid registry subkey.</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.GetSubKeyNames">
+            <summary>
+            Retrieves an array of strings that contains all the subkey names.
+            </summary>
+            <returns>An array of strings that contains the names of the subkeys for the current key.</returns>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.GetValue(System.String)">
+            <summary>
+            Retrieves the data associated with the specified value, or null if the value does not exist.
+            </summary>
+            <param name="name">Name of the value to retrieve.</param>
+            <returns>The data associated with name , or null if the value does not exist.</returns>
+            <exception cref="T:System.ArgumentException">The RegistryKey being manipulated does not exist.</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.GetValue(System.String,System.Object)">
+            <summary>
+            Retrieves the specified value, or the default value you provide if the specified value is not found. 
+            </summary>
+            <param name="name">Name of the value to retrieve.</param>
+            <param name="defaultValue">Value to return if name does not exist.</param>
+            <returns>The data associated with name, or defaultValue if name is not found.</returns>
+            <exception cref="T:System.ArgumentException">The RegistryKey being manipulated does not exist.</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.SetValue(System.String,System.Object)">
+            <summary>
+            Sets the specified value.
+            </summary>
+            <param name="name">Name of value to store data in.</param>
+            <param name="value">Data to store.</param>
+            <exception cref="T:System.ArgumentException">The length of the specified value is longer than the maximum length allowed (255 characters).</exception>
+            <exception cref="T:System.ArgumentNullException">value is null.</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey being set is closed (closed keys cannot be accessed).</exception>
+            <exception cref="T:System.UnauthorizedAccessException">The RegistryKey being set is readonly, and cannot be written to (for example, it is a root-level node, or the key has not been opened with write-access).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.DeleteValue(System.String)">
+            <summary>
+            Deletes the specified value from this key.
+            </summary>
+            <param name="name">Name of the value to delete.</param>
+            <exception cref="T:System.ArgumentException">name is not a valid reference to a value (and throwOnMissingValue is true) or name is null</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+            <exception cref="T:System.UnauthorizedAccessException">The RegistryKey being manipulated is readonly.</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.DeleteValue(System.String,System.Boolean)">
+            <summary>
+            Deletes the specified value from this key.
+            </summary>
+            <param name="name">Name of the value to delete.</param>
+            <param name="throwOnMissingValue">Indicates whether an exception should be raised if the specified value cannot be found.
+            If this argument is true and the specified value does not exist then an exception is raised.
+            If this argument is false and the specified value does not exist, then no action is taken</param>
+            <exception cref="T:System.ArgumentException">name is not a valid reference to a value (and throwOnMissingValue is true) or name is null</exception>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+            <exception cref="T:System.UnauthorizedAccessException">The RegistryKey being manipulated is readonly.</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.GetValueNames">
+            <summary>
+            Retrieves an array of strings that contains all the value names associated with this key.
+            </summary>
+            <returns>An array of strings that contains the value names for the current key.</returns>
+            <remarks>If no value names for the key are found, an empty array is returned.
+            <para>All RegistryKeys are assigned a default value.
+            This is not counted as a value name, and is not returned as part of the result set.</para></remarks>
+            <exception cref="T:System.ObjectDisposedException">The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.RegistryKey.Dispose">
+            <summary>
+            Free up resources used by the RegistryKey
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.WinAPI.RegistryKey.Name">
+            <summary>
+            Retrieves the name of the key.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.WinAPI.RegistryKey.SubKeyCount">
+            <summary>
+            Retrieves the count of subkeys at the base level, for the current key.
+            </summary>
+            <exception cref="T:System.ObjectDisposedException"> The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="P:WJ.MPR.WinAPI.RegistryKey.ValueCount">
+            <summary>
+            Retrieves the count of values in the key.
+            </summary>
+            <exception cref="T:System.ObjectDisposedException"> The RegistryKey being manipulated is closed (closed keys cannot be accessed).</exception>
+        </member>
+        <member name="T:WJ.MPR.WinAPI.RegistryKey.KeyType">
+            <summary>
+            Key type for RegCreateKey(Ex)
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.WinAPI.Sound">
+            <summary>
+            Play a WAV sound.  WAV can be either a file or resource.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.Sound.PlayFile(System.String)">
+            <summary>
+            Play a WAV File asynchronously.
+            </summary>
+            <param name="strFileName">The name of the .WAV file to play</param>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.Sound.PlayResource(System.String)">
+            <summary>
+            Play a WAV Resource asynchronously.
+            </summary>
+            <param name="strFileName">The name of the .WAV resource to play</param>
+        </member>
+        <member name="M:WJ.MPR.WinAPI.Sound.Play(System.String)">
+            <summary>
+            Play a WAV File asynchronously.
+            </summary>
+            <param name="strFileName">The name of the .WAV file to play</param>
+        </member>
+        <member name="T:WJ.Serial.CommPortException">
+            <summary>
+            Exceptions throw by the OpenNETCF.IO.Serial class
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.CommPortException.#ctor(System.String)">
+            <summary>
+            Default CommPortException
+            </summary>
+            <param name="desc"></param>
+        </member>
+        <member name="T:WJ.Serial.Port">
+            <summary>
+            A class wrapper for serial port communications.
+            Derived from OpenNETCF.org's : OpenNETCF.IO.Serial.Port
+            See the Source Code for more documentation, and differences to original OpenNETCF source.
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.Port.#ctor(System.String)">
+            <summary>
+            Create a serial port class.  The port will be created with defualt settings.
+            </summary>
+            <param name="PortName">The port to open (i.e. "COM1:")</param>
+        </member>
+        <member name="M:WJ.Serial.Port.#ctor(System.String,WJ.Serial.BasicPortSettings)">
+            <summary>
+            Create a serial port class.
+            </summary>
+            <param name="PortName">The port to open (i.e. "COM1:")</param>
+            <param name="InitialSettings">BasicPortSettings to apply to the new Port</param>
+        </member>
+        <member name="M:WJ.Serial.Port.#ctor(System.String,WJ.Serial.DetailedPortSettings)">
+            <summary>
+            Create a serial port class.
+            </summary>
+            <param name="PortName">The port to open (i.e. "COM1:")</param>
+            <param name="InitialSettings">DetailedPortSettings to apply to the new Port</param>
+        </member>
+        <member name="M:WJ.Serial.Port.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Create a serial port class.
+            </summary>
+            <param name="PortName">The port to open (i.e. "COM1:")</param>
+            <param name="RxBufferSize">Receive buffer size, in bytes</param>
+            <param name="TxBufferSize">Transmit buffer size, in bytes</param>
+        </member>
+        <member name="M:WJ.Serial.Port.#ctor(System.String,WJ.Serial.BasicPortSettings,System.Int32,System.Int32)">
+            <summary>
+            Create a serial port class.
+            </summary>
+            <param name="PortName">The port to open (i.e. "COM1:")</param>
+            <param name="InitialSettings">BasicPortSettings to apply to the new Port</param>
+            <param name="RxBufferSize">Receive buffer size, in bytes</param>
+            <param name="TxBufferSize">Transmit buffer size, in bytes</param>
+        </member>
+        <member name="M:WJ.Serial.Port.#ctor(System.String,WJ.Serial.DetailedPortSettings,System.Int32,System.Int32)">
+            <summary>
+            Create a serial port class.
+            </summary>
+            <param name="PortName">The port to open (i.e. "COM1:")</param>
+            <param name="InitialSettings">DetailedPortSettings to apply to the new Port</param>
+            <param name="RxBufferSize">Receive buffer size, in bytes</param>
+            <param name="TxBufferSize">Transmit buffer size, in bytes</param>
+        </member>
+        <member name="M:WJ.Serial.Port.Dispose">
+            <summary>
+            Dispose the object's resources
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.Port.Finalize">
+            <summary>
+            Class destructor
+            </summary>
+        </member>
+        <member name="M:WJ.Serial.Port.Open">
+            <summary>
+            Open the current port
+            </summary>
+            <returns>true if successful, false if it fails</returns>
+        </member>
+        <member name="M:WJ.Serial.Port.Query">
+            <summary>
+            Query the current port's capabilities without accessing it. You can only call the Close()
+            method after reading the capabilities. This method does neither initialize nor Open() the
+            port.
+            </summary>
+            
+            <example>
+            
+            </example>
+        </member>
+        <member name="M:WJ.Serial.Port.UpdateSettings">
+            <summary>
+            Updates communication settings of the port
+            parameters without closing and reopening the port
+            </summary>
+            <returns>true if successful, false if it fails</returns>
+        </member>
+        <member name="M:WJ.Serial.Port.Close">
+            <summary>
+            Close the current serial port
+            </summary>
+            <returns>true indicates success, false indicated failure</returns>
+        </member>
+        <member name="E:WJ.Serial.Port.OnError">
+            <summary>
+             A communication error has occurred
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.DataReceived">
+            <summary>
+            Serial data has been received
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.TxDone">
+            <summary>
+            Transmit complete
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.FlagCharReceived">
+            <summary>
+            Set flag character was in the receive stream
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.PowerEvent">
+            <summary>
+            Power change event has occurred
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.HighWater">
+            <summary>
+            Serial buffer's high-water level has been exceeded
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.DSRChange">
+            <summary>
+            DSR state has changed
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.RingChange">
+            <summary>
+            Ring signal has been detected
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.CTSChange">
+            <summary>
+            CTS state has changed
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.RLSDChange">
+            <summary>
+            RLSD state has changed
+            </summary>
+        </member>
+        <member name="E:WJ.Serial.Port.IsOpenChanged">
+            <summary>
+            COM port "open" status has changed
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.PortName">
+            <summary>
+            The name of the Port (i.e. "COM1:")
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.IsOpen">
+            <summary>
+            Returns whether or not the port is currently open
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.isOpen">
+            <summary>
+            Internal private property used to generate IsOpenChanged events when a port is opened or closed.
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.Output">
+            <summary>
+            The Port's output buffer.  Set this property to send data.
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.Input">
+            <summary>
+            The Port's input buffer.  Incoming data is read from here and a read will pull InputLen bytes from the buffer
+            <seealso cref="P:WJ.Serial.Port.InputLen"/>
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.InputLen">
+            <summary>
+            The length of the input buffer
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.InBufferCount">
+            <summary>
+            The actual amount of data in the input buffer
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.OutBufferCount">
+            <summary>
+            The actual amount of data in the output buffer
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.RThreshold">
+            <summary>
+            The number of bytes that the receive buffer must exceed to trigger a Receive event
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.SThreshold">
+            <summary>
+            The number of bytes that the transmit buffer must exceed to trigger a Transmit event
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.Break">
+            <summary>
+            Send or check for a communications BREAK event
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.DTRAvailable">
+            <summary>
+            Returns whether or not the current port support a DTR signal
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.DTREnable">
+            <summary>
+            Gets or sets the current DTR line state (true = 1, false = 0)
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.RTSAvailable">
+            <summary>
+            Returns whether or not the current port support an RTS signal
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.RTSEnable">
+            <summary>
+            Gets or sets the current RTS line state (true = 1, false = 0)
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.IREnable">
+            <summary>
+            Gets or sets the com port for IR use (true = 1, false = 0)
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.DetailedSettings">
+            <summary>
+            Get or Set the Port's DetailedPortSettings
+            </summary>
+        </member>
+        <member name="P:WJ.Serial.Port.Settings">
+            <summary>
+            Get or Set the Port's BasicPortSettings
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.Port.CommEvent">
+            <summary>
+            Raised on all enabled communication events
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.Port.CommChangeEvent">
+            <summary>
+            Raised when the communication state changes
+            </summary>
+        </member>
+        <member name="T:WJ.Serial.Port.CommErrorEvent">
+            <summary>
+            Raised during any communication error
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.RFIDProtocol">
+            <summary>
+            Enumeration for the known RFID protocols.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDProtocol.Unknown">
+            <summary>
+            The RFID Protocol for a tag is not known or specified.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDProtocol.EPCClass0">
+            <summary>
+            EPC Gen 1 Class 0.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDProtocol.EPCClass1">
+            <summary>
+            EPC Gen 1 Class 1.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDProtocol.EPCGen2">
+            <summary>
+            EPC Gen 2 Class 1.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.RFIDTag">
+            <summary>
+            Encapsulates an RFID Tag.
+            Includes properties for the Tag ID, the RFID Protocol (enum), "First Read Time" and 
+            "Last Read Time" 
+            Includes methods for computing Class 0 and Class 1 CRCs.
+            Incomplete: method to convert raw TagID to EPC.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDTag.Class1LockCodeValue">
+            <summary>
+            This value, when programmed into the MSB of the last row of a Class 1 Tag,
+            will lock the tag so that Kills are permanent, and all programming commands
+            {Program, Verify, Erase} are disabled.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDTag.CRC">
+            <summary>
+            The CRC of this Tag.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDTag.KillCode">
+            <summary>
+            Kill Passcode is one byte for EPC UHF Class 1,
+            and is the LSB of the row (16-bits) also containing
+            the LockCode
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDTag.LockCode">
+            <summary>
+            The Lock Code is one byte for EPC UHF Class 1, 
+            and is the MSB of the row (16-bits) also containing
+            the Kill Passcode.
+            Program to A5 to lock a tag.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDTag.RowData">
+            <summary>
+            ePC UHF Class 0+ (Zuma)
+            Class0+ Impinj 16 3-byte rows of row data
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.RFIDTag.#ctor(WJ.MPR.Util.byteList,WJ.MPR.Reader.RFIDProtocol)">
+            <summary>
+            Construct a Tag object with the given tag ID and Protocol.
+            </summary>
+            <param name="tagID">A list of bytes that form the Tag ID.</param>
+            <param name="protocol">The RFID protocol that this tag uses.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.RFIDTag.ToString">
+            <summary>
+            Converts the Tag ID to a string of hexadecimal digits.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.RFIDTag.ReRead(System.DateTime)">
+            <summary>
+            Update the Tag's lastRead property.
+            </summary>
+            <param name="lastread">The time the Tag was last read.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.RFIDTag.Class1CRC(WJ.MPR.Reader.RFIDTag)">
+            <summary>
+            Computes the EPC UHF Gen 1 Class 1 CRC for the TagID bits of an RFIDTag.
+            </summary>
+            <param name="mTag">The Tag whose Tag ID to compute the CRC of.</param>
+            <returns>The 16bit CRC.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.RFIDTag.Class1CRC(WJ.MPR.Util.byteList)">
+            <summary>
+            Compute the CRC for a byteList representing the TagID of a Class 1 Tag.
+            </summary>
+            <param name="TagID">The Tag whose Tag ID to compute the CRC of.</param>
+            <returns>The 16bit CRC.</returns>
+        </member>
+        <member name="F:WJ.MPR.Reader.RFIDTag.crcTable">
+            <summary>
+            The Class0 TagID CRC calculation algorithm is table based.
+            The following is the table computed for the x^16+x^12+x^5+1
+            polynomial.
+            According to the Class0 spec, this is the CCITT CRC.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.RFIDTag.Class0CRC(WJ.MPR.Util.byteList)">
+            <summary>
+            Calculate the EPC Class 0 CRC.
+            A table computed for the x^16+x^12+x^5+1 polynomial is used.
+            </summary>
+            <param name="TagID">The bytes to compute the CRC of.</param>
+            <returns>The 16-bit CRC.</returns>
+        </member>
+        <member name="P:WJ.MPR.Reader.RFIDTag.FirstRead">
+            <summary>
+            A timestamp for the first time this tag was read.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.RFIDTag.LastRead">
+            <summary>
+            A timestamp for the most recent time this tag was read.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.RFIDTag.Protocol">
+            <summary>
+            The RFID Protocol of this Tag.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.RFIDTag.TagID">
+            <summary>
+            The ID of the tag, as a string of Hexadecimal digits.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.RFIDTag.ToByteArray">
+            <summary>
+            The ID of the tag as a byte array.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.RFIDTag.ePC">
+            <summary>
+            Incompletely implemented property to convert TagID to EPC 
+            dotted.decimal notation.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Util.MethodCallInvoker">
+            <summary>
+            A Delegate for a Method that takes an array of objects.  
+            Used by ControlInvoker to Invoke methods that take parameters
+            in the Compact Framework.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Util.MethodInvoker">
+            <summary>
+            A Delegate for a Method that takes a void parameter list.  
+            Used by ControlInvoker to Invoke methods that don't take parameters
+            in the Compact Framework.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Util.ControlInvoker">
+            <summary>
+            Control.Invoke allows a method to be invoked on the same thread as the one
+            the control was created on.  Unlike in the full .NET Framework, the .NET
+            Compact Framework does not support the Control.Invoke overload for passing an 
+            array of objects to pass as arguments.  This ControlInvoker class overcomes
+            this limitation.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.ControlInvoker.#ctor(System.Windows.Forms.Control)">
+            <summary>
+            The constructor typically takes a form
+            </summary>
+            <param name="control"></param>
+        </member>
+        <member name="M:WJ.MPR.Util.ControlInvoker.Invoke(WJ.MPR.Util.MethodCallInvoker,System.Object[])">
+            <summary>
+            The delegate wrapping the method and its arguments 
+            to be called on the same thread as the control.
+            </summary>
+            <param name="invoker">A delegate for the method to call.</param>
+            <param name="arguments">Arguments for the method.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.ControlInvoker.Invoke(WJ.MPR.Util.MethodInvoker)">
+            <summary>
+            The delegate wrapping a method that takes no arguments
+            to be called on the same thread as the control.
+            </summary>
+            <param name="invoker">A delegate for the method to call.</param>
+        </member>
+        <member name="M:WJ.MPR.Util.ControlInvoker.ControlInvoke(System.Object,System.EventArgs)">
+            <summary>
+            CF Invoke only works with EventHandler delegates, so this is the method
+            that actually will be Invoked on the UI Thread.
+            </summary>
+            <param name="sender">These parameters aren't used.</param>
+            <param name="e">These parameters aren't used.</param>
+        </member>
+        <member name="T:WJ.MPR.Reader.TagFilter">
+            <summary>
+            A Class that encapsulates an RFID Tag ID filter.
+            TagFilters are used to select a subset of the Tag ID space.
+            They are really just an array of bits.
+            This class includes a static method to convert a string to an array of bits.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.TagFilter.Length">
+            <summary>
+            The number of bits to use from the Bits array.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.TagFilter.Bits">
+            <summary>
+            A byte array that stores the bits of the filter.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.TagFilter.#ctor(System.Byte,System.String)">
+            <summary>
+            Constructs a TagFilter from a string of hexadecimal digits.
+            </summary>
+            <param name="length">The number of bits to store from the string.</param>
+            <param name="filter">A string of hexadecimal digits from which to form the TagFilter.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.TagFilter.ParseID(System.String)">
+            <summary>
+            Parse the TagID in a string, and convert it to a byteList.
+            </summary>
+            <param name="IDstring"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WJ.MPR.Reader.MPRReader">
+            <summary>
+            	This is the main class instantiated by Applications.
+            	- Manages a single WJ Multi-Protocol Reader.
+            	- Provides properties and methods for accessing features of the MPR.
+            	- Talks to the MPR via an MPRComm object.
+            	- Generates request frame payloads for MPR API commands.
+            	- Parses response frame payloads from MPR API commands.
+            	- Fires events when MPR public properties change
+            	- Manages an Inventory of Tags in the MPRs field of view.
+            	- Inventory can consist of Class 0 or Class 1 tags.
+            	- Periodically polls the MPR for its current Inventory to:
+            		1) add new tags when found
+            		2) expire old tags
+            	- Old Tags are expired if they have not been seen for at least "PersistTime"
+            	- InventoryUpdateGap is how long to wait between inventory requests to the MPR.
+            	- Has methods to enable bootloading new FW to the MPR.
+            	- Exposes MPR methods to Read/Program/Erase/Kill/Lock Tags.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.#ctor">
+            <summary>
+            Construct a new MPRReader.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Connect(System.String,System.String)">
+            <summary>
+            Destroys any existing connection, 
+            then starts the attempt to connect to an MPR at the requested Serial Port and Baud Rate.
+            </summary>
+            <param name="SerialPortName">"COMx" style serial port name</param>
+            <param name="BaudRate">The Baud Rate at which to connect (usually 57600)</param>
+            <returns>Whether an MPR was found at requested Port and BaudRate</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Connect">
+            <summary>
+            Connect using the last (or default) SerialPortName and BaudRate
+            </summary>
+            <returns>Whether an MPR was found at default Port and BaudRate</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Disconnect">
+            <summary>
+            Disable Inventory Timer and close MPRComm.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Suspend">
+            <summary>
+            Close MPRComm, but record that we should reconnect on Resume.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Resume">
+            <summary>
+            Re-connect to the MPR if we were supposed to (as recorded in Suspend())
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class0PlusRead(WJ.MPR.Reader.TagFilter,System.Byte,WJ.MPR.Util.byteList@)">
+            <summary>
+            Read bits from a Matrics Class 0+ Tag.
+            </summary>
+            <param name="filter">a TagFilter specifying the tags to read from</param>
+            <param name="ReadBitCount">How many bits to read</param>
+            <param name="TagBits">A bytelist in which to return the bits read</param>
+            <returns>The number of Tags Read</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class0PlusWrite(WJ.MPR.Reader.TagFilter,WJ.MPR.Reader.TagFilter,System.Byte,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Write a Row of data to a Matrics Class 0+ Tag.
+            </summary>
+            <param name="filter">A Filter to match the Tags to write.</param>
+            <param name="programData">The bits to write to the Tags.</param>
+            <param name="IDPage">The IDPage (ID0-ID15) to Write.</param>
+            <param name="eraseFirst">Whether to Erase the IDPage first.</param>
+            <param name="lockAfter">Whether to Lock the IDPage after writing.</param>
+            <param name="clearTIB">Clear the Traversal Inhibit Bit (ID2 only).</param>
+            <param name="setTIB">Set the Traversal Inhibit Bit (ID2 only).</param>
+            <returns>The Number of Tags written.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class0ZumaRowRead(WJ.MPR.Reader.ZumaRow@,WJ.MPR.Reader.TagFilter)">
+            <summary>
+            Zuma command to Read a row of data (or Tag ID).
+            </summary>
+            <param name="row"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class0ZumaRowWrite(WJ.MPR.Reader.ZumaRow,WJ.MPR.Reader.TagFilter,System.Boolean)">
+            <summary>
+            Zuma command to Write a row of data (or Tag ID).
+            </summary>
+            <param name="row"></param>
+            <param name="filter"></param>
+            <param name="Ack"></param>
+            <returns>int : # Tags written</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class0ZumaInit(WJ.MPR.Reader.TagFilter,System.Boolean)">
+            <summary>
+            Zuma command to Initialize a tag.
+            </summary>
+            <param name="filter"></param>
+            <param name="SetLock">Whether or not to set the lock bit</param>
+            <returns>The number of Tags the responded to the INIT</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class0Kill(WJ.MPR.Util.byteList,System.UInt32)">
+            <summary>
+            Kills a Class 0 Tag.
+            </summary>
+            <param name="TagIDBits">The TagID of the Class 0 tag to Kill.</param>
+            <param name="KillPasscode">The 24-bit Passcode of the Class 0 tag to Kill.</param>
+            <returns></returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class1Kill(WJ.MPR.Util.byteList,System.Byte)">
+            <summary>
+            Kill Class1 Tag.
+            TagID represented as a byteList.
+            </summary>
+            <param name="TagIDBits">The bits to match to singulate the Tag to kill.</param>
+            <param name="Passcode">The Kill Passcode of the Tag to kill.  Must be 8 or 12 bytes long.</param>
+            <returns>true if MPR responds as expected; false if invalid TagIDBits.Length, or MPR responds oddly.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class1Write(System.Byte,System.UInt16)">
+            <summary>
+            Write 16 bits to a Class1 Tag.
+            Word Addresses address 16 bits.
+            </summary>
+            <param name="WordAddress">The word Address.</param>
+            <param name="Word">The 16-bit value with which to program the tag.</param>
+            <returns>true if MPR responds properly; otherwise false.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class1Write(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Write 16 bits to a Class1 Tag.
+            Word Addresses address 16 bits.
+            </summary>
+            <param name="WordAddress">The word Address.</param>
+            <param name="MSB">Most Significant byte to program the tag.</param>
+            <param name="LSB">Least Significant byte to program the tag.</param>
+            <returns>true if MPR responds properly; otherwise false.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class1Verify(System.Double@)">
+            <summary>
+            Read all bits of a Class1 tag's EPC and CRC.
+            </summary>
+            <param name="Time">The Time it took to perform the command (in seconds).</param>
+            <returns>A Class 1 Tag with its data and CRC populated with the read data.  null if no tag read.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class1Verify">
+            <summary>
+            Read all bits of a Class1 tag's EPC and CRC.
+            </summary>
+            <returns>A Class 1 Tag with its data and CRC populated with the read data.  null if no tag read.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class1Erase">
+            <summary>
+            Erase a Class1 Tag.
+            Sets all bits of identifier, CRC and Passcode to all 0s.
+            </summary>
+            <returns>true if MPR Responded properly; otherwise false.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Reset(System.Boolean)">
+            <summary>
+            The MPR Series Reader can be reset by twiddling with the serial port.
+            </summary>
+            <param name="EnterBootloader">Whether to enter the bootloader.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.EnterBootloader">
+            <summary>
+            A shortcut for entering the Bootloader (same as Reset(true))
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.BeginBootloadFromStream(System.IO.Stream)">
+            <summary>
+            Given a Stream, enter the bootloader 
+            launch a new Thread (from the ThreadPool)
+            and send the Stream to the MPR's bootloader.
+            </summary>
+            <param name="FWStream">The Stream to send to the MPR bootloader.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.BootloadFromStream(System.Object)">
+            <summary>
+            Send each row of the Stream to the MPR bootloader.
+            Will fail if parameter oStream is not a valid Stream,
+            or MPR not already in the bootloader.
+            </summary>
+            <param name="oStream">A Stream passed as an object</param>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRReader.singulationField">
+            <summary>
+            Singulation Field for Class0 commands
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.UpdateReaderInfo">
+            <summary>
+            Update the Reader's Manufacturing Information
+            </summary>
+            <returns>Whether the reader's manu info read was successful</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.RecomputeTxPowerLimits">
+            <summary>
+            Tx Power Limits are a function of the model type, as reported by the MPR
+            during a "Read Information" Command.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.InventoryUpdateCallback(System.Object)">
+            <summary>
+            The method called when the InventoryUpdateTimer expires.
+            Updates the Inventories,
+            Fires an InvPollEvent,
+            and restarts the InventoryUpdateTimer, if still enabled.
+            </summary>
+            <param name="o"></param>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRReader.TagsRead">
+            <summary>
+            Form's copy of current persisted inventory
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRReader.Class0InventoryEnabled">
+            <summary>
+            Whether or not to perform EPC Class 0 inventories.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRReader.Class1InventoryEnabled">
+            <summary>
+            Whether to perform EPC Class 1 inventories.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRReader.Gen2InventoryEnabled">
+            <summary>
+            Whether to perform EPC UHF Gen2 inventories.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.UpdateInventory">
+            <summary>
+            A running inventory is called in a loop:
+            	A timer expires after InvUpdateGap.
+            	All enabled inventories are queried from the MPR.
+            	New tags are added, 
+            	and expired tags are removed.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.ClearInventory">
+            <summary>
+            Clear the Inventory by removing all tags.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRReader.pt">
+            <summary>
+            High Performance Timer
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRReader.InventoryUpdateTimer">
+            <summary>
+            Inventory loop timer
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.LogIt(System.String)">
+            <summary>
+            Asynchronously log some status by calling the commlogger
+            delegate (if it has been assigned).
+            </summary>
+            <param name="s">string: The string to log.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.ProcMsgStat(WJ.MPR.Reader.MPRMsg,System.Boolean)">
+            <summary>
+            Process the Status byte of a message response, and 
+            log an error message if the message is not OK.
+            </summary>
+            <param name="aMsg">The Msg to process</param>
+            <param name="enableLogging">Whether to log the raw serial port transaction.</param>
+            <returns>Whether the message response status was OK</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.ProcMsgStat(WJ.MPR.Reader.MPRMsg)">
+            <summary>
+            
+            </summary>
+            <param name="aMsg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.ProcessSummary(WJ.MPR.Util.byteList)">
+            <summary>
+            Most frames end with three counts,
+            Tags Processed,
+            Under-run errors (Tags whose TagID had less bits than the EPC header suggests it should have had)
+            CRC errors
+            </summary>
+            <param name="Summary">A bytelist of the 6 bytes that comprise the Message Summary</param>
+            <returns>The number of tags successfully processed; 0 if Summary wasn't exactly 6 bytes.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.InventoryParse(WJ.MPR.Util.byteList,WJ.MPR.Reader.RFIDProtocol)">
+            <summary>
+            Decode the Tag IDs in the accumulated frame payloads received in response to an inventory command.
+            </summary>
+            <param name="rawBytes">The accumulated payload bytes.</param>
+            <param name="Protocol">The RFID Protocol of the inventory being processed.</param>
+            <returns>An Inventory (Tag List) containing the Tags parsed from the payload.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class0PlusReadParse(WJ.MPR.Util.byteList@,WJ.MPR.Util.byteList)">
+            <summary>
+            Parse the response of a Class0+ read row command.
+            Each response frame consists of:
+            	The number of tags in its payload (1 byte)
+            	For each tag in the frame:
+            		the Tag ID
+            		3 bytes from the row being read.
+            </summary>
+            <param name="TagBits"></param>
+            <param name="rawBytes">The combined payloads of all response packets for this message.</param>
+            <returns>The number of Tags read by this command.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class0ZumaRowParse(WJ.MPR.Reader.ZumaRow@,WJ.MPR.Util.byteList)">
+            <summary>
+            Parse the response from a Class 0 Zuma "Read Row" request message.
+            </summary>
+            <param name="row">The row to which this data is supposed to correspond.</param>
+            <param name="rawBytes">The response packet payload</param>
+            <returns>The number of tags received and parsed.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Class1VerifyParse(WJ.MPR.Util.byteList)">
+            <summary>
+            Parse the response to a Class 1 Verify Command.
+            Each response frame of a Verify command's response consists of:
+            	The number of tags in this frame.
+            	The whole TagID of the tag.
+            	The Kill Passcode of the tag.
+            	The Lock Code of the tag.
+            </summary>
+            <param name="rawBytes"></param>
+            <returns>An RFIDTag with the TagID, Passcode and Lockcode decoded from the response.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.KickInvTimer">
+            <summary>
+            Reset 
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.Dispose">
+            <summary>
+            Release resources:
+            InventoryUpdateTimer and the MPRComm objects
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.comm_IsOpenChanged(System.Boolean)">
+            <summary>
+            Event Handler is called when comm up status changes
+            </summary>
+            <param name="Flag">true if comm now open; else false.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRReader.comm_BLDataArrived(System.String)">
+            <summary>
+            Fires when ASCII data arrives from the bootloader.
+            Passes this data up by firing its own event, BootloaderBytesReceivedEvent.
+            </summary>
+            <param name="Data">Contains the string of ASCII data that arrived from the Bootloader.</param>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.DisconnectEvent">
+            <summary>
+            Raised when the communication state changes
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.TagAdded">
+            <summary>
+            Fired when a new tag is added to the MPRReader's inventory.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.TagRemoved">
+            <summary>
+            Fired when a tag expires, ie hasn't been read for the persist time period.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.ActiveAntennaChanged">
+            <summary>
+            Fired when the Active Antenna changes.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.TxPowerChanged">
+            <summary>
+            Fired when the Tx Power changes.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.Class0SingulationFieldChanged">
+            <summary>
+            Fired when the Class 0 Singulation Field changes.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.PersistTimeChanged">
+            <summary>
+            Fired when the Persist Time changes.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.InvUpdateGapChanged">
+            <summary>
+            Fired when the Inventory Update Period changes.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.InvTimerEnabledChanged">
+            <summary>
+            Fired when the Inventory Timer Enabled property changes.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.ManufacturingInformationChanged">
+            <summary>
+            Fired when manufacturing information is read from the MPR.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.InvPollEvent">
+            <summary>
+            Fired when an Inventory Update occurs.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.BootloaderBytesReceivedEvent">
+            <summary>
+            Fired when a message is recevied from the bootloader.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRReader.StatusEvent">
+            <summary>
+            Fired when a string message is generated.
+            These messages are generated contain:
+            	- Communication log information
+            	- Command results
+            	- Error Messages
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.ActiveAntenna">
+            <summary>
+            The active antenna can be either A or B.  
+            Antenna A is the left antenna port when looking down on the card, with the antenna ports facing up.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.TxPower">
+            <summary>
+            The Tx Power can range from 15-27 dBm for MPR5000/MPR6000, 
+            and 18-30 dBm for MPR7000.
+            Ranges are stored in card NVS, and can be read back.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.TxPowerMin">
+            <summary>
+            The minimum TxPower, as read from the MPR.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.TxPowerMax">
+            <summary>
+            The maximum TxPower, as read from the MPR.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.Class0SingulationField">
+            <summary>
+            The Class0 Singulation Field can be 0, 1 or 2 for 
+            	0 = ID0 (Generated Random ID)
+            	1 = ID1 (Static Random ID)
+            	2 = ID2 (the EPC Code itself)
+            Used by the MPR to determine how to singulate tags.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.CommParams">
+            <summary>
+            A string describing the COM port and baud rate, or "No Comm" 
+            if the communications settings are not set.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.PersistTime">
+            <summary>
+            How long a tag that has been read will persist in the inventory,
+            without being read, while an inventory is running.
+            
+            If an inventory is stopped, tags do not expire.
+            If a tag is re-read, it will live at least another peristTime.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.InvUpdateGap">
+            <summary>
+            How much time to wait between calls to UpdateInventory when
+            an inventory loop is running.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.InvTimerEnabled">
+            <summary>
+            Whether an inventory is actively running.
+            When set to true, a timer is started that will expire after InvUpdateGap and call UpdateInventory()
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.TagInventory">
+            <summary>
+            Returns the inventory (list of tags) that have been read by the reader,
+            but not expired.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.DeviceModelNumber">
+            <summary>
+            Device Model Number is read and returned by the MPR "Get Information" Command.
+            A string of 8 ASCII bytes.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.DeviceSerialNumber">
+            <summary>
+            Device Serial Number is read and returned by the MPR "Get Information" Command.
+            A string of 12 ASCII bytes.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.HardwareVersion">
+            <summary>
+            Hardware Version Number is read and returned by the MPR "Get Information" Command.
+            A string of 8 ASCII bytes.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.ManufactureDate">
+            <summary>
+            Manufacture Date is read and returned by the MPR "Get Information" Command.
+            A string of 8 ASCII bytes.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.ManufacturerName">
+            <summary>
+            Manufacturer Name is read and returned by the MPR "Get Information" Command.
+            A string of 16 ASCII bytes.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.FirmwareVersion">
+            <summary>
+            Firmware Version Number is read and returned by the MPR "Get Information" Command as 2 bytes.
+            This is converted to a string with dotted decimal notation.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.FirmwareMajorVersion">
+            <summary>
+            Firmware Major Version is MSB of the FirmwareVersion
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.FirmwareMinorVersion">
+            <summary>
+            Firmware Major Version is LSB of the FirmwareVersion
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.BootLoaderVersion">
+            <summary>
+            Bootloader Version Number is read and returned by the MPR "Get Information" Command as 2 bytes.
+            This is converted to a string with dotted decimal notation.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.BootloaderMajorVersion">
+            <summary>
+            Bootloader Major Version is MSB of the BootloaderVersion
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.BootloaderMinorVersion">
+            <summary>
+            Bootloader Major Version is LSB of the BootloaderVersion
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.Class0Inventory">
+            <summary>
+            Request the EPC Gen 1 Class 0 Inventory from the MPR.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.Class1Inventory">
+            <summary>
+            Request the EPC Gen 1 Class 1 Inventory from the MPR.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.Gen2Inventory">
+            <summary>
+            Request the UHF Gen 2 Class 1 Inventory from the MPR.
+            - not implemented yet.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.CurrentInventory">
+            <summary>
+            Returns an Inventory Object populated with the tags that have been read and not expired.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRReader.IsConnected">
+            <summary>
+            Whether we are connected to the MPR or not.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.Inventory">
+            <summary>
+            A strongly-typed collection of RFIDTag objects.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.Add(WJ.MPR.Reader.RFIDTag)">
+            <summary>
+            Add a single value to the list.
+            </summary>
+            <param name="val">the value to add.</param>
+            <returns>Index of newly added element.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.IndexOf(WJ.MPR.Reader.RFIDTag)">
+            <summary>
+            Determines the index of a specific element in the list.
+            </summary>
+            <param name="val">The element to locate in the list.</param>
+            <returns>The index of val if found in the list; otherwise, -1.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.Insert(System.Int32,WJ.MPR.Reader.RFIDTag)">
+            <summary>
+            Inserts an element into the list at the specified Index.
+            </summary>
+            <param name="Index">The zero-based index at which the value should be inserted.</param>
+            <param name="val">The value to insert into the list.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.Remove(WJ.MPR.Reader.RFIDTag)">
+            <summary>
+            Removes the first occurrence of a specific value from the list.
+            </summary>
+            <param name="val">The value to remove from the list.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.ToArray">
+            <summary>
+            Convert the list to an array.
+            </summary>
+            <returns>The values of this list, as an array.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.Contains(WJ.MPR.Reader.RFIDTag)">
+            <summary>
+            Determines whether the Inventory contains a specific RFIDTag.
+            </summary>
+            <param name="val">The value to locate in the list.</param>
+            <returns>true if val is found in the list; otherwise, false.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.Contains(System.String)">
+            <summary>
+            Determines whether the Inventory contains a RFIDTag with a specific TagID.
+            The TagID of each RFIDTag in the Inventory is compared to val.
+            </summary>
+            <param name="val">The value to locate in the list.</param>
+            <returns>true if val is found in the list; otherwise, false.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.Find(System.String)">
+            <summary>
+            Determines whether the Inventory contains a RFIDTag with a specific TagID.
+            The TagID of each Tag in the Inventory is compared to val.
+            </summary>
+            <param name="val">The value to locate in the list.</param>
+            <returns>The matching RFIDTag if val is found in the list; otherwise, null.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.Merge(WJ.MPR.Reader.Inventory)">
+            <summary>
+            Combine two Inventories.
+            If newTags is null, false is returned.
+            Then newTags are added.  Lastly Old RFIDTags are Expired.
+            If either adding or expiring changes this Inventory, true is returned.
+            </summary>
+            <param name="newTags">An Inventory containing RFIDTags to add to this Inventory.</param>
+            <returns>Whether any new RFIDTags were added or deleted.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.Add(WJ.MPR.Reader.Inventory)">
+            <summary>
+            Add an Inventory's RFIDTags to this Inventory.
+            This Inventory is searched for each RFIDTag in newTags,
+            if it is found, its LastRead timestamp is updated.
+            if it is not found, it is added.
+            </summary>
+            <param name="newTags">An Inventory of RFIDTags to add.</param>
+            <returns>Whether any RFIDTags were added.</returns>
+        </member>
+        <member name="F:WJ.MPR.Reader.Inventory.persistTime">
+            <summary>
+            The length of time that a RFIDTag can live in an inventory, 
+            without being reread, before it is removed by ExpireTags().
+            If persistTime == TimeSpan.MaxValue, then RFIDTags are never removed.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.Inventory.ExpireTags(System.DateTime)">
+            <summary>
+            The LastRead property of each RFIDTag in this Inventory 
+            + the persistTime is compared against the "now" parameter.  
+            If the sum is less, then the RFIDTag is removed from this Inventory.
+            If persistTime == TimeSpan.MaxValue, then RFIDTags are never removed.
+            </summary>
+            <param name="now"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WJ.MPR.Reader.Inventory.Item(System.Int32)">
+            <summary>
+            Gets or sets the element at the specified index.
+            This property is the indexer for the list.
+            </summary>
+            <param name="Index">The zero-based index of the element to get or set.</param>
+            <value>The element at the specified index.</value>
+            <exception cref="T:System.ArgumentOutOfRangeException">index is not a valid index in the list.</exception>
+        </member>
+        <member name="P:WJ.MPR.Reader.Inventory.CountClass">
+            <summary>
+            Returns the number of Class0 and Class1 RFIDTags in this Inventory.
+            </summary>
+            <value>an array of two integers: [0] = # Class 0, [1] = # Class 1.</value>
+        </member>
+        <member name="T:WJ.MPR.Util.TCPMsgCmd">
+            <summary>
+            The MsgCmd byte for TCP/IP messages containing RFIDTag Add and Remove Tag Events.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Util.TCPMsgCmd.AddTag">
+            <summary>
+            A Tag has been added to the Inventory.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Util.TCPMsgCmd.RemoveTag">
+            <summary>
+            A Tag has been removed from the Inventory.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Util.Helpers">
+            <summary>
+            Contains just a function to convert two bytes to an unsigned short (ushort in C# parlance).
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Helpers.b2us(System.Byte,System.Byte)">
+            <summary>
+            b2us = "byte to ushort"  Combine two (8-bit) bytes into a single (16-bit) ushort
+            </summary>
+            <param name="a">MSB</param>
+            <param name="b">LSB</param>
+            <returns></returns>
+        </member>
+        <member name="T:WJ.MPR.Util.BoolEventHandler">
+            <summary>
+            Delegate for events with a bool argument.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Util.StringEventHandler">
+            <summary>
+            Delegate for events with a string argument.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.MPRComm">
+            <summary>
+            Responsible for handling messages bound for the MPR over a serial port.
+            	- Manages an underlying Serial Port object
+            	- Handles Serial Port Events
+            	- Generates Request Frames and parses Response Frames, and stores all frames for
+            		a single transaction in an MPRMsg.
+            	- Handles and reports Serial Port or MPR API errors.
+            	- Fires two events,
+            		1) BLData, when data arrives (always asynchronously) from the bootloader.
+            		2) IsOpenChanged, when the underlying serial port closes.
+            	- Performs the twiddling needed for Reseting the MPR and entering the bootloader.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRComm.portSettings">
+            <summary>
+            create the port settings:
+            	default has no Handshake
+            	Bootloader uses XonXoff
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRComm.SerialPort">
+            <summary>
+            The underlying Serial Port which we'll use to talk to the MPR
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRComm.BaudRate">
+            <summary>
+            The Baud Rate of the underlying Serial Port (default = 57600)
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.KickTimer">
+            <summary>
+            Reset the TimeOutTimer, by changing it to expire, just once, in 750 milliseconds.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.KillTimer">
+            <summary>
+            Kill the TimeOutTimer, by changing it to never expire.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.TimeOutFunction(System.Object)">
+            <summary>
+            The timer callback function.  Notify the current Msg that a comm timeout has occurred.
+            </summary>
+            <param name="ignore">Not used. Use null.</param>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRComm.CurrentMessage">
+            <summary>
+            The currently active Message.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRComm.rxTmpFrame">
+            <summary>
+            A temporary frame within which to store arriving bytes.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.#ctor(System.String,System.String)">
+            <summary>
+            Constructor that initializes, but doesn't open, the underlying serial port
+            through which to communicate with an MPR.  
+            </summary>
+            <param name="SerialPortName">The "COMx" port to use.</param>
+            <param name="BaudRate">The BaudRate to talk at, always 57600 for MPR series readers.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.Open">
+            <summary>
+            Try to open the underlying Serial Port.
+            </summary>
+            <returns>Whether or not the port was successfully opened.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.Close">
+            <summary>
+            Close the underlying serial port immediately...
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.Send(WJ.MPR.Reader.CmdCode,WJ.MPR.Util.byteList)">
+            <summary>
+            Build an MPRMsg using command and parameters, 
+            send the request frame, and wait for and receive
+            response packets.
+            </summary>
+            <param name="command">The command to send.</param>
+            <param name="parameters">The parameters for the command to send.</param>
+            <returns>The MPRMsg will contain the request and response frames for further processing.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.SendFrame(WJ.MPR.Reader.MPRFrame)">
+            <summary>
+            Send a request frame to the MPR via the Serial Port
+            Kicks the receiver timer after sending a frame
+            </summary>
+            <param name="txFrame">a Frame to send</param>
+            <returns>true if port is still open at exit of function.
+            false if port==null, or port isn't open.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.SendBLLine(System.String)">
+            <summary>
+            Send one line of text
+            </summary>
+            <param name="line"></param>
+            <returns>Whether the serial port is still open after sending the line.</returns>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.Dispose">
+            <summary>
+            Free resources:
+            	Dispose the underlying Serial port.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.SerialPort_TxDone">
+            <summary>
+            Not used:  Fired when the Serial Port is done transmitting the whole Input buffer.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.SerialPort_OnError(System.String)">
+            <summary>
+            Fired when the Serial Port detects an error condition.
+            </summary>
+            <param name="Description">A string describing the error condition.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.SerialPort_IsOpenChanged(System.Boolean)">
+            <summary>
+            Just a thin wrapper around the underlying Port's
+            IsOpenChanged event
+            </summary>
+            <param name="NewState">true if Serial Port is now open; otherwise false.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRComm.ResetMPR(System.Boolean)">
+            <summary>
+            Hard reboot the MPR's processor.
+            Resetting can bring the MPR up in one of two programs.
+            	If the Bootloader line is high, we enter the bootloader.
+            	Else, the normal Application is started.
+            The Application uses no Handshaking, 57600 baud, and communicates through MPRMsg Frames.
+            The Bootloader uses XonXoff Handshaking, 115200 baud, and communicates through ASCII text.
+            The two different types of message require different Message handlers 
+            (SerialPort_DataRecevied and SerialPortBL_DataRecevied).
+            
+            This Method waits 100 msec after toggling the Reset Line, for the MPR to reboot.
+            </summary>
+            <param name="BootLoader">Whether the MPR should start in the boot loader (true) 
+            or the application (false).</param>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRComm.IsOpenChanged">
+            <summary>
+            Raised when the underlying serial port is opened or closed.
+            </summary>
+        </member>
+        <member name="E:WJ.MPR.Reader.MPRComm.BLDataArrived">
+            <summary>
+            Fired when data is received from the MPR's bootloader.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRComm.IsOpen">
+            <summary>
+            Just map the underlying ports IsOpen property.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRComm.PortSetting">
+            <summary>
+            Returns a string with the serial port and baud rate : "COMx 57600".
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.CmdCode">
+            <summary>
+            Message Command Opcodes
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.unknown">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.ReaderInfo">
+            <summary>
+            Requests the MPR Manufacturing Information
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class0Read">
+            <summary>
+            Requests the Class 0 Inventory.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class0Kill">
+            <summary>
+            Kill Class 0 Tags.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class0ZumaCommands">
+            <summary>
+            Command to access Class0 Zuma subcommands.
+            <see cref="T:WJ.MPR.Reader.Class0ZumaSubcommands"/>
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class0PlusRead">
+            <summary>
+            Read Class 0+ (Matrics) Tag Data.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class0PlusWrite">
+            <summary>
+            Write Class 0+ (Matrics) Tag Data.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class1Read">
+            <summary>
+            Requests the Class 1 Inventory.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class1Kill">
+            <summary>
+            Kill Class 1 Tags.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class1Write">
+            <summary>
+            A Class1 Programming Command.
+            Write 16 bits to a Class 1 Tag Data.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class1IDVerify">
+            <summary>
+            A Class1 Programming Command.
+            Verify a Class1 Tag.
+            Reads and returns all data on tag, EPC and CRC.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.Class1IDErase">
+            <summary>
+            A Class1 Programming Command.
+            Erase Tags.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.CmdCode.ReadADCs">
+            <summary>
+            Read and return the current values of all ADCs.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.Class0ZumaSubcommands">
+            <summary>
+            These are the subcommands for Impinj Zuma (Re-writeable Class 0), command 0x18
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.Class0ZumaSubcommands.WriteRow">
+            <summary>
+            Write a Row (18 bits) to a Zuma Tag.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.Class0ZumaSubcommands.ReadRow">
+            <summary>
+            Read a Row (18 bits) from a Zuma Tag.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.Class0ZumaSubcommands.INIT">
+            <summary>
+            Initialize a Zuma Tag for re-writing.
+            This RF-interface command sets the Fab Protect row to Golden Word.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.Class0ZumaSubcommands.WriteAck">
+            <summary>
+            Write a Row (18 bits) to a Zuma Tag, and wait for an acknowledgement.
+            Singulated-only command.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.StatusCode">
+            <summary>
+            Command Response Status Codes.
+            These are the Status bytes from Response Frames (or Packets).
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.StatusCode.Error">
+            <summary>
+            MPR reports an Error.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.StatusCode.Complete">
+            <summary>
+            MPR complete the request.
+            This is the last response frame.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.StatusCode.InProgress">
+            <summary>
+            This is not the last response frame;
+            More frames will follow.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.StatusCode.unknown">
+            <summary>
+            Status Code could not be determined from a response frame.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.ErrorCode">
+            <summary>
+            Command Response Error Codes.
+            These Error Codes follow the Status Byte in Frames
+            with a Status Byte = 0xff (StatusCode.Error)
+            <see cref="T:WJ.MPR.Reader.StatusCode"/>
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.NoError">
+            <summary>
+            No error reported.  
+            This is not received from the MPR, but inferred for Frames with non-Error statuses.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.CurrentOutOfRange">
+            <summary>
+            MPR Current Sense ADC reports out-of-range condition.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.VoltageOutOfRange">
+            <summary>
+            MPR Voltage Sense ADC reports out-of-range condition.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.AppHeaderAccessError">
+            <summary>
+            MPR Could not verify the CRC of the Application Header.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.Class0PlusErrorErasingPage">
+            <summary>
+            Error Programming page (EPC Class 0+ tags only)
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.Class0PlusErrorProgrammingPage">
+            <summary>
+            Error Erasing page (EPC Class 0+ tags only)
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.Class0PlusErrorProgrammingTIB">
+            <summary>
+            Error Programming Traversal Inhibit Bit (EPC Class 0+ tags only)
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.Class0PlusErrorLockingPage">
+            <summary>
+            Error Locking page (EPC Class 0+ tags only)
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.Class0PlusErrorPageLocked">
+            <summary>
+            Page cannot be accessed because it is already locked (EPC Class 0+ tags only)
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.InvalidParams">
+            <summary>
+            A parameter is out of range for the issued command.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.InsufficientData">
+            <summary>
+            Based on the command issued and the message length, there is not enough data in the message to support the command.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.UnsupportedCommand">
+            <summary>
+            The command is not supported or is unable to be processed by the Reader at this time.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.UnsupportedPowerLevel">
+            <summary>
+            A command has been issued with an unsupported power level.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.PLLLockFail">
+            <summary>
+            On commanding the transmit frequency, the PLL which generates the RF up conversion failed to converge on the required frequency.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.AntennaFault">
+            <summary>
+            The antenna was either not present or shorted.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.UnsupportedSubcommand">
+            <summary>
+            The subcommand issued is not one of the subcommands that can be processed by the reader.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.InvalidSubCommandParameter">
+            <summary>
+            A subcommand parameter is out of range for the issued subcommand.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.InvalidNVSTable">
+            <summary>
+            The Non-Volatile Storage table CRC is invalid.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.NVSAlignError">
+            <summary>
+            The NVS address is not a word address.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.NVSProtectionViolation">
+            <summary>
+            An attempt was made to program(write) or erase a protect address in the flash.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.NVSAccessError">
+            <summary>
+            Indicates an illegal access to the flash during a program(write) or erase commands.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.NVSWriteVerifyFail">
+            <summary>
+            Indicates an unsuccessful write sequence; data written does not match data read back from flash.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.IncorrectPasscode">
+            <summary>
+            The Passcode to enter Maintenance Mode was incorrect.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.InvalidCommand">
+            <summary>
+            The command entered is not supported in the current mode, e.g., maintenance mode commands are only valid while in maintenance mode.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.ErrorCode.UndefinedError">
+            <summary>
+            Some other, unspecified error occured.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.RspStatus">
+            <summary>
+            Indicates the possible error sources for an MPRMsg.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RspStatus.NoStatus">
+            <summary>
+            The MPRMsg has no status (yet).
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RspStatus.OK">
+            <summary>
+            No error associated with an MPRMsg.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RspStatus.ErrorRsp">
+            <summary>
+            An error reported in the status of a response frame.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RspStatus.ErrorComm">
+            <summary>
+            An error occured and was reported by the communication layer (serial port).
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RspStatus.TimeOut">
+            <summary>
+            A timeout occured = no final response frame received for the MPRMsg.
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.RspStatus.MsgRcvd">
+            <summary>
+            A message was recevied, but has not been processed yet.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Reader.MPRMsg">
+            <summary>
+            The Message class bundles a host-to-reader request and the reader-to-host responses
+            for a single command exchange.
+            	- The Request Frame is stored as an MPRFrame, txFrame.
+            	- The Response Frames are stored as an MPRFrameList, rxFrames.
+            	- Stores various forms of Status Information
+            		- MPR API status or errors
+            		- Serial Communications errors
+            		- Message Timeouts
+            	- Does the work of waiting for a single "Complete" Request Frame to arrive.
+            	- The .Receive method is where the thread blocks while waiting for the serial port
+            		thread to wake it up via one of three methods:
+            		1) .AddRxFrame()
+            		2) .CommError()
+            		3) .Timeout()
+            
+            </summary>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRMsg.MsgRcvd">
+            <summary>
+            A synchronization variable for signalling the end of
+            response frame reception, either due to an error,
+            a timeout, or the correct number of bytes received.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRMsg.#ctor(WJ.MPR.Reader.CmdCode,WJ.MPR.Util.byteList)">
+            <summary>
+            Construct a new MPRMsg with the given command and parameters.
+            </summary>
+            <param name="command">The command for the Request Frame.</param>
+            <param name="parameters">The parameters of the Request Frame.</param>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRMsg.AddRxFrame(WJ.MPR.Reader.MPRFrame)">
+            <summary>
+            Called by MPRComm when a response frame has been received.
+            </summary>
+            <param name="aFrame">A response packet that has arrived successfully.</param>
+        </member>
+        <member name="F:WJ.MPR.Reader.MPRMsg.commErrorString">
+            <summary>
+            A string describing any communication errors that may have occured.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRMsg.CommError(System.String)">
+            <summary>
+            called by MPRComm when a comm error occurs
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRMsg.Timeout">
+            <summary>
+            called by MPRComm when a message times out
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Reader.MPRMsg.Receive">
+            <summary>
+            Response Frame Receiver.
+            Waits on an AutoResetEvent until the end of a response frame reception.
+            	- This can be either successfull completion of a frame.
+            	- A Timeout while waiting for a response that never arrives.
+            	- A communications error.
+            If not an error,
+            Process each received frame:
+            	if CRC errors return RspStatus.ErrorComm
+            	if StatusCode.Complete
+            		Add rxFrame.Data to databytes
+            		return RspStatus.OK
+            	if StatusCode.Error
+            		record error
+            		return RspStatus.ErrorRsp
+            	if StatusCode.InProgress
+            		Add rxFrame.Data to databytes
+            		and keep looking for more frames. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRMsg.TxFrame">
+            <summary>
+            The Request Frame.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRMsg.RxFrames">
+            <summary>
+            A list of Response Frames.
+            A single response could be composed of multiple "InProgress" Frames,
+            but always a single "Complete" Frame.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRMsg.Error">
+            <summary>
+            Any ErrorCode associated with this MPRMsg.
+            If none, then ErrorCode.NoError.
+            ErrorCodes are returned when the Status Byte
+            of a response Frame = StatusCode.Error (0xFF).
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRMsg.Status">
+            <summary>
+            The Response Status of this MPRMsg:
+            NoStatus, MsgRcvd, OK, or the source of an error condition.
+            <see cref="T:WJ.MPR.Reader.RspStatus"/>
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRMsg.DataBytes">
+            <summary>
+            The accumulated bytes of all Response Frames.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Reader.MPRMsg.MsgID">
+            <summary>
+            A static running total of all MPRMsgs sent since the first 
+            MPRMsg was instantiated.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Util.ISnapIn">
+             <summary>
+            	Use this Interface to write a "Snap-In" For the WJ MPR Demo GUIs.
+            
+            	Usually this Interface is implented on a Form, and the OnClick EventHandler
+            	Shows the Form, which is accessible from the "Snap-In" Menu on the Demo.	
+             </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.ISnapIn.Init(WJ.MPR.Reader.MPRReader)">
+            <summary>
+            Initialization Routine, that gives the Snap-In a reference to a Reader object.
+            </summary>
+            <param name="Reader">The Reader on which the Snap-In should operate</param>
+        </member>
+        <member name="P:WJ.MPR.Util.ISnapIn.MenuName">
+            <summary>
+            The name of the Snap-In as it should appear on the "Snap-Ins" menu of the Demo.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Util.ISnapIn.OnOpen">
+            <summary>
+            The Event Handler to fire when the user selects the SnapIn's menuItem.
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Util.SnappableAttribute">
+            <summary>
+            This Attribute, when applied to a class, will enable it to be recognized
+            as an MPR SnapIn.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.SnappableAttribute.#ctor">
+            <summary>
+            Applying this Attribute to a class will make it snappable (for use as a Demo Snap-In).
+            </summary>
+        </member>
+        <member name="T:WJ.MPR.Util.Settings">
+             <summary>
+            	Read and write settings to an XML .config file. Does not use 
+            	ConfigurationSettings.AppSettings since it's not supported on .NET Compact Framework. 
+            	
+            	Uses same schema as app.config file. Example:
+            
+            	NOTE: [] in example stand for less than and greater than signs in real XML...
+            	
+            	[configuration]
+            	[appSettings]
+            	[add key="Name" value="Live Oak" /]
+            	[add key="LogEvents" value="True" /]
+            	[/appSettings]
+            	[/configuration]
+            	
+            		Default settings file name is the same as app.config, 
+            		appends .config to the end of the assembly name. Example:
+            	
+            	{appname.exe}.config
+            
+             </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.#ctor(System.String)">
+            <summary>
+            Default constructor. 
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.#ctor(System.String,System.String[0:,0:])">
+             <summary>
+             Constructor. Pass in an array of default values.
+             Sample usage that passes in default values:
+            
+            		string[,] values = 
+            		{
+            			{"Name", "Live Oak"},
+            			{"LogEvents", "True"}
+            		}
+            
+            		Settings settings = new Settings(values);
+             </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.SetValue(System.String,System.Object)">
+            <summary>
+            Set setting value. Update underlying file if AutoUpdate is true.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.GetString(System.String)">
+            <summary>
+            Return specified settings as string.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.GetInt(System.String)">
+            <summary>
+            Return specified settings as integer.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.GetBool(System.String)">
+            <summary>
+            Return specified settings as boolean.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.Read">
+            <summary>
+            Read settings file.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.Write">
+            <summary>
+            Write settings to the .config file.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.RestoreDefaults">
+            <summary>
+            Overwrite settings with default values.
+            </summary>
+        </member>
+        <member name="M:WJ.MPR.Util.Settings.GetFilePath">
+            <summary>
+            Return full path to settings file. Appends .config to the assembly name.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Util.Settings.AutoWrite">
+            <summary>
+            Specifies if the settings file is updated whenever a value 
+            is set. If false, you need to call Write to update the 
+            underlying settings file.
+            </summary>
+        </member>
+        <member name="P:WJ.MPR.Util.Settings.FilePath">
+            <summary>
+            Full path to settings file.
+            </summary>
+        </member>
+    </members>
+</doc>
