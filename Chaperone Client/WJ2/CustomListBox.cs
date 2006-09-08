@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
 using OpenNETCF.Windows.Forms;
+using ListItemNS;
 
 namespace OwnerDrawnListFWProject
 {
@@ -17,7 +18,7 @@ namespace OwnerDrawnListFWProject
 
         private ImageList imageList = null;
         private bool wrapText = false;
-        ImageAttributes imageAttr = new ImageAttributes();       
+        ImageAttributes imageAttr = new ImageAttributes();
 
         public bool WrapText
         {
@@ -47,15 +48,17 @@ namespace OwnerDrawnListFWProject
         {
             this.ShowScrollbar = true;
             this.ForeColor = Color.Black;
+
             //Set the item's height
             Graphics g = this.CreateGraphics();
+
             if (wrapText)
                 this.ItemHeight = 2 * Math.Max((int)(g.MeasureString("A", this.Font).Height), this.ItemHeight) + 2;
             else
                 this.ItemHeight = Math.Max((int)(g.MeasureString("A", this.Font).Height), this.ItemHeight) + 4;
 
             g.Dispose();
-        }       
+        }
 
         protected override void OnDrawItem(object sender, DrawItemEventArgs e)
         {
@@ -67,9 +70,7 @@ namespace OwnerDrawnListFWProject
             //Get the ListItem
             ListItem item;
 
-            if (e.Index < this.Items.Count)
-                item = (ListItem)this.Items[e.Index];
-            else
+            if (e.Index >= this.Items.Count)
                 return;
 
             if (e.State == DrawItemState.Selected)
@@ -80,11 +81,11 @@ namespace OwnerDrawnListFWProject
             }
             else
             {
-                if (item.missingAdded == -2)
+                if (((ListItem)this.Items[e.Index]).missingAdded == -2)
                     e.DrawBackground(Color.DarkRed);
-                if (item.missingAdded == -1)
+                if (((ListItem)this.Items[e.Index]).missingAdded == -1)
                     e.DrawBackground(Color.Tomato);
-                else if (item.missingAdded == 0)
+                else if (((ListItem)this.Items[e.Index]).missingAdded == 0)
                     e.DrawBackground(this.BackColor);
                 else
                     e.DrawBackground(Color.LightGreen);
@@ -94,9 +95,9 @@ namespace OwnerDrawnListFWProject
 
 
             //Check if the item has a image
-            if (item.ImageIndex > -1)
+            if (((ListItem)this.Items[e.Index]).ImageIndex > -1)
             {
-                Image img = imageList.Images[item.ImageIndex];
+                Image img = imageList.Images[((ListItem)this.Items[e.Index]).ImageIndex];
                 if (img != null)
                 {
                     imageAttr = new ImageAttributes();
@@ -114,10 +115,11 @@ namespace OwnerDrawnListFWProject
             }
 
             //Draw item's text
-            if (item.shortDesc != "")
-                e.Graphics.DrawString(item.shortDesc, e.Font, textBrush, rc);
+            if (((ListItem)this.Items[e.Index]).shortDesc != "")
+                e.Graphics.DrawString(((ListItem)this.Items[e.Index]).shortDesc, e.Font, textBrush, rc);
             else
-                e.Graphics.DrawString(item.RFIDNum, e.Font, textBrush, rc);
+                e.Graphics.DrawString(((ListItem)this.Items[e.Index]).RFIDNum, e.Font, textBrush, rc);
+
             //Draw the line
             e.Graphics.DrawLine(new Pen(Color.Navy), 0, e.Bounds.Bottom, e.Bounds.Width, e.Bounds.Bottom);
             //Call the base's OnDrawEvent	
@@ -128,72 +130,6 @@ namespace OwnerDrawnListFWProject
         {
             Bitmap bmp = new Bitmap(image);
             return bmp.GetPixel(0, 0);
-        }
-
-        
-    }
-
-    //ListItem class
-    public class ListItem
-    {
-        private string ShortDesc = "";
-        private string rfidNum = "";
-        private int imageIndex = -1;
-        private int MissingAdded = 0;
-
-        public ListItem(string rfid, string shortdesc, int b)
-        {
-            rfidNum = rfid;
-            ShortDesc = shortdesc;
-            MissingAdded = b;
-        }
-
-        public string shortDesc
-        {
-            get
-            {
-                return ShortDesc;
-            }
-            set
-            {
-                ShortDesc = value;
-            }
-        }
-
-        public string RFIDNum
-        {
-            get
-            {
-                return rfidNum;
-            }
-            set
-            {
-                rfidNum = value;
-            }
-        }
-
-        public int ImageIndex
-        {
-            get
-            {
-                return imageIndex;
-            }
-            set
-            {
-                imageIndex = value;
-            }
-        }
-
-        public int missingAdded
-        {
-            get
-            {
-                return MissingAdded;
-            }
-            set
-            {
-                MissingAdded = value;
-            }
         }
     }
 }

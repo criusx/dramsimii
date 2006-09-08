@@ -299,6 +299,8 @@ namespace OpenNETCF.Windows.Forms
 
         protected override void OnResize(EventArgs e)
         {
+            if (this.m_bmpOffscreen != null)
+                this.m_bmpOffscreen.Dispose(); 
 
             if (!this.showScrollbar)
             {
@@ -317,7 +319,6 @@ namespace OpenNETCF.Windows.Forms
                     0,
                     SCROLL_WIDTH,
                     this.ClientSize.Height);
-
 
                 // Determine if scrollbars are needed
                 if (this.listItems.Count > viewableItemCount)
@@ -562,7 +563,15 @@ namespace OpenNETCF.Windows.Forms
         public void Insert(int index, object value)
         {
             Items.Insert(index, value);
+        }
 
+        public void Add(object value)
+        {
+            Items.Add(value);
+        }
+
+        public void RefreshVal()
+        {
             EventArgs a = new EventArgs();
             OnResize(a);
             OnParentChanged(a);
@@ -573,15 +582,9 @@ namespace OpenNETCF.Windows.Forms
         public void Clear()
         {
             Items.Clear();
-            EventArgs a = new EventArgs();
-            OnResize(a);
-            //OnParentChanged(a);
-            this.Invalidate();
-            this.Refresh();
+            this.vScroll.Value = 0;
+            //RefreshVal();
         }
-
-        
-
     }
 
     #endregion

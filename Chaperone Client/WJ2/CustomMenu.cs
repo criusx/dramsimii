@@ -106,11 +106,6 @@ namespace OwnerDrawnListFWProject
             base.OnDrawItem(sender, e);
         }
 
-        public void Add(object value)
-        {
-            this.Insert(Items.Count, value);
-        }
-
-
+        
     }
 }

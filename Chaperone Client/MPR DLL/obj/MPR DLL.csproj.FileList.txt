@@ -1,12 +1,3 @@
 bin\Test\MPR DLL.dll
 obj\Test\ResolveAssemblyReference.cache
 obj\Test\MPR DLL.dll
-bin\Release\MPR DLL.dll
-bin\Release\MPR DLL.xml
-obj\Release\ResolveAssemblyReference.cache
-obj\Release\MPR DLL.dll
-bin\Debug\MPR DLL.dll
-bin\Debug\MPR DLL.pdb
-obj\Debug\ResolveAssemblyReference.cache
-obj\Debug\MPR DLL.dll
-obj\Debug\MPR DLL.pdb

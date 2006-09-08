@@ -1,6 +1,6 @@
 namespace WJ2
 {
-    partial class Form1
+    partial class mainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -35,6 +35,7 @@ namespace WJ2
             this.invTimerBox = new System.Windows.Forms.ComboBox();
             this.invProgressBar = new System.Windows.Forms.ProgressBar();
             this.clearBtn = new System.Windows.Forms.Button();
+            this.reconcileButton = new System.Windows.Forms.Button();
             this.scanButton = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.numTags = new System.Windows.Forms.NumericUpDown();
@@ -55,12 +56,14 @@ namespace WJ2
             this.domainUpDown2 = new System.Windows.Forms.DomainUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.connectBtn = new System.Windows.Forms.Button();
+            this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.dbTableLbl = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.dbNameLbl = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.ipPhoneBox = new System.Windows.Forms.TextBox();
             this.tagServerBox2 = new System.Windows.Forms.TextBox();
             this.dbTableBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -88,11 +91,11 @@ namespace WJ2
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.radConnectButton = new System.Windows.Forms.Button();
             this.radUpDown = new System.Windows.Forms.NumericUpDown();
             this.gpsSerialPort = new System.IO.Ports.SerialPort(this.components);
             this.radTimer = new System.Windows.Forms.Timer();
-            this.reconcileButton = new System.Windows.Forms.Button();
+            this.invTimer = new System.Windows.Forms.Timer();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -103,6 +106,8 @@ namespace WJ2
             // 
             // startInventoryButton
             // 
+            this.startInventoryButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.startInventoryButton.BackColor = System.Drawing.Color.LightGreen;
             this.startInventoryButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
             this.startInventoryButton.ForeColor = System.Drawing.Color.Black;
@@ -143,20 +148,23 @@ namespace WJ2
             // invTimerBox
             // 
             this.invTimerBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.invTimerBox.Items.Add("Manual");
             this.invTimerBox.Items.Add("20s");
+            this.invTimerBox.Items.Add("30s");
             this.invTimerBox.Items.Add("40s");
             this.invTimerBox.Items.Add("60s");
             this.invTimerBox.Items.Add("80s");
             this.invTimerBox.Items.Add("120s");
             this.invTimerBox.Items.Add("240s");
-            this.invTimerBox.Location = new System.Drawing.Point(125, 245);
+            this.invTimerBox.Location = new System.Drawing.Point(125, 246);
             this.invTimerBox.Name = "invTimerBox";
-            this.invTimerBox.Size = new System.Drawing.Size(40, 20);
+            this.invTimerBox.Size = new System.Drawing.Size(69, 20);
             this.invTimerBox.TabIndex = 3;
+            this.invTimerBox.SelectedIndexChanged += new System.EventHandler(this.invTimerBox_SelectedIndexChanged);
             // 
             // invProgressBar
             // 
-            this.invProgressBar.Location = new System.Drawing.Point(139, 245);
+            this.invProgressBar.Location = new System.Drawing.Point(139, 246);
             this.invProgressBar.Maximum = 5;
             this.invProgressBar.Name = "invProgressBar";
             this.invProgressBar.Size = new System.Drawing.Size(55, 20);
@@ -169,19 +177,32 @@ namespace WJ2
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.clearBtn.BackColor = System.Drawing.Color.Red;
             this.clearBtn.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Bold);
-            this.clearBtn.Location = new System.Drawing.Point(208, 244);
+            this.clearBtn.Location = new System.Drawing.Point(208, 246);
             this.clearBtn.Name = "clearBtn";
             this.clearBtn.Size = new System.Drawing.Size(32, 20);
             this.clearBtn.TabIndex = 2;
             this.clearBtn.Text = "Clear";
             this.clearBtn.Click += new System.EventHandler(this.clearBtn_Click);
             // 
+            // reconcileButton
+            // 
+            this.reconcileButton.BackColor = System.Drawing.Color.DeepPink;
+            this.reconcileButton.Enabled = false;
+            this.reconcileButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.reconcileButton.ForeColor = System.Drawing.Color.Black;
+            this.reconcileButton.Location = new System.Drawing.Point(83, 246);
+            this.reconcileButton.Name = "reconcileButton";
+            this.reconcileButton.Size = new System.Drawing.Size(35, 20);
+            this.reconcileButton.TabIndex = 0;
+            this.reconcileButton.Text = "Rec";
+            this.reconcileButton.Click += new System.EventHandler(this.reconcileButton_Click);
+            // 
             // scanButton
             // 
             this.scanButton.BackColor = System.Drawing.Color.Turquoise;
             this.scanButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
             this.scanButton.ForeColor = System.Drawing.Color.Black;
-            this.scanButton.Location = new System.Drawing.Point(46, 245);
+            this.scanButton.Location = new System.Drawing.Point(44, 246);
             this.scanButton.Name = "scanButton";
             this.scanButton.Size = new System.Drawing.Size(35, 20);
             this.scanButton.TabIndex = 0;
@@ -372,12 +393,14 @@ namespace WJ2
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.connectBtn);
+            this.tabPage3.Controls.Add(this.label19);
             this.tabPage3.Controls.Add(this.label18);
             this.tabPage3.Controls.Add(this.dbTableLbl);
             this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Controls.Add(this.dbNameLbl);
             this.tabPage3.Controls.Add(this.label7);
             this.tabPage3.Controls.Add(this.label6);
+            this.tabPage3.Controls.Add(this.ipPhoneBox);
             this.tabPage3.Controls.Add(this.tagServerBox2);
             this.tabPage3.Controls.Add(this.dbTableBox);
             this.tabPage3.Controls.Add(this.label5);
@@ -388,16 +411,24 @@ namespace WJ2
             this.tabPage3.Controls.Add(this.userIDBox);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(240, 271);
+            this.tabPage3.Size = new System.Drawing.Size(232, 268);
             this.tabPage3.Text = "Server";
             // 
             // connectBtn
             // 
-            this.connectBtn.Location = new System.Drawing.Point(95, 224);
+            this.connectBtn.Location = new System.Drawing.Point(95, 236);
             this.connectBtn.Name = "connectBtn";
-            this.connectBtn.Size = new System.Drawing.Size(113, 31);
+            this.connectBtn.Size = new System.Drawing.Size(75, 19);
             this.connectBtn.TabIndex = 4;
             this.connectBtn.Text = "Test";
+            // 
+            // label19
+            // 
+            this.label19.Location = new System.Drawing.Point(7, 210);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(82, 20);
+            this.label19.Text = "IP Phone";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label18
             // 
@@ -447,9 +478,17 @@ namespace WJ2
             this.label6.Text = "Password";
             this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // ipPhoneBox
+            // 
+            this.ipPhoneBox.Location = new System.Drawing.Point(95, 207);
+            this.ipPhoneBox.Name = "ipPhoneBox";
+            this.ipPhoneBox.Size = new System.Drawing.Size(138, 21);
+            this.ipPhoneBox.TabIndex = 0;
+            this.ipPhoneBox.Text = "192.168.10.10";
+            // 
             // tagServerBox2
             // 
-            this.tagServerBox2.Location = new System.Drawing.Point(95, 183);
+            this.tagServerBox2.Location = new System.Drawing.Point(95, 181);
             this.tagServerBox2.Name = "tagServerBox2";
             this.tagServerBox2.Size = new System.Drawing.Size(138, 21);
             this.tagServerBox2.TabIndex = 0;
@@ -457,7 +496,7 @@ namespace WJ2
             // 
             // dbTableBox
             // 
-            this.dbTableBox.Location = new System.Drawing.Point(95, 156);
+            this.dbTableBox.Location = new System.Drawing.Point(95, 155);
             this.dbTableBox.Name = "dbTableBox";
             this.dbTableBox.Size = new System.Drawing.Size(138, 21);
             this.dbTableBox.TabIndex = 0;
@@ -481,7 +520,7 @@ namespace WJ2
             // 
             // portBox
             // 
-            this.portBox.Location = new System.Drawing.Point(95, 106);
+            this.portBox.Location = new System.Drawing.Point(95, 103);
             this.portBox.Name = "portBox";
             this.portBox.Size = new System.Drawing.Size(138, 21);
             this.portBox.TabIndex = 0;
@@ -489,15 +528,16 @@ namespace WJ2
             // 
             // hostnameBox
             // 
-            this.hostnameBox.Location = new System.Drawing.Point(95, 79);
+            this.hostnameBox.Location = new System.Drawing.Point(95, 77);
             this.hostnameBox.Name = "hostnameBox";
             this.hostnameBox.Size = new System.Drawing.Size(138, 21);
             this.hostnameBox.TabIndex = 0;
             this.hostnameBox.Text = "129.2.99.117";
+            this.hostnameBox.LostFocus += new System.EventHandler(this.hostnameBox_LostFocus);
             // 
             // passwordBox
             // 
-            this.passwordBox.Location = new System.Drawing.Point(95, 52);
+            this.passwordBox.Location = new System.Drawing.Point(95, 51);
             this.passwordBox.Name = "passwordBox";
             this.passwordBox.PasswordChar = '*';
             this.passwordBox.Size = new System.Drawing.Size(138, 21);
@@ -653,11 +693,11 @@ namespace WJ2
             this.tabPage5.Controls.Add(this.textBox1);
             this.tabPage5.Controls.Add(this.label16);
             this.tabPage5.Controls.Add(this.label15);
-            this.tabPage5.Controls.Add(this.button1);
+            this.tabPage5.Controls.Add(this.radConnectButton);
             this.tabPage5.Controls.Add(this.radUpDown);
             this.tabPage5.Location = new System.Drawing.Point(0, 0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(232, 268);
+            this.tabPage5.Size = new System.Drawing.Size(240, 271);
             this.tabPage5.Text = "Rad";
             // 
             // textBox1
@@ -687,15 +727,15 @@ namespace WJ2
             this.label15.Text = "Sensor Interval";
             this.label15.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // button1
+            // radConnectButton
             // 
-            this.button1.BackColor = System.Drawing.Color.Cyan;
-            this.button1.Location = new System.Drawing.Point(27, 222);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 20);
-            this.button1.TabIndex = 19;
-            this.button1.Text = "RAD-CZT Connect";
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.radConnectButton.BackColor = System.Drawing.Color.Cyan;
+            this.radConnectButton.Location = new System.Drawing.Point(27, 222);
+            this.radConnectButton.Name = "radConnectButton";
+            this.radConnectButton.Size = new System.Drawing.Size(121, 20);
+            this.radConnectButton.TabIndex = 19;
+            this.radConnectButton.Text = "RAD-CZT Connect";
+            this.radConnectButton.Click += new System.EventHandler(this.radConnectButton_Click);
             // 
             // radUpDown
             // 
@@ -737,18 +777,9 @@ namespace WJ2
             this.radTimer.Interval = 30000;
             this.radTimer.Tick += new System.EventHandler(this.radTimer_Tick);
             // 
-            // reconcileButton
+            // invTimer
             // 
-            this.reconcileButton.BackColor = System.Drawing.Color.DeepPink;
-            this.reconcileButton.Enabled = false;
-            this.reconcileButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.reconcileButton.ForeColor = System.Drawing.Color.Black;
-            this.reconcileButton.Location = new System.Drawing.Point(84, 244);
-            this.reconcileButton.Name = "reconcileButton";
-            this.reconcileButton.Size = new System.Drawing.Size(35, 20);
-            this.reconcileButton.TabIndex = 0;
-            this.reconcileButton.Text = "Rec";
-            this.reconcileButton.Click += new System.EventHandler(this.reconcileButton_Click);
+            this.invTimer.Tick += new System.EventHandler(this.invTimer_Tick);
             // 
             // Form1
             // 
@@ -762,7 +793,6 @@ namespace WJ2
             this.MinimizeBox = false;
             this.Name = "Form1";
             this.Text = "Chaperone GUI";
-            this.TopMost = true;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -829,7 +859,7 @@ namespace WJ2
         private System.Windows.Forms.ComboBox invTimerBox;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.Timer radTimer;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button radConnectButton;
         private System.Windows.Forms.NumericUpDown radUpDown;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox textBox1;
@@ -840,6 +870,9 @@ namespace WJ2
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox tagServerBox2;
         private System.Windows.Forms.Button reconcileButton;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox ipPhoneBox;
+        private System.Windows.Forms.Timer invTimer;
     }
 }
 

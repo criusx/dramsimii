@@ -18,10 +18,11 @@ using RFIDProtocolLib;
 using Bluetooth;
 using OpenNETCF.Windows.Forms;
 using OwnerDrawnListFWProject;
+using ListItemNS;
 
 namespace WJ2
 {
-    public partial class Form1 : Form
+    public partial class mainForm : Form
     {
         [DllImport("coredll.dll")]
         private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
@@ -31,7 +32,7 @@ namespace WJ2
 
         static void Main()
         {
-            Application.Run(new Form1());
+            Application.Run(new mainForm());
         }
 
         #region Form1 Properties (variables)
@@ -59,11 +60,6 @@ namespace WJ2
         private RadiationSensor radSensor = new RadiationSensor(mac);
         bool firstScan = true;
         private string serverAddress;
-        private string phoneNumber;
-
-        private string containerID;
-        private string lastDateTime;
-        private int manifestNum;
 
         private int selectedIndex;
 
@@ -98,7 +94,7 @@ namespace WJ2
         /// <summary>
         /// The constructor for the class, sets a few things up
         /// </summary>
-        public Form1()
+        public mainForm()
         {
             InitializeComponent();            
         }
@@ -161,8 +157,15 @@ namespace WJ2
             NorS = 'N';
             EorW = 'E';
 
-            latitude = 0;
-            longitude = 0;
+            latitude = 38.991671;
+            longitude = -76.901808;
+
+            latBox.Text = latitude.ToString() + NorS;
+            longBox.Text = longitude.ToString() + EorW;
+            satBox.Text = "5";
+            utcBox.Text = "15:23:44.323";
+
+            cc.HostName = hostnameBox.Text;
 
             string[] COMPorts = System.IO.Ports.SerialPort.GetPortNames();
 			Array.Sort(COMPorts);
@@ -231,73 +234,89 @@ namespace WJ2
             else
                 isScan = 0;
 
+            // continuous polling, start or stop
+            if (invTimerBox.Text != "Manual" && sender == startInventoryButton)
+            {
+                if (invTimer.Enabled == true)
+                {
+                    invTimerBox.Visible = true;
+                    startInventoryButton.Text = "Man";
+                    invTimer.Enabled = false;
+                }
+                else
+                {
+                    invTimerBox.Visible = false;
+                    startInventoryButton.Text = "Stop";
+                    invTimer.Interval = 1000 * int.Parse(invTimerBox.Text.ToString().Substring(0, invTimerBox.Text.ToString().Length - 1));
+                    invTimer.Enabled = true;
+                }
+            }
+
+            
             if (comboBox1.SelectedItem == "WJ")
             {
                 if (!Reader.IsConnected)
-                    readerConnect(false);                
+                    readerConnect(false);
 
-                Reader.InvTimerEnabled = !Reader.InvTimerEnabled;            
+                Reader.InvTimerEnabled = !Reader.InvTimerEnabled;
             }
             else if (comboBox1.SelectedItem == "Symbol")
-            {
+            {            
                 scanButton.Enabled = false;
                 startInventoryButton.Enabled = false;
                 getInventorySymbol(sender);
-            }
+            }            
         }
 
         private void getInventorySymbol(object sender)
         {
-            invProgressBar.Value = 0;
-            inventoryTags.Clear();
-            invProgressBar.Show();
-            invTimerBox.Hide();
-            custList.Clear();
-            custList.Refresh();
-
             Cursor.Current = Cursors.WaitCursor;
 
+            inventoryTags.Clear();
+            invTimerBox.Hide();
+            
             try
             {
                 // go get the xml                
-                XmlTextReader reader = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryTags&invis=1&showLastRP=1&raw=1");
-                XmlTextReader clearer = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryEvents&raw=1&invis=1");
-                XmlTextReader clearer2 = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=purgeAllTags");
-
-                int i = 0;
-
+                XmlTextReader reader = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryTags&invis=1&showLastRP=1&raw=1");                
+                
                 while (reader.Read())
                 {
-                    if (reader.NodeType == XmlNodeType.Element)
-                        if (reader.Name == "Tag")
-                            if (reader.AttributeCount > 0)
-                            {
-                                try
-                                {
-                                    reader.MoveToAttribute(0);
-                                    inventoryTags.Add(new RFID(reader.Value.ToCharArray()));
-                                }
-                                catch (System.Exception e)
-                                {
-                                    Console.Out.WriteLine(e.Message);	
-                                }
-                            }
+                    if (reader.Name == "Tag")
+                        try
+                        {
+                            reader.MoveToAttribute(0);
+                            inventoryTags.Add(new RFID(reader.Value.ToCharArray()));
+                        }
+                        catch (ArgumentException e)
+                        {
+                            Console.Out.WriteLine(e.Message);
+                        }
                 }
+                reader.Close();
+
                 EventArgs eA = new EventArgs();
                 Reader_InvTimerEnabledChanged(sender, eA);
-
+                
+                XmlTextReader clearer = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryEvents&raw=1&invis=1");
                 clearer.Read();
+                clearer.Close();
+
+                XmlTextReader clearer2 = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=purgeAllTags");
                 clearer2.Read();
+                clearer2.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString());
+                Console.WriteLine(ex.Message);
+                if (invTimer.Enabled == false)
+                {
+                    startInventoryButton.Enabled = true;
+                    reconcileButton.Enabled = false;
+                }
                 scanButton.Enabled = true;
-                startInventoryButton.Enabled = true;
-                reconcileButton.Enabled = false;
-            }
-            
-            Cursor.Current = Cursors.Default;
+                
+            }            
         }
 
         /// <summary>
@@ -313,14 +332,10 @@ namespace WJ2
             {
                 if (Reader.InvTimerEnabled) /// starting an inventory loop
                 {
-                    if (isScan == 1)
-                    {
-                        startInventoryButton.Enabled = false;
-                    }
-                    else
-                    {
+                    if (isScan == 1)                    
+                        startInventoryButton.Enabled = false;                    
+                    else                    
                         scanButton.Enabled = false;
-                    }
 
                     invProgressBar.Value = 0;
                     inventoryTags.Clear();
@@ -332,80 +347,44 @@ namespace WJ2
                 }
                 else /// stopping an inventory loop
                 {
-                    Cursor.Current = Cursors.WaitCursor;
-
-                    scanButton.Enabled = false;
-                    startInventoryButton.Enabled = false;
-                    
-                    invProgressBar.Hide();
-                    invTimerBox.Show();
+                    custList.Clear();
 
                     try
                     {
-                        if (inventoryTags.Count > 0)
+                        if (invTimer.Enabled == false)
                         {
+                            scanButton.Enabled = false;
+                            startInventoryButton.Enabled = false;
 
-                            cc = new ClientConnection();
+                            invProgressBar.Hide();
+                            invTimerBox.Show();                    
 
-                            // connect to the server
-                            cc.Connect(hostnameBox.Text, 1555);
-
-                            // handshake
-                            //cc.SendConnectPacket();
-                            //cc.WaitForConnectResponsePacket();
-
-                            // send all the RFIDs to the server
-                            for (int i = 0; i < inventoryTags.Count; ++i)
-                                cc.SendPacket(new QueryRequest(new RFID(inventoryTags[i].ToString())));
-
-                            lastDateTime = DateTime.Now.ToString();
-
-                            cc.SendPacket(new Info(latitude.ToString("N15").Substring(0, 15) + NorS, longitude.ToString("N15").Substring(0, 15) + EorW, lastDateTime, isScan));
-
-                            // receive descriptions of items submitted
-                            manifestNum = -1;
-                            int j = 0;
-
-                            while (manifestNum == -1)
+                            if (sender == scanButton)
+                                reconcileButton.Enabled = true;
+                            else
                             {
-                                QueryResponse qr = cc.WaitForQueryResponsePacket();
-
-                                if ((manifestNum = qr.manifestNum) == -1)
-                                {
-                                    if (qr.ShortDesc == "Shipping Container 42D")
-                                        containerID = qr.rfidNum;
-
-                                    custList.Insert(j, new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
-
-                                    j++;
-                                }
+                                startInventoryButton.Enabled = true;
+                                scanButton.Enabled = true;
                             }
-                            if (manifestNum == -2)
-                                MessageBox.Show("No container RFID scanned", "Scan aborted");
+                        }
 
-                            cc.Close();
-                        }
-                        if (sender == scanButton)
-                            reconcileButton.Enabled = true;   
-                        else
-                        {
-                            startInventoryButton.Enabled = true;
-                            scanButton.Enabled = true;
-                        }
+                        sendScan();                     
                     }
                     catch (Exception ex)
                     {
                         Console.Out.WriteLine(ex.Message);
 
-                        custList.Clear();
-
-                        for (int i = 0; i < inventoryTags.Count; ++i)
+                        foreach (object a in inventoryTags)
                         {
-                            custList.Insert(i, new ListItem(inventoryTags[i].ToString(), "", -2)); // -2 for unknown status
+                            custList.Add(new ListItem(a.ToString(), "", -2)); // -2 for unknown status
                         }
-                        scanButton.Enabled = true;
-                        startInventoryButton.Enabled = true;
-                        reconcileButton.Enabled = false;
+
+                        if (invTimer.Enabled == false)
+                        {
+                            scanButton.Enabled = true;
+                            startInventoryButton.Enabled = true;
+                            reconcileButton.Enabled = false;
+                        }
                     }
                     finally
                     {
@@ -414,6 +393,19 @@ namespace WJ2
                         Cursor.Current = Cursors.Default;
                     }
                 }
+            }
+        }
+
+        private void sendScan()
+        {
+            if (inventoryTags.Count > 0)
+            {
+                cc.sendScan(ref inventoryTags, latitude, NorS, longitude, EorW, isScan);
+                foreach (ListItem a in inventoryTags)
+                {
+                    custList.Add(a);
+                }                
+                custList.RefreshVal();
             }
         }
 
@@ -466,7 +458,7 @@ namespace WJ2
         /// <param name="e"></param>
         private void clearBtn_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Really clear inventory?", "Inventory will be removed", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (MessageBox.Show("Really clear inventory?", "Inventory will be cleared.", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 custList.Clear();
                 Reader.ClearInventory();
@@ -499,6 +491,8 @@ namespace WJ2
             custMenu.Add("Show WWW");
 
             custMenu.Show(new Point(Screen.PrimaryScreen.Bounds.Right - 5 - custMenu.Width, e.Y));
+
+            custMenu.RefreshVal();
             
             base.OnMouseUp(e);
         }
@@ -519,35 +513,13 @@ namespace WJ2
                 switch (custMenu.action)
                 {
                     case -1: // remove
-                        cc = new ClientConnection();
-
-                        // connect to the server
-                        cc.Connect(hostnameBox.Text, 1555);
-
-                        // handshake
-                        //cc.SendConnectPacket();
-                        //cc.WaitForConnectResponsePacket();
-
-                        // send command to remove this item
-                        cc.SendPacket(new addRemoveItem(lastDateTime, ((ListItem)custList.Items[selectedIndex]).RFIDNum, containerID, true, manifestNum));
-
-                        cc.Close();
+                        cc.removeItem(((ListItem)custList.Items[selectedIndex]).RFIDNum);
                         break;
+
                     case 1: // add
-                        cc = new ClientConnection();
-
-                        // connect to the server
-                        cc.Connect(hostnameBox.Text, 1555);
-
-                        // handshake
-                        //cc.SendConnectPacket();
-                        //cc.WaitForConnectResponsePacket();
-
-                        // send command to add this item to the manifest
-                        cc.SendPacket(new addRemoveItem(lastDateTime, ((ListItem)custList.Items[selectedIndex]).RFIDNum, containerID, false, manifestNum));
-                        cc.Close();
-
+                        cc.addItem(((ListItem)custList.Items[selectedIndex]).RFIDNum);
                         break;
+
                     case 0:
                         string selectedTag = inventoryTags[selectedIndex].ToString().Replace(" ", "");
 
@@ -847,13 +819,14 @@ namespace WJ2
         private void mapButton_Click(object sender, EventArgs e)
         {
             //webBr.setUrlAndShow(new Uri("http://terraserver.microsoft.com/image.aspx?PgSrh:NavLon=-" + lon.ToString() + "&PgSrh:NavLat=" + lat.ToString()));
+            
             webBr.setUrlAndShow(new Uri("http://maps.google.com/maps?f=q&hl=en&q="
-                + latitude.ToString() + NorS + "+"
-                + longitude.ToString() + EorW + "&t=h"));
+                + latitude.ToString() + "+"
+                + longitude.ToString() + "&t=h"));
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void radConnectButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -862,19 +835,19 @@ namespace WJ2
                     radSensor.connect();
                     radTimer.Interval = int.Parse(radUpDown.Value.ToString()) * 1000;
                     radTimer.Enabled = true;
-                    button1.BackColor = Color.DarkMagenta;
+                    radConnectButton.BackColor = Color.DarkMagenta;
                 }
                 else
                 {
                     radSensor.disconnect();
                     radTimer.Enabled = false;
-                    button1.BackColor = Color.Cyan;
+                    radConnectButton.BackColor = Color.Cyan;
                 }
             }
             catch (Exception ex)
             {
                 radTimer.Enabled = false;
-                button1.BackColor = Color.Green;
+                radConnectButton.BackColor = Color.Green;
             }
         }
 
@@ -885,51 +858,19 @@ namespace WJ2
                 radTimer.Enabled = false;
                 if (radSensor.poll())
                 {
-                    phoneNumber = textBox1.Text;
-                    serverAddress = hostnameBox.Text;
-                    Thread alert = new Thread(new ThreadStart(sendAlert));
-                    alert.Start();
+                    cc.sendAlert();
                 }
-                else
-                {
-                    radTimer.Enabled = true;
-                }
-
             }
             catch (Exception ex)
             {
-                button1.BackColor = Color.Green;
+                radConnectButton.BackColor = Color.Green;
                 radSensor.disconnect();
             }
-        }
-
-        private void sendAlert()
-        {
-            try
+            finally
             {
-                // send warning packet
-                ClientConnection cc = new ClientConnection();
-                cc.Connect(hostnameBox.Text, 1555);
-                //cc.SendSetPhoneNumberPacket(new SetPhoneNumberRequest(phoneNumber));
-                //cc.WaitForSetPhoneNumberResponsePacket();
-                cc.SendPacket(new RaiseAlert());
-                cc.Close();
                 radTimer.Enabled = true;
             }
-            catch (Exception ex)
-            {
-                try
-                {
-                    cc.Close();
-                }
-                catch (Exception ex2)
-                {
-                    radTimer.Enabled = false;
-                    button1.BackColor = Color.Green;
-                    radSensor.disconnect();
-                }
-            }
-        }
+        }        
 
         private void textBox1_GotFocus(object sender, EventArgs e)
         {
@@ -948,33 +889,32 @@ namespace WJ2
 
         private void reconcileButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                // send the reconcile complete command
-                ClientConnection cc = new ClientConnection();
-                cc.Connect(hostnameBox.Text, 1555);
-                cc.SendPacket(new ReconcileFinished(lastDateTime, manifestNum));
-                cc.Close();
-            }
-            catch (Exception ex)
-            {
-                System.Console.WriteLine(ex.Message);
+            cc.Reconcile(ipPhoneBox.Text);
 
-                try
-                {
-                    cc.Close();
-                }
-                catch (Exception ex2)
-                {
-                   
-                }
-            }
-            finally
-            {
-                startInventoryButton.Enabled = true;
-                scanButton.Enabled = true;
-                reconcileButton.Enabled = false;
-            }
+            startInventoryButton.Enabled = true;
+            scanButton.Enabled = true;
+            reconcileButton.Enabled = false;
         }
+
+        private void hostnameBox_LostFocus(object sender, EventArgs e)
+        {
+            cc.HostName = hostnameBox.Text;
+        }
+
+        private void invTimer_Tick(object sender, EventArgs e)
+        {
+            startInventoryButton_Click(scanButton, e);
+            cc.Reconcile(ipPhoneBox.Text);
+        }
+
+        private void invTimerBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (invTimerBox.SelectedItem == "Manual")
+                scanButton.Enabled = true;
+            else
+                scanButton.Enabled = false;
+        }
+
+        
     }
 }

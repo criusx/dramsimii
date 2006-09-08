@@ -21,3 +21,4 @@ obj\Debug\WJ2.Properties.Resources.resources
 obj\Debug\WJ2.csproj.GenerateResource.Cache
 obj\Debug\WJ2.exe
 obj\Debug\WJ2.pdb
+bin\Release\Bluetooth.dll

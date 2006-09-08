@@ -5,7 +5,7 @@ namespace RFIDProtocolLib
 {
     public enum Packets : ushort
     {
-        QueryRequest = 1, QueryResponse = 2, ReconcileFinished = 3, Info = 4, addRemoveItem = 5, RaiseAlert = 6
+        QueryRequest = 1, QueryResponse = 2, ReconcileFinished = 3, Info = 4, addRemoveItem = 5, RaiseAlert = 6, Ack = 7
     }
 
     #region Packet
@@ -154,24 +154,26 @@ namespace RFIDProtocolLib
     #region ReconcileFinished
     public class ReconcileFinished:Packet
     {        
-        public string dateTime;
-
-        public int manifestNum;
+        public string dateTime;        
 
         public string containerRFID;
 
-        public ReconcileFinished(string dT, int man)
+        public string numberToCall;
+
+        public ReconcileFinished(string dT, string containerID, string num)
         {
             Type = (ushort)Packets.ReconcileFinished;
+            containerRFID = containerID;
             dateTime = dT;
-            manifestNum = man;
+            numberToCall = num;
         }
 
         public ReconcileFinished(byte[] buf)
         {
             Type = (ushort)Packets.ReconcileFinished;
             dateTime = "";
-            manifestNum = 0;
+            containerRFID = "";
+            numberToCall = "";
 
             TLVList l = new TLVList(buf);
 
@@ -183,7 +185,8 @@ namespace RFIDProtocolLib
                 switch (tlv.Type)
                 {
                     case 0: dateTime = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
-                    case 1: manifestNum = int.Parse(System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length)); break;
+                    case 1: containerRFID = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
+                    case 2: numberToCall = System.Text.Encoding.ASCII.GetString(tlv.Value, 0, tlv.Length); break;
                 }
             }
         }
@@ -193,7 +196,8 @@ namespace RFIDProtocolLib
             TLVList l = new TLVList(Type);
 
             l.Add(new TLV(0, System.Text.Encoding.ASCII.GetBytes(dateTime)));
-            l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(manifestNum.ToString())));
+            l.Add(new TLV(1, System.Text.Encoding.ASCII.GetBytes(containerRFID)));
+            l.Add(new TLV(2, System.Text.Encoding.ASCII.GetBytes(numberToCall)));
 
             return l;
         }
@@ -351,5 +355,26 @@ namespace RFIDProtocolLib
             return new TLVList(Type);
         }
     }   
+    #endregion
+
+    #region ack
+    public class ack: Packet
+    {
+        public ack()
+        {
+            Type = (ushort)Packets.Ack;
+        }
+
+        public ack(byte[] buf)
+        {
+            Type = (ushort)Packets.Ack;
+        }
+
+        public override TLVList ToTLVList()
+        {
+            TLVList l = new TLVList(Type);
+            return l;
+        }
+    };
     #endregion
 }

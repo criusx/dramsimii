@@ -55,46 +55,4 @@
     </StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Windows|AnyCPU' ">
-    <EnableASPDebugging>false</EnableASPDebugging>
-    <EnableASPXDebugging>false</EnableASPXDebugging>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <EnableSQLServerDebugging>false</EnableSQLServerDebugging>
-    <RemoteDebugEnabled>false</RemoteDebugEnabled>
-    <RemoteDebugMachine>
-    </RemoteDebugMachine>
-    <StartAction>Project</StartAction>
-    <StartArguments>
-    </StartArguments>
-    <StartPage>
-    </StartPage>
-    <StartProgram>
-    </StartProgram>
-    <StartURL>
-    </StartURL>
-    <StartWorkingDirectory>
-    </StartWorkingDirectory>
-    <StartWithIE>false</StartWithIE>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug2|AnyCPU' ">
-    <EnableASPDebugging>false</EnableASPDebugging>
-    <EnableASPXDebugging>false</EnableASPXDebugging>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <EnableSQLServerDebugging>false</EnableSQLServerDebugging>
-    <RemoteDebugEnabled>true</RemoteDebugEnabled>
-    <RemoteDebugMachine>
-    </RemoteDebugMachine>
-    <StartAction>Project</StartAction>
-    <StartArguments>
-    </StartArguments>
-    <StartPage>
-    </StartPage>
-    <StartProgram>
-    </StartProgram>
-    <StartURL>
-    </StartURL>
-    <StartWorkingDirectory>
-    </StartWorkingDirectory>
-    <StartWithIE>true</StartWithIE>
-  </PropertyGroup>
 </Project>

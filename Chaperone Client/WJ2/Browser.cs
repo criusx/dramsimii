@@ -25,7 +25,9 @@ namespace WJ2
         
         public void setUrlAndShow(Uri newUrl)
         {
+            Cursor.Current = Cursors.WaitCursor;
             webBrowser1.Url = newUrl;
+            this.Hide();
             //c = Cursors.WaitCursor;
             //c.Show();
         }
@@ -34,6 +36,9 @@ namespace WJ2
         {
             //.Cursor.Hide();
             this.Show();
+            this.Focus();
+            this.BringToFront();
+            Cursor.Current = Cursors.Default;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace WJ2
         [MTAThread]
         static void Main()
         {
-            Application.Run(new Form1());
+            Application.Run(new mainForm());
         }
     }
 }
