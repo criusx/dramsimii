@@ -85,9 +85,9 @@ namespace RFIDProtocolLib
         #endregion
 
         #region SetPhoneNumber
-        public void SendSetPhoneNumberPacket(SetPhoneNumberRequest req)
+        public void SendSetPhoneNumberPacket(ReconcileFinishedRequest req)
         {
-            TLV packet = new TLV(SetPhoneNumberRequest.Type, req.ToTLVList().GetBytes());
+            TLV packet = new TLV(ReconcileFinishedRequest.Type, req.ToTLVList().GetBytes());
             packet.WriteToStream(c.GetStream());
         }
 

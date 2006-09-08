@@ -28,6 +28,7 @@ namespace RFIDProtocolServer
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
 			this.textBox1 = new System.Windows.Forms.ListBox();
 			this.usernameBox = new System.Windows.Forms.TextBox();
 			this.passwordBox = new System.Windows.Forms.TextBox();
@@ -35,6 +36,8 @@ namespace RFIDProtocolServer
 			this.passwordLabel = new System.Windows.Forms.Label();
 			this.dataSourceBox = new System.Windows.Forms.TextBox();
 			this.dataSourceLabel = new System.Windows.Forms.Label();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.button1 = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// textBox1
@@ -42,7 +45,7 @@ namespace RFIDProtocolServer
 			this.textBox1.FormattingEnabled = true;
 			this.textBox1.Location = new System.Drawing.Point(1, 50);
 			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(636, 563);
+			this.textBox1.Size = new System.Drawing.Size(818, 563);
 			this.textBox1.TabIndex = 0;
 			// 
 			// usernameBox
@@ -97,11 +100,27 @@ namespace RFIDProtocolServer
 			this.dataSourceLabel.TabIndex = 2;
 			this.dataSourceLabel.Text = "Data Source:";
 			// 
+			// timer1
+			// 
+			this.timer1.Enabled = true;
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(584, 13);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.TabIndex = 3;
+			this.button1.Text = "clear";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(636, 617);
+			this.ClientSize = new System.Drawing.Size(823, 617);
+			this.Controls.Add(this.button1);
 			this.Controls.Add(this.dataSourceLabel);
 			this.Controls.Add(this.passwordLabel);
 			this.Controls.Add(this.usernameLabel);
@@ -127,6 +146,8 @@ namespace RFIDProtocolServer
 		private System.Windows.Forms.Label passwordLabel;
 		private System.Windows.Forms.TextBox dataSourceBox;
 		private System.Windows.Forms.Label dataSourceLabel;
+		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Button button1;
 		//private System.Windows.Forms.Timer timer1;
 
 

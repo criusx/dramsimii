@@ -10,8 +10,7 @@ namespace RFIDProtocolLib
 	/// </summary>
 	public class ServerConnection
 	{
-		private TcpClient c;
-		
+		private TcpClient c;		
 
         public static int SessionIdStat = 0;
         public int SessionId;
@@ -59,7 +58,7 @@ namespace RFIDProtocolLib
                 throw new IOException("Data not there!");
 
             TLV packet = new TLV();
-            while (packet.Type != QueryRequest.Type)
+            while (packet.Type != (ushort)Packets.QueryRequest)
                 packet.ReadFromStream(c.GetStream());
 
 
@@ -68,119 +67,57 @@ namespace RFIDProtocolLib
 
         public void SendQueryResponsePacket(QueryResponse resp)
         {
-            TLV responsePacket = new TLV(QueryResponse.Type, resp.ToTLVList().GetBytes());
+            TLV responsePacket = new TLV((ushort)Packets.QueryResponse, resp.ToTLVList().GetBytes());
             responsePacket.WriteToStream(c.GetStream());
         }
         #endregion
 
-        #region SetPhoneNumber
-        public SetPhoneNumberRequest WaitForSetPhoneNumberPacket()
+		#region sendAck
+		public void sendAck()
+		{
+			TLV ackPacket = new TLV((ushort)Packets.Ack);
+			ackPacket.WriteToStream(c.GetStream());
+		}
+		#endregion 
+
+		#region SetPhoneNumber
+		public ReconcileFinished WaitForSetPhoneNumberPacket()
         {
             if (!c.GetStream().DataAvailable)
                 throw new IOException("Data not there!");
 
             TLV packet = new TLV();
-            while (packet.Type != QueryRequest.Type)
+            while (packet.Type != (ushort)Packets.QueryRequest)
                 packet.ReadFromStream(c.GetStream());
 
-            return new SetPhoneNumberRequest(packet.Value);
+            return new ReconcileFinished(packet.Value);
         }
 
-        public void SendSetPhoneNumberPacket(SetPhoneNumberResponse resp)
-        {
-            TLV responsePacket = new TLV(SetPhoneNumberResponse.Type, resp.ToTLVList().GetBytes());
-            responsePacket.WriteToStream(c.GetStream());
-        }
+		//public void SendSetPhoneNumberPacket(SetPhoneNumberResponse resp)
+		//{
+		//    TLV responsePacket = new TLV(SetPhoneNumberResponse.Type, resp.ToTLVList().GetBytes());
+		//    responsePacket.WriteToStream(c.GetStream());
+		//}
         #endregion
 
         #region RaiseAlert
-        public RaiseAlertRequest WaitForSRaiseAlertPacket()
+        public RaiseAlert WaitForSRaiseAlertPacket()
         {
             if (!c.GetStream().DataAvailable)
                 throw new IOException("Data not there!");
 
             TLV packet = new TLV();
-            while (packet.Type != RaiseAlertRequest.Type)
+            while (packet.Type != (ushort)Packets.RaiseAlert)
                 packet.ReadFromStream(c.GetStream());
 
-            return new RaiseAlertRequest(packet.Value);
+            return new RaiseAlert(packet.Value);
         }
 
-        public void SendRaiseAlertPacket(RaiseAlertResponse resp)
-        {
-            TLV responsePacket = new TLV(RaiseAlertResponse.Type, resp.ToTLVList().GetBytes());
-            responsePacket.WriteToStream(c.GetStream());
-        }
+		//public void SendRaiseAlertPacket(RaiseAlertResponse resp)
+		//{
+		//    TLV responsePacket = new TLV(RaiseAlertResponse.Type, resp.ToTLVList().GetBytes());
+		//    responsePacket.WriteToStream(c.GetStream());
+		//}
         #endregion
-
-#if DONTUSETHIS 
-		#region Scan
-		public ScanRequest WaitForScanPacket()
-		{
-			TLV scanPacket = new TLV();
-			while (scanPacket.Type != ScanRequest.Type)
-				scanPacket.ReadFromStream(c.GetStream());
-
-			return new ScanRequest(scanPacket.Value);
-		}
-
-		public void SendScanResponsePacket()
-		{
-			TLV scanResponsePacket = new TLV(ScanResponse.Type);
-			scanResponsePacket.WriteToStream(c.GetStream());
-		}
-		#endregion
-
-		#region Query
-		public QueryRequest WaitForQueryPacket()
-		{
-			TLV packet = new TLV();
-			while (packet.Type != QueryRequest.Type)
-				packet.ReadFromStream(c.GetStream());
-
-			return new QueryRequest(packet.Value);
-		}
-
-		public void SendQueryResponsePacket(QueryResponse resp)
-		{
-			TLV responsePacket = new TLV(QueryResponse.Type, resp.ToTLVList().GetBytes());
-			responsePacket.WriteToStream(c.GetStream());
-		}
-		#endregion
-
-        #region Alert
-        public AlertRequest WaitForAlertPacket()
-        {
-            TLV packet = new TLV();
-            while (packet.Type != AlertRequest.Type)
-                packet.ReadFromStream(c.GetStream());
-
-            return new AlertRequest(packet.Value);
-        }
-
-        public void SendAlertResponsePacket(AlertResponse resp)
-        {
-            TLV responsePacket = new TLV(AlertResponse.Type, resp.ToTLVList().GetBytes());
-            responsePacket.WriteToStream(c.GetStream());
-        }
-        #endregion
-
-        #region CheckManifest
-        public CheckManifestRequest WaitForCheckManifestPacket()
-        {
-            TLV packet = new TLV();
-            while (packet.Type != CheckManifestRequest.Type)
-                packet.ReadFromStream(c.GetStream());
-
-            return new CheckManifestRequest(packet.Value);
-        }
-
-        public void SendCheckManifestResponsePacket(CheckManifestResponse resp)
-        {
-            TLV responsePacket = new TLV(CheckManifestResponse.Type, resp.ToTLVList().GetBytes());
-            responsePacket.WriteToStream(c.GetStream());
-        }
-        #endregion
-#endif
 	}
 }
