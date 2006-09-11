@@ -19,8 +19,9 @@ using Bluetooth;
 using OpenNETCF.Windows.Forms;
 using OwnerDrawnListFWProject;
 using ListItemNS;
+using Microsoft.Win32;
 
-namespace WJ2
+namespace AIT
 {
     public partial class mainForm : Form
     {
@@ -43,9 +44,9 @@ namespace WJ2
         private byte isScan;
         private Browser webBr;
         private ArrayList inventoryTags;
-        private int totalTags;
+        
         private string gpsBuffer;
-        private string utcTime;
+        
         private double latitude;
         private double longitude;
         private char EorW;
@@ -58,21 +59,16 @@ namespace WJ2
         private double avgLong = 0;
         private static byte[] mac = { 0x00, 0x03, 0x7a, 0x23, 0xc6, 0xd6 }; // mac address for the DAQ
         private RadiationSensor radSensor = new RadiationSensor(mac);
-        bool firstScan = true;
-        private string serverAddress;
-
+        
         private int selectedIndex;
 
         private CustomListBox custList;
 
         private CustomMenu custMenu;
 
-        private event EventHandler eh;
         private ClientConnection cc;
         private static Mutex gpsBufLock = new Mutex();
-        private byte originItems;
-        private Cursor cursor;
-
+        
         public delegate void GPSTextModifiedEventHandler(object sender, EventArgs e);
 
         public delegate void DrawItemEventHandler(object sender, DrawItemEventArgs e);
@@ -116,6 +112,7 @@ namespace WJ2
         /// <param name="e"></param>
         private void Form1_Load(object sender, System.EventArgs e)
         {
+            // setup the custom listbox
             custList = new CustomListBox();
             custList.Width = this.Width;
             custList.Height = 250;
@@ -124,6 +121,7 @@ namespace WJ2
 
             this.tabPage1.Controls.Add(this.custList);
 
+            //setup the custom menu
             custMenu = new CustomMenu();
             custMenu.Location = new Point(5, 20);
             custMenu.Width = 100;
@@ -133,6 +131,8 @@ namespace WJ2
             custMenu.MouseUp += new MouseEventHandler(inventoryItemOptionMenuClicked);
 
             this.tabPage1.Controls.Add(custMenu);
+
+
             comboBox1.SelectedIndex = 0;
 
             gpsMod += new GPSTextModifiedEventHandler(GPSTextModifiedEvent);
@@ -188,9 +188,56 @@ namespace WJ2
                 btComPort.Enabled = true;
             }
 
-            // try to connect to the gps device
-            //EventArgs a = new EventArgs();
-            //BTbutton_Click(this, a);
+
+            RegistryKey regKey = Registry.LocalMachine;
+
+            regKey = regKey.OpenSubKey(@"SOFTWARE", true);
+            
+            if (Array.IndexOf(regKey.GetSubKeyNames(), @"AIT", 0) == -1)
+                regKey.CreateSubKey(@"AIT");
+            regKey = regKey.OpenSubKey(@"AIT",true);
+
+            string[] settingKeys = regKey.GetSubKeyNames();
+
+            //user ID
+            if (Array.IndexOf(settingKeys, @"userid", 0) == -1)
+            {
+                regKey.CreateSubKey(@"userid");
+                regKey.SetValue(@"userid", @"test");
+            }
+            userIDBox.Text = regKey.GetValue(@"userid").ToString();
+
+            // password
+            if (Array.IndexOf(settingKeys, @"password", 0) == -1)
+            {
+                regKey.CreateSubKey(@"password");
+                regKey.SetValue(@"password", @"test2000");
+            }
+            passwordBox.Text = regKey.GetValue(@"password").ToString();
+
+            // hostname
+            if (Array.IndexOf(settingKeys, @"hostname", 0) == -1)
+            {
+                regKey.CreateSubKey(@"hostname");
+                regKey.SetValue(@"hostname", @"192.168.2.3");
+            }
+            hostnameBox.Text = regKey.GetValue(@"hostname").ToString();
+
+            // port
+            if (Array.IndexOf(settingKeys, @"port", 0) == -1)
+            {
+                regKey.CreateSubKey(@"port");
+                regKey.SetValue(@"port", @"1522");
+            }
+            portBox.Text = regKey.GetValue(@"port").ToString();
+
+            // tagserver
+            if (Array.IndexOf(settingKeys, @"tagserver", 0) == -1)
+            {
+                regKey.CreateSubKey(@"tagserver");
+                regKey.SetValue(@"tagserver", @"192.168.2.7");
+            }
+            tagServerBox.Text = regKey.GetValue(@"tagserver").ToString();
 
         }
 
@@ -253,14 +300,14 @@ namespace WJ2
             }
 
             
-            if (comboBox1.SelectedItem == "WJ")
+            if ((string)comboBox1.SelectedItem == "WJ")
             {
                 if (!Reader.IsConnected)
                     readerConnect(false);
 
                 Reader.InvTimerEnabled = !Reader.InvTimerEnabled;
             }
-            else if (comboBox1.SelectedItem == "Symbol")
+            else if ((string)comboBox1.SelectedItem == "Symbol")
             {            
                 scanButton.Enabled = false;
                 startInventoryButton.Enabled = false;
@@ -278,7 +325,8 @@ namespace WJ2
             try
             {
                 // go get the xml                
-                XmlTextReader reader = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryTags&invis=1&showLastRP=1&raw=1");                
+                XmlTextReader reader = new XmlTextReader("http://" + tagServerBox.Text + "/cgi-bin/dataProxy?oper=queryTags&invis=1&showLastRP=1&raw=1");
+                reader.WhitespaceHandling = WhitespaceHandling.None;
                 
                 while (reader.Read())
                 {
@@ -298,11 +346,11 @@ namespace WJ2
                 EventArgs eA = new EventArgs();
                 Reader_InvTimerEnabledChanged(sender, eA);
                 
-                XmlTextReader clearer = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=queryEvents&raw=1&invis=1");
+                XmlTextReader clearer = new XmlTextReader("http://" + tagServerBox.Text + "/cgi-bin/dataProxy?oper=queryEvents&raw=1&invis=1");
                 clearer.Read();
                 clearer.Close();
 
-                XmlTextReader clearer2 = new XmlTextReader("http://" + tagServerBox2.Text + "/cgi-bin/dataProxy?oper=purgeAllTags");
+                XmlTextReader clearer2 = new XmlTextReader("http://" + tagServerBox.Text + "/cgi-bin/dataProxy?oper=purgeAllTags");
                 clearer2.Read();
                 clearer2.Close();
             }
@@ -316,7 +364,11 @@ namespace WJ2
                 }
                 scanButton.Enabled = true;
                 
-            }            
+            } 
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         /// <summary>
@@ -332,10 +384,13 @@ namespace WJ2
             {
                 if (Reader.InvTimerEnabled) /// starting an inventory loop
                 {
-                    if (isScan == 1)                    
-                        startInventoryButton.Enabled = false;                    
-                    else                    
-                        scanButton.Enabled = false;
+                    if (invTimer.Enabled == false)
+                    {
+                        if (isScan == 1)
+                            startInventoryButton.Enabled = false;
+                        else
+                            scanButton.Enabled = false;
+                    }
 
                     invProgressBar.Value = 0;
                     inventoryTags.Clear();
@@ -368,7 +423,15 @@ namespace WJ2
                             }
                         }
 
-                        sendScan();                     
+                        if (inventoryTags.Count > 0)
+                        {
+                            cc.sendScan(ref inventoryTags, latitude, NorS, longitude, EorW, isScan);
+                            foreach (ListItem a in inventoryTags)
+                            {
+                                custList.Add(a);
+                            }
+                            
+                        }                     
                     }
                     catch (Exception ex)
                     {
@@ -379,6 +442,8 @@ namespace WJ2
                             custList.Add(new ListItem(a.ToString(), "", -2)); // -2 for unknown status
                         }
 
+                        MessageBox.Show(ex.Message);
+
                         if (invTimer.Enabled == false)
                         {
                             scanButton.Enabled = true;
@@ -388,26 +453,12 @@ namespace WJ2
                     }
                     finally
                     {
+                        custList.RefreshVal();
                         inventoryTags.Clear();
-
-                        Cursor.Current = Cursors.Default;
                     }
                 }
             }
-        }
-
-        private void sendScan()
-        {
-            if (inventoryTags.Count > 0)
-            {
-                cc.sendScan(ref inventoryTags, latitude, NorS, longitude, EorW, isScan);
-                foreach (ListItem a in inventoryTags)
-                {
-                    custList.Add(a);
-                }                
-                custList.RefreshVal();
-            }
-        }
+        }        
 
         /// <summary>
         /// Event fired when the antenna radio button changes
@@ -634,7 +685,7 @@ namespace WJ2
         /// <param name="e"></param>
         private void wjConnectButton_Click(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedItem == "WJ")
+            if ((string)comboBox1.SelectedItem == "WJ")
                 readerConnect(true);
         }
 
@@ -879,6 +930,35 @@ namespace WJ2
 
         private void textBox1_LostFocus(object sender, EventArgs e)
         {
+            RegistryKey regKey = Registry.LocalMachine;
+
+            regKey = regKey.OpenSubKey(@"SOFTWARE", true);
+
+            if (Array.IndexOf(regKey.GetSubKeyNames(), @"AIT", 0) == -1)
+                regKey.CreateSubKey(@"AIT");
+            regKey = regKey.OpenSubKey(@"AIT", true);
+
+            if (sender == portBox)
+            {
+                regKey.SetValue(@"port", portBox.Text);
+                cc.Port = int.Parse(portBox.Text);
+            }
+            else if (sender == hostnameBox)
+            {
+                regKey.SetValue(@"hostname", hostnameBox.Text);
+            }
+            else if (sender == userIDBox)
+            {
+                regKey.SetValue(@"userid", userIDBox.Text);
+            }
+            else if (sender == passwordBox)
+            {
+                regKey.SetValue(@"password", passwordBox.Text);
+            }
+            else if (sender == tagServerBox)
+            {
+                regKey.SetValue(@"tagserver", tagServerBox.Text);
+            }
             SipShowIM(0);
         }
 
@@ -899,6 +979,7 @@ namespace WJ2
         private void hostnameBox_LostFocus(object sender, EventArgs e)
         {
             cc.HostName = hostnameBox.Text;
+            textBox1_LostFocus(sender, e);
         }
 
         private void invTimer_Tick(object sender, EventArgs e)
@@ -909,7 +990,7 @@ namespace WJ2
 
         private void invTimerBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (invTimerBox.SelectedItem == "Manual")
+            if ((string)invTimerBox.SelectedItem == "Manual")
                 scanButton.Enabled = true;
             else
                 scanButton.Enabled = false;

@@ -7,17 +7,17 @@
     <ProjectGuid>{3BD653C1-7293-4627-B159-875E7474DE59}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WJ2</RootNamespace>
+    <RootNamespace>AIT</RootNamespace>
     <AssemblyName>AIT</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
     <PlatformID>3C41C503-53EF-4c2a-8DD4-A8217CAD115E</PlatformID>
     <OSVersion>4.20</OSVersion>
-    <DeployDirSuffix>WJ2</DeployDirSuffix>
+    <DeployDirSuffix>AIT</DeployDirSuffix>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FormFactorID>
     </FormFactorID>
-    <StartupObject>WJ2.mainForm</StartupObject>
+    <StartupObject>AIT.mainForm</StartupObject>
     <ApplicationIcon>msnms.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -100,6 +100,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Protocol.cs" />
     <Compile Include="RFID.cs" />

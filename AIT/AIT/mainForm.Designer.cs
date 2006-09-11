@@ -1,4 +1,4 @@
-namespace WJ2
+namespace AIT
 {
     partial class mainForm
     {
@@ -64,7 +64,7 @@ namespace WJ2
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.ipPhoneBox = new System.Windows.Forms.TextBox();
-            this.tagServerBox2 = new System.Windows.Forms.TextBox();
+            this.tagServerBox = new System.Windows.Forms.TextBox();
             this.dbTableBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.dbNameBox = new System.Windows.Forms.TextBox();
@@ -111,7 +111,7 @@ namespace WJ2
             this.startInventoryButton.BackColor = System.Drawing.Color.LightGreen;
             this.startInventoryButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
             this.startInventoryButton.ForeColor = System.Drawing.Color.Black;
-            this.startInventoryButton.Location = new System.Drawing.Point(5, 246);
+            this.startInventoryButton.Location = new System.Drawing.Point(1, 246);
             this.startInventoryButton.Name = "startInventoryButton";
             this.startInventoryButton.Size = new System.Drawing.Size(35, 20);
             this.startInventoryButton.TabIndex = 0;
@@ -156,7 +156,7 @@ namespace WJ2
             this.invTimerBox.Items.Add("80s");
             this.invTimerBox.Items.Add("120s");
             this.invTimerBox.Items.Add("240s");
-            this.invTimerBox.Location = new System.Drawing.Point(125, 246);
+            this.invTimerBox.Location = new System.Drawing.Point(127, 246);
             this.invTimerBox.Name = "invTimerBox";
             this.invTimerBox.Size = new System.Drawing.Size(69, 20);
             this.invTimerBox.TabIndex = 3;
@@ -177,7 +177,7 @@ namespace WJ2
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.clearBtn.BackColor = System.Drawing.Color.Red;
             this.clearBtn.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Bold);
-            this.clearBtn.Location = new System.Drawing.Point(208, 246);
+            this.clearBtn.Location = new System.Drawing.Point(203, 246);
             this.clearBtn.Name = "clearBtn";
             this.clearBtn.Size = new System.Drawing.Size(32, 20);
             this.clearBtn.TabIndex = 2;
@@ -190,7 +190,7 @@ namespace WJ2
             this.reconcileButton.Enabled = false;
             this.reconcileButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
             this.reconcileButton.ForeColor = System.Drawing.Color.Black;
-            this.reconcileButton.Location = new System.Drawing.Point(83, 246);
+            this.reconcileButton.Location = new System.Drawing.Point(85, 246);
             this.reconcileButton.Name = "reconcileButton";
             this.reconcileButton.Size = new System.Drawing.Size(35, 20);
             this.reconcileButton.TabIndex = 0;
@@ -202,7 +202,7 @@ namespace WJ2
             this.scanButton.BackColor = System.Drawing.Color.Turquoise;
             this.scanButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
             this.scanButton.ForeColor = System.Drawing.Color.Black;
-            this.scanButton.Location = new System.Drawing.Point(44, 246);
+            this.scanButton.Location = new System.Drawing.Point(43, 246);
             this.scanButton.Name = "scanButton";
             this.scanButton.Size = new System.Drawing.Size(35, 20);
             this.scanButton.TabIndex = 0;
@@ -229,7 +229,7 @@ namespace WJ2
             this.tabPage2.Controls.Add(this.domainUpDown2);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(232, 268);
+            this.tabPage2.Size = new System.Drawing.Size(240, 271);
             this.tabPage2.Text = "Setup";
             // 
             // numTags
@@ -401,7 +401,7 @@ namespace WJ2
             this.tabPage3.Controls.Add(this.label7);
             this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.ipPhoneBox);
-            this.tabPage3.Controls.Add(this.tagServerBox2);
+            this.tabPage3.Controls.Add(this.tagServerBox);
             this.tabPage3.Controls.Add(this.dbTableBox);
             this.tabPage3.Controls.Add(this.label5);
             this.tabPage3.Controls.Add(this.dbNameBox);
@@ -411,7 +411,7 @@ namespace WJ2
             this.tabPage3.Controls.Add(this.userIDBox);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(232, 268);
+            this.tabPage3.Size = new System.Drawing.Size(240, 271);
             this.tabPage3.Text = "Server";
             // 
             // connectBtn
@@ -484,15 +484,17 @@ namespace WJ2
             this.ipPhoneBox.Name = "ipPhoneBox";
             this.ipPhoneBox.Size = new System.Drawing.Size(138, 21);
             this.ipPhoneBox.TabIndex = 0;
-            this.ipPhoneBox.Text = "192.168.10.10";
+            this.ipPhoneBox.LostFocus += new System.EventHandler(this.textBox1_LostFocus);
+            this.ipPhoneBox.GotFocus += new System.EventHandler(this.textBox1_GotFocus);
             // 
-            // tagServerBox2
+            // tagServerBox
             // 
-            this.tagServerBox2.Location = new System.Drawing.Point(95, 181);
-            this.tagServerBox2.Name = "tagServerBox2";
-            this.tagServerBox2.Size = new System.Drawing.Size(138, 21);
-            this.tagServerBox2.TabIndex = 0;
-            this.tagServerBox2.Text = "192.168.10.9";
+            this.tagServerBox.Location = new System.Drawing.Point(95, 181);
+            this.tagServerBox.Name = "tagServerBox";
+            this.tagServerBox.Size = new System.Drawing.Size(138, 21);
+            this.tagServerBox.TabIndex = 0;
+            this.tagServerBox.LostFocus += new System.EventHandler(this.textBox1_LostFocus);
+            this.tagServerBox.GotFocus += new System.EventHandler(this.textBox1_GotFocus);
             // 
             // dbTableBox
             // 
@@ -500,7 +502,8 @@ namespace WJ2
             this.dbTableBox.Name = "dbTableBox";
             this.dbTableBox.Size = new System.Drawing.Size(138, 21);
             this.dbTableBox.TabIndex = 0;
-            this.dbTableBox.Text = "locations";
+            this.dbTableBox.LostFocus += new System.EventHandler(this.textBox1_LostFocus);
+            this.dbTableBox.GotFocus += new System.EventHandler(this.textBox1_GotFocus);
             // 
             // label5
             // 
@@ -516,7 +519,8 @@ namespace WJ2
             this.dbNameBox.Name = "dbNameBox";
             this.dbNameBox.Size = new System.Drawing.Size(138, 21);
             this.dbNameBox.TabIndex = 0;
-            this.dbNameBox.Text = "test";
+            this.dbNameBox.LostFocus += new System.EventHandler(this.textBox1_LostFocus);
+            this.dbNameBox.GotFocus += new System.EventHandler(this.textBox1_GotFocus);
             // 
             // portBox
             // 
@@ -524,7 +528,8 @@ namespace WJ2
             this.portBox.Name = "portBox";
             this.portBox.Size = new System.Drawing.Size(138, 21);
             this.portBox.TabIndex = 0;
-            this.portBox.Text = "1522";
+            this.portBox.LostFocus += new System.EventHandler(this.textBox1_LostFocus);
+            this.portBox.GotFocus += new System.EventHandler(this.textBox1_GotFocus);
             // 
             // hostnameBox
             // 
@@ -532,8 +537,8 @@ namespace WJ2
             this.hostnameBox.Name = "hostnameBox";
             this.hostnameBox.Size = new System.Drawing.Size(138, 21);
             this.hostnameBox.TabIndex = 0;
-            this.hostnameBox.Text = "129.2.99.117";
             this.hostnameBox.LostFocus += new System.EventHandler(this.hostnameBox_LostFocus);
+            this.hostnameBox.GotFocus += new System.EventHandler(this.textBox1_GotFocus);
             // 
             // passwordBox
             // 
@@ -542,7 +547,8 @@ namespace WJ2
             this.passwordBox.PasswordChar = '*';
             this.passwordBox.Size = new System.Drawing.Size(138, 21);
             this.passwordBox.TabIndex = 0;
-            this.passwordBox.Text = "test2000";
+            this.passwordBox.LostFocus += new System.EventHandler(this.textBox1_LostFocus);
+            this.passwordBox.GotFocus += new System.EventHandler(this.textBox1_GotFocus);
             // 
             // userIDBox
             // 
@@ -550,7 +556,8 @@ namespace WJ2
             this.userIDBox.Name = "userIDBox";
             this.userIDBox.Size = new System.Drawing.Size(138, 21);
             this.userIDBox.TabIndex = 0;
-            this.userIDBox.Text = "test";
+            this.userIDBox.LostFocus += new System.EventHandler(this.textBox1_LostFocus);
+            this.userIDBox.GotFocus += new System.EventHandler(this.textBox1_GotFocus);
             // 
             // tabPage4
             // 
@@ -697,7 +704,7 @@ namespace WJ2
             this.tabPage5.Controls.Add(this.radUpDown);
             this.tabPage5.Location = new System.Drawing.Point(0, 0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(240, 271);
+            this.tabPage5.Size = new System.Drawing.Size(232, 268);
             this.tabPage5.Text = "Rad";
             // 
             // textBox1
@@ -781,7 +788,7 @@ namespace WJ2
             // 
             this.invTimer.Tick += new System.EventHandler(this.invTimer_Tick);
             // 
-            // Form1
+            // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -791,7 +798,7 @@ namespace WJ2
             this.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Italic);
             this.KeyPreview = true;
             this.MinimizeBox = false;
-            this.Name = "Form1";
+            this.Name = "mainForm";
             this.Text = "Chaperone GUI";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
@@ -868,7 +875,7 @@ namespace WJ2
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.TextBox tagServerBox2;
+        private System.Windows.Forms.TextBox tagServerBox;
         private System.Windows.Forms.Button reconcileButton;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox ipPhoneBox;

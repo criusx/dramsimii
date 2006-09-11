@@ -68,7 +68,7 @@ namespace OwnerDrawnListFWProject
             rc.X += DRAW_OFFSET;
 
             //Get the ListItem
-            ListItem item;
+            //ListItem item;
 
             if (e.Index >= this.Items.Count)
                 return;

@@ -16,13 +16,14 @@ namespace RFIDProtocolLib
 
         private string hostName;
 
+        private int port;
+
         private string lastDateTime;
 
         private string containerID;
 
         private int manifestNum;
-
-
+        
         /// <summary>
         /// Normal constructor.
         /// </summary>
@@ -36,30 +37,21 @@ namespace RFIDProtocolLib
         /// 
         public string LastDateTime
         {
-            set
-            {
-                lastDateTime = value;
-            }
+            set { lastDateTime = value; }
         }
 
         /// <summary>
         /// </summary>
         public string ContainerID
         {
-            set
-            {
-                containerID = value;
-            }
+            set { containerID = value; }
         }
 
         /// <summary>
         /// </summary>
         public int ManifestNum
         {
-            set
-            {
-                manifestNum = value;
-            }
+            set { manifestNum = value; }
         }
 
         /// <summary>
@@ -68,14 +60,17 @@ namespace RFIDProtocolLib
         /// <param name="hN"></param>
         public string HostName
         {
-            set
-            {
-                hostName = value;
-            }
-            get
-            {
-                return hostName;
-            }
+            set { hostName = value; }
+            get { return hostName; }
+        }
+
+        /// <summary>
+        /// Sets or gets the host port
+        /// </summary>
+        public int Port
+        {
+            set { port = value; }
+            get { return port; }
         }
 
         /// <summary>
@@ -86,6 +81,7 @@ namespace RFIDProtocolLib
         public void Connect(string host, int port)
         {
             c = new TcpClient(host, port);
+            c.SendTimeout = c.ReceiveTimeout = 7000;            
         }
 
         /// <summary>
@@ -148,7 +144,7 @@ namespace RFIDProtocolLib
                 }
                 catch (Exception ex2)
                 {
-
+                    System.Console.WriteLine(ex2.Message);
                 }
             }
         }
@@ -198,11 +194,12 @@ namespace RFIDProtocolLib
             manifestNum = -1;
 
             inventoryTags.Clear();
-            int j = 0;
+
+            QueryResponse qr = new QueryResponse("No tags returned",-1," ", 0, " ");
 
             while (manifestNum == -1)
             {
-                QueryResponse qr = WaitForQueryResponsePacket();
+                qr = WaitForQueryResponsePacket();
 
                 if ((manifestNum = qr.manifestNum) == -1)
                 {
@@ -211,14 +208,14 @@ namespace RFIDProtocolLib
 
                     //custList.Insert(j++, new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
                     inventoryTags.Add(new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
-
                 }
             }
             if (manifestNum == -2)
-                MessageBox.Show("No container RFID scanned", "Scan aborted");
+            {
+                throw new Exception(qr.ShortDesc);
+            }
 
             Close();
         }
-
     }
 }
