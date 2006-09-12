@@ -27,9 +27,6 @@ namespace AIT
     {
         [DllImport("coredll.dll")]
         private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
-        [DllImport("coredll.dll")]
-        private static extern bool SipShowIM(int dwFlag);
-
 
         static void Main()
         {
@@ -221,7 +218,7 @@ namespace AIT
                 regKey.CreateSubKey(@"hostname");
                 regKey.SetValue(@"hostname", @"192.168.2.3");
             }
-            hostnameBox.Text = regKey.GetValue(@"hostname").ToString();
+            cc.HostName = hostnameBox.Text = regKey.GetValue(@"hostname").ToString();
 
             // port
             if (Array.IndexOf(settingKeys, @"port", 0) == -1)
@@ -230,6 +227,7 @@ namespace AIT
                 regKey.SetValue(@"port", @"1522");
             }
             portBox.Text = regKey.GetValue(@"port").ToString();
+            cc.Port = int.Parse(portBox.Text);
 
             // tagserver
             if (Array.IndexOf(settingKeys, @"tagserver", 0) == -1)
@@ -238,6 +236,14 @@ namespace AIT
                 regKey.SetValue(@"tagserver", @"192.168.2.7");
             }
             tagServerBox.Text = regKey.GetValue(@"tagserver").ToString();
+
+            // ip phone address
+            if (Array.IndexOf(settingKeys, @"ipphone", 0) == -1)
+            {
+                regKey.CreateSubKey(@"ipphone");
+                regKey.SetValue(@"ipphone", @"192.168.2.3");
+            }
+            ipPhoneBox.Text = regKey.GetValue(@"ipphone").ToString();
 
         }
 
@@ -308,10 +314,20 @@ namespace AIT
                 Reader.InvTimerEnabled = !Reader.InvTimerEnabled;
             }
             else if ((string)comboBox1.SelectedItem == "Symbol")
-            {            
-                scanButton.Enabled = false;
-                startInventoryButton.Enabled = false;
+            {
+                if (invTimer.Enabled == false)
+                {
+                    scanButton.Enabled = false;
+                    startInventoryButton.Enabled = false;
+                }
+
                 getInventorySymbol(sender);
+
+                if (invTimer.Enabled == false)
+                {
+                    scanButton.Enabled = true;
+                    startInventoryButton.Enabled = true;
+                }
             }            
         }
 
@@ -925,7 +941,7 @@ namespace AIT
 
         private void textBox1_GotFocus(object sender, EventArgs e)
         {
-            SipShowIM(1);
+            inputPanel1.Enabled = true;
         }
 
         private void textBox1_LostFocus(object sender, EventArgs e)
@@ -960,7 +976,8 @@ namespace AIT
             {
                 regKey.SetValue(@"tagserver", tagServerBox.Text);
             }
-            SipShowIM(0);
+
+            inputPanel1.Enabled = false;
         }
 
         private void tabPage1_MouseUp(object sender, MouseEventArgs e)

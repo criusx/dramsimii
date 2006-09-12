@@ -181,6 +181,7 @@ namespace RFIDProtocolLib
 
         public void sendScan(ref ArrayList inventoryTags, double latitude, char NorS, double longitude, char EorW, byte isScan)
         {
+            ArrayList invList2 = new ArrayList();
             // connect to the server
             Connect(hostName, 1555);
 
@@ -195,8 +196,6 @@ namespace RFIDProtocolLib
             // receive descriptions of items submitted
             manifestNum = -1;
 
-            inventoryTags.Clear();
-
             QueryResponse qr = new QueryResponse("No tags returned",-1," ", 0, " ");
 
             while (manifestNum == -1)
@@ -209,13 +208,16 @@ namespace RFIDProtocolLib
                         containerID = qr.rfidNum;
 
                     //custList.Insert(j++, new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
-                    inventoryTags.Add(new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
+                    invList2.Add(new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
                 }
             }
             if (manifestNum == -2)
             {
                 throw new Exception(qr.ShortDesc);
             }
+
+            inventoryTags.Clear();
+            inventoryTags = invList2;
 
             Close();
         }

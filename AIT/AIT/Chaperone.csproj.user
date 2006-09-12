@@ -2,5 +2,6 @@
   <PropertyGroup>
     <DeployDeviceID>AE1FD546-ECB8-4553-B0AA-53E129544859</DeployDeviceID>
     <EnableSigning>false</EnableSigning>
+    <NETCFDeploy>true</NETCFDeploy>
   </PropertyGroup>
 </Project>
