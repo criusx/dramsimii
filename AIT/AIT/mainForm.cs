@@ -946,6 +946,7 @@ namespace AIT
             else if (sender == hostnameBox)
             {
                 regKey.SetValue(@"hostname", hostnameBox.Text);
+				cc.HostName = hostnameBox.Text;
             }
             else if (sender == userIDBox)
             {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace WJ2
+namespace AIT
 {
     static class Program
     {

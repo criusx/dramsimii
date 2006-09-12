@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Threading;
 
 
-namespace WJ2
+namespace AIT
 {
     public partial class Browser : Form
     {

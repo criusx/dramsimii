@@ -1,4 +1,4 @@
-namespace WJ2
+namespace AIT
 {
     partial class Browser
     {

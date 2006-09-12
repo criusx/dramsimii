@@ -78,10 +78,12 @@ namespace RFIDProtocolLib
         /// </summary>
         /// <param name="host">The host to connect to.</param>
         /// <param name="port">Its port.</param>
-        public void Connect(string host, int port)
+        public void Connect(string host, int portNum)
         {
-            c = new TcpClient(host, port);
-            c.SendTimeout = c.ReceiveTimeout = 7000;            
+			hostName = host;
+			port = portNum;
+            c = new TcpClient(host, portNum);
+            //c.SendTimeout = c.ReceiveTimeout = 7000;            
         }
 
         /// <summary>
