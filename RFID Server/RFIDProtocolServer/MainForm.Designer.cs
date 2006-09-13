@@ -43,10 +43,12 @@ namespace RFIDProtocolServer
 			// textBox1
 			// 
 			this.textBox1.FormattingEnabled = true;
+			this.textBox1.HorizontalScrollbar = true;
 			this.textBox1.Location = new System.Drawing.Point(1, 50);
 			this.textBox1.Name = "textBox1";
 			this.textBox1.Size = new System.Drawing.Size(818, 563);
 			this.textBox1.TabIndex = 0;
+			this.textBox1.DoubleClick += new System.EventHandler(this.textBox1_DoubleClick);
 			// 
 			// usernameBox
 			// 

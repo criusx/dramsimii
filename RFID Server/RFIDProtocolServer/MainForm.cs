@@ -11,21 +11,12 @@ using System.Net.Sockets;
 using System.IO;
 using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
-
-
 using RFIDProtocolLib;
 
 namespace RFIDProtocolServer
 {
 	public partial class MainForm : Form
 	{
-		public MainForm()
-		{
-			InitializeComponent();
-			messages = new ArrayList();
-			messagesLock = new Mutex();
-		}
-
 		Daemon d;
 		bool isRunning;
 		int port = 5060;
@@ -38,6 +29,13 @@ namespace RFIDProtocolServer
 		private const string DATABASE = "RFID";
 
 		public string[] a = new string[5];
+
+		public MainForm()
+		{
+			InitializeComponent();
+			messages = new ArrayList();
+			messagesLock = new Mutex();
+		}
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
@@ -57,20 +55,19 @@ namespace RFIDProtocolServer
 			try
 			{
 				d = new Daemon(Daemon.PORT);
-				Console.Out.WriteLine("Starting Daemon...");
+				writeLog("Starting Daemon...");
 				d.Start();
 				d.BeginAcceptClientConnection(new AsyncCallback(AcceptClient), d);
-				Console.Out.WriteLine("Daemon listening...");
+				writeLog("Daemon listening...");
 
 				while (isRunning)
 				{
-					Thread.Sleep(10);
+					Thread.Sleep(1000);
 				}
 			}
 			catch (Exception)
 			{
 			}
-
 			Console.Out.WriteLine("Closing Daemon...");
 
 			d.Stop();
@@ -79,8 +76,10 @@ namespace RFIDProtocolServer
 		private void AcceptClient(IAsyncResult result)
 		{
 			writeLog("Received new client");
+
 			Daemon d = (Daemon)result.AsyncState;
 			ServerConnection s = d.EndAcceptClientConnection(result);
+
 			Thread t = new Thread(new ParameterizedThreadStart(RunServer));
 			t.Start(s);
 
@@ -90,24 +89,18 @@ namespace RFIDProtocolServer
 		private void RunServer(object obj)
 		{
 			writeLog("Client thread running");
+
 			ServerConnection s = (ServerConnection)obj;
 
 			string MyConString = "User Id=" + usernameBox.Text + ";" +
 				"Password=" + passwordBox.Text + ";" +
 				"Data Source=" + dataSourceBox.Text;
-					
-			//int numberOfQueries = -1;
+		
 			ArrayList inventoryTags = new ArrayList();
-			bool done = false;
-
-			s.WaitForConnectPacket();
-			writeLog("Got connect packet.");
-			s.SendConnectResponsePacket();
-			writeLog("Sent response connect.");
-
+			
 			try
 			{
-				while (isRunning && s.Connected && !done)
+				while (isRunning && s.Connected)
 				{
 					if (!s.GetStream().DataAvailable)
 					{
@@ -119,28 +112,25 @@ namespace RFIDProtocolServer
 
 					newPacket.ReadFromStream(s.GetStream());
 
-
 					if (newPacket.Type == 0)
-					{
 						continue;
-					}
 
 					switch (newPacket.Type)
 					{
+						#region QueryRequest
 						case (ushort)Packets.QueryRequest:
 							{
 								QueryRequest req = new QueryRequest(newPacket.Value);
 
 								req = addTag(ref inventoryTags, req);
-
 							} break;
-
+						#endregion
 
 						#region ReconcileFinishedHandler
 						case (ushort)Packets.ReconcileFinished:
 							{
 								ReconcileFinished req = new ReconcileFinished(newPacket.Value);
-								s.sendAck();
+								
 								OracleConnection c = null;								
 								OracleCommand cmd = null;
 								OracleGlobalization info = OracleGlobalization.GetClientInfo();
@@ -149,6 +139,7 @@ namespace RFIDProtocolServer
 
 								try
 								{
+									s.sendAck();
 									// now go do requests
 									c = new OracleConnection(MyConString);
 									c.Open();
@@ -159,10 +150,6 @@ namespace RFIDProtocolServer
 									cmd.CommandText = "InsertAlerts";
 
 									cmd.CommandType = CommandType.StoredProcedure;
-
-									//writeLog(cmd.CommandText);
-
-									//cmd.BindByName = true;
 
 									OracleParameter prm1 = cmd.Parameters.Add("in_containerrfid", OracleDbType.Varchar2);
 									prm1.Direction = ParameterDirection.Input;
@@ -179,9 +166,7 @@ namespace RFIDProtocolServer
 									writeLog(cmd.CommandText + "," + req.containerRFID + "," + req.dateTime + "," + req.numberToCall);
 									writeLog(cmd.CommandText + "," + prm1.Value + "," + prm2.Value + "," + prm3.Value);
 
-									int i = cmd.ExecuteNonQuery();
-
-									writeLog(i + " alert rows created.");
+									cmd.ExecuteNonQuery();
 								}
 								catch (Exception e)
 								{
@@ -240,6 +225,7 @@ namespace RFIDProtocolServer
 
 								checkinItems(s, MyConString, ref inventoryTags, iP);
 
+								s.Close();
 							} break;
 						#endregion
 
@@ -314,7 +300,6 @@ namespace RFIDProtocolServer
 			{
 				writeLog(e.Message.ToString());
 			}
-
 			s.Close();
 			writeLog("Client closed");
 		}
@@ -362,14 +347,16 @@ namespace RFIDProtocolServer
 
 				OracleDataReader reader = cmd.ExecuteReader();
 								
-				if (!reader.HasRows)
+				if (!reader.Read())
 				{
-					s.SendQueryResponsePacket(new QueryResponse(" ", -2, " ", 0, " "));
+					writeLog("No rows found.");
+					s.SendQueryResponsePacket(new QueryResponse("No container RFID found.", -2, " ", 0, " "));
 					return;
 				}
 
-				reader.Read();
-				string containerRFID = reader.GetString(0);			
+				string containerRFID = reader.GetString(0);
+
+				writeLog("Container is: " + containerRFID);
 				
 				
 				if (iP.isScan == 0) // generate a new manifest entry and prepare to retrieve that value
@@ -524,23 +511,34 @@ namespace RFIDProtocolServer
 				{
 					while (reader.Read())
 					{
-						string currentTag = reader.GetString(0);
-						string addedRemoved;
-						if (!reader.IsDBNull(1))
-							addedRemoved = reader.GetString(1);
-						else
-							addedRemoved = "";
 						string currentDesc = reader.GetString(2);
-						int addedRemovedNum;
 
-						if (addedRemoved == "UNEXPECTED")
-							addedRemovedNum = 1;
-						else if (addedRemoved == "MISSING")
-							addedRemovedNum = -1;
+						if (currentDesc == @"radtag")
+						{
+							cmd.CommandText = @"RadAlertCall";
+							cmd.CommandType = CommandType.StoredProcedure;
+							writeLog(@"Radiation Alert");
+						}
 						else
-							addedRemovedNum = 0;
+						{
+							string currentTag = reader.GetString(0);
+							string addedRemoved;
+							if (!reader.IsDBNull(1))
+								addedRemoved = reader.GetString(1);
+							else
+								addedRemoved = "";
 
-						s.SendQueryResponsePacket(new QueryResponse(currentDesc, -1, "", addedRemovedNum, currentTag));
+							int addedRemovedNum;
+
+							if (addedRemoved == "UNEXPECTED")
+								addedRemovedNum = 1;
+							else if (addedRemoved == "MISSING")
+								addedRemovedNum = -1;
+							else
+								addedRemovedNum = 0;
+
+							s.SendQueryResponsePacket(new QueryResponse(currentDesc, -1, "", addedRemovedNum, currentTag));
+						}
 					}
 				}				
 
@@ -550,7 +548,15 @@ namespace RFIDProtocolServer
 			}
 			catch (Exception e)
 			{
-				writeLog(e.Message);
+				try
+				{
+					s.SendQueryResponsePacket(new QueryResponse("ex" + e.Message, -2, " ", 0, " "));
+				}
+				catch (Exception ex)
+				{
+					writeLog("ex " + ex.Message);
+				}
+				writeLog("ex " + e.Message);
 			}
 			finally
 			{
@@ -583,18 +589,11 @@ namespace RFIDProtocolServer
 			return req;
 		}
 
-		int lineCount = 0;
-
 		private void writeLog(string str)
-		{
-			System.Console.WriteLine(str);
+		{			
 			messagesLock.WaitOne();
 			messages.Add(str);
-
-			if (lineCount > 2048)
-				messages.RemoveAt(0);
-			else
-				lineCount++;
+			System.Console.WriteLine(str);			
 			messagesLock.ReleaseMutex();
 		}
 
@@ -612,6 +611,8 @@ namespace RFIDProtocolServer
 			else
 			{
 				messagesLock.WaitOne();
+				while (textBox1.Items.Count >= 2048)
+					textBox1.Items.RemoveAt(0);
 				for (int i = 0; i < messages.Count; i++)
 					textBox1.Items.Add(messages[i]);
 				messages.Clear();
@@ -624,6 +625,11 @@ namespace RFIDProtocolServer
 			messagesLock.WaitOne();
 			textBox1.Items.Clear();
 			messagesLock.ReleaseMutex();
+		}
+
+		private void textBox1_DoubleClick(object sender, EventArgs e)
+		{
+			Clipboard.SetDataObject(textBox1.SelectedItem,true);
 		}
 	}
 }

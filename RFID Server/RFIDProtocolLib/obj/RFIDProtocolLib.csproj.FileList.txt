@@ -4,3 +4,11 @@ obj\Debug\ResolveAssemblyReference.cache
 obj\Debug\RFIDProtocolLib.dll
 obj\Debug\RFIDProtocolLib.pdb
 bin\Debug\Oracle.DataAccess.dll
+bin\Release\RFIDProtocolLib.dll
+bin\Release\RFIDProtocolLib.pdb
+bin\Release\Oracle.DataAccess.dll
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\RFIDProtocolLib.dll
+obj\Release\RFIDProtocolLib.pdb
+obj\Debug\RFIDProtocolLib.Properties.Resources.resources
+obj\Debug\RFIDProtocolLib.csproj.GenerateResource.Cache
