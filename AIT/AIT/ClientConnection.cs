@@ -83,7 +83,8 @@ namespace RFIDProtocolLib
 			hostName = host;
 			port = portNum;
             c = new TcpClient(host, portNum);
-            //c.SendTimeout = c.ReceiveTimeout = 7000;            
+            //c.SendTimeout = 5;
+            //c.ReceiveTimeout = 500;            
         }
 
         /// <summary>
