@@ -100,12 +100,11 @@ namespace RFIDProtocolServer
 			
 			try
 			{
-				while (isRunning && s.Connected)
+				while (isRunning && s.Connected )
 				{
-					if (!s.GetStream().DataAvailable)
+					while (!s.GetStream().DataAvailable)
 					{
-						Thread.Sleep(5);
-						continue;
+						Thread.Sleep(5);						
 					}
 
 					TLV newPacket = new TLV();
@@ -180,6 +179,7 @@ namespace RFIDProtocolServer
 										c.Close();
 									c.Dispose();
 								}
+								s.Close();
 							} break;
 						#endregion
 
@@ -578,7 +578,7 @@ namespace RFIDProtocolServer
 				byte[] bytes = new byte[12];
 				bytes = req.Rfid.GetBytes();
 				//bytes[11] += 0x18;
-				req.Rfid = new RFID(bytes);
+				//req.Rfid = new RFID(bytes);
 
 				inventoryTags.Add(new ListItem(new RFID(bytes)));
 			}
@@ -593,7 +593,7 @@ namespace RFIDProtocolServer
 		{			
 			messagesLock.WaitOne();
 			messages.Add(str);
-			System.Console.WriteLine(str);			
+			//System.Console.WriteLine(str);			
 			messagesLock.ReleaseMutex();
 		}
 
@@ -611,7 +611,7 @@ namespace RFIDProtocolServer
 			else
 			{
 				messagesLock.WaitOne();
-				while (textBox1.Items.Count >= 2048)
+				while (textBox1.Items.Count >= logLimitSize.Value)
 					textBox1.Items.RemoveAt(0);
 				for (int i = 0; i < messages.Count; i++)
 					textBox1.Items.Add(messages[i]);
