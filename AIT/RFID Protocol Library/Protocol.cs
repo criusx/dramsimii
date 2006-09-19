@@ -5,7 +5,7 @@ namespace RFIDProtocolLib
 {
 	public enum Packets : ushort
 	{
-		QueryRequest = 1, QueryResponse = 2, ReconcileFinished = 3, Info = 4, addRemoveItem = 5, RaiseAlert = 6, Ack = 7
+		QueryRequest = 1, QueryResponse = 2, ReconcileFinished = 3, Info = 4, addRemoveItem = 5, RaiseAlert = 6, Ack = 7, CloseConnection = 8
 	}
 
 	#region Packet
@@ -377,4 +377,25 @@ namespace RFIDProtocolLib
 		}
 	};
 	#endregion
+
+    #region ack
+    public class CloseConnection : Packet
+    {
+        public CloseConnection()
+        {
+            Type = (ushort)Packets.CloseConnection;
+        }
+
+        public CloseConnection(byte[] buf)
+        {
+            Type = (ushort)Packets.CloseConnection;
+        }
+
+        public override TLVList ToTLVList()
+        {
+            TLVList l = new TLVList(Type);
+            return l;
+        }
+    };
+    #endregion
 }
