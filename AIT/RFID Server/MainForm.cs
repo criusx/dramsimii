@@ -318,8 +318,28 @@ namespace RFIDProtocolServer
 				c.Open();
                 Txn = c.BeginTransaction(IsolationLevel.Serializable);
 
-				cmd = new OracleCommand();
-				cmd.Connection = c;
+                //////////////////////////////////////////////////////////////////////////
+                cmd = new OracleCommand();
+                cmd.Connection = c;
+
+                string[] in_rfidd = new string[20];
+                int[] bindsize = new int[20];
+                cmd.CommandText = @"TESTPACKAGE.testing";
+                cmd.CommandType = CommandType.StoredProcedure;
+                for (int i = 0; i < 20; i++)
+                {
+                    in_rfidd[i] = @"0123456789abcdefghijklmn";
+                    bindsize[i] = 24;
+                }
+                OracleParameter a = cmd.Parameters.Add("in_rfid", OracleDbType.Varchar2, 20,  in_rfidd, ParameterDirection.Input);
+                a.CollectionType = OracleCollectionType.PLSQLAssociativeArray;
+                a.ArrayBindSize = bindsize;
+
+                cmd.ExecuteNonQuery();
+
+                //////////////////////////////////////////////////////////////////////////
+                cmd = new OracleCommand();
+                cmd.Connection = c;
 
 				OracleDate newScantime = new OracleDate(iP.dateTime);
 
@@ -436,41 +456,23 @@ namespace RFIDProtocolServer
 
 				writeLog(cmd.CommandText);
 
-				OracleParameter prm1 = cmd.Parameters.Add("in_manifestnum", OracleDbType.Decimal);
-				prm1.Direction = ParameterDirection.Input;
-				prm1.Value = in_manifestnum;
+				OracleParameter prm1 = cmd.Parameters.Add("in_manifestnum", OracleDbType.Decimal, in_manifestnum, ParameterDirection.Input);
 
-				OracleParameter prm2 = cmd.Parameters.Add("in_rfid", OracleDbType.Varchar2);
-				prm2.Direction = ParameterDirection.Input;
-				prm2.Value = in_rfid;
+                OracleParameter prm2 = cmd.Parameters.Add("in_rfid", OracleDbType.Varchar2, in_rfid, ParameterDirection.Input);
 
-				OracleParameter prm3 = cmd.Parameters.Add("in_scantime", OracleDbType.Date);
-				prm3.Direction = ParameterDirection.Input;
-				prm3.Value = in_scantime;
+                OracleParameter prm3 = cmd.Parameters.Add("in_scantime", OracleDbType.Date, in_scantime, ParameterDirection.Input);
 
-				OracleParameter prm4 = cmd.Parameters.Add("in_latitude", OracleDbType.Varchar2);
-				prm4.Direction = ParameterDirection.Input;
-				prm4.Value = in_latitude;
+                OracleParameter prm4 = cmd.Parameters.Add("in_latitude", OracleDbType.Varchar2, in_latitude, ParameterDirection.Input);
 
-				OracleParameter prm5 = cmd.Parameters.Add("in_longitude", OracleDbType.Varchar2);
-				prm5.Direction = ParameterDirection.Input;
-				prm5.Value = in_longitude;
+                OracleParameter prm5 = cmd.Parameters.Add("in_longitude", OracleDbType.Varchar2, in_longitude, ParameterDirection.Input);
 
-				OracleParameter prm6 = cmd.Parameters.Add("in_temperature", OracleDbType.Single);
-				prm6.Direction = ParameterDirection.Input;
-				prm6.Value = in_temperature;
+                OracleParameter prm6 = cmd.Parameters.Add("in_temperature", OracleDbType.Single, in_temperature, ParameterDirection.Input);
 
-				OracleParameter prm7 = cmd.Parameters.Add("in_elevation", OracleDbType.Decimal);
-				prm7.Direction = ParameterDirection.Input;
-				prm7.Value = in_elevation;
+                OracleParameter prm7 = cmd.Parameters.Add("in_elevation", OracleDbType.Decimal, in_elevation, ParameterDirection.Input);
 
-				OracleParameter prm8 = cmd.Parameters.Add("in_relativehumidity", OracleDbType.Single);
-				prm8.Direction = ParameterDirection.Input;
-				prm8.Value = in_relativehumidity;
+                OracleParameter prm8 = cmd.Parameters.Add("in_relativehumidity", OracleDbType.Single, in_relativehumidity, ParameterDirection.Input);
 
-				OracleParameter prm9 = cmd.Parameters.Add("initial", OracleDbType.Char);
-				prm9.Direction = ParameterDirection.Input;
-				prm9.Value = initial;
+                OracleParameter prm9 = cmd.Parameters.Add("initial", OracleDbType.Char, initial, ParameterDirection.Input);
 
 				writeLog(ref cmd);
 
@@ -625,7 +627,7 @@ namespace RFIDProtocolServer
                     while (textBox1.Items.Count >= logLimitSize.Value)
                         textBox1.Items.RemoveAt(0);
                     for (int i = 0; i < messages.Count; i++)
-                        textBox1.Items.Add(messages[i]);
+                        textBox1.Items.Add(@"[" + DateTime.Now.ToString() + @"]" + messages[i]);
 
                     textBox1.SelectedIndex = textBox1.Items.Count - 1;
 
