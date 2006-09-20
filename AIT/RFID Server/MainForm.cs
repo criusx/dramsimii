@@ -627,7 +627,7 @@ namespace RFIDProtocolServer
                     while (textBox1.Items.Count >= logLimitSize.Value)
                         textBox1.Items.RemoveAt(0);
                     for (int i = 0; i < messages.Count; i++)
-                        textBox1.Items.Add(@"[" + DateTime.Now.ToString() + @"]" + messages[i]);
+                        textBox1.Items.Add(@"[" + DateTime.Now.ToString() + @"] " + messages[i]);
 
                     textBox1.SelectedIndex = textBox1.Items.Count - 1;
 
