@@ -1,10 +1,6 @@
 using System;
 
-#if USING_NUNIT
-using NUnit.Framework;
-#endif
-
-namespace RFIDProtocolLib
+namespace RFIDProtocolLibrary
 {
 	/// <summary>
 	/// An RFID.

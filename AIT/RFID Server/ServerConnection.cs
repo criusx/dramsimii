@@ -2,8 +2,9 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Collections;
+using RFIDProtocolLibrary;
 
-namespace RFIDProtocolLib
+namespace RFIDServer
 {
 	/// <summary>
 	/// This is a server connection that talks to the client.
@@ -12,13 +13,8 @@ namespace RFIDProtocolLib
 	{
 		private TcpClient c;		
 
-        public static int SessionIdStat = 0;
-        public int SessionId;
-
 		public ServerConnection(TcpClient client)
-		{
-            SessionId = SessionIdStat++;
-			c = client;
+		{	c = client;
 		}
 
 		public void Close()
@@ -32,9 +28,7 @@ namespace RFIDProtocolLib
         }
 
         public NetworkStream GetStream()
-        {
-            return c.GetStream();
-        }
+        { return c.GetStream(); }
 
 		#region Connect
 		public void WaitForConnectPacket()

@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
 
-#if USING_NUNIT
-using NUnit.Framework;
-#endif
-
-namespace RFIDProtocolLib
+namespace RFIDProtocolLibrary
 {
 	/// <summary>
 	/// A Type, Length, Value (TLV).

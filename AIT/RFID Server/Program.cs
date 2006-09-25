@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Oracle.DataAccess.Client;
 
-namespace RFIDProtocolServer
+namespace RFIDServer
 {
     static class Program
     {

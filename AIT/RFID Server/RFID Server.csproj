@@ -7,14 +7,15 @@
     <ProjectGuid>{697C18C5-1CF3-493C-9A16-1ACF1D2E324B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RFIDProtocolServer</RootNamespace>
+    <RootNamespace>RFIDServer</RootNamespace>
     <AssemblyName>RFID Server</AssemblyName>
-    <StartupObject>RFIDProtocolServer.Program</StartupObject>
+    <StartupObject>RFIDServer.Program</StartupObject>
     <SignManifests>true</SignManifests>
     <ManifestCertificateThumbprint>7296E0AA889A226EB8721D85C426028BAC9B0FC6</ManifestCertificateThumbprint>
     <ManifestKeyFile>RFID Server_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
     <TargetZone>LocalIntranet</TargetZone>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,8 +26,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationVersion>2.1.1.%2a</ApplicationVersion>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

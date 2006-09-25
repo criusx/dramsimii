@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 using WJ.MPR.Reader;
 using WJ.MPR.Util;
 using System.Xml;
-using RFIDProtocolLib;
+using RFIDProtocolLibrary;
 using Bluetooth;
 using OpenNETCF.Windows.Forms;
 using OwnerDrawnListFWProject;

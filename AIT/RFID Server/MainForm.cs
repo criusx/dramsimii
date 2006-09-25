@@ -11,10 +11,10 @@ using System.Net.Sockets;
 using System.IO;
 using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
-using RFIDProtocolLib;
+using RFIDProtocolLibrary;
 using ListItemNS;
 
-namespace RFIDProtocolServer
+namespace RFIDServer
 {
 	public partial class MainForm : Form
 	{
@@ -39,7 +39,8 @@ namespace RFIDProtocolServer
 		private void MainForm_Load(object sender, EventArgs e)
 		{
 			isRunning = true;
-
+            
+            this.Text = Text + " v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 			Thread t = new Thread(new ThreadStart(RunDaemon));
 			t.Start();			
 		}
@@ -291,7 +292,6 @@ namespace RFIDProtocolServer
 
 						default:
 							throw new Exception("Bad protocol type");
-							break;
 					}
 				}
 			}

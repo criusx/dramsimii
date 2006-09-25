@@ -1,4 +1,4 @@
-namespace RFIDProtocolServer
+namespace RFIDServer
 {
     partial class MainForm
     {
@@ -154,8 +154,12 @@ namespace RFIDProtocolServer
             this.Controls.Add(this.passwordBox);
             this.Controls.Add(this.usernameBox);
             this.Controls.Add(this.textBox1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(831, 644);
             this.Name = "MainForm";
-            this.Text = "RFID Protocol Server";
+            this.ShowIcon = false;
+            this.Text = "RFID Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.logLimitSize)).EndInit();

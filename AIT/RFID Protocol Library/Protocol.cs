@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace RFIDProtocolLib
+namespace RFIDProtocolLibrary
 {
 	public enum Packets : ushort
 	{

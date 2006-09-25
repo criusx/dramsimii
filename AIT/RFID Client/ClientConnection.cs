@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Net.Sockets;
 using OwnerDrawnListFWProject;
 using ListItemNS;
-using RFIDProtocolLib;
+using RFIDProtocolLibrary;
 
 namespace AIT
 {

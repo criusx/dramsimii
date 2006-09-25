@@ -1,7 +1,7 @@
 using System;
 using System.Net.Sockets;
 
-namespace RFIDProtocolLib
+namespace RFIDServer
 {
 	/// <summary>
 	/// This is the server daemon that listens for incoming connections.
