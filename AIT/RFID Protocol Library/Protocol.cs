@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace RFIDProtocolLibrary
 {
+    
 	public enum Packets : ushort
 	{
 		QueryRequest = 1, QueryResponse = 2, ReconcileFinished = 3, Info = 4, addRemoveItem = 5, RaiseAlert = 6, Ack = 7, CloseConnection = 8
@@ -11,6 +12,8 @@ namespace RFIDProtocolLibrary
 	#region Packet
 	public abstract class Packet
 	{
+        public const int port = 1555;
+
 		public ushort Type;
 
 		public abstract TLVList ToTLVList();

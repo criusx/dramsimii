@@ -112,4 +112,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		AMDCaProjectFile = C:\Documents and Settings\CriuS\My Documents\Visual Studio 2005\Projects\AIT\CodeAnalyst\RFID Client Server.caw
+	EndGlobalSection
 EndGlobal

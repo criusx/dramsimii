@@ -59,10 +59,13 @@ namespace RFIDServer
             return new QueryRequest(packet.Value);
         }
 
-        public void SendQueryResponsePacket(QueryResponse resp)
+        public void SendQueryResponsePacket(QueryResponse response)
         {
-            TLV responsePacket = new TLV((ushort)Packets.QueryResponse, resp.ToTLVList().GetBytes());
-            responsePacket.WriteToStream(c.GetStream());
+            if (response != null)
+            {
+                TLV responsePacket = new TLV((ushort)Packets.QueryResponse, response.ToTLVList().GetBytes());
+                responsePacket.WriteToStream(c.GetStream());
+            }
         }
         #endregion
 

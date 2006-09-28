@@ -73,11 +73,6 @@ namespace OwnerDrawnListFWProject
             base.OnMouseUp(e);
         }
 
-        public void onMouseUp(MouseEventArgs e)
-        {
-            this.OnMouseUp(e);
-        }
-
         protected override void OnDrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0)

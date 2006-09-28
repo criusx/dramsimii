@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.IO.Ports;
@@ -225,7 +226,7 @@ namespace AIT
             if (Array.IndexOf(settingKeys, @"port", 0) == -1)
             {
                 regKey.CreateSubKey(@"port");
-                regKey.SetValue(@"port", @"1522");
+                regKey.SetValue(@"port", RFIDProtocolLibrary.Packet.port.ToString());
             }
             portBox.Text = regKey.GetValue(@"port").ToString();
             cc.Port = int.Parse(portBox.Text);
@@ -429,7 +430,7 @@ namespace AIT
                             startInventoryButton.Enabled = false;
 
                             invProgressBar.Hide();
-                            invTimerBox.Show();                    
+                            invTimerBox.Show();
 
                             if (sender == scanButton)
                                 reconcileButton.Enabled = true;
@@ -442,24 +443,22 @@ namespace AIT
 
                         if (inventoryTags.Count > 0)
                         {
-                            cc.sendScan(ref inventoryTags, latitude, NorS, longitude, EorW, isScan);
+                            cc.sendScan(inventoryTags, latitude, NorS, longitude, EorW, isScan);
                             foreach (ListItem a in inventoryTags)
                             {
                                 custList.Add(a);
                             }
-                            
-                        }                     
+
+                        }
                     }
-                    catch (Exception ex)
+                    catch (SocketException ex)
                     {
                         Console.Out.WriteLine(ex.Message);
-
-                        foreach (object a in inventoryTags)
-                        {
-                            custList.Add(new ListItem(a.ToString(), "", -2)); // -2 for unknown status
-                        }
-
-                        MessageBox.Show(ex.Message);
+                    }
+                    // for more serious errors, display this
+                    catch (ArgumentException ex)
+                    {
+                        alertAndShowBox(ex);
 
                         if (invTimer.Enabled == false)
                         {
@@ -470,11 +469,23 @@ namespace AIT
                     }
                     finally
                     {
+                        foreach (object a in inventoryTags)
+                        {
+                            custList.Add(new ListItem(a.ToString(), "", -2)); // -2 for unknown status
+                        }
                         custList.RefreshVal();
                         inventoryTags.Clear();
                     }
                 }
             }
+        }
+
+        [Conditional("DEBUG")]
+        private static void alertAndShowBox(ArgumentException ex)
+        {
+            Console.Out.WriteLine(ex.Message);
+
+            MessageBox.Show(ex.Message);
         }        
 
         /// <summary>
@@ -543,7 +554,7 @@ namespace AIT
         {
             custMenu.Hide();
 
-            selectedIndex = custList.vscrollValue + (e.Y / custList.ItemHeight);
+            selectedIndex = custList.vScrollValue + (e.Y / custList.ItemHeight);
 
             if (selectedIndex >= custList.Items.Count)
                 return;

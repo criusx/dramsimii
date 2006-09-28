@@ -26,7 +26,6 @@ namespace RFIDServer
 
 		private const string DBSERVER = "SRL";
 		private const string DATABASE = "RFID";
-        private const int port = 1555;
         private Object messagewriter = new Object();
 
 		public MainForm()
@@ -54,7 +53,7 @@ namespace RFIDServer
 		{
 			try
 			{
-				d = new Daemon(Daemon.PORT);
+				d = new Daemon(RFIDProtocolLibrary.Packet.port);
 				writeLog("Starting Daemon...");
 				d.Start();
 				d.BeginAcceptClientConnection(new AsyncCallback(AcceptClient), d);
@@ -65,8 +64,9 @@ namespace RFIDServer
 					Thread.Sleep(1000);
 				}
 			}
-			catch (Exception)
+			catch (SocketException ex)
 			{
+                writeLog(ex.Message);
 			}
 			Console.Out.WriteLine("Closing Daemon...");
 
@@ -149,24 +149,18 @@ namespace RFIDServer
 
 									cmd.CommandType = CommandType.StoredProcedure;
 
-									OracleParameter prm1 = cmd.Parameters.Add("in_containerrfid", OracleDbType.Varchar2);
-									prm1.Direction = ParameterDirection.Input;
-									prm1.Value = req.containerRFID;
-
-									OracleParameter prm2 = cmd.Parameters.Add("in_alertdt", OracleDbType.Date);
-									prm2.Direction = ParameterDirection.Input;
-									prm2.Value = new OracleDate(req.dateTime); ;
-
-									OracleParameter prm3 = cmd.Parameters.Add("in_numbertocall", OracleDbType.Varchar2);
-									prm3.Direction = ParameterDirection.Input;
-									prm3.Value = req.numberToCall;
+									OracleParameter prm1 = cmd.Parameters.Add("in_containerrfid",OracleDbType.Varchar2, req.containerRFID, ParameterDirection.Input);
+									
+									OracleParameter prm2 = cmd.Parameters.Add("in_alertdt", OracleDbType.Date, new OracleDate(req.dateTime), ParameterDirection.Input);
+									
+									OracleParameter prm3 = cmd.Parameters.Add("in_numbertocall", OracleDbType.Varchar2, req.numberToCall, ParameterDirection.Input);
 
 									writeLog(cmd.CommandText + "," + req.containerRFID + "," + req.dateTime + "," + req.numberToCall);
 									writeLog(cmd.CommandText + "," + prm1.Value + "," + prm2.Value + "," + prm3.Value);
 
 									cmd.ExecuteNonQuery();
 								}
-								catch (Exception e)
+								catch (OracleException e)
 								{
 									writeLog(e.Message);
 								}
@@ -319,23 +313,23 @@ namespace RFIDServer
                 Txn = c.BeginTransaction(IsolationLevel.Serializable);
 
                 //////////////////////////////////////////////////////////////////////////
-                cmd = new OracleCommand();
-                cmd.Connection = c;
+                //cmd = new OracleCommand();
+                //cmd.Connection = c;
 
-                string[] in_rfidd = new string[20];
-                int[] bindsize = new int[20];
-                cmd.CommandText = @"TESTPACKAGE.testing";
-                cmd.CommandType = CommandType.StoredProcedure;
-                for (int i = 0; i < 20; i++)
-                {
-                    in_rfidd[i] = @"0123456789abcdefghijklmn";
-                    bindsize[i] = 24;
-                }
-                OracleParameter a = cmd.Parameters.Add("in_rfid", OracleDbType.Varchar2, 20,  in_rfidd, ParameterDirection.Input);
-                a.CollectionType = OracleCollectionType.PLSQLAssociativeArray;
-                a.ArrayBindSize = bindsize;
+                //string[] in_rfidd = new string[20];
+                //int[] bindsize = new int[20];
+                //cmd.CommandText = @"TESTPACKAGE.testing";
+                //cmd.CommandType = CommandType.StoredProcedure;
+                //for (int i = 0; i < 20; i++)
+                //{
+                //    in_rfidd[i] = @"0123456789abcdefghijklmn";
+                //    bindsize[i] = 24;
+                //}
+                //OracleParameter a = cmd.Parameters.Add("in_rfid", OracleDbType.Varchar2, 20,  in_rfidd, ParameterDirection.Input);
+                //a.CollectionType = OracleCollectionType.PLSQLAssociativeArray;
+                //a.ArrayBindSize = bindsize;
 
-                cmd.ExecuteNonQuery();
+                //cmd.ExecuteNonQuery();
 
                 //////////////////////////////////////////////////////////////////////////
                 cmd = new OracleCommand();
@@ -456,23 +450,24 @@ namespace RFIDServer
 
 				writeLog(cmd.CommandText);
 
-				OracleParameter prm1 = cmd.Parameters.Add("in_manifestnum", OracleDbType.Decimal, in_manifestnum, ParameterDirection.Input);
+				//OracleParameter prm1 = cmd.Parameters.Add("in_manifestnum", OracleDbType.Decimal, in_manifestnum, ParameterDirection.Input);
+                cmd.Parameters.Add("in_manifestnum", OracleDbType.Decimal, in_manifestnum, ParameterDirection.Input);
 
-                OracleParameter prm2 = cmd.Parameters.Add("in_rfid", OracleDbType.Varchar2, in_rfid, ParameterDirection.Input);
+                cmd.Parameters.Add("in_rfid", OracleDbType.Varchar2, in_rfid, ParameterDirection.Input);
 
-                OracleParameter prm3 = cmd.Parameters.Add("in_scantime", OracleDbType.Date, in_scantime, ParameterDirection.Input);
+                cmd.Parameters.Add("in_scantime", OracleDbType.Date, in_scantime, ParameterDirection.Input);
 
-                OracleParameter prm4 = cmd.Parameters.Add("in_latitude", OracleDbType.Varchar2, in_latitude, ParameterDirection.Input);
+                cmd.Parameters.Add("in_latitude", OracleDbType.Varchar2, in_latitude, ParameterDirection.Input);
 
-                OracleParameter prm5 = cmd.Parameters.Add("in_longitude", OracleDbType.Varchar2, in_longitude, ParameterDirection.Input);
+                cmd.Parameters.Add("in_longitude", OracleDbType.Varchar2, in_longitude, ParameterDirection.Input);
 
-                OracleParameter prm6 = cmd.Parameters.Add("in_temperature", OracleDbType.Single, in_temperature, ParameterDirection.Input);
+                cmd.Parameters.Add("in_temperature", OracleDbType.Single, in_temperature, ParameterDirection.Input);
 
-                OracleParameter prm7 = cmd.Parameters.Add("in_elevation", OracleDbType.Decimal, in_elevation, ParameterDirection.Input);
+                cmd.Parameters.Add("in_elevation", OracleDbType.Decimal, in_elevation, ParameterDirection.Input);
 
-                OracleParameter prm8 = cmd.Parameters.Add("in_relativehumidity", OracleDbType.Single, in_relativehumidity, ParameterDirection.Input);
+                cmd.Parameters.Add("in_relativehumidity", OracleDbType.Single, in_relativehumidity, ParameterDirection.Input);
 
-                OracleParameter prm9 = cmd.Parameters.Add("initial", OracleDbType.Char, initial, ParameterDirection.Input);
+                cmd.Parameters.Add("initial", OracleDbType.Char, initial, ParameterDirection.Input);
 
 				writeLog(ref cmd);
 
@@ -550,7 +545,7 @@ namespace RFIDServer
 
 				Txn.Commit();
 			}
-			catch (Exception e)
+			catch (OracleException e)
 			{
 				try
 				{
@@ -647,7 +642,8 @@ namespace RFIDServer
 
 		private void textBox1_DoubleClick(object sender, EventArgs e)
 		{
-			Clipboard.SetDataObject(textBox1.SelectedItem,true);
+
+			Clipboard.SetDataObject(textBox1.SelectedItem.ToString().Substring(textBox1.SelectedItem.ToString().IndexOf(']') + 2),true);
 		}
 	}
 }

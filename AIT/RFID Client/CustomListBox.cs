@@ -115,7 +115,7 @@ namespace OwnerDrawnListFWProject
             //}
 
             //Draw item's text
-            if (((ListItem)this.Items[e.Index]).shortDesc != "")
+            if (((ListItem)this.Items[e.Index]).shortDesc.Length > 0)
                 e.Graphics.DrawString(((ListItem)this.Items[e.Index]).shortDesc, e.Font, textBrush, rc);
             else
                 e.Graphics.DrawString(((ListItem)this.Items[e.Index]).RFIDNum, e.Font, textBrush, rc);

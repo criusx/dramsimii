@@ -47,7 +47,12 @@ namespace RFIDProtocolLibrary
 			Type = type;
 			Value = data;
 		}
-
+        /// <summary>
+        ///   TLV constructor
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">src or dst is null.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">srcOffset, dstOffset, or count is less than 0.</exception>
+        /// <exception cref="System.ArgumentException">src or dst is an object array, not a value type array.-or- The length of src is less than srcOffset plus count.-or- The length of dst is less than dstOffset plus count.</exception>
 		public TLV(byte[] tlv, int offset)
 		{
 			header = new Byte[HEADER_SIZE];
@@ -64,7 +69,9 @@ namespace RFIDProtocolLibrary
 		/// <summary>
 		/// The type.
 		/// </summary>
-		public ushort Type
+        /// <exception cref="System.ArgumentNullException">src or dst is null.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">srcOffset, dstOffset, or count is less than 0.</exception>
+        public ushort Type
 		{
 			get { return BitConverter.ToUInt16(header, TYPE_OFFSET); }
 
@@ -78,7 +85,9 @@ namespace RFIDProtocolLibrary
 		/// <summary>
 		/// The length.  To modify this you must modify the Value.
 		/// </summary>
-		public ushort Length
+        /// <exception cref="System.ArgumentNullException">src or dst is null.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">srcOffset, dstOffset, or count is less than 0.</exception>
+        public ushort Length
 		{
 			get { return BitConverter.ToUInt16(header, LENGTH_OFFSET); }
 		}
@@ -86,6 +95,9 @@ namespace RFIDProtocolLibrary
 		/// <summary>
 		/// The value.  This automatically modifies the length of the TLV.
 		/// </summary>
+        /// <exception cref="System.ArgumentNullException">src or dst is null.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">srcOffset, dstOffset, or count is less than 0.</exception>
+        /// <exception cref="System.ArgumentException">src or dst is an object array, not a value type array.-or- The length of src is less than srcOffset plus count.-or- The length of dst is less than dstOffset plus count.</exception>
 		public byte[] Value
 		{
 			get { return data; }
@@ -96,8 +108,8 @@ namespace RFIDProtocolLibrary
 					data = null;
 				else
 				{
-					byte[] length = BitConverter.GetBytes (value.Length);
-					Buffer.BlockCopy (length, 0, header, LENGTH_OFFSET, 2);
+					byte[] length = BitConverter.GetBytes(value.Length);
+					Buffer.BlockCopy(length, 0, header, LENGTH_OFFSET, 2);
 					data = value;
 				}
 			}
@@ -108,6 +120,12 @@ namespace RFIDProtocolLibrary
 		/// NOTE: this is blocking!
 		/// </summary>
 		/// <param name="s">The stream to read from.</param>
+        /// <exception cref="System.ArgumentException">The sum of offset and count is larger than the buffer length.</exception>
+        /// <exception cref="System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+        /// <exception cref="System.NotSupportedException">The stream does not support reading.</exception>
+        /// <exception cref="System.ArgumentNullException">buffer is null.</exception>
+        /// <exception cref="System.IO.IOException">An I/O error occurs.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">offset or count is negative.</exception>
 		public void ReadFromStream(System.IO.Stream s)
 		{
             s.Read(header, 0, HEADER_SIZE);
@@ -124,7 +142,13 @@ namespace RFIDProtocolLibrary
 		/// NOTE: this is blocking!
 		/// </summary>
 		/// <param name="s">The stream to write to.</param>
-		public void WriteToStream(System.IO.Stream s)
+        /// <exception cref="System.IO.IOException">An I/O error occurs.</exception>
+        /// <exception cref="System.ArgumentNullException">buffer is null.</exception>
+        /// <exception cref="System.NotSupportedException">The stream does not support writing.</exception>
+        /// <exception cref="System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+        /// <exception cref="System.ArgumentException">The sum of offset and count is greater than the buffer length.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">offset or count is negative.</exception>
+        public void WriteToStream(System.IO.Stream s)
 		{
 			s.Write(header, 0, HEADER_SIZE);
 			if (Length > 0)

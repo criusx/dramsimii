@@ -11,8 +11,6 @@ namespace RFIDServer
 	{
 		private TcpListener listener;
 
-		public const int PORT = 1555;
-
 		/// <summary>
 		/// Listen on loopback at a specified port.
 		/// </summary>

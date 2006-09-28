@@ -252,7 +252,7 @@ namespace OpenNETCF.Windows.Forms
         /// <summary>
         /// Gets the position that has been scrolled to at this point
         /// </summary>
-        public int vscrollValue
+        public int vScrollValue
         {
             get
             {
@@ -564,7 +564,11 @@ namespace OpenNETCF.Windows.Forms
         {
             Items.Insert(index, value);
         }
-
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="value"></param>
+        /// <exception cref="System.NotSupportedException"></exception>
         public void Add(object value)
         {
             Items.Add(value);
@@ -579,6 +583,10 @@ namespace OpenNETCF.Windows.Forms
             this.Refresh();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="System.NotSupportedException"></exception>
         public void Clear()
         {
             Items.Clear();

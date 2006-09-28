@@ -29,9 +29,7 @@ namespace AIT
         /// Normal constructor.
         /// </summary>
         public ClientConnection()
-        {
-            //c = new TcpClient();
-        }
+        {}
 
         /// <summary>
         /// </summary>
@@ -79,13 +77,12 @@ namespace AIT
         /// </summary>
         /// <param name="host">The host to connect to.</param>
         /// <param name="port">Its port.</param>
-        public void Connect(string host, int portNum)
+        /// <exception cref="System.ArgumentNULLException">Thrown when the host name is null</exception>
+        /// <exception cref="System.Net.Sockets.SocketException">Thrown when there was some problem connecting to the specified host</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the port specified is out of range</exception>"
+        public void Connect()
         {
-			hostName = host;
-			port = portNum;
-            c = new TcpClient(host, portNum);
-            //c.SendTimeout = 5;
-            //c.ReceiveTimeout = 500;            
+            c = new TcpClient(hostName, port);    
         }
 
         /// <summary>
@@ -133,7 +130,7 @@ namespace AIT
             try
             {
                 // send the reconcile complete command
-                Connect(hostName, 1555);
+                Connect();
 
                 SendPacket(new ReconcileFinished(lastDateTime, containerID, phoneNum));
 
@@ -159,7 +156,7 @@ namespace AIT
         public void sendAlert()
         {
             // send warning packet
-            Connect(hostName, 1555);
+            Connect();
 
             SendPacket(new RaiseAlert());
 
@@ -170,7 +167,7 @@ namespace AIT
 
         public void removeItem(string RFIDNum)
         {
-            Connect(hostName, 1555);
+            Connect();
 
             // send command to remove this item
             SendPacket(new addRemoveItem(lastDateTime, RFIDNum, containerID, true, manifestNum));
@@ -182,7 +179,7 @@ namespace AIT
 
         public void addItem(string RFIDNum)
         {
-            Connect(hostName, 1555);
+            Connect();
 
             // send command to add this item to the manifest
             SendPacket(new addRemoveItem(lastDateTime, RFIDNum, containerID, false, manifestNum));
@@ -192,11 +189,23 @@ namespace AIT
             Close();
         }
 
-        public void sendScan(ref ArrayList inventoryTags, double latitude, char NorS, double longitude, char EorW, byte isScan)
+        /// <summary>
+        /// Sends all the tags to the server and retrieves descriptions, a complete manifest and status for each item
+        /// </summary>
+        /// <param name="inventoryTags">All the tags to be sent</param>
+        /// <param name="latitude">The current latitude</param>
+        /// <param name="NorS">Whether the latitude indicates North or South</param>
+        /// <param name="longitude">The current longitude</param>
+        /// <param name="EorW">Whether the given longitude is East or West</param>
+        /// <param name="isScan">Tells whether this is a manifest, false, or a scan, true</param>
+        /// <exception cref="System.ArgumentNULLException">Thrown when the host name is null</exception>
+        /// <exception cref="System.Net.Sockets.SocketException">Thrown when there was some problem connecting to the specified host</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the port specified is out of range</exception>"
+        public void sendScan(ArrayList inventoryTags, double latitude, char NorS, double longitude, char EorW, byte isScan)
         {
             ArrayList invList2 = new ArrayList();
             // connect to the server
-            Connect(hostName, 1555);
+            Connect();
 
             // send all the RFIDs to the server
             for (int i = 0; i < inventoryTags.Count; ++i)
@@ -223,11 +232,7 @@ namespace AIT
                     //custList.Insert(j++, new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
                     invList2.Add(new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
                 }
-            }
-            if (manifestNum == -2)
-            {
-                throw new Exception(qr.ShortDesc);
-            }
+            }            
 
             inventoryTags.Clear();
             inventoryTags = invList2;
@@ -235,6 +240,11 @@ namespace AIT
             SendPacket(new CloseConnection());
 
             Close();
+
+            if (manifestNum == -2)
+            {
+                throw new ArgumentException(qr.ShortDesc);
+            }
         }
     }
 }
