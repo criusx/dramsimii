@@ -50,7 +50,7 @@ namespace Protocol
         public int Length
         {
             get
-            { return data.Length - HEADER_SIZE; }
+            { return BitConverter.ToInt32(data, LENGTH); }
         }
 
         public System.IO.Stream Stream
@@ -149,24 +149,19 @@ namespace Protocol
             }
         }
 
-        private int DataLength()
-        {
-            return BitConverter.ToInt32(data, LENGTH);
-        }
+        
 
         public void GetPacket()
         {
-            stream.Read(data, 0, HEADER_SIZE);
+            stream.Read(data, 0, HEADER_SIZE);            
 
-            int size = DataLength();
-
-            if (size > 0)
+            if (Length > 0)
             {
                 byte[] newData = new byte[data[LENGTH]];
 
                 Buffer.BlockCopy(data, 0, newData, 0, HEADER_SIZE);
 
-                stream.Read(newData, HEADER_SIZE, size);
+                stream.Read(newData, HEADER_SIZE, Length);
 
                 data = newData;
             }
