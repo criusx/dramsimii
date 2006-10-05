@@ -85,8 +85,7 @@ namespace GenTag_Server
 
                         case PacketTypes.DescriptionRequest:
                             writeLog(newPacket.ToString());
-                            Packet response = new Packet(PacketTypes.DescriptionResponse);
-                            response.Data = System.Text.Encoding.ASCII.GetBytes("None so far");
+                            Packet response = new Packet(PacketTypes.DescriptionResponse,newPacket.ToString() + " Returned");
                             response.Stream = client.GetStream();
                             response.SendPacket();
                             break;
