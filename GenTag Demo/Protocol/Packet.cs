@@ -136,17 +136,25 @@ namespace Protocol
         {
             stream.Read(data, 0, HEADER_SIZE);
 
-            if (DataLength() > 0)
+            int size = DataLength();
+
+            if (size > 0)
             {
                 byte[] newData = new byte[data[LENGTH]];
 
                 Buffer.BlockCopy(data, 0, newData, 0, HEADER_SIZE);
 
-                stream.Read(newData, HEADER_SIZE, newData[LENGTH] - HEADER_SIZE);
+                stream.Read(newData, HEADER_SIZE, size);
 
                 data = newData;
             }
         }
+
+        public override string ToString()
+        {
+            return System.Text.Encoding.ASCII.GetString(data, HEADER_SIZE, data.Length - HEADER_SIZE);
+        }
+
     };
     #endregion
 }

@@ -31,9 +31,14 @@ namespace GenTag_Demo
             // wait while a tag is read
             while (C1Lib.ISO_15693.NET_get_15693(0x00) == 0) { }
             
-            while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
+            //while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
                 
-            string currentTag = C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
+            //string currentTag = C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
+
+            string currentTag = "";
+
+            for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
+                currentTag += C1Lib.ISO_15693.tag.tag_id[i];
             
             ClientConnection c = new ClientConnection(hostName.Text, Packet.port);
 
@@ -43,16 +48,15 @@ namespace GenTag_Demo
 
             Packet rfidDesc = new Packet(PacketTypes.DescriptionResponse);
 
-            rfidDesc.GetPacket();
+            c.GetPacket(rfidDesc);
 
             c.Close();
 
             treeView1.BeginUpdate();
             treeView1.Nodes.Add(currentTag);
-            treeView1.Nodes[0].Nodes.Add(System.Text.Encoding.ASCII.GetString(rfidDesc.Data,0,rfidDesc.Length));
+            treeView1.Nodes[0].Nodes.Add(rfidDesc.ToString());
             treeView1.EndUpdate();
-            //for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-            //    outputBox.Text += C1Lib.ISO_15693.tag.tag_id[i];
+            
 
             //tempLabel.Text += "Joe";
             //System.Text.ASCIIEncoding encode = new System.Text.ASCIIEncoding();

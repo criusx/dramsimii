@@ -55,7 +55,7 @@ namespace GenTag_Demo
             this.hostName.Name = "hostName";
             this.hostName.Size = new System.Drawing.Size(106, 21);
             this.hostName.TabIndex = 3;
-            this.hostName.Text = "68.50.194.236";
+            this.hostName.Text = "129.2.99.117";
             // 
             // mainForm
             // 

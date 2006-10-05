@@ -21,6 +21,12 @@ namespace GenTag_Demo
             pkt.SendPacket();
         }
 
+        public void GetPacket(Packet pkt)
+        {
+            pkt.Stream = client.GetStream();
+            pkt.GetPacket();
+        }
+
         public void Close()
         {
             Packet close = new Packet(PacketTypes.CloseConnectionRequest);
