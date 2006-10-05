@@ -127,11 +127,16 @@ namespace Protocol
             }
         }
 
+        private int DataLength()
+        {
+            return BitConverter.ToInt32(data, LENGTH);
+        }
+
         public void GetPacket()
         {
             stream.Read(data, 0, HEADER_SIZE);
 
-            if (data[LENGTH] > 0)
+            if (DataLength() > 0)
             {
                 byte[] newData = new byte[data[LENGTH]];
 
