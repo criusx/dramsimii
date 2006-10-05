@@ -42,7 +42,7 @@ namespace GenTag_Demo
             
             ClientConnection c = new ClientConnection(hostName.Text, Packet.port);
 
-            Packet rfidReq = new Packet(PacketTypes.DescriptionRequest,C1Lib.ISO_15693.tag.read_buff);
+            Packet rfidReq = new Packet(PacketTypes.DescriptionRequest,currentTag);
 
             c.SendPacket(rfidReq);
 

@@ -83,7 +83,7 @@ namespace Protocol
 
             data[TYPE] = (byte)PacketTypes.UnknownType;
 
-            Buffer.BlockCopy(BitConverter.GetBytes(data.Length),0,data,LENGTH,BitConverter.GetBytes(data.Length).Length);
+            Buffer.BlockCopy(BitConverter.GetBytes(data.Length),0,data,LENGTH,4);
         }
 
         /// <summary>
@@ -114,7 +114,29 @@ namespace Protocol
 
             data[TYPE] = (byte)type;
 
+            // set the bytes representing the length
             Buffer.BlockCopy(BitConverter.GetBytes(data.Length), 0, data, LENGTH, BitConverter.GetBytes(data.Length).Length);
+
+            // copy the body over
+            Buffer.BlockCopy(body, 0, data, HEADER_SIZE, body.Length);
+        }
+
+        public Packet(PacketTypes type, string body)
+        {
+            if (body.Length > int.MaxValue)
+                throw new ArgumentOutOfRangeException("body", "Was too large to be expressed as an int");
+
+            byte[] stringArray = System.Text.Encoding.ASCII.GetBytes(body);
+
+            data = new byte[HEADER_SIZE + stringArray.Length];
+
+            data[TYPE] = (byte)type;
+
+            // copy the bytes representing the length over
+            Buffer.BlockCopy(BitConverter.GetBytes(data.Length), 0, data, LENGTH, BitConverter.GetBytes(data.Length).Length);
+
+            // copy the body over
+            Buffer.BlockCopy(stringArray, 0, data, HEADER_SIZE, stringArray.Length);
         }
 
         public void SendPacket()
