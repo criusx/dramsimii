@@ -143,9 +143,9 @@ namespace Protocol
         {
             stream.Write(data, 0, HEADER_SIZE);
 
-            if (data.Length > HEADER_SIZE)
+            if (Length > HEADER_SIZE)
             {
-                stream.Write(data, HEADER_SIZE, data.Length - HEADER_SIZE);
+                stream.Write(data, HEADER_SIZE, Length - HEADER_SIZE);
             }
         }
 
@@ -157,11 +157,11 @@ namespace Protocol
 
             if (Length > 0)
             {
-                byte[] newData = new byte[data[LENGTH]];
+                byte[] newData = new byte[Length];
 
                 Buffer.BlockCopy(data, 0, newData, 0, HEADER_SIZE);
 
-                stream.Read(newData, HEADER_SIZE, Length);
+                stream.Read(newData, HEADER_SIZE, Length - HEADER_SIZE);
 
                 data = newData;
             }
