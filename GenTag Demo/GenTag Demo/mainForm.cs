@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using C1Lib;
 using Protocol;
+using System.Net.Sockets;
 
 namespace GenTag_Demo
 {
@@ -39,23 +40,57 @@ namespace GenTag_Demo
 
             for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
                 currentTag += C1Lib.ISO_15693.tag.tag_id[i];
+
+            C1Lib.C1.NET_C1_disable();
+            C1Lib.C1.NET_C1_close_comm();
+
+            try
+            {
+
+                ClientConnection c = new ClientConnection(hostName.Text, Packet.port);
+
+                Packet rfidReq = new Packet(PacketTypes.DescriptionRequest, currentTag);
+
+                c.SendPacket(rfidReq);
+
+                Packet rfidDesc = new Packet(PacketTypes.DescriptionResponse);
+
+                c.GetPacket(rfidDesc);
+
+                string rfidDescr = rfidDesc.ToString();
+
+                c.Close();
+
+                treeView1.BeginUpdate();
+
+                bool exists = false;
+
+                foreach (TreeNode tn in treeView1.Nodes)
+                {
+                    Console.Out.WriteLine(tn.Text);
+                    if (tn.Text == currentTag)
+                    {
+                        tn.Nodes.Clear();
+                        tn.Nodes.Add(rfidDescr);
+                        exists = true;
+                    }
+                }
+                if (!exists)
+                {
+                    treeView1.Nodes.Add(currentTag).Nodes.Add(rfidDescr);
+                }
+                treeView1.EndUpdate();
+            }
+            catch (SocketException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            Cursor.Current = Cursors.Default;
+
+            return;
+
             
-            ClientConnection c = new ClientConnection(hostName.Text, Packet.port);
-
-            Packet rfidReq = new Packet(PacketTypes.DescriptionRequest,currentTag);
-
-            c.SendPacket(rfidReq);
-
-            Packet rfidDesc = new Packet(PacketTypes.DescriptionResponse);
-
-            c.GetPacket(rfidDesc);
-
-            c.Close();
-
-            treeView1.BeginUpdate();
-            treeView1.Nodes.Add(currentTag);
-            treeView1.Nodes[0].Nodes.Add(rfidDesc.ToString());
-            treeView1.EndUpdate();
             
 
             //tempLabel.Text += "Joe";
@@ -65,12 +100,9 @@ namespace GenTag_Demo
             //int block_no = (tempLabel.Text.Length + 1) / C1Lib.ISO_15693.tag.bytes_per_block;
             //while (C1Lib.ISO_15693.NET_write_multi_15693(0x00,block_no,bytes) != 1) {}
 
-            C1Lib.C1.NET_C1_disable();
-            C1Lib.C1.NET_C1_close_comm();
+            
 
-            Cursor.Current = Cursors.Default;
-
-            return;
+            
             //for (byte i = 0x00; i < 0xFF; i++)
             //    if (C1Lib.ISO_15693.NET_read_single_15693(i) == 1)
             //        outputBox.Text += C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);

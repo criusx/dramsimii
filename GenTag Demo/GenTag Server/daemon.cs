@@ -13,7 +13,7 @@ namespace GenTag_Server
         {
             listener = new TcpListener(System.Net.IPAddress.Any, port);
             listener.Start();
-            listener.BeginAcceptTcpClient(callback, listener);
+            listener.BeginAcceptTcpClient(callback, this);
         }
 
         public TcpClient EndAcceptTcpClient(IAsyncResult asyncResult)
@@ -23,7 +23,7 @@ namespace GenTag_Server
 
         public void BeginAcceptTcpClient(AsyncCallback callback, object state)
         {
-            listener.BeginAcceptTcpClient(callback, state);
+            listener.BeginAcceptTcpClient(callback, this);
         }
 
         public void Stop()

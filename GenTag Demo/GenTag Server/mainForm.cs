@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Protocol;
 using System.Net.Sockets;
 using System.Threading;
+using Oracle.DataAccess.Client;
 
 namespace GenTag_Server
 {
@@ -85,9 +86,59 @@ namespace GenTag_Server
 
                         case PacketTypes.DescriptionRequest:
                             writeLog(newPacket.ToString());
-                            Packet response = new Packet(PacketTypes.DescriptionResponse,newPacket.ToString() + " Returned");
-                            response.Stream = client.GetStream();
-                            response.SendPacket();
+                            string MyConString = @"User Id=" + usernameBox.Text + @";" +
+                                @"Password=" + passwordBox.Text + @";" +
+                                @"Data Source=" + dataSourceBox.Text;
+                            OracleConnection c = null;								
+                            OracleCommand cmd = null;
+
+                            try
+                            {
+                                // now go do requests
+                                c = new OracleConnection(MyConString);
+                                
+                                c.Open();
+
+                                cmd = new OracleCommand(@"SELECT description from rfid_desc WHERE rfid ='" + newPacket.ToString() + "'",c);
+
+                                writeLog(cmd.CommandText);
+
+                                OracleDataReader reader = cmd.ExecuteReader();
+
+                                Packet response = reader.Read() == true ?
+                                    new Packet(PacketTypes.DescriptionResponse, reader.GetString(0)) :
+                                    new Packet(PacketTypes.DescriptionResponse, @"No description for this tag");
+                                
+                                response.Stream = client.GetStream();
+                                response.SendPacket();
+
+                            }
+                            catch (OracleException e)
+                            {
+                                writeLog(e.Message);
+                                try
+                                {
+                                    Packet response = new Packet(PacketTypes.DescriptionResponse, @"No description for this tag");
+                                    response.Stream = client.GetStream();
+                                    response.SendPacket();
+                                }
+                                catch (SocketException ex)
+                                {
+                                    writeLog(ex.Message);
+                                }
+                            }
+                            catch (SocketException ex)
+                            {
+                                writeLog(ex.Message);
+                            }
+                            finally
+                            {
+                                if (cmd != null)
+                                    cmd.Dispose();
+                                if (c != null && c.State == ConnectionState.Open)
+                                    c.Close();
+                                c.Dispose();
+                            }
                             break;
 
                         case PacketTypes.CloseConnectionRequest:
@@ -143,6 +194,11 @@ namespace GenTag_Server
                     messages.Clear();
                 }
             }
+        }
+
+        private void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+            Clipboard.SetDataObject(listBox1.SelectedItem.ToString().Substring(listBox1.SelectedItem.ToString().IndexOf(']') + 2), true);
         }
     }
 }

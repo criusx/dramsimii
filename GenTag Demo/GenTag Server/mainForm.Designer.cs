@@ -29,12 +29,12 @@ namespace GenTag_Server
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.usernameBox = new System.Windows.Forms.TextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.passwordBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.dataSourceBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.logLimitSize = new System.Windows.Forms.NumericUpDown();
@@ -50,12 +50,13 @@ namespace GenTag_Server
             this.label1.TabIndex = 0;
             this.label1.Text = "Login:";
             // 
-            // textBox1
+            // usernameBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(42, 21);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 1;
+            this.usernameBox.Location = new System.Drawing.Point(42, 21);
+            this.usernameBox.Name = "usernameBox";
+            this.usernameBox.Size = new System.Drawing.Size(100, 20);
+            this.usernameBox.TabIndex = 1;
+            this.usernameBox.Text = "system";
             // 
             // listBox1
             // 
@@ -64,6 +65,7 @@ namespace GenTag_Server
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(720, 446);
             this.listBox1.TabIndex = 2;
+            this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
             // 
             // label2
             // 
@@ -74,12 +76,14 @@ namespace GenTag_Server
             this.label2.TabIndex = 0;
             this.label2.Text = "Password:";
             // 
-            // textBox2
+            // passwordBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(210, 21);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 1;
+            this.passwordBox.Location = new System.Drawing.Point(210, 21);
+            this.passwordBox.Name = "passwordBox";
+            this.passwordBox.PasswordChar = '*';
+            this.passwordBox.Size = new System.Drawing.Size(100, 20);
+            this.passwordBox.TabIndex = 1;
+            this.passwordBox.Text = "oracle2006";
             // 
             // label3
             // 
@@ -90,12 +94,13 @@ namespace GenTag_Server
             this.label3.TabIndex = 0;
             this.label3.Text = "TNSNames Entry";
             // 
-            // textBox3
+            // dataSourceBox
             // 
-            this.textBox3.Location = new System.Drawing.Point(411, 21);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 1;
+            this.dataSourceBox.Location = new System.Drawing.Point(411, 21);
+            this.dataSourceBox.Name = "dataSourceBox";
+            this.dataSourceBox.Size = new System.Drawing.Size(100, 20);
+            this.dataSourceBox.TabIndex = 1;
+            this.dataSourceBox.Text = "linserver";
             // 
             // label4
             // 
@@ -145,9 +150,9 @@ namespace GenTag_Server
             this.Controls.Add(this.logLimitSize);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.dataSourceBox);
+            this.Controls.Add(this.passwordBox);
+            this.Controls.Add(this.usernameBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -166,12 +171,12 @@ namespace GenTag_Server
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox usernameBox;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox passwordBox;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox dataSourceBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.NumericUpDown logLimitSize;
