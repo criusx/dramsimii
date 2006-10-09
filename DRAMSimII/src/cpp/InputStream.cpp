@@ -41,11 +41,12 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 		{
 			trace_file.open(temp->second.c_str(), ifstream::in);
 			if(!trace_file.is_open()) {
-				cerr << "Error in opening trace file " << temp2 << endl;
+				cerr << "Error in opening trace file " << temp->second.c_str() << endl;
 				_exit(3);
 			}
 		}
 		else
+			cerr << "Unable to open trace file";
 			_exit(6);
 	}
 	else if (type != RANDOM)
