@@ -6,21 +6,22 @@ using RFIDProtocolLibrary;
 
 namespace RFIDServer
 {
-	/// <summary>
-	/// This is a server connection that talks to the client.
-	/// </summary>
-	public class ServerConnection
-	{
-		private TcpClient c;		
+    /// <summary>
+    /// This is a server connection that talks to the client.
+    /// </summary>
+    public class ServerConnection
+    {
+        private TcpClient c;
 
-		public ServerConnection(TcpClient client)
-		{	c = client;
-		}
+        public ServerConnection(TcpClient client)
+        {
+            c = client;
+        }
 
-		public void Close()
-		{
-			c.Close();
-		}
+        public void Close()
+        {
+            c.Close();
+        }
 
         public bool Connected
         {
@@ -30,20 +31,20 @@ namespace RFIDServer
         public NetworkStream GetStream()
         { return c.GetStream(); }
 
-		#region Connect
-		public void WaitForConnectPacket()
-		{
-			TLV connectPacket = new TLV();
-			while (connectPacket.Type != 0)
-				connectPacket.ReadFromStream(c.GetStream());
-		}
+        #region Connect
+        public void WaitForConnectPacket()
+        {
+            TLV connectPacket = new TLV();
+            while (connectPacket.Type != 0)
+                connectPacket.ReadFromStream(c.GetStream());
+        }
 
-		public void SendConnectResponsePacket()
-		{
-			TLV connectResponsePacket = new TLV(1);
-			connectResponsePacket.WriteToStream(c.GetStream());
-		}
-		#endregion
+        public void SendConnectResponsePacket()
+        {
+            TLV connectResponsePacket = new TLV(1);
+            connectResponsePacket.WriteToStream(c.GetStream());
+        }
+        #endregion
 
         #region Query
         public QueryRequest WaitForQueryPacket()
@@ -69,16 +70,16 @@ namespace RFIDServer
         }
         #endregion
 
-		#region sendAck
-		public void sendAck()
-		{
-			TLV ackPacket = new TLV((ushort)Packets.Ack);
-			ackPacket.WriteToStream(c.GetStream());
-		}
-		#endregion 
+        #region sendAck
+        public void sendAck()
+        {
+            TLV ackPacket = new TLV((ushort)Packets.Ack);
+            ackPacket.WriteToStream(c.GetStream());
+        }
+        #endregion
 
-		#region SetPhoneNumber
-		public ReconcileFinished WaitForSetPhoneNumberPacket()
+        #region SetPhoneNumber
+        public ReconcileFinished WaitForSetPhoneNumberPacket()
         {
             if (!c.GetStream().DataAvailable)
                 throw new IOException("Data not there!");
@@ -90,11 +91,11 @@ namespace RFIDServer
             return new ReconcileFinished(packet.Value);
         }
 
-		//public void SendSetPhoneNumberPacket(SetPhoneNumberResponse resp)
-		//{
-		//    TLV responsePacket = new TLV(SetPhoneNumberResponse.Type, resp.ToTLVList().GetBytes());
-		//    responsePacket.WriteToStream(c.GetStream());
-		//}
+        //public void SendSetPhoneNumberPacket(SetPhoneNumberResponse resp)
+        //{
+        //    TLV responsePacket = new TLV(SetPhoneNumberResponse.Type, resp.ToTLVList().GetBytes());
+        //    responsePacket.WriteToStream(c.GetStream());
+        //}
         #endregion
 
         #region RaiseAlert
@@ -110,11 +111,11 @@ namespace RFIDServer
             return new RaiseAlert(packet.Value);
         }
 
-		//public void SendRaiseAlertPacket(RaiseAlertResponse resp)
-		//{
-		//    TLV responsePacket = new TLV(RaiseAlertResponse.Type, resp.ToTLVList().GetBytes());
-		//    responsePacket.WriteToStream(c.GetStream());
-		//}
+        //public void SendRaiseAlertPacket(RaiseAlertResponse resp)
+        //{
+        //    TLV responsePacket = new TLV(RaiseAlertResponse.Type, resp.ToTLVList().GetBytes());
+        //    responsePacket.WriteToStream(c.GetStream());
+        //}
         #endregion
-	}
+    }
 }
