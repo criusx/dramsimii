@@ -106,7 +106,9 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 		other_r_last_cas_length = timing_specification.t_burst;
 		other_r_last_casw_time = now - 1000;
 		other_r_last_casw_length = timing_specification.t_burst;
-		for (unsigned rank_id = system_config.rank_count - 1; rank_id >= 0; rank_id--)
+
+		// find the most recent cas(w) time and length
+		for (unsigned rank_id = 0; rank_id < system_config.rank_count ; rank_id++)
 		{
 			if (rank_id != this_rank)
 			{
