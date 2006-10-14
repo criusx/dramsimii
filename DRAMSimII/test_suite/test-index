@@ -1,0 +1,18 @@
+ddr2/faw1
+
+ddr2/rrd1
+
+ddr2/ras1
+
+ddr2/cas1
+
+ddr2/rcd1
+
+ddr2/rc1
+
+ddr2/cwd1
+
+#Enable if using posted CAS commands
+ddr2/al1
+
+ddr2/dqs1
