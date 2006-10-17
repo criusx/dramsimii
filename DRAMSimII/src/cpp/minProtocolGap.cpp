@@ -75,7 +75,7 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 	case CAS_COMMAND:
 		{
 			//respect last ras of same rank
-			t_ras_gap = max(0,(int)(this_b.last_ras_time + timing_specification.t_rcd - t_al - now));
+			t_ras_gap = max(0,(int)((this_b.last_ras_time - now) + timing_specification.t_rcd - t_al));
 
 			other_r_last_cas_time = now - 1000;
 			other_r_last_cas_length = timing_specification.t_burst;

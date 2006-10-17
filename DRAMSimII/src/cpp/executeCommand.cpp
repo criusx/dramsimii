@@ -28,7 +28,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	//this_command->completion_time = channel.get_time();
 
 	// update the channel's idea of what time it is
-	channel.set_time(this_command->start_time = (this_command->start_time + gap));
+	channel.set_time(this_command->start_time = (channel.get_time() + gap));
 
 	// new, this is not right, this only shows how long until the next command could execute
 	// this_command->completion_time = channel.get_time();
