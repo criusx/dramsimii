@@ -324,7 +324,8 @@ dramTimingSpecification::dramTimingSpecification(map<file_io_token_t,string> &pa
 	if ((temp=parameter.find(dram_type_token))==parameter.end())
 		_exit(9);
 
-	if(temp->second == "sdram"){						/* @ 100 MHz */
+	if(temp->second == "sdram")
+	{						/* @ 100 MHz */
 		t_al = 0;		/* no such thing as posted CAS in SDRAM */
 		t_burst = 8;		/* depending on system config! can be 1, 2, 4, or 8 */
 		t_cas = 2;
@@ -407,8 +408,15 @@ dramTimingSpecification::dramTimingSpecification(map<file_io_token_t,string> &pa
 			stringstream temp2(temp->second);
 			temp2 >> t_ras;
 		}
+		if ((temp=parameter.find(t_rp_token))==parameter.end())
+			t_rp = 10;/* 12 ns @ 1.25ns per beat = 9.6 beats */
+		else
+		{
+			stringstream temp2(temp->second);
+			temp2 >> t_rp;
+		}
 		if ((temp=parameter.find(t_rc_token))==parameter.end())
-			t_rc = 46;/* 57 ns @ 1.25ns per beat = 45.6 beats */
+			t_rc = t_ras + t_rp; // if it is not defined as anything else, set it to this defined value
 		else
 		{
 			stringstream temp2(temp->second);
@@ -428,13 +436,7 @@ dramTimingSpecification::dramTimingSpecification(map<file_io_token_t,string> &pa
 			stringstream temp2(temp->second);
 			temp2 >> t_rfc;
 		}
-		if ((temp=parameter.find(t_rp_token))==parameter.end())
-			t_rp = 10;/* 12 ns @ 1.25ns per beat = 9.6 beats */
-		else
-		{
-			stringstream temp2(temp->second);
-			temp2 >> t_rp;
-		}
+		
 		if ((temp=parameter.find(t_rrd_token))==parameter.end())
 			t_rrd = 6;/* 7.5 ns */
 		else

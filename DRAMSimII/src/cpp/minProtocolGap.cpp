@@ -38,22 +38,21 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 			
 			// respect tRRD and tRC of all other banks of same rank
 			int t_rrd_gap;
-			int tRcGap;
 
 			if (ras_q_count == 0)
 			{
 				t_rrd_gap = 0;
-				tRcGap = 0;
 			}
 			else 
 			{
 				// read tail end of ras history
 				tick_t *last_ras_time = this_r.last_ras_times.read(ras_q_count - 1); 
 				// respect the row-to-row activation delay
-				t_rrd_gap = (int)(*last_ras_time - now) + timing_specification.t_rrd;
-				// respect the row cycle time limitation
-				tRcGap = (int)(*last_ras_time - now) + timing_specification.t_rc;
+				t_rrd_gap = (int)(*last_ras_time - now) + timing_specification.t_rrd;				
 			}
+
+			// respect the row cycle time limitation
+			int tRcGap = (int)(this_b.last_ras_time - now) + timing_specification.t_rc;
 
 			// respect the t_faw value for DDR2 and beyond
 			int t_faw_gap;
@@ -70,9 +69,9 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 			}
 			
 			min_gap = max(max(tRcGap , t_rp_gap) , max(t_rrd_gap , t_faw_gap));
-
-			break;
 		}
+		break;
+
 	case CAS_AND_PRECHARGE_COMMAND:
 		// Auto precharge will be issued as part of command,
 		// but DRAM devices are intelligent enough to delay the prec command
