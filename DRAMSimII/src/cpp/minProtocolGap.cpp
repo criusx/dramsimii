@@ -32,24 +32,30 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 	case RAS_COMMAND:
 		{
 			// respect t_rp of same bank
-			int t_rp_gap = max(0 , (int)(this_b.last_prec_time - now) + timing_specification.t_rp);
+			int t_rp_gap = (int)(this_b.last_prec_time - now) + timing_specification.t_rp;
 
-			// respect t_rrd of all other banks of same rank
 			int ras_q_count = this_r.last_ras_times.get_count();
-
+			
+			// respect tRRD and tRC of all other banks of same rank
 			int t_rrd_gap;
+			int tRcGap;
 
 			if (ras_q_count == 0)
 			{
 				t_rrd_gap = 0;
+				tRcGap = 0;
 			}
 			else 
 			{
 				// read tail end of ras history
 				tick_t *last_ras_time = this_r.last_ras_times.read(ras_q_count - 1); 
-				t_rrd_gap = max(t_rrd_gap,(int)(*last_ras_time - now) + timing_specification.t_rrd);
+				// respect the row-to-row activation delay
+				t_rrd_gap = (int)(*last_ras_time - now) + timing_specification.t_rrd;
+				// respect the row cycle time limitation
+				tRcGap = (int)(*last_ras_time - now) + timing_specification.t_rc;
 			}
 
+			// respect the t_faw value for DDR2 and beyond
 			int t_faw_gap;
 
 			if (ras_q_count < 4)
@@ -60,10 +66,10 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 			{
 				// read head of ras history
 				tick_t *fourth_ras_time = this_r.last_ras_times.read(0); 
-				t_faw_gap = max(0,(int)(*fourth_ras_time - now) + timing_specification.t_faw);
+				t_faw_gap = (int)(*fourth_ras_time - now) + timing_specification.t_faw;
 			}
-
-			min_gap = max(t_rp_gap , max(t_rrd_gap , t_faw_gap));
+			
+			min_gap = max(max(tRcGap , t_rp_gap) , max(t_rrd_gap , t_faw_gap));
 
 			break;
 		}
