@@ -13,11 +13,14 @@ using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
 using RFIDProtocolLibrary;
 using ListItemNS;
+using System.Xml.Serialization;
+using System.Web.Services.Protocols;
 
 namespace RFIDServer
 {
     public partial class MainForm : Form
     {
+        
         Daemon d;
         bool isRunning;
 
@@ -30,6 +33,7 @@ namespace RFIDServer
 
         public MainForm()
         {
+            
             InitializeComponent();
             messages = new ArrayList();
             messagesLock = new Mutex();

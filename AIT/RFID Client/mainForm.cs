@@ -28,13 +28,15 @@ namespace AIT
     {
         [DllImport("coredll.dll")]
         private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
+        [DllImport("coredll.dll")]
+        private static extern bool QueryPerformanceFrequency(out long lpFrequency);
 
         static void Main()
         {
             Application.Run(new mainForm());
         }
 
-        #region Form1 Properties (variables)
+        #region member variables
 
         private const int latLongArraySize = 128;
 
@@ -44,7 +46,10 @@ namespace AIT
         private ArrayList inventoryTags;
         
         private string gpsBuffer;
-        
+
+        private string ipPhoneNumber;
+        private string tagServer;
+
         private double latitude;
         private double longitude;
         private char EorW;
@@ -237,7 +242,7 @@ namespace AIT
                 regKey.CreateSubKey(@"tagserver");
                 regKey.SetValue(@"tagserver", @"192.168.2.7");
             }
-            tagServerBox.Text = regKey.GetValue(@"tagserver").ToString();
+            tagServer = tagServerBox.Text = regKey.GetValue(@"tagserver").ToString();
 
             // ip phone address
             if (Array.IndexOf(settingKeys, @"ipphone", 0) == -1)
@@ -245,7 +250,7 @@ namespace AIT
                 regKey.CreateSubKey(@"ipphone");
                 regKey.SetValue(@"ipphone", @"192.168.2.3");
             }
-            ipPhoneBox.Text = regKey.GetValue(@"ipphone").ToString();
+            ipPhoneNumber = ipPhoneBox.Text = regKey.GetValue(@"ipphone").ToString();
 
         }
 
@@ -284,19 +289,19 @@ namespace AIT
         /// <param name="e"></param>
         private void startInventoryButton_Click(object sender, EventArgs e)
         {
-            if (sender == scanButton)
-                isScan = 1;
-            else
-                isScan = 0;
-
             // continuous polling, start or stop
             if (invTimerBox.Text != "Manual" && sender == startInventoryButton)
             {
+                // first do a manifest
+                isScan = 0;
+
+                // then enable the timer
                 if (invTimer.Enabled == true)
                 {
                     invTimerBox.Visible = true;
                     startInventoryButton.Text = "Man";
                     invTimer.Enabled = false;
+                    Cursor.Current = Cursors.Default;
                 }
                 else
                 {
@@ -304,51 +309,54 @@ namespace AIT
                     startInventoryButton.Text = "Stop";
                     invTimer.Interval = 1000 * int.Parse(invTimerBox.Text.ToString().Substring(0, invTimerBox.Text.ToString().Length - 1));
                     invTimer.Enabled = true;
+                    Cursor.Current = Cursors.WaitCursor;
                 }
             }
-
-            
-            if ((string)comboBox1.SelectedItem == "WJ")
+            else
             {
-                if (!Reader.IsConnected)
-                    readerConnect(false);
+                if (sender == scanButton)
+                    isScan = 1;
+                else
+                    isScan = 0;
 
-                Reader.InvTimerEnabled = !Reader.InvTimerEnabled;
-            }
-            else if ((string)comboBox1.SelectedItem == "Symbol")
-            {
-                if (invTimer.Enabled == false)
+                if ((string)comboBox1.SelectedItem == "WJ")
                 {
+                    if (!Reader.IsConnected)
+                        readerConnect(false);
+
+                    Reader.InvTimerEnabled = !Reader.InvTimerEnabled;
+                }
+                else if ((string)comboBox1.SelectedItem == "Symbol")
+                {
+                    Cursor.Current = Cursors.WaitCursor;
                     scanButton.Enabled = false;
                     startInventoryButton.Enabled = false;
-                }
 
-                getInventorySymbol(sender);
+                    getInventorySymbol(sender);
 
-                if (invTimer.Enabled == false)
-                {
+                    EventArgs eA = new EventArgs();
+                    Reader_InvTimerEnabledChanged(sender, eA);
+
                     scanButton.Enabled = true;
                     startInventoryButton.Enabled = true;
+                    Cursor.Current = Cursors.Default;
                 }
-            }            
+            }
         }
 
         private void getInventorySymbol(object sender)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
             inventoryTags.Clear();
-            invTimerBox.Hide();
-            
+
             try
             {
                 // go get the xml                
-                XmlTextReader reader = new XmlTextReader("http://" + tagServerBox.Text + "/cgi-bin/dataProxy?oper=queryTags&invis=1&showLastRP=1&raw=1");
+                XmlTextReader reader = new XmlTextReader(@"http://" + tagServer + @"/cgi-bin/dataProxy?oper=queryTags&invis=1&showLastRP=1&raw=1");
                 reader.WhitespaceHandling = WhitespaceHandling.None;
-                
+
                 while (reader.Read())
                 {
-                    if (reader.Name == "Tag")
+                    if (reader.Name == @"Tag")
                         try
                         {
                             reader.MoveToAttribute(0);
@@ -359,35 +367,22 @@ namespace AIT
                             Console.Out.WriteLine(e.Message);
                         }
                 }
+
                 reader.Close();
 
-                EventArgs eA = new EventArgs();
-                Reader_InvTimerEnabledChanged(sender, eA);
-                
-                XmlTextReader clearer = new XmlTextReader("http://" + tagServerBox.Text + "/cgi-bin/dataProxy?oper=queryEvents&raw=1&invis=1");
+                XmlTextReader clearer = new XmlTextReader(@"http://" + tagServer + @"/cgi-bin/dataProxy?oper=queryEvents&raw=1&invis=1");
                 clearer.Read();
                 clearer.Close();
 
-                XmlTextReader clearer2 = new XmlTextReader("http://" + tagServerBox.Text + "/cgi-bin/dataProxy?oper=purgeAllTags");
+                XmlTextReader clearer2 = new XmlTextReader(@"http://" + tagServer + @"/cgi-bin/dataProxy?oper=purgeAllTags");
                 clearer2.Read();
                 clearer2.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                if (invTimer.Enabled == false)
-                {
-                    startInventoryButton.Enabled = true;
-                    reconcileButton.Enabled = false;
-                }
-                scanButton.Enabled = true;
-                
-            } 
-            finally
-            {
-                Cursor.Current = Cursors.Default;
             }
-        }
+        }       
 
         /// <summary>
         /// This event is fired when the DLL starts or stops an inventory loop.
@@ -443,7 +438,7 @@ namespace AIT
 
                         if (inventoryTags.Count > 0)
                         {
-                            cc.sendScan(inventoryTags, latitude, NorS, longitude, EorW, isScan);
+                            inventoryTags = cc.sendScan(inventoryTags, latitude, NorS, longitude, EorW, isScan);
                             foreach (ListItem a in inventoryTags)
                             {
                                 custList.Add(a);
@@ -987,6 +982,12 @@ namespace AIT
             else if (sender == tagServerBox)
             {
                 regKey.SetValue(@"tagserver", tagServerBox.Text);
+                tagServer = tagServerBox.Text;
+            }
+            else if (sender == ipPhoneBox)
+            {
+                regKey.SetValue(@"phonenumber", ipPhoneBox.Text);
+                ipPhoneNumber = tagServerBox.Text;
             }
 
             inputPanel1.Enabled = false;
@@ -1014,12 +1015,73 @@ namespace AIT
 
         private void invTimer_Tick(object sender, EventArgs e)
         {
-            lock (timerLock)
+            Thread thr = new Thread(new ThreadStart(doDemo));
+            thr.Start();
+        }
+
+        private void doDemo()
+        {
+            if (Monitor.TryEnter(timerLock) == false)
+                return;
+            else
             {
-                startInventoryButton_Click(scanButton, e);
-                cc.Reconcile(ipPhoneBox.Text);
+                long timeA, timeB;
+                QueryPerformanceCounter(out timeA);
+                getInventorySymbol(this);
+                QueryPerformanceCounter(out timeB);
+
+                if (inventoryTags.Count > 0)
+                {
+                    try
+                    {
+                        inventoryTags = cc.sendScan(inventoryTags, latitude, NorS, longitude, EorW, isScan);
+                        
+                        cc.Reconcile(ipPhoneNumber);
+                    }
+                    catch (SocketException ex)
+                    {
+                        Console.Out.WriteLine(ex.Message);
+                    }
+                    // for more serious errors, display this
+                    catch (ArgumentException ex)
+                    {                        
+                        alertAndShowBox(ex);                        
+                    }
+                    finally
+                    {
+                        showInventoryItems(this, new EventArgs());
+                    }
+                    
+                }
+                if (isScan == 0)
+                    isScan = 1;
+
+                
+                long freq;
+                QueryPerformanceFrequency(out freq);
+
+                //MessageBox.Show("Time Taken: " + ((timeB - timeA) / freq).ToString());
+            }
+            //Thread.Join(); // join to the clearer thread
+            Monitor.Exit(timerLock);
+        }
+
+        private void showInventoryItems(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+                Invoke(new EventHandler(showInventoryItems), new object[] { sender, e });
+            else
+            {
+                custList.Clear();
+                foreach (object a in inventoryTags)
+                {
+                    custList.Add(new ListItem(a.ToString(), "", -2)); // -2 for unknown status
+                }
+                custList.RefreshVal();
             }
         }
+
+
 
         private void invTimerBox_SelectedIndexChanged(object sender, EventArgs e)
         {

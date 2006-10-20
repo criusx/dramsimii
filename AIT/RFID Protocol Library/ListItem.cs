@@ -23,7 +23,10 @@ namespace ListItemNS
 
         public override string ToString()
         {
-            return rfidNum;
+            if ((ShortDesc == null) || (ShortDesc == "") || (ShortDesc == " "))
+                return rfidNum;
+            else
+                return ShortDesc;
         }
 
         public string shortDesc

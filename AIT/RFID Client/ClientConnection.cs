@@ -127,6 +127,9 @@ namespace AIT
 
         public void Reconcile(string phoneNum)
         {
+            if (phoneNum == null)
+                throw new ArgumentException("phoneNum cannot be null");
+
             try
             {
                 // send the reconcile complete command
@@ -201,7 +204,7 @@ namespace AIT
         /// <exception cref="System.ArgumentNULLException">Thrown when the host name is null</exception>
         /// <exception cref="System.Net.Sockets.SocketException">Thrown when there was some problem connecting to the specified host</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the port specified is out of range</exception>"
-        public void sendScan(ArrayList inventoryTags, double latitude, char NorS, double longitude, char EorW, byte isScan)
+        public ArrayList sendScan(ArrayList inventoryTags, double latitude, char NorS, double longitude, char EorW, byte isScan)
         {
             ArrayList invList2 = new ArrayList();
             // connect to the server
@@ -232,10 +235,7 @@ namespace AIT
                     //custList.Insert(j++, new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
                     invList2.Add(new ListItem(qr.rfidNum, qr.ShortDesc, qr.addedRemoved));
                 }
-            }            
-
-            inventoryTags.Clear();
-            inventoryTags = invList2;
+            }    
 
             SendPacket(new CloseConnection());
 
@@ -245,6 +245,9 @@ namespace AIT
             {
                 throw new ArgumentException(qr.ShortDesc);
             }
+
+            inventoryTags.Clear();
+            return invList2;
         }
     }
 }
