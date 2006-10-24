@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using C1Lib;
 using Protocol;
 using System.Net.Sockets;
+using Microsoft.Win32;
+using System.Resources;
 
 namespace GenTag_Demo
 {
@@ -16,18 +18,51 @@ namespace GenTag_Demo
         public mainForm()
         {
             InitializeComponent();
+
+            // Load Localized values
+            button1.Text = GenTag_Demo.Properties.Resources.button1String;
+            this.Text = GenTag_Demo.Properties.Resources.titleString;
+
+
+            // Init the Registry
+            RegistryKey regKey = Registry.LocalMachine;
+
+            regKey = regKey.OpenSubKey(@"SOFTWARE", true);
+
+            if (Array.IndexOf(regKey.GetSubKeyNames(), @"GenTag", 0) == -1)
+                regKey.CreateSubKey(@"GenTag");
+            regKey = regKey.OpenSubKey(@"GenTag", true);
+
+            string[] settingKeys = regKey.GetSubKeyNames();
+
+            //user ID
+            if (Array.IndexOf(settingKeys, @"hostname", 0) == -1)
+            {
+                regKey.CreateSubKey(@"hostname");
+                regKey.SetValue(@"hostname", @"129.2.99.117");
+            }
+            hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+            checkBox1.Checked = false;
 
             //tempLabel.Text = outputBox.Text = "";
 
             if (C1Lib.C1.NET_C1_open_comm() != 1)
+            {
+                MessageBox.Show("Could not open reader");
+                Cursor.Current = Cursors.Default;
                 return;
+            }
             if (C1Lib.C1.NET_C1_enable() != 1)
+            {
+                MessageBox.Show("Could not open reader");
+                Cursor.Current = Cursors.Default;
                 return;
+            }
 
             // wait while a tag is read
             while (C1Lib.ISO_15693.NET_get_15693(0x00) == 0) { }
@@ -35,14 +70,18 @@ namespace GenTag_Demo
             //while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
                 
             //string currentTag = C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
-
-            string currentTag = "";
+            
+            StringBuilder newTag = new StringBuilder(C1Lib.ISO_15693.tag.id_length);
 
             for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-                currentTag += C1Lib.ISO_15693.tag.tag_id[i];
+                newTag.Append(C1Lib.ISO_15693.tag.tag_id[i]);
+
+            string currentTag = newTag.ToString();
 
             C1Lib.C1.NET_C1_disable();
             C1Lib.C1.NET_C1_close_comm();
+
+            checkBox1.Checked = true;
 
             try
             {
@@ -64,7 +103,7 @@ namespace GenTag_Demo
                 treeView1.BeginUpdate();
 
                 bool exists = false;
-
+                
                 foreach (TreeNode tn in treeView1.Nodes)
                 {
                     Console.Out.WriteLine(tn.Text);
@@ -141,6 +180,20 @@ namespace GenTag_Demo
             //C1Lib.C1.NET_C1_close_comm();
 
             //Cursor.Current = Cursors.Default;
+
+        }
+
+        private void hostName_TextChanged(object sender, EventArgs e)
+        {
+            RegistryKey regKey = Registry.LocalMachine;
+
+            regKey = regKey.OpenSubKey(@"SOFTWARE", true);
+
+            if (Array.IndexOf(regKey.GetSubKeyNames(), @"GenTag", 0) == -1)
+                regKey.CreateSubKey(@"GenTag");
+            regKey = regKey.OpenSubKey(@"GenTag", true);
+
+            regKey.SetValue(@"hostname", hostName.Text);
 
         }
     }

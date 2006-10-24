@@ -31,6 +31,7 @@ namespace GenTag_Demo
             this.button1 = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.hostName = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // button1
@@ -39,14 +40,13 @@ namespace GenTag_Demo
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(71, 18);
             this.button1.TabIndex = 0;
-            this.button1.Text = "Read Tag";
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // treeView1
             // 
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(237, 187);
+            this.treeView1.Size = new System.Drawing.Size(240, 187);
             this.treeView1.TabIndex = 2;
             // 
             // hostName
@@ -55,7 +55,15 @@ namespace GenTag_Demo
             this.hostName.Name = "hostName";
             this.hostName.Size = new System.Drawing.Size(106, 21);
             this.hostName.TabIndex = 3;
-            this.hostName.Text = "129.2.99.117";
+            this.hostName.TextChanged += new System.EventHandler(this.hostName_TextChanged);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Enabled = false;
+            this.checkBox1.Location = new System.Drawing.Point(212, 189);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(25, 18);
+            this.checkBox1.TabIndex = 4;
             // 
             // mainForm
             // 
@@ -63,11 +71,11 @@ namespace GenTag_Demo
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 210);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.hostName);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.button1);
             this.Name = "mainForm";
-            this.Text = "GenTag Demo";
             this.ResumeLayout(false);
 
         }
@@ -77,6 +85,7 @@ namespace GenTag_Demo
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.TextBox hostName;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

@@ -10,6 +10,12 @@ using Protocol;
 using System.Net.Sockets;
 using System.Threading;
 using Oracle.DataAccess.Client;
+using System.Security.Permissions;
+
+[assembly: SecurityPermission(
+   SecurityAction.RequestMinimum, Execution = true)]
+[assembly: PermissionSet(
+   SecurityAction.RequestOptional, Unrestricted=true)]
 
 namespace GenTag_Server
 {
