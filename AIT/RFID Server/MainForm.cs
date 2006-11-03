@@ -14,7 +14,6 @@ using Oracle.DataAccess.Types;
 using RFIDProtocolLibrary;
 using ListItemNS;
 using System.Xml.Serialization;
-using System.Web.Services.Protocols;
 
 namespace RFIDServer
 {

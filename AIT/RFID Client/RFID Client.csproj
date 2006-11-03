@@ -103,7 +103,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="XR400Reader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MPR DLL\MPR DLL.csproj">

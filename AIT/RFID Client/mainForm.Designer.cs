@@ -415,7 +415,7 @@ namespace AIT
             this.tabPage3.Controls.Add(this.userIDBox);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(232, 268);
+            this.tabPage3.Size = new System.Drawing.Size(240, 271);
             this.tabPage3.Text = "Server";
             // 
             // connectBtn
@@ -581,7 +581,7 @@ namespace AIT
             this.tabPage4.Controls.Add(this.ownerLbl);
             this.tabPage4.Location = new System.Drawing.Point(0, 0);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(232, 268);
+            this.tabPage4.Size = new System.Drawing.Size(240, 271);
             this.tabPage4.Text = "GPS";
             // 
             // satBox
@@ -803,7 +803,7 @@ namespace AIT
             this.KeyPreview = true;
             this.MinimizeBox = false;
             this.Name = "mainForm";
-            this.Text = "Chaperone GUI";
+            this.Text = "Client";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

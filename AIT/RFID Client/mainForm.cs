@@ -96,7 +96,8 @@ namespace AIT
         /// </summary>
         public mainForm()
         {
-            InitializeComponent();            
+            InitializeComponent();
+            this.Text = Text + " v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         /// <summary>
@@ -987,7 +988,7 @@ namespace AIT
             else if (sender == ipPhoneBox)
             {
                 regKey.SetValue(@"phonenumber", ipPhoneBox.Text);
-                ipPhoneNumber = tagServerBox.Text;
+                ipPhoneNumber = ipPhoneBox.Text;
             }
 
             inputPanel1.Enabled = false;
