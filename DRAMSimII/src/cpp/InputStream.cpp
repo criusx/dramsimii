@@ -43,17 +43,17 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 			if(!trace_file.is_open()) 
 			{
 				cerr << "Error in opening trace file " << temp->second.c_str() << endl;
-				_exit(3);
+				exit(3);
 			}
 		}
 		else
 		{
 			cerr << "Unable to open trace file";
-			_exit(6);
+			exit(6);
 		}
 	}
 	else if (type != RANDOM)
-		_exit(7);
+		exit(7);
 
 	if ((temp=parameter.find(chan_count_token))!=parameter.end())
 	{
@@ -63,7 +63,7 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 		chan_locality = 1 / temp3;
 	}
 	else
-		_exit(5);
+		exit(5);
 
 	if ((temp=parameter.find(read_percentage_token))!=parameter.end())
 	{
@@ -90,7 +90,7 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 		rank_locality = 1 / temp3;
 	}
 	else
-		_exit(8);
+		exit(8);
 
 	if ((temp=parameter.find(bank_count_token))!=parameter.end())
 	{
@@ -100,7 +100,7 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 		bank_locality = 1 / temp3;
 	}
 	else
-		_exit(9);
+		exit(9);
 
 	srand48((long) (1010321 + 9763099));
 }

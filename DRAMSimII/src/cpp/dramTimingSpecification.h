@@ -28,7 +28,7 @@ private:
 	int t_int_burst;	// internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3
 
 public:
-	dramTimingSpecification(std::map<file_io_token_t, std::string> &);
+	explicit dramTimingSpecification(std::map<file_io_token_t, std::string> &);
 	friend std::ostream &operator<<( std::ostream&, const dramTimingSpecification &);
 	friend class dramSystem;
 };

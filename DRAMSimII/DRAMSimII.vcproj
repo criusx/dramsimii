@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -272,6 +273,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cpp\command.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cpp\dramAlgorithm.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\cpp\dramChannel.cpp"
 				>
 			</File>
@@ -280,7 +289,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cpp\dramStatistics.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\cpp\dramSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cpp\dramSystemConfiguration.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cpp\dramTimingSpecification.cpp"
 				>
 			</File>
 			<File

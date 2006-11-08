@@ -140,7 +140,6 @@ enum file_io_token_t
 	help_token,
 	history_queue_depth_token,
 	input_type_token,
-	no_refresh_token,
 	ordering_algorithm_token,
 	output_file_token,
 	per_bank_queue_depth_token,

@@ -82,6 +82,8 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 			//respect last ras of same rank
 			t_ras_gap = max(0,(int)((this_b.last_ras_time - now) + timing_specification.t_rcd - t_al));
 
+			// ensure that if no other rank has issued a CAS command that it will treat
+			// this as if a CAS command was issued long ago
 			other_r_last_cas_time = now - 1000;
 			other_r_last_cas_length = timing_specification.t_burst;
 			other_r_last_casw_time = now - 1000;
@@ -112,6 +114,7 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
 			int t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_burst - now));
+			
 			//respect last cas write of same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
@@ -165,18 +168,23 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 			// DW 3/9/2006 add these two lines
 			//cas_length = max(timing_specification.t_int_burst,this_r.last_cas_length);
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
+			
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
 			int t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtrs - timing_specification.t_cwd - now));
+			
 			// respect last cas to different ranks
 			t_cas_gap = max(t_cas_gap,(int)(other_r_last_cas_time + timing_specification.t_cas + other_r_last_cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
+			
 			// respect last cas write to same rank
-			// DW 3/9/2006 replace the line after next with the next line
+			// DW 3/9/2006 replace the line after next with the next line			
 			// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
 			t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_burst - now));
+			
 			// respect last cas write to different ranks
 			t_cas_gap = max(t_cas_gap,(int)(other_r_last_casw_time + other_r_last_casw_length - now));
+
 			min_gap = max(t_ras_gap,t_cas_gap);
 		}
 		break;
@@ -187,7 +195,7 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
 	case PRECHARGE_COMMAND:
 		{
 			// respect t_ras of same bank
-			t_ras_gap = max(0,(int)(this_b.last_ras_time + timing_specification.t_ras - now));
+			t_ras_gap = (int)(this_b.last_ras_time - now) + timing_specification.t_ras;
 
 			// respect t_cas of same bank
 			int t_cas_gap = max(0,(int)(this_b.last_cas_time + t_al + timing_specification.t_cas + timing_specification.t_burst + max(0,timing_specification.t_rtp - timing_specification.t_cmd)- now));

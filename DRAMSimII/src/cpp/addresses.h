@@ -13,8 +13,6 @@ public:
 	unsigned row_id;
 	unsigned col_id; // column address
 	addresses();
-	//friend ostream &operator<<(ostream &, const addresses &);
-	//ostream &operator<<(ostream &, const addresses &);
 };
 
 #endif

@@ -103,8 +103,9 @@ public:
 			return FAILURE;
 		else if (item == NULL)
 		{
-			std::cerr << "input transaction pointer is NULL" << std::endl;
-			_exit(2);
+			std::cerr << "Input transaction pointer is NULL" << std::endl;
+			return FAILURE;
+			//_exit(2);
 		}
 		else
 		{
@@ -180,7 +181,8 @@ public:
 		else if (item == NULL)
 		{
 			std::cerr << "Attempting to insert NULL into queue" << std::endl;
-			_exit(2);
+			return FAILURE;
+			//_exit(2);
 		}
 		else
 		{

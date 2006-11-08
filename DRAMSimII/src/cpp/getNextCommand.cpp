@@ -132,7 +132,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 				else
 				{
 					cerr << "Serious problems. RAS not followed by CAS" << endl;
-					_exit(2);
+					exit(2);
 				}
 			}
 			else if (last_c->this_command == CAS_AND_PRECHARGE_COMMAND)
@@ -226,7 +226,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 				else
 				{
 					cerr << "Serious problems. RAS not followed by CAS." << endl;
-					_exit(2);
+					exit(2);
 				}
 			}
 			else if (last_c->this_command == CAS_AND_PRECHARGE_COMMAND)
@@ -376,7 +376,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 			command *temp_c = channel.get_rank(candidate_command->addr.rank_id).bank[candidate_command->addr.bank_id].per_bank_q.dequeue();
 
 #ifdef DEBUG
-			cerr << "R[" << candidate_command->addr.rank_id << "] B[" << candidate_command->addr.bank_id << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << channel.time << "]" << endl;
+			cerr << "R[" << candidate_command->addr.rank_id << "] B[" << candidate_command->addr.bank_id << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << channel.get_time() << "]" << endl;
 #endif
 
 			return temp_c;
@@ -386,7 +386,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 	default:
 		{
 			cerr << "This configuration and algorithm combination is not supported" << endl;
-			_exit(0);
+			exit(0);
 		}
 		break;
 	}

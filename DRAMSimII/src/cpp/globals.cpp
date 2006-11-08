@@ -6,64 +6,15 @@
 #include <map>
 #include <fstream>
 
+
+#include "dramSystem.h"
 #include "globals.h"
 #include "dramTimingSpecification.h"
 #include "dramStatistics.h"
-#include "dramSystem.h"
+
 
 using namespace std;
 
-ostream &operator<<(ostream &os, const command_type_t &command)
-{
-	switch(command)
-	{
-	case RAS_COMMAND:
-		os << "RAS ";
-		break;
-	case CAS_COMMAND:
-		os << "CAS ";
-		break;
-	case CAS_AND_PRECHARGE_COMMAND:
-		os << "CAS+P ";
-		break;
-	case CAS_WRITE_COMMAND:
-		os << "CASW ";
-		break;
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-		os << "CASW+P ";
-		break;
-	case RETIRE_COMMAND:
-		os << "RETIRE ";
-		break;
-	case PRECHARGE_COMMAND:
-		os << "PREC ";
-		break;
-	case PRECHARGE_ALL_COMMAND:
-		os << "PREC_A ";
-		break;
-	case RAS_ALL_COMMAND:
-		os << "RAS_A ";
-		break;
-	case DRIVE_COMMAND:
-		os << "DRIVE ";
-		break;
-	case DATA_COMMAND:
-		os << "DATA ";
-		break;
-	case CAS_WITH_DRIVE_COMMAND:
-		os << "CAS+D ";
-		break;
-	case REFRESH_ALL_COMMAND:
-		os << "REF_A ";
-		break;
-	}
-	return os;
-}
-ostream &operator<<(ostream &os, const command &this_c)
-{
-	os << this_c.this_command << this_c.addr << " S[" << std::hex << this_c.start_time << "] Q[" << std::hex << this_c.enqueue_time << "] E[" << std::hex << this_c.completion_time << "] T[" << this_c.completion_time - this_c.start_time << "]";
-	return os;
-}
 
 
 double ascii2multiplier(const string &input)
@@ -107,7 +58,7 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 		cout << "-dram:spd_input SPD_FILENAME" << endl;
 		cout << "-output_file OUTPUT_FILENAME" << endl;
 		cout << "-debug" << endl;
-		_exit(0);
+		exit(0);
 	}
 
 	// go find the spd file first, read in all params if it was specified (and it should be)
@@ -120,7 +71,7 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 			ifstream cfg_file(temp2.c_str(),ifstream::in);
 			if(!cfg_file.is_open()) {
 				cerr << "Error in opening CFG file " << temp2 << endl;
-				_exit(3);
+				exit(3);
 			}
 			else
 			{
@@ -187,7 +138,7 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 			parameters[t_rtrs_token] = temp2;
 			argc_index += 2;
 		} else if (temp == "-no_refresh") {
-			parameters[no_refresh_token] = "";
+			parameters[refresh_policy_token] = "none";
 			argc_index += 1;
 		} else {
 			cerr << temp << " is not a recognized option" << endl;
@@ -259,11 +210,7 @@ void create_input_map_from_input_file(map<enum file_io_token_t,string> &paramete
 	}
 }
 
-ostream &operator<<(ostream &os, const dramTimingSpecification &this_a)
-{
-	os << "rtrs[" << this_a.t_rtrs << "] ";
-	return os;
-}
+
 
 ostream &operator<<(ostream &os, const dramStatistics &this_a)
 {
@@ -492,7 +439,7 @@ ostream &operator<<(ostream &os, const transaction_type_t type)
 ostream &operator<<(ostream &os, const dramSystem &this_a)
 {
 	os << "SYS[";
-	switch(this_a.system_config.config_type)
+	switch(this_a.system_config.getConfigType())
 	{
 	case BASELINE_CONFIG:
 		os << "BASE] ";
@@ -501,10 +448,10 @@ ostream &operator<<(ostream &os, const dramSystem &this_a)
 		os << "UNKN] ";
 		break;
 	}
-	os << "RC[" << this_a.system_config.rank_count << "] ";
-	os << "BC[" << this_a.system_config.bank_count << "] ";
+	os << "RC[" << this_a.system_config.getRankCount() << "] ";
+	os << "BC[" << this_a.system_config.getBankCount() << "] ";
 	os << "ALG[";
-	switch(this_a.system_config.command_ordering_algorithm)
+	switch(this_a.system_config.getCommandOrderingAlgorithm())
 	{
 	case STRICT_ORDER:
 		os << "STRO] ";
@@ -525,9 +472,9 @@ ostream &operator<<(ostream &os, const dramSystem &this_a)
 		os << "UNKN] ";
 		break;
 	}
-	os << "BQD[" << this_a.system_config.per_bank_queue_depth << "] ";
-	os << "BLR[" << setprecision(0) << floor(100*(this_a.system_config.short_burst_ratio+0.0001)+.5) << "] ";
-	os << "RP[" << (int)(100*this_a.system_config.read_percentage) << "] ";
+	os << "BQD[" << this_a.system_config.getPerBankQueueDepth() << "] ";
+	os << "BLR[" << setprecision(0) << floor(100*(this_a.system_config.getShortBurstRatio() + 0.0001) + .5) << "] ";
+	os << "RP[" << (int)(100*this_a.system_config.getReadPercentage()) << "] ";
 
 	os << this_a.timing_specification;
 	os << this_a.statistics;

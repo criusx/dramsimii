@@ -22,8 +22,8 @@ To do list:
 
 #define tick_t long long
 //#define TICK_T_MAX LLONG_MAX
+
 // class forward declarations
-class dramSystem;
 class dramSystemConfiguration;
 class dramTimingSpecification;
 class dramAlgorithm;
@@ -31,6 +31,7 @@ class rank_c;
 class bank_c;
 class transaction;
 class command;
+class dramSystem;
 
 #include <iostream>
 #include <map>

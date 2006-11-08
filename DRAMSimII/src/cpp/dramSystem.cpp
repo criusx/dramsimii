@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "dramSystem.h"
+#include "globals.h"
 
 using namespace std;
 
@@ -597,7 +598,7 @@ enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
 		}
 	}
 
-	if (system_config.noRefresh)
+	if (system_config.refresh_policy == NO_REFRESH)
 	{
 		this_t = temp_t;
 		temp_t = NULL;
@@ -667,59 +668,59 @@ void dramSystem::set_dram_timing_specification(enum dram_type_t dram_type)
 		t_wr = 2;		
 		break;
 
-	case DDR:					/* @ 200 MHz (400 Mbps) */
-		t_al = 0;		/* no such thing in DDR */
-		t_burst = 8;		/* depending on system config! can be 2, 4, or 8 */
+	case DDR:				// @ 200 MHz (400 Mbps)
+		t_al = 0;			// no such thing in DDR
+		t_burst = 8;		// depending on system config! can be 2, 4, or 8
 		t_cas = 6;
-		t_cmd = 2;		/* protocol specific, cannot be changed */
-		t_cwd = 2;		/* protocol specific, cannot be changed */
-		t_int_burst = 2;		/* protocol specific, cannot be changed */
-		t_faw = 0;		/* no such thing in DDR */
-		t_ras = 16;		/* 40 ns @ 2.5 ns per beat == 16 beats */
-		t_rc = 22;		/* 55 ns t_rc */
+		t_cmd = 2;			// protocol specific, cannot be changed
+		t_cwd = 2;			// protocol specific, cannot be changed
+		t_int_burst = 2;	// protocol specific, cannot be changed
+		t_faw = 0;			// no such thing in DDR
+		t_ras = 16;			// 40 ns @ 2.5 ns per beat == 16 beats
+		t_rc = 22;			// 55 ns t_rc
 		t_rcd = 6;
-		t_rfc = 28;		/* 70 ns @ 2.5 ns per beat == 28 beats */
-		t_rp = 6;		/* 15 ns @ 2.5ns per beat = 6 beats */
+		t_rfc = 28;			// 70 ns @ 2.5 ns per beat == 28 beats
+		t_rp = 6;			// 15 ns @ 2.5ns per beat = 6 beats
 		t_rrd = 0;
 		t_rtp = 2;
 		t_rtrs = 2;
-		t_wr = 6;		/* 15 ns @ 2.5 ns per beat = 6 beats */
+		t_wr = 6;			// 15 ns @ 2.5 ns per beat = 6 beats
 		t_wtr = 4;
 		break;
 
-	case DDR2:					/* @ 800 Mbps */
+	case DDR2:				// @ 800 Mbps
 		t_al = 0;
-		t_burst = 8;		/* depending on system config! can be 4, or 8 */
+		t_burst = 8;		// depending on system config! can be 4, or 8
 		t_cas = 10;
-		t_cmd = 2;		/* protocol specific, cannot be changed */
-		t_cwd = t_cas - 2;	/* protocol specific, cannot be changed */
-		t_int_burst = 4;		/* protocol specific, cannot be changed */
+		t_cmd = 2;			// protocol specific, cannot be changed
+		t_cwd = t_cas - 2;	// protocol specific, cannot be changed
+		t_int_burst = 4;	// protocol specific, cannot be changed
 		t_faw = 30;
-		t_ras = 36;		/* 45 ns @ 1.25ns per beat = 36 beats */
-		t_rc = 46;		/* 57 ns @ 1.25ns per beat = 45.6 beats */
+		t_ras = 36;			// 45 ns @ 1.25ns per beat = 36 beats
+		t_rc = 46;			// 57 ns @ 1.25ns per beat = 45.6 beats
 		t_rcd = 10;
-		t_rfc = 102;		/* 128 ns @ 1.25ns per beat ~= 102 beats */
-		t_rp = 10;		/* 12 ns @ 1.25ns per beat = 9.6 beats */
-		t_rrd = 6;		/* 7.5 ns */
+		t_rfc = 102;		// 128 ns @ 1.25ns per beat ~= 102 beats
+		t_rp = 10;			// 12 ns @ 1.25ns per beat = 9.6 beats
+		t_rrd = 6;			// 7.5 ns
 		t_rtp = 6;
 		t_rtrs = 2;
 		t_wr = 12;
 		t_wtr = 6;
 		break;
 
-	case DDR3:					/* @ 1.33 Gbps = 0.75 ns per beat */
+	case DDR3:				// @ 1.33 Gbps = 0.75 ns per beat
 		t_al = 0;
-		t_burst = 8;		/* protocol specific, cannot be changed */
+		t_burst = 8;		// protocol specific, cannot be changed
 		t_cas = 10;
-		t_cmd = 2;		/* protocol specific, cannot be changed */
+		t_cmd = 2;			// protocol specific, cannot be changed
 		t_cwd = t_cas - 2;
-		t_int_burst = 8;		/* protocol specific, cannot be changed */
+		t_int_burst = 8;	// protocol specific, cannot be changed
 		t_faw = 30;
-		t_ras = 36;		/* 27 ns @ 0.75ns per beat = 36 beats */
-		t_rc = 48;		/* 36 ns @ 0.75ns per beat = 48 beats */
+		t_ras = 36;			// 27 ns @ 0.75ns per beat = 36 beats
+		t_rc = 48;			// 36 ns @ 0.75ns per beat = 48 beats
 		t_rcd = 12;
 		t_rfc = 280;
-		t_rp = 12;		/* 9 ns @ 0.75ns per beat = 12 beats */
+		t_rp = 12;			// 9 ns @ 0.75ns per beat = 12 beats
 		t_rrd = 8;
 		t_rtrs = 2;
 		t_rtp = 8;
@@ -731,6 +732,7 @@ void dramSystem::set_dram_timing_specification(enum dram_type_t dram_type)
 		// not currently supported
 		cerr << "Not yet supported" << endl;
 		break;
+
 	default:
 		cerr << "Not supported" << endl;
 		break;
@@ -749,7 +751,10 @@ channel(system_config.chan_count,
 		system_config.per_bank_queue_depth)),
 timing_specification(parameter),
 sim_parameters(parameter),
-algorithm(free_command_pool,system_config.rank_count,system_config.bank_count,system_config.config_type),
+algorithm(free_command_pool,
+		  system_config.rank_count,
+		  system_config.bank_count,
+		  system_config.config_type),
 input_stream(parameter),
 time(0), // start the clock
 free_command_pool(4*COMMAND_QUEUE_SIZE,true), // place to temporarily dump unused command structures */
@@ -763,8 +768,7 @@ event_q(COMMAND_QUEUE_SIZE)
 	if ((temp=parameter.find(output_file_token))!=parameter.end())
 		output_filename = parameter[output_file_token];
 
-	// create as many channels as were specified, all of the same type
-	// now that the parameters for each have been set
+	// init the refresh queue for each channel
 	unsigned cnt = 0;
 	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
@@ -772,6 +776,41 @@ event_q(COMMAND_QUEUE_SIZE)
 	}
 }
 
+#ifdef M5
+
+dramSystem::dramSystem(dramSystem::Params *parameter):
+system_config(parameter),
+channel(parameter->chanCount,
+		dramChannel(system_config.transaction_queue_depth,
+		system_config.history_queue_depth,
+		system_config.completion_queue_depth,
+		system_config.refresh_queue_depth,
+		system_config.rank_count,
+		system_config.bank_count,
+		system_config.per_bank_queue_depth)),
+timing_specification(parameter),
+sim_parameters(parameter),
+algorithm(free_command_pool,
+		  system_config.rank_count,
+		  system_config.bank_count,
+		  system_config.config_type),
+input_stream(parameter),
+time(0),
+free_command_pool(4*COMMAND_QUEUE_SIZE,true), // place to hold allocated commands
+free_transaction_pool(4*COMMAND_QUEUE_SIZE,true), // holds allocated transactions
+free_event_pool(COMMAND_QUEUE_SIZE,true), // holds allocated events
+event_q(COMMAND_QUEUE_SIZE)
+{
+	output_filename = parameter->outFilename;
+
+	// init the refresh queue for each channel
+	unsigned cnt = 0;
+	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
+	{
+		i->initRefreshQueue(system_config.row_count, system_config.refresh_time, cnt++);
+	}
+}
+#endif
 
 
 int dramSystem::find_oldest_channel() const
