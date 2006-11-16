@@ -19,10 +19,13 @@ protected:
 	int cas_count[4];
 
 public:
-	dramAlgorithm(queue<command> &,	int , int ,	int);
+	dramAlgorithm(int, int, int);
 	dramAlgorithm(const dramAlgorithm &);
-	void init(queue<command> &, int, int, int); 
-	friend class dramSystem;
+	void init(int, int, int); 
+	//friend class dramSystem;
+	queue<command> &getWHCC() { return WHCC; }
+	int *WHCCOffset() { return WHCC_offset; }
+	int *getTransactionType() { return transaction_type; }
 };
 
 #endif

@@ -44,6 +44,7 @@ private:
 	double read_percentage;
 
 public:
+	// constructors
 	explicit dramSystemConfiguration(std::map<file_io_token_t,std::string> &);
 	
 	// friends

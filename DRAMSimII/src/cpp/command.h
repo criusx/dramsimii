@@ -2,13 +2,17 @@
 #define COMMAND_H
 #pragma once
 
+#include "globals.h"
 #include "addresses.h"
 #include "enumTypes.h"
-#include "globals.h"
 #include "transaction.h"
+#include "queue.h"
 
 class command
 {
+private:
+	static queue<command> freeCommandPool; // command objects are stored here to avoid allocating memory after initialization
+
 public:
 	command_type_t this_command;	// which command is this?
 	tick_t start_time;				// when did the command start?
@@ -36,6 +40,8 @@ public:
 
 	explicit command();
 	explicit command(const command &);
+	void *operator new(size_t size);
+	void operator delete(void *);
 };
 
 #endif

@@ -135,7 +135,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	}
 
 	// record command history. Check to see if this can be removed
-	channel.record_command(this_command, free_command_pool);
+	channel.record_command(this_command);
 
 	
 

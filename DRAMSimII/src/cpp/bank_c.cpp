@@ -13,8 +13,7 @@ cas_count(0),
 casw_count(0),
 last_casw_length(8),
 last_cas_length(8)
-{
-	
+{	
 }
 
 bank_c::bank_c(const bank_c &b):
@@ -24,7 +23,7 @@ last_cas_time(b.last_cas_time),
 last_casw_time(b.last_casw_time),
 last_prec_time(b.last_prec_time),
 last_refresh_all_time(b.last_refresh_all_time),
-last_cas_length(b.last_casw_time),
+last_cas_length(b.last_cas_length),
 last_casw_length(b.last_casw_length),
 row_id(b.row_id),
 ras_count(b.ras_count),

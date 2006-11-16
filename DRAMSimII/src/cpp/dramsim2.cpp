@@ -45,15 +45,7 @@ simulationParameters::simulationParameters(map<file_io_token_t,string> &paramete
 
 
 
-transaction::transaction()
-{
-	arrival_time = 0;
-	completion_time = 0;
-	status = 0;
-	event_no = 0;
 
-	type = CONTROL_TRANSACTION;
-}
 
 busEvent::busEvent()
 {

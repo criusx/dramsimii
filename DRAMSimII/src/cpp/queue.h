@@ -28,7 +28,7 @@ public:
 		{
 			for (int i = a.depth - 1; i >= 0; i--)
 			{
-				enqueue(new T);
+				enqueue(::new T);
 			}
 		}
 		else
@@ -47,9 +47,7 @@ public:
 
 		if (preallocate)
 		{      
-			while (enqueue(new T) == SUCCESS)
-			{
-			}
+			while (enqueue(::new T) == SUCCESS) {}
 		}
 		else
 		{
@@ -64,7 +62,7 @@ public:
 	{
 		while (count > 0)
 		{
-			delete dequeue();			
+			::delete dequeue();			
 		}
 		if (entry != NULL)
 		{
@@ -84,7 +82,7 @@ public:
 		if (preallocate)
 		{      
 			for (int i = 0; i < size; i++)
-				enqueue(new T);
+				enqueue(::new T);
 		}
 		else
 		{
@@ -121,14 +119,14 @@ public:
 	T *acquire_item()
 	{
 		if (count == 0)
-			return new T;
+			return ::new T;
 		else
 			return dequeue();
 	}
 
 	T *dequeue()
 	{
-		if(count == 0)
+		if (count == 0)
 			return NULL;
 		else
 		{
@@ -136,7 +134,7 @@ public:
 
 			T *item = entry[head_ptr];
 
-			head_ptr = (head_ptr+1) % depth; 	/*advance head_ptr */
+			head_ptr = (head_ptr+1) % depth;	//advance head_ptr
 
 			return item;
 		}
@@ -169,7 +167,7 @@ public:
 	void release_item(T *item)
 	{
 		if(enqueue(item) == FAILURE)
-			delete item;
+			::delete item;
 	}
 
 	// this function makes this queue a non-FIFO queue.  
@@ -194,7 +192,7 @@ public:
 
 			entry[(head_ptr+offset) % depth] = item;
 
-			tail_ptr	= (tail_ptr+1) % depth; 	// advance tail_ptr
+			tail_ptr = (tail_ptr+1) % depth;	// advance tail_ptr
 
 			return SUCCESS;
 		}

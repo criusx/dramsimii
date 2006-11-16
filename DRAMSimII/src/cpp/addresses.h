@@ -12,6 +12,8 @@ public:
 	unsigned bank_id;
 	unsigned row_id;
 	unsigned col_id; // column address
+
+	// constructor
 	addresses();
 };
 

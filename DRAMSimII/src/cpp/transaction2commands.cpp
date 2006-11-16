@@ -41,7 +41,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 			// then add the command to all queues
 			for (vector<bank_c>::iterator i = rank.bank.begin(); i != rank.bank.end(); i++)
 			{
-				command *temp_c = free_command_pool.acquire_item();
+				command *temp_c = new command;
 				temp_c->addr = this_t->addr;
 				temp_c->enqueue_time = time;
 				temp_c->start_time = channel[this_t->addr.chan_id].get_time();
@@ -64,7 +64,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		else
 		{
 			// command one, the RAS command to activate the row
-			command *free_c = free_command_pool.acquire_item();
+			command *free_c = new command;
 
 			free_c->this_command = RAS_COMMAND;
 			// start time of the command is the same as the arrival time of the transaction
@@ -78,7 +78,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 			bank_q->enqueue(free_c);
 
 			// command two, CAS or CAS+Precharge
-			free_c = free_command_pool.acquire_item();
+			free_c = new command;
 
 			// if CAS+Precharge is available
 			if(system_config.auto_precharge == false)
@@ -107,7 +107,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 				bank_q->enqueue(free_c);
 
 				// command three, the Precharge command
-				free_c = free_command_pool.acquire_item();
+				free_c = new command;
 				free_c->this_command = PRECHARGE_COMMAND;
 				free_c->start_time = this_t->arrival_time;
 				free_c->enqueue_time = time;
@@ -167,7 +167,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 					if(empty_command_slot_count < 1)
 						return FAILURE;
 
-					command *free_c = free_command_pool.acquire_item();
+					command *free_c = new command;
 
 					if(this_t->type == WRITE_TRANSACTION)
 						free_c->this_command = CAS_WRITE_COMMAND;
@@ -198,7 +198,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		{
 			return FAILURE;
 		}
-		command *free_c = free_command_pool.acquire_item();
+		command *free_c = new command;
 
 		free_c->this_command = RAS_COMMAND;
 		free_c->start_time = this_t->arrival_time;
@@ -208,7 +208,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 
 		bank_q->enqueue(free_c);
 
-		free_c = free_command_pool.acquire_item();
+		free_c = new command;
 		if (this_t->type == WRITE_TRANSACTION)
 		{
 			free_c->this_command = CAS_WRITE_COMMAND;
@@ -231,7 +231,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		// FIXME: not initializing the host_t value?
 		bank_q->enqueue(free_c);
 
-		free_c = free_command_pool.acquire_item();
+		free_c = new command;
 		free_c->this_command = PRECHARGE_COMMAND;
 		free_c->start_time = this_t->arrival_time;
 		free_c->enqueue_time = time;

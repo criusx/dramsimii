@@ -8,7 +8,7 @@ last_ras_times(4)
 	last_casw_time = -100;	
 }
 
-rank_c::rank_c(const int bank_cnt, const int per_bank_queue_depth):
+rank_c::rank_c(const unsigned bank_cnt, const unsigned per_bank_queue_depth):
 last_ras_times(4),
 last_refresh_time(0),
 last_cas_time(-100),

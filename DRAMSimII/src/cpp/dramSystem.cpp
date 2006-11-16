@@ -568,7 +568,7 @@ enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
 
 	if (temp_t == NULL)
 	{
-		temp_t = free_transaction_pool.acquire_item();	
+		temp_t = new transaction;
 
 		if (input_stream.type == RANDOM)
 		{
@@ -751,14 +751,11 @@ channel(system_config.chan_count,
 		system_config.per_bank_queue_depth)),
 timing_specification(parameter),
 sim_parameters(parameter),
-algorithm(free_command_pool,
-		  system_config.rank_count,
+algorithm(system_config.rank_count,
 		  system_config.bank_count,
 		  system_config.config_type),
 input_stream(parameter),
 time(0), // start the clock
-free_command_pool(4*COMMAND_QUEUE_SIZE,true), // place to temporarily dump unused command structures */
-free_transaction_pool(4*COMMAND_QUEUE_SIZE,true), // ditto, but for transactions, avoid system calls during runtime
 free_event_pool(COMMAND_QUEUE_SIZE,true), // create enough events, transactions and commands ahead of time
 event_q(COMMAND_QUEUE_SIZE)
 {
@@ -775,42 +772,6 @@ event_q(COMMAND_QUEUE_SIZE)
 		i->initRefreshQueue(system_config.row_count, system_config.refresh_time, cnt++);
 	}
 }
-
-#ifdef M5
-
-dramSystem::dramSystem(dramSystem::Params *parameter):
-system_config(parameter),
-channel(parameter->chanCount,
-		dramChannel(system_config.transaction_queue_depth,
-		system_config.history_queue_depth,
-		system_config.completion_queue_depth,
-		system_config.refresh_queue_depth,
-		system_config.rank_count,
-		system_config.bank_count,
-		system_config.per_bank_queue_depth)),
-timing_specification(parameter),
-sim_parameters(parameter),
-algorithm(free_command_pool,
-		  system_config.rank_count,
-		  system_config.bank_count,
-		  system_config.config_type),
-input_stream(parameter),
-time(0),
-free_command_pool(4*COMMAND_QUEUE_SIZE,true), // place to hold allocated commands
-free_transaction_pool(4*COMMAND_QUEUE_SIZE,true), // holds allocated transactions
-free_event_pool(COMMAND_QUEUE_SIZE,true), // holds allocated events
-event_q(COMMAND_QUEUE_SIZE)
-{
-	output_filename = parameter->outFilename;
-
-	// init the refresh queue for each channel
-	unsigned cnt = 0;
-	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
-	{
-		i->initRefreshQueue(system_config.row_count, system_config.refresh_time, cnt++);
-	}
-}
-#endif
 
 
 int dramSystem::find_oldest_channel() const

@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="&quot;C:\temp\m5-2.0b1\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -321,6 +321,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cpp\m5-dramSystem.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\src\cpp\main.cpp"
 				>
 			</File>
@@ -342,6 +354,10 @@
 			</File>
 			<File
 				RelativePath=".\src\cpp\runSimulations.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cpp\transaction.cpp"
 				>
 			</File>
 			<File

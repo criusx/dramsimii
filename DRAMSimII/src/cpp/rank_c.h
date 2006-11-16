@@ -24,8 +24,8 @@ public:
 
 	
 	explicit rank_c();
-	rank_c(const rank_c &);
-	explicit rank_c(const int,const int);
+	explicit rank_c(const rank_c &);
+	explicit rank_c(const unsigned,const unsigned);
 	void init_ranks(int,int);
 };
 

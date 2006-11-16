@@ -64,7 +64,7 @@ void dramSystem::run_simulations2()
 								channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
 							}
 							else
-								free_transaction_pool.release_item(completed_t);
+								delete completed_t;
 #ifdef DEBUG_TRANSACTION
 							cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
 #endif
@@ -115,7 +115,7 @@ void dramSystem::run_simulations2()
 								channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
 							}
 							else
-								free_transaction_pool.release_item(completed_t);
+								delete completed_t;
 #ifdef DEBUG_TRANSACTION
 							cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
 #endif
@@ -179,7 +179,7 @@ void dramSystem::run_simulations()
 						update_system_time(); 
 						transaction *completed_t = channel[oldest_chan_id].get_oldest_completed();
 						if(completed_t != NULL)
-							free_transaction_pool.release_item(completed_t);
+							delete completed_t;
 					}
 				}
 				/* randomness check

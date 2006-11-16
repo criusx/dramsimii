@@ -109,11 +109,11 @@ void dramChannel::initRefreshQueue(const unsigned rowCount,
 
 }
 
-void dramChannel::record_command(command *latest_command, queue<command> &free_command_pool)
+void dramChannel::record_command(command *latest_command)
 {
 	if (history_q.enqueue(latest_command) == FAILURE)
 	{
-		free_command_pool.release_item(history_q.dequeue());
+		delete history_q.dequeue();
 		history_q.enqueue(latest_command); //FIXME: assert that this is != FAILURE
 	}
 
