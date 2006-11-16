@@ -756,7 +756,7 @@ algorithm(system_config.rank_count,
 		  system_config.config_type),
 input_stream(parameter),
 time(0), // start the clock
-free_event_pool(COMMAND_QUEUE_SIZE,true), // create enough events, transactions and commands ahead of time
+//free_event_pool(COMMAND_QUEUE_SIZE,true), // create enough events, transactions and commands ahead of time
 event_q(COMMAND_QUEUE_SIZE)
 {
 	map<file_io_token_t, string>::iterator temp;

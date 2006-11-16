@@ -63,11 +63,11 @@ class dramSystem;
 
 #define COMMAND_QUEUE_SIZE 32
 
-#define DEBUG_FLAG
+//#define DEBUG_FLAG
 
-#define DEBUG_COMMAND
+//#define DEBUG_COMMAND
 
-#define DEBUG_TRANSACTION
+//#define DEBUG_TRANSACTION
 
 //#define DEBUG_RAND
 

@@ -30,7 +30,7 @@ private:
 	std::string output_filename;	
 
 	tick_t time;								// master clock	
-	queue<event> free_event_pool;				// same for events
+	
 	queue<event> event_q;						// pending event queue	
 
 	void read_dram_config_from_file();

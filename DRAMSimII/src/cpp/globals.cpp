@@ -402,7 +402,7 @@ ostream &operator<<(ostream &os, const transaction *this_t)
 
 ostream &operator<<(ostream &os, const transaction_type_t type)
 {
-	switch(type)
+	switch (type)
 	{
 	case IFETCH_TRANSACTION:
 		os << "FETCH  ";

@@ -14,7 +14,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 {
 	if (this_t == NULL)
 	return FAILURE;
-	
+	//cerr << this_t << endl;
 	queue<command> *bank_q = &(channel[this_t->addr.chan_id].get_rank(this_t->addr.rank_id).bank[this_t->addr.bank_id].per_bank_q);
 	
 	// with closed page, all transactions convert into one of the following:

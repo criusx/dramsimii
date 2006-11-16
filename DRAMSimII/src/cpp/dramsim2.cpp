@@ -57,14 +57,3 @@ addresses::addresses()
 {
 	virt_addr = phys_addr = chan_id = rank_id = bank_id = row_id = col_id = 0;
 }
-
-
-
-
-
-event::event()
-{
-	event_type = 0;
-	time = 0;
-	event_ptr = NULL;
-}
