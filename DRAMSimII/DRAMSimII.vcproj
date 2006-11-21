@@ -101,7 +101,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="4"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -126,6 +126,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
+				PreprocessorDefinitions="WIN32;_RELEASE;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
@@ -183,7 +184,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug2|Win32"
+			Name="M5|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
@@ -207,6 +208,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;C:\temp\m5-2.0b1\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

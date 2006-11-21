@@ -11,7 +11,7 @@ class M5dramSystem: public PhysicalMemory
 {
 protected:
 	dramSystem *ds = NULL;
-	Tick calculateLatency(Packet *pkt);
+	Tick calculateLatency(Packet *);
 
 public:
 	struct Params: public PhysicalMemory::Params
@@ -19,22 +19,22 @@ public:
 		std::string outFilename;
 		std::string dramType;
 		std::string rowBufferManagmentPolicy;
-		bool autoPrecharge;
+		std::string autoPrecharge;
 		std::string addrMappingScheme;
-		int datarate;
-		int refreshTime;
-		bool readWriteGrouping;
+		std::string datarate;
+		std::string refreshTime;
+		std::string readWriteGrouping;
 		std::string refreshPolicy;
-		unsigned seniorityAgeLimit;
-		bool postedCas;
-		int clockGranularity;
-		unsigned rowCount;
-		unsigned cachelinesPerRow;
-		unsigned colCount;
-		unsigned colSize;
-		unsigned rowSize;
-		unsigned cachelineSize;
-		unsigned historyQueueDepth;
+		std::string seniorityAgeLimit;
+		std::string postedCas;
+		std::string clockGranularity;
+		std::string rowCount;
+		std::string cachelinesPerRow;
+		std::string colCount;
+		std::string colSize;
+		std::string rowSize;
+		std::string cachelineSize;
+		std::string historyQueueDepth;
 		std::string completionQueueDepth;
 		std::string transactionQueueDepth;
 		std::string eventQueueDepth;

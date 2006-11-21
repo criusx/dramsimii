@@ -67,6 +67,8 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 			addr_mapping_scheme = SDRAM_BASE_MAP;
 		else if (temp->second == "sdram_close_page_map")
 			addr_mapping_scheme = SDRAM_CLOSE_PAGE_MAP;
+		else if (temp->second == "sdram_hiperf_map")
+			addr_mapping_scheme = SDRAM_HIPERF_MAP;
 		else
 			addr_mapping_scheme = SDRAM_HIPERF_MAP;
 	}
