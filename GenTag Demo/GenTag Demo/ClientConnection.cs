@@ -30,8 +30,8 @@ namespace GenTag_Demo
         public void Close()
         {
             Packet close = new Packet(PacketTypes.CloseConnectionRequest);
-            close.Stream = client.GetStream();
-            close.SendPacket();
+            SendPacket(close);
+            client.Close();
         }
     }
 }

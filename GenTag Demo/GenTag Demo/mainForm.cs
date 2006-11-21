@@ -81,6 +81,8 @@ namespace GenTag_Demo
             C1Lib.C1.NET_C1_disable();
             C1Lib.C1.NET_C1_close_comm();
 
+            string rfidDescr = "No description found";
+
             checkBox1.Checked = true;
 
             try
@@ -96,34 +98,37 @@ namespace GenTag_Demo
 
                 c.GetPacket(rfidDesc);
 
-                string rfidDescr = rfidDesc.ToString();
+                rfidDescr = rfidDesc.ToString();
 
+                Packet closePacket = new Packet(PacketTypes.CloseConnectionRequest);
+                c.SendPacket(closePacket);
                 c.Close();
-
-                treeView1.BeginUpdate();
-
-                bool exists = false;
-                
-                foreach (TreeNode tn in treeView1.Nodes)
-                {
-                    Console.Out.WriteLine(tn.Text);
-                    if (tn.Text == currentTag)
-                    {
-                        tn.Nodes.Clear();
-                        tn.Nodes.Add(rfidDescr);
-                        exists = true;
-                    }
-                }
-                if (!exists)
-                {
-                    treeView1.Nodes.Add(currentTag).Nodes.Add(rfidDescr);
-                }
-                treeView1.EndUpdate();
+                //c.Close();                
             }
             catch (SocketException ex)
             {
                 MessageBox.Show(ex.Message);
             }
+
+            treeView1.BeginUpdate();
+
+            bool exists = false;
+
+            foreach (TreeNode tn in treeView1.Nodes)
+            {
+                Console.Out.WriteLine(tn.Text);
+                if (tn.Text == currentTag)
+                {
+                    tn.Nodes.Clear();
+                    tn.Nodes.Add(rfidDescr);
+                    exists = true;
+                }
+            }
+            if (!exists)
+            {
+                treeView1.Nodes.Add(currentTag).Nodes.Add(rfidDescr);
+            }
+            treeView1.EndUpdate();
 
             Cursor.Current = Cursors.Default;
 

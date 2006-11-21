@@ -84,7 +84,7 @@ namespace GenTag_Server
                     newPacket.Stream = client.GetStream();
 
                     newPacket.GetPacket();
-
+                    int a = 0;
                     switch (newPacket.Type)
                     {
                         case PacketTypes.UnknownType:
@@ -149,6 +149,8 @@ namespace GenTag_Server
 
                         case PacketTypes.CloseConnectionRequest:
                             client.Close();
+                            break;
+                        default:
                             break;
                     }
                 }
