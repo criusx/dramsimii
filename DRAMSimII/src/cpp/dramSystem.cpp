@@ -10,6 +10,7 @@
 #include <map>
 #include <vector>
 
+#include "rank_c.h"
 #include "dramSystem.h"
 #include "globals.h"
 

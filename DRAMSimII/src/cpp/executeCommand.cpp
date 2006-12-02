@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "rank_c.h"
 #include "dramSystem.h"
 
 using namespace std;
@@ -136,13 +137,4 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 
 	// record command history. Check to see if this can be removed
 	channel.record_command(this_command);
-
-	
-
-	//if (channel.history_q.get_count() == system_config.history_queue_depth)
-	//{		
-	/*done with this command, release into pool */
-	//	free_command_pool.release_item(channel.history_q.dequeue());
-	//}
-	//channel.history_q.enqueue(this_c);
 }

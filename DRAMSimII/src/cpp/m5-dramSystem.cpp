@@ -1,12 +1,15 @@
 #include <map>
 #include <sstream>
+#include "sim/builder.hh"
 #include "enumTypes.h"
 #include "m5-dramSystem.h"
 
 
-M5dramSystem::M5dramSystem(Params *p)
+M5dramSystem::M5dramSystem(Params *p):
+PhysicalMemory(p)
 {
-	map<file_io_token_t,std::string> parameter;
+	std::cerr << "in M5dramSystem constructor" << std::endl;
+	std::map<file_io_token_t,std::string> parameter;
 
 	parameter[output_file_token] = p->outFilename;
 	parameter[dram_type_token] = p->dramType;
@@ -50,7 +53,40 @@ M5dramSystem::M5dramSystem(Params *p)
 	parameter[t_wtr_token] = p->tWTR;
 
 	ds = new dramSystem(parameter);
+
+	std::cerr << *ds << std::endl;
 }
+
+M5dramSystem::~M5dramSystem()
+{
+	std::cerr << "M5dramSystem destructor" << std::endl;
+	delete ds;
+}
+
+Tick
+M5dramSystem::calculateLatency(Packet *pkt)
+{
+	transaction *trans = new transaction(pkt->cmd,pkt->time,pkt->getSize(),pkt->getAddr());
+
+	// convert the physical address to chan, rank, bank, etc.
+	ds->convert_address(trans->addr);
+
+	// wake the channel and do everything it was going to do up to this point
+	ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id);
+
+	// add the transaction to the memory system
+	ds->enqueue(trans);
+
+	// run time forward until the transaction completes
+
+	// calculate the time elapsed from when the transaction started
+}
+
+
+
+
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 //////////////////////////////////////////////////////////////////////////
 // simObject parameters
@@ -155,13 +191,13 @@ INIT_PARAM_DFLT(tRRD,"rank to rank delay","5"),
 INIT_PARAM_DFLT(tRTP,"read to precharge","5"),
 INIT_PARAM_DFLT(tRTRS,"rank to rank switching delay","2"),
 INIT_PARAM_DFLT(tWR,"write recovery, write to precharge delay","10"),
-INIT_PARAM_DFLT(tWTR,"write to read recovery time","6");
+INIT_PARAM_DFLT(tWTR,"write to read recovery time","6")
 
 END_INIT_SIM_OBJECT_PARAMS(M5dramSystem)
 
 CREATE_SIM_OBJECT(M5dramSystem)
 {
-	DRAMMemory::Params *p = new M5dramSystem::Params;
+	M5dramSystem::Params *p = new M5dramSystem::Params;
 	p->name = getInstanceName();
 	p->addrRange = range;
 	p->latency = latency;
@@ -212,3 +248,5 @@ CREATE_SIM_OBJECT(M5dramSystem)
 }
 
 REGISTER_SIM_OBJECT("M5dramSystem", M5dramSystem)
+
+#endif // DOXYGEN_SHOULD_SKIP_THIS

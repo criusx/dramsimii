@@ -1,5 +1,5 @@
 #ifndef M5_DRAMSYSTEM
-#endif
+#define M5_DRAMSYSTEM
 #pragma once
 
 #include "mem/physical.hh"
@@ -10,7 +10,7 @@
 class M5dramSystem: public PhysicalMemory
 {
 protected:
-	dramSystem *ds = NULL;
+	dramSystem *ds;
 	Tick calculateLatency(Packet *);
 
 public:
@@ -60,6 +60,7 @@ public:
 		std::string tWTR;
 	};
 	M5dramSystem(Params *);
+	~M5dramSystem();
 };
 
 #endif

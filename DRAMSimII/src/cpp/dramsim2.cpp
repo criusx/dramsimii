@@ -8,7 +8,7 @@
 #include <sstream>
 
 #include "globals.h"
-#include "dramsystem.h"
+#include "dramSystem.h"
 #include "dramSystemConfiguration.h"
 #include "dramTimingSpecification.h"
 #include "dramAlgorithm.h"
@@ -16,6 +16,7 @@
 #include "dramStatistics.h"
 #include "busevent.h"
 #include "event.h"
+#include "rank_c.h"
 
 using namespace std;
 

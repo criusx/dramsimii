@@ -2,10 +2,7 @@
 #define DRAMCHANNEL_H
 #pragma once
 
-#include <vector>
-#include "queue.h"
-#include "transaction.h"
-#include "command.h"
+#include "globals.h"
 #include "rank_c.h"
 
 class dramChannel

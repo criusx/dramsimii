@@ -15,6 +15,7 @@
 #include "event.h"
 #include "dramChannel.h"
 #include "enumTypes.h"
+#include "rank_c.h"
 
 class dramSystem
 {
@@ -42,7 +43,7 @@ private:
 	int find_oldest_channel() const;
 	void executeCommand(command *, const int);
 	void update_system_time();
-	int convert_address(addresses &);
+	
 	enum input_status_t get_next_input_transaction(transaction *&);
 	void get_next_random_request(transaction *);
 
@@ -51,6 +52,10 @@ public:
 	explicit dramSystem(std::map<file_io_token_t,std::string> &);
 
 	friend std::ostream &operator<<(std::ostream &, const dramSystem &);
+	int convert_address(addresses &);
+	void moveChannelToTime(const tick_t endTime, const int chan);
+	void enqueue(transaction* trans);
+
 	void run_simulations();
 	void run_simulations2();
 };

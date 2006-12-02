@@ -5,8 +5,8 @@
 class addresses
 {
 public:
-	unsigned virt_addr;	
-	unsigned phys_addr;
+	unsigned virt_addr;	// virtual address
+	unsigned long long phys_addr; // physical address
 	unsigned chan_id; // logical channel id
 	unsigned rank_id; // device id
 	unsigned bank_id;
@@ -15,6 +15,7 @@ public:
 
 	// constructor
 	addresses();
+	explicit addresses(unsigned long long pA) { phys_addr = pA; }
 };
 
 #endif

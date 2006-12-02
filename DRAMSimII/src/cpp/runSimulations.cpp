@@ -30,104 +30,10 @@ void dramSystem::run_simulations2()
 
 			// first try to update the channel so that it is one command past this
 			// transaction's start time
-			while (channel[chan].get_time() < input_t->arrival_time)
-			{
-				// attempt first to move transactions out of the transactions queue and
-				// convert them into commands
-				transaction *temp_t = channel[chan].read_transaction();
-
-				if ((temp_t == NULL) || (transaction2commands(temp_t) != SUCCESS))
-				{
-					// move time up by executing commands
-					command *temp_c = getNextCommand(chan);
-
-					if (temp_c != NULL)
-					{
-						int min_gap = minProtocolGap(input_t->addr.chan_id, temp_c);
-
-						executeCommand(temp_c, min_gap);
-
-#ifdef DEBUG_COMMAND
-						cerr << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
-#endif
-
-						update_system_time(); 
-
-						transaction *completed_t = channel[chan].get_oldest_completed();
-
-						if(completed_t != NULL)
-						{
-							if (completed_t->type == AUTO_REFRESH_TRANSACTION)
-							{
-								completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
-								//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
-								channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
-							}
-							else
-								delete completed_t;
-#ifdef DEBUG_TRANSACTION
-							cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
-#endif
-						}
-					}
-					else
-					{
-						// the transaction queue and all the per bank queues are empty,
-						// so just move time forward to the point where the transaction starts
-						channel[chan].set_time(input_t->arrival_time);
-					}
-				}
-				else // successfully converted to commands, dequeue
-				{
-					assert(temp_t == channel[chan].get_transaction());
-				}
-			}
+			moveChannelToTime(input_t->arrival_time,chan);
 
 			// attempt to enqueue, if there is no room, move time forward until there is
-			while (channel[input_t->addr.chan_id].enqueue(input_t) == FAILURE)
-			{
-				transaction *temp_t = channel[chan].get_transaction();
-
-				if(temp_t != NULL)
-				{
-					// if it can't fit in the transaction queue, drain the queue
-					while (transaction2commands(temp_t) != SUCCESS)
-					{
-						command *temp_c = getNextCommand(chan);
-
-						int min_gap = minProtocolGap(input_t->addr.chan_id, temp_c);
-
-						executeCommand(temp_c, min_gap);
-
-#ifdef DEBUG_COMMAND
-						cerr << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
-#endif
-
-						update_system_time(); 
-
-						transaction *completed_t = channel[chan].get_oldest_completed();
-
-						if(completed_t != NULL)
-						{
-							if (completed_t->type == AUTO_REFRESH_TRANSACTION)
-							{
-								completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
-								channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
-							}
-							else
-								delete completed_t;
-#ifdef DEBUG_TRANSACTION
-							cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
-#endif
-						}
-
-					}
-				}
-				else
-					break;
-
-				input_t->arrival_time = channel[chan].get_time();
-			}
+			enqueue(input_t);
 		}	
 		else
 			// EOF reached, quit the loop
@@ -138,12 +44,121 @@ void dramSystem::run_simulations2()
 	statistics.set_valid_trans_count(sim_parameters.get_request_count());
 }
 
+void dramSystem::enqueue(transaction* trans)
+{
+	const int chan = trans->addr.chan_id;
+
+	while (channel[chan].enqueue(trans) == FAILURE)
+	{
+		transaction *temp_t = channel[chan].get_transaction();
+
+		if(temp_t != NULL)
+		{
+			// if it can't fit in the transaction queue, drain the queue
+			while (transaction2commands(temp_t) != SUCCESS)
+			{
+				command *temp_c = getNextCommand(chan);
+
+				int min_gap = minProtocolGap(chan, temp_c);
+
+				executeCommand(temp_c, min_gap);
+
+#ifdef DEBUG_COMMAND
+				cerr << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+#endif
+
+				update_system_time(); 
+
+				transaction *completed_t = channel[chan].get_oldest_completed();
+
+				if(completed_t != NULL)
+				{
+					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
+					{
+						completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
+						channel[chan].enqueueRefresh(completed_t);
+					}
+					else
+						delete completed_t;
+#ifdef DEBUG_TRANSACTION
+					cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
+#endif
+				}
+
+			}
+		}
+		else
+			break;
+
+		trans->arrival_time = channel[chan].get_time();
+	}
+}
+
+
+/// Moves the specified channel to at least the time given
+void dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
+{
+	while (channel[chan].get_time() < endTime)
+	{
+		// attempt first to move transactions out of the transactions queue and
+		// convert them into commands
+		transaction *temp_t = channel[chan].read_transaction();
+
+		// if there were no transactions left in the queue or there was not
+		// enough room to split the transaction into commands
+		if ((temp_t == NULL) || (transaction2commands(temp_t) != SUCCESS))
+		{
+			// move time up by executing commands
+			command *temp_c = getNextCommand(chan);
+
+			if (temp_c != NULL)
+			{
+				int min_gap = minProtocolGap(chan, temp_c);
+
+				executeCommand(temp_c, min_gap);
+
+#ifdef DEBUG_COMMAND
+				cerr << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+#endif
+
+				update_system_time(); 
+
+				transaction *completed_t = channel[chan].get_oldest_completed();
+
+				if (completed_t != NULL)
+				{
+					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
+					{
+						completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
+						//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
+						channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
+					}
+					else
+						delete completed_t;
+#ifdef DEBUG_TRANSACTION
+					cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
+#endif
+				}
+			}
+			else
+			{
+				// the transaction queue and all the per bank queues are empty,
+				// so just move time forward to the point where the transaction starts
+				channel[chan].set_time(endTime);
+			}
+		}
+		else // successfully converted to commands, dequeue
+		{
+			assert(temp_t == channel[chan].get_transaction());
+		}
+	}
+}
 
 void dramSystem::run_simulations()
 {
 	for (int i = sim_parameters.get_request_count(); i > 0; --i)
 	{
-		transaction 	*input_t;
+		transaction* input_t;
 		if (get_next_input_transaction(input_t) == SUCCESS)
 		{
 			statistics.collect_transaction_stats(input_t);

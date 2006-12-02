@@ -5,64 +5,47 @@
 #include <cmath>
 #include <map>
 #include <fstream>
+#include <vector>
 
+#include "rank_c.h"
+#include "globals.h"
 #include "dramChannel.h"
+#include "queue.h"
+#include "transaction.h"
+#include "command.h"
 
 using namespace std;
 
 dramChannel::dramChannel(int transaction_queue_depth,
-						   int history_queue_depth,
-						   int completion_queue_depth,
-						   int refresh_queue_depth,
-						   int rank_count,
-						   int bank_count,
-						   int per_bank_queue_depth):
+						 int history_queue_depth,
+						 int completion_queue_depth,
+						 int refresh_queue_depth,
+						 int rank_count,
+						 int bank_count,
+						 int per_bank_queue_depth):
+time(0),
+rank(rank_count,rank_c(bank_count,per_bank_queue_depth)),
+refresh_row_index(0),
+last_refresh_time(0),
+last_rank_id(0),
 transaction_q(transaction_queue_depth),
-history_q(history_queue_depth),
-completion_q(completion_queue_depth),
 refreshQueue(refresh_queue_depth,true),
-rank(rank_count,rank_c(bank_count,per_bank_queue_depth))
-{	
-	time = 0;
-	last_refresh_time = 0;
-	refresh_row_index = 0;
-	last_rank_id = 0;
-
-	//transaction_q.init(transaction_queue_depth);
-	//history_q.init(history_queue_depth);
-	//completion_q.init(completion_queue_depth);
-
-
-
-	//rank = new rank_c[rank_count]; // FIXME: consider converting this array to a vector
-	// std::vector<rank_c> rank(rank_count, rank_c(bank_count,per_bank_queue_depth));
-	//for (int i=0;i<rank_count;i++)
-	//	rank.push_back(rank_c(bank_count,per_bank_queue_depth));
-	//	rank[i].init_ranks(bank_count,per_bank_queue_depth);
-
-	//refreshQueue.init(refresh_queue_depth,  true);
+history_q(history_queue_depth),
+completion_q(completion_queue_depth)
+{
 }
 
-dramChannel::dramChannel(const dramChannel &dc): 
-transaction_q(dc.transaction_q),
-refreshQueue(dc.refreshQueue),
-history_q(dc.history_q),
-completion_q(dc.completion_q),
+dramChannel::dramChannel(const dramChannel &dc):
 time(dc.time),
 rank(dc.rank),
 refresh_row_index(dc.refresh_row_index),
 last_refresh_time(dc.last_refresh_time),
-last_rank_id(dc.last_rank_id)
+last_rank_id(dc.last_rank_id),
+transaction_q(dc.transaction_q),
+refreshQueue(dc.refreshQueue),
+history_q(dc.history_q),
+completion_q(dc.completion_q)
 {
-	//time = dc.time;
-	//rank = dc.rank;
-	//refresh_row_index = dc.refresh_row_index;
-	//last_refresh_time = dc.last_refresh_time;
-	//last_rank_id = dc.last_rank_id;
-	//transaction_q = dc.transaction_q;
-	//refreshQueue = dc.refreshQueue;
-	//history_q = dc.history_q;
-	//completion_q = dc.completion_q;
 }
 
 void dramChannel::init_controller(int transaction_queue_depth,
@@ -111,12 +94,10 @@ void dramChannel::initRefreshQueue(const unsigned rowCount,
 
 void dramChannel::record_command(command *latest_command)
 {
-	if (history_q.enqueue(latest_command) == FAILURE)
+	while (history_q.enqueue(latest_command) == FAILURE)
 	{
 		delete history_q.dequeue();
-		history_q.enqueue(latest_command); //FIXME: assert that this is != FAILURE
 	}
-
 }
 
 

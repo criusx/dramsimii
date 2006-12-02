@@ -13,6 +13,7 @@
 #include <fstream>
 
 #include "dramSystem.h"
+#include "rank_c.h"
 #include "globals.h"
 
 using namespace std;

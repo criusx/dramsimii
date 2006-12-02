@@ -24,6 +24,7 @@ public:
 	addresses addr;
 
 	explicit transaction();
+	explicit transaction(int, tick_t, int, unsigned long long);
 	friend std::ostream &operator<<(std::ostream &, const transaction *);
 
 	void *operator new(size_t size);

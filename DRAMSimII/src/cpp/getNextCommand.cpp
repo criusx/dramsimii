@@ -1,6 +1,8 @@
 #include <iostream>
 #include <climits>
 #include <limits>
+
+#include "rank_c.h"
 #include "dramSystem.h"
 
 using namespace std;

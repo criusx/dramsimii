@@ -17,6 +17,20 @@ transaction::transaction()
 	type = CONTROL_TRANSACTION;
 }
 
+transaction::transaction(int attribute, tick_t startTime, int Size, unsigned long long address):
+addr(address),
+length(Size),
+arrival_time(startTime)
+{
+	switch(attribute & 0x07)
+	{
+	case 1 << 0: type = READ_TRANSACTION; break;
+	case 1 << 1: type = WRITE_TRANSACTION; break;
+	case 1 << 2: type = PREFETCH_TRANSACTION; break;
+	default: cerr << "unknown type" << endl;
+	}
+}
+
 void * transaction::operator new(size_t size)
 {
 	assert(size == sizeof(transaction));

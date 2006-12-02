@@ -8,6 +8,7 @@
 
 
 #include "dramSystem.h"
+#include "rank_c.h"
 #include "globals.h"
 #include "dramTimingSpecification.h"
 #include "dramStatistics.h"

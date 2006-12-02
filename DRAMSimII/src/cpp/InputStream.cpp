@@ -13,8 +13,8 @@
 using namespace std;
 
 inputStream::inputStream(map<file_io_token_t,string> &parameter):
-time(0),
 type(RANDOM),
+time(0),
 row_locality(0.2),
 average_interarrival_cycle_count(10),
 interarrival_distribution_model(UNIFORM_DISTRIBUTION)

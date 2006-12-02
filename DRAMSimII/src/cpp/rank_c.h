@@ -9,8 +9,6 @@
 
 class rank_c
 {
-
-
 public:
 	int bank_count;
 	int last_bank_id; // id of the last accessed bank of this rank
@@ -24,9 +22,8 @@ public:
 
 	
 	explicit rank_c();
-	explicit rank_c(const rank_c &);
-	explicit rank_c(const unsigned,const unsigned);
-	void init_ranks(int,int);
+	rank_c(const rank_c &);
+	explicit rank_c(const unsigned,const unsigned);	
 };
 
 #endif
