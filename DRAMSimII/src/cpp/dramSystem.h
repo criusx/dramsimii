@@ -55,6 +55,7 @@ public:
 	int convert_address(addresses &);
 	void moveChannelToTime(const tick_t endTime, const int chan);
 	void enqueue(transaction* trans);
+	input_status_t waitForTransactionToFinish(transaction *trans);
 
 	void run_simulations();
 	void run_simulations2();

@@ -78,8 +78,19 @@ M5dramSystem::calculateLatency(Packet *pkt)
 	ds->enqueue(trans);
 
 	// run time forward until the transaction completes
+	ds->waitForTransactionToFinish(trans);
 
 	// calculate the time elapsed from when the transaction started
+	if (pkt->isRead())
+		std::cerr << "R ";
+	else if (pkt->isWrite())
+		std::cerr << "W ";
+	else if (pkt->isRequest())
+		std::cerr << "RQ ";
+	else
+		std::cerr << "? ";
+	std::cerr << trans->completion_time - trans->arrival_time << std::endl;
+	return trans->completion_time - trans->arrival_time;
 }
 
 

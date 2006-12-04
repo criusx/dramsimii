@@ -111,7 +111,13 @@ void dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
 			// move time up by executing commands
 			command *temp_c = getNextCommand(chan);
 
-			if (temp_c != NULL)
+			if (temp_c == NULL)
+			{
+				// the transaction queue and all the per bank queues are empty,
+				// so just move time forward to the point where the transaction starts
+				channel[chan].set_time(endTime);				
+			}
+			else
 			{
 				int min_gap = minProtocolGap(chan, temp_c);
 
@@ -127,6 +133,7 @@ void dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
 
 				if (completed_t != NULL)
 				{
+					// reuse the refresh transactions
 					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 					{
 						completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
@@ -135,16 +142,77 @@ void dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
 					}
 					else
 						delete completed_t;
+
 #ifdef DEBUG_TRANSACTION
 					cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
 #endif
 				}
 			}
-			else
+		}
+		else // successfully converted to commands, dequeue
+		{
+			assert(temp_t == channel[chan].get_transaction());
+		}
+	}
+}
+
+input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
+{
+	const int chan = trans->addr.chan_id;
+
+	while (true)
+	{
+		// attempt first to move transactions out of the transactions queue and
+		// convert them into commands
+		transaction *temp_t = channel[chan].read_transaction();
+
+		// if there were no transactions left in the queue or there was not
+		// enough room to split the transaction into commands
+		if ((temp_t == NULL) || (transaction2commands(temp_t) != SUCCESS))
+		{
+			// move time up by executing commands
+			command *temp_c = getNextCommand(chan);
+
+			if (temp_c == NULL)
 			{
 				// the transaction queue and all the per bank queues are empty,
 				// so just move time forward to the point where the transaction starts
-				channel[chan].set_time(endTime);
+				//channel[chan].set_time(endTime);
+				if (temp_t == NULL)
+					return FAILURE;
+			}
+			else
+			{
+				int min_gap = minProtocolGap(chan, temp_c);
+
+				executeCommand(temp_c, min_gap);
+
+				update_system_time(); 
+
+				transaction *completed_t = channel[chan].get_oldest_completed();
+
+				if (completed_t != NULL)
+				{
+					// reuse the refresh transactions
+					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
+					{
+						completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
+						//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
+						channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
+					}
+					else
+						delete completed_t;
+
+#ifdef DEBUG_TRANSACTION
+					cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
+#endif					
+				}
+#ifdef DEBUG_COMMAND
+				cerr << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+#endif
+				// if the CAS command was just executed, then this command is effectively done
+				if (temp_c->host_t == trans)
+					return SUCCESS;
 			}
 		}
 		else // successfully converted to commands, dequeue
