@@ -105,7 +105,7 @@ namespace GenTag_Server
                                 
                                 c.Open();
 
-                                cmd = new OracleCommand(@"SELECT description from rfid_desc WHERE rfid ='" + newPacket.ToString() + "'",c);
+                                cmd = new OracleCommand(@"SELECT description from system.rfid_desc WHERE rfid ='" + newPacket.ToString() + "'",c);
 
                                 writeLog(cmd.CommandText);
 

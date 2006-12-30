@@ -56,7 +56,7 @@ namespace GenTag_Server
             this.usernameBox.Name = "usernameBox";
             this.usernameBox.Size = new System.Drawing.Size(100, 20);
             this.usernameBox.TabIndex = 1;
-            this.usernameBox.Text = "system";
+            this.usernameBox.Text = "rfid";
             // 
             // listBox1
             // 
@@ -83,7 +83,7 @@ namespace GenTag_Server
             this.passwordBox.PasswordChar = '*';
             this.passwordBox.Size = new System.Drawing.Size(100, 20);
             this.passwordBox.TabIndex = 1;
-            this.passwordBox.Text = "oracle2006";
+            this.passwordBox.Text = "rfid2006";
             // 
             // label3
             // 

@@ -75,7 +75,10 @@ namespace GenTag_Demo
             this.Controls.Add(this.hostName);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.button1);
+            this.KeyPreview = true;
+            this.MinimizeBox = false;
             this.Name = "mainForm";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainForm_KeyDown);
             this.ResumeLayout(false);
 
         }
