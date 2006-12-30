@@ -59,6 +59,7 @@ public:
 	unsigned getBankCount() const { return bank_count; }
 	double getShortBurstRatio() const { return short_burst_ratio; }
 	double getReadPercentage() const { return read_percentage; }
+	double Frequency() const { return datarate; }
 };
 
 #endif

@@ -3,19 +3,54 @@
 #pragma once
 
 #include "mem/physical.hh"
+#include "mem/tport.hh"
 #include "dramSystem.h"
 
 // this is a wrapper class to allow DRAMSimII
 // to integrate with M5
 class M5dramSystem: public PhysicalMemory
 {
+	// taken from m5 interface
+private:
+	class MemoryPort : public SimpleTimingPort
+	{
+		// backward pointer to the memory system
+		M5dramSystem *memory;
+
+	public:
+
+		MemoryPort(const std::string &_name, PhysicalMemory *_memory);
+
+	protected:
+
+		virtual Tick recvAtomic(PacketPtr pkt);
+
+		virtual void recvFunctional(PacketPtr pkt);
+
+		virtual void recvStatusChange(Status status);
+
+		virtual void getDeviceAddressRanges(AddrRangeList &resp,
+			AddrRangeList &snoop);
+
+		virtual int deviceBlockSize();
+
+		virtual bool recvTiming(PacketPtr pkt);
+	};
+
+	
+
 protected:
+	MemoryPort *memoryPort;
 	dramSystem *ds;
-	Tick calculateLatency(Packet *);
+	int cpuRatio;
+	virtual Tick calculateLatency(Packet *);
+	virtual Tick recvTiming(PacketPtr pkt);
+	MemoryPort *port;
 
 public:
 	struct Params: public PhysicalMemory::Params
 	{
+		int			cpu_ratio;
 		std::string outFilename;
 		std::string dramType;
 		std::string rowBufferManagmentPolicy;
@@ -60,7 +95,7 @@ public:
 		std::string tWTR;
 	};
 	M5dramSystem(Params *);
-	~M5dramSystem();
+	virtual ~M5dramSystem();
 };
 
 #endif

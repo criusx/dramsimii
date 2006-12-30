@@ -178,7 +178,17 @@ enum file_io_token_t
 	transaction_ordering_policy_token,
 	transaction_queue_depth_token,
 	trace_file_token,
-	unknown_token
+	unknown_token,
+	// power config tokens
+	vdd_token,
+	idd0_token,
+	idd2p_token,
+	idd2n_token,
+	idd3p_token,
+	idd3n_token,
+	idd4r_token,
+	idd4w_token,
+	idd5_token
 };
 
 enum distribution_type_t

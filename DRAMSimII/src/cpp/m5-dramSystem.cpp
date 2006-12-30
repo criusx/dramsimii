@@ -4,10 +4,12 @@
 #include "enumTypes.h"
 #include "m5-dramSystem.h"
 
+using namespace std;
 
 M5dramSystem::M5dramSystem(Params *p):
 PhysicalMemory(p)
 {
+	
 	std::cerr << "in M5dramSystem constructor" << std::endl;
 	std::map<file_io_token_t,std::string> parameter;
 
@@ -54,6 +56,8 @@ PhysicalMemory(p)
 
 	ds = new dramSystem(parameter);
 
+	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency() * 1.0E6));
+
 	std::cerr << *ds << std::endl;
 }
 
@@ -78,7 +82,8 @@ M5dramSystem::calculateLatency(Packet *pkt)
 	ds->enqueue(trans);
 
 	// run time forward until the transaction completes
-	ds->waitForTransactionToFinish(trans);
+	if (ds->waitForTransactionToFinish(trans) == FAILURE)
+		std::cerr << "failed" << std::endl;
 
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())
@@ -89,8 +94,72 @@ M5dramSystem::calculateLatency(Packet *pkt)
 		std::cerr << "RQ ";
 	else
 		std::cerr << "? ";
-	std::cerr << trans->completion_time - trans->arrival_time << std::endl;
-	return trans->completion_time - trans->arrival_time;
+	std::cerr << cpuRatio <<" " << Clock::Frequency << " " << curTick << " " << trans->arrival_time << " " << trans->completion_time << " " << cpuRatio *(trans->completion_time - trans->arrival_time) << std::endl;
+
+	// return the latency, scaled to be in cpu ticks, not memory system ticks
+	return cpuRatio *(trans->completion_time - trans->arrival_time);
+}
+
+int 
+M5dramSystem::MemoryPort::deviceBlockSize()
+{
+	return memory->deviceBlockSize();
+}
+
+void
+M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
+{
+	//Since we are overriding the function, make sure to have the impl of the
+	//check or functional accesses here.
+	std::list<std::pair<Tick,PacketPtr> >::iterator i = transmitList.begin();
+	std::list<std::pair<Tick,PacketPtr> >::iterator end = transmitList.end();
+	bool notDone = true;
+
+	while (i != end && notDone) {
+		PacketPtr target = i->second;
+		// If the target contains data, and it overlaps the
+		// probed request, need to update data
+		if (target->intersect(pkt))
+			notDone = fixPacket(pkt, target);
+		i++;
+	}
+
+	// Default implementation of SimpleTimingPort::recvFunctional()
+	// calls recvAtomic() and throws away the latency; we can save a
+	// little here by just not calculating the latency.
+	memory->doFunctionalAccess(pkt); 
+}
+
+Tick
+M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
+{ 
+	cerr << "M5dramSystem recvAtomic()" << endl;
+
+	memory->doFunctionalAccess(pkt); 
+	return memory->calculateLatency(pkt);
+}
+
+bool
+M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
+{ 
+	cerr << "M5 recv timing" << endl;
+	assert(pkt->result != Packet::Nacked);
+	//Tick latency = recvAtomic(pkt);
+	memory->doFunctionalAccess(pkt);
+	Tick latency = memory->calculateLatency(pkt);
+	// turn packet around to go back to requester if response expected
+	if (pkt->needsResponse()) {
+		pkt->makeTimingResponse();
+		sendTiming(pkt, latency);
+	}
+	else {
+		if (pkt->cmd != Packet::UpgradeReq)
+		{
+			delete pkt->req;
+			delete pkt;
+		}
+	}
+	return true;
 }
 
 
@@ -108,6 +177,7 @@ Param<std::string> file;
 Param<Range<Addr> > range;
 Param<Tick> latency;
 /* additional params for dram protocol*/
+Param<int> cpu_ratio;
 Param<std::string> outFilename;
 Param<std::string> dramType;
 Param<std::string> rowBufferManagmentPolicy;
@@ -161,6 +231,7 @@ INIT_PARAM(range, "Device Address Range"),
 INIT_PARAM(latency, "Memory access latency"),
 
 /* additional params for dram protocol*/
+INIT_PARAM_DFLT(cpu_ratio,"ratio between CPU speed and memory bus speed",5), 
 INIT_PARAM_DFLT(outFilename,"output file name",""),
 INIT_PARAM_DFLT(dramType,"type of DRAM, sdram, ddr, etc.","ddr2"),
 INIT_PARAM_DFLT(rowBufferManagmentPolicy,"open_page, close_page, auto_page","close_page"),
@@ -214,6 +285,7 @@ CREATE_SIM_OBJECT(M5dramSystem)
 	p->latency = latency;
 
 	/* additional params for dram */
+	p->cpu_ratio = cpu_ratio;
 	p->outFilename = outFilename;
 	p->dramType = dramType;
 	p->rowBufferManagmentPolicy = rowBufferManagmentPolicy;

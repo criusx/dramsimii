@@ -357,9 +357,9 @@ command *dramSystem::getNextCommand(const int chan_id)
 
 			int candidate_gap = INT_MAX;
 
-			for (unsigned rank_id = system_config.rank_count; rank_id >= 0; --rank_id)
+			for (unsigned rank_id = 0; rank_id < system_config.rank_count; ++rank_id)
 			{
-				for (unsigned bank_id = system_config.bank_count; bank_id >= 0; --bank_id)
+				for (unsigned bank_id = 0; bank_id < system_config.bank_count ; ++bank_id)
 				{
 					command *challenger_command = channel.get_rank(rank_id).bank[bank_id].per_bank_q.read(0);
 
@@ -392,4 +392,5 @@ command *dramSystem::getNextCommand(const int chan_id)
 		}
 		break;
 	}
+	return NULL;
 }

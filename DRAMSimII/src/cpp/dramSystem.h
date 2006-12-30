@@ -56,6 +56,7 @@ public:
 	void moveChannelToTime(const tick_t endTime, const int chan);
 	void enqueue(transaction* trans);
 	input_status_t waitForTransactionToFinish(transaction *trans);
+	double Frequency() const { return system_config.Frequency(); }
 
 	void run_simulations();
 	void run_simulations2();
