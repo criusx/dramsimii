@@ -12,14 +12,14 @@ class M5dramSystem: public PhysicalMemory
 {
 	// taken from m5 interface
 private:
-	class MemoryPort : public SimpleTimingPort
+	class MemPort : public SimpleTimingPort
 	{
 		// backward pointer to the memory system
 		M5dramSystem *memory;
 
 	public:
 
-		MemoryPort(const std::string &_name, PhysicalMemory *_memory);
+		MemPort(const std::string &_name, M5dramSystem *_memory);
 
 	protected:
 
@@ -40,14 +40,21 @@ private:
 	
 
 protected:
-	MemoryPort *memoryPort;
+	MemPort *memoryPort;
+	// the whole point of the wrapper class
 	dramSystem *ds;
 	int cpuRatio;
-	virtual Tick calculateLatency(Packet *);
+	void getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop);
+	//virtual Tick calculateLatency(Packet *);
 	virtual Tick recvTiming(PacketPtr pkt);
-	MemoryPort *port;
+	void virtual init();
+	
 
 public:
+	// allows other components to get a port which they can send packets to
+	virtual Port *getPort(const std::string &if_name, int idx = -1);
+
+
 	struct Params: public PhysicalMemory::Params
 	{
 		int			cpu_ratio;

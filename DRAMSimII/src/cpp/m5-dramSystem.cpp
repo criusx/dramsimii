@@ -61,14 +61,51 @@ PhysicalMemory(p)
 	std::cerr << *ds << std::endl;
 }
 
+M5dramSystem::MemPort::MemPort(const std::string &_name,
+									   M5dramSystem *_memory)
+									   : SimpleTimingPort(_name), memory(_memory)
+{ }
+
+Port *M5dramSystem::getPort(const string &if_name, int idx)
+{
+	if (if_name == "port" && idx == -1) 
+	{
+		if (port != NULL)
+			panic("M5dramSystem::getPort: additional port requested to memory!"); 
+		memoryPort = new MemPort(name() + "-port", this);
+		return memoryPort; 
+	}
+	else if (if_name == "functional") 
+	{
+		/* special port for functional writes at startup. And for memtester */
+		return new MemPort(name() + "-funcport", this);
+	}
+	else 
+	{
+		panic("M5dramSystem::getPort: unknown port %s requested", if_name);
+	}
+	cerr << "called M5dramSystem::getPort" << endl;
+}
+
+void M5dramSystem::init()
+{
+	if (!memoryPort)
+		panic("M5dramSystem not connected to anything!");
+	memoryPort->sendStatusChange(Port::RangeChange); 
+
+}
+
 M5dramSystem::~M5dramSystem()
 {
+	//if (pmemAddr)
+	//	munmap(pmemAddr, params()->addrRange.size());
+	
 	std::cerr << "M5dramSystem destructor" << std::endl;
 	delete ds;
 }
 
 Tick
-M5dramSystem::calculateLatency(Packet *pkt)
+M5dramSystem::recvTiming(Packet *pkt)
 {
 	transaction *trans = new transaction(pkt->cmd,pkt->time,pkt->getSize(),pkt->getAddr());
 
@@ -94,20 +131,20 @@ M5dramSystem::calculateLatency(Packet *pkt)
 		std::cerr << "RQ ";
 	else
 		std::cerr << "? ";
-	std::cerr << cpuRatio <<" " << Clock::Frequency << " " << curTick << " " << trans->arrival_time << " " << trans->completion_time << " " << cpuRatio *(trans->completion_time - trans->arrival_time) << std::endl;
+	std::cerr << cpuRatio <<" " << Clock::Frequency << " " << curTick << " A" << trans->arrival_time << " C" << trans->completion_time << " T" << cpuRatio *(trans->completion_time - trans->arrival_time) << std::endl;
 
 	// return the latency, scaled to be in cpu ticks, not memory system ticks
 	return cpuRatio *(trans->completion_time - trans->arrival_time);
 }
 
 int 
-M5dramSystem::MemoryPort::deviceBlockSize()
+M5dramSystem::MemPort::deviceBlockSize()
 {
 	return memory->deviceBlockSize();
 }
 
 void
-M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
+M5dramSystem::MemPort::recvFunctional(PacketPtr pkt)
 {
 	//Since we are overriding the function, make sure to have the impl of the
 	//check or functional accesses here.
@@ -131,7 +168,7 @@ M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
 }
 
 Tick
-M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
+M5dramSystem::MemPort::recvAtomic(PacketPtr pkt)
 { 
 	cerr << "M5dramSystem recvAtomic()" << endl;
 
@@ -139,20 +176,45 @@ M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
 	return memory->calculateLatency(pkt);
 }
 
-bool
-M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
+void
+M5dramSystem::MemPort::recvStatusChange(Port::Status status)
 { 
-	cerr << "M5 recv timing" << endl;
+	memory->recvStatusChange(status); 
+}
+
+void
+M5dramSystem::MemPort::getDeviceAddressRanges(AddrRangeList &resp,
+												   AddrRangeList &snoop)
+{
+	memory->getAddressRanges(resp, snoop);
+}
+
+void
+M5dramSystem::getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop)
+{
+	snoop.clear();
+	resp.clear();
+	resp.push_back(RangeSize(params()->addrRange.start,
+		params()->addrRange.size()));
+}
+
+bool
+M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
+{ 
+	cerr << "M5dramSystem::MemPort::recvTiming" << endl;
+	Tick latency = memory->recvTiming(pkt);
+	
 	assert(pkt->result != Packet::Nacked);
 	//Tick latency = recvAtomic(pkt);
 	memory->doFunctionalAccess(pkt);
-	Tick latency = memory->calculateLatency(pkt);
+	//Tick latency = memory->calculateLatency(pkt);
 	// turn packet around to go back to requester if response expected
 	if (pkt->needsResponse()) {
 		pkt->makeTimingResponse();
 		sendTiming(pkt, latency);
 	}
 	else {
+		cerr << "packet not needing response." << endl;
 		if (pkt->cmd != Packet::UpgradeReq)
 		{
 			delete pkt->req;
