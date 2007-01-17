@@ -21,6 +21,12 @@ private:
 
 		MemPort(const std::string &_name, M5dramSystem *_memory);
 
+		// accessor that was needed to allow the memory system to handle incoming transactions
+		void doSendTiming(PacketPtr pkt, Tick t)
+		{
+			sendTiming(pkt,t);
+		}
+
 	protected:
 
 		virtual Tick recvAtomic(PacketPtr pkt);
@@ -34,7 +40,7 @@ private:
 
 		virtual int deviceBlockSize();
 
-		virtual bool recvTiming(PacketPtr pkt);
+		virtual bool recvTiming(PacketPtr pkt);		
 	};
 
 	

@@ -10,7 +10,7 @@ void dramSystem::run_simulations2()
 {
 	//bool EOF_reached = false;
 
-	for(int i = sim_parameters.get_request_count(); i > 0; --i)
+	for (int i = sim_parameters.get_request_count(); i > 0; --i)
 	{
 		transaction *input_t;
 
@@ -81,7 +81,7 @@ void dramSystem::enqueue(transaction* trans)
 					else
 						delete completed_t;
 #ifdef DEBUG_TRANSACTION
-					cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
+					cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif
 				}
 
@@ -144,7 +144,7 @@ void dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
 						delete completed_t;
 
 #ifdef DEBUG_TRANSACTION
-					cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
+					cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif
 				}
 			}
@@ -204,7 +204,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 						delete completed_t;
 
 #ifdef DEBUG_TRANSACTION
-					cerr << "CH[" << setw(2) << i << "] " << completed_t << endl;
+					cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif					
 				}
 #ifdef DEBUG_COMMAND

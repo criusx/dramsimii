@@ -104,39 +104,6 @@ M5dramSystem::~M5dramSystem()
 	delete ds;
 }
 
-Tick
-M5dramSystem::recvTiming(Packet *pkt)
-{
-	transaction *trans = new transaction(pkt->cmd,pkt->time,pkt->getSize(),pkt->getAddr());
-
-	// convert the physical address to chan, rank, bank, etc.
-	ds->convert_address(trans->addr);
-
-	// wake the channel and do everything it was going to do up to this point
-	ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id);
-
-	// add the transaction to the memory system
-	ds->enqueue(trans);
-
-	// run time forward until the transaction completes
-	if (ds->waitForTransactionToFinish(trans) == FAILURE)
-		std::cerr << "failed" << std::endl;
-
-	// calculate the time elapsed from when the transaction started
-	if (pkt->isRead())
-		std::cerr << "R ";
-	else if (pkt->isWrite())
-		std::cerr << "W ";
-	else if (pkt->isRequest())
-		std::cerr << "RQ ";
-	else
-		std::cerr << "? ";
-	std::cerr << cpuRatio <<" " << Clock::Frequency << " " << curTick << " A" << trans->arrival_time << " C" << trans->completion_time << " T" << cpuRatio *(trans->completion_time - trans->arrival_time) << std::endl;
-
-	// return the latency, scaled to be in cpu ticks, not memory system ticks
-	return cpuRatio *(trans->completion_time - trans->arrival_time);
-}
-
 int 
 M5dramSystem::MemPort::deviceBlockSize()
 {
@@ -198,22 +165,68 @@ M5dramSystem::getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop)
 		params()->addrRange.size()));
 }
 
-bool
-M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
-{ 
-	cerr << "M5dramSystem::MemPort::recvTiming" << endl;
-	Tick latency = memory->recvTiming(pkt);
+Tick
+M5dramSystem::recvTiming(Packet *pkt)
+{
+	//if (pkt->getSrc() == )
+	cerr << "from: " << pkt->getSrc() << "to: " << pkt->getDest() << "" << pkt->cmdString() << endl;
+	if (pkt->result != Packet::Nacked && pkt->cmd != Packet::InvalidCmd)
+	{
+		cerr << Packet::InvalidCmd << " " << pkt->cmd << endl;
+		Packet *newPacket = new Packet(*pkt);
+		
+		newPacket->makeTimingResponse();
+		newPacket->reinitFromRequest();
+		newPacket->cmd = Packet::InvalidCmd;
+		newPacket->result = Packet::Nacked;
+		newPacket->setDest(Packet::Broadcast);
+		memoryPort->doSendTiming(newPacket,newPacket->time + 50);
+	}
+	else
+	{
+		cerr << "got packet from self " << pkt->getSrc() << endl;
+		return -1;
+	}
+	//memoryPort->doSendTiming(new Packet(*pkt), pkt->time + 500000);
 	
+	transaction *trans = new transaction(pkt->cmd,pkt->time,pkt->getSize(),pkt->getAddr());
+
+	// convert the physical address to chan, rank, bank, etc.
+	ds->convert_address(trans->addr);
+
+	// wake the channel and do everything it was going to do up to this point
+	ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id);
+
+	// add the transaction to the memory system
+	ds->enqueue(trans);
+
+	// run time forward until the transaction completes
+	if (ds->waitForTransactionToFinish(trans) == FAILURE)
+		std::cerr << "failed" << std::endl;
+
+	// calculate the time elapsed from when the transaction started
+	if (pkt->isRead())
+		std::cerr << "R ";
+	else if (pkt->isWrite())
+		std::cerr << "W ";
+	else if (pkt->isRequest())
+		std::cerr << "RQ ";
+	else
+		std::cerr << "? ";
+	std::cerr << cpuRatio <<" " << Clock::Frequency << " " << curTick << " A" << trans->arrival_time << " C" << trans->completion_time << " T" << cpuRatio *(trans->completion_time - trans->arrival_time) << std::endl;
+
 	assert(pkt->result != Packet::Nacked);
 	//Tick latency = recvAtomic(pkt);
-	memory->doFunctionalAccess(pkt);
+	doFunctionalAccess(pkt);
 	//Tick latency = memory->calculateLatency(pkt);
 	// turn packet around to go back to requester if response expected
-	if (pkt->needsResponse()) {
+	if (pkt->needsResponse()) 
+	{
 		pkt->makeTimingResponse();
-		sendTiming(pkt, latency);
+		memoryPort->doSendTiming(pkt, cpuRatio *(trans->completion_time - trans->arrival_time));
 	}
-	else {
+	else
+	{
 		cerr << "packet not needing response." << endl;
 		if (pkt->cmd != Packet::UpgradeReq)
 		{
@@ -221,6 +234,15 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			delete pkt;
 		}
 	}
+
+	// return the latency, scaled to be in cpu ticks, not memory system ticks
+	return cpuRatio *(trans->completion_time - trans->arrival_time);
+}
+
+bool
+M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
+{ 
+	memory->recvTiming(pkt);	
 	return true;
 }
 
