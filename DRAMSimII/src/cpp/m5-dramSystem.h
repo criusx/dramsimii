@@ -12,6 +12,32 @@ class M5dramSystem: public PhysicalMemory
 {
 	// taken from m5 interface
 private:
+	class TickEvent : public Event
+	{
+	private:
+		/** The associated memory system */
+		M5dramSystem *memory;
+
+	public:
+		/**
+		* Construct this event;
+		*/
+		TickEvent(M5dramSystem *c);
+
+		/**
+		* Call the tick function.
+		*/
+		void process();
+
+		/**
+		* Return a string description of this event.
+		*/
+		const char *description();
+	};
+
+	TickEvent tickEvent;
+
+
 	class MemPort : public SimpleTimingPort
 	{
 		// backward pointer to the memory system

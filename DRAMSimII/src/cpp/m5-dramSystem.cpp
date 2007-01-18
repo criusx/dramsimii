@@ -7,7 +7,7 @@
 using namespace std;
 
 M5dramSystem::M5dramSystem(Params *p):
-PhysicalMemory(p)
+PhysicalMemory(p), tickEvent(this)
 {
 	
 	std::cerr << "in M5dramSystem constructor" << std::endl;
@@ -165,29 +165,31 @@ M5dramSystem::getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop)
 		params()->addrRange.size()));
 }
 
+M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
+: Event(&mainEventQueue, CPU_Tick_Pri), memory(c)
+{
+}
+
+void
+M5dramSystem::TickEvent::process()
+{
+	cerr << "doing process of m5dramSystem::TickEvent::process()" << endl;
+}
+
+const char *
+M5dramSystem::TickEvent::description()
+{
+	return "m5dramSystem tick event";
+}
+
 Tick
 M5dramSystem::recvTiming(Packet *pkt)
 {
 	//if (pkt->getSrc() == )
 	cerr << "from: " << pkt->getSrc() << "to: " << pkt->getDest() << "" << pkt->cmdString() << endl;
-	if (pkt->result != Packet::Nacked && pkt->cmd != Packet::InvalidCmd)
-	{
-		cerr << Packet::InvalidCmd << " " << pkt->cmd << endl;
-		Packet *newPacket = new Packet(*pkt);
-		
-		newPacket->makeTimingResponse();
-		newPacket->reinitFromRequest();
-		newPacket->cmd = Packet::InvalidCmd;
-		newPacket->result = Packet::Nacked;
-		newPacket->setDest(Packet::Broadcast);
-		memoryPort->doSendTiming(newPacket,newPacket->time + 50);
-	}
-	else
-	{
-		cerr << "got packet from self " << pkt->getSrc() << endl;
-		return -1;
-	}
-	//memoryPort->doSendTiming(new Packet(*pkt), pkt->time + 500000);
+	
+	tickEvent.schedule(pkt->time + 0x0F);
+	tickEvent.schedule(pkt->time + 0xFF);
 	
 	transaction *trans = new transaction(pkt->cmd,pkt->time,pkt->getSize(),pkt->getAddr());
 
