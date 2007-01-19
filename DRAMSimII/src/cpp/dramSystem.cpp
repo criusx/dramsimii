@@ -16,6 +16,16 @@
 
 using namespace std;
 
+tick_t dramSystem::nextTick() const
+{
+	unsigned int oldestChannel = find_oldest_channel();
+	command *tempCommand = readNextCommand(oldestChannel);
+	if (tempCommand == NULL)
+		return 0;
+
+	return time + minProtocolGap(oldestChannel, tempCommand);
+}
+
 int dramSystem::convert_address(addresses &this_a)
 {
 	unsigned int input_a;

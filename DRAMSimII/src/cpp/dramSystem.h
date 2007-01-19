@@ -38,8 +38,9 @@ private:
 
 	void set_dram_timing_specification(enum dram_type_t);
 	command *getNextCommand(const int);
+	command *readNextCommand(const int) const;
 	enum input_status_t transaction2commands(transaction *);
-	int minProtocolGap(const unsigned,const command *);
+	int minProtocolGap(const unsigned,const command *) const;
 	int find_oldest_channel() const;
 	void executeCommand(command *, const int);
 	void update_system_time();
@@ -54,9 +55,11 @@ public:
 	friend std::ostream &operator<<(std::ostream &, const dramSystem &);
 	int convert_address(addresses &);
 	void moveChannelToTime(const tick_t endTime, const int chan);
-	void enqueue(transaction* trans);
+	bool enqueue(transaction* trans);
+	void enqueueTimeShift(transaction* trans);
 	input_status_t waitForTransactionToFinish(transaction *trans);
 	double Frequency() const { return system_config.Frequency(); }
+	tick_t nextTick() const;
 
 	void run_simulations();
 	void run_simulations2();

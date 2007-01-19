@@ -21,7 +21,9 @@ private:
 public:
 	// the get_ functions
 	rank_c& get_rank(const unsigned rank_num) { return rank[rank_num]; }
+	const rank_c& getRankC(const unsigned rankNum) const { return rank[rankNum]; }
 	std::vector<rank_c>& get_rank() { return rank; }
+	const std::vector<rank_c>& getRankC() const { return rank; }
 	tick_t get_time() const { return time; }
 	void set_time(tick_t new_time) { time = new_time; }
 	int get_last_rank_id() const { return last_rank_id; }

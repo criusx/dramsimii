@@ -7,12 +7,12 @@ using namespace std;
 /// <summary>
 /// find the protocol gap between a command and current system state
 /// </summary>
-int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c)
+int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) const
 { 
 	//FIXME: some max() functions take uninit values
 	int min_gap;
 
-	dramChannel &channel = dramSystem::channel[channel_id];
+	const dramChannel &channel = dramSystem::channel[channel_id];
 
 	const unsigned this_rank = this_c->addr.rank_id;
 	const unsigned this_bank = this_c->addr.bank_id;

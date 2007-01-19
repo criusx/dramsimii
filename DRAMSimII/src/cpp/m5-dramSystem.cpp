@@ -173,25 +173,25 @@ M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 void
 M5dramSystem::TickEvent::process()
 {
-	cerr << "doing process of m5dramSystem::TickEvent::process()" << endl;
+	tick_t now = now / Clock::Frequency * memory->ds->Frequency();
+	cerr << "wake at " << curTick << "(" << now << ")" << endl;
 }
 
 const char *
 M5dramSystem::TickEvent::description()
 {
-	return "m5dramSystem tick event";
+	return "m5dramSystem tick event";	
 }
 
 Tick
 M5dramSystem::recvTiming(Packet *pkt)
 {
 	//if (pkt->getSrc() == )
-	cerr << "from: " << pkt->getSrc() << "to: " << pkt->getDest() << "" << pkt->cmdString() << endl;
+	//cerr << "from: " << pkt->getSrc() << "to: " << pkt->getDest() << "" << pkt->cmdString() << endl;
 	
-	tickEvent.schedule(pkt->time + 0x0F);
-	tickEvent.schedule(pkt->time + 0xFF);
+	//tickEvent.schedule(pkt->time + 0x0F);
 	
-	transaction *trans = new transaction(pkt->cmd,pkt->time,pkt->getSize(),pkt->getAddr());
+	transaction *trans = new transaction(pkt->cmd,(tick_t)(pkt->time/Clock::Frequency*ds->Frequency()),pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 	// convert the physical address to chan, rank, bank, etc.
 	ds->convert_address(trans->addr);
@@ -199,12 +199,30 @@ M5dramSystem::recvTiming(Packet *pkt)
 	// wake the channel and do everything it was going to do up to this point
 	ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id);
 
-	// add the transaction to the memory system
-	ds->enqueue(trans);
+	assert(pkt->result != Packet::Nacked);
+	assert(pkt->needsResponse());
+	// attempt to add the transaction to the memory system
+	if (!ds->enqueue(trans))
+	{
+		// if the packet did not fit, then send a NACK
+		pkt->result = Packet::Nacked;
+		assert(pkt->needsResponse());
+		pkt->makeTimingResponse();
+		memoryPort->doSendTiming(pkt,0);
+		delete trans;
+	}
+	else
+	{
+		tickEvent.deschedule();
+		tick_t next = ds->nextTick();
+		assert(next > 0);
+		cerr << "scheduling for " << next << "(" << Clock::Frequency/ds->Frequency()*next << ")" << " at " << curTick << endl;
+		tickEvent.schedule(Clock::Frequency/ds->Frequency()*next);
+	}
 
 	// run time forward until the transaction completes
-	if (ds->waitForTransactionToFinish(trans) == FAILURE)
-		std::cerr << "failed" << std::endl;
+	//if (ds->waitForTransactionToFinish(trans) == FAILURE)
+	//	std::cerr << "failed" << std::endl;
 
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())
@@ -215,17 +233,16 @@ M5dramSystem::recvTiming(Packet *pkt)
 		std::cerr << "RQ ";
 	else
 		std::cerr << "? ";
-	std::cerr << cpuRatio <<" " << Clock::Frequency << " " << curTick << " A" << trans->arrival_time << " C" << trans->completion_time << " T" << cpuRatio *(trans->completion_time - trans->arrival_time) << std::endl;
-
-	assert(pkt->result != Packet::Nacked);
+	std::cerr << cpuRatio <<" " << Clock::Frequency << " " << curTick << " A" << trans->arrival_time << std::endl;
+	
 	//Tick latency = recvAtomic(pkt);
-	doFunctionalAccess(pkt);
+	//doFunctionalAccess(pkt);
 	//Tick latency = memory->calculateLatency(pkt);
 	// turn packet around to go back to requester if response expected
 	if (pkt->needsResponse()) 
 	{
-		pkt->makeTimingResponse();
-		memoryPort->doSendTiming(pkt, cpuRatio *(trans->completion_time - trans->arrival_time));
+		//pkt->makeTimingResponse();
+		//memoryPort->doSendTiming(pkt, cpuRatio *(trans->completion_time - trans->arrival_time));
 	}
 	else
 	{
@@ -238,12 +255,13 @@ M5dramSystem::recvTiming(Packet *pkt)
 	}
 
 	// return the latency, scaled to be in cpu ticks, not memory system ticks
-	return cpuRatio *(trans->completion_time - trans->arrival_time);
+	return 0;
 }
 
 bool
 M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
+	cerr << "M5dramSystem::MemPort::recvTiming()" << endl;
 	memory->recvTiming(pkt);	
 	return true;
 }

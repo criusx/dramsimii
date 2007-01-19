@@ -33,7 +33,7 @@ void dramSystem::run_simulations2()
 			moveChannelToTime(input_t->arrival_time,chan);
 
 			// attempt to enqueue, if there is no room, move time forward until there is
-			enqueue(input_t);
+			enqueueTimeShift(input_t);
 		}	
 		else
 			// EOF reached, quit the loop
@@ -44,10 +44,24 @@ void dramSystem::run_simulations2()
 	statistics.set_valid_trans_count(sim_parameters.get_request_count());
 }
 
-void dramSystem::enqueue(transaction* trans)
+/// Attempt to enqueue the command
+/// Return true if there was room, else false
+bool dramSystem::enqueue(transaction *trans)
 {
 	const int chan = trans->addr.chan_id;
 
+	if (channel[chan].enqueue(trans) == FAILURE)
+		return false;
+	else
+		return true;
+}
+
+/// Move time forward to ensure that the command was successfully enqueued
+void dramSystem::enqueueTimeShift(transaction* trans)
+{
+	const int chan = trans->addr.chan_id;
+
+	// as long 
 	while (channel[chan].enqueue(trans) == FAILURE)
 	{
 		transaction *temp_t = channel[chan].get_transaction();

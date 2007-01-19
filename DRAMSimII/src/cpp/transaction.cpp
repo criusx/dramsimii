@@ -17,10 +17,12 @@ transaction::transaction()
 	type = CONTROL_TRANSACTION;
 }
 
-transaction::transaction(int attribute, tick_t startTime, int Size, unsigned long long address):
+transaction::transaction(int attribute, tick_t startTime, int Size, unsigned long long address, void *originalTrans):
 addr(address),
 length(Size),
-arrival_time(startTime)
+arrival_time(startTime),
+originalTransaction(originalTrans)
+
 {
 	switch(attribute & 0x07)
 	{

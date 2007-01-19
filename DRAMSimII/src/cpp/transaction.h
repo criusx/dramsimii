@@ -22,9 +22,10 @@ public:
 	tick_t arrival_time;		// time when first seen by memory controller in DRAM ticks
 	tick_t completion_time;		// time when transaction has completed in DRAM ticks
 	addresses addr;
+	void *originalTransaction;
 
 	explicit transaction();
-	explicit transaction(int, tick_t, int, unsigned long long);
+	explicit transaction(int, tick_t, int, unsigned long long, void *);
 	friend std::ostream &operator<<(std::ostream &, const transaction *);
 
 	void *operator new(size_t size);
