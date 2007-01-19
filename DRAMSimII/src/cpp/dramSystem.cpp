@@ -487,7 +487,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 			this_t->addr.rank_id = rank_id;
 		}
 
-		int bank_id = channel[this_t->addr.chan_id].get_rank(rank_id).last_bank_id;
+		int bank_id = channel[this_t->addr.chan_id].getRank(rank_id).last_bank_id;
 
 		rand_s(&j);
 
@@ -501,7 +501,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 			this_t->addr.bank_id = bank_id;
 		}
 
-		int row_id = channel[this_t->addr.chan_id].get_rank(rank_id).bank[bank_id].row_id;
+		int row_id = channel[this_t->addr.chan_id].getRank(rank_id).bank[bank_id].row_id;
 
 		rand_s(&j);
 

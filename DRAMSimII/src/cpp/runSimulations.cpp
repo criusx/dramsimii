@@ -30,7 +30,7 @@ void dramSystem::run_simulations2()
 
 			// first try to update the channel so that it is one command past this
 			// transaction's start time
-			moveChannelToTime(input_t->arrival_time,chan);
+			while (!moveChannelToTime(input_t->arrival_time,chan)) {;}
 
 			// attempt to enqueue, if there is no room, move time forward until there is
 			enqueueTimeShift(input_t);
@@ -108,9 +108,21 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 	}
 }
 
+/// Moves all channels to the specified time
+/// If a transaction completes, then it is returned without completing the movement
+void *dramSystem::moveAllChannelsToTime(const tick_t endTime)
+{
+	for (int i = 0; i < channel.size(); i++)
+	{
+		void *finishedTrans = moveChannelToTime(endTime, i);
+		if (finishedTrans)
+			return finishedTrans;
+	}
+	return NULL;
+}
 
 /// Moves the specified channel to at least the time given
-void dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
+void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
 {
 	while (channel[chan].get_time() < endTime)
 	{
@@ -147,6 +159,9 @@ void dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
 
 				if (completed_t != NULL)
 				{
+#ifdef DEBUG_TRANSACTION
+					cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
+#endif
 					// reuse the refresh transactions
 					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 					{
@@ -154,12 +169,19 @@ void dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
 						//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
 						channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
 					}
-					else
+					else // return what was pointed to
+					{
+						void *origTrans = NULL;
+						
+						if (completed_t->originalTransaction)
+							origTrans = completed_t->originalTransaction;
+						else
+							cerr << "transaction completed, not REFRESH, no orig trans" << endl;
+						
 						delete completed_t;
 
-#ifdef DEBUG_TRANSACTION
-					cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
-#endif
+						return origTrans;
+					}
 				}
 			}
 		}
@@ -168,6 +190,7 @@ void dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
 			assert(temp_t == channel[chan].get_transaction());
 		}
 	}
+	return NULL;
 }
 
 input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)

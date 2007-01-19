@@ -16,8 +16,8 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 
 	const unsigned this_rank = this_c->addr.rank_id;
 	const unsigned this_bank = this_c->addr.bank_id;
-	rank_c &this_r = channel.get_rank(this_rank);
-	bank_c &this_b = this_r.bank[this_bank];
+	const rank_c &this_r = channel.getRank(this_rank);
+	const bank_c &this_b = this_r.bank[this_bank];
 	tick_t now = channel.get_time();
 	int t_ras_gap = 0;
 	tick_t other_r_last_cas_time;
@@ -94,15 +94,15 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 			{
 				if (rank_id != this_rank)
 				{
-					if (channel.get_rank(rank_id).last_cas_time > other_r_last_cas_time)
+					if (channel.getRank(rank_id).last_cas_time > other_r_last_cas_time)
 					{
-						other_r_last_cas_time = channel.get_rank(rank_id).last_cas_time;
-						other_r_last_cas_length = channel.get_rank(rank_id).last_cas_length;
+						other_r_last_cas_time = channel.getRank(rank_id).last_cas_time;
+						other_r_last_cas_length = channel.getRank(rank_id).last_cas_length;
 					}
-					if (channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
+					if (channel.getRank(rank_id).last_casw_time > other_r_last_casw_time)
 					{
-						other_r_last_casw_time = channel.get_rank(rank_id).last_casw_time;
-						other_r_last_casw_length = channel.get_rank(rank_id).last_casw_length;
+						other_r_last_casw_time = channel.getRank(rank_id).last_casw_time;
+						other_r_last_casw_length = channel.getRank(rank_id).last_casw_length;
 					}
 				}
 			}
@@ -153,15 +153,15 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 			{
 				if (rank_id != this_rank)
 				{
-					if (channel.get_rank(rank_id).last_cas_time > other_r_last_cas_time)
+					if (channel.getRank(rank_id).last_cas_time > other_r_last_cas_time)
 					{
-						other_r_last_cas_time = channel.get_rank(rank_id).last_cas_time;
-						other_r_last_cas_length = channel.get_rank(rank_id).last_cas_length;
+						other_r_last_cas_time = channel.getRank(rank_id).last_cas_time;
+						other_r_last_cas_length = channel.getRank(rank_id).last_cas_length;
 					}
-					if ( channel.get_rank(rank_id).last_casw_time > other_r_last_casw_time)
+					if ( channel.getRank(rank_id).last_casw_time > other_r_last_casw_time)
 					{
-						other_r_last_casw_time = channel.get_rank(rank_id).last_casw_time;
-						other_r_last_casw_length = channel.get_rank(rank_id).last_casw_length;
+						other_r_last_casw_time = channel.getRank(rank_id).last_casw_time;
+						other_r_last_casw_length = channel.getRank(rank_id).last_casw_length;
 					}
 				}
 			}

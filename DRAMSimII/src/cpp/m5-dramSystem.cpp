@@ -175,6 +175,12 @@ M5dramSystem::TickEvent::process()
 {
 	tick_t now = now / Clock::Frequency * memory->ds->Frequency();
 	cerr << "wake at " << curTick << "(" << now << ")" << endl;
+
+
+	while (void *packet = memory->ds->moveAllChannelsToTime(now))
+	{
+		((Packet *)packet)->makeTimingResponse();
+	}
 }
 
 const char *

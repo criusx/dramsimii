@@ -18,7 +18,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 {
 	dramChannel &channel= dramSystem::channel[this_command->addr.chan_id];
 
-	rank_c &this_rank = channel.get_rank(this_command->addr.rank_id);
+	rank_c &this_rank = channel.getRank(this_command->addr.rank_id);
 
 	bank_c &this_bank = this_rank.bank[this_command->addr.bank_id];
 
