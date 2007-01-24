@@ -30,7 +30,8 @@ void dramSystem::run_simulations2()
 
 			// first try to update the channel so that it is one command past this
 			// transaction's start time
-			while (!moveChannelToTime(input_t->arrival_time,chan)) {;}
+			tick_t finishTime;
+			while (!moveChannelToTime(input_t->arrival_time,chan,&finishTime)) {;}
 
 			// attempt to enqueue, if there is no room, move time forward until there is
 			enqueueTimeShift(input_t);
@@ -48,12 +49,14 @@ void dramSystem::run_simulations2()
 /// Return true if there was room, else false
 bool dramSystem::enqueue(transaction *trans)
 {
-	const int chan = trans->addr.chan_id;
 
-	if (channel[chan].enqueue(trans) == FAILURE)
+	if (channel[trans->addr.chan_id].enqueue(trans) == FAILURE)
 		return false;
 	else
+	{
+		trans->enqueueTime = channel[trans->addr.chan_id].get_time();
 		return true;
+	}
 }
 
 /// Move time forward to ensure that the command was successfully enqueued
@@ -110,11 +113,11 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 
 /// Moves all channels to the specified time
 /// If a transaction completes, then it is returned without completing the movement
-void *dramSystem::moveAllChannelsToTime(const tick_t endTime)
+void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime)
 {
 	for (int i = 0; i < channel.size(); i++)
 	{
-		void *finishedTrans = moveChannelToTime(endTime, i);
+		void *finishedTrans = moveChannelToTime(endTime, i, transFinishTime);
 		if (finishedTrans)
 			return finishedTrans;
 	}
@@ -122,7 +125,7 @@ void *dramSystem::moveAllChannelsToTime(const tick_t endTime)
 }
 
 /// Moves the specified channel to at least the time given
-void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
+void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime)
 {
 	while (channel[chan].get_time() < endTime)
 	{
@@ -179,6 +182,8 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan)
 							cerr << "transaction completed, not REFRESH, no orig trans" << endl;
 						
 						delete completed_t;
+
+						*transFinishTime = completed_t->completion_time;
 
 						return origTrans;
 					}

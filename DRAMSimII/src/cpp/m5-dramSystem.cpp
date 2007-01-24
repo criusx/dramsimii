@@ -167,19 +167,33 @@ M5dramSystem::getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop)
 
 M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 : Event(&mainEventQueue, CPU_Tick_Pri), memory(c)
-{
-}
+{}
 
 void
 M5dramSystem::TickEvent::process()
 {
-	tick_t now = now / Clock::Frequency * memory->ds->Frequency();
-	cerr << "wake at " << curTick << "(" << now << ")" << endl;
+	// find the ratio of the cpu frequency to the memory clock frequency
+	double ratio = (static_cast<double>(Clock::Frequency) / memory->ds->Frequency());
+	tick_t now = curTick / ratio;
+	cerr << "wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
 
+	tick_t finishTime;
 
-	while (void *packet = memory->ds->moveAllChannelsToTime(now))
+	// move memory channels to the current time
+	while (void *packet = memory->ds->moveAllChannelsToTime(now, &finishTime))
 	{
 		((Packet *)packet)->makeTimingResponse();
+		cerr << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * ratio) - curTick << endl;
+		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * ratio) - curTick);
+	}
+
+	tick_t next = memory->ds->nextTick();
+	if (next > 0)
+	{	
+		if (memory->tickEvent.scheduled())
+			memory->tickEvent.deschedule();
+		cerr << "scheduling for " << static_cast<Tick>(curTick + next * ratio) << endl;
+		memory->tickEvent.schedule(static_cast<Tick>(curTick + next * ratio));
 	}
 }
 
@@ -202,14 +216,16 @@ M5dramSystem::recvTiming(Packet *pkt)
 	// convert the physical address to chan, rank, bank, etc.
 	ds->convert_address(trans->addr);
 
+	tick_t finishTime;
 	// wake the channel and do everything it was going to do up to this point
-	ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id);
+	assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
 
 	assert(pkt->result != Packet::Nacked);
 	assert(pkt->needsResponse());
 	// attempt to add the transaction to the memory system
 	if (!ds->enqueue(trans))
 	{
+		cerr << "enqueue failed" << endl;
 		// if the packet did not fit, then send a NACK
 		pkt->result = Packet::Nacked;
 		assert(pkt->needsResponse());
@@ -219,11 +235,15 @@ M5dramSystem::recvTiming(Packet *pkt)
 	}
 	else
 	{
-		tickEvent.deschedule();
+		if (tickEvent.scheduled())
+			tickEvent.deschedule();
 		tick_t next = ds->nextTick();
 		assert(next > 0);
-		cerr << "scheduling for " << next << "(" << Clock::Frequency/ds->Frequency()*next << ")" << " at " << curTick << endl;
-		tickEvent.schedule(Clock::Frequency/ds->Frequency()*next);
+		if (next > 0)
+		{
+			cerr << "scheduling for " << next << "(" << Clock::Frequency/ds->Frequency()*next << ")" << " at " << curTick << endl;
+			tickEvent.schedule(Clock::Frequency/static_cast<tick_t>(ds->Frequency())*next);
+		}
 	}
 
 	// run time forward until the transaction completes

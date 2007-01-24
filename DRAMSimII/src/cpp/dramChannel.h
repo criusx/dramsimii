@@ -28,7 +28,7 @@ public:
 	void set_time(tick_t new_time) { time = new_time; }
 	int get_last_rank_id() const { return last_rank_id; }
 	transaction *get_transaction() { return transaction_q.dequeue(); } // remove and return the oldest transaction
-	transaction *read_transaction() { return transaction_q.read_back(); } // read the oldest transaction without affecting the queue
+	transaction *read_transaction() const { return transaction_q.read_back(); } // read the oldest transaction without affecting the queue
 	transaction *get_refresh() { return refreshQueue.dequeue(); }
 	transaction *read_refresh() { return refreshQueue.read_back(); }
 	input_status_t enqueueRefresh(transaction *in) { return refreshQueue.enqueue(in); }

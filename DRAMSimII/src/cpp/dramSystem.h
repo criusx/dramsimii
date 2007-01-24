@@ -54,8 +54,8 @@ public:
 
 	friend std::ostream &operator<<(std::ostream &, const dramSystem &);
 	int convert_address(addresses &);
-	void *moveAllChannelsToTime(const tick_t endTime);
-	void *moveChannelToTime(const tick_t endTime, const int chan);
+	void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
+	void *moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime);
 	bool enqueue(transaction* trans);
 	void enqueueTimeShift(transaction* trans);
 	input_status_t waitForTransactionToFinish(transaction *trans);

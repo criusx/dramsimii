@@ -18,12 +18,32 @@ using namespace std;
 
 tick_t dramSystem::nextTick() const
 {
-	unsigned int oldestChannel = find_oldest_channel();
-	command *tempCommand = readNextCommand(oldestChannel);
-	if (tempCommand == NULL)
-		return 0;
+	int gap = INT_MAX;	
 
-	return time + minProtocolGap(oldestChannel, tempCommand);
+	for (int j = 0;j != channel.size(); j++)
+	{		
+		// first look for transactions
+		if (transaction *nextTrans = channel[j].read_transaction())
+		{
+			// FIXME: '2' represents what could be a variable related to queue delay
+			int tempGap = channel[j].get_time() - nextTrans->enqueueTime + 2;
+			if (tempGap < gap)
+				gap=tempGap;
+		}
+		// then check to see when the next command occurs
+		command *tempCommand = readNextCommand(j);
+		if (tempCommand)
+		{
+			int tempGap = minProtocolGap(j,tempCommand);
+			if (tempGap < gap)
+				gap = tempGap;
+		}
+	}
+
+	if (gap < INT_MAX)
+		return time + gap;
+	else 
+		return 0;
 }
 
 int dramSystem::convert_address(addresses &this_a)
