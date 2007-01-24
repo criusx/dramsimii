@@ -171,20 +171,19 @@ M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 
 void
 M5dramSystem::TickEvent::process()
-{
-	// find the ratio of the cpu frequency to the memory clock frequency
-	double ratio = (static_cast<double>(Clock::Frequency) / memory->ds->Frequency());
-	tick_t now = curTick / ratio;
+{	
+	tick_t now = curTick / memory->getCpuRatio();
 	cerr << "wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
 
 	tick_t finishTime;
 
 	// move memory channels to the current time
-	while (void *packet = memory->ds->moveAllChannelsToTime(now, &finishTime))
+	while (Packet *packet = (Packet *)memory->ds->moveAllChannelsToTime(now, &finishTime))
 	{
-		((Packet *)packet)->makeTimingResponse();
-		cerr << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * ratio) - curTick << endl;
-		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * ratio) - curTick);
+		memory->doFunctionalAccess(packet);
+		packet->makeTimingResponse();
+		cerr << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) - curTick << endl;
+		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio()) - curTick);
 	}
 
 	tick_t next = memory->ds->nextTick();
@@ -192,8 +191,8 @@ M5dramSystem::TickEvent::process()
 	{	
 		if (memory->tickEvent.scheduled())
 			memory->tickEvent.deschedule();
-		cerr << "scheduling for " << static_cast<Tick>(curTick + next * ratio) << endl;
-		memory->tickEvent.schedule(static_cast<Tick>(curTick + next * ratio));
+		cerr << "scheduling for " << static_cast<Tick>(curTick + next * memory->getCpuRatio()) << endl;
+		memory->tickEvent.schedule(static_cast<Tick>(curTick + next * memory->getCpuRatio()));
 	}
 }
 
@@ -209,9 +208,7 @@ M5dramSystem::recvTiming(Packet *pkt)
 	//if (pkt->getSrc() == )
 	//cerr << "from: " << pkt->getSrc() << "to: " << pkt->getDest() << "" << pkt->cmdString() << endl;
 	
-	//tickEvent.schedule(pkt->time + 0x0F);
-	
-	transaction *trans = new transaction(pkt->cmd,(tick_t)(pkt->time/Clock::Frequency*ds->Frequency()),pkt->getSize(),pkt->getAddr(),(void *)pkt);
+	transaction *trans = new transaction(pkt->cmd,(tick_t)(pkt->time/cpuRatio),pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 	// convert the physical address to chan, rank, bank, etc.
 	ds->convert_address(trans->addr);
@@ -241,8 +238,8 @@ M5dramSystem::recvTiming(Packet *pkt)
 		assert(next > 0);
 		if (next > 0)
 		{
-			cerr << "scheduling for " << next << "(" << Clock::Frequency/ds->Frequency()*next << ")" << " at " << curTick << endl;
-			tickEvent.schedule(Clock::Frequency/static_cast<tick_t>(ds->Frequency())*next);
+			cerr << "scheduling for " << cpuRatio * next + curTick << "(+" << next << ")" << " at " << curTick << endl;
+			tickEvent.schedule(cpuRatio * next + curTick);
 		}
 	}
 
@@ -259,7 +256,7 @@ M5dramSystem::recvTiming(Packet *pkt)
 		std::cerr << "RQ ";
 	else
 		std::cerr << "? ";
-	std::cerr << cpuRatio <<" " << Clock::Frequency << " " << curTick << " A" << trans->arrival_time << std::endl;
+	std::cerr <<  " @[" << curTick << "] A[" << trans->arrival_time << "]" << endl;
 	
 	//Tick latency = recvAtomic(pkt);
 	//doFunctionalAccess(pkt);
@@ -287,7 +284,7 @@ M5dramSystem::recvTiming(Packet *pkt)
 bool
 M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
-	cerr << "M5dramSystem::MemPort::recvTiming()" << endl;
+	cerr << "M5dramSystem::MemPort::recvTiming() wake @ " << curTick << endl;
 	memory->recvTiming(pkt);	
 	return true;
 }

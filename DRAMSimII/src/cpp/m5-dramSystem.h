@@ -86,6 +86,8 @@ public:
 	// allows other components to get a port which they can send packets to
 	virtual Port *getPort(const std::string &if_name, int idx = -1);
 
+	int getCpuRatio() const { return cpuRatio; }
+
 
 	struct Params: public PhysicalMemory::Params
 	{
