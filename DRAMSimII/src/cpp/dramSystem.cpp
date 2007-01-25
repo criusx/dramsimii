@@ -26,7 +26,7 @@ tick_t dramSystem::nextTick() const
 		if (transaction *nextTrans = channel[j].read_transaction())
 		{
 			// FIXME: '2' represents what could be a variable related to queue delay
-			int tempGap = channel[j].get_time() - nextTrans->enqueueTime + 2;
+			int tempGap = (channel[j].get_time() - nextTrans->enqueueTime) + 2;
 			if (tempGap < gap)
 				gap=tempGap;
 		}
@@ -41,7 +41,10 @@ tick_t dramSystem::nextTick() const
 	}
 
 	if (gap < INT_MAX)
+	{
+		cerr << "min gap is: " << std::dec << time + gap << endl;
 		return time + gap;
+	}
 	else 
 		return 0;
 }
@@ -83,7 +86,7 @@ int dramSystem::convert_address(addresses &this_a)
 	// strip away the byte address portion
 	input_a = this_a.phys_addr >> col_size_depth;
 
-	unsigned int address = this_a.phys_addr;
+	unsigned int address = static_cast<unsigned>(this_a.phys_addr);
 
 	unsigned cacheline_size;
 	unsigned cacheline_size_depth;	/* address bit depth */

@@ -169,6 +169,13 @@ M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 : Event(&mainEventQueue, CPU_Tick_Pri), memory(c)
 {}
 
+const char *
+M5dramSystem::TickEvent::description()
+{
+	return "m5dramSystem tick event";	
+}
+
+
 void
 M5dramSystem::TickEvent::process()
 {	
@@ -182,8 +189,9 @@ M5dramSystem::TickEvent::process()
 	{
 		memory->doFunctionalAccess(packet);
 		packet->makeTimingResponse();
-		cerr << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) - curTick << endl;
-		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio()) - curTick);
+		assert(curTick <= static_cast<Tick>(finishTime * memory->getCpuRatio()));
+		cerr << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << endl;
+		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio()));
 	}
 
 	tick_t next = memory->ds->nextTick();
@@ -196,11 +204,6 @@ M5dramSystem::TickEvent::process()
 	}
 }
 
-const char *
-M5dramSystem::TickEvent::description()
-{
-	return "m5dramSystem tick event";	
-}
 
 Tick
 M5dramSystem::recvTiming(Packet *pkt)
@@ -208,14 +211,14 @@ M5dramSystem::recvTiming(Packet *pkt)
 	//if (pkt->getSrc() == )
 	//cerr << "from: " << pkt->getSrc() << "to: " << pkt->getDest() << "" << pkt->cmdString() << endl;
 	
-	transaction *trans = new transaction(pkt->cmd,(tick_t)(pkt->time/cpuRatio),pkt->getSize(),pkt->getAddr(),(void *)pkt);
+	transaction *trans = new transaction(pkt->cmd,(tick_t)(curTick/cpuRatio),pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 	// convert the physical address to chan, rank, bank, etc.
 	ds->convert_address(trans->addr);
 
 	tick_t finishTime;
 	// wake the channel and do everything it was going to do up to this point
-	assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
+	//assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
 
 	assert(pkt->result != Packet::Nacked);
 	assert(pkt->needsResponse());

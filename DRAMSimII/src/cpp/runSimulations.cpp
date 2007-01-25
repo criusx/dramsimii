@@ -131,6 +131,7 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 	{
 		// attempt first to move transactions out of the transactions queue and
 		// convert them into commands
+		// FIXME: don't convert transactions until after a set period of time
 		transaction *temp_t = channel[chan].read_transaction();
 
 		// if there were no transactions left in the queue or there was not
@@ -192,6 +193,9 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 		}
 		else // successfully converted to commands, dequeue
 		{
+			cerr << "converted transaction to commands" << endl;
+			// FIXME: make this a timing variable
+			channel[chan].set_time(channel[chan].get_time() + 2);
 			assert(temp_t == channel[chan].get_transaction());
 		}
 	}
@@ -253,7 +257,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 				cerr << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 				// if the CAS command was just executed, then this command is effectively done
-				if (temp_c->host_t == trans)
+				if (temp_c->getHost() == trans)
 					return SUCCESS;
 			}
 		}

@@ -14,8 +14,8 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 
 	const dramChannel &channel = dramSystem::channel[channel_id];
 
-	const unsigned this_rank = this_c->addr.rank_id;
-	const unsigned this_bank = this_c->addr.bank_id;
+	const unsigned this_rank = this_c->getAddress().rank_id;
+	const unsigned this_bank = this_c->getAddress().bank_id;
 	const rank_c &this_r = channel.getRank(this_rank);
 	const bank_c &this_b = this_r.bank[this_bank];
 	tick_t now = channel.get_time();
@@ -25,9 +25,9 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 	int other_r_last_cas_length;
 	int other_r_last_casw_length;
 
-	int t_al = this_c->posted_cas ? timing_specification.t_al : 0;
+	int t_al = this_c->isPostedCAS() ? timing_specification.t_al : 0;
 
-	switch(this_c->this_command)
+	switch(this_c->getCommandType())
 	{
 	case RAS_COMMAND:
 		{

@@ -113,7 +113,7 @@ enum transaction_type_t	dramChannel::set_read_write_type(const int rank_id,const
 
 		if(temp_c != NULL)
 		{
-			if(temp_c->this_command == CAS_AND_PRECHARGE_COMMAND)
+			if(temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND)
 			{
 				read_count++;
 			}

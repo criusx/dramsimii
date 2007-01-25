@@ -41,13 +41,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 			// then add the command to all queues
 			for (vector<bank_c>::iterator i = rank.bank.begin(); i != rank.bank.end(); i++)
 			{
-				command *temp_c = new command;
-				temp_c->addr = this_t->addr;
-				temp_c->enqueue_time = time;
-				temp_c->start_time = channel[this_t->addr.chan_id].get_time();
-				temp_c->this_command = REFRESH_ALL_COMMAND;
-				temp_c->host_t = this_t;
-				i->per_bank_q.enqueue(temp_c);
+				i->per_bank_q.enqueue(new command(this_t->addr, REFRESH_ALL_COMMAND,time,this_t,system_config.posted_cas));
 			}
 		}
 		// every transaction translates into at least two commands
@@ -64,85 +58,51 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		else
 		{
 			// command one, the RAS command to activate the row
-			command *free_c = new command;
-
-			free_c->this_command = RAS_COMMAND;
-			// start time of the command is the same as the arrival time of the transaction
-			// because it is assumed that the movement from the transaction queue to the per
-			// bank queue is instantaneous
-			free_c->start_time = this_t->arrival_time;
-			free_c->enqueue_time = time;
-			free_c->addr = this_t->addr; // copy the addr stuff over
-			free_c->host_t = NULL;
-
-			bank_q->enqueue(free_c);
+			bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,time,NULL,system_config.posted_cas));
 
 			// command two, CAS or CAS+Precharge
-			free_c = new command;
 
-			// if CAS+Precharge is available
-			if(system_config.auto_precharge == false)
+			// if CAS+Precharge is unavailable
+			if (system_config.auto_precharge == false)
 			{
 				switch (this_t->type)
 				{
-				case WRITE_TRANSACTION:
-					free_c->this_command = CAS_WRITE_COMMAND;
+				case WRITE_TRANSACTION:					
+					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config.posted_cas));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					free_c->this_command = CAS_COMMAND;
+					bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config.posted_cas));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << this_t->type;
 					exit(-8);
 					break;
-				}
-
-				free_c->start_time = this_t->arrival_time;
-				free_c->enqueue_time = time;
-				free_c->addr = this_t->addr;
-				free_c->posted_cas = system_config.posted_cas;
-				free_c->host_t = this_t;				
-				free_c->length = this_t->length;
-				bank_q->enqueue(free_c);
+				}				
 
 				// command three, the Precharge command
-				free_c = new command;
-				free_c->this_command = PRECHARGE_COMMAND;
-				free_c->start_time = this_t->arrival_time;
-				free_c->enqueue_time = time;
-				free_c->addr = this_t->addr;
-				free_c->host_t = NULL; // only one of these commands has a pointer to the original transaction
-				bank_q->enqueue(free_c);
+				// only one of these commands has a pointer to the original transaction, thus NULL
+				bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,time,NULL,system_config.posted_cas));
 			}
 			else // precharge is implied, only need two commands
 			{
 				switch(this_t->type)
 				{
 				case WRITE_TRANSACTION:
-					free_c->this_command = CAS_WRITE_AND_PRECHARGE_COMMAND;
+					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_AND_PRECHARGE_COMMAND,time,this_t,system_config.posted_cas));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					free_c->this_command = CAS_AND_PRECHARGE_COMMAND;
+					bank_q->enqueue(new command(this_t->addr,CAS_AND_PRECHARGE_COMMAND,time,this_t,system_config.posted_cas));
 					break;
 				case PER_BANK_REFRESH_TRANSACTION:
-					free_c->this_command = PRECHARGE_COMMAND;
+					bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,time,this_t,system_config.posted_cas));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << this_t->type;
 					exit(-8);
 					break;
 				}
-
-				free_c->start_time = this_t->arrival_time;
-				free_c->enqueue_time = time;
-				free_c->addr = this_t->addr;		/* copy the addr stuff over */
-				free_c->posted_cas = system_config.posted_cas;
-				free_c->host_t = this_t;				
-				free_c->length = this_t->length;
-
-				bank_q->enqueue(free_c);
 			}
 		}
 	}
@@ -160,27 +120,18 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		{	
 			command *temp_c = bank_q->read(tail_offset);
 
-			if(temp_c->this_command == PRECHARGE_COMMAND) // found a precharge command
+			if (temp_c->getCommandType() == PRECHARGE_COMMAND) // found a precharge command
 			{
-				if(temp_c->addr.row_id == this_t->addr.row_id) // same row, insert here 
+				if (temp_c->getAddress().row_id == this_t->addr.row_id) // same row, insert here 
 				{
-					if(empty_command_slot_count < 1)
+					if (empty_command_slot_count < 1)
 						return FAILURE;
 
-					command *free_c = new command;
-
-					if(this_t->type == WRITE_TRANSACTION)
-						free_c->this_command = CAS_WRITE_COMMAND;
+					if (this_t->type == WRITE_TRANSACTION)
+						bank_q->insert(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config.posted_cas,this_t->length), tail_offset);	/* insert at this location */						
 					else if (this_t->type == READ_TRANSACTION)
-						free_c->this_command = CAS_COMMAND;
-					free_c->start_time = this_t->arrival_time;
-					free_c->enqueue_time = time;
-					free_c->addr = this_t->addr; /// copy the addr stuff over
-					free_c->host_t = this_t;
-
-					free_c->length = this_t->length;
-
-					bank_q->insert(free_c, tail_offset);	/* insert at this location */
+						bank_q->insert(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config.posted_cas,this_t->length), tail_offset);	/* insert at this location */
+					
 					return SUCCESS;
 				}
 			}
@@ -189,7 +140,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 			// command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
 
 			if ((system_config.command_ordering_algorithm == STRICT_ORDER) 
-				|| ((int)(time-temp_c->enqueue_time) > system_config.seniority_age_limit))
+				|| ((int)(time - temp_c->getEnqueueTime()) > system_config.seniority_age_limit))
 			{
 				bypass_allowed = false;
 			}
@@ -198,24 +149,16 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		{
 			return FAILURE;
 		}
-		command *free_c = new command;
 
-		free_c->this_command = RAS_COMMAND;
-		free_c->start_time = this_t->arrival_time;
-		free_c->enqueue_time = time;
-		free_c->addr = this_t->addr;		// copy the addr stuff over
-		free_c->host_t = NULL;
+		bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,time,NULL,system_config.posted_cas,this_t->length));
 
-		bank_q->enqueue(free_c);
-
-		free_c = new command;
 		if (this_t->type == WRITE_TRANSACTION)
 		{
-			free_c->this_command = CAS_WRITE_COMMAND;
+			bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config.posted_cas,this_t->length));
 		}
 		else if (this_t->type == READ_TRANSACTION)
 		{
-			free_c->this_command = CAS_COMMAND;
+			bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config.posted_cas,this_t->length));
 		}
 		else
 		{
@@ -223,21 +166,8 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 			exit(-8);
 		}
 
-		free_c->start_time = this_t->arrival_time;
-		free_c->enqueue_time = time;
-		free_c->posted_cas = system_config.posted_cas;
-		free_c->addr = this_t->addr;		// copy the addr stuff over
-		free_c->length = this_t->length;
-		// FIXME: not initializing the host_t value?
-		bank_q->enqueue(free_c);
-
-		free_c = new command;
-		free_c->this_command = PRECHARGE_COMMAND;
-		free_c->start_time = this_t->arrival_time;
-		free_c->enqueue_time = time;
-		free_c->addr = this_t->addr;		// copy the addr stuff over
-		free_c->host_t = NULL;
-		bank_q->enqueue(free_c);
+		// last, the precharge command
+		bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,time,NULL,system_config.posted_cas,this_t->length));
 	}
 	else
 	{

@@ -6,7 +6,6 @@
 #include <map>
 #include <fstream>
 
-
 #include "dramSystem.h"
 #include "rank_c.h"
 #include "globals.h"
@@ -15,8 +14,6 @@
 
 
 using namespace std;
-
-
 
 double ascii2multiplier(const string &input)
 {
@@ -394,9 +391,9 @@ file_io_token_t file_io_token(const string &input)
 
 ostream &operator<<(ostream &os, const transaction *this_t)
 {
-	os << "S[" << setw(8) << std::hex << this_t->arrival_time << "] ";
+	os << "S[" << setw(8) << std::dec << this_t->arrival_time << "] ";
 	os << this_t->type;
-	os << "E[" << setw(8) << std::hex << this_t->completion_time << "]" 
+	os << "E[" << setw(8) << std::dec << this_t->completion_time << "]" 
 		<< " PA[0x" << std::hex << this_t->addr.phys_addr << "]";
 	return os;
 }

@@ -34,6 +34,52 @@ command::command()
 	length = 0;
 }
 
+command::command(const addresses address, const command_type_t commandType, const tick_t enqueueTime, transaction *hostTransaction, const bool postedCAS):
+this_command(commandType),
+start_time(-1),
+enqueue_time(enqueueTime),
+completion_time(-1),
+addr(address),
+host_t(hostTransaction),
+link_comm_tran_comp_time(0),
+amb_proc_comp_time(0),
+dimm_comm_tran_comp_time(0),
+dram_proc_comp_time(0),
+dimm_data_tran_comp_time(0),
+amb_down_proc_comp_time(0),
+link_data_tran_comp_time(0),
+bundle_id(0),
+tran_id(0),
+data_word(0),
+data_word_position(0),
+refresh(0),
+posted_cas(postedCAS),
+length(0)
+{}
+
+command::command(const addresses address, const command_type_t commandType, const tick_t enqueueTime, transaction *hostTransaction, const bool postedCAS, const int _length):
+this_command(commandType),
+start_time(-1),
+enqueue_time(enqueueTime),
+completion_time(-1),
+addr(address),
+host_t(hostTransaction),
+link_comm_tran_comp_time(0),
+amb_proc_comp_time(0),
+dimm_comm_tran_comp_time(0),
+dram_proc_comp_time(0),
+dimm_data_tran_comp_time(0),
+amb_down_proc_comp_time(0),
+link_data_tran_comp_time(0),
+bundle_id(0),
+tran_id(0),
+data_word(0),
+data_word_position(0),
+refresh(0),
+posted_cas(postedCAS),
+length(_length)
+{}
+
 ostream &operator<<(ostream &os, const command_type_t &command)
 {
 	switch(command)
@@ -82,7 +128,7 @@ ostream &operator<<(ostream &os, const command_type_t &command)
 }
 ostream &operator<<(ostream &os, const command &this_c)
 {
-	os << this_c.this_command << this_c.addr << " S[" << std::hex << this_c.start_time << "] Q[" << std::hex << this_c.enqueue_time << "] E[" << std::hex << this_c.completion_time << "] T[" << this_c.completion_time - this_c.start_time << "] D[" << this_c.start_time - this_c.enqueue_time << "]";
+	os << this_c.this_command << this_c.addr << " S[" << std::dec << this_c.start_time << "] Q[" << std::dec << this_c.enqueue_time << "] E[" << std::dec << this_c.completion_time << std::dec << "] T[" << this_c.completion_time - this_c.start_time << "] DLY[" << std::dec << this_c.start_time - this_c.enqueue_time << "]";
 	return os;
 }
 
