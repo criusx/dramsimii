@@ -9,6 +9,7 @@
 #include <cmath>
 #include <map>
 #include <vector>
+#include <assert.h>
 
 #include "rank_c.h"
 #include "dramSystem.h"
@@ -26,9 +27,10 @@ tick_t dramSystem::nextTick() const
 		if (transaction *nextTrans = channel[j].read_transaction())
 		{
 			// FIXME: '2' represents what could be a variable related to queue delay
-			int tempGap = (channel[j].get_time() - nextTrans->enqueueTime) + 2;
+			int tempGap = (nextTrans->enqueueTime - channel[j].get_time()) + 2;
+			assert(tempGap <= 2);
 			if (tempGap < gap)
-				gap=tempGap;
+				gap=max(0,tempGap);
 		}
 		// then check to see when the next command occurs
 		command *tempCommand = readNextCommand(j);
@@ -42,8 +44,8 @@ tick_t dramSystem::nextTick() const
 
 	if (gap < INT_MAX)
 	{
-		cerr << "min gap is: " << std::dec << time + gap << endl;
-		return time + gap;
+		//cerr << "min gap is: " << std::dec << gap << endl;
+		return gap;
 	}
 	else 
 		return 0;

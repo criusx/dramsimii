@@ -13,7 +13,6 @@ class command
 private:
 	static queue<command> freeCommandPool; // command objects are stored here to avoid allocating memory after initialization
 
-//public:
 	command_type_t this_command;	// which command is this?
 	tick_t start_time;				// when did the command start?
 	tick_t enqueue_time;			// when did it make it into the per bank command queue?

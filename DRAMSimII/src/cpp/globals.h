@@ -65,9 +65,9 @@ class dramSystem;
 
 //#define DEBUG_FLAG
 
-#define DEBUG_COMMAND
+//#define DEBUG_COMMAND
 
-#define DEBUG_TRANSACTION
+//#define DEBUG_TRANSACTION
 
 //#define DEBUG_RAND
 

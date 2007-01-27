@@ -176,47 +176,49 @@ M5dramSystem::TickEvent::description()
 }
 
 
-void
-M5dramSystem::TickEvent::process()
-{	
-	tick_t now = curTick / memory->getCpuRatio();
-	cerr << "wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
 
-	tick_t finishTime;
+//#define TESTNORMAL
 
-	// move memory channels to the current time
-	while (Packet *packet = (Packet *)memory->ds->moveAllChannelsToTime(now, &finishTime))
-	{
-		memory->doFunctionalAccess(packet);
-		packet->makeTimingResponse();
-		assert(curTick <= static_cast<Tick>(finishTime * memory->getCpuRatio()));
-		cerr << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << endl;
-		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio()));
-	}
+bool
+M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
+{ 
+	cerr << "M5dramSystem::MemPort::recvTiming() wake @ " << curTick << "(" << curTick / memory->getCpuRatio() << ") ";
+	// calculate the time elapsed from when the transaction started
+	if (pkt->isRead())
+		cerr << "R ";
+	else if (pkt->isWrite())
+		cerr << "W ";
+	else if (pkt->isRequest())
+		cerr << "RQ ";
+	else
+		cerr << "? ";
 
-	tick_t next = memory->ds->nextTick();
-	if (next > 0)
-	{	
-		if (memory->tickEvent.scheduled())
-			memory->tickEvent.deschedule();
-		cerr << "scheduling for " << static_cast<Tick>(curTick + next * memory->getCpuRatio()) << endl;
-		memory->tickEvent.schedule(static_cast<Tick>(curTick + next * memory->getCpuRatio()));
-	}
+#ifdef TESTNORMAL
+	memory->doFunctionalAccess(pkt);
+	pkt->makeTimingResponse();
+	cerr << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
+	sendTiming(pkt, 95996);
+#else
+	memory->recvTiming(pkt);	
+#endif
+	return true;
 }
-
 
 Tick
 M5dramSystem::recvTiming(Packet *pkt)
 {
-	//if (pkt->getSrc() == )
-	//cerr << "from: " << pkt->getSrc() << "to: " << pkt->getDest() << "" << pkt->cmdString() << endl;
-	
 	transaction *trans = new transaction(pkt->cmd,(tick_t)(curTick/cpuRatio),pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 	// convert the physical address to chan, rank, bank, etc.
 	ds->convert_address(trans->addr);
 
-	tick_t finishTime;
+	// move channels to current time so that calculations based on current channel times work
+	// should also not start/finish any commands, since this would happen at a scheduled time
+	// instead of now
+	tick_t nearFinishTime;
+	assert(!ds->moveAllChannelsToTime(curTick/cpuRatio,&nearFinishTime));
+
+	//tick_t finishTime;
 	// wake the channel and do everything it was going to do up to this point
 	//assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
 
@@ -237,33 +239,19 @@ M5dramSystem::recvTiming(Packet *pkt)
 	{
 		if (tickEvent.scheduled())
 			tickEvent.deschedule();
+
+		doFunctionalAccess(pkt);
+		pkt->makeTimingResponse();
+
 		tick_t next = ds->nextTick();
 		assert(next > 0);
 		if (next > 0)
 		{
-			cerr << "scheduling for " << cpuRatio * next + curTick << "(+" << next << ")" << " at " << curTick << endl;
+			//cerr << "scheduling for " << cpuRatio * next + curTick << "(+" << next << ")" << " at " << curTick << "(" << curTick / getCpuRatio() << ")" << endl;
 			tickEvent.schedule(cpuRatio * next + curTick);
 		}
 	}
 
-	// run time forward until the transaction completes
-	//if (ds->waitForTransactionToFinish(trans) == FAILURE)
-	//	std::cerr << "failed" << std::endl;
-
-	// calculate the time elapsed from when the transaction started
-	if (pkt->isRead())
-		std::cerr << "R ";
-	else if (pkt->isWrite())
-		std::cerr << "W ";
-	else if (pkt->isRequest())
-		std::cerr << "RQ ";
-	else
-		std::cerr << "? ";
-	std::cerr <<  " @[" << curTick << "] A[" << trans->arrival_time << "]" << endl;
-	
-	//Tick latency = recvAtomic(pkt);
-	//doFunctionalAccess(pkt);
-	//Tick latency = memory->calculateLatency(pkt);
 	// turn packet around to go back to requester if response expected
 	if (pkt->needsResponse()) 
 	{
@@ -284,16 +272,36 @@ M5dramSystem::recvTiming(Packet *pkt)
 	return 0;
 }
 
-bool
-M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
-{ 
-	cerr << "M5dramSystem::MemPort::recvTiming() wake @ " << curTick << endl;
-	memory->recvTiming(pkt);	
-	return true;
+void
+M5dramSystem::TickEvent::process()
+{	
+	tick_t now = curTick / memory->getCpuRatio();
+	//cerr << "wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
+
+	tick_t finishTime;
+
+	// move memory channels to the current time
+	while (Packet *packet = (Packet *)memory->ds->moveAllChannelsToTime(now, &finishTime))
+	{
+		//memory->doFunctionalAccess(packet);
+		//packet->makeTimingResponse();
+		assert(curTick <= static_cast<Tick>(finishTime * memory->getCpuRatio()));
+		cerr << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick) << endl;
+		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick));
+	}
+
+	// deschedule yourself
+	if (memory->tickEvent.scheduled())
+		memory->tickEvent.deschedule();
+
+	tick_t next = memory->ds->nextTick();
+
+	if (next > 0)
+	{	
+		//cerr << "scheduling for " << static_cast<Tick>(curTick + next * memory->getCpuRatio()) << "(+" << next << ")" << endl;
+		memory->tickEvent.schedule(static_cast<Tick>(curTick + next * memory->getCpuRatio()));
+	}
 }
-
-
-
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

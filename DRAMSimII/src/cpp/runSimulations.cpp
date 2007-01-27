@@ -31,7 +31,7 @@ void dramSystem::run_simulations2()
 			// first try to update the channel so that it is one command past this
 			// transaction's start time
 			tick_t finishTime;
-			while (!moveChannelToTime(input_t->arrival_time,chan,&finishTime)) {;}
+			while (moveChannelToTime(input_t->arrival_time,chan,&finishTime)) {;}
 
 			// attempt to enqueue, if there is no room, move time forward until there is
 			enqueueTimeShift(input_t);
@@ -51,7 +51,9 @@ bool dramSystem::enqueue(transaction *trans)
 {
 
 	if (channel[trans->addr.chan_id].enqueue(trans) == FAILURE)
+	{
 		return false;
+	}
 	else
 	{
 		trans->enqueueTime = channel[trans->addr.chan_id].get_time();
@@ -115,6 +117,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 /// If a transaction completes, then it is returned without completing the movement
 void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime)
 {
+	//cerr << "move forward until: " << endTime << endl;
 	for (int i = 0; i < channel.size(); i++)
 	{
 		void *finishedTrans = moveChannelToTime(endTime, i, transFinishTime);
@@ -178,9 +181,11 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 						void *origTrans = NULL;
 						
 						if (completed_t->originalTransaction)
-							origTrans = completed_t->originalTransaction;
+							origTrans = completed_t->originalTransaction;						
+#ifdef M5
 						else
 							cerr << "transaction completed, not REFRESH, no orig trans" << endl;
+#endif
 						
 						delete completed_t;
 
@@ -193,12 +198,13 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 		}
 		else // successfully converted to commands, dequeue
 		{
-			cerr << "converted transaction to commands" << endl;
+			//cerr << "converted transaction to commands" << endl;
 			// FIXME: make this a timing variable
 			channel[chan].set_time(channel[chan].get_time() + 2);
 			assert(temp_t == channel[chan].get_transaction());
 		}
 	}
+	//cerr << "ch[" << chan << "] @ " << channel[chan].get_time() << endl;
 	return NULL;
 }
 

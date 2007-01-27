@@ -13,7 +13,9 @@ using namespace std;
 enum input_status_t dramSystem::transaction2commands(transaction *this_t) 
 {
 	if (this_t == NULL)
-	return FAILURE;
+	{
+		return FAILURE;
+	}
 	//cerr << this_t << endl;
 	queue<command> *bank_q = &(channel[this_t->addr.chan_id].getRank(this_t->addr.rank_id).bank[this_t->addr.bank_id].per_bank_q);
 	
@@ -41,7 +43,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 			// then add the command to all queues
 			for (vector<bank_c>::iterator i = rank.bank.begin(); i != rank.bank.end(); i++)
 			{
-				i->per_bank_q.enqueue(new command(this_t->addr, REFRESH_ALL_COMMAND,time,this_t,system_config.posted_cas));
+				i->per_bank_q.enqueue(new command(this_t->addr, REFRESH_ALL_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
 			}
 		}
 		// every transaction translates into at least two commands
@@ -58,7 +60,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		else
 		{
 			// command one, the RAS command to activate the row
-			bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,time,NULL,system_config.posted_cas));
+			bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,channel[this_t->addr.chan_id].get_time(),NULL,system_config.posted_cas));
 
 			// command two, CAS or CAS+Precharge
 
@@ -68,11 +70,11 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 				switch (this_t->type)
 				{
 				case WRITE_TRANSACTION:					
-					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << this_t->type;
@@ -82,21 +84,21 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 
 				// command three, the Precharge command
 				// only one of these commands has a pointer to the original transaction, thus NULL
-				bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,time,NULL,system_config.posted_cas));
+				bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),NULL,system_config.posted_cas));
 			}
 			else // precharge is implied, only need two commands
 			{
 				switch(this_t->type)
 				{
 				case WRITE_TRANSACTION:
-					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_AND_PRECHARGE_COMMAND,time,this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_AND_PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					bank_q->enqueue(new command(this_t->addr,CAS_AND_PRECHARGE_COMMAND,time,this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,CAS_AND_PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
 					break;
 				case PER_BANK_REFRESH_TRANSACTION:
-					bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,time,this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << this_t->type;
@@ -128,9 +130,9 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 						return FAILURE;
 
 					if (this_t->type == WRITE_TRANSACTION)
-						bank_q->insert(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config.posted_cas,this_t->length), tail_offset);	/* insert at this location */						
+						bank_q->insert(new command(this_t->addr,CAS_WRITE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length), tail_offset);	/* insert at this location */						
 					else if (this_t->type == READ_TRANSACTION)
-						bank_q->insert(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config.posted_cas,this_t->length), tail_offset);	/* insert at this location */
+						bank_q->insert(new command(this_t->addr,CAS_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length), tail_offset);	/* insert at this location */
 					
 					return SUCCESS;
 				}
@@ -140,7 +142,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 			// command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
 
 			if ((system_config.command_ordering_algorithm == STRICT_ORDER) 
-				|| ((int)(time - temp_c->getEnqueueTime()) > system_config.seniority_age_limit))
+				|| ((int)(channel[this_t->addr.chan_id].get_time() - temp_c->getEnqueueTime()) > system_config.seniority_age_limit))
 			{
 				bypass_allowed = false;
 			}
@@ -150,15 +152,15 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 			return FAILURE;
 		}
 
-		bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,time,NULL,system_config.posted_cas,this_t->length));
+		bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,channel[this_t->addr.chan_id].get_time(),NULL,system_config.posted_cas,this_t->length));
 
 		if (this_t->type == WRITE_TRANSACTION)
 		{
-			bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config.posted_cas,this_t->length));
+			bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length));
 		}
 		else if (this_t->type == READ_TRANSACTION)
 		{
-			bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config.posted_cas,this_t->length));
+			bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length));
 		}
 		else
 		{
@@ -167,7 +169,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		}
 
 		// last, the precharge command
-		bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,time,NULL,system_config.posted_cas,this_t->length));
+		bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),NULL,system_config.posted_cas,this_t->length));
 	}
 	else
 	{

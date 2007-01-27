@@ -389,50 +389,6 @@ file_io_token_t file_io_token(const string &input)
 }
 
 
-ostream &operator<<(ostream &os, const transaction *this_t)
-{
-	os << "S[" << setw(8) << std::dec << this_t->arrival_time << "] ";
-	os << this_t->type;
-	os << "E[" << setw(8) << std::dec << this_t->completion_time << "]" 
-		<< " PA[0x" << std::hex << this_t->addr.phys_addr << "]";
-	return os;
-}
-
-ostream &operator<<(ostream &os, const transaction_type_t type)
-{
-	switch (type)
-	{
-	case IFETCH_TRANSACTION:
-		os << "FETCH  ";
-		break;
-	case WRITE_TRANSACTION:
-		os << "WRITE  ";
-		break;
-	case READ_TRANSACTION:
-		os << "READ   ";
-		break;
-	case PREFETCH_TRANSACTION:
-		os << "PREFET ";
-		break;
-	case AUTO_REFRESH_TRANSACTION:
-		os << "REFRSH ";
-		break;
-	case PER_BANK_REFRESH_TRANSACTION:
-		os << "BNKREF ";
-		break;
-	case AUTO_PRECHARGE_TRANSACTION:
-		os << "AUTOPR ";
-		break;
-	case CONTROL_TRANSACTION:
-		os << "CTRL   ";
-		break;
-	default:
-		os << "UNKWN  ";
-		break;
-	}
-	return os;
-}
-
 
 ostream &operator<<(ostream &os, const dramSystem &this_a)
 {
