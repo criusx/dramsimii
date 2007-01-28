@@ -215,12 +215,12 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 
 	if(type == K6_TRACE)
 	{
-		int base_control;
+		//int base_control;
 		enum transaction_type_t attributes;
-		int burst_length = 4; /* Socket 7 cachelines are 32 byte long, burst of 4 */
+		int burst_length = 4; // Socket 7 cachelines are 32 byte long, burst of 4
 		int burst_count;
 		bool bursting = true;
-		double multiplier;
+		//double multiplier;
 		tick_t timestamp;
 		int address;
 
@@ -261,11 +261,11 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 				(((this_e.address.phys_addr ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
 			{
 				bursting = false;
-				timestamp *= ascii2multiplier(input);
-				this_e.address.phys_addr 	= 0x3FFFFFFF & address;		/* mask out top addr bit */
-				this_e.attributes 	= CONTROL_TRANSACTION;
-				this_e.timestamp 	= timestamp;
-				burst_count 		= 1;
+				timestamp = static_cast<tick_t>(static_cast<double>(timestamp) * ascii2multiplier(input));
+				this_e.address.phys_addr = 0x3FFFFFFF & address; // mask out top addr bit
+				this_e.attributes = CONTROL_TRANSACTION;
+				this_e.timestamp = timestamp;
+				burst_count = 1;
 			}
 			else
 			{

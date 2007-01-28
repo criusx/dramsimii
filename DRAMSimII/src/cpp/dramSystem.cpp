@@ -10,6 +10,7 @@
 #include <map>
 #include <vector>
 #include <assert.h>
+#include <xutility>
 
 #include "rank_c.h"
 #include "dramSystem.h"
@@ -28,6 +29,7 @@ tick_t dramSystem::nextTick() const
 		{
 			// FIXME: '2' represents what could be a variable related to queue delay
 			int tempGap = (nextTrans->enqueueTime - channel[j].get_time()) + 2;
+			assert((nextTrans->enqueueTime - channel[j].get_time() + 2) <= INT_MAX);
 			assert(tempGap <= 2);
 			if (tempGap < gap)
 				gap=max(0,tempGap);

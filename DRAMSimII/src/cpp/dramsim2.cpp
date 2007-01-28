@@ -54,7 +54,12 @@ busEvent::busEvent()
 	attributes = CONTROL_TRANSACTION;
 }
 
-addresses::addresses()
-{
-	virt_addr = phys_addr = chan_id = rank_id = bank_id = row_id = col_id = 0;
-}
+addresses::addresses():
+virt_addr(0),
+phys_addr(0),
+chan_id(0),
+rank_id(0),
+bank_id(0),
+row_id(0),
+col_id(0)
+{}

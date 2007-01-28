@@ -118,7 +118,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime)
 {
 	//cerr << "move forward until: " << endTime << endl;
-	for (int i = 0; i < channel.size(); i++)
+	for (unsigned i = 0; i < channel.size(); i++)
 	{
 		void *finishedTrans = moveChannelToTime(endTime, i, transFinishTime);
 		if (finishedTrans)
