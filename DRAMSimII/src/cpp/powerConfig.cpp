@@ -2,17 +2,13 @@
 #include <sstream>
 #include <string>
 
+#include "globals.h"
 #include "enumTypes.h"
 #include "powerConfig.h"
 
 
 
-template <class T>
-bool toNumeric(T& t, const std::string& s, std::ios_base& (*f)(std::ios_base&))
-{
-	std::istringstream iss(s);
-	return !(iss >> f >> t).fail();
-}
+
 
 using namespace std;
 
@@ -83,4 +79,9 @@ powerConfig::powerConfig(std::map<file_io_token_t,std::string> &parameter)
 
 powerConfig::~powerConfig(void)
 {
+}
+
+void recordCommand(const command *)
+{
+
 }

@@ -26,6 +26,7 @@ private:
 	int t_wtr;			// write to read turnaround time
 	int t_cmd;			// command bus duration...
 	int t_int_burst;	// internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3
+	int t_buffer_delay;	// the delay a transaction experiences before it can be converted to a series of commands
 
 public:
 	explicit dramTimingSpecification(std::map<file_io_token_t, std::string> &);

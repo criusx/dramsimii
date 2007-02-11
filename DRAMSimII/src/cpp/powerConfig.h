@@ -18,6 +18,8 @@ protected:
 	int IDD4W; // Operating Burst Write Current in mA
 	int IDD5; // Burst Refresh Current in mA
 
+	void recordCommand(const command *);
+
 
 public:
 	powerConfig();

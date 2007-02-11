@@ -158,6 +158,7 @@ enum file_io_token_t
 	short_burst_ratio_token,
 	system_configuration_type_token,
 	t_al_token,
+	t_buffer_delay_token,
 	t_burst_token,
 	t_cac_token,
 	t_cas_token,

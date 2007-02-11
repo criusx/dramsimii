@@ -19,6 +19,7 @@ To do list:
 #pragma once
 
 #include <limits>
+#include <sstream>
 
 #define tick_t long long
 //#define TICK_T_MAX LLONG_MAX
@@ -65,9 +66,9 @@ class dramSystem;
 
 //#define DEBUG_FLAG
 
-//#define DEBUG_COMMAND
+#define DEBUG_COMMAND
 
-//#define DEBUG_TRANSACTION
+#define DEBUG_TRANSACTION
 
 //#define DEBUG_RAND
 
@@ -83,6 +84,14 @@ unsigned inline log2(unsigned input)
 		l2++;
 	}
 	return l2;
+}
+
+
+template <class T>
+bool toNumeric(T& t, const std::string& s, std::ios_base& (*f)(std::ios_base&))
+{
+	std::istringstream iss(s);
+	return !(iss >> f >> t).fail();
 }
 
 // overloaded insertion operator functions for printing various aspects of the dram system

@@ -10,7 +10,6 @@
 #include <map>
 #include <vector>
 #include <assert.h>
-#include <xutility>
 
 #include "rank_c.h"
 #include "dramSystem.h"
@@ -18,42 +17,50 @@
 
 using namespace std;
 
+// returns the time when the memory system next has an event
+// the event may either be a conversion of a transaction into commands
+// or it may be the next time a command may be issued
 tick_t dramSystem::nextTick() const
 {
-	int gap = INT_MAX;	
+	tick_t nextWake = INT_MAX;
 
 	for (int j = 0;j != channel.size(); j++)
 	{		
 		// first look for transactions
 		if (transaction *nextTrans = channel[j].read_transaction())
 		{
-			// FIXME: '2' represents what could be a variable related to queue delay
-			int tempGap = (nextTrans->enqueueTime - channel[j].get_time()) + 2;
-			assert((nextTrans->enqueueTime - channel[j].get_time() + 2) <= INT_MAX);
-			assert(tempGap <= 2);
-			if (tempGap < gap)
-				gap=max(0,tempGap);
+			int tempGap = (nextTrans->enqueueTime - channel[j].get_time()) + timing_specification.t_buffer_delay + 1; // make sure it can finish
+			tempGap = max(1,tempGap);
+			assert(tempGap <= timing_specification.t_buffer_delay + 1);
+			if ((tempGap + channel[j].get_time() < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
+			{
+				nextWake = tempGap + channel[j].get_time();
+			}
 		}
 		// then check to see when the next command occurs
 		command *tempCommand = readNextCommand(j);
 		if (tempCommand)
 		{
 			int tempGap = minProtocolGap(j,tempCommand);
-			if (tempGap < gap)
-				gap = tempGap;
+			if (tempGap + channel[j].get_time() < nextWake)
+			{
+				nextWake = tempGap + channel[j].get_time();
+			}
 		}
 	}
 
-	if (gap < INT_MAX)
+	if (nextWake < INT_MAX)
 	{
 		//cerr << "min gap is: " << std::dec << gap << endl;
-		return gap;
+		return nextWake;
 	}
 	else 
+	{
 		return 0;
+	}
 }
 
-int dramSystem::convert_address(addresses &this_a)
+int dramSystem::convert_address(addresses &this_a) const
 {
 	unsigned int input_a;
 	unsigned int temp_a, temp_b;
@@ -596,10 +603,6 @@ void dramSystem::get_next_random_request(transaction *this_t)
 	}
 }
 
-
-
-
-
 enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
 {
 	static transaction *temp_t;
@@ -656,12 +659,6 @@ enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
 	}
 	return SUCCESS;
 }
-
-
-
-
-
-
 
 void dramSystem::set_dram_timing_specification(enum dram_type_t dram_type)
 {
@@ -817,7 +814,7 @@ int dramSystem::find_oldest_channel() const
 	int oldest_chan_id = 0;
 	tick_t oldest_time = channel[0].get_time();
 
-	for (int chan_id = 1; chan_id < channel.size() ; ++chan_id)
+	for (unsigned chan_id = 1; chan_id < channel.size() ; ++chan_id)
 	{
 		if (channel[chan_id].get_time() < oldest_time)
 		{

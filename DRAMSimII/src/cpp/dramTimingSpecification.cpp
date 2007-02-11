@@ -1,6 +1,8 @@
 #include <map>
 #include <string>
 #include <sstream>
+
+#include "globals.h"
 #include "enumTypes.h"
 #include "dramTimingSpecification.h"
 
@@ -66,24 +68,21 @@ dramTimingSpecification::dramTimingSpecification(map<file_io_token_t,string> &pa
 			t_al = 0;
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_al;
+			toNumeric<int>(t_al,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_burst_token))==parameter.end())
 			t_burst = 8;/* depending on system config! can be 4, or 8 */
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_burst;
+			toNumeric<int>(t_burst,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_cas_token))==parameter.end())
 			t_cas = 10;
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_cas;
+			toNumeric<int>(t_cas,temp->second,std::dec);
 		}
 
 		t_cmd = 2;	// protocol specific, cannot be changed
@@ -93,107 +92,119 @@ dramTimingSpecification::dramTimingSpecification(map<file_io_token_t,string> &pa
 		t_int_burst = 4;	// protocol specific, cannot be changed
 
 		if ((temp=parameter.find(t_faw_token))==parameter.end())
+		{
 			t_faw = 30;
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_faw;
+			toNumeric<int>(t_faw,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_ras_token))==parameter.end())
-			t_ras = 36;/* 45 ns @ 1.25ns per beat = 36 beats */
+		{
+			t_ras = 36;	// 45 ns @ 1.25ns per beat = 36 beats
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_ras;
+			toNumeric<int>(t_ras,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_rp_token))==parameter.end())
-			t_rp = 10;/* 12 ns @ 1.25ns per beat = 9.6 beats */
+		{
+			t_rp = 10;	// 12 ns @ 1.25ns per beat = 9.6 beats
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_rp;
+			toNumeric<int>(t_rp,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_rc_token))==parameter.end())
+		{
 			t_rc = t_ras + t_rp; // if it is not defined as anything else, set it to this defined value
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_rc;
+			toNumeric<int>(t_rc,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_rcd_token))==parameter.end())
+		{
 			t_rcd = 10;
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_rcd;
+			toNumeric<int>(t_rcd,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_rfc_token))==parameter.end())
-			t_rfc = 102;/* 128 ns @ 1.25ns per beat ~= 102 beats */
+		{
+			t_rfc = 102;	// 128 ns @ 1.25ns per beat ~= 102 beats
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_rfc;
+			toNumeric<int>(t_rfc,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_rrd_token))==parameter.end())
-			t_rrd = 6;/* 7.5 ns */
+		{
+			t_rrd = 6;	// 7.5 ns
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_rrd;
+			toNumeric<int>(t_rrd,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_rtp_token))==parameter.end())
+		{
 			t_rtp = 6;
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_rtp;
+			toNumeric<int>(t_rtp,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_rtrs_token))==parameter.end())
+		{
 			t_rtrs = 2;
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_rtrs;
+			toNumeric<int>(t_rtrs,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_wr_token))==parameter.end())
+		{
 			t_wr = 12;
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_wr;
+			toNumeric<int>(t_wr,temp->second,std::dec);
 		}
 
 		if ((temp=parameter.find(t_wtr_token))==parameter.end())
+		{
 			t_wtr = 6;
+		}
 		else
 		{
-			stringstream temp2(temp->second);
-			temp2 >> t_wtr;
+			toNumeric<int>(t_wtr,temp->second,std::dec);
 		}
 	}
-	else if (temp->second == "ddr3")					/* @ 1.33 Gbps = 0.75 ns per beat */
+	else if (temp->second == "ddr3")
 	{
+		// defaults to @ 1.33 Gbps = 0.75 ns per beat
 		t_al = 0;
 		t_burst = 8;	// protocol specific, cannot be changed 
 		t_cas = 10;
-		t_cmd = 2;		/* protocol specific, cannot be changed */
+		t_cmd = 2;		// protocol specific, cannot be changed
 		t_cwd = t_cas - 2;
-		t_int_burst = 8;		/* protocol specific, cannot be changed */
+		t_int_burst = 8;	// protocol specific, cannot be changed
 		t_faw = 30;
-		t_ras = 36;		/* 27 ns @ 0.75ns per beat = 36 beats */
-		t_rc = 48;		/* 36 ns @ 0.75ns per beat = 48 beats */
+		t_ras = 36;	// 27 ns @ 0.75ns per beat = 36 beats
+		t_rc = 48;	// 36 ns @ 0.75ns per beat = 48 beats
 		t_rcd = 12;
 		t_rfc = 280;
-		t_rp = 12;		/* 9 ns @ 0.75ns per beat = 12 beats */
+		t_rp = 12;	// 9 ns @ 0.75ns per beat = 12 beats
 		t_rrd = 8;
 		t_rtrs = 2;
 		t_rtp = 8;
@@ -201,14 +212,23 @@ dramTimingSpecification::dramTimingSpecification(map<file_io_token_t,string> &pa
 		t_wtr = 8;
 
 	}
-	else if (temp->second == "drdram")					/* FIXME */
+	else if (temp->second == "drdram")
 	{
-		;/* not currently supported */
+		;// FIXME: DRDRAM not currently supported
 	}
 
 	if ((temp=parameter.find(t_rtrs_token))!=parameter.end())
 	{
-		stringstream temp2(temp->second);
-		temp2 >> t_rtrs;
+		toNumeric<int>(t_rtrs,temp->second,std::dec);
+	}
+
+	// set the delay for the transaction to command buffer delay
+	if ((temp=parameter.find(t_buffer_delay_token)) != parameter.end())
+	{
+		toNumeric<int>(t_buffer_delay,temp->second,std::dec);
+	}
+	else
+	{
+		t_buffer_delay = 2; // just a default value
 	}
 }

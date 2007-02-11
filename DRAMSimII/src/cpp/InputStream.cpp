@@ -109,7 +109,7 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 ///
 /// from the book "Numerical Recipes in C: The Art of Scientific Computing"///
 
-double inputStream::poisson_rng (double xm)
+double inputStream::poisson_rng (double xm) const
 {	
 	static double sq, alxm, g, oldm = (-1.0);
 	double em, t, y;
@@ -176,7 +176,8 @@ double inputStream::gammaln(const double xx) const
 
 }
 
-double inputStream::box_muller(double m, double s) {
+double inputStream::box_muller(double m, double s) const
+{
 	double w, y1;
 	static double y2;
 	static int use_last = 0;

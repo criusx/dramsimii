@@ -56,6 +56,9 @@ bool dramSystem::enqueue(transaction *trans)
 	}
 	else
 	{
+#ifdef M5DEBUG
+		cerr << "queue size is: " << channel[trans->addr.chan_id].getTransactionQueueCount() << endl;
+#endif
 		trans->enqueueTime = channel[trans->addr.chan_id].get_time();
 		return true;
 	}
@@ -130,81 +133,121 @@ void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinis
 /// Moves the specified channel to at least the time given
 void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime)
 {
+	bool processingTransaction = false;
+
 	while (channel[chan].get_time() < endTime)
 	{
 		// attempt first to move transactions out of the transactions queue and
-		// convert them into commands
-		// FIXME: don't convert transactions until after a set period of time
-		transaction *temp_t = channel[chan].read_transaction();
+		// convert them into commands after a fixed amount of time		
+		transaction *temp_t = channel[chan].read_transaction();		
+
+		if ((temp_t) && (channel[chan].get_time() - temp_t->enqueueTime < timing_specification.t_buffer_delay))
+		{
+#ifdef M5DEBUG
+			cerr << "resetting: ";
+			cerr << channel[chan].get_time() << " ";
+			cerr << temp_t->enqueueTime << " ";
+			cerr << timing_specification.t_buffer_delay << endl;
+#endif
+			temp_t = NULL; // not enough time has passed
+			processingTransaction = true;
+		}
+
 
 		// if there were no transactions left in the queue or there was not
 		// enough room to split the transaction into commands
 		if ((temp_t == NULL) || (transaction2commands(temp_t) != SUCCESS))
-		{
+		{			
 			// move time up by executing commands
-			command *temp_c = getNextCommand(chan);
+			command *temp_c = readNextCommand(chan);
 
 			if (temp_c == NULL)
 			{
 				// the transaction queue and all the per bank queues are empty,
 				// so just move time forward to the point where the transaction starts
-				channel[chan].set_time(endTime);				
+				// or move time forward until the transaction is ready to be decoded
+				if ((processingTransaction) && (channel[chan].get_time() + timing_specification.t_buffer_delay <= endTime))
+				{
+					processingTransaction = false;
+					// FIXME: this should move time forward until the trans can be successfully converted
+					channel[chan].set_time(channel[chan].get_time() + timing_specification.t_buffer_delay);
+				}
+				else
+				{
+					channel[chan].set_time(endTime);				
+				}
 			}
 			else
 			{
 				int min_gap = minProtocolGap(chan, temp_c);
+#ifdef M5DEBUG
+				cerr << "mg: " << min_gap << endl;
+#endif
 
-				executeCommand(temp_c, min_gap);
+				if (min_gap + channel[chan].get_time() <= endTime)
+				{
+					temp_c = getNextCommand(chan);
+
+					executeCommand(temp_c, min_gap);
 
 #ifdef DEBUG_COMMAND
-				cerr << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+					cerr << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
-				update_system_time(); 
+					update_system_time(); 
 
-				transaction *completed_t = channel[chan].get_oldest_completed();
+					transaction *completed_t = channel[chan].get_oldest_completed();
 
-				if (completed_t != NULL)
-				{
+					if (completed_t != NULL)
+					{
 #ifdef DEBUG_TRANSACTION
-					cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
+						cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif
-					// reuse the refresh transactions
-					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
-					{
-						completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
-						//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
-						channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
-					}
-					else // return what was pointed to
-					{
-						void *origTrans = NULL;
-						
-						if (completed_t->originalTransaction)
-							origTrans = completed_t->originalTransaction;						
+						// reuse the refresh transactions
+						if (completed_t->type == AUTO_REFRESH_TRANSACTION)
+						{
+							completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
+							//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
+							channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
+						}
+						else // return what was pointed to
+						{
+							void *origTrans = NULL;
+
+							if (completed_t->originalTransaction)
+								origTrans = completed_t->originalTransaction;						
 #ifdef M5
-						else
-							cerr << "transaction completed, not REFRESH, no orig trans" << endl;
+							else
+								cerr << "transaction completed, not REFRESH, no orig trans" << endl;
 #endif
-						
-						delete completed_t;
 
-						*transFinishTime = completed_t->completion_time;
+							delete completed_t;
 
-						return origTrans;
+							*transFinishTime = completed_t->completion_time;
+
+							return origTrans;
+						}
 					}
+				}
+				else
+				{
+					channel[chan].set_time(endTime);
 				}
 			}
 		}
 		else // successfully converted to commands, dequeue
 		{
-			//cerr << "converted transaction to commands" << endl;
-			// FIXME: make this a timing variable
-			channel[chan].set_time(channel[chan].get_time() + 2);
+			cerr << "converted transaction to commands, queue size is: " << channel[chan].getTransactionQueueCount() << endl;
+
+			channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
+			update_system_time(); 
 			assert(temp_t == channel[chan].get_transaction());
 		}
 	}
-	//cerr << "ch[" << chan << "] @ " << channel[chan].get_time() << endl;
+	assert(channel[chan].get_time() == endTime);
+#ifdef M5DEBUG
+	cerr << "ch[" << chan << "] @ " << channel[chan].get_time() << endl;
+#endif
 	return NULL;
 }
 

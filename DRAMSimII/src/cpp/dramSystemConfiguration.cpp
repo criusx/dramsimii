@@ -87,10 +87,10 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 	{
 		stringstream temp2(temp->second);
 		temp2 >> refresh_time;
-		refresh_time *= datarate;
+		refresh_time *= static_cast<unsigned>(datarate);
 	}
 	else
-		refresh_time = 64000 * datarate;
+		refresh_time = static_cast<unsigned>(64000 * datarate);
 
 	if ((temp=parameter.find(read_write_grouping_token))!=parameter.end())
 	{

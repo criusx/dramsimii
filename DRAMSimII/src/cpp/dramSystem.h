@@ -48,12 +48,10 @@ private:
 	enum input_status_t get_next_input_transaction(transaction *&);
 	void get_next_random_request(transaction *);
 
-public:
+public:	
 
-	explicit dramSystem(std::map<file_io_token_t,std::string> &);
-
-	friend std::ostream &operator<<(std::ostream &, const dramSystem &);
-	int convert_address(addresses &);
+	bool checkForAvailableCommandSlots(const transaction *trans) const;	
+	int convert_address(addresses &) const;
 	void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
 	void *moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime);
 	bool enqueue(transaction* trans);
@@ -61,9 +59,14 @@ public:
 	input_status_t waitForTransactionToFinish(transaction *trans);
 	double Frequency() const { return system_config.Frequency(); }
 	tick_t nextTick() const;
-
 	void run_simulations();
 	void run_simulations2();
+
+	// constructors
+	explicit dramSystem(std::map<file_io_token_t,std::string> &);
+
+	// friends
+	friend std::ostream &operator<<(std::ostream &, const dramSystem &);
 };
 
 #endif

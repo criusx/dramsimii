@@ -1,8 +1,94 @@
 #include <iostream>
+#include <assert.h>
 
 #include "dramSystem.h"
 
 using namespace std;
+
+bool dramSystem::checkForAvailableCommandSlots(const transaction *trans) const
+{
+	const queue<command> *bank_q = &(channel[trans->addr.chan_id].getRank(trans->addr.rank_id).bank[trans->addr.bank_id].per_bank_q);
+
+	// with closed page, all transactions convert into one of the following:
+	// RAS, CAS, Precharge
+	// RAS, CAS+Precharge
+	if (system_config.row_buffer_management_policy == CLOSE_PAGE)
+	{
+		int empty_command_slot_count = bank_q->freecount();
+
+		// refresh transactions become only one command and are handled differently
+		if (trans->type == AUTO_REFRESH_TRANSACTION)
+		{
+			// make sure that there is room in all the queues for one command
+			// refresh commands refresh a row, but kill everything currently in the sense amps
+			// therefore, we need to make sure that the refresh commands happen when all banks
+			// are available
+			for (vector<bank_c>::const_iterator i = channel[trans->addr.chan_id].getRank(trans->addr.rank_id).bank.begin();
+				i != channel[trans->addr.chan_id].getRank(trans->addr.rank_id).bank.end();
+				i++)
+			{
+				if (i->per_bank_q.freecount() < 1)
+					return false;
+			}
+		}
+		// every transaction translates into at least two commands
+		else if (empty_command_slot_count < 2)
+		{
+			return false;
+		}
+		// or three commands if the CAS+Precharge command is not available
+		else if ((system_config.auto_precharge == false) && (empty_command_slot_count < 3))
+		{
+			return false;
+		}
+	}
+	// open page systems may, in the best case, add a CAS command to an already open row
+	// closing the row and precharging may be delayed
+	else if (system_config.row_buffer_management_policy == OPEN_PAGE)
+	{
+		int queued_command_count = bank_q->get_count();
+		int empty_command_slot_count = bank_q->freecount();
+		
+		// look in the bank_q and see if there's a precharge for this row
+		bool bypass_allowed = true;
+		// go from tail to head
+		for (int tail_offset = queued_command_count -1 ;(tail_offset >= 0) && (bypass_allowed == true); --tail_offset)
+		{	
+			command *temp_c = bank_q->read(tail_offset);
+
+			// goes right before the PRE command to ensure that the original order is preserved
+			if ((temp_c->getCommandType() == PRECHARGE_COMMAND) &&
+				(temp_c->getAddress().row_id == trans->addr.row_id))
+			{
+				// can piggyback on other R-C-C...C-P sequences
+				if (empty_command_slot_count < 1)
+					return false;
+
+				return true;			
+			}
+
+			// even STRICT ORDER allows you to look at the tail of the queue
+			// to see if that's the precharge command that you need. If so,
+			// insert CAS COMMAND in front of PRECHARGE COMMAND
+
+			if ((system_config.command_ordering_algorithm == STRICT_ORDER) 
+				|| ((int)(channel[trans->addr.chan_id].get_time() - temp_c->getEnqueueTime()) > system_config.seniority_age_limit))
+			{
+				bypass_allowed = false;
+			}
+		}
+		if (empty_command_slot_count < 3)
+		{
+			return false;
+		}
+	}
+	else
+	{
+		cerr << "Unhandled row buffer management policy" << endl;
+		return FAILURE;
+	}
+	return true;
+}
 
 /// <summary>
 /// Converts a transaction in a particular channel into commands,
@@ -14,6 +100,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 {
 	if (this_t == NULL)
 	{
+		assert(this_t != NULL);
 		return FAILURE;
 	}
 	//cerr << this_t << endl;
