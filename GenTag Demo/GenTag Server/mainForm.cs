@@ -208,5 +208,21 @@ namespace GenTag_Server
         {
             Clipboard.SetDataObject(listBox1.SelectedItem.ToString().Substring(listBox1.SelectedItem.ToString().IndexOf(']') + 2), true);
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // wsdl testing
+            WebReference.GetDatesWS ws = new WebReference.GetDatesWS();
+            string []ts = ws.getTestStrings();
+            foreach (string s in ts)
+                MessageBox.Show(s);
+            Random r = new Random();
+            int day = r.Next(365);
+            int dayOfWeek = (day % 6) + 1;
+            string date = ws.getDayOfWeek(dayOfWeek);
+            MessageBox.Show(date.ToString() + " " + dayOfWeek.ToString());
+            return;
+            //////////////////////////////////////////////////////////////////////////
+        }
     }
 }

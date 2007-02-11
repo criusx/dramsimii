@@ -67,6 +67,15 @@ namespace GenTag_Demo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RV.
+        /// </summary>
+        internal static string button2String {
+            get {
+                return ResourceManager.GetString("button2String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GenTag Demo.
         /// </summary>
         internal static string titleString {

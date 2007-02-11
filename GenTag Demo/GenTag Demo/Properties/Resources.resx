@@ -120,6 +120,9 @@
   <data name="button1String" xml:space="preserve">
     <value>Read Tag</value>
   </data>
+  <data name="button2String" xml:space="preserve">
+    <value>RV</value>
+  </data>
   <data name="titleString" xml:space="preserve">
     <value>GenTag Demo</value>
   </data>

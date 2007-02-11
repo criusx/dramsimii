@@ -32,6 +32,7 @@ namespace GenTag_Demo
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.hostName = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -65,6 +66,13 @@ namespace GenTag_Demo
             this.checkBox1.Size = new System.Drawing.Size(25, 18);
             this.checkBox1.TabIndex = 4;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(192, 189);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(14, 18);
+            this.button2.TabIndex = 0;
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -74,6 +82,7 @@ namespace GenTag_Demo
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.hostName);
             this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.KeyPreview = true;
             this.MinimizeBox = false;
@@ -89,6 +98,7 @@ namespace GenTag_Demo
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.TextBox hostName;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button2;
     }
 }
 
