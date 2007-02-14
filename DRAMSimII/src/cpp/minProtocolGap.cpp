@@ -227,8 +227,8 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 	}
 
 #ifdef DEBUG_MIN_PROTOCOL_GAP
-	cerr << this_c->this_command;
-	cerr << " ras[" << setw(2) << t_ras_gap << "] rrd[" << setw(2) << t_rrd_gap << "] faw[" << setw(2) << t_faw_gap << "] cas[" << setw(2) << t_cas_gap << "] rrd[" << setw(2) << t_rrd_gap << "] rp[" << setw(2) << t_rp_gap << "] min[" << setw(2) << min_gap << "]" << endl;
+	outStream << this_c->this_command;
+	outStream << " ras[" << setw(2) << t_ras_gap << "] rrd[" << setw(2) << t_rrd_gap << "] faw[" << setw(2) << t_faw_gap << "] cas[" << setw(2) << t_cas_gap << "] rrd[" << setw(2) << t_rrd_gap << "] rp[" << setw(2) << t_rp_gap << "] min[" << setw(2) << min_gap << "]" << endl;
 #endif
 
 	return max(min_gap,timing_specification.t_cmd);

@@ -3,6 +3,7 @@
 #pragma once
 
 #include <vector>
+#include <ostream>
 #include <iostream>
 #include "dramSystemConfiguration.h"
 #include "dramTimingSpecification.h"
@@ -16,10 +17,12 @@
 #include "dramChannel.h"
 #include "enumTypes.h"
 #include "rank_c.h"
+#include "gzstream/gzstream.h"
 
 class dramSystem
 {
 private:
+
 	dramSystemConfiguration system_config;
 	std::vector<dramChannel> channel;
 	dramTimingSpecification timing_specification;
@@ -28,6 +31,7 @@ private:
 	dramAlgorithm algorithm;
 	inputStream input_stream;
 
+	
 	std::string output_filename;	
 
 	tick_t time;								// master clock	
@@ -50,10 +54,11 @@ private:
 
 public:	
 
+	ogzstream outStream;
 	bool checkForAvailableCommandSlots(const transaction *trans) const;	
 	int convert_address(addresses &) const;
-	void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
-	void *moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime);
+	const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
+	const void *moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime);
 	bool enqueue(transaction* trans);
 	void enqueueTimeShift(transaction* trans);
 	input_status_t waitForTransactionToFinish(transaction *trans);
@@ -66,7 +71,7 @@ public:
 	explicit dramSystem(std::map<file_io_token_t,std::string> &);
 
 	// friends
-	friend std::ostream &operator<<(std::ostream &, const dramSystem &);
+	friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
 };
 
 #endif

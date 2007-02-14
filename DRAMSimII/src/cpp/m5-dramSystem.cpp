@@ -3,6 +3,7 @@
 #include "sim/builder.hh"
 #include "enumTypes.h"
 #include "m5-dramSystem.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -10,7 +11,7 @@ M5dramSystem::M5dramSystem(Params *p):
 PhysicalMemory(p), tickEvent(this)
 {
 	
-	std::cerr << "in M5dramSystem constructor" << std::endl;
+	ds->outStream << "in M5dramSystem constructor" << std::endl;
 	std::map<file_io_token_t,std::string> parameter;
 
 	parameter[output_file_token] = p->outFilename;
@@ -58,7 +59,7 @@ PhysicalMemory(p), tickEvent(this)
 
 	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency() * 1.0E6));
 
-	std::cerr << *ds << std::endl;
+	ds->outStream << *ds << std::endl;
 }
 
 M5dramSystem::MemPort::MemPort(const std::string &_name,
@@ -84,7 +85,7 @@ Port *M5dramSystem::getPort(const string &if_name, int idx)
 	{
 		panic("M5dramSystem::getPort: unknown port %s requested", if_name);
 	}
-	cerr << "called M5dramSystem::getPort" << endl;
+	ds->outStream << "called M5dramSystem::getPort" << endl;
 }
 
 void M5dramSystem::init()
@@ -100,7 +101,7 @@ M5dramSystem::~M5dramSystem()
 	//if (pmemAddr)
 	//	munmap(pmemAddr, params()->addrRange.size());
 	
-	std::cerr << "M5dramSystem destructor" << std::endl;
+	ds->outStream << "M5dramSystem destructor" << std::endl;
 	delete ds;
 }
 
@@ -137,7 +138,7 @@ M5dramSystem::MemPort::recvFunctional(PacketPtr pkt)
 Tick
 M5dramSystem::MemPort::recvAtomic(PacketPtr pkt)
 { 
-	cerr << "M5dramSystem recvAtomic()" << endl;
+	ds->outStream << "M5dramSystem recvAtomic()" << endl;
 
 	memory->doFunctionalAccess(pkt); 
 	return memory->calculateLatency(pkt);
@@ -177,31 +178,53 @@ M5dramSystem::TickEvent::description()
 
 
 
-//#define TESTNORMAL
+#define TESTNORMAL
 
 bool
 M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
-	cerr << "External wake @ " << curTick << "(" << curTick / memory->getCpuRatio() << ") ";
+	ds->outStream << "External wake @ " << curTick << "(" << curTick / memory->getCpuRatio() << ") ";
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())
-		cerr << "R ";
+		ds->outStream << "R ";
 	else if (pkt->isWrite())
-		cerr << "W ";
+		ds->outStream << "W ";
 	else if (pkt->isRequest())
-		cerr << "RQ ";
+		ds->outStream << "RQ ";
+	else if (pkt->isInvalidate())
+		ds->outStream << "I  ";
 	else
-		cerr << "? ";
-	cerr << std::hex << pkt->getAddr() << endl;
+		ds->outStream << "? ";
+	assert(pkt->isRead() || pkt->isWrite() || pkt->isInvalidate());
+	ds->outStream << std::hex << pkt->getAddr() << endl;
 
+	if (!pkt->needsResponse() && !pkt->isWrite())
+	{
+		ds->outStream << "packet not needing response." << endl;
+		if (pkt->cmd != Packet::UpgradeReq)
+		{
+			delete pkt->req;
+			delete pkt;
+		}
+		else
+		{
+			ds->outStream << "####################### not upgrade request" << endl;
+		}
+	}
+	else
+	{
 #ifdef TESTNORMAL
-	memory->doFunctionalAccess(pkt);
-	pkt->makeTimingResponse();
-	cerr << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
-	sendTiming(pkt, 95996);
+		memory->doFunctionalAccess(pkt);
+		if (!pkt->isWrite())
+		{
+			pkt->makeTimingResponse();
+			ds->outStream << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
+			sendTiming(pkt, rand() % 95996);
+		}
 #else
-	memory->recvTiming(pkt);	
+		memory->recvTiming(pkt);	
 #endif
+	}
 	return true;
 }
 
@@ -224,11 +247,14 @@ M5dramSystem::recvTiming(Packet *pkt)
 	//assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
 
 	assert(pkt->result != Packet::Nacked);
-	assert(pkt->needsResponse());
+	// turn packet around to go back to requester if response expected
+	
+	
+	//assert(pkt->needsResponse());
 	// attempt to add the transaction to the memory system
 	if (!ds->enqueue(trans))
 	{
-		cerr << "enqueue failed" << endl;
+		ds->outStream << "enqueue failed" << endl;
 		// if the packet did not fit, then send a NACK
 		pkt->result = Packet::Nacked;
 		assert(pkt->needsResponse());
@@ -248,26 +274,12 @@ M5dramSystem::recvTiming(Packet *pkt)
 		assert(next > 0);
 		if (next > 0)
 		{
-			cerr << "Scheduling for " << std::dec << cpuRatio * next << "(" << next << ")" << " at " << curTick << "(" << curTick / getCpuRatio() << ")" << endl;
+			ds->outStream << "Scheduling for " << std::dec << cpuRatio * next << "(" << next << ")" << " at " << curTick << "(" << curTick / getCpuRatio() << ")" << endl;
 			tickEvent.schedule(cpuRatio * next);
 		}
 	}
 
-	// turn packet around to go back to requester if response expected
-	if (pkt->needsResponse()) 
-	{
-		//pkt->makeTimingResponse();
-		//memoryPort->doSendTiming(pkt, cpuRatio *(trans->completion_time - trans->arrival_time));
-	}
-	else
-	{
-		cerr << "packet not needing response." << endl;
-		if (pkt->cmd != Packet::UpgradeReq)
-		{
-			delete pkt->req;
-			delete pkt;
-		}
-	}
+	
 
 	// return the latency, scaled to be in cpu ticks, not memory system ticks
 	return 0;
@@ -277,7 +289,7 @@ void
 M5dramSystem::TickEvent::process()
 {	
 	tick_t now = curTick / memory->getCpuRatio();
-	cerr << "Internal wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
+	memory->ds->outStream << "Internal wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
 
 	tick_t finishTime;
 
@@ -287,7 +299,7 @@ M5dramSystem::TickEvent::process()
 		memory->doFunctionalAccess(packet);
 		packet->makeTimingResponse();
 		assert(curTick <= static_cast<Tick>(finishTime * memory->getCpuRatio()));
-		cerr << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick) << ") at" << curTick << endl;
+		memory->ds->outStream << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick) << ") at" << curTick << endl;
 		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick));
 	}
 
@@ -299,7 +311,7 @@ M5dramSystem::TickEvent::process()
 
 	if (next > 0)
 	{	
-		cerr << "scheduling for " << static_cast<Tick>(next * memory->getCpuRatio()) << "(" << next << ")" << endl;
+		memory->ds->outStream << "scheduling for " << static_cast<Tick>(next * memory->getCpuRatio()) << "(" << next << ")" << endl;
 		assert(next * memory->getCpuRatio() > curTick);
 		memory->tickEvent.schedule(static_cast<Tick>(next * memory->getCpuRatio()));
 	}

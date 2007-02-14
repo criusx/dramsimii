@@ -39,12 +39,13 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\temp\m5-2.0b1\src&quot;"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="&quot;C:\temp\m5-2.0b1\src&quot;;&quot;C:\temp\zlib\zlib-1.2.3\win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
+				ExceptionHandling="0"
+				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
@@ -52,8 +53,11 @@
 				AssemblerOutput="4"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
+				CompileAs="2"
+				DisableSpecificWarnings="4530"
 				ShowIncludes="false"
+				EnablePREfast="true"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -66,7 +70,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="zdll.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\temp\zlib\zlib-1.2.3\win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -128,7 +134,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="C:\temp\m5-2.0b1\src"
+				AdditionalIncludeDirectories="&quot;C:\temp\m5-2.0b1\src&quot;;&quot;C:\temp\zlib\zlib-1.2.3\win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_RELEASE;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
@@ -142,6 +148,8 @@
 				DebugInformationFormat="3"
 				CompileAs="2"
 				DisableSpecificWarnings="4530"
+				ShowIncludes="false"
+				EnablePREfast="true"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -154,7 +162,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="zdll.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\temp\zlib\zlib-1.2.3\win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="0"
@@ -330,6 +340,20 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cpp\gzstream\gzstream.C"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+						BasicRuntimeChecks="3"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\src\cpp\InputStream.cpp"
 				>
 			</File>
@@ -372,6 +396,14 @@
 			<File
 				RelativePath=".\src\cpp\powerConfig.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="true"

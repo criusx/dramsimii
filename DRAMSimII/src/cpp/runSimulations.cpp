@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "dramSystem.h"
+#include "globals.h"
 
 using namespace std;
 
@@ -57,7 +58,7 @@ bool dramSystem::enqueue(transaction *trans)
 	else
 	{
 #ifdef M5DEBUG
-		cerr << "queue size is: " << channel[trans->addr.chan_id].getTransactionQueueCount() << endl;
+		outStream << "queue size is: " << channel[trans->addr.chan_id].getTransactionQueueCount() << endl;
 #endif
 		trans->enqueueTime = channel[trans->addr.chan_id].get_time();
 		return true;
@@ -86,7 +87,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 				executeCommand(temp_c, min_gap);
 
 #ifdef DEBUG_COMMAND
-				cerr << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+				outStream << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
 				update_system_time(); 
@@ -103,7 +104,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 					else
 						delete completed_t;
 #ifdef DEBUG_TRANSACTION
-					cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
+					outStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif
 				}
 
@@ -118,12 +119,14 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 
 /// Moves all channels to the specified time
 /// If a transaction completes, then it is returned without completing the movement
-void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime)
+const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime)
 {
-	//cerr << "move forward until: " << endTime << endl;
+#if M5DEBUG
+	outStream << "move forward until: " << endTime << endl;
+#endif
 	for (unsigned i = 0; i < channel.size(); i++)
 	{
-		void *finishedTrans = moveChannelToTime(endTime, i, transFinishTime);
+		const void *finishedTrans = moveChannelToTime(endTime, i, transFinishTime);
 		if (finishedTrans)
 			return finishedTrans;
 	}
@@ -131,7 +134,7 @@ void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinis
 }
 
 /// Moves the specified channel to at least the time given
-void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime)
+const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime)
 {
 	bool processingTransaction = false;
 
@@ -144,10 +147,10 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 		if ((temp_t) && (channel[chan].get_time() - temp_t->enqueueTime < timing_specification.t_buffer_delay))
 		{
 #ifdef M5DEBUG
-			cerr << "resetting: ";
-			cerr << channel[chan].get_time() << " ";
-			cerr << temp_t->enqueueTime << " ";
-			cerr << timing_specification.t_buffer_delay << endl;
+			outStream << "resetting: ";
+			outStream << channel[chan].get_time() << " ";
+			outStream << temp_t->enqueueTime << " ";
+			outStream << timing_specification.t_buffer_delay << endl;
 #endif
 			temp_t = NULL; // not enough time has passed
 			processingTransaction = true;
@@ -181,7 +184,7 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 			{
 				int min_gap = minProtocolGap(chan, temp_c);
 #ifdef M5DEBUG
-				cerr << "mg: " << min_gap << endl;
+				outStream << "mg: " << min_gap << endl;
 #endif
 
 				if (min_gap + channel[chan].get_time() <= endTime)
@@ -191,7 +194,7 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 					executeCommand(temp_c, min_gap);
 
 #ifdef DEBUG_COMMAND
-					cerr << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+					outStream << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
 					update_system_time(); 
@@ -201,8 +204,9 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 					if (completed_t != NULL)
 					{
 #ifdef DEBUG_TRANSACTION
-						cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
+						outStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif
+						outStream << "test";
 						// reuse the refresh transactions
 						if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 						{
@@ -212,13 +216,12 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 						}
 						else // return what was pointed to
 						{
-							void *origTrans = NULL;
+							const void *origTrans = completed_t->originalTransaction;
 
-							if (completed_t->originalTransaction)
-								origTrans = completed_t->originalTransaction;						
+							if (!completed_t->originalTransaction)
 #ifdef M5
 							else
-								cerr << "transaction completed, not REFRESH, no orig trans" << endl;
+								outStream << "transaction completed, not REFRESH, no orig trans" << endl;
 #endif
 
 							delete completed_t;
@@ -237,7 +240,7 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 		}
 		else // successfully converted to commands, dequeue
 		{
-			cerr << "converted transaction to commands, queue size is: " << channel[chan].getTransactionQueueCount() << endl;
+			outStream << "converted transaction to commands, queue size is: " << channel[chan].getTransactionQueueCount() << endl;
 
 			channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
 			update_system_time(); 
@@ -246,7 +249,7 @@ void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t
 	}
 	assert(channel[chan].get_time() == endTime);
 #ifdef M5DEBUG
-	cerr << "ch[" << chan << "] @ " << channel[chan].get_time() << endl;
+	outStream << "ch[" << chan << "] @ " << channel[chan].get_time() << endl;
 #endif
 	return NULL;
 }
@@ -299,11 +302,11 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 						delete completed_t;
 
 #ifdef DEBUG_TRANSACTION
-					cerr << "CH[" << setw(2) << chan << "] " << completed_t << endl;
+					outStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif					
 				}
 #ifdef DEBUG_COMMAND
-				cerr << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+				outStream << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 				// if the CAS command was just executed, then this command is effectively done
 				if (temp_c->getHost() == trans)
@@ -335,7 +338,7 @@ void dramSystem::run_simulations()
 				transaction *temp_t = channel[oldest_chan_id].get_transaction();
 
 #ifdef DEBUG_TRANSACTION
-				cerr << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
+				outStream << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
 #endif
 
 				if(temp_t != NULL)
@@ -350,7 +353,7 @@ void dramSystem::run_simulations()
 						int min_gap = minProtocolGap(input_t->addr.chan_id, temp_c);
 
 #ifdef DEBUG_COMMAND
-						cerr << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+						outStream << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
 						executeCommand(temp_c, min_gap);

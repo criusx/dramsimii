@@ -51,7 +51,7 @@ tick_t dramSystem::nextTick() const
 
 	if (nextWake < INT_MAX)
 	{
-		//cerr << "min gap is: " << std::dec << gap << endl;
+		//outStream << "min gap is: " << std::dec << gap << endl;
 		return nextWake;
 	}
 	else 
@@ -798,7 +798,10 @@ event_q(COMMAND_QUEUE_SIZE)
 	stringstream temp2;
 
 	if ((temp=parameter.find(output_file_token))!=parameter.end())
+	{
 		output_filename = parameter[output_file_token];
+		outStream.open(output_filename.c_str());		
+	}
 
 	// init the refresh queue for each channel
 	unsigned cnt = 0;

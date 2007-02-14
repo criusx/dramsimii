@@ -57,26 +57,22 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 
 	if ((temp=parameter.find(chan_count_token))!=parameter.end())
 	{
-		stringstream temp2(temp->second);
-		double temp3;
-		temp2 >> temp3;
-		chan_locality = 1 / temp3;
+		toNumeric<double>(chan_locality,temp->second,std::dec);
+		chan_locality = 1 / chan_locality;
 	}
 	else
 		exit(5);
 
 	if ((temp=parameter.find(read_percentage_token))!=parameter.end())
 	{
-		stringstream temp2(temp->second);
-		temp2 >> read_percentage;
+		toNumeric<double>(read_percentage,temp->second,std::dec);
 	}
 	else
 		read_percentage = 0.5; /// set this to a fixed value for now, FIXME
 
 	if ((temp=parameter.find(short_burst_ratio_token))!=parameter.end())
 	{
-		stringstream temp2(temp->second);
-		temp2 >> short_burst_ratio;
+		toNumeric<double>(short_burst_ratio,temp->second,std::dec);
 	}
 	else
 		short_burst_ratio = 0.0;
@@ -84,20 +80,16 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 
 	if ((temp=parameter.find(rank_count_token))!=parameter.end())
 	{
-		stringstream temp2(temp->second);
-		double temp3;
-		temp2 >> temp3;
-		rank_locality = 1 / temp3;
+		toNumeric<double>(rank_locality,temp->second,std::dec);
+		rank_locality = 1 / rank_locality;
 	}
 	else
 		exit(8);
 
 	if ((temp=parameter.find(bank_count_token))!=parameter.end())
 	{
-		stringstream temp2(temp->second);
-		double temp3;
-		temp2 >> temp3;
-		bank_locality = 1 / temp3;
+		toNumeric<double>(bank_locality,temp->second,std::dec);
+		bank_locality = 1 / bank_locality;
 	}
 	else
 		exit(9);

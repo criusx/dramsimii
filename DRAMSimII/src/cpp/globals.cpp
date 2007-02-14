@@ -11,6 +11,7 @@
 #include "globals.h"
 #include "dramTimingSpecification.h"
 #include "dramStatistics.h"
+#include "gzstream/gzstream.h"
 
 
 using namespace std;
@@ -62,13 +63,12 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 	// go find the spd file first, read in all params if it was specified (and it should be)
 	for (argc_index = 1; argc_index < argc; ++argc_index)
 	{
-		string temp = argv[argc_index];
-		if (temp == "-dram:spd_input")
+		string argValue = argv[argc_index];
+		if (argValue == "-dram:spd_input")
 		{
-			string temp2 = argv[argc_index + 1];
-			ifstream cfg_file(temp2.c_str(),ifstream::in);
+			ifstream cfg_file(argv[argc_index + 1],ifstream::in);
 			if(!cfg_file.is_open()) {
-				cerr << "Error in opening CFG file " << temp2 << endl;
+				cerr << "Error in opening CFG file " << argv[argc_index + 1] << endl;
 				exit(3);
 			}
 			else
@@ -388,7 +388,17 @@ file_io_token_t file_io_token(const string &input)
 	return unknown_token;
 }
 
+//std::ostream &operator<<(outputStream& os, const char *str)
+//{
+//	if (os.good())
+//		os << str;
+//		//os.write(str, strlen(str));
+//	else
+//		std::cerr << str;
+//	return os;
+//}
 
+//std::ostream &operator<<(outputStream& os, std::ostream
 
 ostream &operator<<(ostream &os, const dramSystem &this_a)
 {

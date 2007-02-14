@@ -18,7 +18,7 @@ transaction::transaction()
 	type = CONTROL_TRANSACTION;
 }
 
-transaction::transaction(int attribute, tick_t enqueueTime, int Size, unsigned long long address, void *originalTrans):
+transaction::transaction(const int attribute,const tick_t enqueueTime,const int Size,const unsigned long long address, const void *originalTrans):
 addr(address),
 length(Size),
 enqueueTime(enqueueTime),
@@ -30,7 +30,7 @@ originalTransaction(originalTrans)
 	case 1 << 0: type = READ_TRANSACTION; break;
 	case 1 << 1: type = WRITE_TRANSACTION; break;
 	case 1 << 2: type = PREFETCH_TRANSACTION; break;
-	default: cerr << "unknown type" << endl;
+	default: cerr << "unknown type" << endl; exit(-11);
 	}
 }
 

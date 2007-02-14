@@ -26,10 +26,10 @@ public:
 	tick_t completion_time;		// time when transaction has completed in DRAM ticks
 	
 	addresses addr;
-	void *originalTransaction;	// utility pointer in the event that this transaction represents another version of a transaction
+	const void *originalTransaction;	// utility pointer in the event that this transaction represents another version of a transaction
 
 	explicit transaction();
-	explicit transaction(int, tick_t, int, unsigned long long, void *);
+	explicit transaction(const int,const  tick_t,const int,const unsigned long long, const void *);
 	friend std::ostream &operator<<(std::ostream &, const transaction *);
 
 	void *operator new(size_t size);
