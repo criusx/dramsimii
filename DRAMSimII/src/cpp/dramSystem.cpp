@@ -17,6 +17,9 @@
 
 using namespace std;
 
+// modified, writes to cerr or a compressed output file
+ogzstream outStream;
+
 // returns the time when the memory system next has an event
 // the event may either be a conversion of a transaction into commands
 // or it may be the next time a command may be issued
@@ -800,7 +803,15 @@ event_q(COMMAND_QUEUE_SIZE)
 	if ((temp=parameter.find(output_file_token))!=parameter.end())
 	{
 		output_filename = parameter[output_file_token];
-		outStream.open(output_filename.c_str());		
+		if (output_filename.length() > 1)
+		{
+			outStream.open(output_filename.c_str());	
+			if (!outStream.good())
+			{
+				cerr << "Error opening file \"" << output_filename << "\" for writing" << endl;
+				exit(-12);
+			}
+		}
 	}
 
 	// init the refresh queue for each channel

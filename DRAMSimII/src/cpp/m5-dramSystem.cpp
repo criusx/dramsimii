@@ -11,7 +11,7 @@ M5dramSystem::M5dramSystem(Params *p):
 PhysicalMemory(p), tickEvent(this)
 {
 	
-	ds->outStream << "in M5dramSystem constructor" << std::endl;
+	outStream << "in M5dramSystem constructor" << std::endl;
 	std::map<file_io_token_t,std::string> parameter;
 
 	parameter[output_file_token] = p->outFilename;
@@ -59,7 +59,7 @@ PhysicalMemory(p), tickEvent(this)
 
 	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency() * 1.0E6));
 
-	ds->outStream << *ds << std::endl;
+	outStream << *ds << std::endl;
 }
 
 M5dramSystem::MemPort::MemPort(const std::string &_name,
@@ -85,7 +85,7 @@ Port *M5dramSystem::getPort(const string &if_name, int idx)
 	{
 		panic("M5dramSystem::getPort: unknown port %s requested", if_name);
 	}
-	ds->outStream << "called M5dramSystem::getPort" << endl;
+	outStream << "called M5dramSystem::getPort" << endl;
 }
 
 void M5dramSystem::init()
@@ -101,7 +101,7 @@ M5dramSystem::~M5dramSystem()
 	//if (pmemAddr)
 	//	munmap(pmemAddr, params()->addrRange.size());
 	
-	ds->outStream << "M5dramSystem destructor" << std::endl;
+	outStream << "M5dramSystem destructor" << std::endl;
 	delete ds;
 }
 
@@ -138,7 +138,7 @@ M5dramSystem::MemPort::recvFunctional(PacketPtr pkt)
 Tick
 M5dramSystem::MemPort::recvAtomic(PacketPtr pkt)
 { 
-	ds->outStream << "M5dramSystem recvAtomic()" << endl;
+	outStream << "M5dramSystem recvAtomic()" << endl;
 
 	memory->doFunctionalAccess(pkt); 
 	return memory->calculateLatency(pkt);
@@ -178,29 +178,29 @@ M5dramSystem::TickEvent::description()
 
 
 
-#define TESTNORMAL
+//#define TESTNORMAL
 
 bool
 M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
-	ds->outStream << "External wake @ " << curTick << "(" << curTick / memory->getCpuRatio() << ") ";
+	outStream << "External wake @ " << curTick << "(" << curTick / memory->getCpuRatio() << ") ";
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())
-		ds->outStream << "R ";
+		outStream << "R ";
 	else if (pkt->isWrite())
-		ds->outStream << "W ";
+		outStream << "W ";
 	else if (pkt->isRequest())
-		ds->outStream << "RQ ";
+		outStream << "RQ ";
 	else if (pkt->isInvalidate())
-		ds->outStream << "I  ";
+		outStream << "I  ";
 	else
-		ds->outStream << "? ";
+		outStream << "? ";
 	assert(pkt->isRead() || pkt->isWrite() || pkt->isInvalidate());
-	ds->outStream << std::hex << pkt->getAddr() << endl;
+	outStream << std::hex << pkt->getAddr() << endl;
 
 	if (!pkt->needsResponse() && !pkt->isWrite())
 	{
-		ds->outStream << "packet not needing response." << endl;
+		outStream << "packet not needing response." << endl;
 		if (pkt->cmd != Packet::UpgradeReq)
 		{
 			delete pkt->req;
@@ -208,7 +208,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		}
 		else
 		{
-			ds->outStream << "####################### not upgrade request" << endl;
+			outStream << "####################### not upgrade request" << endl;
 		}
 	}
 	else
@@ -218,7 +218,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		if (!pkt->isWrite())
 		{
 			pkt->makeTimingResponse();
-			ds->outStream << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
+			outStream << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
 			sendTiming(pkt, rand() % 95996);
 		}
 #else
@@ -254,7 +254,7 @@ M5dramSystem::recvTiming(Packet *pkt)
 	// attempt to add the transaction to the memory system
 	if (!ds->enqueue(trans))
 	{
-		ds->outStream << "enqueue failed" << endl;
+		outStream << "enqueue failed" << endl;
 		// if the packet did not fit, then send a NACK
 		pkt->result = Packet::Nacked;
 		assert(pkt->needsResponse());
@@ -274,7 +274,7 @@ M5dramSystem::recvTiming(Packet *pkt)
 		assert(next > 0);
 		if (next > 0)
 		{
-			ds->outStream << "Scheduling for " << std::dec << cpuRatio * next << "(" << next << ")" << " at " << curTick << "(" << curTick / getCpuRatio() << ")" << endl;
+			outStream << "Scheduling for " << std::dec << cpuRatio * next << "(" << next << ")" << " at " << curTick << "(" << curTick / getCpuRatio() << ")" << endl;
 			tickEvent.schedule(cpuRatio * next);
 		}
 	}
@@ -289,7 +289,7 @@ void
 M5dramSystem::TickEvent::process()
 {	
 	tick_t now = curTick / memory->getCpuRatio();
-	memory->ds->outStream << "Internal wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
+	outStream << "Internal wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
 
 	tick_t finishTime;
 
@@ -299,7 +299,7 @@ M5dramSystem::TickEvent::process()
 		memory->doFunctionalAccess(packet);
 		packet->makeTimingResponse();
 		assert(curTick <= static_cast<Tick>(finishTime * memory->getCpuRatio()));
-		memory->ds->outStream << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick) << ") at" << curTick << endl;
+		outStream << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick) << ") at" << curTick << endl;
 		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick));
 	}
 
@@ -311,7 +311,7 @@ M5dramSystem::TickEvent::process()
 
 	if (next > 0)
 	{	
-		memory->ds->outStream << "scheduling for " << static_cast<Tick>(next * memory->getCpuRatio()) << "(" << next << ")" << endl;
+		outStream << "scheduling for " << static_cast<Tick>(next * memory->getCpuRatio()) << "(" << next << ")" << endl;
 		assert(next * memory->getCpuRatio() > curTick);
 		memory->tickEvent.schedule(static_cast<Tick>(next * memory->getCpuRatio()));
 	}
@@ -384,7 +384,7 @@ INIT_PARAM(latency, "Memory access latency"),
 
 /* additional params for dram protocol*/
 INIT_PARAM_DFLT(cpu_ratio,"ratio between CPU speed and memory bus speed",5), 
-INIT_PARAM_DFLT(outFilename,"output file name",""),
+INIT_PARAM_DFLT(outFilename,"output file name","dramSimIIout.gz"),
 INIT_PARAM_DFLT(dramType,"type of DRAM, sdram, ddr, etc.","ddr2"),
 INIT_PARAM_DFLT(rowBufferManagmentPolicy,"open_page, close_page, auto_page","close_page"),
 INIT_PARAM_DFLT(autoPrecharge,"true or false","true"),

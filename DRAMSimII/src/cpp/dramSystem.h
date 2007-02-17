@@ -19,6 +19,8 @@
 #include "rank_c.h"
 #include "gzstream/gzstream.h"
 
+
+
 class dramSystem
 {
 private:
@@ -52,9 +54,8 @@ private:
 	enum input_status_t get_next_input_transaction(transaction *&);
 	void get_next_random_request(transaction *);
 
-public:	
+public:
 
-	ogzstream outStream;
 	bool checkForAvailableCommandSlots(const transaction *trans) const;	
 	int convert_address(addresses &) const;
 	const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);

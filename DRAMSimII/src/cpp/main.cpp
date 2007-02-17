@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	//ds.read_command_line_config(argc,argv)
 	ds.run_simulations2();
 
-	ds.outStream << ds << endl;
+	outStream << ds << endl;
 	//cerr << ds.timing_specification;
 	//cerr << (dram_statistics) ds;
 	
