@@ -129,7 +129,7 @@
 				ExecutionBucket="7"
 				AdditionalIncludeDirectories="C:\Documents and Settings\CriuS\My Documents\RFID\KSW Dev Kit\Sirit\SDIO SDK\cd\include"
 				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
-				ExceptionHandling="0"
+				ExceptionHandling="1"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"

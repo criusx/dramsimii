@@ -55,25 +55,29 @@ extern "C" __declspec(dllexport) int WINAPI getViolations()
 #endif
 
 typedef void (*ARRAYCB)(int errorCode,
-						float upperTempLimit, float lowerTempLimit, int recordPeriod, 
 						int len,
+						float upperTempLimit,
+						float lowerTempLimit, 
+						int recordPeriod, 						
 						unsigned char logMode[],
 						unsigned int dateTime[],
 						float temperatures[]);
 
-#define MAXTRIES 16
+#define MAXTRIES 1
+
+#define DEFAULTARRAYSIZE 4
 
 extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 {
 	// default to having something to marshal
-	int len = 1;
-	unsigned char *logMode = new unsigned char[1];
-	unsigned int *dateTime = new unsigned int[1];	
-	float *temperatures = new float[1];	
+	int len = DEFAULTARRAYSIZE;
+	unsigned char *logMode = new unsigned char[DEFAULTARRAYSIZE];
+	unsigned int *dateTime = new unsigned int[DEFAULTARRAYSIZE];	
+	float *temperatures = new float[DEFAULTARRAYSIZE];	
 
-	static float lowerTempLimit = 0;
-	static float upperTempLimit = 0;
-	static unsigned short recordPeriod = 0;
+	static float lowerTempLimit = 1;
+	static float upperTempLimit = 2;
+	static unsigned short recordPeriod = 3;
 	static int errorCode = 0; // the equivalent of a return code	 
 
 	if (!C1_open_comm()) 
@@ -97,7 +101,7 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 		while (failures > 0)
 		{
 			// make sure it isn't doing a spin-wait
-			//Sleep(10);
+			Sleep(10);
 
 			if (get_15693(&myVarioSensTag, NULL) &&
 				myVarioSensTag.tag_type == VARIOSENS)
@@ -189,7 +193,7 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 				{
 					errorCode = -3;
 				}
-				--failures;
+				//--failures;
 			}
 			
 		}
@@ -199,5 +203,5 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 
 	C1_close_comm();	
 
-	(*callbackFunc)(errorCode, upperTempLimit,lowerTempLimit,recordPeriod,len,logMode,dateTime,temperatures);
+	(*callbackFunc)(errorCode, len,upperTempLimit,lowerTempLimit,recordPeriod,logMode,dateTime,temperatures);
 }

@@ -50,16 +50,26 @@ namespace GenTag_Demo
         [DllImport("VarioSens Lib.dll",CallingConvention = CallingConvention.Winapi)]
         static extern int multiply(int a, int b);
 
-        public delegate void arrayCB(int errorCode, float upperTempLimit, float lowerTempLimit, int recordPeriod, int len,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] byte[] logMode,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] uint[] dateTime,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] float[] temperatures);
+        public delegate void arrayCB(
+            int errorCode,
+            int len,
+            float upperTempLimit,
+            float lowerTempLimit, 
+            int recordPeriod,             
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] byte[] logMode,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] uint[] dateTime,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] float[] temperatures);
 
         [DllImport("VarioSens Lib.dll")]
         public static extern void getVarioSensLog(arrayCB cb);
 
 
-        private static void callbackFunct(int errorCode, float upperTempLimit, float lowerTempLimit, int recordPeriod, int len,
+        private static void callbackFunct(
+            int errorCode,
+            int len, 
+            float upperTempLimit, 
+            float lowerTempLimit, 
+            int recordPeriod, 
             byte[] logMode,
             uint[] dateTime,
             float[] temperatures)
@@ -67,7 +77,15 @@ namespace GenTag_Demo
             switch (errorCode)
             {
                 case 0:
-                    MessageBox.Show("Success");
+                    uint time_t = dateTime[0];
+                    DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
+                    DateTime convertedValue = origin + new TimeSpan(time_t * TimeSpan.TicksPerSecond);
+                    if (System.TimeZone.CurrentTimeZone.IsDaylightSavingTime(convertedValue) == true)
+                    {
+                        System.Globalization.DaylightTime daylightTime = System.TimeZone.CurrentTimeZone.GetDaylightChanges(convertedValue.Year);
+                        convertedValue = convertedValue + daylightTime.Delta;
+                    }
+                    MessageBox.Show("Success" + convertedValue.ToString());
                     break;
                 case -1:
                     MessageBox.Show("Error, no communication with Sirit card");
