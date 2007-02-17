@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:tns="http://datespackage/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GetDatesWS" targetNamespace="http://datespackage/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified" targetNamespace="http://datespackage/">
+      <xsd:element name="getDate" type="tns:getDate" />
+      <xsd:complexType name="getDate">
+        <xsd:sequence />
+      </xsd:complexType>
+      <xsd:element name="getDateResponse" type="tns:getDateResponse" />
+      <xsd:complexType name="getDateResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="xsd:dateTime" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getDateHence" type="tns:getDateHence" />
+      <xsd:complexType name="getDateHence">
+        <xsd:sequence>
+          <xsd:element name="daysHence" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getDateHenceResponse" type="tns:getDateHenceResponse" />
+      <xsd:complexType name="getDateHenceResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="xsd:dateTime" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getDayOfWeek" type="tns:getDayOfWeek" />
+      <xsd:complexType name="getDayOfWeek">
+        <xsd:sequence>
+          <xsd:element name="day" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getDayOfWeekResponse" type="tns:getDayOfWeekResponse" />
+      <xsd:complexType name="getDayOfWeekResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getDescription" type="tns:getDescription" />
+      <xsd:complexType name="getDescription">
+        <xsd:sequence>
+          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getDescriptionResponse" type="tns:getDescriptionResponse" />
+      <xsd:complexType name="getDescriptionResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getTestStrings" type="tns:getTestStrings" />
+      <xsd:complexType name="getTestStrings">
+        <xsd:sequence />
+      </xsd:complexType>
+      <xsd:element name="getTestStringsResponse" type="tns:getTestStringsResponse" />
+      <xsd:complexType name="getTestStringsResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="return" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <message name="GetDatesWS_getDate">
+    <part name="parameters" element="tns:getDate" />
+  </message>
+  <message name="GetDatesWS_getDateResponse">
+    <part name="parameters" element="tns:getDateResponse" />
+  </message>
+  <message name="GetDatesWS_getDateHence">
+    <part name="parameters" element="tns:getDateHence" />
+  </message>
+  <message name="GetDatesWS_getDateHenceResponse">
+    <part name="parameters" element="tns:getDateHenceResponse" />
+  </message>
+  <message name="GetDatesWS_getDayOfWeek">
+    <part name="parameters" element="tns:getDayOfWeek" />
+  </message>
+  <message name="GetDatesWS_getDayOfWeekResponse">
+    <part name="parameters" element="tns:getDayOfWeekResponse" />
+  </message>
+  <message name="GetDatesWS_getDescription">
+    <part name="parameters" element="tns:getDescription" />
+  </message>
+  <message name="GetDatesWS_getDescriptionResponse">
+    <part name="parameters" element="tns:getDescriptionResponse" />
+  </message>
+  <message name="GetDatesWS_getTestStrings">
+    <part name="parameters" element="tns:getTestStrings" />
+  </message>
+  <message name="GetDatesWS_getTestStringsResponse">
+    <part name="parameters" element="tns:getTestStringsResponse" />
+  </message>
+  <portType name="GetDatesWS">
+    <operation name="getDate">
+      <input message="tns:GetDatesWS_getDate" />
+      <output message="tns:GetDatesWS_getDateResponse" />
+    </operation>
+    <operation name="getDateHence">
+      <input message="tns:GetDatesWS_getDateHence" />
+      <output message="tns:GetDatesWS_getDateHenceResponse" />
+    </operation>
+    <operation name="getDayOfWeek">
+      <input message="tns:GetDatesWS_getDayOfWeek" />
+      <output message="tns:GetDatesWS_getDayOfWeekResponse" />
+    </operation>
+    <operation name="getDescription">
+      <input message="tns:GetDatesWS_getDescription" />
+      <output message="tns:GetDatesWS_getDescriptionResponse" />
+    </operation>
+    <operation name="getTestStrings">
+      <input message="tns:GetDatesWS_getTestStrings" />
+      <output message="tns:GetDatesWS_getTestStringsResponse" />
+    </operation>
+  </portType>
+  <binding name="GetDatesWSSoapHttp" type="tns:GetDatesWS">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="getDate">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getDateHence">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getDayOfWeek">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getDescription">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getTestStrings">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="GetDatesWS">
+    <port name="GetDatesWSSoapHttpPort" binding="tns:GetDatesWSSoapHttp">
+      <soap:address location="http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort" />
+    </port>
+  </service>
+</definitions>

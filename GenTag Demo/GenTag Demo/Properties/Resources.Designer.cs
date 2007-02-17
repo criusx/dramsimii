@@ -67,7 +67,7 @@ namespace GenTag_Demo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to RV.
+        ///   Looks up a localized string similar to Read VarioSens.
         /// </summary>
         internal static string button2String {
             get {

@@ -121,7 +121,7 @@
     <value>Read Tag</value>
   </data>
   <data name="button2String" xml:space="preserve">
-    <value>RV</value>
+    <value>Read VarioSens</value>
   </data>
   <data name="titleString" xml:space="preserve">
     <value>GenTag Demo</value>

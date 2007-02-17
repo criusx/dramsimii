@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Threading;
 using Oracle.DataAccess.Client;
 using System.Security.Permissions;
+using System.Runtime.InteropServices;
 
 [assembly: SecurityPermission(
    SecurityAction.RequestMinimum, Execution = true)]
@@ -209,8 +210,16 @@ namespace GenTag_Server
             Clipboard.SetDataObject(listBox1.SelectedItem.ToString().Substring(listBox1.SelectedItem.ToString().IndexOf(']') + 2), true);
         }
 
+        [DllImport("VarioSens Lib.dll")]
+        static extern double multiply(double a, double b);
+
         private void button1_Click(object sender, EventArgs e)
         {
+            double a = 3;
+            double b = 9;
+            double c = multiply(a, b);
+
+            return;
             // wsdl testing
             WebReference.GetDatesWS ws = new WebReference.GetDatesWS();
             string []ts = ws.getTestStrings();

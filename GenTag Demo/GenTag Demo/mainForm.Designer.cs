@@ -30,7 +30,6 @@ namespace GenTag_Demo
         {
             this.button1 = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.hostName = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -50,14 +49,6 @@ namespace GenTag_Demo
             this.treeView1.Size = new System.Drawing.Size(240, 187);
             this.treeView1.TabIndex = 2;
             // 
-            // hostName
-            // 
-            this.hostName.Location = new System.Drawing.Point(80, 189);
-            this.hostName.Name = "hostName";
-            this.hostName.Size = new System.Drawing.Size(106, 21);
-            this.hostName.TabIndex = 3;
-            this.hostName.TextChanged += new System.EventHandler(this.hostName_TextChanged);
-            // 
             // checkBox1
             // 
             this.checkBox1.Enabled = false;
@@ -68,9 +59,9 @@ namespace GenTag_Demo
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(192, 189);
+            this.button2.Location = new System.Drawing.Point(80, 189);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(14, 18);
+            this.button2.Size = new System.Drawing.Size(71, 18);
             this.button2.TabIndex = 0;
             // 
             // mainForm
@@ -80,7 +71,6 @@ namespace GenTag_Demo
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 210);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.hostName);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -96,7 +86,6 @@ namespace GenTag_Demo
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.TextBox hostName;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button2;
     }

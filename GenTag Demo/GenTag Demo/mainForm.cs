@@ -43,11 +43,78 @@ namespace GenTag_Demo
                 regKey.CreateSubKey(@"hostname");
                 regKey.SetValue(@"hostname", @"129.2.99.117");
             }
-            hostName.Text = regKey.GetValue(@"hostname").ToString();
+           //hostName.Text = regKey.GetValue(@"hostname").ToString();
+        }
+
+
+        [DllImport("VarioSens Lib.dll",CallingConvention = CallingConvention.Winapi)]
+        static extern int multiply(int a, int b);
+
+        public delegate void arrayCB(int errorCode, float upperTempLimit, float lowerTempLimit, int recordPeriod, int len,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] byte[] logMode,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] uint[] dateTime,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] float[] temperatures);
+
+        [DllImport("VarioSens Lib.dll")]
+        public static extern void getVarioSensLog(arrayCB cb);
+
+
+        private static void callbackFunct(int errorCode, float upperTempLimit, float lowerTempLimit, int recordPeriod, int len,
+            byte[] logMode,
+            uint[] dateTime,
+            float[] temperatures)
+        {
+            switch (errorCode)
+            {
+                case 0:
+                    MessageBox.Show("Success");
+                    break;
+                case -1:
+                    MessageBox.Show("Error, no communication with Sirit card");
+                    break;
+                case -2:
+                    MessageBox.Show("Error, cannot enable Sirit PNP RFID");
+                    break;
+                case -3:
+                    MessageBox.Show("Error, cannot read tag");
+                    break;
+                case -4:
+                    MessageBox.Show("Error, cannot retrieve log state from VarioSens card");
+                    break;
+                case -5:
+                    MessageBox.Show("Error, cannot get violation data");
+                    break;
+                case -6:
+                    MessageBox.Show("No violations recorded");
+                    break;
+                case -7:
+                    MessageBox.Show("Error, not a VarioSens tag");
+                    break;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            arrayCB mycb = new arrayCB(callbackFunct);
+
+            getVarioSensLog(mycb);
+
+            return;
+            uint time_t = 1162857786;
+            DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
+            DateTime convertedValue = origin + new TimeSpan(time_t * TimeSpan.TicksPerSecond);
+            if (System.TimeZone.CurrentTimeZone.IsDaylightSavingTime(convertedValue) == true)
+            {
+                System.Globalization.DaylightTime daylightTime = System.TimeZone.CurrentTimeZone.GetDaylightChanges(convertedValue.Year);
+                convertedValue = convertedValue + daylightTime.Delta;
+            }
+
+            int a = 4;
+            int b = 5;
+            int c = multiply(a, b);
+            c++;
+
+            return;
             
             
             Cursor.Current = Cursors.WaitCursor;
@@ -198,19 +265,7 @@ namespace GenTag_Demo
 
         }
 
-        private void hostName_TextChanged(object sender, EventArgs e)
-        {
-            RegistryKey regKey = Registry.LocalMachine;
-
-            regKey = regKey.OpenSubKey(@"SOFTWARE", true);
-
-            if (Array.IndexOf(regKey.GetSubKeyNames(), @"GenTag", 0) == -1)
-                regKey.CreateSubKey(@"GenTag");
-            regKey = regKey.OpenSubKey(@"GenTag", true);
-
-            regKey.SetValue(@"hostname", hostName.Text);
-
-        }       
+         
 
         private void mainForm_KeyDown(object sender, KeyEventArgs e)
         {
@@ -229,6 +284,7 @@ namespace GenTag_Demo
             if ((e.KeyCode == System.Windows.Forms.Keys.Right))
             {
                 // Right
+                treeView1.Nodes.Clear();
             }
             if ((e.KeyCode == System.Windows.Forms.Keys.Enter))
             {
