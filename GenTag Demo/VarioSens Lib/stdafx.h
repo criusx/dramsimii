@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <afx.h>
+
 // NOTE - this is value is not strongly correlated to the Windows CE OS version being targeted
 #define WINVER _WIN32_WCE
 

@@ -6,24 +6,87 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using C1Lib;
-using Protocol;
+//using Protocol;
+using System.Net;
 using System.Net.Sockets;
 using Microsoft.Win32;
 using System.Resources;
 using System.Runtime.InteropServices;
+using System.Globalization;
+using System.Threading;
+using TestPocketGraphBar;
 
+[assembly:CLSCompliant(true)]
 namespace GenTag_Demo
 {
     public partial class mainForm : Form
     {
+        static mainForm mF;
+
+        Graph graph;
+        //private bgTreeView treeView2;
+
+        //[DllImport("user32.dll")]
+        //public extern static int SendMessage(IntPtr hwnd, uint msg, uint wParam, uint lParam);
+
+        //[DllImport("coredll.dll")]
+        //public static extern int SendMessage(IntPtr hWnd, uint Message, uint wParam, uint lParam);
+
+        //[DllImport("user32.dll")]
+        //public extern static int SendMessage(IntPtr hwnd, uint msg, uint wParam, LVBKIMAGE lParam);
+
+        //private const int NOERROR = 0x0;
+        //private const int S_OK = 0x0;
+        //private const int S_FALSE = 0x1;
+        //private const int LVM_FIRST = 0x1000;
+        //private const int LVM_SETBKIMAGE = LVM_FIRST + 68;
+        //private const int LVM_SETTEXTBKCOLOR = LVM_FIRST + 38;
+        //private const int LVBKIF_SOURCE_URL = 0x02;
+        //private const int LVBKIF_STYLE_TILE = 0x10;
+        //private const uint CLR_NONE = 0xFFFFFFFF;
+
+        //SendMessage(listBox1.Handle, LVM_SETEXTENDEDLISTVIEWSTYLE, LVS_EX_GRADIENT, LVS_EX_GRADIENT);
+  
+
+        //private const int LVS_EX_GRADIENT   = 0x20000000;
+        //private const int LVM_FIRST     = 0x1000;
+        //private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
+
+        //private const int LVS_EX_GRADIENT = 0x20000000;
+        //private const int LVM_FIRST = 0x1000;
+        //private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
+
         public mainForm()
         {
-            InitializeComponent();
+            InitializeComponent();            
+
+            mF = this;
+            
+            graph = new Graph();
+            graph.Visible = false;
+            graph.Size = new Size(240, 230);
+            graph.Location = new Point(0, 0);            
+            tabPage2.Controls.Add(graph);
 
             // Load Localized values
             button1.Text = GenTag_Demo.Properties.Resources.button1String;
             button2.Text = GenTag_Demo.Properties.Resources.button2String;
+            button3.Text = GenTag_Demo.Properties.Resources.button3String;
+            button4.Text = GenTag_Demo.Properties.Resources.button4String;
+            button5.Text = GenTag_Demo.Properties.Resources.button5String;
             this.Text = GenTag_Demo.Properties.Resources.titleString;
+
+            tabControl1.TabPages[0].Text = GenTag_Demo.Properties.Resources.tab2String;
+            tabControl1.TabPages[1].Text = GenTag_Demo.Properties.Resources.tab1String;
+            tabControl1.TabPages[2].Text = GenTag_Demo.Properties.Resources.tab3String;
+            tabControl1.TabPages[3].Text = GenTag_Demo.Properties.Resources.tab4String;
+
+            label5.Text = label1.Text = GenTag_Demo.Properties.Resources.hiLimitString;
+            label6.Text = label2.Text = GenTag_Demo.Properties.Resources.loLimitString;
+            label7.Text = label3.Text = GenTag_Demo.Properties.Resources.intervalString;
+            label4.Text = GenTag_Demo.Properties.Resources.logString;
+
+            textBox9.Text = @"";
 
 
             // Init the Registry
@@ -46,95 +109,121 @@ namespace GenTag_Demo
            //hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
-
-        [DllImport("VarioSens Lib.dll",CallingConvention = CallingConvention.Winapi)]
-        static extern int multiply(int a, int b);
-
         public delegate void arrayCB(
-            int errorCode,
-            int len,
-            float upperTempLimit,
-            float lowerTempLimit, 
-            int recordPeriod,             
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] byte[] logMode,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] uint[] dateTime,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] float[] temperatures);
+            Int32 errorCode,
+            Int32 len,
+            Single upperTempLimit,
+            Single lowerTempLimit, 
+            short recordPeriod,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] int[] dateTime,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] Byte[] logMode,            
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] Single[] temperatures);
 
         [DllImport("VarioSens Lib.dll")]
-        public static extern void getVarioSensLog(arrayCB cb);
+        protected static extern void getVarioSensLog(arrayCB cb);
 
+        private static DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
 
         private static void callbackFunct(
-            int errorCode,
-            int len, 
-            float upperTempLimit, 
-            float lowerTempLimit, 
-            int recordPeriod, 
-            byte[] logMode,
-            uint[] dateTime,
-            float[] temperatures)
+            Int32 errorCode,
+            Int32 len, 
+            Single upperTempLimit, 
+            Single lowerTempLimit, 
+            short recordPeriod,
+            int[] dateTime,
+            Byte[] logMode,            
+            Single[] temperatures)
         {
+            mF.textBox9.Text = @"";
+
             switch (errorCode)
             {
                 case 0:
-                    uint time_t = dateTime[0];
-                    DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
-                    DateTime convertedValue = origin + new TimeSpan(time_t * TimeSpan.TicksPerSecond);
-                    if (System.TimeZone.CurrentTimeZone.IsDaylightSavingTime(convertedValue) == true)
+                    mF.textBox1.Text = upperTempLimit.ToString();
+                    mF.textBox2.Text = lowerTempLimit.ToString();
+                    mF.textBox3.Text = recordPeriod.ToString();
+                    mF.listBox1.Items.Clear();
+
+                    for (int i = 0; i < dateTime.Length; i++)
                     {
-                        System.Globalization.DaylightTime daylightTime = System.TimeZone.CurrentTimeZone.GetDaylightChanges(convertedValue.Year);
-                        convertedValue = convertedValue + daylightTime.Delta;
+                        if (logMode[i] == 1)
+                        {
+                            mF.listBox1.Items.Add(temperatures[i].ToString("F"));
+                            mF.graph.Add(i, temperatures[i]);
+                        }
+                        else if (logMode[i] == 2)
+                        {
+                            UInt32 time_t = Convert.ToUInt32(dateTime[i]);
+
+                            DateTime convertedValue = origin + new TimeSpan(time_t * TimeSpan.TicksPerSecond);
+                            if (System.TimeZone.CurrentTimeZone.IsDaylightSavingTime(convertedValue) == true)
+                            {
+                                System.Globalization.DaylightTime daylightTime = System.TimeZone.CurrentTimeZone.GetDaylightChanges(convertedValue.Year);
+                                convertedValue = convertedValue + daylightTime.Delta;
+                            }
+                            mF.listBox1.Items.Add(temperatures[i].ToString("F",CultureInfo.CurrentCulture) + " C" + convertedValue.ToString());
+                            
+                        }
+                        
                     }
-                    MessageBox.Show("Success" + convertedValue.ToString());
-                    break;
+                    if (logMode[0] == 1)
+                    {
+                        try
+                        {
+                            mF.graph.Visible = true;
+                            mF.graph.BringToFront();
+                            //mF.button2.Visible =
+                            //    mF.label1.Visible =
+                            //    mF.label2.Visible =
+                            //    mF.label3.Visible =
+                            //    mF.label4.Visible =
+                            //    mF.textBox1.Visible =
+                            //    mF.textBox2.Visible =
+                            //    mF.textBox3.Visible =
+                            //    mF.textBox9.Visible =
+                            //    mF.listBox1.Visible =
+                            //    mF.checkBox2.Visible = false;
+
+                            //mF.graph.LeftMargin = 20;
+                            //mF.graph.AxisColor = Color.Black;
+                            //mF.graph.MaxHeight = 200;
+                            //mF.graph.Thick = 6;
+                            //mF.graph.DisplayTimes = 10;
+                            //mF.graph.
+                            //mF.graph.DrawGraphs(new PaintEventArgs());
+                        }
+                        catch (Exception ee)
+                        {
+                            throw ee;
+                        }
+                    }
+                        break;
                 case -1:
-                    MessageBox.Show("Error, no communication with Sirit card");
+                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error1;
                     break;
                 case -2:
-                    MessageBox.Show("Error, cannot enable Sirit PNP RFID");
+                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error2;
                     break;
                 case -3:
-                    MessageBox.Show("Error, cannot read tag");
+                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error3;
                     break;
                 case -4:
-                    MessageBox.Show("Error, cannot retrieve log state from VarioSens card");
+                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error4;
                     break;
                 case -5:
-                    MessageBox.Show("Error, cannot get violation data");
+                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error5;
                     break;
                 case -6:
-                    MessageBox.Show("No violations recorded");
+                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error6;
                     break;
                 case -7:
-                    MessageBox.Show("Error, not a VarioSens tag");
+                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error7;
                     break;
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            arrayCB mycb = new arrayCB(callbackFunct);
-
-            getVarioSensLog(mycb);
-
-            return;
-            uint time_t = 1162857786;
-            DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
-            DateTime convertedValue = origin + new TimeSpan(time_t * TimeSpan.TicksPerSecond);
-            if (System.TimeZone.CurrentTimeZone.IsDaylightSavingTime(convertedValue) == true)
-            {
-                System.Globalization.DaylightTime daylightTime = System.TimeZone.CurrentTimeZone.GetDaylightChanges(convertedValue.Year);
-                convertedValue = convertedValue + daylightTime.Delta;
-            }
-
-            int a = 4;
-            int b = 5;
-            int c = multiply(a, b);
-            c++;
-
-            return;
-            
-            
             Cursor.Current = Cursors.WaitCursor;
             checkBox1.Checked = false;
 
@@ -177,9 +266,16 @@ namespace GenTag_Demo
             try
             {
                 org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-                //GetDatesWS.GetDatesWS ws = new GetDatesWS.GetDatesWS();
-
-                rfidDescr = ws.getDescription(currentTag);                
+                
+                try
+                {
+                    rfidDescr = ws.getDescription(currentTag);
+                }
+                catch (WebException ex)
+                {
+                    MessageBox.Show("Problem connecting to web service: " + ex.Message);
+                }
+                
 
                 //ClientConnection c = new ClientConnection(hostName.Text, Packet.port);
 
@@ -281,189 +377,144 @@ namespace GenTag_Demo
 
             //Cursor.Current = Cursors.Default;
 
-        }
-
-         
+        }         
 
         private void mainForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            if ((e.KeyCode == System.Windows.Forms.Keys.Up))
+        {            
+            if (e.KeyCode == System.Windows.Forms.Keys.Back)
             {
-                // Up
-            }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Down))
-            {
-                // Down
-            }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Left))
-            {
-                // Left
-            }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Right))
-            {
-                // Right
                 treeView1.Nodes.Clear();
             }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Enter))
+            else if (e.KeyCode == System.Windows.Forms.Keys.Q)
             {
-                // Enter
-                treeView1.Nodes.Clear();
+                Application.Exit();                
             }
         }
-    }
-    public unsafe class varioSensReader
-    {
-        public struct tag_15693
+
+        private void button2_Click(object sender, EventArgs e)
         {
-            bool program_option;
-            bool read_security;
-            bool selected;          
-            bool addressed;
-            byte sys_info_support;
-            byte command_support;
-            byte DSFID;
-            byte AFI;
-            byte bytes_per_block;
-            byte blocks;
-            byte ic_ref;
-            fixed byte tag_id[10];
-            int id_length;
-            fixed byte read_buff[256];
-            fixed byte security_buff[256];
-            byte tag_type;
-        };
+            Cursor.Current = Cursors.WaitCursor;
 
-        struct tempViolationData
+            checkBox2.Checked = false;
+
+            arrayCB mycb = new arrayCB(callbackFunct);
+
+            getVarioSensLog(mycb);
+
+            checkBox2.Checked = true;
+
+            // go do web service stuff
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
         {
-            byte logMode;
+            Cursor.Current = Cursors.WaitCursor;
 
-            // Log Mode 0
-            //	temperature[0] - internal temperature
-            //  temperature[1] - external temperature
-            //  logCounter - Log Counter
+            textBox4.Enabled = false;
 
-            // Log Mode 1
-            //	temperature[0] - Measurement 1
-            //  temperature[1] - Measurement 2
-            //  temperature[2] - Measurement 3
+            org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
 
-            // Log Mode 2
-            //	temperature[0] - Measurement outside limits
-            //  logCounter - Log Counter
+            string rfidDescr = @"No description found";
 
-            // Log Mode 3
-            //	temperature[0] - First time measurement is outside or inside limits or extremum value
-            //  logCounter - Log Counter
-
-            fixed float temperature[3];
-
-            // the time that the violation occurred
-            uint vltionTime;
-        };
-
-        const uint VARIOSENS = 2;
-
-        public struct variosens_log
-        {
-            //log settings
-            // memory block 0x05
-            int calTemp1;
-            int calTemp2;
-            int calTicks1;
-
-            // memory block 0x06
-            uint calVoltageLo;
-            uint voltageTh;
-            uint calVoltageHi;
-            int calTicks2;
-
-            // memory block 0x08
-            uint UTCStartTime;
-
-            // memory block 0x09
-            ushort stndByTime;
-            ushort logIntval;
-
-            // memory block 0x0A
-            byte logMode;
-            byte batCheck;
-            float upperTemp;
-            float lowerTemp;
-            byte storageMode;
-            byte sensorFlag;
-
-            // memory block 0x0B
-            uint nextBlockAdd;
-            uint numMemRpl;
-            bool cardStopped;
-            bool cardExternal;
-            uint numMeasure;
-
-            uint numDownloadMeas;
-
-            byte PWLevel;
-            uint password;
-
-            //fixed tempViolationData vltionData[VIOLATIONDATALNTH];
-        };
-
-        #region dllImports
-        //[DllImport("C1lib_PPC.dll")]
-        extern int get_15693(tag_15693 *tag, byte AFI);
-        extern variosens_log new_variosens_log();
-        extern int VS_init(tag_15693 *tag);
-        extern int VS_setLogMode(tag_15693 *tag, variosens_log *pVLog);
-        extern int VS_setLogTimer(tag_15693 *tag, variosens_log *pVLog);
-        extern int VS_startLog(tag_15693 *tag, uint UTCTime);
-        extern int VS_getLogState(tag_15693 *tag, variosens_log *pVLog);
-        extern int VS_set_passive(tag_15693 *tag);
-        extern int VS_verifyPW(tag_15693 *tag, variosens_log *pVLog);
-        extern int VS_setPW(tag_15693 *tag, variosens_log *pVLog);
-        extern int VS_getLogData(tag_15693 *pTag, variosens_log *pVLog);
-        extern int C1_open_comm();
-        extern int C1_close_comm();
-        extern int C1_set_comm();
-        extern int C1_disable();
-        extern int C1_enable();
-        
-        #endregion
-
-        unsafe private void button2_Click(object sender, EventArgs e)
-        {
-            return;
-            if (C1Lib.C1.NET_C1_open_comm() != 1)
+            try
             {
-                C1Lib.C1.NET_C1_close_comm();
-                return;
+                rfidDescr = ws.getDescription(textBox4.Text);
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show(@"Problem connecting to web service: " + ex.Message);
             }
 
-            if (C1Lib.C1.NET_C1_enable() != 1)
+            treeView2.BeginUpdate();
+
+            bool exists = false;
+
+            foreach (TreeNode tn in treeView2.Nodes)
             {
-                C1Lib.C1.NET_C1_close_comm();
-                return;
-            }
-            if (C1Lib.ISO_15693.NET_get_15693(0x00) == 0) { }
-            if (C1Lib.ISO_15693.tag.tag_type == 2)
-            {
-                    for (uint i = 0; i < 0x0F; i++)
-                    {
-                        if (C1Lib.ISO_15693.TempSens.NET_TS_get_log_info() == 1)
-                        {
-                            if (C1Lib.ISO_15693.TempSens.NET_TS_get_log_data() == 1)
-                            {
-                                //string violations = "";
-                                //for (uint i=0; i <C1Lib.ISO_15693.TempSens.log.)
-                                //MessageBox.Show("Violations: " + )
-                                MessageBox.Show("Current Temp: " + C1Lib.ISO_15693.TempSens.log.temperature[0]);
-                                break;
-                            }
-                        }
-                        
-                    }
+                if (tn.Text == textBox4.Text)
+                {
+                    tn.Nodes.Clear();
+                    tn.Nodes.Add(rfidDescr);
+                    exists = true;
                 }
-                C1Lib.C1.NET_C1_disable();
-                C1Lib.C1.NET_C1_close_comm();
-            //}
+            }
+            if (!exists)
+            {
+                treeView2.Nodes.Add(textBox4.Text).Nodes.Add(rfidDescr);
+            }
+            treeView1.EndUpdate();
+
+            textBox4.Enabled = true;
+
+            Cursor.Current = Cursors.Default;
+        }       
+
+        [DllImport("VarioSens Lib.dll")]
+        public static extern int setVarioSensSettings(float lowTemp, float hiTemp, int interval, int mode, int batteryCheckInterval);
+        
+        // set
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int mode;
+
+                if (comboBox1.SelectedIndex == 0)
+                    mode = 1;
+                else
+                    mode = 2;
+                int eC = setVarioSensSettings(float.Parse(textBox7.Text), float.Parse(textBox6.Text), int.Parse(textBox5.Text), mode, int.Parse(textBox8.Text));
+                if (eC != 0)
+                    MessageBox.Show("Error");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-    };
+
+        public delegate void arrayCB2(
+            Single upperTempLimit,
+            Single lowerTempLimit,
+            short recordPeriod,
+            short errorCode,
+            short logMode,
+            short batteryCheckInterval);
+
+        [DllImport("VarioSens Lib.dll")]
+        public static extern void getVarioSensSettings(arrayCB2 cb);
+
+        private void getCallback(Single upper, Single lower, short period, short errorCode, short logMode, short batteryCheckInterval)
+        {
+            if (errorCode == 0)
+            {
+                mF.textBox7.Text = lower.ToString();
+                mF.textBox6.Text = upper.ToString();
+                mF.textBox5.Text = period.ToString();
+                if (logMode == 1)
+                {
+                    mF.comboBox1.SelectedIndex = 0;
+                }
+                else if (logMode == 2)
+                {
+                    mF.comboBox1.SelectedIndex = 1;
+                }
+                mF.textBox8.Text = batteryCheckInterval.ToString();
+            }
+        }
+
+        // get
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            arrayCB2 mycb = new arrayCB2(getCallback);
+
+            getVarioSensSettings(mycb);
+
+            Cursor.Current = Cursors.Default;
+        }
+    }    
 }

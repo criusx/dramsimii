@@ -11,4 +11,3 @@
 // CVarioSensLibApp
 // See VarioSens Lib.cpp for the implementation of this class
 //
-extern "C" __declspec(dllexport) int WINAPI multiply(int a,int b);

@@ -104,7 +104,8 @@
 			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="2"
+			UseOfATL="0"
 			CharacterSet="1"
 			>
 			<Tool
@@ -127,13 +128,15 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
+				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="C:\Documents and Settings\CriuS\My Documents\RFID\KSW Dev Kit\Sirit\SDIO SDK\cd\include"
 				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
 				ExceptionHandling="1"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
+				CompileForArchitecture="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -149,13 +152,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions=" /subsystem:windowsce,5.01"
-				AdditionalDependencies="C1Lib_PPC.lib"
+				AdditionalOptions=" /subsystem:windowsce,5.01 /verbose:lib /INCLUDE:DllMain"
+				AdditionalDependencies="C1Lib_PPC.lib "
 				OutputFile="../GenTag Demo/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\CriuS\My Documents\RFID\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC&quot;"
 				IgnoreAllDefaultLibraries="false"
-				IgnoreDefaultLibraryNames="corelibc.lib;uafxcwd.lib"
+				IgnoreDefaultLibraryNames=""
 				ModuleDefinitionFile=".\VarioSens Lib.def"
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
@@ -319,12 +322,16 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
-				OutputFile="$(OutDir)/VarioSens Lib.dll"
-				LinkIncremental="1"
+				AdditionalDependencies="C1Lib_PPC.lib"
+				OutputFile="../GenTag Demo/$(ProjectName).dll"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\CriuS\My Documents\RFID\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC&quot;"
 				ModuleDefinitionFile=".\VarioSens Lib.def"
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
+				EntryPointSymbol="_DllMainCRTStartup"
+				BaseAddress="0x000100000"
 				ImportLibrary="$(OutDir)/VarioSens Lib.lib"
 			/>
 			<Tool

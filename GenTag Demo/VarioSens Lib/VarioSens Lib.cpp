@@ -1,83 +1,227 @@
 // VarioSens Lib.cpp : Defines the initialization routines for the DLL.
 //
-
 #include "stdafx.h"
 #include "VarioSens Lib.h"
 #include "c1lib.h"
-#include <string>
-#include <sstream>
 
-//#ifdef _DEBUG
-//#define new DEBUG_NEW
-//#endif
-
-//
-//TODO: If this DLL is dynamically linked against the MFC DLLs,
-//		any functions exported from this DLL which call into
-//		MFC must have the AFX_MANAGE_STATE macro added at the
-//		very beginning of the function.
-//
-//		For example:
-//
-//		extern "C" BOOL PASCAL EXPORT ExportedFunction()
-//		{
-//			AFX_MANAGE_STATE(AfxGetStaticModuleState());
-//			// normal function body here
-//		}
-//
-//		It is very important that this macro appear in each
-//		function, prior to any calls into MFC.  This means that
-//		it must appear as the first statement within the 
-//		function, even before any object variable declarations
-//		as their constructors may generate calls into the MFC
-//		DLL.
-//
-//		Please see MFC Technical Notes 33 and 58 for additional
-//		details.
-//
-
-BOOL APIENTRY DllMain( HANDLE hModule,
-					  DWORD ul_reason_for_call,
-					  LPVOID lpReserved)
-{
-	return TRUE;
-}
-
-extern "C" __declspec(dllexport) int WINAPI multiply(int a,int b)
-{
-	return a * b;
-}
-#if 0
-extern "C" __declspec(dllexport) int WINAPI getViolations()
-{
-	
-}
-#endif
+typedef void (*ARRAYCB2)(float upper,
+						 float lower,
+						 int period,
+						 int errorCode,
+						 int logMode,
+						 int batteryCheckInterval);
 
 typedef void (*ARRAYCB)(int errorCode,
 						int len,
 						float upperTempLimit,
 						float lowerTempLimit, 
-						int recordPeriod, 						
-						unsigned char logMode[],
+						unsigned short recordPeriod, 
 						unsigned int dateTime[],
+						unsigned char logMode[],						
 						float temperatures[]);
 
 #define MAXTRIES 1
 
-#define DEFAULTARRAYSIZE 4
+#define DEFAULTARRAYSIZE 1
+
+extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
+														  float hiTemp,
+														  int interval,
+														  int mode,
+														  int batCheckInt)
+{
+	int errorCode = 0;
+
+	if (!C1_open_comm()) 
+	{
+		C1_close_comm();
+		errorCode = -1;
+	}
+	else if (!C1_enable())
+	{
+		C1_close_comm();
+		errorCode = -2;
+	}
+	else
+	{
+		tag_15693 myVarioSensTag = new_15693();
+
+		variosens_log varioSensLog = new_variosens_log();
+
+		int failures = MAXTRIES;
+
+		while (failures > 0)
+		{
+			// make sure it isn't doing a spin-wait
+			Sleep(10);
+
+			if (get_15693(&myVarioSensTag, NULL) && myVarioSensTag.tag_type == VARIOSENS)
+			{
+				if (!VS_init(&myVarioSensTag))
+				{
+					errorCode = -3;
+					--failures;
+				}
+				else if (!VS_getLogState(&myVarioSensTag, &varioSensLog))
+				{
+					errorCode = -4;
+					--failures;
+				}				
+				else
+				{
+					varioSensLog.stndByTime = 0;
+					varioSensLog.logIntval = (unsigned short)interval;
+
+					if (!VS_setLogTimer(&myVarioSensTag,&varioSensLog))
+					{
+						errorCode = -5;
+						--failures;
+					}
+					else
+					{
+						varioSensLog.upperTemp = hiTemp;
+						varioSensLog.lowerTemp = lowTemp;
+						varioSensLog.logMode = mode;
+						
+						if (!VS_setLogMode(&myVarioSensTag,&varioSensLog))
+						{
+							errorCode = -6;
+							--failures;
+						}
+						else
+						{
+							CTime theTime(CTime::GetCurrentTime());
+							time_t osBinaryTime = (time_t)theTime.GetTime(); // time_t defined in <time.h>
+							SYSTEMTIME timeDest;
+							theTime.GetAsSystemTime(timeDest);
+							varioSensLog.UTCStartTime = osBinaryTime;
+
+							if (!VS_startLog(&myVarioSensTag,osBinaryTime))
+							{
+								errorCode = -7;
+								--failures;
+							}
+							else
+							{								
+								errorCode = 0;
+								break;
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				errorCode = -3;
+			}
+
+		}
+	}
+
+	C1_disable();
+
+	C1_close_comm();	
+
+	return errorCode;
+}
+
+
+extern "C" __declspec(dllexport) void getVarioSensSettings(ARRAYCB2 callbackFunc)
+{
+	
+	static float lowerTempLimit = 0;
+	static float upperTempLimit = 0;
+	static unsigned short recordPeriod = 0;
+	static int errorCode = 0; // the equivalent of a return code
+	static int logMode = 0;
+	static int batteryCheckInterval = 0;
+
+	if (!C1_open_comm()) 
+	{
+		C1_close_comm();
+		errorCode = -1;
+	}
+	else if (!C1_enable())
+	{
+		C1_close_comm();
+		errorCode = -2;
+	}
+	else
+	{
+		tag_15693 myVarioSensTag = new_15693();
+
+		variosens_log varioSensLog = new_variosens_log();
+
+		int failures = MAXTRIES;
+
+		while (failures > 0)
+		{
+			// make sure it isn't doing a spin-wait
+			Sleep(10);
+
+			if (get_15693(&myVarioSensTag, NULL) &&
+				myVarioSensTag.tag_type == VARIOSENS)
+			{
+#ifdef USINGPASSIVE
+				if(!VS_set_passive(&my_tag_15693))
+				{
+					errorMessage = "ERROR - Failed to set passive";
+					break;
+				}
+#endif
+
+				if (!VS_getLogState(&myVarioSensTag, &varioSensLog))
+				{
+					errorCode = -4;
+					--failures;
+				}				
+				else
+				{
+					errorCode = 0;
+					// no more read failures at this point
+					lowerTempLimit = varioSensLog.lowerTemp;
+					upperTempLimit = varioSensLog.upperTemp;
+					recordPeriod = varioSensLog.logIntval; 
+					batteryCheckInterval = varioSensLog.batCheck;
+					logMode = varioSensLog.logMode;
+					break;
+				}
+			}
+			else
+			{
+				/*if (myVarioSensTag.tag_type != VARIOSENS)
+				{
+					errorCode = -7;
+					break;
+				}*/
+				//else
+				//{
+					errorCode = -3;
+				//}
+				//--failures;
+			}
+
+		}
+	}
+
+	C1_disable();
+
+	C1_close_comm();	
+
+	(*callbackFunc)(upperTempLimit,lowerTempLimit,recordPeriod,errorCode,logMode,batteryCheckInterval);
+}
 
 extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 {
 	// default to having something to marshal
 	int len = DEFAULTARRAYSIZE;
 	unsigned char *logMode = new unsigned char[DEFAULTARRAYSIZE];
-	unsigned int *dateTime = new unsigned int[DEFAULTARRAYSIZE];	
+	unsigned int *dateTime = new unsigned int[DEFAULTARRAYSIZE];
 	float *temperatures = new float[DEFAULTARRAYSIZE];	
 
-	static float lowerTempLimit = 1;
-	static float upperTempLimit = 2;
-	static unsigned short recordPeriod = 3;
+	static float lowerTempLimit = 0;
+	static float upperTempLimit = 0;
+	static unsigned short recordPeriod = 0;
 	static int errorCode = 0; // the equivalent of a return code	 
 
 	if (!C1_open_comm()) 
@@ -145,11 +289,13 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 						delete[] dateTime;
 						delete[] temperatures;
 
-						unsigned char *logMode = new unsigned char[varioSensLog.numDownloadMeas];
-						unsigned int *dateTime = new unsigned int[varioSensLog.numDownloadMeas];
-						float *temperatures = new float[varioSensLog.numDownloadMeas];
+						len = varioSensLog.numDownloadMeas;
 
-						for (unsigned int i=0; i<varioSensLog.numDownloadMeas; i++) 
+						logMode = new unsigned char[varioSensLog.numDownloadMeas];
+						dateTime = new unsigned int[varioSensLog.numDownloadMeas];
+						temperatures = new float[varioSensLog.numDownloadMeas];
+						
+						for (unsigned int i = 0; i < varioSensLog.numDownloadMeas; i++) 
 						{
 							dateTime[i] = varioSensLog.vltionData[i].vltionTime;
 
@@ -162,7 +308,7 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 								break;
 							case 1:
 								// FIXME: this logs to all three temperature slots
-								temperatures[i] = varioSensLog.vltionData[i].temperature[1];
+								temperatures[i] = varioSensLog.vltionData[i].temperature[0];
 								break;
 							case 2:
 								temperatures[i] = varioSensLog.vltionData[i].temperature[0];
@@ -203,5 +349,5 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 
 	C1_close_comm();	
 
-	(*callbackFunc)(errorCode, len,upperTempLimit,lowerTempLimit,recordPeriod,logMode,dateTime,temperatures);
+	(*callbackFunc)(errorCode, len,upperTempLimit,lowerTempLimit,recordPeriod,dateTime,logMode,temperatures);
 }

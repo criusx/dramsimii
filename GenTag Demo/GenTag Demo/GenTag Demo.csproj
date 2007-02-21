@@ -17,6 +17,8 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FormFactorID>
     </FormFactorID>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Gentag Demo Key.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRules>-Microsoft.Globalization#CA1303</CodeAnalysisRules>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,6 +52,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\RFID\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC\C1Lib_net_PPC.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -59,7 +63,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientConnection.cs" />
-    <Compile Include="CRC.cs" />
+    <Compile Include="Data.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GraphMotor.cs" />
+    <Compile Include="GraphPoint.cs" />
+    <Compile Include="ListData.cs" />
+    <Compile Include="ListGraphs.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,6 +78,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Data.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Data.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mainForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>mainForm.cs</DependentUpon>
@@ -89,12 +103,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Protocol\Protocol.csproj">
-      <Project>{1E793C5E-89C2-488A-B5FF-C501ABAA8000}</Project>
-      <Name>Protocol</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +121,7 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Gentag Demo Key.pfx" />
     <None Include="Web References\org.dyndns.crius\GetDatesWS.wsdl" />
     <None Include="Web References\org.dyndns.crius\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
@@ -120,6 +129,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Gentag-logo.png" />
     <Content Include="VarioSens Lib.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

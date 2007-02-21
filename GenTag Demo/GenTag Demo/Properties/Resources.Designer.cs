@@ -76,6 +76,175 @@ namespace GenTag_Demo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lookup.
+        /// </summary>
+        internal static string button3String {
+            get {
+                return ResourceManager.GetString("button3String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Values.
+        /// </summary>
+        internal static string button4String {
+            get {
+                return ResourceManager.GetString("button4String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read Values.
+        /// </summary>
+        internal static string button5String {
+            get {
+                return ResourceManager.GetString("button5String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error, no communication with Sirit card.
+        /// </summary>
+        internal static string error1 {
+            get {
+                return ResourceManager.GetString("error1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error, cannot enable Sirit PNP RFID.
+        /// </summary>
+        internal static string error2 {
+            get {
+                return ResourceManager.GetString("error2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error, cannot read tag.
+        /// </summary>
+        internal static string error3 {
+            get {
+                return ResourceManager.GetString("error3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error, cannot retrieve log state from VarioSens card.
+        /// </summary>
+        internal static string error4 {
+            get {
+                return ResourceManager.GetString("error4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error, cannot get violation data.
+        /// </summary>
+        internal static string error5 {
+            get {
+                return ResourceManager.GetString("error5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No violations recorded.
+        /// </summary>
+        internal static string error6 {
+            get {
+                return ResourceManager.GetString("error6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error, not a VarioSens tag.
+        /// </summary>
+        internal static string error7 {
+            get {
+                return ResourceManager.GetString("error7", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Gentag_logo {
+            get {
+                object obj = ResourceManager.GetObject("Gentag_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hi Limit.
+        /// </summary>
+        internal static string hiLimitString {
+            get {
+                return ResourceManager.GetString("hiLimitString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interval.
+        /// </summary>
+        internal static string intervalString {
+            get {
+                return ResourceManager.GetString("intervalString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature Violation Log.
+        /// </summary>
+        internal static string logString {
+            get {
+                return ResourceManager.GetString("logString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lo Limit.
+        /// </summary>
+        internal static string loLimitString {
+            get {
+                return ResourceManager.GetString("loLimitString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VarioSens.
+        /// </summary>
+        internal static string tab1String {
+            get {
+                return ResourceManager.GetString("tab1String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID Lookup.
+        /// </summary>
+        internal static string tab2String {
+            get {
+                return ResourceManager.GetString("tab2String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual.
+        /// </summary>
+        internal static string tab3String {
+            get {
+                return ResourceManager.GetString("tab3String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VarioSens/W.
+        /// </summary>
+        internal static string tab4String {
+            get {
+                return ResourceManager.GetString("tab4String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GenTag Demo.
         /// </summary>
         internal static string titleString {
