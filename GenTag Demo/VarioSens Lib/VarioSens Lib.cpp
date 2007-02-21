@@ -81,8 +81,8 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 					{
 						varioSensLog.upperTemp = hiTemp;
 						varioSensLog.lowerTemp = lowTemp;
-						varioSensLog.logMode = mode;
-						
+						varioSensLog.logMode = (unsigned char)mode;
+
 						if (!VS_setLogMode(&myVarioSensTag,&varioSensLog))
 						{
 							errorCode = -6;
@@ -128,7 +128,7 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 
 extern "C" __declspec(dllexport) void getVarioSensSettings(ARRAYCB2 callbackFunc)
 {
-	
+
 	static float lowerTempLimit = 0;
 	static float upperTempLimit = 0;
 	static unsigned short recordPeriod = 0;
@@ -191,12 +191,12 @@ extern "C" __declspec(dllexport) void getVarioSensSettings(ARRAYCB2 callbackFunc
 			{
 				/*if (myVarioSensTag.tag_type != VARIOSENS)
 				{
-					errorCode = -7;
-					break;
+				errorCode = -7;
+				break;
 				}*/
 				//else
 				//{
-					errorCode = -3;
+				errorCode = -3;
 				//}
 				//--failures;
 			}
@@ -294,7 +294,7 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 						logMode = new unsigned char[varioSensLog.numDownloadMeas];
 						dateTime = new unsigned int[varioSensLog.numDownloadMeas];
 						temperatures = new float[varioSensLog.numDownloadMeas];
-						
+
 						for (unsigned int i = 0; i < varioSensLog.numDownloadMeas; i++) 
 						{
 							dateTime[i] = varioSensLog.vltionData[i].vltionTime;
@@ -341,7 +341,7 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 				}
 				//--failures;
 			}
-			
+
 		}
 	}
 

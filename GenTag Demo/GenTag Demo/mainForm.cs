@@ -143,6 +143,7 @@ namespace GenTag_Demo
                     mF.textBox2.Text = lowerTempLimit.ToString();
                     mF.textBox3.Text = recordPeriod.ToString();
                     mF.listBox1.Items.Clear();
+                    mF.graph.Clear();
 
                     for (int i = 0; i < dateTime.Length; i++)
                     {
@@ -170,27 +171,11 @@ namespace GenTag_Demo
                     {
                         try
                         {
-                            mF.graph.Visible = true;
-                            mF.graph.BringToFront();
-                            //mF.button2.Visible =
-                            //    mF.label1.Visible =
-                            //    mF.label2.Visible =
-                            //    mF.label3.Visible =
-                            //    mF.label4.Visible =
-                            //    mF.textBox1.Visible =
-                            //    mF.textBox2.Visible =
-                            //    mF.textBox3.Visible =
-                            //    mF.textBox9.Visible =
-                            //    mF.listBox1.Visible =
-                            //    mF.checkBox2.Visible = false;
-
-                            //mF.graph.LeftMargin = 20;
-                            //mF.graph.AxisColor = Color.Black;
-                            //mF.graph.MaxHeight = 200;
-                            //mF.graph.Thick = 6;
-                            //mF.graph.DisplayTimes = 10;
-                            //mF.graph.
-                            //mF.graph.DrawGraphs(new PaintEventArgs());
+                            if (mF.listBox1.Items.Count > 1)
+                            {
+                                mF.graph.Visible = true;
+                                mF.graph.BringToFront();
+                            }
                         }
                         catch (Exception ee)
                         {

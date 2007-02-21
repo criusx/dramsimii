@@ -53,8 +53,6 @@ namespace TestPocketGraphBar
         }
         #endregion
 
-
-
         private void Data_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             try
@@ -97,10 +95,15 @@ namespace TestPocketGraphBar
             return;
         }
 
-        public void Add(int X,float Y)
+        public void Add(int X, float Y)
         {
-            GraphPoint p = new GraphPoint(Convert.ToDecimal(X),Convert.ToDecimal(Y));
+            GraphPoint p = new GraphPoint(Convert.ToDecimal(X), Convert.ToDecimal(Y));
             graph.Graphs[0].Add(p);
+        }
+
+        public void Clear()
+        {
+            graph.Graphs[0].Clear();
         }
 
         private void Draw_Click(object sender, System.EventArgs e)

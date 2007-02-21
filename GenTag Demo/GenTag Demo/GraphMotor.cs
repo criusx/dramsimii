@@ -135,7 +135,7 @@ namespace PocketGraphBar
       /// <summary>
       /// Color for data in X Axis and y Axis
       /// </summary>
-      public System.Drawing.Font LegendFont
+      public Font LegendFont
       {
          get
          {
