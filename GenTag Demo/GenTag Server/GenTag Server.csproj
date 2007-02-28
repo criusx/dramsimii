@@ -69,8 +69,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Web References\WebReference\GetDatesWS.wsdl" />
-    <None Include="Web References\WebReference\Reference.map">
+    <None Include="Web References\org.dyndns.crius\GetDates.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\org.dyndns.crius\GetDatesWS.wsdl" />
+    <None Include="Web References\org.dyndns.crius\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -79,38 +82,27 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Web References\WebReference\Reference.cs">
+    <Compile Include="Web References\org.dyndns.crius\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Protocol\Protocol.csproj">
-      <Project>{1E793C5E-89C2-488A-B5FF-C501ABAA8000}</Project>
-      <Name>Protocol</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://192.168.10.20:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\WebReference\</RelPath>
-      <UpdateFromURL>http://192.168.10.20:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <RelPath>Web References\org.dyndns.crius\</RelPath>
+      <UpdateFromURL>http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>GenTag_Server_WebReference_GetDatesWS</CachedSettingsPropName>
+      <CachedSettingsPropName>GenTag_Server_org_dyndns_crius_GetDatesWS</CachedSettingsPropName>
     </WebReferenceUrl>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="VarioSens Lib.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

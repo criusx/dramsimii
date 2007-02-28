@@ -3,22 +3,7 @@
 #include "stdafx.h"
 #include "VarioSens Lib.h"
 #include "c1lib.h"
-
-typedef void (*ARRAYCB2)(float upper,
-						 float lower,
-						 int period,
-						 int errorCode,
-						 int logMode,
-						 int batteryCheckInterval);
-
-typedef void (*ARRAYCB)(int errorCode,
-						int len,
-						float upperTempLimit,
-						float lowerTempLimit, 
-						unsigned short recordPeriod, 
-						unsigned int dateTime[],
-						unsigned char logMode[],						
-						float temperatures[]);
+#include <sstream>
 
 #define MAXTRIES 1
 
@@ -125,8 +110,13 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 	return errorCode;
 }
 
+typedef void (*ARRAYCB2)(float upper,
+						 float lower,
+						 int period,
+						 int logMode,
+						 int batteryCheckInterval);
 
-extern "C" __declspec(dllexport) void getVarioSensSettings(ARRAYCB2 callbackFunc)
+extern "C" __declspec(dllexport) int getVarioSensSettings(ARRAYCB2 callbackFunc)
 {
 
 	static float lowerTempLimit = 0;
@@ -177,13 +167,16 @@ extern "C" __declspec(dllexport) void getVarioSensSettings(ARRAYCB2 callbackFunc
 				}				
 				else
 				{
-					errorCode = 0;
 					// no more read failures at this point
 					lowerTempLimit = varioSensLog.lowerTemp;
 					upperTempLimit = varioSensLog.upperTemp;
 					recordPeriod = varioSensLog.logIntval; 
 					batteryCheckInterval = varioSensLog.batCheck;
 					logMode = varioSensLog.logMode;
+
+					errorCode = 0;
+					
+					(*callbackFunc)(upperTempLimit,lowerTempLimit,recordPeriod,logMode,batteryCheckInterval);					
 					break;
 				}
 			}
@@ -208,10 +201,22 @@ extern "C" __declspec(dllexport) void getVarioSensSettings(ARRAYCB2 callbackFunc
 
 	C1_close_comm();	
 
-	(*callbackFunc)(upperTempLimit,lowerTempLimit,recordPeriod,errorCode,logMode,batteryCheckInterval);
+	return errorCode;
 }
 
-extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
+//////////////////////////////////////////////////////////////////////////
+// getVarioSensLog and associated callback
+//////////////////////////////////////////////////////////////////////////
+typedef void (*ARRAYCB)(float upperTempLimit,
+						float lowerTempLimit, 
+						int len,
+						unsigned short recordPeriod, 
+						unsigned int dateTime[],
+						unsigned char logMode[],						
+						float temperatures[]);
+
+
+extern "C" __declspec(dllexport) int getVarioSensLog(ARRAYCB callbackFunc)
 {
 	// default to having something to marshal
 	int len = DEFAULTARRAYSIZE;
@@ -222,7 +227,7 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 	static float lowerTempLimit = 0;
 	static float upperTempLimit = 0;
 	static unsigned short recordPeriod = 0;
-	static int errorCode = 0; // the equivalent of a return code	 
+	int errorCode = -1; // the equivalent of a return code	 
 
 	if (!C1_open_comm()) 
 	{
@@ -324,8 +329,9 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 								break;
 							}
 						}
+						(*callbackFunc)(upperTempLimit,lowerTempLimit,len,recordPeriod,dateTime,logMode,temperatures);
+						break;
 					}
-					break;
 				}
 			}
 			else
@@ -349,5 +355,5 @@ extern "C" __declspec(dllexport) void getVarioSensLog(ARRAYCB callbackFunc)
 
 	C1_close_comm();	
 
-	(*callbackFunc)(errorCode, len,upperTempLimit,lowerTempLimit,recordPeriod,dateTime,logMode,temperatures);
+	return errorCode;
 }

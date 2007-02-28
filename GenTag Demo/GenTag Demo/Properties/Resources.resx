@@ -117,26 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="button1String" xml:space="preserve">
-    <value>Read Tag</value>
-  </data>
-  <data name="button2String" xml:space="preserve">
-    <value>Read VarioSens</value>
-  </data>
-  <data name="button3String" xml:space="preserve">
-    <value>Lookup</value>
-  </data>
-  <data name="button4String" xml:space="preserve">
-    <value>Set Values</value>
-  </data>
-  <data name="button5String" xml:space="preserve">
-    <value>Read Values</value>
-  </data>
   <data name="error1" xml:space="preserve">
-    <value>Error, no communication with Sirit card</value>
+    <value>Please ensure that the Sirit reader is completely inserted</value>
   </data>
   <data name="error2" xml:space="preserve">
-    <value>Error, cannot enable Sirit PNP RFID</value>
+    <value>Unable to communicate with Sirit reader</value>
   </data>
   <data name="error3" xml:space="preserve">
     <value>Error, cannot read tag</value>
@@ -168,6 +153,21 @@
   </data>
   <data name="loLimitString" xml:space="preserve">
     <value>Lo Limit</value>
+  </data>
+  <data name="manualIDButtonInit" xml:space="preserve">
+    <value>Lookup</value>
+  </data>
+  <data name="readIDButtonInit" xml:space="preserve">
+    <value>Read Tag</value>
+  </data>
+  <data name="readLogButtonInit" xml:space="preserve">
+    <value>Read VarioSens</value>
+  </data>
+  <data name="readValueButtonInit" xml:space="preserve">
+    <value>Read Values</value>
+  </data>
+  <data name="setValueButtonInit" xml:space="preserve">
+    <value>Set Values</value>
   </data>
   <data name="tab1String" xml:space="preserve">
     <value>VarioSens</value>

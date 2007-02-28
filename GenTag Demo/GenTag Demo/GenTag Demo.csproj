@@ -130,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Gentag-logo.png" />
+    <None Include="Web References\org.dyndns.crius\GetDates.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <Content Include="VarioSens Lib.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

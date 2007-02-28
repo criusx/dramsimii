@@ -3,12 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenTag Demo", "GenTag Demo\GenTag Demo.csproj", "{2BB2FFF5-F1D5-4C0D-A1DB-CD507D7F9280}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protocol", "Protocol\Protocol.csproj", "{1E793C5E-89C2-488A-B5FF-C501ABAA8000}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenTag Server", "GenTag Server\GenTag Server.csproj", "{550F5C11-A801-41C8-BA5F-EA2A623E957E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000} = {1E793C5E-89C2-488A-B5FF-C501ABAA8000}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6CE67811-D13A-43D7-9DF8-7FDE4D0B27A9}"
 EndProject
@@ -48,22 +43,6 @@ Global
 		{2BB2FFF5-F1D5-4C0D-A1DB-CD507D7F9280}.Release|Pocket PC 2003 (ARMV4).ActiveCfg = Release|Any CPU
 		{2BB2FFF5-F1D5-4C0D-A1DB-CD507D7F9280}.Release|Win32.ActiveCfg = Release|Any CPU
 		{2BB2FFF5-F1D5-4C0D-A1DB-CD507D7F9280}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Debug|Pocket PC 2003 (ARMV4).ActiveCfg = Debug|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Debug|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Release|Pocket PC 2003 (ARMV4).ActiveCfg = Release|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Release|Win32.ActiveCfg = Release|Any CPU
-		{1E793C5E-89C2-488A-B5FF-C501ABAA8000}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release|Any CPU
 		{550F5C11-A801-41C8-BA5F-EA2A623E957E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{550F5C11-A801-41C8-BA5F-EA2A623E957E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{550F5C11-A801-41C8-BA5F-EA2A623E957E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

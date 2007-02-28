@@ -26,11 +26,11 @@ namespace GenTag_Server.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://192.168.10.20:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttp" +
-            "Port")]
-        public string GenTag_Server_WebReference_GetDatesWS {
+        [global::System.Configuration.DefaultSettingValueAttribute("http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapH" +
+            "ttpPort")]
+        public string GenTag_Server_org_dyndns_crius_GetDatesWS {
             get {
-                return ((string)(this["GenTag_Server_WebReference_GetDatesWS"]));
+                return ((string)(this["GenTag_Server_org_dyndns_crius_GetDatesWS"]));
             }
         }
     }

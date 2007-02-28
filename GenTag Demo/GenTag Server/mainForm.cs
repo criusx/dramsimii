@@ -6,12 +6,13 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Protocol;
 using System.Net.Sockets;
 using System.Threading;
 using Oracle.DataAccess.Client;
 using System.Security.Permissions;
 using System.Runtime.InteropServices;
+using System.IO;
+using Oracle.DataAccess.Types;
 
 [assembly: SecurityPermission(
    SecurityAction.RequestMinimum, Execution = true)]
@@ -22,216 +23,389 @@ namespace GenTag_Server
 {
     public partial class mainForm : Form
     {
-        private daemon d;
+        string imagename;
 
-        private bool isRunning = true;
-
-        private ArrayList messages = new ArrayList();
-
-        private Object messagewriter = new Object();
-
+        string drugImagename;
+        
         public mainForm()
         {
             InitializeComponent();
-
-            (new Thread(new ThreadStart(Startup))).Start();
         }
 
-        private void Startup()
+        private void closeButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void browseButton_Click(object sender, EventArgs e)
         {
             try
             {
-                d = new daemon(new AsyncCallback(acceptClient), Protocol.Packet.port);
+                FileDialog fldlg = new OpenFileDialog();
 
-                writeLog("Daemon listening");
+                fldlg.InitialDirectory = @"C:\";
 
-                while (isRunning)
-                    Thread.Sleep(1000);
-            }
-            catch (SocketException ex)
-            {
-                writeLog(ex.Message);
-            }
+                fldlg.Filter = "Image File (*.jpg;*.bmp;*.gif)|*.jpg;*.bmp;*.gif";
 
-            d.Stop();
-        }
-
-        private void acceptClient(IAsyncResult result)
-        {
-            TcpClient client = ((daemon)result.AsyncState).EndAcceptTcpClient(result);
-            ((daemon)result.AsyncState).BeginAcceptTcpClient(new AsyncCallback(acceptClient), (daemon)result.AsyncState);
-
-            Thread thr = new Thread(new ParameterizedThreadStart(serviceClient));
-            thr.Start(client);
-        }
-
-        private void serviceClient(object clientConnection)
-        {
-            TcpClient client = (TcpClient)clientConnection;
-
-            writeLog("New Client " + client.ToString());
-
-            try
-            {
-                while (isRunning && client.Connected)
+                if (fldlg.ShowDialog() == DialogResult.OK)
                 {
-                    while (!client.GetStream().DataAvailable)
-                    {
-                        Thread.Sleep(50);
-                    }
 
-                    Packet newPacket = new Packet();
+                    imagename = fldlg.FileName;
 
-                    newPacket.Stream = client.GetStream();
+                    Bitmap newimg = new Bitmap(imagename);
 
-                    newPacket.GetPacket();
-                    int a = 0;
-                    switch (newPacket.Type)
-                    {
-                        case PacketTypes.UnknownType:
-                            continue;
+                    pictImg.SizeMode = PictureBoxSizeMode.StretchImage;
 
-                        case PacketTypes.DescriptionRequest:
-                            writeLog(newPacket.ToString());
-                            string MyConString = @"User Id=" + usernameBox.Text + @";" +
-                                @"Password=" + passwordBox.Text + @";" +
-                                @"Data Source=" + dataSourceBox.Text;
-                            OracleConnection c = null;								
-                            OracleCommand cmd = null;
+                    pictImg.Image = (Image)newimg;
 
-                            try
-                            {
-                                // now go do requests
-                                c = new OracleConnection(MyConString);
-                                
-                                c.Open();
+                }
 
-                                cmd = new OracleCommand(@"SELECT description from system.rfid_desc WHERE rfid ='" + newPacket.ToString() + "'",c);
+                fldlg = null;
 
-                                writeLog(cmd.CommandText);
+            }
 
-                                OracleDataReader reader = cmd.ExecuteReader();
+            catch (System.ArgumentException ae)
+            {
 
-                                Packet response = reader.Read() == true ?
-                                    new Packet(PacketTypes.DescriptionResponse, reader.GetString(0)) :
-                                    new Packet(PacketTypes.DescriptionResponse, @"No description for this tag");
-                                
-                                response.Stream = client.GetStream();
-                                response.SendPacket();
+                imagename = " ";
 
-                            }
-                            catch (OracleException e)
-                            {
-                                writeLog(e.Message);
-                                try
-                                {
-                                    Packet response = new Packet(PacketTypes.DescriptionResponse, @"No description for this tag");
-                                    response.Stream = client.GetStream();
-                                    response.SendPacket();
-                                }
-                                catch (SocketException ex)
-                                {
-                                    writeLog(ex.Message);
-                                }
-                            }
-                            catch (SocketException ex)
-                            {
-                                writeLog(ex.Message);
-                            }
-                            finally
-                            {
-                                if (cmd != null)
-                                    cmd.Dispose();
-                                if (c != null && c.State == ConnectionState.Open)
-                                    c.Close();
-                                c.Dispose();
-                            }
-                            break;
+                MessageBox.Show(ae.Message.ToString());
 
-                        case PacketTypes.CloseConnectionRequest:
-                            client.Close();
-                            break;
-                        default:
-                            break;
-                    }
+            }
+
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message.ToString());
+
+            }
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            //use filestream object to read the image.
+
+            //read to the full length of image to a byte array.
+
+            //add this byte as an oracle parameter and insert it into database.
+
+            try
+            {
+
+                //proceed only when the image has a valid path
+
+                if (imagename != "")
+                {
+
+                    FileStream fls;
+
+                    fls = new FileStream(@imagename, FileMode.Open, FileAccess.Read);
+
+                    byte[] blob = new byte[fls.Length];
+
+                    fls.Read(blob, 0, System.Convert.ToInt32(fls.Length));
+
+                    fls.Close();
+
+                    string MyConString = @"User Id=" + usernameBox.Text + @";" +
+                        @"Password=" + passwordBox.Text + @";" +
+                        @"Data Source=" + dataSourceBox.Text;
+
+                    OracleConnection conn = new OracleConnection(MyConString);
+
+                    conn.Open();
+
+                    OracleCommand cmnd;
+
+                    string query;
+
+                    query = "insert into patientData(id,interaction,description,picture) values('" + idBox.Text + "','" + interactionBox.Text + "','" + descriptionBox.Text + "',:BlobParameter )";
+
+                    OracleParameter blobParameter = new OracleParameter();
+
+                    blobParameter.OracleDbType = OracleDbType.Blob;
+
+                    blobParameter.ParameterName = "BlobParameter";
+
+                    blobParameter.Value = blob;
+
+                    cmnd = new OracleCommand(query, conn);
+
+                    cmnd.Parameters.Add(blobParameter);
+
+                    cmnd.ExecuteNonQuery();
+
+                    MessageBox.Show("added to blob field");
+
+                    cmnd.Dispose();
+
+                    conn.Close();
+
+                    conn.Dispose();
                 }
             }
-            catch (SocketException ex)
+            catch (Exception ex)
             {
-                writeLog(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
 
-        private void mainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void clearButton_Click(object sender, EventArgs e)
         {
-            isRunning = false;
+            idBox.Clear();
+            interactionBox.Clear();
+            descriptionBox.Clear();            
         }
 
-        private void writeLog(string str)
+        private void loadButton_Click(object sender, EventArgs e)
         {
-            lock (messagewriter)
-            {
-                messages.Add(str);
-                timer1_Tick(this, new EventArgs());
-            }
+            string MyConString = @"User Id=" + usernameBox.Text + @";" +
+                        @"Password=" + passwordBox.Text + @";" +
+                        @"Data Source=" + dataSourceBox.Text;
+            
+            OracleConnection conn = new OracleConnection(MyConString);
+            conn.Open();
+
+            OracleDataAdapter adap = new OracleDataAdapter();
+
+            //adap.SelectCommand = new OracleCommand("SELECT * from patientData WHERE (id='" + idBox.Text + "')");
+             OracleCommand cmd = new OracleCommand("SELECT * from patientData WHERE (id='" + idBox.Text + "')");
+             cmd.Connection = conn;
+             OracleDataReader dr = cmd.ExecuteReader();
+
+             dr.Read();
+             idBox.Text = dr.GetString(0);
+             interactionBox.Text = dr.GetString(1);
+             descriptionBox.Text = dr.GetString(2);
+            
+             OracleBlob inBlob = dr.GetOracleBlob(3);
+           // MemoryStream s = new MemoryStream(inBlob.);
+            pictImg.Image = Image.FromStream(inBlob);
+            pictImg.Refresh();
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void interactionSave_Click(object sender, EventArgs e)
         {
-            if (listBox1.InvokeRequired)
+            if (interactionID.Text.Length < 16)
             {
-                listBox1.BeginInvoke(new EventHandler(timer1_Tick), new object[] { sender, e });
+                MessageBox.Show(interactionID.Text + " isn't long enough");
+                return;
             }
-            else
+
+            string MyConString = @"User Id=" + usernameBox.Text + @";" +
+                        @"Password=" + passwordBox.Text + @";" +
+                        @"Data Source=" + dataSourceBox.Text;
+
+            OracleConnection conn = new OracleConnection(MyConString);
+
+            conn.Open();
+
+            foreach (string s in interactionListBox.Items)
             {
-                if (messages.Count == 0)
-                    return;
+                string query = "INSERT INTO INTERACTIONS VALUES('" + interactionID.Text + "','" + s + "')";
 
-                lock (messagewriter)
-                {                
-                    listBox1.BeginUpdate();
-
-                    while (listBox1.Items.Count >= logLimitSize.Value)
-                        listBox1.Items.RemoveAt(0);
-                    for (int i = 0; i < messages.Count; i++)
-                        listBox1.Items.Add(@"[" + DateTime.Now.ToString() + @"] " + messages[i]);
-
-                    listBox1.SelectedIndex = listBox1.Items.Count - 1;
-
-                    listBox1.EndUpdate();
-
-                    messages.Clear();
+                OracleCommand cmnd = new OracleCommand(query, conn);
+                
+                try
+                {
+                    cmnd.ExecuteNonQuery(); 
                 }
+                catch (OracleException ex)
+                {
+
+                }               
+
+                cmnd.Dispose();
             }
-        }
 
-        private void listBox1_DoubleClick(object sender, EventArgs e)
-        {
-            Clipboard.SetDataObject(listBox1.SelectedItem.ToString().Substring(listBox1.SelectedItem.ToString().IndexOf(']') + 2), true);
-        }
+            MessageBox.Show("Added");
 
-        [DllImport("VarioSens Lib.dll")]
-        static extern double multiply(double a, double b);
+            conn.Close();
+
+            conn.Dispose();
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            double a = 3;
-            double b = 9;
-            double c = multiply(a, b);
-
-            return;
-            // wsdl testing
-            WebReference.GetDatesWS ws = new WebReference.GetDatesWS();
-            string []ts = ws.getTestStrings();
-            foreach (string s in ts)
-                MessageBox.Show(s);
-            Random r = new Random();
-            int day = r.Next(365);
-            int dayOfWeek = (day % 6) + 1;
-            string date = ws.getDayOfWeek(dayOfWeek);
-            MessageBox.Show(date.ToString() + " " + dayOfWeek.ToString());
-            return;
-            //////////////////////////////////////////////////////////////////////////
+            if (drugIDAddBox.Text.Length >= 16)
+                interactionListBox.Items.Add(drugIDAddBox.Text);
         }
+
+        private void interactionLoad_Click(object sender, EventArgs e)
+        {
+            if (interactionID.Text.Length < 16)
+            {
+                MessageBox.Show(interactionID.Text + " isn't long enough");
+                return;
+            }
+
+            string MyConString = @"User Id=" + usernameBox.Text + @";" +
+                        @"Password=" + passwordBox.Text + @";" +
+                        @"Data Source=" + dataSourceBox.Text;
+
+            OracleConnection conn = new OracleConnection(MyConString);
+
+            interactionListBox.Items.Clear();
+
+            conn.Open();
+
+            string query = "SELECT DRUGID FROM INTERACTIONS WHERE PATIENTID='" + interactionID.Text + "'";
+
+            OracleCommand cmnd = new OracleCommand(query, conn);
+
+            OracleDataReader dr = cmnd.ExecuteReader();    
+
+            while (dr.Read())
+                interactionListBox.Items.Add(dr.GetString(0));
+
+            conn.Close();
+
+            conn.Dispose();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            interactionListBox.Items.Clear();
+        }
+
+        private void drugBrowseButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                FileDialog fldlg = new OpenFileDialog();
+
+                fldlg.InitialDirectory = @"C:\";
+
+                fldlg.Filter = "Image File (*.jpg;*.bmp;*.gif)|*.jpg;*.bmp;*.gif";
+
+                if (fldlg.ShowDialog() == DialogResult.OK)
+                {
+
+                    drugImagename = fldlg.FileName;
+
+                    Bitmap newimg = new Bitmap(drugImagename);
+
+                    drugPictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+
+                    drugPictureBox.Image = (Image)newimg;
+
+                }
+
+                fldlg = null;
+
+            }
+
+            catch (System.ArgumentException ae)
+            {
+
+                drugImagename = " ";
+
+                MessageBox.Show(ae.Message.ToString());
+
+            }
+
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message.ToString());
+
+            }
+        }
+
+        private void drugClearButton_Click(object sender, EventArgs e)
+        {
+            drugPictureBox.Image = null;
+            drugPictureBox.Refresh();
+            drugIDBox.Clear();
+            drugDescriptionBox.Clear();
+        }
+
+        private void drugSaveButton_Click(object sender, EventArgs e)
+        {
+            //use filestream object to read the image.
+
+            //read to the full length of image to a byte array.
+
+            //add this byte as an oracle parameter and insert it into database.
+
+            try
+            {
+
+                //proceed only when the image has a valid path
+
+                if (imagename != "")
+                {
+                    FileStream fls;
+
+                    fls = new FileStream(@drugImagename, FileMode.Open, FileAccess.Read);
+
+                    byte[] blob = new byte[fls.Length];
+
+                    fls.Read(blob, 0, System.Convert.ToInt32(fls.Length));
+
+                    fls.Close();
+
+                    string MyConString = @"User Id=" + usernameBox.Text + @";" +
+                        @"Password=" + passwordBox.Text + @";" +
+                        @"Data Source=" + dataSourceBox.Text;
+
+                    OracleConnection conn = new OracleConnection(MyConString);
+
+                    conn.Open();
+
+                    string query = "insert into drugData values ('" + drugIDBox.Text+ "'," + "'" + drugDescriptionBox.Text + "',:BlobParameter )";
+
+                    OracleParameter blobParameter = new OracleParameter();
+
+                    blobParameter.OracleDbType = OracleDbType.Blob;
+
+                    blobParameter.ParameterName = "BlobParameter";
+
+                    blobParameter.Value = blob;
+
+                    OracleCommand cmnd = new OracleCommand(query, conn);
+
+                    cmnd.Parameters.Add(blobParameter);
+
+                    cmnd.ExecuteNonQuery();
+
+                    cmnd.Dispose();
+
+                    conn.Close();
+
+                    conn.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void drugLoadButton_Click(object sender, EventArgs e)
+        {
+            string MyConString = @"User Id=" + usernameBox.Text + @";" +
+                        @"Password=" + passwordBox.Text + @";" +
+                        @"Data Source=" + dataSourceBox.Text;
+
+            OracleConnection conn = new OracleConnection(MyConString);
+            conn.Open();
+
+            OracleDataAdapter adap = new OracleDataAdapter();
+
+            //adap.SelectCommand = new OracleCommand("SELECT * from patientData WHERE (id='" + idBox.Text + "')");
+            OracleCommand cmd = new OracleCommand("SELECT description,picture from DrugData WHERE (drugid='" + drugIDBox.Text + "')");
+            cmd.Connection = conn;
+            OracleDataReader dr = cmd.ExecuteReader();
+            dr.Read();
+            
+            drugDescriptionBox.Text = dr.GetString(0);            
+
+            OracleBlob inBlob = dr.GetOracleBlob(1);
+            // MemoryStream s = new MemoryStream(inBlob.);
+            drugPictureBox.Image = Image.FromStream(inBlob);
+            drugPictureBox.Refresh();
+        }        
     }
 }

@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GenTag_Server.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="GenTag_Server_WebReference_GetDatesWS" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://192.168.10.20:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort</Value>
+    <Setting Name="GenTag_Server_org_dyndns_crius_GetDatesWS" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort</Value>
     </Setting>
   </Settings>
 </SettingsFile>

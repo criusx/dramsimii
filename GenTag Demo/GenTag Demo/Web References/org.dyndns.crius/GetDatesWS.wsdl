@@ -2,38 +2,17 @@
 <definitions xmlns:tns="http://datespackage/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GetDatesWS" targetNamespace="http://datespackage/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>
     <xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified" targetNamespace="http://datespackage/">
-      <xsd:element name="getDate" type="tns:getDate" />
-      <xsd:complexType name="getDate">
-        <xsd:sequence />
-      </xsd:complexType>
-      <xsd:element name="getDateResponse" type="tns:getDateResponse" />
-      <xsd:complexType name="getDateResponse">
+      <xsd:element name="checkInteraction" type="tns:checkInteraction" />
+      <xsd:complexType name="checkInteraction">
         <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="xsd:dateTime" />
+          <xsd:element name="ID" nillable="true" type="xsd:string" />
+          <xsd:element name="drugID" nillable="true" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
-      <xsd:element name="getDateHence" type="tns:getDateHence" />
-      <xsd:complexType name="getDateHence">
+      <xsd:element name="checkInteractionResponse" type="tns:checkInteractionResponse" />
+      <xsd:complexType name="checkInteractionResponse">
         <xsd:sequence>
-          <xsd:element name="daysHence" type="xsd:int" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="getDateHenceResponse" type="tns:getDateHenceResponse" />
-      <xsd:complexType name="getDateHenceResponse">
-        <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="xsd:dateTime" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="getDayOfWeek" type="tns:getDayOfWeek" />
-      <xsd:complexType name="getDayOfWeek">
-        <xsd:sequence>
-          <xsd:element name="day" type="xsd:int" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="getDayOfWeekResponse" type="tns:getDayOfWeekResponse" />
-      <xsd:complexType name="getDayOfWeekResponse">
-        <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="xsd:string" />
+          <xsd:element name="return" type="xsd:boolean" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:element name="getDescription" type="tns:getDescription" />
@@ -48,35 +27,45 @@
           <xsd:element name="return" nillable="true" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
-      <xsd:element name="getTestStrings" type="tns:getTestStrings" />
-      <xsd:complexType name="getTestStrings">
-        <xsd:sequence />
-      </xsd:complexType>
-      <xsd:element name="getTestStringsResponse" type="tns:getTestStringsResponse" />
-      <xsd:complexType name="getTestStringsResponse">
+      <xsd:element name="getInfo" type="tns:getInfo" />
+      <xsd:complexType name="getInfo">
         <xsd:sequence>
-          <xsd:element minOccurs="0" maxOccurs="unbounded" name="return" nillable="true" type="xsd:string" />
+          <xsd:element name="ID" nillable="true" type="xsd:string" />
+          <xsd:element name="isDrug" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getInfoResponse" type="tns:getInfoResponse" />
+      <xsd:complexType name="getInfoResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="tns:GetDates" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GetDates">
+        <xsd:sequence>
+          <xsd:element name="name" nillable="true" type="xsd:string" />
+          <xsd:element name="desc" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getPicture" type="tns:getPicture" />
+      <xsd:complexType name="getPicture">
+        <xsd:sequence>
+          <xsd:element name="ID" nillable="true" type="xsd:string" />
+          <xsd:element name="isDrug" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getPictureResponse" type="tns:getPictureResponse" />
+      <xsd:complexType name="getPictureResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="xsd:base64Binary" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>
   </types>
-  <message name="GetDatesWS_getDate">
-    <part name="parameters" element="tns:getDate" />
+  <message name="GetDatesWS_checkInteraction">
+    <part name="parameters" element="tns:checkInteraction" />
   </message>
-  <message name="GetDatesWS_getDateResponse">
-    <part name="parameters" element="tns:getDateResponse" />
-  </message>
-  <message name="GetDatesWS_getDateHence">
-    <part name="parameters" element="tns:getDateHence" />
-  </message>
-  <message name="GetDatesWS_getDateHenceResponse">
-    <part name="parameters" element="tns:getDateHenceResponse" />
-  </message>
-  <message name="GetDatesWS_getDayOfWeek">
-    <part name="parameters" element="tns:getDayOfWeek" />
-  </message>
-  <message name="GetDatesWS_getDayOfWeekResponse">
-    <part name="parameters" element="tns:getDayOfWeekResponse" />
+  <message name="GetDatesWS_checkInteractionResponse">
+    <part name="parameters" element="tns:checkInteractionResponse" />
   </message>
   <message name="GetDatesWS_getDescription">
     <part name="parameters" element="tns:getDescription" />
@@ -84,55 +73,39 @@
   <message name="GetDatesWS_getDescriptionResponse">
     <part name="parameters" element="tns:getDescriptionResponse" />
   </message>
-  <message name="GetDatesWS_getTestStrings">
-    <part name="parameters" element="tns:getTestStrings" />
+  <message name="GetDatesWS_getInfo">
+    <part name="parameters" element="tns:getInfo" />
   </message>
-  <message name="GetDatesWS_getTestStringsResponse">
-    <part name="parameters" element="tns:getTestStringsResponse" />
+  <message name="GetDatesWS_getInfoResponse">
+    <part name="parameters" element="tns:getInfoResponse" />
+  </message>
+  <message name="GetDatesWS_getPicture">
+    <part name="parameters" element="tns:getPicture" />
+  </message>
+  <message name="GetDatesWS_getPictureResponse">
+    <part name="parameters" element="tns:getPictureResponse" />
   </message>
   <portType name="GetDatesWS">
-    <operation name="getDate">
-      <input message="tns:GetDatesWS_getDate" />
-      <output message="tns:GetDatesWS_getDateResponse" />
-    </operation>
-    <operation name="getDateHence">
-      <input message="tns:GetDatesWS_getDateHence" />
-      <output message="tns:GetDatesWS_getDateHenceResponse" />
-    </operation>
-    <operation name="getDayOfWeek">
-      <input message="tns:GetDatesWS_getDayOfWeek" />
-      <output message="tns:GetDatesWS_getDayOfWeekResponse" />
+    <operation name="checkInteraction">
+      <input message="tns:GetDatesWS_checkInteraction" />
+      <output message="tns:GetDatesWS_checkInteractionResponse" />
     </operation>
     <operation name="getDescription">
       <input message="tns:GetDatesWS_getDescription" />
       <output message="tns:GetDatesWS_getDescriptionResponse" />
     </operation>
-    <operation name="getTestStrings">
-      <input message="tns:GetDatesWS_getTestStrings" />
-      <output message="tns:GetDatesWS_getTestStringsResponse" />
+    <operation name="getInfo">
+      <input message="tns:GetDatesWS_getInfo" />
+      <output message="tns:GetDatesWS_getInfoResponse" />
+    </operation>
+    <operation name="getPicture">
+      <input message="tns:GetDatesWS_getPicture" />
+      <output message="tns:GetDatesWS_getPictureResponse" />
     </operation>
   </portType>
   <binding name="GetDatesWSSoapHttp" type="tns:GetDatesWS">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <operation name="getDate">
-      <soap:operation soapAction="" />
-      <input>
-        <soap:body use="literal" />
-      </input>
-      <output>
-        <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="getDateHence">
-      <soap:operation soapAction="" />
-      <input>
-        <soap:body use="literal" />
-      </input>
-      <output>
-        <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="getDayOfWeek">
+    <operation name="checkInteraction">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />
@@ -150,7 +123,16 @@
         <soap:body use="literal" />
       </output>
     </operation>
-    <operation name="getTestStrings">
+    <operation name="getInfo">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getPicture">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />

@@ -34,63 +34,25 @@ namespace GenTag_Demo.org.dyndns.crius {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
-        public System.Nullable<System.DateTime> getDate() {
-            object[] results = this.Invoke("getDate", new object[0]);
-            return ((System.Nullable<System.DateTime>)(results[0]));
+        [return: System.Xml.Serialization.XmlElementAttribute("return")]
+        public bool checkInteraction([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string ID, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string drugID) {
+            object[] results = this.Invoke("checkInteraction", new object[] {
+                        ID,
+                        drugID});
+            return ((bool)(results[0]));
         }
         
         /// <remarks/>
-        public System.IAsyncResult BegingetDate(System.AsyncCallback callback, object asyncState) {
-            return this.BeginInvoke("getDate", new object[0], callback, asyncState);
+        public System.IAsyncResult BegincheckInteraction(string ID, string drugID, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("checkInteraction", new object[] {
+                        ID,
+                        drugID}, callback, asyncState);
         }
         
         /// <remarks/>
-        public System.Nullable<System.DateTime> EndgetDate(System.IAsyncResult asyncResult) {
+        public bool EndcheckInteraction(System.IAsyncResult asyncResult) {
             object[] results = this.EndInvoke(asyncResult);
-            return ((System.Nullable<System.DateTime>)(results[0]));
-        }
-        
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
-        public System.Nullable<System.DateTime> getDateHence(int daysHence) {
-            object[] results = this.Invoke("getDateHence", new object[] {
-                        daysHence});
-            return ((System.Nullable<System.DateTime>)(results[0]));
-        }
-        
-        /// <remarks/>
-        public System.IAsyncResult BegingetDateHence(int daysHence, System.AsyncCallback callback, object asyncState) {
-            return this.BeginInvoke("getDateHence", new object[] {
-                        daysHence}, callback, asyncState);
-        }
-        
-        /// <remarks/>
-        public System.Nullable<System.DateTime> EndgetDateHence(System.IAsyncResult asyncResult) {
-            object[] results = this.EndInvoke(asyncResult);
-            return ((System.Nullable<System.DateTime>)(results[0]));
-        }
-        
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
-        public string getDayOfWeek(int day) {
-            object[] results = this.Invoke("getDayOfWeek", new object[] {
-                        day});
-            return ((string)(results[0]));
-        }
-        
-        /// <remarks/>
-        public System.IAsyncResult BegingetDayOfWeek(int day, System.AsyncCallback callback, object asyncState) {
-            return this.BeginInvoke("getDayOfWeek", new object[] {
-                        day}, callback, asyncState);
-        }
-        
-        /// <remarks/>
-        public string EndgetDayOfWeek(System.IAsyncResult asyncResult) {
-            object[] results = this.EndInvoke(asyncResult);
-            return ((string)(results[0]));
+            return ((bool)(results[0]));
         }
         
         /// <remarks/>
@@ -117,20 +79,80 @@ namespace GenTag_Demo.org.dyndns.crius {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
-        public string[] getTestStrings() {
-            object[] results = this.Invoke("getTestStrings", new object[0]);
-            return ((string[])(results[0]));
+        public GetDates getInfo([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string ID, bool isDrug) {
+            object[] results = this.Invoke("getInfo", new object[] {
+                        ID,
+                        isDrug});
+            return ((GetDates)(results[0]));
         }
         
         /// <remarks/>
-        public System.IAsyncResult BegingetTestStrings(System.AsyncCallback callback, object asyncState) {
-            return this.BeginInvoke("getTestStrings", new object[0], callback, asyncState);
+        public System.IAsyncResult BegingetInfo(string ID, bool isDrug, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("getInfo", new object[] {
+                        ID,
+                        isDrug}, callback, asyncState);
         }
         
         /// <remarks/>
-        public string[] EndgetTestStrings(System.IAsyncResult asyncResult) {
+        public GetDates EndgetInfo(System.IAsyncResult asyncResult) {
             object[] results = this.EndInvoke(asyncResult);
-            return ((string[])(results[0]));
+            return ((GetDates)(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", DataType="base64Binary", IsNullable=true)]
+        public byte[] getPicture([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string ID, bool isDrug) {
+            object[] results = this.Invoke("getPicture", new object[] {
+                        ID,
+                        isDrug});
+            return ((byte[])(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BegingetPicture(string ID, bool isDrug, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("getPicture", new object[] {
+                        ID,
+                        isDrug}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public byte[] EndgetPicture(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((byte[])(results[0]));
+        }
+    }
+    
+    /// <remarks/>
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://datespackage/")]
+    public partial class GetDates {
+        
+        private string nameField;
+        
+        private string descField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public string name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public string desc {
+            get {
+                return this.descField;
+            }
+            set {
+                this.descField = value;
+            }
         }
     }
 }

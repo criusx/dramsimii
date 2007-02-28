@@ -58,52 +58,7 @@ namespace GenTag_Demo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Read Tag.
-        /// </summary>
-        internal static string button1String {
-            get {
-                return ResourceManager.GetString("button1String", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Read VarioSens.
-        /// </summary>
-        internal static string button2String {
-            get {
-                return ResourceManager.GetString("button2String", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Lookup.
-        /// </summary>
-        internal static string button3String {
-            get {
-                return ResourceManager.GetString("button3String", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Set Values.
-        /// </summary>
-        internal static string button4String {
-            get {
-                return ResourceManager.GetString("button4String", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Read Values.
-        /// </summary>
-        internal static string button5String {
-            get {
-                return ResourceManager.GetString("button5String", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error, no communication with Sirit card.
+        ///   Looks up a localized string similar to Please ensure that the Sirit reader is completely inserted.
         /// </summary>
         internal static string error1 {
             get {
@@ -112,7 +67,7 @@ namespace GenTag_Demo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error, cannot enable Sirit PNP RFID.
+        ///   Looks up a localized string similar to Unable to communicate with Sirit reader.
         /// </summary>
         internal static string error2 {
             get {
@@ -205,6 +160,51 @@ namespace GenTag_Demo.Properties {
         internal static string loLimitString {
             get {
                 return ResourceManager.GetString("loLimitString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lookup.
+        /// </summary>
+        internal static string manualIDButtonInit {
+            get {
+                return ResourceManager.GetString("manualIDButtonInit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read Tag.
+        /// </summary>
+        internal static string readIDButtonInit {
+            get {
+                return ResourceManager.GetString("readIDButtonInit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read VarioSens.
+        /// </summary>
+        internal static string readLogButtonInit {
+            get {
+                return ResourceManager.GetString("readLogButtonInit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read Values.
+        /// </summary>
+        internal static string readValueButtonInit {
+            get {
+                return ResourceManager.GetString("readValueButtonInit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Values.
+        /// </summary>
+        internal static string setValueButtonInit {
+            get {
+                return ResourceManager.GetString("setValueButtonInit", resourceCulture);
             }
         }
         

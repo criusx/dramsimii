@@ -8,72 +8,48 @@ using System.Windows.Forms;
 using C1Lib;
 //using Protocol;
 using System.Net;
+using System.IO;
 using System.Net.Sockets;
 using Microsoft.Win32;
 using System.Resources;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Globalization;
 using System.Threading;
 using TestPocketGraphBar;
 
-[assembly:CLSCompliant(true)]
+
+[assembly: CLSCompliant(true)]
 namespace GenTag_Demo
 {
     public partial class mainForm : Form
     {
+        bool readerRunning;
+
         static mainForm mF;
 
-        Graph graph;
-        //private bgTreeView treeView2;
-
-        //[DllImport("user32.dll")]
-        //public extern static int SendMessage(IntPtr hwnd, uint msg, uint wParam, uint lParam);
-
-        //[DllImport("coredll.dll")]
-        //public static extern int SendMessage(IntPtr hWnd, uint Message, uint wParam, uint lParam);
-
-        //[DllImport("user32.dll")]
-        //public extern static int SendMessage(IntPtr hwnd, uint msg, uint wParam, LVBKIMAGE lParam);
-
-        //private const int NOERROR = 0x0;
-        //private const int S_OK = 0x0;
-        //private const int S_FALSE = 0x1;
-        //private const int LVM_FIRST = 0x1000;
-        //private const int LVM_SETBKIMAGE = LVM_FIRST + 68;
-        //private const int LVM_SETTEXTBKCOLOR = LVM_FIRST + 38;
-        //private const int LVBKIF_SOURCE_URL = 0x02;
-        //private const int LVBKIF_STYLE_TILE = 0x10;
-        //private const uint CLR_NONE = 0xFFFFFFFF;
-
-        //SendMessage(listBox1.Handle, LVM_SETEXTENDEDLISTVIEWSTYLE, LVS_EX_GRADIENT, LVS_EX_GRADIENT);
-  
-
-        //private const int LVS_EX_GRADIENT   = 0x20000000;
-        //private const int LVM_FIRST     = 0x1000;
-        //private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
-
-        //private const int LVS_EX_GRADIENT = 0x20000000;
-        //private const int LVM_FIRST = 0x1000;
-        //private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
+        Graph graph;  
 
         public mainForm()
         {
-            InitializeComponent();            
+            InitializeComponent();
 
             mF = this;
-            
+
+            readerRunning = false;
+
             graph = new Graph();
             graph.Visible = false;
             graph.Size = new Size(240, 230);
-            graph.Location = new Point(0, 0);            
+            graph.Location = new Point(0, 0);
             tabPage2.Controls.Add(graph);
 
             // Load Localized values
-            button1.Text = GenTag_Demo.Properties.Resources.button1String;
-            button2.Text = GenTag_Demo.Properties.Resources.button2String;
-            button3.Text = GenTag_Demo.Properties.Resources.button3String;
-            button4.Text = GenTag_Demo.Properties.Resources.button4String;
-            button5.Text = GenTag_Demo.Properties.Resources.button5String;
+            readIDButton.Text = GenTag_Demo.Properties.Resources.readIDButtonInit;
+            readLogButton.Text = GenTag_Demo.Properties.Resources.readLogButtonInit;
+            manualIDButton.Text = GenTag_Demo.Properties.Resources.manualIDButtonInit;
+            setValueButton.Text = GenTag_Demo.Properties.Resources.setValueButtonInit;
+            readValueButton.Text = GenTag_Demo.Properties.Resources.readValueButtonInit;
             this.Text = GenTag_Demo.Properties.Resources.titleString;
 
             tabControl1.TabPages[0].Text = GenTag_Demo.Properties.Resources.tab2String;
@@ -81,8 +57,8 @@ namespace GenTag_Demo
             tabControl1.TabPages[2].Text = GenTag_Demo.Properties.Resources.tab3String;
             tabControl1.TabPages[3].Text = GenTag_Demo.Properties.Resources.tab4String;
 
-            label5.Text = label1.Text = GenTag_Demo.Properties.Resources.hiLimitString;
-            label6.Text = label2.Text = GenTag_Demo.Properties.Resources.loLimitString;
+            label6.Text = label1.Text = GenTag_Demo.Properties.Resources.hiLimitString;
+            label5.Text = label2.Text = GenTag_Demo.Properties.Resources.loLimitString;
             label7.Text = label3.Text = GenTag_Demo.Properties.Resources.intervalString;
             label4.Text = GenTag_Demo.Properties.Resources.logString;
 
@@ -106,184 +82,111 @@ namespace GenTag_Demo
                 regKey.CreateSubKey(@"hostname");
                 regKey.SetValue(@"hostname", @"129.2.99.117");
             }
-           //hostName.Text = regKey.GetValue(@"hostname").ToString();
+            //hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
-        public delegate void arrayCB(
-            Int32 errorCode,
-            Int32 len,
-            Single upperTempLimit,
-            Single lowerTempLimit, 
-            short recordPeriod,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] int[] dateTime,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] Byte[] logMode,            
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] Single[] temperatures);
-
-        [DllImport("VarioSens Lib.dll")]
-        protected static extern void getVarioSensLog(arrayCB cb);
-
-        private static DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
-
-        private static void callbackFunct(
-            Int32 errorCode,
-            Int32 len, 
-            Single upperTempLimit, 
-            Single lowerTempLimit, 
-            short recordPeriod,
-            int[] dateTime,
-            Byte[] logMode,            
-            Single[] temperatures)
+        private void readIDClick(object sender, EventArgs e)
         {
-            mF.textBox9.Text = @"";
-
-            switch (errorCode)
+            if (readerRunning == false)
             {
-                case 0:
-                    mF.textBox1.Text = upperTempLimit.ToString();
-                    mF.textBox2.Text = lowerTempLimit.ToString();
-                    mF.textBox3.Text = recordPeriod.ToString();
-                    mF.listBox1.Items.Clear();
-                    mF.graph.Clear();
-
-                    for (int i = 0; i < dateTime.Length; i++)
-                    {
-                        if (logMode[i] == 1)
-                        {
-                            mF.listBox1.Items.Add(temperatures[i].ToString("F"));
-                            mF.graph.Add(i, temperatures[i]);
-                        }
-                        else if (logMode[i] == 2)
-                        {
-                            UInt32 time_t = Convert.ToUInt32(dateTime[i]);
-
-                            DateTime convertedValue = origin + new TimeSpan(time_t * TimeSpan.TicksPerSecond);
-                            if (System.TimeZone.CurrentTimeZone.IsDaylightSavingTime(convertedValue) == true)
-                            {
-                                System.Globalization.DaylightTime daylightTime = System.TimeZone.CurrentTimeZone.GetDaylightChanges(convertedValue.Year);
-                                convertedValue = convertedValue + daylightTime.Delta;
-                            }
-                            mF.listBox1.Items.Add(temperatures[i].ToString("F",CultureInfo.CurrentCulture) + " C" + convertedValue.ToString());
-                            
-                        }
-                        
-                    }
-                    if (logMode[0] == 1)
-                    {
-                        try
-                        {
-                            if (mF.listBox1.Items.Count > 1)
-                            {
-                                mF.graph.Visible = true;
-                                mF.graph.BringToFront();
-                            }
-                        }
-                        catch (Exception ee)
-                        {
-                            throw ee;
-                        }
-                    }
-                        break;
-                case -1:
-                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error1;
-                    break;
-                case -2:
-                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error2;
-                    break;
-                case -3:
-                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error3;
-                    break;
-                case -4:
-                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error4;
-                    break;
-                case -5:
-                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error5;
-                    break;
-                case -6:
-                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error6;
-                    break;
-                case -7:
-                    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error7;
-                    break;
+                readerRunning = true;
+                new Thread(new ThreadStart(readID)).Start();
+            }
+            else
+            {
+                readerRunning = false;
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private delegate void updateTreeDelegate();
+
+        private string readTagID()
         {
-            Cursor.Current = Cursors.WaitCursor;
-            checkBox1.Checked = false;
-
-            //tempLabel.Text = outputBox.Text = "";
-
             if (C1Lib.C1.NET_C1_open_comm() != 1)
             {
-                MessageBox.Show("Could not open reader");
-                Cursor.Current = Cursors.Default;
-                return;
+                MessageBox.Show(GenTag_Demo.Properties.Resources.error1);
             }
-            if (C1Lib.C1.NET_C1_enable() != 1)
+            else if (C1Lib.C1.NET_C1_enable() != 1)
             {
-                MessageBox.Show("Could not open reader");
-                Cursor.Current = Cursors.Default;
-                return;
+                MessageBox.Show(GenTag_Demo.Properties.Resources.error2);
+                C1Lib.C1.NET_C1_disable();
             }
+            else
+            {
+                // wait while a tag is read
+                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0)) { }
 
-            // wait while a tag is read
-            while (C1Lib.ISO_15693.NET_get_15693(0x00) == 0) { }
-            
-            //while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
-                
-            //string currentTag = C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
-            
-            StringBuilder newTag = new StringBuilder(C1Lib.ISO_15693.tag.id_length);
+                //while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
 
-            for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-                newTag.Append(C1Lib.ISO_15693.tag.tag_id[i]);
 
-            string currentTag = newTag.ToString();
+                //string rfidDescr = C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
+                //rfidDescr += "\n";
 
-            C1Lib.C1.NET_C1_disable();
-            C1Lib.C1.NET_C1_close_comm();
+                StringBuilder newTag = new StringBuilder(C1Lib.ISO_15693.tag.id_length);
 
-            string rfidDescr = "No description found";
+                for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
+                    newTag.Append(C1Lib.util.hex_value(C1Lib.ISO_15693.tag.tag_id[i]));
 
-            checkBox1.Checked = true;
+                C1Lib.C1.NET_C1_disable();
+                C1Lib.C1.NET_C1_close_comm();
+
+                return newTag.ToString();
+            }
+            throw new System.IO.IOException("Unable to read tag");
+        }
+
+        private void readID()
+        {
+            Cursor.Current = Cursors.WaitCursor;
 
             try
             {
-                org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-                
+                string currentTag = readTagID();
+
+                string rfidDescr = "";
+
+                // use the web service to retrieve a description
                 try
                 {
-                    rfidDescr = ws.getDescription(currentTag);
+                    org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
+
+                    try
+                    {
+                        rfidDescr += ws.getDescription(currentTag);
+                    }
+                    catch (WebException ex)
+                    {
+                        rfidDescr += @"No description found";
+                        MessageBox.Show("Problem connecting to web service: " + ex.Message);
+                    }
                 }
-                catch (WebException ex)
+                catch (SocketException ex)
                 {
-                    MessageBox.Show("Problem connecting to web service: " + ex.Message);
+                    MessageBox.Show(ex.Message);
+                    return;
                 }
-                
 
-                //ClientConnection c = new ClientConnection(hostName.Text, Packet.port);
-
-                //Packet rfidReq = new Packet(PacketTypes.DescriptionRequest, currentTag);
-
-                //c.SendPacket(rfidReq);
-
-                //Packet rfidDesc = new Packet(PacketTypes.DescriptionResponse);
-
-                //c.GetPacket(rfidDesc);
-
-                //rfidDescr = rfidDesc.ToString();
-
-                //Packet closePacket = new Packet(PacketTypes.CloseConnectionRequest);
-                //c.SendPacket(closePacket);
-                //c.Close();
-                //c.Close();                
+                updateTreeView1(currentTag, rfidDescr);
             }
-            catch (SocketException ex)
+            catch (System.IO.IOException ex)
             {
                 MessageBox.Show(ex.Message);
             }
 
+            readerRunning = false;
+            Cursor.Current = Cursors.Default;
+        }
+
+        private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr);
+
+        private void updateTreeView1(string currentTag, string rfidDescr)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new updateTreeView1Delegate(updateTreeView1),
+                    new object[] { currentTag, rfidDescr });
+                return;
+            }
             treeView1.BeginUpdate();
 
             bool exists = false;
@@ -303,97 +206,234 @@ namespace GenTag_Demo
                 treeView1.Nodes.Add(currentTag).Nodes.Add(rfidDescr);
             }
             treeView1.EndUpdate();
-
-            Cursor.Current = Cursors.Default;
-
-            MessageBox.Show("Tag ID: " + currentTag + "\nDesc: " + rfidDescr, "Found new tag", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-
-            return;
-
-            
-            
-
-            //tempLabel.Text += "Joe";
-            //System.Text.ASCIIEncoding encode = new System.Text.ASCIIEncoding();
-            //byte[] bytes = encode.GetBytes(tempLabel.Text);
-
-            //int block_no = (tempLabel.Text.Length + 1) / C1Lib.ISO_15693.tag.bytes_per_block;
-            //while (C1Lib.ISO_15693.NET_write_multi_15693(0x00,block_no,bytes) != 1) {}
-
-            
-
-            
-            //for (byte i = 0x00; i < 0xFF; i++)
-            //    if (C1Lib.ISO_15693.NET_read_single_15693(i) == 1)
-            //        outputBox.Text += C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
-            //byte[] Inventory = { 0x01, 0x01, 0x00 };
-            //byte[] Inventory = { 0x0F, 0XFF, 0XBF, 0X04, 0X00, 0X60, 0X02, 0X1E, 0X84, 0X6A, 0X27, 0X01, 0X00, 0XC6, 0X0C };
-            //byte[] Inventory = { 0x27, 0x01, 0x00 };
-            //byte[] InventoryOut = new byte[12];
-            //int err0 =  C1.NET_C1_config_15693();
-            //ushort crc1 = CRC.calc(Inventory, Inventory.Length - 2);
-            //Inventory[Inventory.Length - 2] = (byte)(crc1 >> 0x08);
-            //Inventory[Inventory.Length - 1] = (byte)(crc1 & 0x00FF);
-            //uint err = C1Lib.C1.NET_C1_transmit(Inventory, Inventory.Length, InventoryOut, InventoryOut.Length, true, false);
-            //if (C1Lib.ISO_15693.tag.tag_type == C1Lib.ISO_15693.TEMPSENS)
-            //{
-            //    if (C1Lib.ISO_15693.TempSens.NET_TS_get_log_info() == 0)
-            //        return;
-            //    if (C1Lib.ISO_15693.TempSens.NET_TS_get_log_data() == 0)
-            //        return;
-            //    if (C1Lib.ISO_15693.TempSens.log.next_measurment_block == 0)
-            //        return;
-            //    else
-            //    {
-            //        tempBar.Value = (int)C1Lib.ISO_15693.TempSens.log.temperature[C1Lib.ISO_15693.TempSens.log.next_measurment_block];
-            //        tempLabel.Text = tempBar.Value + " F";
-            //    }
-                //if (!C1Lib.ISO_15693.TempSens.NET_TS_clear())
-                //    return;
-                //if (!C1Lib.ISO_15693.TempSens.NET_TS_get_log_info())
-                //    return;
-                //C1Lib.ISO_15693.TempSens.log.period = 450;
-                //C1Lib.ISO_15693.TempSens.log.low_temp_limit = 10;
-                //C1Lib.ISO_15693.TempSens.log.high_temp_limit = 120;
-            //}
-
-            //C1Lib.C1.NET_C1_disable();
-            //C1Lib.C1.NET_C1_close_comm();
-
-            //Cursor.Current = Cursors.Default;
-
-        }         
+        }
 
         private void mainForm_KeyDown(object sender, KeyEventArgs e)
-        {            
+        {
             if (e.KeyCode == System.Windows.Forms.Keys.Back)
             {
                 treeView1.Nodes.Clear();
             }
             else if (e.KeyCode == System.Windows.Forms.Keys.Q)
             {
-                Application.Exit();                
+                Application.Exit();
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        public delegate void writeViolationsCB(
+            Single upperTempLimit,
+            Single lowerTempLimit,
+            Int32 len,
+            short recordPeriod,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] dateTime,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Byte[] logMode,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Single[] temperatures);
+
+        [DllImport("VarioSens Lib.dll")]
+        protected static extern int getVarioSensLog(writeViolationsCB cb);
+
+        private delegate void writeViolationsDelegate(
+            Single upperTempLimit,
+            Single lowerTempLimit,
+            Int32 len,
+            short recordPeriod,
+            int[] dateTime,
+            Byte[] logMode,
+            Single[] temperatures);
+
+        private static DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
+
+        private static void writeViolations(
+            Single upperTempLimit,
+            Single lowerTempLimit,
+            Int32 len,
+            short recordPeriod,
+            int[] dateTime,
+            Byte[] logMode,
+            Single[] temperatures)
+        {
+            if (mF.InvokeRequired)
+            {
+                mF.Invoke(new writeViolationsDelegate(writeViolations),
+                    new object[] { upperTempLimit, lowerTempLimit, len, recordPeriod, dateTime, logMode, temperatures });
+                return;
+            }
+            mF.textBox9.Text = @"";
+            mF.textBox1.Text = upperTempLimit.ToString();
+            mF.textBox2.Text = lowerTempLimit.ToString();
+            mF.textBox3.Text = recordPeriod.ToString();
+            mF.listBox1.Items.Clear();
+            mF.graph.Clear();
+
+            for (int i = 0; i < dateTime.Length; i++)
+            {
+                if (logMode[i] == 1)
+                {
+                    mF.listBox1.Items.Add(temperatures[i].ToString("F"));
+                    mF.graph.Add(i, temperatures[i]);
+                }
+                else if (logMode[i] == 2)
+                {
+                    UInt32 time_t = Convert.ToUInt32(dateTime[i]);
+
+                    DateTime convertedValue = origin + new TimeSpan(time_t * TimeSpan.TicksPerSecond);
+                    if (System.TimeZone.CurrentTimeZone.IsDaylightSavingTime(convertedValue) == true)
+                    {
+                        System.Globalization.DaylightTime daylightTime = System.TimeZone.CurrentTimeZone.GetDaylightChanges(convertedValue.Year);
+                        convertedValue = convertedValue + daylightTime.Delta;
+                    }
+                    mF.listBox1.Items.Add(temperatures[i].ToString("F", CultureInfo.CurrentCulture) + " C" + convertedValue.ToString());
+
+                }
+            }
+            if (logMode[0] == 1)
+            {
+                try
+                {
+                    if (mF.listBox1.Items.Count > 1)
+                    {
+                        mF.graph.Visible = true;
+                        mF.graph.BringToFront();
+                    }
+                }
+                catch (Exception ee)
+                {
+                    throw ee;
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void readLogClick(object sender, EventArgs e)
+        {
+            if (readerRunning == false)
+            {
+                readerRunning = true;
+                new Thread(new ThreadStart(readLog)).Start();
+            }
+            else
+            {
+                readerRunning = false;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void readLog()
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            checkBox2.Checked = false;
+            setButtons(readLogButton);
 
-            arrayCB mycb = new arrayCB(callbackFunct);
+            writeViolationsCB mycb = new writeViolationsCB(writeViolations);
 
-            getVarioSensLog(mycb);
+            int errorCode = 0;
+            while (readerRunning == true)
+            {
+                if ((errorCode = getVarioSensLog(mycb)) == 0)
+                    readerRunning = false;
+                else if ((errorCode == -1) || (errorCode == -2))
+                    readerRunning = false;
+                Thread.Sleep(100);
+            }
 
-            checkBox2.Checked = true;
+            switch (errorCode)
+            {
+                case -1:
+                    MessageBox.Show(GenTag_Demo.Properties.Resources.error1);
+                    break;
+                case -2:
+                    MessageBox.Show(GenTag_Demo.Properties.Resources.error2);
+                    break;
+                //case -3:
+                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error3;
+                //    break;
+                //case -4:
+                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error4;
+                //    break;
+                //case -5:
+                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error5;
+                //    break;
+                //case -6:
+                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error6;
+                //    break;
+                //case -7:
+                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error7;
+                //    break;
+                default:
+                    break;
+            }
 
-            // go do web service stuff
+            // TODO: go do web service stuff
+
+            resetButtons(readLogButton);
 
             Cursor.Current = Cursors.Default;
         }
+        #region Adjust Buttons
+        private delegate void resetButtonsDelegate(object obj);
 
-        private void button3_Click(object sender, EventArgs e)
+        private void resetButtons(object obj)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new resetButtonsDelegate(resetButtons), new object[] { obj });
+                return;
+            }
+            // reset buttons depending what was passed in
+            readIDButton.Enabled = true;
+            setValueButton.Enabled = true;
+            readValueButton.Enabled = true;
+            readLogButton.Enabled = true;
+
+            if (obj == readLogButton)
+            {
+                readLogButton.Text = GenTag_Demo.Properties.Resources.readLogButtonInit;
+            }
+            else if (obj == setValueButton)
+            {
+                setValueButton.Text = GenTag_Demo.Properties.Resources.setValueButtonInit;
+            }
+            else if (obj == readValueButton)
+            {
+                setValueButton.Text = GenTag_Demo.Properties.Resources.readValueButtonInit;
+            }
+            else if (obj == setValueButton)
+            {
+                readIDButton.Text = GenTag_Demo.Properties.Resources.readIDButtonInit;
+            }
+        }
+
+        private delegate void setButtonsDelegate(object obj);
+
+        private void setButtons(object obj)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setButtonsDelegate(setButtons), new object[] { obj });
+                return;
+            }
+
+            ((Button)obj).Text = @"Stop";
+            // reset buttons depending what was passed in
+            if (obj != readLogButton)
+            {
+                readLogButton.Enabled = false;
+            }
+            if (obj != readIDButton)
+            {
+                readIDButton.Enabled = false;
+            }
+            if (obj != setValueButton)
+            {
+                setValueButton.Enabled = false;
+            }
+            if (obj != readValueButton)
+            {
+                readValueButton.Enabled = false;
+            }
+        }
+        #endregion
+        private void manualLookupClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
 
@@ -434,14 +474,16 @@ namespace GenTag_Demo
             textBox4.Enabled = true;
 
             Cursor.Current = Cursors.Default;
-        }       
+        }
 
         [DllImport("VarioSens Lib.dll")]
         public static extern int setVarioSensSettings(float lowTemp, float hiTemp, int interval, int mode, int batteryCheckInterval);
-        
+
         // set
-        private void button4_Click(object sender, EventArgs e)
+        private void setVSSettingsClick(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             try
             {
                 int mode;
@@ -450,7 +492,14 @@ namespace GenTag_Demo
                     mode = 1;
                 else
                     mode = 2;
-                int eC = setVarioSensSettings(float.Parse(textBox7.Text), float.Parse(textBox6.Text), int.Parse(textBox5.Text), mode, int.Parse(textBox8.Text));
+
+                int eC = -1;
+                for (int i = 0; i < 8; i++)
+                {
+                    if ((eC = setVarioSensSettings(float.Parse(textBox7.Text), float.Parse(textBox6.Text), int.Parse(textBox5.Text), mode, int.Parse(textBox8.Text))) == 0)
+                        break;
+                }
+
                 if (eC != 0)
                     MessageBox.Show("Error");
             }
@@ -458,36 +507,34 @@ namespace GenTag_Demo
             {
                 throw ex;
             }
+
+            Cursor.Current = Cursors.Default;
         }
 
-        public delegate void arrayCB2(
+        public delegate void writeVSSettingsCB(
             Single upperTempLimit,
             Single lowerTempLimit,
             short recordPeriod,
-            short errorCode,
             short logMode,
             short batteryCheckInterval);
 
         [DllImport("VarioSens Lib.dll")]
-        public static extern void getVarioSensSettings(arrayCB2 cb);
+        public static extern int getVarioSensSettings(writeVSSettingsCB cb);
 
-        private void getCallback(Single upper, Single lower, short period, short errorCode, short logMode, short batteryCheckInterval)
+        private void getCallback(Single upper, Single lower, short period, short logMode, short batteryCheckInterval)
         {
-            if (errorCode == 0)
+            mF.textBox7.Text = lower.ToString();
+            mF.textBox6.Text = upper.ToString();
+            mF.textBox5.Text = period.ToString();
+            if (logMode == 1)
             {
-                mF.textBox7.Text = lower.ToString();
-                mF.textBox6.Text = upper.ToString();
-                mF.textBox5.Text = period.ToString();
-                if (logMode == 1)
-                {
-                    mF.comboBox1.SelectedIndex = 0;
-                }
-                else if (logMode == 2)
-                {
-                    mF.comboBox1.SelectedIndex = 1;
-                }
-                mF.textBox8.Text = batteryCheckInterval.ToString();
+                mF.comboBox1.SelectedIndex = 0;
             }
+            else if (logMode == 2)
+            {
+                mF.comboBox1.SelectedIndex = 1;
+            }
+            mF.textBox8.Text = batteryCheckInterval.ToString();
         }
 
         // get
@@ -495,11 +542,132 @@ namespace GenTag_Demo
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            arrayCB2 mycb = new arrayCB2(getCallback);
+            writeVSSettingsCB mycb = new writeVSSettingsCB(getCallback);
 
-            getVarioSensSettings(mycb);
+            int errorCode = -1;
+
+            for (int i = 0; i < 8; i++)
+            {
+                if ((errorCode = getVarioSensSettings(mycb)) == 0)
+                    break;
+            }
+
+            if (errorCode != 0)
+                MessageBox.Show("Error reading tag");
 
             Cursor.Current = Cursors.Default;
         }
-    }    
+
+        private void readPatientButton_Click(object sender, EventArgs e)
+        {
+            if (readerRunning == false)
+            {
+                readerRunning = true;
+                new Thread(new ThreadStart(readPatientData)).Start();
+            }
+            else
+            {
+                readerRunning = false;
+            }
+        }
+
+        private string patientID;
+
+        private void readPatientData()
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                patientID = readTagID();
+                org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
+                org.dyndns.crius.GetDates values = ws.getInfo(patientID, false);
+                setTextBox(patientNameBox, values.name);
+                setTextBox(patientDescriptionBox, values.desc);
+
+                byte[] bA = ws.getPicture(patientID, false);
+                setPhoto(patientPhoto, bA);
+            }
+            catch (WebException ex)
+            {
+
+            }
+            finally
+            {
+                readerRunning = false;
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private delegate void setTextBoxDelegate(TextBox tB, string desc);
+
+        private void setTextBox(TextBox tB, string val)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setTextBoxDelegate(setTextBox), new object[] { tB, val });
+                return;
+            }
+            tB.Text = val;
+        }    
+
+        private void medicationButton_Click(object sender, EventArgs e)
+        {
+            if (readerRunning == false)
+            {
+                readerRunning = true;
+                new Thread(new ThreadStart(readDrugData)).Start();
+            }
+            else
+            {
+                readerRunning = false;
+            }
+        }
+
+        private string drugID;
+
+        private void readDrugData()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            drugID = readTagID();
+            try
+            {
+                org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
+                org.dyndns.crius.GetDates values = ws.getInfo(drugID, true);
+                byte[] bA = ws.getPicture(drugID, true);
+                bool drugInteraction = ws.checkInteraction(patientID, drugID);
+
+                //setPatientData(values.name, values.desc);
+                setPhoto(drugPhoto, bA);
+
+                if (drugInteraction == true)
+                    MessageBox.Show("Warning, interaction between this patient and this drug");
+            }
+            catch (WebException ex)
+            {                
+                MessageBox.Show("Problem connecting to web service: " + ex.Message);
+            }
+
+            readerRunning = false;
+            Cursor.Current = Cursors.Default;
+        }
+
+        private delegate void setPhotoDelegate(PictureBox pB, byte[] bA);
+
+        private void setPhoto(PictureBox pB, byte[] bA)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setPhotoDelegate(setPhoto), new object[] { pB, bA });
+                return;
+            }
+            try
+            {
+                pB.Image = new Bitmap(new MemoryStream(bA));
+            }
+            catch (ArgumentException ex)
+            {
+
+            }
+        }
+    }
 }
