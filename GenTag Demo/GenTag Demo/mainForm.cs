@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using C1Lib;
-//using Protocol;
 using System.Net;
 using System.IO;
 using System.Net.Sockets;
@@ -16,11 +15,13 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Globalization;
 using System.Threading;
+using System.Security.Permissions;
 using TestPocketGraphBar;
 
 
 [assembly: CLSCompliant(true)]
-namespace GenTag_Demo
+//[assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]
+namespace GenTagDemo
 {
     public partial class mainForm : Form
     {
@@ -28,7 +29,7 @@ namespace GenTag_Demo
 
         static mainForm mF;
 
-        Graph graph;  
+        Graph graph;
 
         public mainForm()
         {
@@ -36,7 +37,11 @@ namespace GenTag_Demo
 
             mF = this;
 
-            readerRunning = false;
+            ImageList myImageList = new ImageList();
+            myImageList.Images.Add(Image.FromHbitmap(GenTagDemo.Properties.Resources.blank.GetHbitmap()));
+            myImageList.Images.Add(Image.FromHbitmap(GenTagDemo.Properties.Resources.cancel.GetHbitmap()));
+            myImageList.Images.Add(Image.FromHbitmap(GenTagDemo.Properties.Resources.ok.GetHbitmap()));
+            treeView1.ImageList = myImageList;
 
             graph = new Graph();
             graph.Visible = false;
@@ -45,22 +50,22 @@ namespace GenTag_Demo
             tabPage2.Controls.Add(graph);
 
             // Load Localized values
-            readIDButton.Text = GenTag_Demo.Properties.Resources.readIDButtonInit;
-            readLogButton.Text = GenTag_Demo.Properties.Resources.readLogButtonInit;
-            manualIDButton.Text = GenTag_Demo.Properties.Resources.manualIDButtonInit;
-            setValueButton.Text = GenTag_Demo.Properties.Resources.setValueButtonInit;
-            readValueButton.Text = GenTag_Demo.Properties.Resources.readValueButtonInit;
-            this.Text = GenTag_Demo.Properties.Resources.titleString;
+            readIDButton.Text = GenTagDemo.Properties.Resources.readIDButtonInit;
+            readLogButton.Text = GenTagDemo.Properties.Resources.readLogButtonInit;
+            manualIDButton.Text = GenTagDemo.Properties.Resources.manualIDButtonInit;
+            setValueButton.Text = GenTagDemo.Properties.Resources.setValueButtonInit;
+            readValueButton.Text = GenTagDemo.Properties.Resources.readValueButtonInit;
+            this.Text = GenTagDemo.Properties.Resources.titleString;
 
-            tabControl1.TabPages[0].Text = GenTag_Demo.Properties.Resources.tab2String;
-            tabControl1.TabPages[1].Text = GenTag_Demo.Properties.Resources.tab1String;
-            tabControl1.TabPages[2].Text = GenTag_Demo.Properties.Resources.tab3String;
-            tabControl1.TabPages[3].Text = GenTag_Demo.Properties.Resources.tab4String;
+            tabControl1.TabPages[0].Text = GenTagDemo.Properties.Resources.tab2String;
+            tabControl1.TabPages[1].Text = GenTagDemo.Properties.Resources.tab1String;
+            tabControl1.TabPages[2].Text = GenTagDemo.Properties.Resources.tab3String;
+            tabControl1.TabPages[3].Text = GenTagDemo.Properties.Resources.tab4String;
 
-            label6.Text = label1.Text = GenTag_Demo.Properties.Resources.hiLimitString;
-            label5.Text = label2.Text = GenTag_Demo.Properties.Resources.loLimitString;
-            label7.Text = label3.Text = GenTag_Demo.Properties.Resources.intervalString;
-            label4.Text = GenTag_Demo.Properties.Resources.logString;
+            label6.Text = label1.Text = GenTagDemo.Properties.Resources.hiLimitString;
+            label5.Text = label2.Text = GenTagDemo.Properties.Resources.loLimitString;
+            label7.Text = label3.Text = GenTagDemo.Properties.Resources.intervalString;
+            label4.Text = GenTagDemo.Properties.Resources.logString;
 
             textBox9.Text = @"";
 
@@ -85,36 +90,24 @@ namespace GenTag_Demo
             //hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
-        private void readIDClick(object sender, EventArgs e)
-        {
-            if (readerRunning == false)
-            {
-                readerRunning = true;
-                new Thread(new ThreadStart(readID)).Start();
-            }
-            else
-            {
-                readerRunning = false;
-            }
-        }
-
-        private delegate void updateTreeDelegate();
-
         private string readTagID()
         {
             if (C1Lib.C1.NET_C1_open_comm() != 1)
             {
-                MessageBox.Show(GenTag_Demo.Properties.Resources.error1);
+                MessageBox.Show(GenTagDemo.Properties.Resources.error1);
             }
             else if (C1Lib.C1.NET_C1_enable() != 1)
             {
-                MessageBox.Show(GenTag_Demo.Properties.Resources.error2);
+                MessageBox.Show(GenTagDemo.Properties.Resources.error2);
                 C1Lib.C1.NET_C1_disable();
             }
             else
             {
                 // wait while a tag is read
-                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0)) { }
+                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0)) { Thread.Sleep(100); }
+
+                if (readerRunning == false)
+                    throw new IOException("Reading of tag stopped");
 
                 //while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
 
@@ -132,18 +125,23 @@ namespace GenTag_Demo
 
                 return newTag.ToString();
             }
-            throw new System.IO.IOException("Unable to read tag");
+            throw new IOException(@"Unable to read tag");
         }
 
         private void readID()
         {
             Cursor.Current = Cursors.WaitCursor;
+            setCheckBox(checkBox1, false);
 
             try
             {
                 string currentTag = readTagID();
 
+                setCheckBox(checkBox1, true);
+
                 string rfidDescr = "";
+
+                bool authenticated = false;
 
                 // use the web service to retrieve a description
                 try
@@ -153,6 +151,7 @@ namespace GenTag_Demo
                     try
                     {
                         rfidDescr += ws.getDescription(currentTag);
+                        authenticated = ws.isAuthenticated(currentTag);
                     }
                     catch (WebException ex)
                     {
@@ -165,8 +164,13 @@ namespace GenTag_Demo
                     MessageBox.Show(ex.Message);
                     return;
                 }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
 
-                updateTreeView1(currentTag, rfidDescr);
+                updateTreeView1(currentTag, rfidDescr, authenticated);
             }
             catch (System.IO.IOException ex)
             {
@@ -177,14 +181,15 @@ namespace GenTag_Demo
             Cursor.Current = Cursors.Default;
         }
 
-        private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr);
+        private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated);
 
-        private void updateTreeView1(string currentTag, string rfidDescr)
+
+        private void updateTreeView1(string currentTag, string rfidDescr, bool isAuthenticated)
         {
-            if (InvokeRequired)
+            if (this.InvokeRequired)
             {
                 Invoke(new updateTreeView1Delegate(updateTreeView1),
-                    new object[] { currentTag, rfidDescr });
+                    new object[] { currentTag, rfidDescr, isAuthenticated });
                 return;
             }
             treeView1.BeginUpdate();
@@ -197,13 +202,22 @@ namespace GenTag_Demo
                 if (tn.Text == currentTag)
                 {
                     tn.Nodes.Clear();
-                    tn.Nodes.Add(rfidDescr);
+                    TreeNode tN = new TreeNode(rfidDescr);
+                    tN.SelectedImageIndex = tN.ImageIndex = isAuthenticated ? 2 : 1;
+                    tn.Nodes.Add(tN);
                     exists = true;
                 }
             }
             if (!exists)
             {
-                treeView1.Nodes.Add(currentTag).Nodes.Add(rfidDescr);
+                TreeNode superTn = new TreeNode(currentTag);
+                superTn.SelectedImageIndex = superTn.ImageIndex = 0;
+
+                TreeNode subTn = new TreeNode(rfidDescr);
+                subTn.SelectedImageIndex = subTn.ImageIndex = isAuthenticated ? 2 : 1;
+
+                superTn.Nodes.Add(subTn);
+                treeView1.Nodes.Add(superTn);
             }
             treeView1.EndUpdate();
         }
@@ -304,12 +318,23 @@ namespace GenTag_Demo
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void readLogClick(object sender, EventArgs e)
+        private void readerClick(object sender, EventArgs e)
         {
             if (readerRunning == false)
             {
                 readerRunning = true;
-                new Thread(new ThreadStart(readLog)).Start();
+                if (sender == readLogButton)
+                    new Thread(new ThreadStart(readLog)).Start();
+                else if (sender == readIDButton)
+                    new Thread(new ThreadStart(readID)).Start();
+                else if (sender == setValueButton)
+                    new Thread(new ThreadStart(setVSSettings)).Start();
+                else if (sender == readValueButton)
+                    new Thread(new ThreadStart(getVSSettings)).Start();
+                else if (sender == readPatientButton)
+                    new Thread(new ThreadStart(readPatientData)).Start();
+                else if (sender == medicationButton)
+                    new Thread(new ThreadStart(readDrugData)).Start();
             }
             else
             {
@@ -339,10 +364,10 @@ namespace GenTag_Demo
             switch (errorCode)
             {
                 case -1:
-                    MessageBox.Show(GenTag_Demo.Properties.Resources.error1);
+                    MessageBox.Show(GenTagDemo.Properties.Resources.error1);
                     break;
                 case -2:
-                    MessageBox.Show(GenTag_Demo.Properties.Resources.error2);
+                    MessageBox.Show(GenTagDemo.Properties.Resources.error2);
                     break;
                 //case -3:
                 //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error3;
@@ -387,19 +412,19 @@ namespace GenTag_Demo
 
             if (obj == readLogButton)
             {
-                readLogButton.Text = GenTag_Demo.Properties.Resources.readLogButtonInit;
+                readLogButton.Text = GenTagDemo.Properties.Resources.readLogButtonInit;
             }
             else if (obj == setValueButton)
             {
-                setValueButton.Text = GenTag_Demo.Properties.Resources.setValueButtonInit;
+                setValueButton.Text = GenTagDemo.Properties.Resources.setValueButtonInit;
             }
             else if (obj == readValueButton)
             {
-                setValueButton.Text = GenTag_Demo.Properties.Resources.readValueButtonInit;
+                setValueButton.Text = GenTagDemo.Properties.Resources.readValueButtonInit;
             }
             else if (obj == setValueButton)
             {
-                readIDButton.Text = GenTag_Demo.Properties.Resources.readIDButtonInit;
+                readIDButton.Text = GenTagDemo.Properties.Resources.readIDButtonInit;
             }
         }
 
@@ -479,8 +504,7 @@ namespace GenTag_Demo
         [DllImport("VarioSens Lib.dll")]
         public static extern int setVarioSensSettings(float lowTemp, float hiTemp, int interval, int mode, int batteryCheckInterval);
 
-        // set
-        private void setVSSettingsClick(object sender, EventArgs e)
+        private void setVSSettings()
         {
             Cursor.Current = Cursors.WaitCursor;
 
@@ -488,26 +512,40 @@ namespace GenTag_Demo
             {
                 int mode;
 
-                if (comboBox1.SelectedIndex == 0)
+                if (getComboBoxIndex(comboBox1) == 0)
                     mode = 1;
                 else
                     mode = 2;
 
-                int eC = -1;
-                for (int i = 0; i < 8; i++)
+                int errorCode = -1;
+
+                while ((readerRunning == true) &&
+                    ((errorCode = setVarioSensSettings(
+                    float.Parse(getTextBox(textBox7)),
+                    float.Parse(getTextBox(textBox6)),
+                    int.Parse(getTextBox(textBox5)), mode,
+                    int.Parse(getTextBox(textBox8)))) != 0))
                 {
-                    if ((eC = setVarioSensSettings(float.Parse(textBox7.Text), float.Parse(textBox6.Text), int.Parse(textBox5.Text), mode, int.Parse(textBox8.Text))) == 0)
-                        break;
+                    Thread.Sleep(100);
                 }
 
-                if (eC != 0)
-                    MessageBox.Show("Error");
+                if (errorCode != 0)
+                    setTextBox(getSetStatusBox, "Error writing tag");
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                throw ex;
+                MessageBox.Show("Error parsing: " + ex.ToString());
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show("A setting is not in a valid format: " + ex.ToString());
+            }
+            catch (OverflowException ex)
+            {
+                MessageBox.Show("A value is too large or small: " + ex.ToString());
             }
 
+            readerRunning = false;
             Cursor.Current = Cursors.Default;
         }
 
@@ -521,63 +559,43 @@ namespace GenTag_Demo
         [DllImport("VarioSens Lib.dll")]
         public static extern int getVarioSensSettings(writeVSSettingsCB cb);
 
-        private void getCallback(Single upper, Single lower, short period, short logMode, short batteryCheckInterval)
+        private void getVSSettingsCB(Single upper, Single lower, short period, short logMode, short batteryCheckInterval)
         {
-            mF.textBox7.Text = lower.ToString();
-            mF.textBox6.Text = upper.ToString();
-            mF.textBox5.Text = period.ToString();
-            if (logMode == 1)
-            {
-                mF.comboBox1.SelectedIndex = 0;
-            }
-            else if (logMode == 2)
-            {
-                mF.comboBox1.SelectedIndex = 1;
-            }
-            mF.textBox8.Text = batteryCheckInterval.ToString();
+            mF.setTextBox(textBox7, lower.ToString());
+            mF.setTextBox(textBox6, upper.ToString());
+            mF.setTextBox(textBox5, period.ToString());
+            mF.setComboBoxIndex(mF.comboBox1, logMode - 1);
+            mF.setTextBox(textBox8, batteryCheckInterval.ToString());
         }
 
-        // get
-        private void button5_Click(object sender, EventArgs e)
+        private void getVSSettings()
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            writeVSSettingsCB mycb = new writeVSSettingsCB(getCallback);
+            writeVSSettingsCB writeVSCB = new writeVSSettingsCB(getVSSettingsCB);
 
             int errorCode = -1;
 
-            for (int i = 0; i < 8; i++)
+            while ((readerRunning == true) && ((errorCode = getVarioSensSettings(writeVSCB)) != 0))
             {
-                if ((errorCode = getVarioSensSettings(mycb)) == 0)
-                    break;
+                Thread.Sleep(100);
             }
 
             if (errorCode != 0)
-                MessageBox.Show("Error reading tag");
+                setTextBox(getSetStatusBox, "Error reading tag");
 
+            readerRunning = false;
             Cursor.Current = Cursors.Default;
-        }
-
-        private void readPatientButton_Click(object sender, EventArgs e)
-        {
-            if (readerRunning == false)
-            {
-                readerRunning = true;
-                new Thread(new ThreadStart(readPatientData)).Start();
-            }
-            else
-            {
-                readerRunning = false;
-            }
         }
 
         private string patientID;
 
         private void readPatientData()
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             try
             {
-                Cursor.Current = Cursors.WaitCursor;
                 patientID = readTagID();
                 org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
                 org.dyndns.crius.GetDates values = ws.getInfo(patientID, false);
@@ -587,40 +605,17 @@ namespace GenTag_Demo
                 byte[] bA = ws.getPicture(patientID, false);
                 setPhoto(patientPhoto, bA);
             }
+            catch (IOException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             catch (WebException ex)
             {
 
             }
-            finally
-            {
-                readerRunning = false;
-                Cursor.Current = Cursors.Default;
-            }
-        }
 
-        private delegate void setTextBoxDelegate(TextBox tB, string desc);
-
-        private void setTextBox(TextBox tB, string val)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new setTextBoxDelegate(setTextBox), new object[] { tB, val });
-                return;
-            }
-            tB.Text = val;
-        }    
-
-        private void medicationButton_Click(object sender, EventArgs e)
-        {
-            if (readerRunning == false)
-            {
-                readerRunning = true;
-                new Thread(new ThreadStart(readDrugData)).Start();
-            }
-            else
-            {
-                readerRunning = false;
-            }
+            readerRunning = false;
+            Cursor.Current = Cursors.Default;
         }
 
         private string drugID;
@@ -640,15 +635,82 @@ namespace GenTag_Demo
                 setPhoto(drugPhoto, bA);
 
                 if (drugInteraction == true)
-                    MessageBox.Show("Warning, interaction between this patient and this drug");
+                    MessageBox.Show("Warning! \nThis drug should not be taken by this patient.");
             }
             catch (WebException ex)
-            {                
+            {
                 MessageBox.Show("Problem connecting to web service: " + ex.Message);
             }
 
             readerRunning = false;
             Cursor.Current = Cursors.Default;
+        }
+
+        #region Safe Accessors and Mutators
+
+        private delegate void setCheckBoxDelegate(CheckBox cB, bool check);
+
+        private void setCheckBox(CheckBox cB, bool check)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setCheckBoxDelegate(setCheckBox), new object[] { cB, check });
+                return;
+            }
+            cB.Checked = check;
+        }
+
+        private delegate int getComboBoxIndexDelegate(ComboBox cB);
+
+        private int getComboBoxIndex(ComboBox cB)
+        {
+            if (this.InvokeRequired)
+            {
+                return (int)this.Invoke(new getComboBoxIndexDelegate(getComboBoxIndex), new object[] { cB });
+            }
+            return cB.SelectedIndex;
+        }
+
+        private delegate void setComboBoxIndexDelegate(ComboBox cB, int index);
+
+        private void setComboBoxIndex(ComboBox cB, int index)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setComboBoxIndexDelegate(setComboBoxIndex), new object[] { cB, index });
+                return;
+            }
+            try
+            {
+                cB.SelectedIndex = index;
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                cB.SelectedIndex = 0;
+            }
+        }
+
+        private delegate void setTextBoxDelegate(TextBox tB, string desc);
+
+        private void setTextBox(TextBox tB, string val)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setTextBoxDelegate(setTextBox), new object[] { tB, val });
+                return;
+            }
+            tB.Text = val;
+        }
+
+        private delegate string getTextBoxDelegate(TextBox tB);
+
+        private string getTextBox(TextBox tB)
+        {
+            if (this.InvokeRequired)
+            {
+                return (string)this.Invoke(new getTextBoxDelegate(getTextBox), new object[] { tB });
+            }
+            return tB.Text;
         }
 
         private delegate void setPhotoDelegate(PictureBox pB, byte[] bA);
@@ -663,11 +725,14 @@ namespace GenTag_Demo
             try
             {
                 pB.Image = new Bitmap(new MemoryStream(bA));
+                pB.Refresh();
             }
             catch (ArgumentException ex)
             {
 
             }
         }
+        #endregion
+
     }
 }

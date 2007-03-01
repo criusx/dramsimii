@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace GenTag_Demo
+namespace GenTagDemo
 {
     static class Program
     {

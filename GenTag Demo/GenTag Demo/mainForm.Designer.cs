@@ -1,4 +1,4 @@
-namespace GenTag_Demo
+namespace GenTagDemo
 {
     partial class mainForm
     {
@@ -30,7 +30,6 @@ namespace GenTag_Demo
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
             this.readIDButton = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.readLogButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -52,6 +51,7 @@ namespace GenTag_Demo
             this.manualIDButton = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.getSetStatusBox = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.readValueButton = new System.Windows.Forms.Button();
             this.setValueButton = new System.Windows.Forms.Button();
@@ -65,15 +65,15 @@ namespace GenTag_Demo
             this.label9 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.patientNameBox = new System.Windows.Forms.TextBox();
-            this.patientPhoto = new System.Windows.Forms.PictureBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.patientDescriptionBox = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.readPatientButton = new System.Windows.Forms.Button();
             this.medicationButton = new System.Windows.Forms.Button();
+            this.readPatientButton = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.drugPhoto = new System.Windows.Forms.PictureBox();
+            this.patientPhoto = new System.Windows.Forms.PictureBox();
+            this.patientDescriptionBox = new System.Windows.Forms.TextBox();
+            this.patientNameBox = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -84,19 +84,11 @@ namespace GenTag_Demo
             // 
             // readIDButton
             // 
-            this.readIDButton.Location = new System.Drawing.Point(7, 187);
+            this.readIDButton.Location = new System.Drawing.Point(2, 187);
             this.readIDButton.Name = "readIDButton";
             this.readIDButton.Size = new System.Drawing.Size(71, 27);
             this.readIDButton.TabIndex = 0;
-            this.readIDButton.Click += new System.EventHandler(this.readIDClick);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(53, 163);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(25, 18);
-            this.checkBox1.TabIndex = 4;
+            this.readIDButton.Click += new System.EventHandler(this.readerClick);
             // 
             // readLogButton
             // 
@@ -105,7 +97,7 @@ namespace GenTag_Demo
             this.readLogButton.Name = "readLogButton";
             this.readLogButton.Size = new System.Drawing.Size(84, 18);
             this.readLogButton.TabIndex = 0;
-            this.readLogButton.Click += new System.EventHandler(this.readLogClick);
+            this.readLogButton.Click += new System.EventHandler(this.readerClick);
             // 
             // tabControl1
             // 
@@ -114,7 +106,6 @@ namespace GenTag_Demo
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -280,6 +271,7 @@ namespace GenTag_Demo
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.getSetStatusBox);
             this.tabPage4.Controls.Add(this.comboBox1);
             this.tabPage4.Controls.Add(this.readValueButton);
             this.tabPage4.Controls.Add(this.setValueButton);
@@ -297,11 +289,18 @@ namespace GenTag_Demo
             this.tabPage4.Size = new System.Drawing.Size(232, 214);
             this.tabPage4.Text = "tabPage4";
             // 
+            // getSetStatusBox
+            // 
+            this.getSetStatusBox.Location = new System.Drawing.Point(8, 153);
+            this.getSetStatusBox.Name = "getSetStatusBox";
+            this.getSetStatusBox.Size = new System.Drawing.Size(100, 21);
+            this.getSetStatusBox.TabIndex = 14;
+            // 
             // comboBox1
             // 
             this.comboBox1.Items.Add("All");
             this.comboBox1.Items.Add("Violations");
-            this.comboBox1.Location = new System.Drawing.Point(105, 115);
+            this.comboBox1.Location = new System.Drawing.Point(105, 81);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(60, 22);
             this.comboBox1.TabIndex = 8;
@@ -313,8 +312,8 @@ namespace GenTag_Demo
             this.readValueButton.Name = "readValueButton";
             this.readValueButton.Size = new System.Drawing.Size(72, 20);
             this.readValueButton.TabIndex = 6;
-            this.readValueButton.Text = "button4";
-            this.readValueButton.Click += new System.EventHandler(this.button5_Click);
+            this.readValueButton.Text = "Get";
+            this.readValueButton.Click += new System.EventHandler(this.readerClick);
             // 
             // setValueButton
             // 
@@ -323,19 +322,19 @@ namespace GenTag_Demo
             this.setValueButton.Name = "setValueButton";
             this.setValueButton.Size = new System.Drawing.Size(72, 20);
             this.setValueButton.TabIndex = 6;
-            this.setValueButton.Text = "button4";
-            this.setValueButton.Click += new System.EventHandler(this.setVSSettingsClick);
+            this.setValueButton.Text = "Set";
+            this.setValueButton.Click += new System.EventHandler(this.readerClick);
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(105, 78);
+            this.textBox5.Location = new System.Drawing.Point(105, 54);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(32, 21);
             this.textBox5.TabIndex = 5;
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(105, 41);
+            this.textBox6.Location = new System.Drawing.Point(105, 27);
             this.textBox6.MaxLength = 3;
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(60, 21);
@@ -343,7 +342,7 @@ namespace GenTag_Demo
             // 
             // textBox8
             // 
-            this.textBox8.Location = new System.Drawing.Point(105, 152);
+            this.textBox8.Location = new System.Drawing.Point(105, 109);
             this.textBox8.MaxLength = 3;
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(32, 21);
@@ -359,28 +358,28 @@ namespace GenTag_Demo
             // 
             // label8
             // 
-            this.label8.Location = new System.Drawing.Point(8, 115);
+            this.label8.Location = new System.Drawing.Point(8, 81);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(100, 20);
             this.label8.Text = "logmode";
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(8, 78);
+            this.label7.Location = new System.Drawing.Point(8, 54);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(100, 20);
             this.label7.Text = "logperiod";
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(8, 41);
+            this.label6.Location = new System.Drawing.Point(8, 27);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(100, 20);
             this.label6.Text = "hilimit";
             // 
             // label9
             // 
-            this.label9.Location = new System.Drawing.Point(7, 152);
+            this.label9.Location = new System.Drawing.Point(7, 109);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(100, 20);
             this.label9.Text = "batChiItv";
@@ -407,44 +406,25 @@ namespace GenTag_Demo
             this.tabPage5.Size = new System.Drawing.Size(240, 217);
             this.tabPage5.Text = "Patient";
             // 
-            // tabPage6
+            // medicationButton
             // 
-            this.tabPage6.Location = new System.Drawing.Point(0, 0);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(240, 217);
-            this.tabPage6.Text = "Auth";
+            this.medicationButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.medicationButton.Location = new System.Drawing.Point(61, 135);
+            this.medicationButton.Name = "medicationButton";
+            this.medicationButton.Size = new System.Drawing.Size(66, 20);
+            this.medicationButton.TabIndex = 4;
+            this.medicationButton.Text = "Medication";
+            this.medicationButton.Click += new System.EventHandler(this.readerClick);
             // 
-            // patientNameBox
+            // readPatientButton
             // 
-            this.patientNameBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.patientNameBox.Location = new System.Drawing.Point(133, 151);
-            this.patientNameBox.Name = "patientNameBox";
-            this.patientNameBox.Size = new System.Drawing.Size(100, 19);
-            this.patientNameBox.TabIndex = 0;
-            // 
-            // patientPhoto
-            // 
-            this.patientPhoto.Location = new System.Drawing.Point(8, 8);
-            this.patientPhoto.Name = "patientPhoto";
-            this.patientPhoto.Size = new System.Drawing.Size(107, 121);
-            this.patientPhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            // 
-            // label10
-            // 
-            this.label10.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.label10.Location = new System.Drawing.Point(133, 135);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(100, 12);
-            this.label10.Text = "Patient Name";
-            // 
-            // patientDescriptionBox
-            // 
-            this.patientDescriptionBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.patientDescriptionBox.Location = new System.Drawing.Point(8, 174);
-            this.patientDescriptionBox.Multiline = true;
-            this.patientDescriptionBox.Name = "patientDescriptionBox";
-            this.patientDescriptionBox.Size = new System.Drawing.Size(225, 40);
-            this.patientDescriptionBox.TabIndex = 0;
+            this.readPatientButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.readPatientButton.Location = new System.Drawing.Point(8, 135);
+            this.readPatientButton.Name = "readPatientButton";
+            this.readPatientButton.Size = new System.Drawing.Size(48, 20);
+            this.readPatientButton.TabIndex = 4;
+            this.readPatientButton.Text = "Patient";
+            this.readPatientButton.Click += new System.EventHandler(this.readerClick);
             // 
             // label11
             // 
@@ -454,32 +434,53 @@ namespace GenTag_Demo
             this.label11.Size = new System.Drawing.Size(100, 12);
             this.label11.Text = "Patient Description";
             // 
-            // readPatientButton
+            // label10
             // 
-            this.readPatientButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.readPatientButton.Location = new System.Drawing.Point(80, 135);
-            this.readPatientButton.Name = "readPatientButton";
-            this.readPatientButton.Size = new System.Drawing.Size(48, 20);
-            this.readPatientButton.TabIndex = 4;
-            this.readPatientButton.Text = "Patient";
-            this.readPatientButton.Click += new System.EventHandler(this.readPatientButton_Click);
-            // 
-            // medicationButton
-            // 
-            this.medicationButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.medicationButton.Location = new System.Drawing.Point(8, 135);
-            this.medicationButton.Name = "medicationButton";
-            this.medicationButton.Size = new System.Drawing.Size(66, 20);
-            this.medicationButton.TabIndex = 4;
-            this.medicationButton.Text = "Medication";
-            this.medicationButton.Click += new System.EventHandler(this.medicationButton_Click);
+            this.label10.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label10.Location = new System.Drawing.Point(133, 135);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(100, 12);
+            this.label10.Text = "Patient Name";
             // 
             // drugPhoto
             // 
-            this.drugPhoto.Location = new System.Drawing.Point(121, 8);
+            this.drugPhoto.Location = new System.Drawing.Point(121, 54);
             this.drugPhoto.Name = "drugPhoto";
-            this.drugPhoto.Size = new System.Drawing.Size(112, 121);
+            this.drugPhoto.Size = new System.Drawing.Size(112, 54);
             this.drugPhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            // 
+            // patientPhoto
+            // 
+            this.patientPhoto.Location = new System.Drawing.Point(8, 8);
+            this.patientPhoto.Name = "patientPhoto";
+            this.patientPhoto.Size = new System.Drawing.Size(107, 121);
+            this.patientPhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            // 
+            // patientDescriptionBox
+            // 
+            this.patientDescriptionBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.patientDescriptionBox.Location = new System.Drawing.Point(8, 174);
+            this.patientDescriptionBox.Multiline = true;
+            this.patientDescriptionBox.Name = "patientDescriptionBox";
+            this.patientDescriptionBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.patientDescriptionBox.Size = new System.Drawing.Size(225, 40);
+            this.patientDescriptionBox.TabIndex = 0;
+            // 
+            // patientNameBox
+            // 
+            this.patientNameBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.patientNameBox.Location = new System.Drawing.Point(133, 151);
+            this.patientNameBox.Name = "patientNameBox";
+            this.patientNameBox.Size = new System.Drawing.Size(100, 19);
+            this.patientNameBox.TabIndex = 0;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Enabled = false;
+            this.checkBox1.Location = new System.Drawing.Point(0, 163);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(25, 18);
+            this.checkBox1.TabIndex = 4;
             // 
             // mainForm
             // 
@@ -507,7 +508,6 @@ namespace GenTag_Demo
         #endregion
 
         private System.Windows.Forms.Button readIDButton;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button readLogButton;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
@@ -549,8 +549,9 @@ namespace GenTag_Demo
         private System.Windows.Forms.PictureBox patientPhoto;
         private System.Windows.Forms.TextBox patientDescriptionBox;
         private System.Windows.Forms.TextBox patientNameBox;
-        private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.PictureBox drugPhoto;
+        private System.Windows.Forms.TextBox getSetStatusBox;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

@@ -51,32 +51,32 @@ namespace GenTag_Server
             this.loadButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.interactionID = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.drugBrowseButton = new System.Windows.Forms.Button();
+            this.drugPictureBox = new System.Windows.Forms.PictureBox();
             this.drugDescriptionBox = new System.Windows.Forms.TextBox();
+            this.drugSaveButton = new System.Windows.Forms.Button();
             this.drugIDBox = new System.Windows.Forms.TextBox();
+            this.drugClearButton = new System.Windows.Forms.Button();
             this.drugLoadButton = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.drugClearButton = new System.Windows.Forms.Button();
-            this.drugSaveButton = new System.Windows.Forms.Button();
-            this.drugPictureBox = new System.Windows.Forms.PictureBox();
-            this.drugBrowseButton = new System.Windows.Forms.Button();
-            this.interactionLoad = new System.Windows.Forms.Button();
-            this.interactionSave = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.interactionListBox = new System.Windows.Forms.ListBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.drugIDAddBox = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.interactionID = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.interactionSave = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.interactionLoad = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.logLimitSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictImg)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drugPictureBox)).BeginInit();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -253,9 +253,11 @@ namespace GenTag_Server
             // 
             // pictImg
             // 
+            this.pictImg.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictImg.Location = new System.Drawing.Point(110, 145);
             this.pictImg.Name = "pictImg";
             this.pictImg.Size = new System.Drawing.Size(260, 260);
+            this.pictImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictImg.TabIndex = 8;
             this.pictImg.TabStop = false;
             // 
@@ -317,49 +319,25 @@ namespace GenTag_Server
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Drug Data";
             // 
-            // groupBox3
+            // drugBrowseButton
             // 
-            this.groupBox3.Controls.Add(this.interactionListBox);
-            this.groupBox3.Controls.Add(this.drugIDAddBox);
-            this.groupBox3.Controls.Add(this.label12);
-            this.groupBox3.Controls.Add(this.interactionID);
-            this.groupBox3.Controls.Add(this.label8);
-            this.groupBox3.Controls.Add(this.interactionSave);
-            this.groupBox3.Controls.Add(this.label9);
-            this.groupBox3.Controls.Add(this.button2);
-            this.groupBox3.Controls.Add(this.button1);
-            this.groupBox3.Controls.Add(this.interactionLoad);
-            this.groupBox3.Location = new System.Drawing.Point(3, 472);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(666, 102);
-            this.groupBox3.TabIndex = 10;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Interactions";
+            this.drugBrowseButton.Location = new System.Drawing.Point(7, 144);
+            this.drugBrowseButton.Name = "drugBrowseButton";
+            this.drugBrowseButton.Size = new System.Drawing.Size(75, 23);
+            this.drugBrowseButton.TabIndex = 7;
+            this.drugBrowseButton.Text = "Browse";
+            this.drugBrowseButton.UseVisualStyleBackColor = true;
+            this.drugBrowseButton.Click += new System.EventHandler(this.drugBrowseButton_Click);
             // 
-            // interactionID
+            // drugPictureBox
             // 
-            this.interactionID.Location = new System.Drawing.Point(56, 16);
-            this.interactionID.Name = "interactionID";
-            this.interactionID.Size = new System.Drawing.Size(226, 20);
-            this.interactionID.TabIndex = 5;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 19);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(18, 13);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "ID";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 48);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(44, 13);
-            this.label9.TabIndex = 6;
-            this.label9.Text = "Drug ID";
+            this.drugPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.drugPictureBox.Location = new System.Drawing.Point(88, 144);
+            this.drugPictureBox.Name = "drugPictureBox";
+            this.drugPictureBox.Size = new System.Drawing.Size(260, 260);
+            this.drugPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.drugPictureBox.TabIndex = 8;
+            this.drugPictureBox.TabStop = false;
             // 
             // drugDescriptionBox
             // 
@@ -370,12 +348,32 @@ namespace GenTag_Server
             this.drugDescriptionBox.Size = new System.Drawing.Size(263, 56);
             this.drugDescriptionBox.TabIndex = 5;
             // 
+            // drugSaveButton
+            // 
+            this.drugSaveButton.Location = new System.Drawing.Point(7, 202);
+            this.drugSaveButton.Name = "drugSaveButton";
+            this.drugSaveButton.Size = new System.Drawing.Size(75, 23);
+            this.drugSaveButton.TabIndex = 7;
+            this.drugSaveButton.Text = "Save";
+            this.drugSaveButton.UseVisualStyleBackColor = true;
+            this.drugSaveButton.Click += new System.EventHandler(this.drugSaveButton_Click);
+            // 
             // drugIDBox
             // 
             this.drugIDBox.Location = new System.Drawing.Point(88, 19);
             this.drugIDBox.Name = "drugIDBox";
             this.drugIDBox.Size = new System.Drawing.Size(226, 20);
             this.drugIDBox.TabIndex = 5;
+            // 
+            // drugClearButton
+            // 
+            this.drugClearButton.Location = new System.Drawing.Point(7, 173);
+            this.drugClearButton.Name = "drugClearButton";
+            this.drugClearButton.Size = new System.Drawing.Size(75, 23);
+            this.drugClearButton.TabIndex = 7;
+            this.drugClearButton.Text = "Clear";
+            this.drugClearButton.UseVisualStyleBackColor = true;
+            this.drugClearButton.Click += new System.EventHandler(this.drugClearButton_Click);
             // 
             // drugLoadButton
             // 
@@ -405,73 +403,24 @@ namespace GenTag_Server
             this.label11.TabIndex = 6;
             this.label11.Text = "ID";
             // 
-            // drugClearButton
+            // groupBox3
             // 
-            this.drugClearButton.Location = new System.Drawing.Point(7, 173);
-            this.drugClearButton.Name = "drugClearButton";
-            this.drugClearButton.Size = new System.Drawing.Size(75, 23);
-            this.drugClearButton.TabIndex = 7;
-            this.drugClearButton.Text = "Clear";
-            this.drugClearButton.UseVisualStyleBackColor = true;
-            this.drugClearButton.Click += new System.EventHandler(this.drugClearButton_Click);
-            // 
-            // drugSaveButton
-            // 
-            this.drugSaveButton.Location = new System.Drawing.Point(7, 202);
-            this.drugSaveButton.Name = "drugSaveButton";
-            this.drugSaveButton.Size = new System.Drawing.Size(75, 23);
-            this.drugSaveButton.TabIndex = 7;
-            this.drugSaveButton.Text = "Save";
-            this.drugSaveButton.UseVisualStyleBackColor = true;
-            this.drugSaveButton.Click += new System.EventHandler(this.drugSaveButton_Click);
-            // 
-            // drugPictureBox
-            // 
-            this.drugPictureBox.Location = new System.Drawing.Point(88, 144);
-            this.drugPictureBox.Name = "drugPictureBox";
-            this.drugPictureBox.Size = new System.Drawing.Size(260, 260);
-            this.drugPictureBox.TabIndex = 8;
-            this.drugPictureBox.TabStop = false;
-            // 
-            // drugBrowseButton
-            // 
-            this.drugBrowseButton.Location = new System.Drawing.Point(7, 144);
-            this.drugBrowseButton.Name = "drugBrowseButton";
-            this.drugBrowseButton.Size = new System.Drawing.Size(75, 23);
-            this.drugBrowseButton.TabIndex = 7;
-            this.drugBrowseButton.Text = "Browse";
-            this.drugBrowseButton.UseVisualStyleBackColor = true;
-            this.drugBrowseButton.Click += new System.EventHandler(this.drugBrowseButton_Click);
-            // 
-            // interactionLoad
-            // 
-            this.interactionLoad.Location = new System.Drawing.Point(585, 43);
-            this.interactionLoad.Name = "interactionLoad";
-            this.interactionLoad.Size = new System.Drawing.Size(75, 23);
-            this.interactionLoad.TabIndex = 7;
-            this.interactionLoad.Text = "Load";
-            this.interactionLoad.UseVisualStyleBackColor = true;
-            this.interactionLoad.Click += new System.EventHandler(this.interactionLoad_Click);
-            // 
-            // interactionSave
-            // 
-            this.interactionSave.Location = new System.Drawing.Point(585, 14);
-            this.interactionSave.Name = "interactionSave";
-            this.interactionSave.Size = new System.Drawing.Size(75, 23);
-            this.interactionSave.TabIndex = 7;
-            this.interactionSave.Text = "Save";
-            this.interactionSave.UseVisualStyleBackColor = true;
-            this.interactionSave.Click += new System.EventHandler(this.interactionSave_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(585, 72);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Add";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.groupBox3.Controls.Add(this.interactionListBox);
+            this.groupBox3.Controls.Add(this.drugIDAddBox);
+            this.groupBox3.Controls.Add(this.label12);
+            this.groupBox3.Controls.Add(this.interactionID);
+            this.groupBox3.Controls.Add(this.label8);
+            this.groupBox3.Controls.Add(this.interactionSave);
+            this.groupBox3.Controls.Add(this.label9);
+            this.groupBox3.Controls.Add(this.button2);
+            this.groupBox3.Controls.Add(this.button1);
+            this.groupBox3.Controls.Add(this.interactionLoad);
+            this.groupBox3.Location = new System.Drawing.Point(3, 472);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(382, 102);
+            this.groupBox3.TabIndex = 10;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Interactions";
             // 
             // interactionListBox
             // 
@@ -481,21 +430,56 @@ namespace GenTag_Server
             this.interactionListBox.Size = new System.Drawing.Size(145, 43);
             this.interactionListBox.TabIndex = 8;
             // 
+            // drugIDAddBox
+            // 
+            this.drugIDAddBox.Location = new System.Drawing.Point(195, 19);
+            this.drugIDAddBox.Name = "drugIDAddBox";
+            this.drugIDAddBox.Size = new System.Drawing.Size(87, 20);
+            this.drugIDAddBox.TabIndex = 5;
+            // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(400, 77);
+            this.label12.Location = new System.Drawing.Point(145, 22);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(44, 13);
             this.label12.TabIndex = 6;
             this.label12.Text = "Drug ID";
             // 
-            // drugIDAddBox
+            // interactionID
             // 
-            this.drugIDAddBox.Location = new System.Drawing.Point(450, 74);
-            this.drugIDAddBox.Name = "drugIDAddBox";
-            this.drugIDAddBox.Size = new System.Drawing.Size(129, 20);
-            this.drugIDAddBox.TabIndex = 5;
+            this.interactionID.Location = new System.Drawing.Point(56, 16);
+            this.interactionID.Name = "interactionID";
+            this.interactionID.Size = new System.Drawing.Size(83, 20);
+            this.interactionID.TabIndex = 5;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 19);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(18, 13);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "ID";
+            // 
+            // interactionSave
+            // 
+            this.interactionSave.Location = new System.Drawing.Point(298, 15);
+            this.interactionSave.Name = "interactionSave";
+            this.interactionSave.Size = new System.Drawing.Size(75, 23);
+            this.interactionSave.TabIndex = 7;
+            this.interactionSave.Text = "Save";
+            this.interactionSave.UseVisualStyleBackColor = true;
+            this.interactionSave.Click += new System.EventHandler(this.interactionSave_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 48);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(44, 13);
+            this.label9.TabIndex = 6;
+            this.label9.Text = "Drug ID";
             // 
             // button2
             // 
@@ -506,6 +490,26 @@ namespace GenTag_Server
             this.button2.Text = "Clear";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(298, 73);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "Add";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // interactionLoad
+            // 
+            this.interactionLoad.Location = new System.Drawing.Point(298, 44);
+            this.interactionLoad.Name = "interactionLoad";
+            this.interactionLoad.Size = new System.Drawing.Size(75, 23);
+            this.interactionLoad.TabIndex = 7;
+            this.interactionLoad.Text = "Load";
+            this.interactionLoad.UseVisualStyleBackColor = true;
+            this.interactionLoad.Click += new System.EventHandler(this.interactionLoad_Click);
             // 
             // mainForm
             // 
@@ -535,9 +539,9 @@ namespace GenTag_Server
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.drugPictureBox)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.drugPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
