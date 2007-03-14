@@ -245,7 +245,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		{
 			bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length));
 		}
-		else if (this_t->type == READ_TRANSACTION)
+		else if ((this_t->type == READ_TRANSACTION) || (this_t->type == IFETCH_TRANSACTION))
 		{
 			bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length));
 		}

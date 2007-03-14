@@ -1,0 +1,76 @@
+
+
+
+class dramSettings
+{
+public:
+	//////////////////////////////////////////////////////////////////////////	
+	// command data
+	refresh_policy_t refreshPolicy;
+	dram_type_t dramType;
+	unsigned dataRate;
+	command_ordering_algorithm_t commandOrderingAlgorithm;
+	transaction_ordering_algorithm_t transactionOrderingAlgorithm;
+	unsigned perBankQueueDepth;
+	unsigned columnSize;
+	unsigned rowSize;
+	unsigned channelWidth;
+	unsigned columnCount;
+	unsigned rowCount;
+	unsigned cacheLineSize;
+	unsigned historyQueueDepth;
+	unsigned completionQueueDepth;
+	unsigned transactionQueueDepth;
+	unsigned eventQueueDepth;
+	unsigned refreshQueueDepth;
+	unsigned refreshTime;
+	unsigned seniorityAgeLimit;
+	row_buffer_policy_t rowBufferManagementPolicy;
+	address_mapping_scheme_t addressMappingScheme;
+	bool postedCAS;
+	bool readWriteGrouping;
+	bool autoPrecharge;
+	unsigned clockGranularity;
+	unsigned cachelinesPerRow;
+	unsigned channelCount;
+	unsigned rankCount;
+	unsigned bankCount;
+	double shortBurstRatio;
+	double readPercentage;
+	//////////////////////////////////////////////////////////////////////////	
+	// timing data
+	unsigned tRTRS;
+	unsigned tAL;
+	unsigned tBurst;
+	unsigned tCAS;
+	unsigned tCWD;
+	unsigned tFAW;
+	unsigned tRAS;
+	unsigned tRC;
+	unsigned tRCD;
+	unsigned tREFI;
+	unsigned tRFC;
+	unsigned tRP;
+	unsigned tRRD;
+	unsigned tRTP;
+	unsigned tWR;
+	unsigned tWTR;
+	unsigned tCMD;
+	unsigned tInternalBurst;
+	unsigned tBufferDelay;
+	//////////////////////////////////////////////////////////////////////////
+	// power data
+	float maxVCC;
+	float VDD;
+	unsigned IDD0;
+	unsigned IDD2P;
+	unsigned IDD2N;
+	unsigned IDD3P;
+	unsigned IDD3N;
+	unsigned IDD4W;
+	unsigned IDD4R;
+	unsigned IDD5;
+
+
+	explicit dramSettings(const int, const char **);
+};

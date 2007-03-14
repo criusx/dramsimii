@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;C:\temp\m5-2.0b1\src&quot;;&quot;C:\temp\zlib\zlib-1.2.3\win32\include&quot;"
+				WholeProgramOptimization="false"
+				AdditionalIncludeDirectories="&quot;C:\temp\m5-2.0b1\src&quot;;&quot;C:\temp\zlib\zlib-dll\include&quot;;&quot;C:\temp\libxml2-2.6.27.win32\include&quot;;&quot;C:\temp\iconv-1.9.2.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
@@ -57,7 +57,7 @@
 				CompileAs="2"
 				DisableSpecificWarnings="4530"
 				ShowIncludes="false"
-				EnablePREfast="true"
+				EnablePREfast="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -70,9 +70,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="zdll.lib"
+				AdditionalDependencies="zdll.lib libxml2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\temp\zlib\zlib-1.2.3\win32\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\temp\libxml2-2.6.27.win32\lib&quot;;&quot;C:\temp\zlib\zlib-dll\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -301,6 +301,10 @@
 			</File>
 			<File
 				RelativePath=".\src\cpp\dramChannel.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cpp\dramSettings.cpp"
 				>
 			</File>
 			<File

@@ -38,13 +38,19 @@ enum system_configuration_type_t
 };
 
 // we can define various algorithms previously explored by Rixner, McKee et al. here.
-enum ordering_algorithm_t
+enum command_ordering_algorithm_t
 {
 	STRICT_ORDER, // maintains original ordering
 	RANK_ROUND_ROBIN, // alternate ranks 
 	BANK_ROUND_ROBIN, // keep same ranks as long as possible, go down banks
 	GREEDY, // greedy algorithm
 	WANG_RANK_HOP // Patented stuff. davewang202@yahoo.com ;)
+};
+
+enum transaction_ordering_algorithm_t
+{
+	RIFF,
+	STRICT
 };
 
 enum input_type_t
@@ -170,6 +176,7 @@ enum file_io_token_t
 	t_rcd_token,
 	t_rfc_token,
 	t_rl_token,
+	t_refi_token,
 	t_rp_token,
 	t_rrd_token,
 	t_rtp_token,
@@ -182,6 +189,7 @@ enum file_io_token_t
 	unknown_token,
 	// power config tokens
 	vdd_token,
+	max_vcc_token,
 	idd0_token,
 	idd2p_token,
 	idd2n_token,

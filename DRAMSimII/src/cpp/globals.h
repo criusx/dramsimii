@@ -108,6 +108,7 @@ extern ogzstream outStream;
 
 // converts a string to a file_io_token
 file_io_token_t file_io_token(const std::string &);
+file_io_token_t fileIOToken(const unsigned char *input);
 
 // converts a string to its corresponding magnitude representation
 double ascii2multiplier(const std::string &);

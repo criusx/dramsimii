@@ -195,9 +195,12 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		outStream << "I  ";
 	else
 		outStream << "? ";
+
 	assert(pkt->isRead() || pkt->isWrite() || pkt->isInvalidate());
+
 	outStream << std::hex << pkt->getAddr() << endl;
 
+	// any packet which doesn't need a response and isn't a write
 	if (!pkt->needsResponse() && !pkt->isWrite())
 	{
 		outStream << "packet not needing response." << endl;
@@ -297,10 +300,14 @@ M5dramSystem::TickEvent::process()
 	while (Packet *packet = (Packet *)memory->ds->moveAllChannelsToTime(now, &finishTime))
 	{
 		memory->doFunctionalAccess(packet);
-		packet->makeTimingResponse();
-		assert(curTick <= static_cast<Tick>(finishTime * memory->getCpuRatio()));
-		outStream << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick) << ") at" << curTick << endl;
-		memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick));
+
+		if (!packet->isWrite())
+		{			
+			packet->makeTimingResponse();
+			assert(curTick <= static_cast<Tick>(finishTime * memory->getCpuRatio()));
+			outStream << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick) << ") at" << curTick << endl;
+			memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick));
+		}
 	}
 
 	// deschedule yourself

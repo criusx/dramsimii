@@ -15,14 +15,16 @@
 #include "dramSystem.h"
 #include "rank_c.h"
 #include "globals.h"
+#include "dramSettings.h"
 
 using namespace std;
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv, char *envp[])
 {
 
 	map<enum file_io_token_t,string> parameters;
 
+	dramSettings settings(argc, const_cast<const char **>(argv));
 	create_input_map(argc, argv, parameters);
 	//simulation_parameters_t	*simulation_parameters;
 	//dram_statistics_t	*dram_stats;

@@ -228,7 +228,7 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 	else
 		per_bank_queue_depth = 8;
 
-	if ((temp=parameter.find(ordering_algorithm_token))!=parameter.end())
+	if ((temp=parameter.find(command_ordering_algorithm_token))!=parameter.end())
 	{
 		if (temp->second == "strict_order" || temp->second == "strict")
 			command_ordering_algorithm = STRICT_ORDER;

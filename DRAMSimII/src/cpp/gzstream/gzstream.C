@@ -104,6 +104,7 @@ namespace GZSTREAM_NAMESPACE {
 		// Separate the writing of the buffer from overflow() and
 		// sync() operation.
 		int w = pptr() - pbase();
+
 		// JG: if stream is not open, write to cerr instead
 		if (opened)
 		{

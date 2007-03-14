@@ -6,13 +6,7 @@
 #include "enumTypes.h"
 #include "powerConfig.h"
 
-
-
-
-
 using namespace std;
-
-
 
 powerConfig::powerConfig(std::map<file_io_token_t,std::string> &parameter)
 {

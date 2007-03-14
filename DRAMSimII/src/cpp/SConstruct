@@ -1,0 +1,71 @@
+import os
+import sys
+#Import(`env`)
+
+sources = Split("""	bank_c.cpp
+			command.cpp
+			dramAlgorithm.cpp
+			dramChannel.cpp
+			dramsim2.cpp
+			dramStatistics.cpp
+			dramSystem.cpp
+			dramSystemConfiguration.cpp
+			dramTimingSpecification.cpp
+			event.cpp
+			executeCommand.cpp
+			getNextCommand.cpp
+			globals.cpp
+			InputStream.cpp
+			main.cpp
+			gzstream/gzstream.C
+			minProtocolGap.cpp
+			rank_c.cpp
+			runSimulations.cpp
+			transaction.cpp
+			transaction2commands.cpp""")
+
+
+ROOT = Dir('.').abspath
+SRCDIR = os.path.join(ROOT,'src')
+
+#env = Environment(ENV = os.environ,  # inherit user's environment vars
+#                  ROOT = ROOT,
+#                  SRCDIR = SRCDIR)
+env = Environment(CCFLAGS = '-g -O3')
+
+                  
+# This function adds the specified sources to the given build
+# environment, and returns a list of all the corresponding SCons
+# Object nodes (including an extra one for date.cc).  We explicitly
+# add the Object nodes so we can set up special dependencies for
+# date.cc.
+def make_objs(sources, env):
+    objs = [env.Object(s) for s in sources]
+    # make date.cc depend on all other objects so it always gets
+    # recompiled whenever anything else does
+    date_obj = env.Object('base/date.cc')
+    env.Depends(date_obj, objs)
+    objs.append(date_obj)
+    return objs                  
+
+# Function to create a new build environment as clone of current
+# environment 'env' with modified object suffix and optional stripped
+# binary.  Additional keyword arguments are appended to corresponding
+# build environment vars.
+def makeEnv(label, objsfx, strip = False, **kwargs):
+    newEnv = env.Copy(OBJSUFFIX=objsfx)
+    newEnv.Label = label
+    newEnv.Append(**kwargs)
+    exe = 'm5.' + label  # final executable
+    bin = exe + '.bin'   # executable w/o appended Python zip archive
+    newEnv.Program(bin, make_objs(sources, newEnv))
+    if strip:
+        stripped_bin = bin + '.stripped'
+        newEnv.Command(stripped_bin, bin, 'strip $SOURCE -o $TARGET')
+        bin = stripped_bin
+    #targets = newEnv.Concat(exe, [bin, 'python/m5py.zip'])
+    newEnv.M5Binary = targets[0]
+    envList.append(newEnv)
+
+#makeEnv('opt', '.o', CCFLAGS = Split('-g -O3'),CPPDEFINES = ['TRACING_ON=1'])
+env.Program('dramSimII',sources, LIBS=['z'])

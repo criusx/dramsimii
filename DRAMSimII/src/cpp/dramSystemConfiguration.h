@@ -11,8 +11,7 @@ class dramSystemConfiguration
 { 
 
 private:
-	std::ifstream spd_file_ptr;
-	ordering_algorithm_t command_ordering_algorithm;	// strict or round robin 
+	command_ordering_algorithm_t command_ordering_algorithm;	// strict or round robin 
 	unsigned per_bank_queue_depth;						// command queue size
 	system_configuration_type_t config_type;
 	unsigned refresh_time;								// loop time of refresh 
@@ -52,7 +51,7 @@ public:
 	friend std::ostream &operator<<(std::ostream &, const dramSystemConfiguration &);
 
 	// accessors
-	ordering_algorithm_t getCommandOrderingAlgorithm() const { return command_ordering_algorithm; }
+	command_ordering_algorithm_t getCommandOrderingAlgorithm() const { return command_ordering_algorithm; }
 	system_configuration_type_t getConfigType() const { return config_type; }
 	unsigned getPerBankQueueDepth() const { return per_bank_queue_depth; }
 	unsigned getRankCount() const { return rank_count; }

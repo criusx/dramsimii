@@ -206,7 +206,6 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 #ifdef DEBUG_TRANSACTION
 						outStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif
-						outStream << "test";
 						// reuse the refresh transactions
 						if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 						{
@@ -218,15 +217,14 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 						{
 							const void *origTrans = completed_t->originalTransaction;
 
-							if (!completed_t->originalTransaction)
+							if (!completed_t->originalTransaction);
 #ifdef M5
 							else
 								outStream << "transaction completed, not REFRESH, no orig trans" << endl;
 #endif
-
-							delete completed_t;
-
 							*transFinishTime = completed_t->completion_time;
+
+							delete completed_t;							
 
 							return origTrans;
 						}
