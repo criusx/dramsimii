@@ -235,6 +235,8 @@ file_io_token_t file_io_token(const string &input)
 		return dram_type_token;
 	else if (input == "datarate")
 		return datarate_token;
+	else if (input == "tBufferDelay")
+		return t_buffer_delay_token;
 	else if (input == "clock_granularity" || input == "clockGranularity")
 		return clock_granularity_token;
 	else if (input == "row_buffer_policy" || input == "rowBufferPolicy")
@@ -249,6 +251,12 @@ file_io_token_t file_io_token(const string &input)
 		return transaction_ordering_policy_token;
 	else if (input == "command_ordering_algorithm" || input == "commandOrderingAlgorithm")
 		return command_ordering_algorithm_token;
+	else if (input == "transactionOrderingAlgorithm")
+		return transaction_ordering_policy_token;
+	else if (input == "readPercentage")
+		return read_percentage_token;
+	else if (input == "shortBurstRatio")
+		return short_burst_ratio_token;
 	else if (input == "command_ordering_policy" || input == "commandOrderingPolicy")
 		return command_ordering_algorithm_token;
 	else if (input == "auto_refresh_policy" || input == "autoRefreshPolicy")
@@ -428,51 +436,6 @@ file_io_token_t file_io_token(const string &input)
 
 //std::ostream &operator<<(outputStream& os, std::ostream
 
-ostream &operator<<(ostream &os, const dramSystem &this_a)
-{
-	os << "SYS[";
-	switch(this_a.system_config.getConfigType())
-	{
-	case BASELINE_CONFIG:
-		os << "BASE] ";
-		break;
-	default:
-		os << "UNKN] ";
-		break;
-	}
-	os << "RC[" << this_a.system_config.getRankCount() << "] ";
-	os << "BC[" << this_a.system_config.getBankCount() << "] ";
-	os << "ALG[";
-	switch(this_a.system_config.getCommandOrderingAlgorithm())
-	{
-	case STRICT_ORDER:
-		os << "STRO] ";
-		break;
-	case RANK_ROUND_ROBIN:
-		os << "RRR ] ";
-		break;
-	case BANK_ROUND_ROBIN:
-		os << "BRR ] ";
-		break;
-	case WANG_RANK_HOP:
-		os << "WANG] ";
-		break;
-	case GREEDY:
-		os << "GRDY] ";
-		break;
-	default:
-		os << "UNKN] ";
-		break;
-	}
-	os << "BQD[" << this_a.system_config.getPerBankQueueDepth() << "] ";
-	os << "BLR[" << setprecision(0) << floor(100*(this_a.system_config.getShortBurstRatio() + 0.0001) + .5) << "] ";
-	os << "RP[" << (int)(100*this_a.system_config.getReadPercentage()) << "] ";
-
-	os << this_a.timing_specification;
-	os << this_a.statistics;
-
-	return os;
-}
 
 ostream &operator<<(ostream &os, const addresses &this_a)
 {

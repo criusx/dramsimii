@@ -136,8 +136,14 @@ dramSettings::dramSettings(const int argc, const char **argv)
 					case vdd_token:
 						toNumeric<float>(VDD,nodeValue,std::dec);
 						break;
+					case t_cwd_token:
+						toNumeric<unsigned>(tCWD,nodeValue,std::dec);
+						break;
 					case t_buffer_delay_token:
 						toNumeric<unsigned>(tBufferDelay,nodeValue,std::dec);
+						break;
+					case t_cmd_token:
+						toNumeric<unsigned>(tCMD,nodeValue,std::dec);
 						break;
 					case t_wtr_token:
 						toNumeric<unsigned>(tWTR,nodeValue,std::dec);
@@ -197,10 +203,10 @@ dramSettings::dramSettings(const int argc, const char **argv)
 						toNumeric<unsigned>(channelCount,nodeValue,std::dec);
 						break;
 					case short_burst_ratio_token:
-						toNumeric<double>(shortBurstRatio,nodeValue,std::dec);
+						toNumeric<float>(shortBurstRatio,nodeValue,std::dec);
 						break;
 					case read_percentage_token:
-						toNumeric<double>(readPercentage,nodeValue,std::dec);
+						toNumeric<float>(readPercentage,nodeValue,std::dec);
 						break;					
 					case per_bank_queue_depth_token:
 						toNumeric<unsigned>(perBankQueueDepth,nodeValue,std::dec);
@@ -258,6 +264,14 @@ dramSettings::dramSettings(const int argc, const char **argv)
 					case refresh_time_token:
 						toNumeric<unsigned>(refreshTime,nodeValue,std::dec);
 						break;
+					case transaction_ordering_policy_token:
+						if (nodeValue == "strict")
+							transactionOrderingAlgorithm = STRICT;
+						else if (nodeValue == "RIFF")
+							transactionOrderingAlgorithm = RIFF;
+						else
+							transactionOrderingAlgorithm = STRICT;						
+						break;
 					case command_ordering_algorithm_token:
 						if (nodeValue == "strict")
 							commandOrderingAlgorithm = STRICT_ORDER;
@@ -309,7 +323,7 @@ dramSettings::dramSettings(const int argc, const char **argv)
 						break;
 					case max_vcc_token:
 						toNumeric<float>(maxVCC,nodeValue,std::dec);
-						break;
+						break;					
 					default:
 						break;
 					}

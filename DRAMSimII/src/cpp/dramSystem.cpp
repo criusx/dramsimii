@@ -838,3 +838,49 @@ int dramSystem::find_oldest_channel() const
 	}
 	return oldest_chan_id;
 }
+
+ostream &operator<<(ostream &os, const dramSystem &this_a)
+{
+	os << "SYS[";
+	switch(this_a.system_config.getConfigType())
+	{
+	case BASELINE_CONFIG:
+		os << "BASE] ";
+		break;
+	default:
+		os << "UNKN] ";
+		break;
+	}
+	os << "RC[" << this_a.system_config.getRankCount() << "] ";
+	os << "BC[" << this_a.system_config.getBankCount() << "] ";
+	os << "ALG[";
+	switch(this_a.system_config.getCommandOrderingAlgorithm())
+	{
+	case STRICT_ORDER:
+		os << "STR ] ";
+		break;
+	case RANK_ROUND_ROBIN:
+		os << "RRR ] ";
+		break;
+	case BANK_ROUND_ROBIN:
+		os << "BRR ] ";
+		break;
+	case WANG_RANK_HOP:
+		os << "WANG] ";
+		break;
+	case GREEDY:
+		os << "GRDY] ";
+		break;
+	default:
+		os << "UNKN] ";
+		break;
+	}
+	os << "BQD[" << this_a.system_config.getPerBankQueueDepth() << "] ";
+	os << "BLR[" << setprecision(0) << floor(100*(this_a.system_config.getShortBurstRatio() + 0.0001) + .5) << "] ";
+	os << "RP[" << (int)(100*this_a.system_config.getReadPercentage()) << "] ";
+
+	os << this_a.timing_specification;
+	os << this_a.statistics;
+
+	return os;
+}

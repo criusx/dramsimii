@@ -9,8 +9,7 @@ using namespace std;
 
 M5dramSystem::M5dramSystem(Params *p):
 PhysicalMemory(p), tickEvent(this)
-{
-	
+{	
 	outStream << "in M5dramSystem constructor" << std::endl;
 	std::map<file_io_token_t,std::string> parameter;
 
@@ -36,7 +35,7 @@ PhysicalMemory(p), tickEvent(this)
 	parameter[transaction_queue_depth_token] = p->transactionQueueDepth;
 	parameter[event_queue_depth_token] = p->eventQueueDepth;
 	parameter[per_bank_queue_depth_token] = p->perBankQueueDepth;
-	parameter[ordering_algorithm_token] = p->orderingAlgorithm;
+	parameter[command_ordering_algorithm_token] = p->orderingAlgorithm;
 	parameter[chan_count_token] = p->chanCount;
 	parameter[rank_count_token] = p->rankCount;
 	parameter[bank_count_token] = p->bankCount;
@@ -233,7 +232,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 
 Tick
 M5dramSystem::recvTiming(Packet *pkt)
-{
+{	
 	transaction *trans = new transaction(pkt->cmd,(tick_t)(curTick/cpuRatio),pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 	// convert the physical address to chan, rank, bank, etc.
@@ -270,9 +269,6 @@ M5dramSystem::recvTiming(Packet *pkt)
 		if (tickEvent.scheduled())
 			tickEvent.deschedule();
 
-		//doFunctionalAccess(pkt);
-		//pkt->makeTimingResponse();
-
 		tick_t next = ds->nextTick();
 		assert(next > 0);
 		if (next > 0)
@@ -281,8 +277,6 @@ M5dramSystem::recvTiming(Packet *pkt)
 			tickEvent.schedule(cpuRatio * next);
 		}
 	}
-
-	
 
 	// return the latency, scaled to be in cpu ticks, not memory system ticks
 	return 0;

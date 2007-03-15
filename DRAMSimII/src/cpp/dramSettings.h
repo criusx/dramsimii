@@ -35,8 +35,8 @@ public:
 	unsigned channelCount;
 	unsigned rankCount;
 	unsigned bankCount;
-	double shortBurstRatio;
-	double readPercentage;
+	float shortBurstRatio;
+	float readPercentage;
 	//////////////////////////////////////////////////////////////////////////	
 	// timing data
 	unsigned tRTRS;
