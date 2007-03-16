@@ -28,12 +28,14 @@ namespace GenTagDemo
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
             this.readIDButton = new System.Windows.Forms.Button();
             this.readLogButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox9 = new System.Windows.Forms.TextBox();
@@ -73,13 +75,53 @@ namespace GenTagDemo
             this.patientPhoto = new System.Windows.Forms.PictureBox();
             this.patientDescriptionBox = new System.Windows.Forms.TextBox();
             this.patientNameBox = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.gpsPage = new System.Windows.Forms.TabPage();
+            this.satellitesUsedTextBox = new System.Windows.Forms.TextBox();
+            this.timeTextBox = new System.Windows.Forms.TextBox();
+            this.hdopTextBox = new System.Windows.Forms.TextBox();
+            this.vdopTextBox = new System.Windows.Forms.TextBox();
+            this.statusTextBox = new System.Windows.Forms.TextBox();
+            this.speedTextBox = new System.Windows.Forms.TextBox();
+            this.satLabel8 = new System.Windows.Forms.Label();
+            this.satLabel7 = new System.Windows.Forms.Label();
+            this.satLabel6 = new System.Windows.Forms.Label();
+            this.satLabel5 = new System.Windows.Forms.Label();
+            this.satLabel4 = new System.Windows.Forms.Label();
+            this.satLabel3 = new System.Windows.Forms.Label();
+            this.satLabel2 = new System.Windows.Forms.Label();
+            this.satLabel1 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.directionTextBox = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.longitudeTextBox = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.latitudeTextBox = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.comPortsComboBox = new System.Windows.Forms.ComboBox();
+            this.connectGPSButton = new System.Windows.Forms.Button();
+            this.scanCOMPortButton = new System.Windows.Forms.Button();
+            this.progressBar8 = new System.Windows.Forms.ProgressBar();
+            this.progressBar7 = new System.Windows.Forms.ProgressBar();
+            this.progressBar6 = new System.Windows.Forms.ProgressBar();
+            this.progressBar5 = new System.Windows.Forms.ProgressBar();
+            this.progressBar4 = new System.Windows.Forms.ProgressBar();
+            this.progressBar3 = new System.Windows.Forms.ProgressBar();
+            this.progressBar2 = new System.Windows.Forms.ProgressBar();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.gpsSerialPort = new System.IO.Ports.SerialPort(this.components);
+            this.listBox2 = new System.Windows.Forms.ListBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.gpsPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // readIDButton
@@ -106,6 +148,7 @@ namespace GenTagDemo
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.gpsPage);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -114,6 +157,7 @@ namespace GenTagDemo
             // 
             // tabPage1
             // 
+            this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Controls.Add(this.readIDButton);
             this.tabPage1.Controls.Add(this.checkBox1);
@@ -132,15 +176,24 @@ namespace GenTagDemo
             this.pictureBox1.Size = new System.Drawing.Size(154, 90);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.Enabled = false;
+            this.checkBox1.Location = new System.Drawing.Point(0, 163);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(25, 18);
+            this.checkBox1.TabIndex = 4;
+            // 
             // treeView1
             // 
-            this.treeView1.Location = new System.Drawing.Point(0, 0);
+            this.treeView1.Location = new System.Drawing.Point(3, 3);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(240, 121);
+            this.treeView1.Size = new System.Drawing.Size(234, 118);
             this.treeView1.TabIndex = 2;
             // 
             // tabPage2
             // 
+            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.tabPage2.Controls.Add(this.textBox9);
             this.tabPage2.Controls.Add(this.listBox1);
             this.tabPage2.Controls.Add(this.checkBox2);
@@ -238,19 +291,21 @@ namespace GenTagDemo
             // 
             // tabPage3
             // 
+            this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.tabPage3.Controls.Add(this.listBox2);
             this.tabPage3.Controls.Add(this.treeView2);
             this.tabPage3.Controls.Add(this.manualIDButton);
             this.tabPage3.Controls.Add(this.textBox4);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(232, 214);
+            this.tabPage3.Size = new System.Drawing.Size(240, 217);
             this.tabPage3.Text = "tabPage3";
             // 
             // treeView2
             // 
             this.treeView2.Location = new System.Drawing.Point(0, 0);
             this.treeView2.Name = "treeView2";
-            this.treeView2.Size = new System.Drawing.Size(240, 161);
+            this.treeView2.Size = new System.Drawing.Size(27, 161);
             this.treeView2.TabIndex = 2;
             // 
             // manualIDButton
@@ -271,6 +326,7 @@ namespace GenTagDemo
             // 
             // tabPage4
             // 
+            this.tabPage4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.tabPage4.Controls.Add(this.getSetStatusBox);
             this.tabPage4.Controls.Add(this.comboBox1);
             this.tabPage4.Controls.Add(this.readValueButton);
@@ -286,7 +342,7 @@ namespace GenTagDemo
             this.tabPage4.Controls.Add(this.label5);
             this.tabPage4.Location = new System.Drawing.Point(0, 0);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(232, 214);
+            this.tabPage4.Size = new System.Drawing.Size(240, 217);
             this.tabPage4.Text = "tabPage4";
             // 
             // getSetStatusBox
@@ -393,6 +449,7 @@ namespace GenTagDemo
             // 
             // tabPage5
             // 
+            this.tabPage5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.tabPage5.Controls.Add(this.medicationButton);
             this.tabPage5.Controls.Add(this.readPatientButton);
             this.tabPage5.Controls.Add(this.label11);
@@ -403,7 +460,7 @@ namespace GenTagDemo
             this.tabPage5.Controls.Add(this.patientNameBox);
             this.tabPage5.Location = new System.Drawing.Point(0, 0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(240, 217);
+            this.tabPage5.Size = new System.Drawing.Size(232, 214);
             this.tabPage5.Text = "Patient";
             // 
             // medicationButton
@@ -474,13 +531,382 @@ namespace GenTagDemo
             this.patientNameBox.Size = new System.Drawing.Size(100, 19);
             this.patientNameBox.TabIndex = 0;
             // 
-            // checkBox1
+            // gpsPage
             // 
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(0, 163);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(25, 18);
-            this.checkBox1.TabIndex = 4;
+            this.gpsPage.Controls.Add(this.satellitesUsedTextBox);
+            this.gpsPage.Controls.Add(this.timeTextBox);
+            this.gpsPage.Controls.Add(this.hdopTextBox);
+            this.gpsPage.Controls.Add(this.vdopTextBox);
+            this.gpsPage.Controls.Add(this.statusTextBox);
+            this.gpsPage.Controls.Add(this.speedTextBox);
+            this.gpsPage.Controls.Add(this.satLabel8);
+            this.gpsPage.Controls.Add(this.satLabel7);
+            this.gpsPage.Controls.Add(this.satLabel6);
+            this.gpsPage.Controls.Add(this.satLabel5);
+            this.gpsPage.Controls.Add(this.satLabel4);
+            this.gpsPage.Controls.Add(this.satLabel3);
+            this.gpsPage.Controls.Add(this.satLabel2);
+            this.gpsPage.Controls.Add(this.satLabel1);
+            this.gpsPage.Controls.Add(this.label20);
+            this.gpsPage.Controls.Add(this.label19);
+            this.gpsPage.Controls.Add(this.label18);
+            this.gpsPage.Controls.Add(this.directionTextBox);
+            this.gpsPage.Controls.Add(this.label17);
+            this.gpsPage.Controls.Add(this.longitudeTextBox);
+            this.gpsPage.Controls.Add(this.label16);
+            this.gpsPage.Controls.Add(this.latitudeTextBox);
+            this.gpsPage.Controls.Add(this.label15);
+            this.gpsPage.Controls.Add(this.label14);
+            this.gpsPage.Controls.Add(this.label13);
+            this.gpsPage.Controls.Add(this.label12);
+            this.gpsPage.Controls.Add(this.comPortsComboBox);
+            this.gpsPage.Controls.Add(this.connectGPSButton);
+            this.gpsPage.Controls.Add(this.scanCOMPortButton);
+            this.gpsPage.Controls.Add(this.progressBar8);
+            this.gpsPage.Controls.Add(this.progressBar7);
+            this.gpsPage.Controls.Add(this.progressBar6);
+            this.gpsPage.Controls.Add(this.progressBar5);
+            this.gpsPage.Controls.Add(this.progressBar4);
+            this.gpsPage.Controls.Add(this.progressBar3);
+            this.gpsPage.Controls.Add(this.progressBar2);
+            this.gpsPage.Controls.Add(this.progressBar1);
+            this.gpsPage.Location = new System.Drawing.Point(0, 0);
+            this.gpsPage.Name = "gpsPage";
+            this.gpsPage.Size = new System.Drawing.Size(240, 217);
+            this.gpsPage.Text = "GPS";
+            // 
+            // satellitesUsedTextBox
+            // 
+            this.satellitesUsedTextBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.satellitesUsedTextBox.Location = new System.Drawing.Point(72, 50);
+            this.satellitesUsedTextBox.Name = "satellitesUsedTextBox";
+            this.satellitesUsedTextBox.ReadOnly = true;
+            this.satellitesUsedTextBox.Size = new System.Drawing.Size(59, 19);
+            this.satellitesUsedTextBox.TabIndex = 14;
+            // 
+            // timeTextBox
+            // 
+            this.timeTextBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.timeTextBox.Location = new System.Drawing.Point(72, 86);
+            this.timeTextBox.Name = "timeTextBox";
+            this.timeTextBox.ReadOnly = true;
+            this.timeTextBox.Size = new System.Drawing.Size(59, 19);
+            this.timeTextBox.TabIndex = 14;
+            // 
+            // hdopTextBox
+            // 
+            this.hdopTextBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.hdopTextBox.Location = new System.Drawing.Point(88, 121);
+            this.hdopTextBox.Name = "hdopTextBox";
+            this.hdopTextBox.ReadOnly = true;
+            this.hdopTextBox.Size = new System.Drawing.Size(43, 19);
+            this.hdopTextBox.TabIndex = 14;
+            // 
+            // vdopTextBox
+            // 
+            this.vdopTextBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.vdopTextBox.Location = new System.Drawing.Point(88, 156);
+            this.vdopTextBox.Name = "vdopTextBox";
+            this.vdopTextBox.ReadOnly = true;
+            this.vdopTextBox.Size = new System.Drawing.Size(43, 19);
+            this.vdopTextBox.TabIndex = 14;
+            // 
+            // statusTextBox
+            // 
+            this.statusTextBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.statusTextBox.Location = new System.Drawing.Point(72, 191);
+            this.statusTextBox.Name = "statusTextBox";
+            this.statusTextBox.ReadOnly = true;
+            this.statusTextBox.Size = new System.Drawing.Size(59, 19);
+            this.statusTextBox.TabIndex = 14;
+            // 
+            // speedTextBox
+            // 
+            this.speedTextBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.speedTextBox.Location = new System.Drawing.Point(7, 191);
+            this.speedTextBox.Name = "speedTextBox";
+            this.speedTextBox.ReadOnly = true;
+            this.speedTextBox.Size = new System.Drawing.Size(59, 19);
+            this.speedTextBox.TabIndex = 14;
+            // 
+            // satLabel8
+            // 
+            this.satLabel8.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.satLabel8.Location = new System.Drawing.Point(137, 194);
+            this.satLabel8.Name = "satLabel8";
+            this.satLabel8.Size = new System.Drawing.Size(19, 17);
+            this.satLabel8.Text = "#";
+            this.satLabel8.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // satLabel7
+            // 
+            this.satLabel7.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.satLabel7.Location = new System.Drawing.Point(137, 168);
+            this.satLabel7.Name = "satLabel7";
+            this.satLabel7.Size = new System.Drawing.Size(19, 17);
+            this.satLabel7.Text = "#";
+            this.satLabel7.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // satLabel6
+            // 
+            this.satLabel6.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.satLabel6.Location = new System.Drawing.Point(137, 142);
+            this.satLabel6.Name = "satLabel6";
+            this.satLabel6.Size = new System.Drawing.Size(19, 17);
+            this.satLabel6.Text = "#";
+            this.satLabel6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // satLabel5
+            // 
+            this.satLabel5.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.satLabel5.Location = new System.Drawing.Point(137, 116);
+            this.satLabel5.Name = "satLabel5";
+            this.satLabel5.Size = new System.Drawing.Size(19, 17);
+            this.satLabel5.Text = "#";
+            this.satLabel5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // satLabel4
+            // 
+            this.satLabel4.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.satLabel4.Location = new System.Drawing.Point(137, 90);
+            this.satLabel4.Name = "satLabel4";
+            this.satLabel4.Size = new System.Drawing.Size(19, 17);
+            this.satLabel4.Text = "#";
+            this.satLabel4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // satLabel3
+            // 
+            this.satLabel3.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.satLabel3.Location = new System.Drawing.Point(137, 64);
+            this.satLabel3.Name = "satLabel3";
+            this.satLabel3.Size = new System.Drawing.Size(19, 17);
+            this.satLabel3.Text = "#";
+            this.satLabel3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // satLabel2
+            // 
+            this.satLabel2.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.satLabel2.Location = new System.Drawing.Point(137, 38);
+            this.satLabel2.Name = "satLabel2";
+            this.satLabel2.Size = new System.Drawing.Size(19, 17);
+            this.satLabel2.Text = "#";
+            this.satLabel2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // satLabel1
+            // 
+            this.satLabel1.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.satLabel1.Location = new System.Drawing.Point(137, 12);
+            this.satLabel1.Name = "satLabel1";
+            this.satLabel1.Size = new System.Drawing.Size(19, 17);
+            this.satLabel1.Text = "#";
+            this.satLabel1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label20
+            // 
+            this.label20.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label20.Location = new System.Drawing.Point(72, 35);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(59, 14);
+            this.label20.Text = "Satellites";
+            this.label20.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label19
+            // 
+            this.label19.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label19.Location = new System.Drawing.Point(72, 71);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(59, 14);
+            this.label19.Text = "Time";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label18
+            // 
+            this.label18.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label18.Location = new System.Drawing.Point(88, 106);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(43, 14);
+            this.label18.Text = "HDOP";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // directionTextBox
+            // 
+            this.directionTextBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.directionTextBox.Location = new System.Drawing.Point(72, 16);
+            this.directionTextBox.Name = "directionTextBox";
+            this.directionTextBox.ReadOnly = true;
+            this.directionTextBox.Size = new System.Drawing.Size(59, 19);
+            this.directionTextBox.TabIndex = 14;
+            // 
+            // label17
+            // 
+            this.label17.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label17.Location = new System.Drawing.Point(88, 141);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(43, 14);
+            this.label17.Text = "VDOP";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // longitudeTextBox
+            // 
+            this.longitudeTextBox.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
+            this.longitudeTextBox.Location = new System.Drawing.Point(7, 157);
+            this.longitudeTextBox.Name = "longitudeTextBox";
+            this.longitudeTextBox.ReadOnly = true;
+            this.longitudeTextBox.Size = new System.Drawing.Size(75, 18);
+            this.longitudeTextBox.TabIndex = 14;
+            // 
+            // label16
+            // 
+            this.label16.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label16.Location = new System.Drawing.Point(72, 176);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(59, 14);
+            this.label16.Text = "Status";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // latitudeTextBox
+            // 
+            this.latitudeTextBox.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
+            this.latitudeTextBox.Location = new System.Drawing.Point(7, 122);
+            this.latitudeTextBox.Name = "latitudeTextBox";
+            this.latitudeTextBox.ReadOnly = true;
+            this.latitudeTextBox.Size = new System.Drawing.Size(75, 18);
+            this.latitudeTextBox.TabIndex = 14;
+            // 
+            // label15
+            // 
+            this.label15.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label15.Location = new System.Drawing.Point(7, 176);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(59, 14);
+            this.label15.Text = "Speed";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label14
+            // 
+            this.label14.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label14.Location = new System.Drawing.Point(72, 1);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(59, 14);
+            this.label14.Text = "Direction";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label13
+            // 
+            this.label13.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label13.Location = new System.Drawing.Point(7, 142);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(75, 14);
+            this.label13.Text = "Longitude";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label12
+            // 
+            this.label12.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label12.Location = new System.Drawing.Point(7, 107);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(75, 14);
+            this.label12.Text = "Latitude";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // comPortsComboBox
+            // 
+            this.comPortsComboBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.comPortsComboBox.Location = new System.Drawing.Point(7, 27);
+            this.comPortsComboBox.Name = "comPortsComboBox";
+            this.comPortsComboBox.Size = new System.Drawing.Size(59, 20);
+            this.comPortsComboBox.TabIndex = 9;
+            // 
+            // connectGPSButton
+            // 
+            this.connectGPSButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.connectGPSButton.Location = new System.Drawing.Point(7, 50);
+            this.connectGPSButton.Name = "connectGPSButton";
+            this.connectGPSButton.Size = new System.Drawing.Size(59, 20);
+            this.connectGPSButton.TabIndex = 8;
+            this.connectGPSButton.Text = "Connect";
+            this.connectGPSButton.Click += new System.EventHandler(this.connectGPSButton_Click);
+            // 
+            // scanCOMPortButton
+            // 
+            this.scanCOMPortButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.scanCOMPortButton.Location = new System.Drawing.Point(7, 6);
+            this.scanCOMPortButton.Name = "scanCOMPortButton";
+            this.scanCOMPortButton.Size = new System.Drawing.Size(59, 20);
+            this.scanCOMPortButton.TabIndex = 8;
+            this.scanCOMPortButton.Text = "scanCOM";
+            this.scanCOMPortButton.Click += new System.EventHandler(this.scanCOMPortButton_Click);
+            // 
+            // progressBar8
+            // 
+            this.progressBar8.Location = new System.Drawing.Point(162, 191);
+            this.progressBar8.Maximum = 99;
+            this.progressBar8.Name = "progressBar8";
+            this.progressBar8.Size = new System.Drawing.Size(71, 20);
+            // 
+            // progressBar7
+            // 
+            this.progressBar7.Location = new System.Drawing.Point(162, 165);
+            this.progressBar7.Maximum = 99;
+            this.progressBar7.Name = "progressBar7";
+            this.progressBar7.Size = new System.Drawing.Size(71, 20);
+            // 
+            // progressBar6
+            // 
+            this.progressBar6.Location = new System.Drawing.Point(162, 139);
+            this.progressBar6.Maximum = 99;
+            this.progressBar6.Name = "progressBar6";
+            this.progressBar6.Size = new System.Drawing.Size(71, 20);
+            // 
+            // progressBar5
+            // 
+            this.progressBar5.Location = new System.Drawing.Point(162, 113);
+            this.progressBar5.Maximum = 99;
+            this.progressBar5.Name = "progressBar5";
+            this.progressBar5.Size = new System.Drawing.Size(71, 20);
+            // 
+            // progressBar4
+            // 
+            this.progressBar4.Location = new System.Drawing.Point(162, 87);
+            this.progressBar4.Maximum = 99;
+            this.progressBar4.Name = "progressBar4";
+            this.progressBar4.Size = new System.Drawing.Size(71, 20);
+            // 
+            // progressBar3
+            // 
+            this.progressBar3.Location = new System.Drawing.Point(162, 61);
+            this.progressBar3.Maximum = 99;
+            this.progressBar3.Name = "progressBar3";
+            this.progressBar3.Size = new System.Drawing.Size(71, 20);
+            // 
+            // progressBar2
+            // 
+            this.progressBar2.Location = new System.Drawing.Point(162, 35);
+            this.progressBar2.Maximum = 99;
+            this.progressBar2.Name = "progressBar2";
+            this.progressBar2.Size = new System.Drawing.Size(71, 20);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(162, 9);
+            this.progressBar1.Maximum = 99;
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(71, 20);
+            // 
+            // gpsSerialPort
+            // 
+            this.gpsSerialPort.BaudRate = 4800;
+            this.gpsSerialPort.PortName = "COM7";
+            this.gpsSerialPort.ReadBufferSize = 8192;
+            this.gpsSerialPort.ReceivedBytesThreshold = 512;
+            this.gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.gpsSerialPort_DataReceived);
+            // 
+            // listBox2
+            // 
+            this.listBox2.Location = new System.Drawing.Point(34, 8);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(199, 156);
+            this.listBox2.TabIndex = 3;
             // 
             // mainForm
             // 
@@ -501,6 +927,7 @@ namespace GenTagDemo
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            this.gpsPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -552,6 +979,46 @@ namespace GenTagDemo
         private System.Windows.Forms.PictureBox drugPhoto;
         private System.Windows.Forms.TextBox getSetStatusBox;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.TabPage gpsPage;
+        private System.Windows.Forms.ProgressBar progressBar7;
+        private System.Windows.Forms.ProgressBar progressBar6;
+        private System.Windows.Forms.ProgressBar progressBar5;
+        private System.Windows.Forms.ProgressBar progressBar4;
+        private System.Windows.Forms.ProgressBar progressBar3;
+        private System.Windows.Forms.ProgressBar progressBar2;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ComboBox comPortsComboBox;
+        private System.Windows.Forms.Button connectGPSButton;
+        private System.Windows.Forms.Button scanCOMPortButton;
+        private System.Windows.Forms.ProgressBar progressBar8;
+        private System.Windows.Forms.TextBox speedTextBox;
+        private System.Windows.Forms.TextBox directionTextBox;
+        private System.Windows.Forms.TextBox longitudeTextBox;
+        private System.Windows.Forms.TextBox latitudeTextBox;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox hdopTextBox;
+        private System.Windows.Forms.TextBox vdopTextBox;
+        private System.Windows.Forms.TextBox statusTextBox;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox satellitesUsedTextBox;
+        private System.Windows.Forms.TextBox timeTextBox;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
+        private System.IO.Ports.SerialPort gpsSerialPort;
+        private System.Windows.Forms.Label satLabel8;
+        private System.Windows.Forms.Label satLabel7;
+        private System.Windows.Forms.Label satLabel6;
+        private System.Windows.Forms.Label satLabel5;
+        private System.Windows.Forms.Label satLabel4;
+        private System.Windows.Forms.Label satLabel3;
+        private System.Windows.Forms.Label satLabel2;
+        private System.Windows.Forms.Label satLabel1;
+        private System.Windows.Forms.ListBox listBox2;
     }
 }
 

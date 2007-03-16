@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using C1Lib;
 using System.Net;
 using System.IO;
+using System.IO.Ports;
 using System.Net.Sockets;
 using Microsoft.Win32;
 using System.Resources;
@@ -31,11 +32,28 @@ namespace GenTagDemo
 
         Graph graph;
 
+        nmeaInterpreter gpsNmea;
+
         public mainForm()
         {
             InitializeComponent();
 
             mF = this;
+
+            gpsNmea = new nmeaInterpreter();
+
+            gpsNmea.DateTimeChanged += new nmeaInterpreter.DateTimeChangedEventHandler(gpsNmea_DateTimeChanged);
+            gpsNmea.FixObtained += new nmeaInterpreter.FixObtainedEventHandler(gpsNmea_FixObtained);
+            gpsNmea.FixLost += new nmeaInterpreter.FixLostEventHandler(gpsNmea_FixLost);
+            gpsNmea.PositionReceived += new nmeaInterpreter.PositionReceivedEventHandler(gpsNmea_PositionReceived);
+            gpsNmea.SpeedReceived += new nmeaInterpreter.SpeedReceivedEventHandler(gpsNmea_SpeedReceived);
+            gpsNmea.BearingReceived += new nmeaInterpreter.BearingReceivedEventHandler(gpsNmea_BearingReceived);
+            gpsNmea.SatelliteReceived += new nmeaInterpreter.SatelliteReceivedEventHandler(gpsNmea_SatelliteReceived);
+            gpsNmea.PDOPReceived += new nmeaInterpreter.PDOPReceivedEventHandler(gpsNmea_PDOPReceived);
+            gpsNmea.HDOPReceived += new nmeaInterpreter.HDOPReceivedEventHandler(gpsNmea_HDOPReceived);
+            gpsNmea.VDOPReceived += new nmeaInterpreter.VDOPReceivedEventHandler(gpsNmea_VDOPReceived);
+
+
 
             ImageList myImageList = new ImageList();
             myImageList.Images.Add(Image.FromHbitmap(GenTagDemo.Properties.Resources.blank.GetHbitmap()));
@@ -130,55 +148,62 @@ namespace GenTagDemo
 
         private void readID()
         {
-            Cursor.Current = Cursors.WaitCursor;
+            setWaitCursor(true);
+
             setCheckBox(checkBox1, false);
+            string currentTag;
 
             try
             {
-                string currentTag = readTagID();
+                currentTag = readTagID();
+            }
+            catch (System.IO.IOException ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
 
-                setCheckBox(checkBox1, true);
+            setCheckBox(checkBox1, true);
 
-                string rfidDescr = "";
+            int triesLeft = 8;
+            string failMessage = "";
 
-                bool authenticated = false;
+            org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
 
-                // use the web service to retrieve a description
+            while (triesLeft > 0)
+            {
+                // use the web service to retrieve a description  
                 try
                 {
-                    org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-
-                    try
-                    {
-                        rfidDescr += ws.getDescription(currentTag);
-                        authenticated = ws.isAuthenticated(currentTag);
-                    }
-                    catch (WebException ex)
-                    {
-                        rfidDescr += @"No description found";
-                        MessageBox.Show("Problem connecting to web service: " + ex.Message);
-                    }
+                    updateTreeView1(currentTag, ws.getDescription(currentTag), ws.isAuthenticated(currentTag));
+                    break;
+                }
+                catch (WebException ex)
+                {
+                    failMessage = "Problem connecting to web service: " + ex.Message;
+                    triesLeft--;
+                    Thread.Sleep(2000);
                 }
                 catch (SocketException ex)
                 {
-                    MessageBox.Show(ex.Message);
-                    return;
+                    failMessage = ex.Message;
+                    triesLeft--;
+                    Thread.Sleep(2000);
                 }
                 catch (IOException ex)
                 {
                     MessageBox.Show(ex.Message);
                     return;
                 }
-
-                updateTreeView1(currentTag, rfidDescr, authenticated);
             }
-            catch (System.IO.IOException ex)
+            if (triesLeft == 0)
             {
-                MessageBox.Show(ex.Message);
+                updateTreeView1(currentTag, @"No description found", false);
+                MessageBox.Show(failMessage);
             }
 
             readerRunning = false;
-            Cursor.Current = Cursors.Default;
+            setWaitCursor(false);
         }
 
         private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated);
@@ -356,7 +381,7 @@ namespace GenTagDemo
             {
                 if ((errorCode = getVarioSensLog(mycb)) == 0)
                     readerRunning = false;
-                else if ((errorCode == -1) || (errorCode == -2))
+                else if ((errorCode == -1) || (errorCode == -2) || (errorCode == -6))
                     readerRunning = false;
                 Thread.Sleep(100);
             }
@@ -598,6 +623,7 @@ namespace GenTagDemo
             {
                 patientID = readTagID();
                 org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
+                ws.Timeout = 30000;
                 org.dyndns.crius.GetDates values = ws.getInfo(patientID, false);
                 setTextBox(patientNameBox, values.name);
                 setTextBox(patientDescriptionBox, values.desc);
@@ -647,6 +673,20 @@ namespace GenTagDemo
         }
 
         #region Safe Accessors and Mutators
+
+        private delegate void setWaitCursorDelegate(bool set);
+
+        private void setWaitCursor(bool set)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setWaitCursorDelegate(setWaitCursor), new object[] { set });
+            }
+            if (set == true)
+                Cursor.Current = Cursors.WaitCursor;
+            else
+                Cursor.Current = Cursors.Default;
+        }
 
         private delegate void setCheckBoxDelegate(CheckBox cB, bool check);
 
@@ -734,5 +774,165 @@ namespace GenTagDemo
         }
         #endregion
 
+        private void scanCOMPortButton_Click(object sender, EventArgs e)
+        {
+            string[] COMPorts = System.IO.Ports.SerialPort.GetPortNames();
+
+            Array.Sort(COMPorts);
+
+            comPortsComboBox.Items.Clear();
+            bool foundCom7 = false;
+            if (COMPorts.Length > 0)
+            {
+                int i = 0;
+                foreach (string sCOMPort in COMPorts)
+                {
+                    comPortsComboBox.Items.Add(sCOMPort);
+                    if (sCOMPort == @"COM7")
+                    {
+                        foundCom7 = true;
+                        comPortsComboBox.SelectedIndex = i;
+                    }
+                    i++;
+                }
+                comPortsComboBox.SelectedIndex = 0;
+            }
+            if (foundCom7 == false)
+            {
+                comPortsComboBox.Items.Add(@"COM7");
+                comPortsComboBox.SelectedIndex = comPortsComboBox.Items.Count - 1;
+            }
+        }
+
+        private void connectGPSButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!gpsSerialPort.IsOpen)
+                {
+                    gpsSerialPort.PortName = comPortsComboBox.SelectedItem.ToString();
+                    gpsSerialPort.Open();
+                    connectGPSButton.Text = "Disconnect";
+                }
+                else
+                {
+                    gpsSerialPort.Close();
+                    connectGPSButton.Text = "Connect";
+                }
+            }
+            catch (Exception ex)
+            {
+                connectGPSButton.Text = "Connect";
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }
+
+        private void gpsSerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            if (InvokeRequired)
+                Invoke(new SerialDataReceivedEventHandler(gpsSerialPort_DataReceived), new object[] { sender, e });
+            else
+            {
+                string[] buffer = gpsSerialPort.ReadExisting().Split('$');
+                gpsSerialPort.DiscardInBuffer();
+                for (int i = 1; i < buffer.Length - 1; i++)
+                    if (buffer[i].StartsWith(@"GPRMC") || buffer[i].StartsWith(@"GPGSV") || buffer[i].StartsWith(@"GPGSA"))
+                        if (gpsNmea.Parse(@"$" + buffer[i].Substring(0, buffer[i].Length - 2)) == false)
+                        {
+                            progressBar1.Value++;
+                            //MessageBox.Show(buffer[i]);
+                        }
+            }
+
+        }
+
+        private void gpsNmea_DateTimeChanged(DateTime dT)
+        {
+            satellitesUsedTextBox.Text = dT.ToShortDateString();
+        }
+        private void gpsNmea_FixObtained()
+        {
+            statusTextBox.Text = @"Fixed";
+        }
+        private void gpsNmea_FixLost()
+        {
+            statusTextBox.Text = @"Searching";
+        }
+        private const double maximumHDOPValue = 7.0;
+        private void gpsNmea_PositionReceived(string latitude, string longitude)
+        {
+            if (currentHDOPValue < maximumHDOPValue)
+            {
+                latitudeTextBox.Text = latitude;
+                longitudeTextBox.Text = longitude;
+            }
+        }
+        private void gpsNmea_SpeedReceived(double speed)
+        {
+            speedTextBox.Text = speed.ToString();
+        }
+        private void gpsNmea_BearingReceived(double bearing)
+        {
+            directionTextBox.Text = bearing.ToString();
+        }
+
+        int satNumber = 0;
+        private void gpsNmea_SatelliteReceived(int pseudoRandomCode, int azimuth, int elevation, int signalToNoiseRatio, bool firstMessage)
+        {
+            //listBox2.Items.Add("PRC: " + pseudoRandomCode + "Az: " + azimuth + "Ele: " + elevation + "SNR: " + signalToNoiseRatio.ToString());
+            //return;
+            if (firstMessage == true)
+                satNumber = 0;
+            switch (satNumber)
+            {
+                case 0:
+                    satLabel1.Text = pseudoRandomCode.ToString();
+                    progressBar1.Value = signalToNoiseRatio;
+                    break;
+                case 1:
+                    satLabel2.Text = pseudoRandomCode.ToString();
+                    progressBar2.Value = signalToNoiseRatio;
+                    break;
+                case 2:
+                    satLabel3.Text = pseudoRandomCode.ToString();
+                    progressBar3.Value = signalToNoiseRatio;
+                    break;
+                case 3:
+                    satLabel4.Text = pseudoRandomCode.ToString();
+                    progressBar4.Value = signalToNoiseRatio;
+                    break;
+                case 4:
+                    satLabel5.Text = pseudoRandomCode.ToString();
+                    progressBar5.Value = signalToNoiseRatio;
+                    break;
+                case 5:
+                    satLabel6.Text = pseudoRandomCode.ToString();
+                    progressBar6.Value = signalToNoiseRatio;
+                    break;
+                case 6:
+                    satLabel7.Text = pseudoRandomCode.ToString();
+                    progressBar7.Value = signalToNoiseRatio;
+                    break;
+                case 7:
+                    satLabel8.Text = pseudoRandomCode.ToString();
+                    progressBar8.Value = signalToNoiseRatio;
+                    break;
+            }
+            satNumber = (satNumber + 1) % 8;
+        }
+        private void gpsNmea_PDOPReceived(double value)
+        {
+
+        }
+        double currentHDOPValue = 0;
+        private void gpsNmea_HDOPReceived(double value)
+        {
+            hdopTextBox.Text = value.ToString();
+            currentHDOPValue = value;
+        }
+        private void gpsNmea_VDOPReceived(double value)
+        {
+            vdopTextBox.Text = value.ToString();
+        }
     }
 }
