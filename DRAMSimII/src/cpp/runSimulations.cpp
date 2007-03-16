@@ -48,39 +48,25 @@ void dramSystem::run_simulations2()
 
 void dramSystem::run_simulations3()
 {
-	//bool EOF_reached = false;
-
 	for (int i = sim_parameters.get_request_count(); i > 0; --i)
 	{
 		transaction *input_t;
 
-		// see if it is time for the channel to arrive, if so, put in the channel
-		// queue
-		// if not, either make the channels wait and move time to the point where
-		// the transaction should arrive or execute commands until that time happens
-		// make sure not to overshoot the time by looking at when a transaction would end
-		// so that executing one more command doesn't go too far forward
-		// this only happens when there is the option to move time or execute commands
-		if (get_next_input_transaction(input_t) == SUCCESS)
-		{
-			// record stats
-			statistics.collect_transaction_stats(input_t);
-
-			int chan = input_t->addr.chan_id;
-
-			// first try to update the channel so that it is one command past this
-			// transaction's start time
-			tick_t finishTime;
-			while (moveChannelToTime(input_t->arrival_time,chan,&finishTime)) {;}
-
-			// attempt to enqueue, if there is no room, move time forward until there is
-			enqueueTimeShift(input_t);
-		}	
-		else
-			// EOF reached, quit the loop
+		if (get_next_input_transaction(input_t) != SUCCESS)
 			break;
-	}
 
+		tick_t nearFinish = 0;
+		const void *error;
+
+		// as long as transactions keep happening prior to this time
+		while (((error = moveAllChannelsToTime(input_t->arrival_time,&nearFinish)) == NULL)
+			&& (nearFinish < input_t->arrival_time))
+		{
+			if (error)
+				cerr << "not right" << endl;
+		}
+		enqueue(input_t);
+	}
 	statistics.set_end_time(time);
 	statistics.set_valid_trans_count(sim_parameters.get_request_count());
 }
@@ -256,9 +242,9 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 						{
 							const void *origTrans = completed_t->originalTransaction;
 
-							if (!completed_t->originalTransaction);
+
 #ifdef M5
-							else
+							if (!completed_t->originalTransaction)
 								outStream << "transaction completed, not REFRESH, no orig trans" << endl;
 #endif
 							*transFinishTime = completed_t->completion_time;
@@ -285,6 +271,7 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 		}
 	}
 	assert(channel[chan].get_time() == endTime);
+	*transFinishTime = endTime;
 #ifdef M5DEBUG
 	outStream << "ch[" << chan << "] @ " << channel[chan].get_time() << endl;
 #endif

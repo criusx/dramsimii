@@ -34,7 +34,8 @@ int main(int argc, char **argv, char *envp[])
 	//simulation_parameters sp;
 	//dram_statistics stats;
 	//ds.read_command_line_config(argc,argv)
-	ds.run_simulations2();
+	//ds.run_simulations2();
+	ds.run_simulations3();
 
 	outStream << ds << endl;
 	//cerr << ds.timing_specification;

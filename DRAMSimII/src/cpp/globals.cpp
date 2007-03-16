@@ -135,6 +135,8 @@ void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &p
 		} else if(temp == "-timing:rtrs") {
 			parameters[t_rtrs_token] = temp2;
 			argc_index += 2;
+		} else if (temp == "--settings") {
+			argc_index += 2;
 		} else if (temp == "-no_refresh") {
 			parameters[refresh_policy_token] = "none";
 			argc_index += 1;
@@ -207,8 +209,6 @@ void create_input_map_from_input_file(map<enum file_io_token_t,string> &paramete
 		}
 	}
 }
-
-
 
 ostream &operator<<(ostream &os, const dramStatistics &this_a)
 {

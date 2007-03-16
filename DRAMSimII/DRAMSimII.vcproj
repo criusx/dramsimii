@@ -42,7 +42,7 @@
 				Optimization="0"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="&quot;C:\temp\m5-2.0b1\src&quot;;&quot;C:\temp\zlib\zlib-dll\include&quot;;&quot;C:\temp\libxml2-2.6.27.win32\include&quot;;&quot;C:\temp\iconv-1.9.2.win32\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;M5DEBUG"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="0"

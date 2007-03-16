@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		localtestrun.testrunconfig = localtestrun.testrunconfig
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestProject1", "TestProject1\TestProject1.vcproj", "{552C6D9D-37B1-48E1-BD10-2CB3F92EFFA2}"
-EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = DRAMSimII.vsmdi
@@ -27,11 +25,6 @@ Global
 		{65A5B23B-7F7D-4848-82BE-B9155E072660}.M5|Win32.Build.0 = M5|Win32
 		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Release|Win32.ActiveCfg = Release|Win32
 		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Release|Win32.Build.0 = Release|Win32
-		{552C6D9D-37B1-48E1-BD10-2CB3F92EFFA2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{552C6D9D-37B1-48E1-BD10-2CB3F92EFFA2}.M5|Win32.ActiveCfg = Debug|Win32
-		{552C6D9D-37B1-48E1-BD10-2CB3F92EFFA2}.M5|Win32.Build.0 = Debug|Win32
-		{552C6D9D-37B1-48E1-BD10-2CB3F92EFFA2}.Release|Win32.ActiveCfg = Release|Win32
-		{552C6D9D-37B1-48E1-BD10-2CB3F92EFFA2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

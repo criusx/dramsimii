@@ -246,7 +246,7 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 		}
 	}
 	else
-		command_ordering_algorithm = BANK_ROUND_ROBIN;
+		command_ordering_algorithm = STRICT_ORDER;
 
 	if ((temp=parameter.find(system_configuration_type_token))!=parameter.end())
 		config_type = BASELINE_CONFIG;

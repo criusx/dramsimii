@@ -1,25 +1,14 @@
-# $Id: Makefile,v davewang Exp $
+CC = g++
 
-CC = gcc
-
-OPT = -O3  -g
-
-INCLUDEPATH = -I/usr/local/include -I/usr/include -I/usr/openwin/include
-LIBDIRS = -L/usr/local/lib -L/usr/lib
-LIBS =  -lm 
-
-CFLAGS = $(OPT) $(INCLUDEPATH)
+CCFLAGS = 
+CFLAGS = -Wall -O3 -c
 LDFLAGS = $(OPT)
 
-DRAMOBJ = address.o algorithm.o commandline.o dramsim.o execute.o files.o inits.o protocol.o queues.o random.o stats.o
-
-dramsim: $(DRAMOBJ)
-	$(CC) $(CCFLAGS) $(LDFLAGS) $(DRAMOBJ) $(LIBDIRS) -o $@ $(LIBS)
+dramsim2: dramsim2.o dramSystem.o dramChannel.o globals.o InputStream.o executeCommand.o transaction2commands.o getNextCommand.o main.o minProtocolGap.o rank_c.o runSimulations.o bank_c.o
+	$(CC) $(CCFLAGS) -o dramsim2 dramsim2.o dramSystem.o dramChannel.o globals.o InputStream.o executeCommand.o transaction2commands.o getNextCommand.o main.o minProtocolGap.o rank_c.o runSimulations.o bank_c.o
 
 clean: 
-	rm *.o
-	rm *~
-	rm dramsim
+	rm *.o dramsim2
 
 DRAM = dram_src
 
@@ -28,14 +17,5 @@ tar:
 	tar -cvf $(DRAM).tar src ; \
 	gzip $(DRAM).tar 
 
-address.o: dramsim.h
-algorithm.o: dramsim.h
-commandline.o: dramsim.h
-dramsim.o: dramsim.h
-execute.o: dramsim.h
-inits.o: dramsim.h
-files.o: dramsim.h
-protocol.o: dramsim.h
-queues.o: dramsim.h
-random.o: dramsim.h
-stats.o: dramsim.h
+%.o:%.cpp
+	$(CC) $(CFLAGS) $< -o $@ 
