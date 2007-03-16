@@ -288,63 +288,63 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\cpp\bank_c.cpp"
+				RelativePath=".\src\bank_c.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\command.cpp"
+				RelativePath=".\src\command.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\dramAlgorithm.cpp"
+				RelativePath=".\src\dramAlgorithm.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\dramChannel.cpp"
+				RelativePath=".\src\dramChannel.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\dramSettings.cpp"
+				RelativePath=".\src\dramSettings.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\dramsim2.cpp"
+				RelativePath=".\src\dramsim2.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\dramStatistics.cpp"
+				RelativePath=".\src\dramStatistics.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\dramSystem.cpp"
+				RelativePath=".\src\dramSystem.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\dramSystemConfiguration.cpp"
+				RelativePath=".\src\dramSystemConfiguration.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\dramTimingSpecification.cpp"
+				RelativePath=".\src\dramTimingSpecification.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\event.cpp"
+				RelativePath=".\src\event.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\executeCommand.cpp"
+				RelativePath=".\src\executeCommand.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\getNextCommand.cpp"
+				RelativePath=".\src\getNextCommand.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\globals.cpp"
+				RelativePath=".\src\globals.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\gzstream\gzstream.C"
+				RelativePath=".\src\gzstream\gzstream.C"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -358,11 +358,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\cpp\InputStream.cpp"
+				RelativePath=".\src\InputStream.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\m5-dramSystem.cpp"
+				RelativePath=".\src\m5-dramSystem.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -382,11 +382,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\cpp\main.cpp"
+				RelativePath=".\src\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\minProtocolGap.cpp"
+				RelativePath=".\src\minProtocolGap.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -398,7 +398,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\cpp\powerConfig.cpp"
+				RelativePath=".\src\powerConfig.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -418,19 +418,19 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\cpp\rank_c.cpp"
+				RelativePath=".\src\rank_c.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\runSimulations.cpp"
+				RelativePath=".\src\runSimulations.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\transaction.cpp"
+				RelativePath=".\src\transaction.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\cpp\transaction2commands.cpp"
+				RelativePath=".\src\transaction2commands.cpp"
 				>
 			</File>
 		</Filter>
