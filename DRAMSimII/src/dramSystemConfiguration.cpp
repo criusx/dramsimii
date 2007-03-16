@@ -242,7 +242,7 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 			command_ordering_algorithm = GREEDY;
 		else {
 			cerr << "Unrecognized ordering algorithm: " << temp->second << endl;
-			command_ordering_algorithm = BANK_ROUND_ROBIN;
+			command_ordering_algorithm = STRICT_ORDER;
 		}
 	}
 	else

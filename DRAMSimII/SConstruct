@@ -2,4 +2,4 @@ import os
 import sys
 #Import(`env`)
 
-SConscript('cpp/SConscript', build_dir = 'build', duplicate = 0)
+SConscript('src/SConscript', build_dir = 'build', duplicate = 0)
