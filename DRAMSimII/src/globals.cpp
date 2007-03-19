@@ -16,6 +16,9 @@
 
 using namespace std;
 
+// modified, writes to cerr or a compressed output file
+ogzstream outStream;
+
 double ascii2multiplier(const string &input)
 {
 	switch(file_io_token(input))
@@ -42,7 +45,7 @@ double ascii2multiplier(const string &input)
 	}
 }
 
-void create_input_map(int argc,char *argv[],map<enum file_io_token_t, string> &parameters)
+void create_input_map(int argc,const char **argv,map<enum file_io_token_t, string> &parameters)
 {
 	int argc_index=1;
 	string trace_filename;
@@ -259,6 +262,8 @@ file_io_token_t file_io_token(const string &input)
 		return short_burst_ratio_token;
 	else if (input == "command_ordering_policy" || input == "commandOrderingPolicy")
 		return command_ordering_algorithm_token;
+	else if (input == "outFile")
+		return output_file_token;
 	else if (input == "auto_refresh_policy" || input == "autoRefreshPolicy")
 		return refresh_policy_token;
 	else if (input == "refresh_policy" || input == "refreshPolicy")

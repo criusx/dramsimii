@@ -11,14 +11,11 @@
 #include <vector>
 #include <assert.h>
 
-#include "rank_c.h"
 #include "dramSystem.h"
-#include "globals.h"
+
 
 using namespace std;
 
-// modified, writes to cerr or a compressed output file
-ogzstream outStream;
 
 // returns the time when the memory system next has an event
 // the event may either be a conversion of a transaction into commands
@@ -777,6 +774,36 @@ void dramSystem::set_dram_timing_specification(enum dram_type_t dram_type)
 	}
 }
 
+dramSystem::dramSystem(const dramSettings *settings): 
+system_config(settings),
+channel(system_config.chan_count,
+		dramChannel(settings)),
+timing_specification(settings),
+sim_parameters(settings),
+statistics(settings),
+algorithm(settings),
+input_stream(settings),
+time(0),
+event_q(COMMAND_QUEUE_SIZE)
+{
+	if (settings->outFile > 1)
+	{
+		outStream.open(settings->outFile.c_str());	
+		if (!outStream.good())
+		{
+			cerr << "Error opening file \"" << settings->outFile << "\" for writing" << endl;
+			exit(-12);
+		}
+	}
+	// init the refresh queue for each channel
+	unsigned cnt = 0;
+	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
+	{
+		i->initRefreshQueue(settings->rowCount, settings->refreshTime, cnt++);
+	}
+}
+
+
 dramSystem::dramSystem(map<file_io_token_t,string> &parameter):
 system_config(parameter),
 channel(system_config.chan_count,
@@ -802,10 +829,10 @@ event_q(COMMAND_QUEUE_SIZE)
 
 	if ((temp=parameter.find(output_file_token))!=parameter.end())
 	{
-		output_filename = parameter[output_file_token];
-		if (output_filename.length() > 1)
+		//output_filename = parameter[output_file_token];
+		if (temp->second.length() > 1)
 		{
-			outStream.open(output_filename.c_str());	
+			outStream.open(temp->second.c_str());	
 			if (!outStream.good())
 			{
 				cerr << "Error opening file \"" << output_filename << "\" for writing" << endl;
@@ -884,3 +911,4 @@ ostream &operator<<(ostream &os, const dramSystem &this_a)
 
 	return os;
 }
+

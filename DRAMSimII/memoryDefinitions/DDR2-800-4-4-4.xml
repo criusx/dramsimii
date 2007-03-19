@@ -84,5 +84,6 @@
 	<simulationParameters>
 		<shortBurstRatio>.5</shortBurstRatio>
 		<readPercentage>.5</readPercentage>
+    <outFile>standardOutFile.gz</outFile>
 	</simulationParameters>
 </dramspec>

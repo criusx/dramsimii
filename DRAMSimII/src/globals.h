@@ -114,7 +114,7 @@ file_io_token_t fileIOToken(const unsigned char *input);
 double ascii2multiplier(const std::string &);
 
 // maps the inputs to file_io_tokens and corresponding strings to simplify initialization
-void create_input_map(int ,char *[],std::map<file_io_token_t, std::string> &);
+void create_input_map(int ,const char **,std::map<file_io_token_t, std::string> &);
 void create_input_map_from_input_file(std::map<file_io_token_t, std::string> &,std::ifstream &);
 
 #endif

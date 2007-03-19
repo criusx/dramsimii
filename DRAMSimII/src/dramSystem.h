@@ -18,13 +18,13 @@
 #include "enumTypes.h"
 #include "rank_c.h"
 #include "gzstream/gzstream.h"
-
-
+#include "dramSettings.h"
+#include "globals.h"
 
 class dramSystem
 {
 private:
-
+	// members
 	dramSystemConfiguration system_config;
 	std::vector<dramChannel> channel;
 	dramTimingSpecification timing_specification;
@@ -32,14 +32,12 @@ private:
 	dramStatistics statistics;
 	dramAlgorithm algorithm;
 	inputStream input_stream;
-
 	
-	std::string output_filename;	
-
 	tick_t time;								// master clock	
 	
 	queue<event> event_q;						// pending event queue	
 
+	//functions
 	void read_dram_config_from_file();
 
 	void set_dram_timing_specification(enum dram_type_t);
@@ -71,6 +69,7 @@ public:
 
 	// constructors
 	explicit dramSystem(std::map<file_io_token_t,std::string> &);
+	explicit dramSystem(const dramSettings *settings);
 
 	// friends
 	friend std::ostream &operator<<(std::ostream &, const dramSystem &);	

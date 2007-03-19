@@ -1,11 +1,12 @@
-
-
+#ifndef DRAMSETTINGS
+#define DRAMSETTINGS
 
 class dramSettings
 {
 public:
 	//////////////////////////////////////////////////////////////////////////	
 	// command data
+	string outFile;
 	refresh_policy_t refreshPolicy;
 	dram_type_t dramType;
 	unsigned dataRate;
@@ -74,3 +75,4 @@ public:
 
 	explicit dramSettings(const int, const char **);
 };
+#endif

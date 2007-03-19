@@ -28,6 +28,7 @@
 <!ELEMENT eventQueueDepth (#PCDATA)>
 <!ELEMENT historyQueueDepth (#PCDATA)>
 <!ELEMENT maxVCC (#PCDATA)>
+<!ELEMENT outFile (#PCDATA)>
 <!ELEMENT perBankQueueDepth (#PCDATA)>
 <!ELEMENT physicalAddressMappingPolicy (#PCDATA)>
 <!ELEMENT postedCAS (#PCDATA)>
@@ -42,7 +43,7 @@
 <!ELEMENT rows (#PCDATA)>
 <!ELEMENT seniorityAgeLimit (#PCDATA)>
 <!ELEMENT shortBurstRatio (#PCDATA)>
-<!ELEMENT simulationParameters (shortBurstRatio, readPercentage)>
+<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, outFile)>
 <!ELEMENT systemConfigurationType (#PCDATA)>
 <!ELEMENT systemVDD (#PCDATA)>
 <!ELEMENT tAL (#PCDATA)>

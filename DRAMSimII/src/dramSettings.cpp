@@ -109,6 +109,8 @@ dramSettings::dramSettings(const int argc, const char **argv)
 					{
 					case unknown_token:
 						break;
+					case output_file_token:
+						outFile = nodeValue;
 					case idd5_token:
 						toNumeric<unsigned>(IDD5,nodeValue,std::dec);
 						break;

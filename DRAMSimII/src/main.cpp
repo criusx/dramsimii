@@ -19,17 +19,18 @@
 
 using namespace std;
 
-int main(int argc, char **argv, char *envp[])
+int main(int argc,const char **argv, char *envp[])
 {
 
 	map<enum file_io_token_t,string> parameters;
 
-	dramSettings settings(argc, const_cast<const char **>(argv));
+	dramSettings *settings = new dramSettings(argc, argv);
 	create_input_map(argc, argv, parameters);
 	//simulation_parameters_t	*simulation_parameters;
 	//dram_statistics_t	*dram_stats;
 
-	dramSystem ds(parameters); // combines read_command line and other inits
+	dramSystem ds(settings); // combines read_command line and other inits
+	delete settings;
 	//input_stream	is(ds);
 	//simulation_parameters sp;
 	//dram_statistics stats;

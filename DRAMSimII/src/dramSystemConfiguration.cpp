@@ -7,7 +7,41 @@
 
 using namespace std;
 
-///
+dramSystemConfiguration::dramSystemConfiguration(dramSettings *settings):
+dram_type(settings->dramType),
+row_buffer_management_policy(settings->rowBufferManagementPolicy),
+auto_precharge(settings->autoPrecharge),
+addr_mapping_scheme(settings->addressMappingScheme),
+datarate(settings->dataRate),
+refresh_time(settings->dataRate * settings->refreshTime),
+read_write_grouping(settings->readWriteGrouping),
+refresh_policy(settings->refreshPolicy),
+seniority_age_limit(settings->seniorityAgeLimit),
+posted_cas(settings->postedCAS),
+clock_granularity(settings->clockGranularity),
+row_count(settings->rowCount),
+cachelines_per_row(settings->cachelinesPerRow),
+col_count(settings->columnCount),
+col_size(settings->columnSize),
+row_size(settings->rowSize),
+cacheline_size(settings->cacheLineSize),
+// any of these really needed?
+history_queue_depth(settings->historyQueueDepth),
+completion_queue_depth(settings->completionQueueDepth),
+transaction_queue_depth(settings->transactionQueueDepth),
+event_queue_depth(settings->eventQueueDepth),
+per_bank_queue_depth(settings->perBankQueueDepth),
+chan_count(settings->channelCount),
+rank_count(settings->rankCount),
+bank_count(settings->bankCount),
+refresh_queue_depth(settings->refreshQueueDepth),
+//
+command_ordering_algorithm(settings->commandOrderingAlgorithm),
+config_type(BASELINE_CONFIG),
+read_percentage(settings->readPercentage),
+short_burst_ratio(settings->shortBurstRatio)
+{}
+
 /// Contains all of the configuration information.
 /// Constructor for the dram_system_configuration class
 dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &parameter)
