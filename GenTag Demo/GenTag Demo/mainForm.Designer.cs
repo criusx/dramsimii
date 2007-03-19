@@ -114,7 +114,6 @@ namespace GenTagDemo
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.gpsSerialPort = new System.IO.Ports.SerialPort(this.components);
-            this.listBox2 = new System.Windows.Forms.ListBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -165,7 +164,7 @@ namespace GenTagDemo
             this.tabPage1.Location = new System.Drawing.Point(0, 0);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Size = new System.Drawing.Size(240, 217);
-            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.Text = "Auth";
             // 
             // pictureBox1
             // 
@@ -208,7 +207,7 @@ namespace GenTagDemo
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Size = new System.Drawing.Size(232, 214);
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "VarioSens";
             // 
             // textBox9
             // 
@@ -292,20 +291,19 @@ namespace GenTagDemo
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.tabPage3.Controls.Add(this.listBox2);
             this.tabPage3.Controls.Add(this.treeView2);
             this.tabPage3.Controls.Add(this.manualIDButton);
             this.tabPage3.Controls.Add(this.textBox4);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(240, 217);
-            this.tabPage3.Text = "tabPage3";
+            this.tabPage3.Text = "VarioSens/W";
             // 
             // treeView2
             // 
             this.treeView2.Location = new System.Drawing.Point(0, 0);
             this.treeView2.Name = "treeView2";
-            this.treeView2.Size = new System.Drawing.Size(27, 161);
+            this.treeView2.Size = new System.Drawing.Size(240, 161);
             this.treeView2.TabIndex = 2;
             // 
             // manualIDButton
@@ -343,7 +341,7 @@ namespace GenTagDemo
             this.tabPage4.Location = new System.Drawing.Point(0, 0);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(240, 217);
-            this.tabPage4.Text = "tabPage4";
+            this.tabPage4.Text = "Manual";
             // 
             // getSetStatusBox
             // 
@@ -460,7 +458,7 @@ namespace GenTagDemo
             this.tabPage5.Controls.Add(this.patientNameBox);
             this.tabPage5.Location = new System.Drawing.Point(0, 0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(232, 214);
+            this.tabPage5.Size = new System.Drawing.Size(240, 217);
             this.tabPage5.Text = "Patient";
             // 
             // medicationButton
@@ -533,6 +531,7 @@ namespace GenTagDemo
             // 
             // gpsPage
             // 
+            this.gpsPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.gpsPage.Controls.Add(this.satellitesUsedTextBox);
             this.gpsPage.Controls.Add(this.timeTextBox);
             this.gpsPage.Controls.Add(this.hdopTextBox);
@@ -731,7 +730,7 @@ namespace GenTagDemo
             // directionTextBox
             // 
             this.directionTextBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.directionTextBox.Location = new System.Drawing.Point(72, 16);
+            this.directionTextBox.Location = new System.Drawing.Point(7, 86);
             this.directionTextBox.Name = "directionTextBox";
             this.directionTextBox.ReadOnly = true;
             this.directionTextBox.Size = new System.Drawing.Size(59, 19);
@@ -785,7 +784,7 @@ namespace GenTagDemo
             // label14
             // 
             this.label14.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.label14.Location = new System.Drawing.Point(72, 1);
+            this.label14.Location = new System.Drawing.Point(7, 71);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(59, 14);
             this.label14.Text = "Direction";
@@ -901,13 +900,6 @@ namespace GenTagDemo
             this.gpsSerialPort.ReceivedBytesThreshold = 512;
             this.gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.gpsSerialPort_DataReceived);
             // 
-            // listBox2
-            // 
-            this.listBox2.Location = new System.Drawing.Point(34, 8);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(199, 156);
-            this.listBox2.TabIndex = 3;
-            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1018,7 +1010,6 @@ namespace GenTagDemo
         private System.Windows.Forms.Label satLabel3;
         private System.Windows.Forms.Label satLabel2;
         private System.Windows.Forms.Label satLabel1;
-        private System.Windows.Forms.ListBox listBox2;
     }
 }
 

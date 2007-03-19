@@ -9,9 +9,9 @@ namespace GenTagDemo
     class nmeaInterpreter
     {
         // Represents the EN-US culture, used for numbers in NMEA sentences
-        public static CultureInfo NmeaCultureInfo = new CultureInfo("en-US");
+        private static CultureInfo NmeaCultureInfo = new CultureInfo("en-US");
         // Used to convert knots into miles per hour
-        public static double MPHPerKnot = double.Parse("1.150779",NmeaCultureInfo);
+        private double MPHPerKnot;
 
         #region Delegates
         public delegate void PositionReceivedEventHandler(
@@ -27,6 +27,7 @@ namespace GenTagDemo
         public delegate void HDOPReceivedEventHandler(double value);
         public delegate void VDOPReceivedEventHandler(double value);
         public delegate void PDOPReceivedEventHandler(double value);
+        public delegate void NumberOfSatellitesInViewEventHandler(int numSats);
         #endregion
 
         #region Events
@@ -41,7 +42,14 @@ namespace GenTagDemo
         public event HDOPReceivedEventHandler HDOPReceived;
         public event VDOPReceivedEventHandler VDOPReceived;
         public event PDOPReceivedEventHandler PDOPReceived;
+        public event NumberOfSatellitesInViewEventHandler NumSatsReceived;
         #endregion
+
+        public nmeaInterpreter(CultureInfo cultureInfo)
+        {
+            NmeaCultureInfo = cultureInfo;
+            MPHPerKnot = double.Parse("1.150779", NmeaCultureInfo);
+        }
 
         // Processes information from the GPS receiver
         public bool Parse(string sentence)
@@ -68,7 +76,7 @@ namespace GenTagDemo
 
         private static char[] splitter = new char[]{ ',', '*'};
         // Divides a sentence into individual words
-        public string[] GetWords(string sentence)
+        public static string[] GetWords(string sentence)
         {
             return sentence.Split(splitter);
         }
@@ -79,8 +87,10 @@ namespace GenTagDemo
             string[] Words = GetWords(sentence);
 
             // Do we have enough values to describe our location?
-            if (Words[3] != "" & Words[4] != "" &
-            Words[5] != "" & Words[6] != "")
+            if (!string.IsNullOrEmpty(Words[3]) &&
+                !string.IsNullOrEmpty(Words[4]) &&
+                !string.IsNullOrEmpty(Words[5]) &&
+                !string.IsNullOrEmpty(Words[6]))
             {
                 // Yes. Extract latitude and longitude
                 // Append hours
@@ -99,18 +109,16 @@ namespace GenTagDemo
                     PositionReceived(Latitude, Longitude);
             }
             // Do we have enough values to parse satellite-derived time?
-            if (Words[1] != "")
+            if (!string.IsNullOrEmpty(Words[1]))
             {
                 // Yes. Extract hours, minutes, seconds and milliseconds
-                int UtcHours = Convert.ToInt32(Words[1].Substring(0, 2));
-                int UtcMinutes = Convert.ToInt32(Words[1].Substring(2, 2));
-                int UtcSeconds = Convert.ToInt32(Words[1].Substring(4, 2));
-                int UtcMilliseconds = 0;
+                int UtcHours = Convert.ToInt32(Words[1].Substring(0, 2), NmeaCultureInfo);
+                int UtcMinutes = Convert.ToInt32(Words[1].Substring(2, 2), NmeaCultureInfo);
+                int UtcSeconds = Convert.ToInt32(Words[1].Substring(4, 2), NmeaCultureInfo);
+                
                 // Extract milliseconds if it is available
-                if (Words[1].Length > 7)
-                {
-                    UtcMilliseconds = Convert.ToInt32(Words[1].Substring(7));
-                }
+                int UtcMilliseconds = (Words[1].Length > 7) ? Convert.ToInt32(Words[1].Substring(7), NmeaCultureInfo) : 0;
+                
                 // Now build a DateTime object with all values
                 System.DateTime Today = System.DateTime.Now.ToUniversalTime();
                 System.DateTime SatelliteTime = new System.DateTime(Today.Year,
@@ -121,7 +129,7 @@ namespace GenTagDemo
                     DateTimeChanged(SatelliteTime.ToLocalTime());
             }
             // Do we have enough information to extract the current speed?
-            if (Words[7] != "")
+            if (!string.IsNullOrEmpty(Words[7]))
             {
                 // Yes. Parse the speed and convert it to MPH
                 double Speed = double.Parse(Words[7], NmeaCultureInfo) * MPHPerKnot;
@@ -134,7 +142,7 @@ namespace GenTagDemo
                         SpeedLimitReached();
             }
             // Do we have enough information to extract bearing?
-            if (Words[8] != "")
+            if (!string.IsNullOrEmpty(Words[8]))
             {
                 // Indicate that the sentence was recognized
                 double Bearing = double.Parse(Words[8], NmeaCultureInfo);
@@ -142,7 +150,7 @@ namespace GenTagDemo
                     BearingReceived(Bearing);
             }
             // Does the device currently have a satellite fix?
-            if (Words[2] != "")
+            if (!string.IsNullOrEmpty(Words[2]))
             {
                 switch (Words[2])
                 {
@@ -170,6 +178,8 @@ namespace GenTagDemo
             string[] Words = GetWords(sentence);
 
             bool firstMessage = (Words[2].CompareTo(@"1") == 0) ? true : false;
+
+            NumSatsReceived(Convert.ToInt32(Words[3], NmeaCultureInfo));
             // Each sentence contains four blocks of satellite information. 
             // Read each block and report each satellite's information
             int Count = 0;
@@ -180,14 +190,16 @@ namespace GenTagDemo
                 {
                     // Yes. Proceed with analyzing the block. 
                     // Does it contain any information?
-                    if (Words[Count * 4] != "" & Words[Count * 4 + 1] != ""
-                    & Words[Count * 4 + 2] != "" & Words[Count * 4 + 3] != "")
+                    if (!string.IsNullOrEmpty(Words[Count * 4]) &&
+                        !string.IsNullOrEmpty(Words[Count * 4 + 1]) &&
+                        !string.IsNullOrEmpty(Words[Count * 4 + 2]) &&
+                        !string.IsNullOrEmpty(Words[Count * 4 + 3]))
                     {
                         // Yes. Extract satellite information and report it
-                        PseudoRandomCode = System.Convert.ToInt32(Words[Count * 4]);
-                        Elevation = Convert.ToInt32(Words[Count * 4 + 1]);
-                        Azimuth = Convert.ToInt32(Words[Count * 4 + 2]);
-                        SignalToNoiseRatio = Convert.ToInt32(Words[Count * 4 + 3]);
+                        PseudoRandomCode = System.Convert.ToInt32(Words[Count * 4], NmeaCultureInfo);
+                        Elevation = Convert.ToInt32(Words[Count * 4 + 1], NmeaCultureInfo);
+                        Azimuth = Convert.ToInt32(Words[Count * 4 + 2], NmeaCultureInfo);
+                        SignalToNoiseRatio = Convert.ToInt32(Words[Count * 4 + 3], NmeaCultureInfo);
                         // Notify of this satellite's information
                         if (SatelliteReceived != null)
                         {
@@ -209,32 +221,29 @@ namespace GenTagDemo
             try
             {
                 // Update the DOP values
-                if (Words[15] != "")
+                if (!string.IsNullOrEmpty(Words[15]))
                 {
                     if (PDOPReceived != null)
                         PDOPReceived(double.Parse(Words[15], NmeaCultureInfo));
                 }
-                if (Words[16] != "")
+                if (!string.IsNullOrEmpty(Words[16]))
                 {
                     if (HDOPReceived != null)
                         HDOPReceived(double.Parse(Words[16], NmeaCultureInfo));
                 }
-                if (Words[17] != "")
+                if (!string.IsNullOrEmpty(Words[17]))
                 {
                     if (VDOPReceived != null)
                         VDOPReceived(double.Parse(Words[17], NmeaCultureInfo));
                 }
             }
-            catch (FormatException ex)
+            catch (FormatException)
             {
-                MessageBox.Show(Words[15] + "," + Words[16] + "," + Words[17]);
             }
             return true;
         }
-        // Returns True if a sentence's checksum
-        //     matches the 
-        // calculated checksum
-        public bool IsValid(string sentence)
+        // Returns True if a sentence's checksum matches the calculated checksum
+        public static bool IsValid(string sentence)
         {
             // Compare the characters after the asterisk to the calculation
             return sentence.Substring(sentence.IndexOf("*") + 1) ==
@@ -242,7 +251,7 @@ namespace GenTagDemo
         }
 
         // Calculates the checksum for a sentence
-        public string GetChecksum(string sentence)
+        public static string GetChecksum(string sentence)
         {
             // Loop through all chars to get a check
             //     sum
@@ -274,7 +283,7 @@ namespace GenTagDemo
                 }
             }
             // Return the checksum formatted as a two-character hexadecimal
-            return Checksum.ToString("X2");
+            return Checksum.ToString("X2", NmeaCultureInfo);
         }
     }
 }

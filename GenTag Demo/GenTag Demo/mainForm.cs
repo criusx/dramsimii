@@ -34,13 +34,17 @@ namespace GenTagDemo
 
         nmeaInterpreter gpsNmea;
 
+        private CultureInfo cultureInfo;
+
         public mainForm()
         {
             InitializeComponent();
 
             mF = this;
 
-            gpsNmea = new nmeaInterpreter();
+            cultureInfo = new CultureInfo("en-US");
+
+            gpsNmea = new nmeaInterpreter(cultureInfo);
 
             gpsNmea.DateTimeChanged += new nmeaInterpreter.DateTimeChangedEventHandler(gpsNmea_DateTimeChanged);
             gpsNmea.FixObtained += new nmeaInterpreter.FixObtainedEventHandler(gpsNmea_FixObtained);
@@ -52,6 +56,7 @@ namespace GenTagDemo
             gpsNmea.PDOPReceived += new nmeaInterpreter.PDOPReceivedEventHandler(gpsNmea_PDOPReceived);
             gpsNmea.HDOPReceived += new nmeaInterpreter.HDOPReceivedEventHandler(gpsNmea_HDOPReceived);
             gpsNmea.VDOPReceived += new nmeaInterpreter.VDOPReceivedEventHandler(gpsNmea_VDOPReceived);
+            gpsNmea.NumSatsReceived +=new nmeaInterpreter.NumberOfSatellitesInViewEventHandler(gpsNmea_NumSatsReceived);
 
 
 
@@ -269,7 +274,7 @@ namespace GenTagDemo
             [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Single[] temperatures);
 
         [DllImport("VarioSens Lib.dll")]
-        protected static extern int getVarioSensLog(writeViolationsCB cb);
+        private static extern int getVarioSensLog(writeViolationsCB cb);
 
         private delegate void writeViolationsDelegate(
             Single upperTempLimit,
@@ -337,7 +342,7 @@ namespace GenTagDemo
                 }
                 catch (Exception ee)
                 {
-                    throw ee;
+                    throw;
                 }
             }
         }
@@ -527,7 +532,7 @@ namespace GenTagDemo
         }
 
         [DllImport("VarioSens Lib.dll")]
-        public static extern int setVarioSensSettings(float lowTemp, float hiTemp, int interval, int mode, int batteryCheckInterval);
+        private static extern int setVarioSensSettings(float lowTemp, float hiTemp, int interval, int mode, int batteryCheckInterval);
 
         private void setVSSettings()
         {
@@ -582,7 +587,7 @@ namespace GenTagDemo
             short batteryCheckInterval);
 
         [DllImport("VarioSens Lib.dll")]
-        public static extern int getVarioSensSettings(writeVSSettingsCB cb);
+        private static extern int getVarioSensSettings(writeVSSettingsCB cb);
 
         private void getVSSettingsCB(Single upper, Single lower, short period, short logMode, short batteryCheckInterval)
         {
@@ -653,7 +658,7 @@ namespace GenTagDemo
             try
             {
                 org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-                org.dyndns.crius.GetDates values = ws.getInfo(drugID, true);
+                //org.dyndns.crius.GetDates values = ws.getInfo(drugID, true);
                 byte[] bA = ws.getPicture(drugID, true);
                 bool drugInteraction = ws.checkInteraction(patientID, drugID);
 
@@ -805,26 +810,35 @@ namespace GenTagDemo
         }
 
         private void connectGPSButton_Click(object sender, EventArgs e)
-        {
-            try
+        {            
+            string errorMsg = "";
+            for (int triesLeft = 5; triesLeft > 0; )
             {
-                if (!gpsSerialPort.IsOpen)
+                try
                 {
-                    gpsSerialPort.PortName = comPortsComboBox.SelectedItem.ToString();
-                    gpsSerialPort.Open();
-                    connectGPSButton.Text = "Disconnect";
+                    if (!gpsSerialPort.IsOpen)
+                    {
+                        gpsSerialPort.PortName = comPortsComboBox.SelectedItem.ToString();
+                        gpsSerialPort.Open();
+                        connectGPSButton.Text = "Disconnect";
+                    }
+                    else
+                    {
+                        gpsSerialPort.Close();
+                        connectGPSButton.Text = "Connect";
+                    }
+                    errorMsg = "";
+                    triesLeft = 0;
                 }
-                else
+                catch (Exception ex)
                 {
-                    gpsSerialPort.Close();
                     connectGPSButton.Text = "Connect";
+                    errorMsg = ex.Message;
+                    triesLeft--;
                 }
             }
-            catch (Exception ex)
-            {
-                connectGPSButton.Text = "Connect";
-                MessageBox.Show(ex.Message.ToString());
-            }
+            if (errorMsg.Length > 2)
+                MessageBox.Show(errorMsg);
         }
 
         private void gpsSerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -848,7 +862,7 @@ namespace GenTagDemo
 
         private void gpsNmea_DateTimeChanged(DateTime dT)
         {
-            satellitesUsedTextBox.Text = dT.ToShortDateString();
+            timeTextBox.Text = dT.ToString("t");
         }
         private void gpsNmea_FixObtained()
         {
@@ -876,13 +890,20 @@ namespace GenTagDemo
             directionTextBox.Text = bearing.ToString();
         }
 
-        int satNumber = 0;
+        private int satNumber;
         private void gpsNmea_SatelliteReceived(int pseudoRandomCode, int azimuth, int elevation, int signalToNoiseRatio, bool firstMessage)
         {
-            //listBox2.Items.Add("PRC: " + pseudoRandomCode + "Az: " + azimuth + "Ele: " + elevation + "SNR: " + signalToNoiseRatio.ToString());
-            //return;
             if (firstMessage == true)
+            {
                 satNumber = 0;
+                satLabel1.Text = satLabel2.Text = satLabel3.Text =
+                    satLabel4.Text = satLabel5.Text = satLabel6.Text =
+                    satLabel7.Text = satLabel8.Text = "#";
+                progressBar1.Value = progressBar2.Value = progressBar3.Value =
+                    progressBar4.Value = progressBar5.Value =
+                    progressBar6.Value = progressBar7.Value =
+                    progressBar8.Value = 0;
+            }
             switch (satNumber)
             {
                 case 0:
@@ -920,19 +941,28 @@ namespace GenTagDemo
             }
             satNumber = (satNumber + 1) % 8;
         }
+
         private void gpsNmea_PDOPReceived(double value)
         {
 
         }
-        double currentHDOPValue = 0;
+        
+        private double currentHDOPValue;
+        
         private void gpsNmea_HDOPReceived(double value)
         {
             hdopTextBox.Text = value.ToString();
             currentHDOPValue = value;
         }
+
         private void gpsNmea_VDOPReceived(double value)
         {
             vdopTextBox.Text = value.ToString();
+        }
+
+        private void gpsNmea_NumSatsReceived(int value)
+        {
+            satellitesUsedTextBox.Text = value.ToString();
         }
     }
 }

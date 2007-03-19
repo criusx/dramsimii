@@ -74,7 +74,7 @@ namespace TestPocketGraphBar
             }
             catch (Exception ee)
             {
-                throw ee;
+                throw;
             }
 
         }
@@ -104,12 +104,7 @@ namespace TestPocketGraphBar
         public void Clear()
         {
             graph.Graphs[0].Clear();
-        }
-
-        private void Draw_Click(object sender, System.EventArgs e)
-        {
-
-        }
+        }       
 
         private void Data_Click(object sender, EventArgs e)
         {
