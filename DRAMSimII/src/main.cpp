@@ -24,7 +24,7 @@ int main(int argc,const char **argv, char *envp[])
 
 	map<enum file_io_token_t,string> parameters;
 
-	dramSettings *settings = new dramSettings(argc, argv);
+	const dramSettings *settings = new dramSettings(argc, argv);
 	create_input_map(argc, argv, parameters);
 	//simulation_parameters_t	*simulation_parameters;
 	//dram_statistics_t	*dram_stats;

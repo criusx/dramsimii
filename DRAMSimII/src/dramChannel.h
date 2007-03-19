@@ -40,9 +40,13 @@ public:
 	void record_command(command *);
 	void initRefreshQueue(const unsigned, const unsigned, const unsigned); // init the RefreshQueue using selected algorithm
 
+	// constructors
 	explicit dramChannel();
 	explicit dramChannel(int, int, int, int, int, int, int);
+	explicit dramChannel(const dramSettings *settings);
 	dramChannel(const dramChannel &);
+
+
 	rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
 	void init_controller(int, int, int, int, int, int, int);
 	enum transaction_type_t set_read_write_type(const int,const int) const;

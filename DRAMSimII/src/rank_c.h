@@ -20,10 +20,11 @@ public:
 	queue<tick_t> last_ras_times; // ras time queue. useful to determine if t_faw is met
 	std::vector<bank_c> bank;
 
-	
+	// constructors
 	explicit rank_c();
 	rank_c(const rank_c &);
 	explicit rank_c(const unsigned,const unsigned);	
+	explicit rank_c(const dramSettings *settings);
 };
 
 #endif

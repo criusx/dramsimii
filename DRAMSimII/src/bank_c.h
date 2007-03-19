@@ -25,6 +25,8 @@ public:
 	int cas_count;
 	int casw_count;
 
+	// constructors
+	explicit bank_c(const dramSettings *settings);
 	explicit bank_c(unsigned);
 	bank_c(const bank_c &);	
 };

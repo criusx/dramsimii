@@ -7,7 +7,7 @@
 
 using namespace std;
 
-dramSystemConfiguration::dramSystemConfiguration(dramSettings *settings):
+dramSystemConfiguration::dramSystemConfiguration(const dramSettings *settings):
 dram_type(settings->dramType),
 row_buffer_management_policy(settings->rowBufferManagementPolicy),
 auto_precharge(settings->autoPrecharge),

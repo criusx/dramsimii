@@ -16,6 +16,18 @@
 
 using namespace std;
 
+dramChannel::dramChannel(const dramSettings *settings):
+time(0),
+rank(settings->rankCount, rank_c(settings)),
+refresh_row_index(0),
+last_refresh_time(0),
+last_rank_id(0),
+transaction_q(settings->transactionQueueDepth),
+refreshQueue(settings->refreshQueueDepth,true),
+history_q(settings->historyQueueDepth),
+completion_q(settings->completionQueueDepth)
+{}
+
 dramChannel::dramChannel(int transaction_queue_depth,
 						 int history_queue_depth,
 						 int completion_queue_depth,
@@ -113,7 +125,7 @@ enum transaction_type_t	dramChannel::set_read_write_type(const int rank_id,const
 
 		if(temp_c != NULL)
 		{
-			if(temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND)
+			if (temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND)
 			{
 				read_count++;
 			}

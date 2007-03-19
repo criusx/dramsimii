@@ -45,6 +45,7 @@ private:
 public:
 	// constructors
 	explicit dramSystemConfiguration(std::map<file_io_token_t,std::string> &);
+	explicit dramSystemConfiguration(const dramSettings *settings);
 	
 	// friends
 	friend class dramSystem;

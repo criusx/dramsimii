@@ -1,5 +1,17 @@
 #include "rank_c.h"
 
+rank_c::rank_c(const dramSettings *settings):
+bank_count(settings->bankCount),
+last_bank_id(settings->bankCount - 1),
+last_refresh_time(0),
+last_cas_time(-100),
+last_casw_time(-100),
+last_cas_length(0),
+last_casw_length(0),
+last_ras_times(4),
+bank(settings->bankCount,bank_c(settings))
+{}
+
 rank_c::rank_c():
 last_ras_times(4)
 {
