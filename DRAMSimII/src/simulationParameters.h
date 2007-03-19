@@ -2,6 +2,10 @@
 #define SIMULATION_PARAMETERS_H
 #pragma once
 
+#include <map>
+#include "dramSettings.h"
+#include <globals.h>
+
 class simulationParameters 
 {
 private:
@@ -9,7 +13,11 @@ private:
 	int input_type;
 
 public:
+	// constructors
 	simulationParameters(std::map<file_io_token_t,std::string> &);
+	simulationParameters(const dramSettings *settings);
+
+	// functions
 	int get_request_count() {return request_count;}
 };
 

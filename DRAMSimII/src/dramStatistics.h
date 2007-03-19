@@ -21,8 +21,12 @@ private:
 	int system_config_type;
 
 public:
-	void collect_transaction_stats(transaction *);
+
+	// constructors
 	dramStatistics();
+
+	// functions
+	void collect_transaction_stats(transaction *);	
 	inline void set_end_time(tick_t et) {end_time = et;}
 	inline void set_valid_trans_count(int vtc) {valid_transaction_count = vtc;}
 	friend std::ostream &operator<<(std::ostream &, const dramStatistics &);

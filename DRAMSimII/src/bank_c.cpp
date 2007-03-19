@@ -1,4 +1,5 @@
 #include "bank_c.h"
+#include "dramSettings.h"
 
 bank_c::bank_c(const dramSettings *settings):
 per_bank_q(settings->perBankQueueDepth),

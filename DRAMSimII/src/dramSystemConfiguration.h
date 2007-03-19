@@ -5,7 +5,8 @@
 #include <fstream>
 #include <map>
 #include "enumTypes.h"
-
+#include "globals.h"
+#include "dramSettings.h"
 
 class dramSystemConfiguration
 { 

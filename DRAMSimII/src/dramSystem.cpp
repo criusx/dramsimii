@@ -780,13 +780,13 @@ channel(system_config.chan_count,
 		dramChannel(settings)),
 timing_specification(settings),
 sim_parameters(settings),
-statistics(settings),
+statistics(),
 algorithm(settings),
 input_stream(settings),
 time(0),
 event_q(COMMAND_QUEUE_SIZE)
 {
-	if (settings->outFile > 1)
+	if (settings->outFile.length() > 1)
 	{
 		outStream.open(settings->outFile.c_str());	
 		if (!outStream.good())
@@ -835,7 +835,7 @@ event_q(COMMAND_QUEUE_SIZE)
 			outStream.open(temp->second.c_str());	
 			if (!outStream.good())
 			{
-				cerr << "Error opening file \"" << output_filename << "\" for writing" << endl;
+				cerr << "Error opening file \"" << temp->second << "\" for writing" << endl;
 				exit(-12);
 			}
 		}

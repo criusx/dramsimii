@@ -1,12 +1,14 @@
 #ifndef DRAMSETTINGS
 #define DRAMSETTINGS
 
+#include "enumTypes.h"
+
 class dramSettings
 {
 public:
 	//////////////////////////////////////////////////////////////////////////	
 	// command data
-	string outFile;
+	std::string outFile;
 	refresh_policy_t refreshPolicy;
 	dram_type_t dramType;
 	unsigned dataRate;

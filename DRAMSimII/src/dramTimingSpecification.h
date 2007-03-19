@@ -4,6 +4,7 @@
 
 #include <map>
 #include "enumTypes.h"
+#include "dramSettings.h"
 
 // t_pp (min prec to prec of any bank) ignored
 class dramTimingSpecification
@@ -29,7 +30,11 @@ private:
 	int t_buffer_delay;	// the delay a transaction experiences before it can be converted to a series of commands
 
 public:
+	// constructors
 	explicit dramTimingSpecification(std::map<file_io_token_t, std::string> &);
+	explicit dramTimingSpecification(const dramSettings *settings);
+
+	// friends
 	friend std::ostream &operator<<( std::ostream&, const dramTimingSpecification &);
 	friend class dramSystem;
 };

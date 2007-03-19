@@ -1,7 +1,7 @@
 #include "rank_c.h"
 
 rank_c::rank_c(const dramSettings *settings):
-bank_count(settings->bankCount),
+bankCount(settings->bankCount),
 last_bank_id(settings->bankCount - 1),
 last_refresh_time(0),
 last_cas_time(-100),
@@ -21,8 +21,8 @@ last_ras_times(4)
 }
 
 rank_c::rank_c(const unsigned bank_cnt, const unsigned per_bank_queue_depth):
-bank_count(bank_cnt),
-last_bank_id(bank_count-1),
+bankCount(bank_cnt),
+last_bank_id(bankCount-1),
 last_refresh_time(0),
 last_cas_time(-100),
 last_casw_time(-100),
@@ -35,7 +35,7 @@ bank(bank_cnt,bank_c(per_bank_queue_depth))
 
 
 rank_c::rank_c(const rank_c &r): 
-bank_count(r.bank_count),
+bankCount(r.bankCount),
 last_bank_id(r.last_bank_id),
 last_refresh_time(r.last_refresh_time),
 last_cas_time(r.last_cas_time),

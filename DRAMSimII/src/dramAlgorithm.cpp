@@ -1,5 +1,202 @@
 #include "dramAlgorithm.h"
 
+dramAlgorithm::dramAlgorithm(const dramSettings *settings){
+	rank_id[0] = 0;
+	rank_id[1] = 3;
+	ras_bank_id[0] = 0;
+	ras_bank_id[1] = 0;
+	ras_bank_id[2] = 0;
+	ras_bank_id[3] = 0;
+	cas_count[0] = 0;
+	cas_count[1] = 0;
+	cas_count[2] = 0;
+	cas_count[3] = 0;
+	WHCC_offset[0] = 0;
+	WHCC_offset[1] = 0;
+	transaction_type[0] = READ_TRANSACTION;
+	transaction_type[1] = READ_TRANSACTION;
+	transaction_type[2] = READ_TRANSACTION;
+	transaction_type[3] = READ_TRANSACTION;
+
+
+	WHCC.init(settings->rankCount * settings->bankCount * 2);
+
+	command *temp_c;
+
+	if (settings->rankCount == 2)
+	{
+		if(settings->bankCount == 8)
+		{
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		}
+		else if (settings->bankCount == 16)
+		{
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  8; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  9; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 10; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 11; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  8; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 12; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  9; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 10; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 13; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 11; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 12; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 14; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 13; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 14; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 15; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id = 15; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  8; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  9; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 10; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 11; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 12; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  8; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  9; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 13; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 10; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 11; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 14; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 12; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 13; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 15; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 14; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+			temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id = 15; WHCC.enqueue(temp_c);
+		}
+	}
+	else if (settings->rankCount == 4)
+	{
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  2; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  0; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  4; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 1; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  5; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 2; temp_c->addr.bank_id =  3; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  6; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = RAS_COMMAND; temp_c->addr.rank_id = 3; temp_c->addr.bank_id =  1; WHCC.enqueue(temp_c);
+		temp_c = new command; temp_c->this_command = CAS_COMMAND; temp_c->addr.rank_id = 0; temp_c->addr.bank_id =  7; WHCC.enqueue(temp_c);
+	}
+}
+
 dramAlgorithm::dramAlgorithm(int rank_count,
 							 int bank_count,
 							 int config_type)

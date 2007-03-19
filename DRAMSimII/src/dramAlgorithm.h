@@ -5,6 +5,7 @@
 #include "command.h"
 #include "globals.h"
 #include "queue.h"
+#include "dramSettings.h"
 
 // Algorithm specific data structures should go in here.
 class dramAlgorithm
@@ -19,8 +20,12 @@ protected:
 	int cas_count[4];
 
 public:
+	// constructors
 	dramAlgorithm(int, int, int);
 	dramAlgorithm(const dramAlgorithm &);
+	dramAlgorithm(const dramSettings *settings);
+
+	// functions
 	void init(int, int, int); 
 	//friend class dramSystem;
 	queue<command> &getWHCC() { return WHCC; }

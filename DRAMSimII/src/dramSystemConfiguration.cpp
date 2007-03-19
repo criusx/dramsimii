@@ -1,8 +1,6 @@
 #include <map>
 #include <string>
 #include <sstream>
-#include "globals.h"
-#include "enumTypes.h"
 #include "dramSystemConfiguration.h"
 
 using namespace std;
@@ -188,7 +186,7 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 		temp2 >> cachelines_per_row;
 	}
 	else
-		cachelines_per_row = INVALID;/* not used now, set to INVALID */
+		cachelines_per_row = (unsigned)INVALID;/* not used now, set to INVALID */
 
 	if ((temp=parameter.find(col_count_token))!=parameter.end())
 	{

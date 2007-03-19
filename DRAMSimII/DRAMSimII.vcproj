@@ -291,7 +291,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\addresses.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\bank_c.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\busEvent.cpp"
 				>
 			</File>
 			<File
@@ -308,10 +316,6 @@
 			</File>
 			<File
 				RelativePath=".\src\dramSettings.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramsim2.cpp"
 				>
 			</File>
 			<File
@@ -426,6 +430,10 @@
 			</File>
 			<File
 				RelativePath=".\src\runSimulations.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\simulationParameters.cpp"
 				>
 			</File>
 			<File

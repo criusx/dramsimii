@@ -6,11 +6,12 @@
 #include "bank_c.h"
 #include "globals.h"
 #include "queue.h"
+#include "dramSettings.h"
 
 class rank_c
 {
 public:
-	int bank_count;
+	int bankCount;
 	int last_bank_id; // id of the last accessed bank of this rank
 	tick_t last_refresh_time;
 	tick_t last_cas_time;

@@ -10,8 +10,8 @@ queue<command> command::freeCommandPool(4*COMMAND_QUEUE_SIZE,true);
 
 command::command()
 {
-	this_command = RETIRE_COMMAND;                        /* which command is this? */
-	start_time = 0;                     /* when did the transaction start? */
+	this_command = RETIRE_COMMAND;	/* which command is this? */
+	start_time = 0;					/* when did the transaction start? */
 	enqueue_time = 0;			/* when did it make it into the queues? */
 	completion_time = 0;
 	host_t = NULL;	/* backward pointer to the original transaction */

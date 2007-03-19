@@ -13,6 +13,7 @@
 #include "queue.h"
 #include "transaction.h"
 #include "command.h"
+#include "dramSettings.h"
 
 using namespace std;
 

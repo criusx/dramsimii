@@ -34,6 +34,7 @@ class transaction;
 class command;
 class dramSystem;
 class ogzstream;
+class dramSettings;
 
 #include <iostream>
 #include <map>
