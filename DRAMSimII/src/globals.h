@@ -5,7 +5,7 @@ To do list:
 2. add open page support
 3. Look at power up/down models.
 4. re-add power models.
-6. attach BIU, port to alpha-sim
+6. attach BIU/MCH, port to alpha-sim
 7. convert passed pointers/values to references
 8. standardize time variables
 9. organize classes better, divide work more intelligently
@@ -108,7 +108,7 @@ std::ostream &operator<<(std::ostream &, const transaction_type_t );
 extern ogzstream outStream;
 
 // converts a string to a file_io_token
-file_io_token_t file_io_token(const std::string &);
+file_io_token_t dramTokenizer(const std::string &);
 file_io_token_t fileIOToken(const unsigned char *input);
 
 // converts a string to its corresponding magnitude representation

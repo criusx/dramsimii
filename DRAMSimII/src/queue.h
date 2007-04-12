@@ -18,8 +18,7 @@ private:
 
 public:
 	explicit queue(): depth(0),count(0), head_ptr(0), tail_ptr(0), entry(NULL)
-	{
-	}
+	{}
 
 	explicit queue(const queue<T>& a): depth(a.depth), count(0), head_ptr(0), tail_ptr(0)
 	{
@@ -102,7 +101,7 @@ public:
 			return FAILURE;
 		else if (item == NULL)
 		{
-			std::cerr << "Input transaction pointer is NULL" << std::endl;
+			std::cerr << "Input pointer is NULL" << std::endl;
 			return FAILURE;
 			//_exit(2);
 		}
@@ -110,7 +109,7 @@ public:
 		{
 			count++;
 			entry[tail_ptr] = item;
-			tail_ptr	= (tail_ptr+1) % depth; 	/*advance tail_ptr */
+			tail_ptr = (tail_ptr + 1) % depth; 	/*advance tail_ptr */
 			return SUCCESS;
 		}
 	}
@@ -135,7 +134,7 @@ public:
 
 			T *item = entry[head_ptr];
 
-			head_ptr = (head_ptr+1) % depth;	//advance head_ptr
+			head_ptr = (head_ptr + 1) % depth;	//advance head_ptr
 
 			return item;
 		}
@@ -143,10 +142,7 @@ public:
 
 	T *read_back() const
 	{
-		if (count == 0)
-			return NULL;
-
-		return entry[head_ptr];
+		return count ? entry[head_ptr] : NULL;
 	}
 
 	inline int get_count() const
@@ -154,12 +150,12 @@ public:
 		return count;
 	}
 
-	T *read(int offset) const
+	T *read(const int offset) const
 	{
 		if((offset >= count) || (offset < 0))
 			return NULL;
 		else
-			return entry[(head_ptr+offset) % depth];
+			return entry[(head_ptr + offset) % depth];
 	}
 
 	// release item into pool
@@ -207,7 +203,24 @@ public:
 	T* newest() const
 	{
 		return read(count - 1);
-	}	
+	}
+
+	T &operator=(const queue<T> &right)
+	{
+		while (count > 0)
+		{
+			delete dequeue();
+		}
+		delete entry;
+		entry = new T *[right.depth];
+		head_ptr = tail_ptr = 0;
+		count = right.count;
+		depth = right.depth;
+		while (right.count > 0)
+		{
+			enqueue(right.dequeue());
+		}
+	}
 };
 
 #endif

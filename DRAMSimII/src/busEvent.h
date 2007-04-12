@@ -9,7 +9,7 @@
 class busEvent /* 6 DWord per event */
 {
 public:
-	enum transaction_type_t attributes;
+	transaction_type_t attributes;
 	// read/write/Fetch type stuff. Not overloaded with other stuff
 	addresses address; // assume to be <= 32 bits for now
 	tick_t timestamp; // time stamp will now have a large dynamic range, but only 53 bit precision

@@ -334,6 +334,16 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 		refresh_queue_depth = row_count * rank_count;
 }
 
+ostream &operator<<(ostream &os, const dramSystemConfiguration &this_a)
+{
+	os << "PerBankQ[" << this_a.per_bank_queue_depth << "] ";
+	os << "CH[" << this_a.chan_count << "] ";
+	os << "RK[" << this_a.rank_count << "] ";
+	os << "BK[" << this_a.bank_count << "] ";
+
+	return os;
+}
+
 #ifdef M5
 dramSystemConfiguration::dramSystemConfiguration(dramSystem::Params *parameter)
 {

@@ -20,44 +20,37 @@ using namespace std;
 // returns the time when the memory system next has an event
 // the event may either be a conversion of a transaction into commands
 // or it may be the next time a command may be issued
+// returns: INT_MAX if there is no next event, or the time of the next event
 tick_t dramSystem::nextTick() const
 {
-	tick_t nextWake = INT_MAX;
+	tick_t nextWake = LLONG_MAX;
 
 	for (int j = 0;j != channel.size(); j++)
 	{		
 		// first look for transactions
 		if (transaction *nextTrans = channel[j].read_transaction())
 		{
-			int tempGap = (nextTrans->enqueueTime - channel[j].get_time()) + timing_specification.t_buffer_delay + 1; // make sure it can finish
+			int tempGap = (nextTrans->enqueueTime - channel[j].get_time()) + timing_specification.t_buffer_delay; // make sure it can finish
 			tempGap = max(1,tempGap);
-			assert(tempGap <= timing_specification.t_buffer_delay + 1);
+			assert(tempGap <= timing_specification.t_buffer_delay );
 			if ((tempGap + channel[j].get_time() < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
 			{
 				nextWake = tempGap + channel[j].get_time();
 			}
 		}
+
 		// then check to see when the next command occurs
-		command *tempCommand = readNextCommand(j);
-		if (tempCommand)
+		if (command *tempCommand = readNextCommand(j))
 		{
 			int tempGap = minProtocolGap(j,tempCommand);
 			if (tempGap + channel[j].get_time() < nextWake)
 			{
-				nextWake = tempGap + channel[j].get_time();
+				nextWake = min(nextWake,tempGap + channel[j].get_time());
 			}
 		}
 	}
 
-	if (nextWake < INT_MAX)
-	{
-		//outStream << "min gap is: " << std::dec << gap << endl;
-		return nextWake;
-	}
-	else 
-	{
-		return 0;
-	}
+	return nextWake;
 }
 
 int dramSystem::convert_address(addresses &this_a) const
@@ -580,12 +573,12 @@ void dramSystem::get_next_random_request(transaction *this_t)
 			if (j > input_stream.arrival_thresh_hold * UINT_MAX) /* interarrival probability function */
 			{
 
-				//gaussian distribution function
+				// Gaussian distribution function
 				if (input_stream.interarrival_distribution_model == GAUSSIAN_DISTRIBUTION)
 				{
 					input_stream.arrival_thresh_hold = 1.0 - (1.0 / input_stream.box_muller((double)input_stream.average_interarrival_cycle_count, 10));
 				}
-				//poisson distribution function
+				// Poisson distribution function
 				else if (input_stream.interarrival_distribution_model == POISSON_DISTRIBUTION)
 				{
 					input_stream.arrival_thresh_hold = 1.0 - (1.0 / input_stream.poisson_rng((double)input_stream.average_interarrival_cycle_count));
@@ -603,7 +596,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 	}
 }
 
-enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
+enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 {
 	static transaction *temp_t;
 
@@ -622,6 +615,7 @@ enum input_status_t dramSystem::get_next_input_transaction(transaction *&this_t)
 			if(input_stream.get_next_bus_event(this_e) == FAILURE)
 			{
 				/* EOF reached */
+				delete temp_t;
 				return FAILURE;
 			} 
 			else
@@ -795,11 +789,16 @@ event_q(COMMAND_QUEUE_SIZE)
 			exit(-12);
 		}
 	}
-	// init the refresh queue for each channel
-	unsigned cnt = 0;
-	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
+
+	// don't init the refresh queues if there's no need
+	if (system_config.refresh_policy != NO_REFRESH)
 	{
-		i->initRefreshQueue(settings->rowCount, settings->refreshTime, cnt++);
+		// init the refresh queue for each channel
+		unsigned cnt = 0;
+		for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
+		{
+			i->initRefreshQueue(settings->rowCount, settings->refreshTime, cnt++);
+		}
 	}
 }
 
@@ -908,6 +907,7 @@ ostream &operator<<(ostream &os, const dramSystem &this_a)
 
 	os << this_a.timing_specification;
 	os << this_a.statistics;
+	os << this_a.system_config;
 
 	return os;
 }

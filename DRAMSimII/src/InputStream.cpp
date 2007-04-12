@@ -12,6 +12,31 @@
 
 using namespace std;
 
+inputStream::inputStream(const dramSettings *settings):
+type(settings->inFileType),
+time(0),
+row_locality(0.2),
+average_interarrival_cycle_count(10),
+interarrival_distribution_model(UNIFORM_DISTRIBUTION),
+chan_locality(1 / static_cast<double>(settings->channelCount)),
+read_percentage(settings->readPercentage),
+short_burst_ratio(settings->shortBurstRatio),
+rank_locality(1 / settings->rankCount),
+bank_locality(1 / settings->bankCount)
+{
+	if (settings->inFile.length() > 2)
+	{
+		string inFileWithPath = "./traceFiles/" + settings->inFile;
+		trace_file.open(inFileWithPath.c_str());
+		if (!trace_file.good())
+		{
+			cerr << "Unable to open trace file \"" << settings->inFile << "\"" << endl;
+			exit(-9);
+		}
+	}
+	srand48((long) (1010321 + 9763099));
+}
+
 inputStream::inputStream(map<file_io_token_t,string> &parameter):
 type(RANDOM),
 time(0),
@@ -215,7 +240,7 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 		bool bursting = true;
 		//double multiplier;
 		tick_t timestamp;
-		int address;
+		unsigned address;
 
 		while((bursting == true) && trace_file.good())
 		{
@@ -227,7 +252,7 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 				return FAILURE;
 			}
 
-			control = file_io_token(input);
+			control = dramTokenizer(input);
 
 			if(control == unknown_token)
 			{
@@ -271,14 +296,14 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 	else if (type == MASE_TRACE)
 	{
 		trace_file >> std::hex >> this_e.address.phys_addr >> input >> std::dec >> this_e.timestamp;
-		
+
 		if(!trace_file.good()) /// found starting Hex address 
 		{
 			cerr << "Unexpected EOF, Please fix input trace file" << endl;
 			return FAILURE;
 		}
 
-		control = file_io_token(input);
+		control = dramTokenizer(input);
 
 		switch (control)
 		{
@@ -310,8 +335,8 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 			cerr << "Unexpected EOF, Please fix input trace file" << endl;
 			return FAILURE;
 		}
-		
-		control = file_io_token(input);
+
+		control = dramTokenizer(input);
 
 		switch (control)
 		{
@@ -334,9 +359,9 @@ enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
 			break;
 		}
 	}
-	
+
 	//this_e.attributes = CONTROL_TRANSACTION;
-	
+
 	return SUCCESS;
 }
 

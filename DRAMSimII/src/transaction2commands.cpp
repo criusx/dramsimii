@@ -100,7 +100,6 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 {
 	if (this_t == NULL)
 	{
-		assert(this_t != NULL);
 		return FAILURE;
 	}
 	queue<command> *bank_q = &(channel[this_t->addr.chan_id].getRank(this_t->addr.rank_id).bank[this_t->addr.bank_id].per_bank_q);

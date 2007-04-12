@@ -9,8 +9,6 @@ using namespace std;
 
 void dramSystem::run_simulations2()
 {
-	//bool EOF_reached = false;
-
 	for (int i = sim_parameters.get_request_count(); i > 0; --i)
 	{
 		transaction *input_t;
@@ -22,7 +20,7 @@ void dramSystem::run_simulations2()
 		// make sure not to overshoot the time by looking at when a transaction would end
 		// so that executing one more command doesn't go too far forward
 		// this only happens when there is the option to move time or execute commands
-		if (get_next_input_transaction(input_t) == SUCCESS)
+		if (getNextIncomingTransaction(input_t) == SUCCESS)
 		{
 			// record stats
 			statistics.collect_transaction_stats(input_t);
@@ -48,24 +46,45 @@ void dramSystem::run_simulations2()
 
 void dramSystem::run_simulations3()
 {
-	for (int i = sim_parameters.get_request_count(); i > 0; --i)
-	{
-		transaction *input_t;
+	transaction *input_t = NULL;
+	tick_t nextArrival = 0;
 
-		if (get_next_input_transaction(input_t) != SUCCESS)
-			break;
+	for (int i = sim_parameters.get_request_count(); i > 0; )
+	{
+		if (!input_t)
+		{
+			if (getNextIncomingTransaction(input_t) != SUCCESS)
+				break;
+			// if the previous transaction was delayed, thus making this arrival be in the past
+			// prevent new arrivals from arriving in the past
+			input_t->arrival_time = max(input_t->arrival_time,channel[input_t->addr.chan_id].get_time());
+		}
+
+		// in case this transaction tried to arrive while the queue was full
+		
 
 		tick_t nearFinish = 0;
 		const void *error;
 
+		nextArrival = min(input_t->arrival_time,nextArrival);
 		// as long as transactions keep happening prior to this time
-		while (((error = moveAllChannelsToTime(input_t->arrival_time,&nearFinish)) == NULL)
-			&& (nearFinish < input_t->arrival_time))
+		if (moveAllChannelsToTime(nextArrival,&nearFinish))
 		{
-			if (error)
-				cerr << "not right" << endl;
+			cerr << "not right, no host transactions here" << endl;
 		}
-		enqueue(input_t);
+
+		if (nearFinish >= input_t->arrival_time) 
+		{
+			if (enqueue(input_t))
+			{
+				input_t = NULL;
+				i--;
+			}
+			else
+				// figure that the cpu <=> mch bus runs at the mostly the same speed
+				input_t->arrival_time += timing_specification.t_cmd;
+		}
+		nextArrival = nextTick();
 	}
 	statistics.set_end_time(time);
 	statistics.set_valid_trans_count(sim_parameters.get_request_count());
@@ -263,17 +282,18 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 		}
 		else // successfully converted to commands, dequeue
 		{
-			outStream << "converted transaction to commands, queue size is: " << channel[chan].getTransactionQueueCount() << endl;
+			outStream << "converted transaction to commands @" << channel[chan].get_time() << ", queue size is: " << channel[chan].getTransactionQueueCount() << endl;
 
-			channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
-			update_system_time(); 
-			assert(temp_t == channel[chan].get_transaction());
+			//channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
+			//update_system_time(); 
+			transaction *completedTransaction = channel[chan].get_transaction();
+			assert(temp_t == completedTransaction);
 		}
 	}
 	assert(channel[chan].get_time() == endTime);
 	*transFinishTime = endTime;
 #ifdef M5DEBUG
-	outStream << "ch[" << chan << "] @ " << channel[chan].get_time() << endl;
+	outStream << "ch[" << chan << "] @ " << std::dec << channel[chan].get_time() << endl;
 #endif
 	return NULL;
 }
@@ -339,7 +359,8 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 		}
 		else // successfully converted to commands, dequeue
 		{
-			assert(temp_t == channel[chan].get_transaction());
+			transaction *completedTrans = channel[chan].get_transaction();
+			assert(temp_t == completedTrans);
 		}
 	}
 }
@@ -349,7 +370,7 @@ void dramSystem::run_simulations()
 	for (int i = sim_parameters.get_request_count(); i > 0; --i)
 	{
 		transaction* input_t;
-		if (get_next_input_transaction(input_t) == SUCCESS)
+		if (getNextIncomingTransaction(input_t) == SUCCESS)
 		{
 			statistics.collect_transaction_stats(input_t);
 

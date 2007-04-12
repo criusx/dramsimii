@@ -1,6 +1,5 @@
 #include <assert.h>
 #include <iomanip>
-#include "enumTypes.h"
 #include "transaction.h"
 
 using namespace std;
@@ -8,20 +7,26 @@ using namespace std;
 // initialize the static member
 queue<transaction> transaction::freeTransactionPool(4*COMMAND_QUEUE_SIZE,true);
 
-transaction::transaction()
-{
-	arrival_time = 0;
-	completion_time = 0;
-	status = 0;
-	event_no = 0;
-
-	type = CONTROL_TRANSACTION;
-}
+transaction::transaction():
+event_no(0),
+type(CONTROL_TRANSACTION),
+status(0),
+length(0),
+arrival_time(0),
+enqueueTime(0),
+completion_time(0),
+addr(),
+originalTransaction(0)
+{}
 
 transaction::transaction(const int attribute,const tick_t enqueueTime,const int Size,const unsigned long long address, const void *originalTrans):
-addr(address),
+event_no(0),
+status(0),
 length(Size),
+arrival_time(0),
 enqueueTime(enqueueTime),
+completion_time(0),
+addr(address),
 originalTransaction(originalTrans)
 
 {

@@ -19,6 +19,7 @@ public:
 	int last_cas_length;
 	int last_casw_length;
 	int row_id;						// if the bank is open, what is the row id?
+	bool isActivated;				// if the bank is activated, else precharged
 	
 	// stats
 	int ras_count;

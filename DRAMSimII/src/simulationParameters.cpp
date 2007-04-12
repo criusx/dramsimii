@@ -3,7 +3,9 @@
 using namespace std;
 
 simulationParameters::simulationParameters(const dramSettings *settings):
-request_count(settings->re)
+input_type(RANDOM),
+request_count(settings->requestCount)
+{}
 
 simulationParameters::simulationParameters(map<file_io_token_t,string> &parameter)
 {

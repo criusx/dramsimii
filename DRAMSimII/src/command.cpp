@@ -1,7 +1,5 @@
 #include <assert.h>
-#include "enumTypes.h"
 #include "command.h"
-
 
 using namespace std;
 
@@ -158,7 +156,7 @@ command::command(const command &rhs)
 	length = rhs.length;
 }
 
-void * command::operator new(size_t size)
+void *command::operator new(size_t size)
 {
 	assert(size == sizeof(command));
 	return freeCommandPool.acquire_item();

@@ -24,7 +24,7 @@ refresh_row_index(0),
 last_refresh_time(0),
 last_rank_id(0),
 transaction_q(settings->transactionQueueDepth),
-refreshQueue(settings->refreshQueueDepth,true),
+refreshQueue(settings->rowCount * settings->rankCount,true),
 history_q(settings->historyQueueDepth),
 completion_q(settings->completionQueueDepth)
 {}

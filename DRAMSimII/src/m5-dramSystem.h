@@ -5,6 +5,7 @@
 #include "mem/physical.hh"
 #include "mem/tport.hh"
 #include "dramSystem.h"
+#include "dramSettings.h"
 
 // this is a wrapper class to allow DRAMSimII
 // to integrate with M5
@@ -90,8 +91,9 @@ public:
 
 
 	struct Params: public PhysicalMemory::Params
-	{
+	{		
 		int			cpu_ratio;
+		std::string settingsFile;
 		std::string outFilename;
 		std::string dramType;
 		std::string rowBufferManagmentPolicy;

@@ -37,6 +37,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	{
 	case RAS_COMMAND:
 
+		this_bank.isActivated = true;
 		this_bank.last_ras_time = channel.get_time();
 		this_bank.row_id = this_command->getAddress().row_id;
 		this_bank.ras_count++;
@@ -58,6 +59,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 
 	case CAS_AND_PRECHARGE_COMMAND:
 
+		this_bank.isActivated = false;
 		this_bank.last_prec_time = max(channel.get_time() + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_bank.last_ras_time + timing_specification.t_ras);
 		// lack of break is intentional
 
@@ -76,6 +78,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 
+		this_bank.isActivated = false;
 		this_bank.last_prec_time = max(channel.get_time() + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_bank.last_ras_time + timing_specification.t_ras);
 		// missing break is intentional
 
@@ -96,6 +99,8 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		break;
 
 	case PRECHARGE_COMMAND:
+
+		this_bank.isActivated = false;
 		this_bank.last_prec_time = channel.get_time();
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rp);
 		break;

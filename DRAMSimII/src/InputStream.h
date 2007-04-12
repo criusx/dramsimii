@@ -2,11 +2,13 @@
 #define INPUTSTREAM_H
 #pragma once
 
+#include <fstream>
+#include <map>
+
 #include "enumTypes.h"
 #include "busevent.h"
 #include "globals.h"
-#include <fstream>
-#include <map>
+#include "dramSettings.h"
 
 class inputStream
 {
@@ -31,7 +33,9 @@ private:
 	std::ifstream trace_file;
 
 public: 
+	// constructors
 	inputStream(std::map<file_io_token_t,std::string> &);
+	inputStream(const dramSettings *settings);
 	inline input_type_t getType() { return type; }
 
 	//friends

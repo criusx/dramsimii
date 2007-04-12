@@ -53,10 +53,15 @@ PhysicalMemory(p), tickEvent(this)
 	parameter[t_rtrs_token] = p->tRTRS;
 	parameter[t_wr_token] = p->tWR;
 	parameter[t_wtr_token] = p->tWTR;
+	const char **settingsMap = new const char*[2];
+	settingsMap[0] = "--settings";
+	settingsMap[1] = p->settingsFile.c_str();
+	dramSettings *settings = new dramSettings(2,settingsMap);
+	ds = new dramSystem(settings);
+	delete settings;
+	//ds = new dramSystem(parameter);
 
-	ds = new dramSystem(parameter);
-
-	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency() * 1.0E6));
+	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency()));
 
 	outStream << *ds << std::endl;
 }
@@ -233,7 +238,8 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 Tick
 M5dramSystem::recvTiming(Packet *pkt)
 {	
-	transaction *trans = new transaction(pkt->cmd,(tick_t)(curTick/cpuRatio),pkt->getSize(),pkt->getAddr(),(void *)pkt);
+	tick_t currentMemCycle = curTick/cpuRatio;
+	transaction *trans = new transaction(pkt->cmd,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 	// convert the physical address to chan, rank, bank, etc.
 	ds->convert_address(trans->addr);
@@ -242,17 +248,17 @@ M5dramSystem::recvTiming(Packet *pkt)
 	// should also not start/finish any commands, since this would happen at a scheduled time
 	// instead of now
 	tick_t nearFinishTime;
-	assert(!ds->moveAllChannelsToTime(curTick/cpuRatio,&nearFinishTime));
+	const void *finishedTrans = ds->moveAllChannelsToTime(currentMemCycle,&nearFinishTime);
+	assert(!finishedTrans);
 
 	//tick_t finishTime;
 	// wake the channel and do everything it was going to do up to this point
 	//assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
 
 	assert(pkt->result != Packet::Nacked);
+	assert(pkt->isRead() || pkt->isWrite() || pkt->isInvalidate());
 	// turn packet around to go back to requester if response expected
 	
-	
-	//assert(pkt->needsResponse());
 	// attempt to add the transaction to the memory system
 	if (!ds->enqueue(trans))
 	{
@@ -270,8 +276,8 @@ M5dramSystem::recvTiming(Packet *pkt)
 			tickEvent.deschedule();
 
 		tick_t next = ds->nextTick();
-		assert(next > 0);
-		if (next > 0)
+		assert(next < INT_MAX);
+		if (next < INT_MAX)
 		{
 			outStream << "Scheduling for " << std::dec << cpuRatio * next << "(" << next << ")" << " at " << curTick << "(" << curTick / getCpuRatio() << ")" << endl;
 			tickEvent.schedule(cpuRatio * next);
@@ -293,14 +299,22 @@ M5dramSystem::TickEvent::process()
 	// move memory channels to the current time
 	while (Packet *packet = (Packet *)memory->ds->moveAllChannelsToTime(now, &finishTime))
 	{
+		// for debug purposes, remove this later
+		assert(packet->isRead() | packet->isWrite() || packet->isInvalidate());
+
 		memory->doFunctionalAccess(packet);
 
-		if (!packet->isWrite())
+		if (packet->needsResponse())
 		{			
 			packet->makeTimingResponse();
 			assert(curTick <= static_cast<Tick>(finishTime * memory->getCpuRatio()));
 			outStream << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick) << ") at" << curTick << endl;
 			memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick));
+		}
+		else
+		{
+			delete packet->req;
+			delete packet;
 		}
 	}
 
@@ -309,8 +323,10 @@ M5dramSystem::TickEvent::process()
 		memory->tickEvent.deschedule();
 
 	tick_t next = memory->ds->nextTick();
+	assert(next > 0);
 
-	if (next > 0)
+	// nextTick() returns LLONG_MAX if there is nothing else to wake up for
+	if (next < LLONG_MAX)
 	{	
 		outStream << "scheduling for " << static_cast<Tick>(next * memory->getCpuRatio()) << "(" << next << ")" << endl;
 		assert(next * memory->getCpuRatio() > curTick);
@@ -326,6 +342,7 @@ M5dramSystem::TickEvent::process()
 //////////////////////////////////////////////////////////////////////////
 BEGIN_DECLARE_SIM_OBJECT_PARAMS(M5dramSystem)
 
+Param<std::string> settingsFile;
 Param<std::string> file;
 Param<Range<Addr> > range;
 Param<Tick> latency;
@@ -384,6 +401,7 @@ INIT_PARAM(range, "Device Address Range"),
 INIT_PARAM(latency, "Memory access latency"),
 
 /* additional params for dram protocol*/
+INIT_PARAM_DFLT(settingsFile,"the xml file with the settings","/home/crius/m5/src/mem/DRAMSimII/memoryDefinitions/DDR2-800-4-4-4.xml"),
 INIT_PARAM_DFLT(cpu_ratio,"ratio between CPU speed and memory bus speed",5), 
 INIT_PARAM_DFLT(outFilename,"output file name","dramSimIIout.gz"),
 INIT_PARAM_DFLT(dramType,"type of DRAM, sdram, ddr, etc.","ddr2"),
@@ -479,6 +497,7 @@ CREATE_SIM_OBJECT(M5dramSystem)
 	p->tRTRS = tRTRS;
 	p->tWR = tWR;
 	p->tWTR = tWTR;
+	p->settingsFile = settingsFile;
 
 	return new M5dramSystem(p); 
 }

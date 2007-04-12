@@ -6,8 +6,9 @@
 #include <string>
 
 #include "enumTypes.h"
-#include "dramSettings.h"
 #include "globals.h"
+#include "dramSettings.h"
+
 
 using namespace std;
 
@@ -37,7 +38,7 @@ dramSettings::dramSettings(const int argc, const char **argv)
 	// first find the settings file
 	const string settings = "--settings";
 	string settingsFile = "";
-	for (int i = argc - 1; i > 0; --i)
+	for (int i = argc - 1; i >= 0; --i)
 	{
 		if (settings == argv[i])
 		{
@@ -74,8 +75,7 @@ dramSettings::dramSettings(const int argc, const char **argv)
 		string nodeValue;
 
 		while ((ret = xmlTextReaderRead(reader)) == 1)
-		{
-			
+		{	
 			switch (xmlTextReaderNodeType(reader))
 			{
 			case XML_ELEMENT_NODE:
@@ -98,6 +98,19 @@ dramSettings::dramSettings(const int argc, const char **argv)
 						else
 							dramType = DDR2;
 					}
+					else if (nodeName == "inputFile")
+					{
+						const xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
+						string type = (const char *)attr;
+						if (type == "mase")
+							inFileType = MASE_TRACE;
+						else if (type == "k6")
+							inFileType = K6_TRACE;
+						else if (type == "mapped")
+							inFileType = MAPPED;
+						else if (type == "random")
+							inFileType = RANDOM;
+					}
 					break;
 				}
 			case XML_TEXT_NODE:				
@@ -105,12 +118,19 @@ dramSettings::dramSettings(const int argc, const char **argv)
 				{
 					nodeValue = (const char *)xmlTextReaderConstValue(reader);
 					
-					switch (file_io_token(nodeName))
+					switch (dramTokenizer(nodeName))
 					{
 					case unknown_token:
 						break;
+					case input_file_token:
+						inFile = nodeValue;
+						break;
 					case output_file_token:
 						outFile = nodeValue;
+						break;
+					case request_count_token:
+						toNumeric<unsigned>(requestCount,nodeValue,std::dec);
+						break;
 					case idd5_token:
 						toNumeric<unsigned>(IDD5,nodeValue,std::dec);
 						break;
@@ -331,15 +351,17 @@ dramSettings::dramSettings(const int argc, const char **argv)
 					}
 				}
 			case XML_CDATA_SECTION_NODE:
-				cerr << endl;
+				//cerr << endl;
 				break;
 			}
 		}
 
-		if (ret == -1)
+		if ((ret == -1) || (xmlTextReaderIsValid(reader) != 1))
 		{
 			cerr << "There was an error reading/parsing " << settingsFile << "." << endl;
 			exit(-2);
 		}
+		// close the reader
+		xmlFreeTextReader(reader);
 	}
 }

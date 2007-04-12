@@ -18,7 +18,7 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 	const unsigned this_bank = this_c->getAddress().bank_id;
 	const rank_c &this_r = channel.getRank(this_rank);
 	const bank_c &this_b = this_r.bank[this_bank];
-	tick_t now = channel.get_time();
+	const tick_t now = channel.get_time();
 	int t_ras_gap = 0;
 	tick_t other_r_last_cas_time;
 	tick_t other_r_last_casw_time;

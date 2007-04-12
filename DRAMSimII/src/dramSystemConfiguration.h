@@ -61,6 +61,9 @@ public:
 	double getShortBurstRatio() const { return short_burst_ratio; }
 	double getReadPercentage() const { return read_percentage; }
 	double Frequency() const { return datarate; }
+
+	// friends
+	friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
 };
 
 #endif

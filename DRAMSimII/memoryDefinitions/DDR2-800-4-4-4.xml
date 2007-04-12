@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE dramspec SYSTEM "DDR2-800-4-4-4.dtd">
-<dramspec type="ddr2">
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="style2.xsl"?>
+<!DOCTYPE dramspec SYSTEM "dramspec.dtd">
+<dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema2.xsd">
 	<timing>
 		<datarate>800000000</datarate>
 		<clockGranularity>2</clockGranularity>
@@ -23,7 +24,7 @@
 		<tFAW>30</tFAW>
 		<!--time between a row access and data restoration in the data array-->
 		<tRAS>34</tRAS>
-		<!--minimum activate-to-activate timing (same bank)-->
+		<!--minimum activate-to-activate timing (same bank), tRC = tRAS + tRP-->
 		<tRC>44</tRC>
 		<tRCD>10</tRCD>
 		<!--minimum refresh-to-refresh cycle time-->
@@ -36,9 +37,11 @@
 		<tWR>12</tWR>
 		<tWTR>6</tWTR>
 		<postedCAS>true</postedCAS>
+		<!--additive latency, the dram device may buffer a command for up to this length of time to allow it to be transferred and help until timing parameters are met, see Micron doc TN4710-->
 		<tAL>10</tAL>
 		<autoRefresh>true</autoRefresh>
-		<autoRefreshPolicy>refreshOneChanAllRankAllBank</autoRefreshPolicy>
+		<!--may be none, refreshOneChanAllRankAllBank, etc.-->
+		<autoRefreshPolicy>none</autoRefreshPolicy>
 		<!--given in us-->
 		<refreshTime>64000</refreshTime>
 		<!--average periodic refresh time-->
@@ -82,8 +85,11 @@
 		<IDD5A>280</IDD5A>
 	</power>
 	<simulationParameters>
-		<shortBurstRatio>.5</shortBurstRatio>
+		<shortBurstRatio>.50</shortBurstRatio>
 		<readPercentage>.5</readPercentage>
-    <outFile>standardOutFile.gz</outFile>
+		<outFile>standardOutFile.gz</outFile>
+		<requestCount>990000000</requestCount>
+		<!--may be "mase","k6","mapped","random"-->
+		<inputFile type="mase">equake.trc</inputFile>
 	</simulationParameters>
 </dramspec>

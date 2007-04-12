@@ -33,13 +33,12 @@ private:
 	dramAlgorithm algorithm;
 	inputStream input_stream;
 	
-	tick_t time;								// master clock	
+	tick_t time;	// master clock	
 	
-	queue<event> event_q;						// pending event queue	
+	queue<event> event_q;	// pending event queue	
 
 	//functions
 	void read_dram_config_from_file();
-
 	void set_dram_timing_specification(enum dram_type_t);
 	command *getNextCommand(const int);
 	command *readNextCommand(const int) const;
@@ -49,7 +48,7 @@ private:
 	void executeCommand(command *, const int);
 	void update_system_time();
 	
-	enum input_status_t get_next_input_transaction(transaction *&);
+	enum input_status_t getNextIncomingTransaction(transaction *&);
 	void get_next_random_request(transaction *);
 
 public:

@@ -4,7 +4,7 @@
 
 #include <map>
 #include "dramSettings.h"
-#include <globals.h>
+#include "globals.h"
 
 class simulationParameters 
 {

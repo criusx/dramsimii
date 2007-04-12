@@ -21,7 +21,7 @@ ogzstream outStream;
 
 double ascii2multiplier(const string &input)
 {
-	switch(file_io_token(input))
+	switch(dramTokenizer(input))
 	{
 	case PICOSECOND:
 		return 0.001;
@@ -158,7 +158,7 @@ void create_input_map_from_input_file(map<enum file_io_token_t,string> &paramete
 		string input_string;
 		cfg_file >> input_string;
 		file_io_token_t temp;
-		switch(temp = file_io_token(input_string))
+		switch(temp = dramTokenizer(input_string))
 		{
 		case dram_type_token:
 		case clock_granularity_token:
@@ -225,10 +225,10 @@ ostream &operator<<(ostream &os, const dramStatistics &this_a)
 file_io_token_t fileIOToken(const unsigned char *input)
 {
 	const string inputS((const char *)input);
-	return file_io_token(inputS);
+	return dramTokenizer(inputS);
 }
 
-file_io_token_t file_io_token(const string &input)
+file_io_token_t dramTokenizer(const string &input)
 {
 	if (input.length() == 0)
 		return unknown_token;
@@ -262,6 +262,10 @@ file_io_token_t file_io_token(const string &input)
 		return short_burst_ratio_token;
 	else if (input == "command_ordering_policy" || input == "commandOrderingPolicy")
 		return command_ordering_algorithm_token;
+	else if (input == "requestCount")
+		return request_count_token;
+	else if (input == "inputFile")
+		return input_file_token;
 	else if (input == "outFile")
 		return output_file_token;
 	else if (input == "auto_refresh_policy" || input == "autoRefreshPolicy")

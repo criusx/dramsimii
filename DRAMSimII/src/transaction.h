@@ -14,8 +14,6 @@ class transaction
 private:
 	static queue<transaction> freeTransactionPool;	// transactions are stored here to avoid allocating memory after initialization
 
-	
-
 public:
 	int event_no;
 	transaction_type_t type;	// transaction type
@@ -28,6 +26,7 @@ public:
 	addresses addr;
 	const void *originalTransaction;	// utility pointer in the event that this transaction represents another version of a transaction
 
+	// constructors
 	explicit transaction();
 	explicit transaction(const int,const  tick_t,const int,const unsigned long long, const void *);
 	friend std::ostream &operator<<(std::ostream &, const transaction *);
