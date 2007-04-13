@@ -6,31 +6,28 @@ using namespace std;
 // initialize the static member
 queue<command> command::freeCommandPool(4*COMMAND_QUEUE_SIZE,true);
 
-command::command()
-{
-	this_command = RETIRE_COMMAND;	/* which command is this? */
-	start_time = 0;					/* when did the transaction start? */
-	enqueue_time = 0;			/* when did it make it into the queues? */
-	completion_time = 0;
-	host_t = NULL;	/* backward pointer to the original transaction */
-	/** Added list of completion times in order to clean up code */
-	link_comm_tran_comp_time = 0;
-	amb_proc_comp_time = 0;
-	dimm_comm_tran_comp_time = 0;
-	dram_proc_comp_time = 0;
-	dimm_data_tran_comp_time = 0;
-	amb_down_proc_comp_time = 0;
-	link_data_tran_comp_time = 0;
-
-	/* Variables added for the FB-DIMM */
-	bundle_id = 0;              /* Bundle into which command is being sent - Do we need this ?? */
-	tran_id = 0;                /*      The transaction id number */
-	data_word = 0;              /* Which portion of data is returned i.e. entire cacheline or fragment thereof which portions are being sent*/
-	data_word_position = 0;     /** Which part of the data transmission are we doing : postions include FIRST , MIDDLE, LAST **/
-	refresh = 0;                /** This is used to determine if the ras/prec are part of refresh **/
-	posted_cas = false;             /** This is used to determine if the ras + cas were in the same bundle **/
-	length = 0;
-}
+command::command():
+this_command(RETIRE_COMMAND),
+start_time(0),
+enqueue_time(0),
+completion_time(0),
+addr(),
+host_t(NULL),
+link_comm_tran_comp_time(0),
+amb_proc_comp_time(0),
+dimm_comm_tran_comp_time(0),
+dram_proc_comp_time(0),
+dimm_data_tran_comp_time(0),
+amb_down_proc_comp_time(0),
+link_data_tran_comp_time(0),
+bundle_id(0),
+tran_id(0),
+data_word(0),
+data_word_position(0),
+refresh(0),
+posted_cas(false),
+length(0)
+{}
 
 command::command(const addresses address, const command_type_t commandType, const tick_t enqueueTime, transaction *hostTransaction, const bool postedCAS):
 this_command(commandType),
@@ -130,31 +127,28 @@ ostream &operator<<(ostream &os, const command &this_c)
 	return os;
 }
 
-command::command(const command &rhs)
-{
-	this_command = rhs.this_command;
-	start_time = rhs.start_time;
-	enqueue_time = rhs.enqueue_time;
-	completion_time = rhs.completion_time;
-	addr = rhs.addr;
-	host_t = rhs.host_t;		
-
-	link_comm_tran_comp_time = rhs.link_comm_tran_comp_time;
-	amb_proc_comp_time = rhs.amb_down_proc_comp_time;
-	dimm_comm_tran_comp_time = rhs.dimm_comm_tran_comp_time;
-	dram_proc_comp_time = rhs.dram_proc_comp_time;
-	dimm_data_tran_comp_time = rhs.dimm_data_tran_comp_time;
-	amb_down_proc_comp_time = rhs.amb_down_proc_comp_time;
-	link_data_tran_comp_time = rhs.link_data_tran_comp_time;
-
-	bundle_id = rhs.bundle_id;
-	tran_id = rhs.tran_id;
-	data_word = rhs.data_word;
-	data_word_position = rhs.data_word_position;
-	refresh = rhs.refresh;
-	posted_cas = rhs.posted_cas;
-	length = rhs.length;
-}
+command::command(const command &rhs):
+this_command(rhs.this_command),
+start_time(rhs.start_time),
+enqueue_time(rhs.enqueue_time),
+completion_time(rhs.completion_time),
+addr(rhs.addr),
+host_t(rhs.host_t),
+link_comm_tran_comp_time(rhs.link_comm_tran_comp_time),
+amb_proc_comp_time(rhs.amb_down_proc_comp_time),
+dimm_comm_tran_comp_time(rhs.dimm_comm_tran_comp_time),
+dram_proc_comp_time(rhs.dram_proc_comp_time),
+dimm_data_tran_comp_time(rhs.dimm_data_tran_comp_time),
+amb_down_proc_comp_time(rhs.amb_down_proc_comp_time),
+link_data_tran_comp_time(rhs.link_data_tran_comp_time),
+bundle_id(rhs.bundle_id),
+tran_id(rhs.tran_id),
+data_word(rhs.data_word),
+data_word_position(rhs.data_word_position),
+refresh(rhs.refresh),
+posted_cas(rhs.posted_cas),
+length(rhs.length)
+{}
 
 void *command::operator new(size_t size)
 {
@@ -164,6 +158,6 @@ void *command::operator new(size_t size)
 
 void command::operator delete(void *mem)
 {
-	command *cmd = static_cast<command*>(mem);
+	command *cmd(static_cast<command*>(mem));
 	freeCommandPool.release_item(cmd);
 }

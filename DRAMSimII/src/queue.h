@@ -20,9 +20,14 @@ public:
 	explicit queue(): depth(0),count(0), head_ptr(0), tail_ptr(0), entry(NULL)
 	{}
 
-	explicit queue(const queue<T>& a): depth(a.depth), count(0), head_ptr(0), tail_ptr(0)
+	explicit queue(const queue<T>& a):
+	depth(a.depth),
+	count(0),
+	head_ptr(0),
+	tail_ptr(0),
+	entry(new T *[a.depth])
 	{
-		entry = new T *[a.depth];
+		//entry = new T *[a.depth];
 		
 		if (a.entry[0] != NULL)
 		{
@@ -41,9 +46,14 @@ public:
 
 	}	
 
-	explicit queue(int size, bool preallocate = false): depth(size), count(0), head_ptr(0), tail_ptr(0)
+	explicit queue(int size, bool preallocate = false):
+	depth(size),
+		count(0),
+		head_ptr(0),
+		tail_ptr(0),
+		entry(new T *[size])
 	{
-		entry = new T *[size];
+		//entry = new T *[size];
 
 		if (preallocate)
 		{      

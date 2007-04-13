@@ -1,7 +1,7 @@
 #include "busEvent.h"
 
-busEvent::busEvent()
-{
-	timestamp = 0;
-	attributes = CONTROL_TRANSACTION;
-}
+busEvent::busEvent():
+attributes(CONTROL_TRANSACTION),
+address(),
+timestamp(0)
+{}

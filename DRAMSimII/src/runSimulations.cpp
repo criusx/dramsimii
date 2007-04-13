@@ -282,12 +282,11 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 		}
 		else // successfully converted to commands, dequeue
 		{
-			outStream << "converted transaction to commands @" << channel[chan].get_time() << ", queue size is: " << channel[chan].getTransactionQueueCount() << endl;
-
 			//channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
 			//update_system_time(); 
 			transaction *completedTransaction = channel[chan].get_transaction();
 			assert(temp_t == completedTransaction);
+			outStream << "converted transaction to commands @" << channel[chan].get_time() << ", queue size is: " << channel[chan].getTransactionQueueCount() << endl;
 		}
 	}
 	assert(channel[chan].get_time() == endTime);

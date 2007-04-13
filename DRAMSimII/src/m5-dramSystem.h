@@ -29,6 +29,7 @@ private:
 		* Call the tick function.
 		*/
 		void process();
+		
 
 		/**
 		* Return a string description of this event.
@@ -44,7 +45,7 @@ private:
 		// backward pointer to the memory system
 		M5dramSystem *memory;
 
-	public:
+	public:	
 
 		MemPort(const std::string &_name, M5dramSystem *_memory);
 
@@ -52,7 +53,7 @@ private:
 		void doSendTiming(PacketPtr pkt, Tick t)
 		{
 			sendTiming(pkt,t);
-		}
+		}	
 
 	protected:
 
@@ -89,6 +90,7 @@ public:
 
 	int getCpuRatio() const { return cpuRatio; }
 
+	void moveDramSystemToTime(tick_t now);
 
 	struct Params: public PhysicalMemory::Params
 	{		

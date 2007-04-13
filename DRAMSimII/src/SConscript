@@ -2,11 +2,13 @@ import os
 import sys
 #Import(`env`)
 
-sources = Split("""	bank_c.cpp
+sources = Split("""
+			addresses.cpp
+			bank_c.cpp
+			busEvent.cpp
 			command.cpp
 			dramAlgorithm.cpp
-			dramChannel.cpp
-			dramsim2.cpp
+			dramChannel.cpp			
 			dramStatistics.cpp
 			dramSystem.cpp
 			dramSettings.cpp
@@ -22,6 +24,7 @@ sources = Split("""	bank_c.cpp
 			minProtocolGap.cpp
 			rank_c.cpp
 			runSimulations.cpp
+			simulationParameters.cpp
 			transaction.cpp
 			transaction2commands.cpp""")
 
@@ -32,11 +35,11 @@ SRCDIR = os.path.join(ROOT,'src')
 #env = Environment(ENV = os.environ,  # inherit user's environment vars
 #                  ROOT = ROOT,
 #                  SRCDIR = SRCDIR)
-env = Environment(CCFLAGS = '-g -O3',
+env = Environment(CCFLAGS = '-g -O3 -Weffc++',
 			OBJSUFFIC = ".o",
 			CPPPATH = '/usr/include/libxml2/')
 
-envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -ffast-math -fomit-frame-pointer -malign-double -finline-functions -march=athlon -fno-exceptions',
+envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -malign-double -finline-functions -march=athlon -fno-exceptions',
 			OBJSUFFIX = '.fo',
 			CPPPATH = '/usr/include/libxml2/')
 

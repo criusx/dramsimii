@@ -24,6 +24,11 @@ short_burst_ratio(settings->shortBurstRatio),
 rank_locality(1 / settings->rankCount),
 bank_locality(1 / settings->bankCount)
 {
+	if (interarrival_distribution_model == UNIFORM_DISTRIBUTION)
+		arrival_thresh_hold = 1.0 - (1.0 / (double)average_interarrival_cycle_count);
+	else if (interarrival_distribution_model == GAUSSIAN_DISTRIBUTION)
+		arrival_thresh_hold = 1.0 - (1.0 / box_muller((double)average_interarrival_cycle_count, 10));
+
 	if (settings->inFile.length() > 2)
 	{
 		string inFileWithPath = "./traceFiles/" + settings->inFile;

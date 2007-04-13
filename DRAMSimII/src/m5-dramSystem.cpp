@@ -200,8 +200,6 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	else
 		outStream << "? ";
 
-	assert(pkt->isRead() || pkt->isWrite() || pkt->isInvalidate());
-
 	outStream << std::hex << pkt->getAddr() << endl;
 
 	// any packet which doesn't need a response and isn't a write
@@ -247,16 +245,13 @@ M5dramSystem::recvTiming(Packet *pkt)
 	// move channels to current time so that calculations based on current channel times work
 	// should also not start/finish any commands, since this would happen at a scheduled time
 	// instead of now
-	tick_t nearFinishTime;
-	const void *finishedTrans = ds->moveAllChannelsToTime(currentMemCycle,&nearFinishTime);
-	assert(!finishedTrans);
+	moveDramSystemToTime(currentMemCycle);
 
 	//tick_t finishTime;
 	// wake the channel and do everything it was going to do up to this point
 	//assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
 
 	assert(pkt->result != Packet::Nacked);
-	assert(pkt->isRead() || pkt->isWrite() || pkt->isInvalidate());
 	// turn packet around to go back to requester if response expected
 	
 	// attempt to add the transaction to the memory system
@@ -294,29 +289,9 @@ M5dramSystem::TickEvent::process()
 	tick_t now = curTick / memory->getCpuRatio();
 	outStream << "Internal wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
 
-	tick_t finishTime;
-
 	// move memory channels to the current time
-	while (Packet *packet = (Packet *)memory->ds->moveAllChannelsToTime(now, &finishTime))
-	{
-		// for debug purposes, remove this later
-		assert(packet->isRead() | packet->isWrite() || packet->isInvalidate());
+	memory->moveDramSystemToTime(now);
 
-		memory->doFunctionalAccess(packet);
-
-		if (packet->needsResponse())
-		{			
-			packet->makeTimingResponse();
-			assert(curTick <= static_cast<Tick>(finishTime * memory->getCpuRatio()));
-			outStream << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * memory->getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick) << ") at" << curTick << endl;
-			memory->memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * memory->getCpuRatio() - curTick));
-		}
-		else
-		{
-			delete packet->req;
-			delete packet;
-		}
-	}
 
 	// deschedule yourself
 	if (memory->tickEvent.scheduled())
@@ -331,6 +306,31 @@ M5dramSystem::TickEvent::process()
 		outStream << "scheduling for " << static_cast<Tick>(next * memory->getCpuRatio()) << "(" << next << ")" << endl;
 		assert(next * memory->getCpuRatio() > curTick);
 		memory->tickEvent.schedule(static_cast<Tick>(next * memory->getCpuRatio()));
+	}
+}
+
+void M5dramSystem::moveDramSystemToTime(tick_t now)
+{
+	tick_t finishTime;
+	while (Packet *packet = (Packet *)ds->moveAllChannelsToTime(now, &finishTime))
+	{
+		// for debug purposes, remove this later
+		assert(packet->isRead() | packet->isWrite() || packet->isInvalidate());
+
+		doFunctionalAccess(packet);
+
+		if (packet->needsResponse())
+		{			
+			packet->makeTimingResponse();
+			assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
+			outStream << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << ") at" << curTick << endl;
+			memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
+		}
+		else
+		{
+			delete packet->req;
+			delete packet;
+		}
 	}
 }
 
