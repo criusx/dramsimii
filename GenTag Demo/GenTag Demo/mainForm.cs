@@ -947,7 +947,7 @@ namespace GenTagDemo
 
         }
         
-        private double currentHDOPValue;
+        private double currentHDOPValue = 15;
         
         private void gpsNmea_HDOPReceived(double value)
         {

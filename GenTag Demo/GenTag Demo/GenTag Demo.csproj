@@ -13,12 +13,12 @@
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
     <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
     <OSVersion>5.01</OSVersion>
-    <DeployDirSuffix>GenTag_Demo</DeployDirSuffix>
+    <DeployDirSuffix>GenTag Demo</DeployDirSuffix>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FormFactorID>
     </FormFactorID>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>Gentag Demo Key.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>GentagKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,7 +51,7 @@
   <ItemGroup>
     <Reference Include="C1Lib_net_PPC, Version=1.0.2545.18356, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\RFID\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC\C1Lib_net_PPC.dll</HintPath>
+      <HintPath>..\..\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC\C1Lib_net_PPC.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="mscorlib" />
@@ -131,6 +131,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="GentagKey.pfx" />
     <None Include="Resources\Gentag-logo.png" />
     <None Include="Web References\org.dyndns.crius\GetDates1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
