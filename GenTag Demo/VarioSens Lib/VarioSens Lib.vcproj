@@ -300,7 +300,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
-				AdditionalIncludeDirectories="C:\Documents and Settings\CriuS\My Documents\RFID\KSW Dev Kit\Sirit\SDIO SDK\cd\include"
+				AdditionalIncludeDirectories="&quot;C:\Users\CriuS\Documents\Visual Studio 2005\Projects\KSW Dev Kit\Sirit\SDIO SDK\cd\include&quot;"
 				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -325,7 +325,7 @@
 				AdditionalDependencies="C1Lib_PPC.lib"
 				OutputFile="../GenTag Demo/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\CriuS\My Documents\RFID\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Users\CriuS\Documents\Visual Studio 2005\Projects\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC&quot;"
 				ModuleDefinitionFile=".\VarioSens Lib.def"
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
