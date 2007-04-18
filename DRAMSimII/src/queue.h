@@ -10,10 +10,10 @@ template <class T>
 class queue
 {
 private:
-	int depth;
-	int count;
-	int head_ptr;
-	int tail_ptr;
+	unsigned depth;
+	unsigned count;
+	unsigned head_ptr;
+	unsigned tail_ptr;
 	T **entry;
 
 public:
@@ -160,7 +160,7 @@ public:
 		return count;
 	}
 
-	T *read(const int offset) const
+	T *read(const unsigned offset) const
 	{
 		if((offset >= count) || (offset < 0))
 			return NULL;

@@ -5,6 +5,7 @@
 #include <cmath>
 #include <map>
 #include <fstream>
+#include <boost/iostreams/filtering_stream.hpp>
 
 #include "dramSystem.h"
 #include "rank_c.h"
@@ -17,7 +18,7 @@
 using namespace std;
 
 // modified, writes to cerr or a compressed output file
-ogzstream outStream;
+boost::iostreams::filtering_ostream outStream;
 
 double ascii2multiplier(const string &input)
 {

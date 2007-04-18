@@ -102,7 +102,7 @@ bool dramSystem::enqueue(transaction *trans)
 	else
 	{
 #ifdef M5DEBUG
-		outStream << "queue size is: " << channel[trans->addr.chan_id].getTransactionQueueCount() << endl;
+		outStream << "+T(" << trans->addr.chan_id << ")[" << channel[trans->addr.chan_id].getTransactionQueueCount() << "]" << endl;
 #endif
 		trans->enqueueTime = channel[trans->addr.chan_id].get_time();
 		return true;
@@ -286,7 +286,7 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 			//update_system_time(); 
 			transaction *completedTransaction = channel[chan].get_transaction();
 			assert(temp_t == completedTransaction);
-			outStream << "converted transaction to commands @" << channel[chan].get_time() << ", queue size is: " << channel[chan].getTransactionQueueCount() << endl;
+			outStream << "T->C [" << channel[chan].get_time() << "] Q[" << channel[chan].getTransactionQueueCount() << "]" << endl;
 		}
 	}
 	assert(channel[chan].get_time() == endTime);

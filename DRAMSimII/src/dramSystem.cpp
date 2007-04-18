@@ -10,6 +10,10 @@
 #include <map>
 #include <vector>
 #include <assert.h>
+#include <boost/iostreams/filtering_streambuf.hpp>
+#include <boost/iostreams/device/file_descriptor.hpp>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filter/bzip2.hpp>
 
 #include "dramSystem.h"
 
@@ -25,7 +29,7 @@ tick_t dramSystem::nextTick() const
 {
 	tick_t nextWake = LLONG_MAX;
 
-	for (int j = 0;j != channel.size(); j++)
+	for (unsigned j = 0;j != channel.size(); j++)
 	{		
 		// first look for transactions
 		if (transaction *nextTrans = channel[j].read_transaction())
@@ -781,8 +785,12 @@ time(0),
 event_q(COMMAND_QUEUE_SIZE)
 {
 	if (settings->outFile.length() > 1)
-	{
-		outStream.open(settings->outFile.c_str());	
+	{		
+		//ofstream output(settings->outFile.c_str(), ios_base::out | ios_base::binary);
+		
+		outStream.push(boost::iostreams::bzip2_compressor());
+		outStream.push(boost::iostreams::file_sink(settings->outFile.c_str()));
+		
 		if (!outStream.good())
 		{
 			cerr << "Error opening file \"" << settings->outFile << "\" for writing" << endl;
@@ -830,8 +838,12 @@ event_q(COMMAND_QUEUE_SIZE)
 	{
 		//output_filename = parameter[output_file_token];
 		if (temp->second.length() > 1)
-		{
-			outStream.open(temp->second.c_str());	
+		{		
+			ofstream output(temp->second.c_str(), ios_base::out | ios_base::binary);
+
+			outStream.push(boost::iostreams::bzip2_compressor());
+			outStream.push(output);
+
 			if (!outStream.good())
 			{
 				cerr << "Error opening file \"" << temp->second << "\" for writing" << endl;

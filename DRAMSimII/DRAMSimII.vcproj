@@ -73,7 +73,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="zdll.lib libxml2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\temp\libxml2-2.6.27.win32\lib&quot;;&quot;C:\temp\zlib\zlib-dll\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\temp\libxml2-2.6.27.win32\lib&quot;;&quot;C:\temp\zlib\zlib-dll\lib&quot;;&quot;C:\temp\boost_1_33_1\bin\boost\libs\iostreams\build\libboost_iostreams.lib\vc-8_0\release\threading-multi&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"

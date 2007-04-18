@@ -20,9 +20,10 @@ To do list:
 
 #include <limits>
 #include <sstream>
+#include <iostream>
 
 #define tick_t long long
-//#define TICK_T_MAX LLONG_MAX
+#define TICK_T_MAX LLONG_MAX
 
 // class forward declarations
 class dramSystemConfiguration;
@@ -36,8 +37,11 @@ class dramSystem;
 class ogzstream;
 class dramSettings;
 
+
 #include <iostream>
 #include <map>
+#include <boost/iostreams/filtering_stream.hpp>
+
 #include "addresses.h"
 #include "command.h"
 #include "enumTypes.h"
@@ -105,7 +109,7 @@ std::ostream &operator<<(std::ostream &, const address_mapping_scheme_t &);
 std::ostream &operator<<(std::ostream &, const transaction_type_t );
 
 // global var forward
-extern ogzstream outStream;
+extern boost::iostreams::filtering_ostream outStream;
 
 // converts a string to a file_io_token
 file_io_token_t dramTokenizer(const std::string &);

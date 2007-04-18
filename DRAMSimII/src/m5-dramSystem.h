@@ -6,6 +6,7 @@
 #include "mem/tport.hh"
 #include "dramSystem.h"
 #include "dramSettings.h"
+#include "globals.h"
 
 // this is a wrapper class to allow DRAMSimII
 // to integrate with M5
@@ -15,19 +16,18 @@ class M5dramSystem: public PhysicalMemory
 private:
 	class TickEvent : public Event
 	{
+
 	private:
-		/** The associated memory system */
+
+		// The associated memory system
 		M5dramSystem *memory;
 
 	public:
-		/**
-		* Construct this event;
-		*/
+	
+		// constructor
 		TickEvent(M5dramSystem *c);
 
-		/**
-		* Call the tick function.
-		*/
+		// process to call when a tick event happens
 		void process();
 		
 
@@ -77,10 +77,11 @@ protected:
 	MemPort *memoryPort;
 	// the whole point of the wrapper class
 	dramSystem *ds;
+	bool needRetry;
 	int cpuRatio;
 	void getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop);
 	//virtual Tick calculateLatency(Packet *);
-	virtual Tick recvTiming(PacketPtr pkt);
+	//virtual Tick recvTiming(PacketPtr pkt);
 	void virtual init();
 	
 

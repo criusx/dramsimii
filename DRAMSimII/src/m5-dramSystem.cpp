@@ -8,9 +8,9 @@
 using namespace std;
 
 M5dramSystem::M5dramSystem(Params *p):
-PhysicalMemory(p), tickEvent(this)
+PhysicalMemory(p), tickEvent(this), needRetry(false)
 {	
-	outStream << "in M5dramSystem constructor" << std::endl;
+	outStream << "M5dramSystem constructor" << std::endl;
 	std::map<file_io_token_t,std::string> parameter;
 
 	parameter[output_file_token] = p->outFilename;
@@ -187,7 +187,8 @@ M5dramSystem::TickEvent::description()
 bool
 M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
-	outStream << "External wake @ " << curTick << "(" << curTick / memory->getCpuRatio() << ") ";
+	tick_t currentMemCycle = curTick/memory->getCpuRatio();
+	outStream << "<-!Wake [" << curTick << "]/[" << currentMemCycle << "]";
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())
 		outStream << "R ";
@@ -200,7 +201,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	else
 		outStream << "? ";
 
-	outStream << std::hex << pkt->getAddr() << endl;
+	outStream << "0x" << std::hex << pkt->getAddr() << endl;
 
 	// any packet which doesn't need a response and isn't a write
 	if (!pkt->needsResponse() && !pkt->isWrite())
@@ -215,6 +216,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		{
 			outStream << "####################### not upgrade request" << endl;
 		}
+		return true;
 	}
 	else
 	{
@@ -226,68 +228,61 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			outStream << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
 			sendTiming(pkt, rand() % 95996);
 		}
-#else
-		memory->recvTiming(pkt);	
+#else		
+		transaction *trans = new transaction(pkt->cmd,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
+
+		// convert the physical address to chan, rank, bank, etc.
+		memory->ds->convert_address(trans->addr);
+
+		// move channels to current time so that calculations based on current channel times work
+		// should also not start/finish any commands, since this would happen at a scheduled time
+		// instead of now
+		memory->moveDramSystemToTime(currentMemCycle);
+
+		//tick_t finishTime;
+		// wake the channel and do everything it was going to do up to this point
+		//assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
+
+		assert(pkt->result != Packet::Nacked);
+		// turn packet around to go back to requester if response expected
+
+		// attempt to add the transaction to the memory system
+		if (!memory->ds->enqueue(trans))
+		{
+			outStream << "+T fails" << endl;
+			// if the packet did not fit, then send a NACK
+			//pkt->result = Packet::Nacked;
+			assert(pkt->needsResponse());
+			cerr << ".";
+			//pkt->makeTimingResponse();
+			//memoryPort->doSendTiming(pkt,0);
+			delete trans;
+			memory->needRetry = true;
+			return false;
+		}
+		else
+		{
+			if (memory->tickEvent.scheduled())
+				memory->tickEvent.deschedule();
+
+			tick_t next = memory->ds->nextTick();
+			assert(next < TICK_T_MAX);
+			if (next < TICK_T_MAX)
+			{
+				outStream << "->Wake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]" << endl;
+				memory->tickEvent.schedule(memory->getCpuRatio() * next);
+			}
+			return true;
+		}
 #endif
 	}
-	return true;
-}
-
-Tick
-M5dramSystem::recvTiming(Packet *pkt)
-{	
-	tick_t currentMemCycle = curTick/cpuRatio;
-	transaction *trans = new transaction(pkt->cmd,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
-
-	// convert the physical address to chan, rank, bank, etc.
-	ds->convert_address(trans->addr);
-
-	// move channels to current time so that calculations based on current channel times work
-	// should also not start/finish any commands, since this would happen at a scheduled time
-	// instead of now
-	moveDramSystemToTime(currentMemCycle);
-
-	//tick_t finishTime;
-	// wake the channel and do everything it was going to do up to this point
-	//assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
-
-	assert(pkt->result != Packet::Nacked);
-	// turn packet around to go back to requester if response expected
-	
-	// attempt to add the transaction to the memory system
-	if (!ds->enqueue(trans))
-	{
-		outStream << "enqueue failed" << endl;
-		// if the packet did not fit, then send a NACK
-		pkt->result = Packet::Nacked;
-		assert(pkt->needsResponse());
-		pkt->makeTimingResponse();
-		memoryPort->doSendTiming(pkt,0);
-		delete trans;
-	}
-	else
-	{
-		if (tickEvent.scheduled())
-			tickEvent.deschedule();
-
-		tick_t next = ds->nextTick();
-		assert(next < INT_MAX);
-		if (next < INT_MAX)
-		{
-			outStream << "Scheduling for " << std::dec << cpuRatio * next << "(" << next << ")" << " at " << curTick << "(" << curTick / getCpuRatio() << ")" << endl;
-			tickEvent.schedule(cpuRatio * next);
-		}
-	}
-
-	// return the latency, scaled to be in cpu ticks, not memory system ticks
-	return 0;
 }
 
 void
 M5dramSystem::TickEvent::process()
 {	
 	tick_t now = curTick / memory->getCpuRatio();
-	outStream << "Internal wake at " << std::dec << curTick << "(" << std::dec << now << ")" << endl;
+	outStream << "<-Wake [" << std::dec << curTick << "][" << std::dec << now << "]" << endl;
 
 	// move memory channels to the current time
 	memory->moveDramSystemToTime(now);
@@ -297,21 +292,26 @@ M5dramSystem::TickEvent::process()
 	if (memory->tickEvent.scheduled())
 		memory->tickEvent.deschedule();
 
-	tick_t next = memory->ds->nextTick();
-	assert(next > 0);
+	tick_t next = memory->ds->nextTick();	
 
-	// nextTick() returns LLONG_MAX if there is nothing else to wake up for
-	if (next < LLONG_MAX)
+	// nextTick() returns TICK_T_MAX if there is nothing else to wake up for
+	if (next < TICK_T_MAX)
 	{	
-		outStream << "scheduling for " << static_cast<Tick>(next * memory->getCpuRatio()) << "(" << next << ")" << endl;
+		outStream << "->Wake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]" << endl;
 		assert(next * memory->getCpuRatio() > curTick);
-		memory->tickEvent.schedule(static_cast<Tick>(next * memory->getCpuRatio()));
+		schedule(static_cast<Tick>(next * memory->getCpuRatio()));
+	}
+	if (memory->needRetry)
+	{
+		memory->needRetry != false;
+		memory->memoryPort->sendRetry();
 	}
 }
 
 void M5dramSystem::moveDramSystemToTime(tick_t now)
 {
 	tick_t finishTime;
+
 	while (Packet *packet = (Packet *)ds->moveAllChannelsToTime(now, &finishTime))
 	{
 		// for debug purposes, remove this later
@@ -323,7 +323,7 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 		{			
 			packet->makeTimingResponse();
 			assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
-			outStream << "sending packet back at " << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << " (+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << ") at" << curTick << endl;
+			outStream << "<-T [" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
 			memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
 		}
 		else
