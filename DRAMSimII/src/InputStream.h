@@ -33,8 +33,7 @@ private:
 	std::ifstream trace_file;
 
 public: 
-	// constructors
-	inputStream(std::map<file_io_token_t,std::string> &);
+	// constructors	
 	inputStream(const dramSettings *settings);
 	inline input_type_t getType() { return type; }
 

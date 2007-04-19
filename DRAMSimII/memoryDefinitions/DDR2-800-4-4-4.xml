@@ -87,7 +87,7 @@
 	<simulationParameters>
 		<shortBurstRatio>.50</shortBurstRatio>
 		<readPercentage>.5</readPercentage>
-		<!-- type may be gz, bz, cout, none -->
+		<!-- type may be gz, bz, cout, uncompressed, none -->
 		<outFile type="gz">standardOutFile.gz</outFile>
 		<requestCount>990000000</requestCount>
 		<!--may be "mase","k6","mapped","random"-->

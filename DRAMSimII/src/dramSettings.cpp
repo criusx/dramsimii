@@ -117,10 +117,12 @@ dramSettings::dramSettings(const int argc, const char **argv)
 						const string type = (const char *)attr;
 						if (type == "gz" || type == "GZ")
 							outFileType = GZ;
-						else if (type == "bz" || type == "BZ" || type == "bzip" || type == "bzip2")
+						else if (type == "bz" || type == "BZ" || type == "bzip" || type == "bzip2" || type == "bz2")
 							outFileType = BZ;
 						else if (type == "cout" || type == "stdout" || type == "COUT")
 							outFileType = COUT;
+						else if (type == "uncompressed" || type == "plain")
+							outFileType = UNCOMPRESSED;
 						else
 							outFileType = NONE;
 					}

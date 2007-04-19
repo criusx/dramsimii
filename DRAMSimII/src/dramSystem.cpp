@@ -25,19 +25,20 @@ using namespace std;
 // returns the time when the memory system next has an event
 // the event may either be a conversion of a transaction into commands
 // or it may be the next time a command may be issued
-// returns: INT_MAX if there is no next event, or the time of the next event
+// returns: TICK_T_MAX if there is no next event, or the time of the next event
 tick_t dramSystem::nextTick() const
 {
-	tick_t nextWake = LLONG_MAX;
+	tick_t nextWake = TICK_T_MAX;
 
 	for (unsigned j = 0;j != channel.size(); j++)
 	{		
 		// first look for transactions
 		if (transaction *nextTrans = channel[j].read_transaction())
 		{
-			int tempGap = (nextTrans->enqueueTime - channel[j].get_time()) + timing_specification.t_buffer_delay; // make sure it can finish
-			tempGap = max(1,tempGap);
+			int tempGap = max(1,(int)(nextTrans->enqueueTime - channel[j].get_time()) + timing_specification.t_buffer_delay); // make sure it can finish
+			
 			assert(tempGap <= timing_specification.t_buffer_delay );
+			// whenever the next transaction is ready and there are available slots for the R/C/P commands
 			if ((tempGap + channel[j].get_time() < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
 			{
 				nextWake = tempGap + channel[j].get_time();
@@ -50,7 +51,7 @@ tick_t dramSystem::nextTick() const
 			int tempGap = minProtocolGap(j,tempCommand);
 			if (tempGap + channel[j].get_time() < nextWake)
 			{
-				nextWake = min(nextWake,tempGap + channel[j].get_time());
+				nextWake = tempGap + channel[j].get_time();
 			}
 		}
 	}
@@ -807,6 +808,16 @@ event_q(COMMAND_QUEUE_SIZE)
 			exit(-12);
 		}
 	}
+	else if (settings->outFileType == UNCOMPRESSED)
+	{
+		outStream.push(boost::iostreams::file_sink(settings->outFile.c_str()));
+
+		if (!outStream.good())
+		{
+			cerr << "Error opening file \"" << settings->outFile << "\" for writing" << endl;
+			exit(-12);
+		}
+	}
 	else if (settings->outFileType == COUT) 
 	{
 		outStream.push(std::cout);
@@ -824,57 +835,6 @@ event_q(COMMAND_QUEUE_SIZE)
 		}
 	}
 }
-
-
-dramSystem::dramSystem(map<file_io_token_t,string> &parameter):
-system_config(parameter),
-channel(system_config.chan_count,
-		dramChannel(system_config.transaction_queue_depth,
-		system_config.history_queue_depth,
-		system_config.completion_queue_depth,
-		system_config.refresh_queue_depth,
-		system_config.rank_count,
-		system_config.bank_count,
-		system_config.per_bank_queue_depth)),
-timing_specification(parameter),
-sim_parameters(parameter),
-algorithm(system_config.rank_count,
-		  system_config.bank_count,
-		  system_config.config_type),
-input_stream(parameter),
-time(0), // start the clock
-//free_event_pool(COMMAND_QUEUE_SIZE,true), // create enough events, transactions and commands ahead of time
-event_q(COMMAND_QUEUE_SIZE)
-{
-	map<file_io_token_t, string>::iterator temp;
-	stringstream temp2;
-
-	if ((temp=parameter.find(output_file_token))!=parameter.end())
-	{
-		//output_filename = parameter[output_file_token];
-		if (temp->second.length() > 1)
-		{		
-			ofstream output(temp->second.c_str(), ios_base::out | ios_base::binary);
-
-			outStream.push(boost::iostreams::bzip2_compressor());
-			outStream.push(output);
-
-			if (!outStream.good())
-			{
-				cerr << "Error opening file \"" << temp->second << "\" for writing" << endl;
-				exit(-12);
-			}
-		}
-	}
-
-	// init the refresh queue for each channel
-	unsigned cnt = 0;
-	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
-	{
-		i->initRefreshQueue(system_config.row_count, system_config.refresh_time, cnt++);
-	}
-}
-
 
 int dramSystem::find_oldest_channel() const
 {

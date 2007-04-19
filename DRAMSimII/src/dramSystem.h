@@ -66,8 +66,7 @@ public:
 	void run_simulations2();
 	void run_simulations3();
 
-	// constructors
-	explicit dramSystem(std::map<file_io_token_t,std::string> &);
+	// constructors	
 	explicit dramSystem(const dramSettings *settings);
 
 	// friends

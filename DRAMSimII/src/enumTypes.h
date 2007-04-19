@@ -52,6 +52,7 @@ enum output_file_t
 	COUT, // print to stdout
 	GZ, // print to a gzip file
 	BZ, // print to a bzip2 file
+	UNCOMPRESSED, // just write to a normal file
 	NONE // don't print diagnostic messages
 };
 
