@@ -87,7 +87,8 @@
 	<simulationParameters>
 		<shortBurstRatio>.50</shortBurstRatio>
 		<readPercentage>.5</readPercentage>
-		<outFile>standardOutFile.gz</outFile>
+		<!-- type may be gz, bz, cout, none -->
+		<outFile type="gz">standardOutFile.gz</outFile>
 		<requestCount>990000000</requestCount>
 		<!--may be "mase","k6","mapped","random"-->
 		<inputFile type="mase">equake.trc</inputFile>

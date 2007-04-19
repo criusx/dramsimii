@@ -12,6 +12,7 @@ public:
 	std::string inFile;
 	input_type_t inFileType;
 	std::string outFile;
+	output_file_t outFileType;
 	unsigned requestCount;
 	refresh_policy_t refreshPolicy;
 	dram_type_t dramType;

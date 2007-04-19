@@ -111,6 +111,19 @@ dramSettings::dramSettings(const int argc, const char **argv)
 						else if (type == "random")
 							inFileType = RANDOM;
 					}
+					else if (nodeName == "outFile")
+					{
+						const xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
+						const string type = (const char *)attr;
+						if (type == "gz" || type == "GZ")
+							outFileType = GZ;
+						else if (type == "bz" || type == "BZ" || type == "bzip" || type == "bzip2")
+							outFileType = BZ;
+						else if (type == "cout" || type == "stdout" || type == "COUT")
+							outFileType = COUT;
+						else
+							outFileType = NONE;
+					}
 					break;
 				}
 			case XML_TEXT_NODE:				

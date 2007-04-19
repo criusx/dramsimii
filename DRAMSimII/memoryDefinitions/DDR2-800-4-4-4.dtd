@@ -29,11 +29,10 @@
 <!ELEMENT eventQueueDepth (#PCDATA)>
 <!ELEMENT historyQueueDepth (#PCDATA)>
 <!ELEMENT inputFile (#PCDATA)>
-<!ATTLIST inputFile
-	type CDATA #REQUIRED
->
+<!ATTLIST inputFile type CDATA #REQUIRED>
 <!ELEMENT maxVCC (#PCDATA)>
 <!ELEMENT outFile (#PCDATA)>
+<!ATTLIST outFile type CDATA #REQUIRED>
 <!ELEMENT perBankQueueDepth (#PCDATA)>
 <!ELEMENT physicalAddressMappingPolicy (#PCDATA)>
 <!ELEMENT postedCAS (#PCDATA)>

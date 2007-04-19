@@ -14,6 +14,7 @@
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/bzip2.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
 
 #include "dramSystem.h"
 
@@ -784,12 +785,10 @@ input_stream(settings),
 time(0),
 event_q(COMMAND_QUEUE_SIZE)
 {
-	if (settings->outFile.length() > 1)
-	{		
-		//ofstream output(settings->outFile.c_str(), ios_base::out | ios_base::binary);
-		
+	if (settings->outFileType == BZ)
+	{	
 		outStream.push(boost::iostreams::bzip2_compressor());
-		outStream.push(boost::iostreams::file_sink(settings->outFile.c_str()));
+		outStream.push(boost::iostreams::file_sink((settings->outFile + ".bz").c_str()));
 		
 		if (!outStream.good())
 		{
@@ -797,6 +796,22 @@ event_q(COMMAND_QUEUE_SIZE)
 			exit(-12);
 		}
 	}
+	else if (settings->outFileType == GZ)
+	{
+		outStream.push(boost::iostreams::gzip_compressor());
+		outStream.push(boost::iostreams::file_sink((settings->outFile + ".gz").c_str()));
+
+		if (!outStream.good())
+		{
+			cerr << "Error opening file \"" << settings->outFile << "\" for writing" << endl;
+			exit(-12);
+		}
+	}
+	else if (settings->outFileType == COUT) 
+	{
+		outStream.push(std::cout);
+	}
+
 
 	// don't init the refresh queues if there's no need
 	if (system_config.refresh_policy != NO_REFRESH)

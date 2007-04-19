@@ -47,6 +47,14 @@ enum command_ordering_algorithm_t
 	WANG_RANK_HOP // Patented stuff. davewang202@yahoo.com ;)
 };
 
+enum output_file_t
+{
+	COUT, // print to stdout
+	GZ, // print to a gzip file
+	BZ, // print to a bzip2 file
+	NONE // don't print diagnostic messages
+};
+
 enum transaction_ordering_algorithm_t
 {
 	RIFF,
