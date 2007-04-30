@@ -2,80 +2,55 @@
 #include <sstream>
 #include <string>
 
-#include "globals.h"
-#include "enumTypes.h"
 #include "powerConfig.h"
 
 using namespace std;
 
-powerConfig::powerConfig(std::map<file_io_token_t,std::string> &parameter)
+powerConfig::powerConfig(dramSettings *settings):
+VDD(settings->VDD),
+IDD0(settings->IDD0),
+IDD2P(settings->IDD2P),
+IDD2N(settings->IDD2N),
+IDD3P(settings->IDD3P),
+IDD3N(settings->IDD3N),
+IDD4R(settings->IDD4R),
+IDD4W(settings->IDD4W),
+IDD5(settings->IDD5)
+{}
+
+powerConfig::~powerConfig()
+{}
+
+void powerConfig::recordCommand(const command *cmd, const dramChannel &channel, const dramTimingSpecification &timing)
 {
-	std::map<file_io_token_t, std::string>::iterator temp;
-
-	// defaults based on the Micron MT47H128M8BT-3
-	// 1Gb, DDR2@333MHz, x8
-	VDD = 1.8;
-	IDD0 = 90;
-	IDD2P = 7;
-	IDD2N = 60;
-	IDD3P = 40;
-	IDD3N = 70;
-	IDD4R = 160;
-	IDD4W = 160;
-	IDD5 = 270;
-
-	if ((temp=parameter.find(vdd_token))!=parameter.end())
+	switch (cmd->getCommandType())
 	{
-		toNumeric<float>(VDD,temp->second,std::dec);
-	}
+	case RAS_COMMAND:
 
-	if ((temp=parameter.find(idd0_token))!=parameter.end())
-	{
-		toNumeric<int>(IDD0,temp->second,std::dec);
+		break;
+	case CAS_AND_PRECHARGE_COMMAND:
+		//RDsch += timing.t_burst;
+		break;
+	case CAS_COMMAND:
+		//RDsch += timing.t_burst;
+		break;
+	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+		//WRsch += timing.t_burst;
+		break;
+	case CAS_WRITE_COMMAND:
+		//WRsch += timing.t_burst;
+		break;
+	case PRECHARGE_COMMAND:
+		break;
+	case REFRESH_ALL_COMMAND:
+		break;
+	default:
+		break;
 	}
-
-	if ((temp=parameter.find(idd2p_token))!=parameter.end())
-	{
-		toNumeric<int>(IDD2P,temp->second,std::dec);
-	}
-
-	if ((temp=parameter.find(idd2n_token))!=parameter.end())
-	{
-		toNumeric<int>(IDD2N,temp->second,std::dec);
-	}
-
-	if ((temp=parameter.find(idd3p_token))!=parameter.end())
-	{
-		toNumeric<int>(IDD3P,temp->second,std::dec);
-	}
-
-	if ((temp=parameter.find(idd3n_token))!=parameter.end())
-	{
-		toNumeric<int>(IDD3N,temp->second,std::dec);
-	}
-
-	if ((temp=parameter.find(idd4r_token))!=parameter.end())
-	{
-		toNumeric<int>(IDD4R,temp->second,std::dec);
-	}
-
-	if ((temp=parameter.find(idd4w_token))!=parameter.end())
-	{
-		toNumeric<int>(IDD4W,temp->second,std::dec);
-	}
-
-	if ((temp=parameter.find(idd5_token))!=parameter.end())
-	{
-		toNumeric<int>(IDD5,temp->second,std::dec);
-	}
-
 }
 
-powerConfig::~powerConfig(void)
-{
-}
 
-void recordCommand(const command *)
+void calculatePower(const std::vector<dramChannel> &channels)
 {
 
 }

@@ -18,6 +18,9 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 {
 	dramChannel &channel= dramSystem::channel[this_command->getAddress().chan_id];
 
+	// do power calculations
+	powerConfig.recordCommand(this_command, channel, timing_specification);
+
 	rank_c &this_rank = channel.getRank(this_command->getAddress().rank_id);
 
 	bank_c &this_bank = this_rank.bank[this_command->getAddress().bank_id];
@@ -36,25 +39,21 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	switch(this_command->getCommandType())
 	{
 	case RAS_COMMAND:
+		{
+			this_bank.isActivated = true;
 
-		this_bank.isActivated = true;
-		this_bank.last_ras_time = channel.get_time();
-		this_bank.row_id = this_command->getAddress().row_id;
-		this_bank.ras_count++;
+			// RAS time history queue, per rank
+			tick_t *this_ras_time = this_rank.last_ras_times.acquire_item();
 
-		// RAS time history queue, per rank
-		tick_t *this_ras_time;
+			*this_ras_time = this_bank.last_ras_time = channel.get_time();
+			this_bank.row_id = this_command->getAddress().row_id;
+			this_bank.ras_count++;
 
-		if(this_rank.last_ras_times.freecount() == 0)	// FIXME: this is not very general
-			this_ras_time = this_rank.last_ras_times.dequeue();
-		else
-			this_ras_time = new tick_t;
+			this_rank.last_ras_times.enqueue(this_ras_time);
 
-		*this_ras_time = channel.get_time();
-		this_rank.last_ras_times.enqueue(this_ras_time);
-
-		// specific for RAS command
-		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_ras);
+			// specific for RAS command
+			this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_ras);
+		}
 		break;
 
 	case CAS_AND_PRECHARGE_COMMAND:
@@ -95,15 +94,21 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr);
 		break;
 
-	case RETIRE_COMMAND:
-		break;
-
 	case PRECHARGE_COMMAND:
 
 		this_bank.isActivated = false;
 		this_bank.last_prec_time = channel.get_time();
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rp);
 		break;
+
+	case REFRESH_ALL_COMMAND:
+		this_bank.last_refresh_all_time = channel.get_time();
+		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rfc);
+		this_command->getHost()->completion_time = this_command->getCompletionTime();
+		break;
+
+	case RETIRE_COMMAND:
+		break;	
 
 	case PRECHARGE_ALL_COMMAND:
 		break;
@@ -118,13 +123,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		break;
 
 	case CAS_WITH_DRIVE_COMMAND:
-		break;
-
-	case REFRESH_ALL_COMMAND:
-		this_bank.last_refresh_all_time = channel.get_time();
-		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rfc);
-		this_command->getHost()->completion_time = this_command->getCompletionTime();
-		break;
+		break;	
 	}
 
 	// transaction complete? if so, put in completion queue
@@ -140,6 +139,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		}
 	}
 
-	// record command history. Check to see if this can be removed
+	// record command history.
+	// inserts into a queue which dequeues into the command pool
 	channel.record_command(this_command);
 }

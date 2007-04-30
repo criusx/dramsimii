@@ -5,6 +5,11 @@
 #include <map>
 #include <string>
 
+#include "globals.h"
+#include "dramChannel.h"
+#include "enumTypes.h"
+#include "dramSettings.h"
+
 class powerConfig
 {
 protected:
@@ -18,12 +23,17 @@ protected:
 	int IDD4W; // Operating Burst Write Current in mA
 	int IDD5; // Burst Refresh Current in mA
 
-	void recordCommand(const command *);
-
+	tick_t allBanksPrecharged;
+	tick_t RDsch; // number of clock cycles spent sending data
+	tick_t WRsch; // number of clock cycles spent receiving data
+	
 
 public:
 	powerConfig();
-	powerConfig(std::map<file_io_token_t,std::string> &parameter);
+	powerConfig(dramSettings *settings);
+	void recordCommand(const command *, const dramChannel &channel, const dramTimingSpecification &timing);
+	void calculatePower(const std::vector<dramChannel> &channels);
+	
 public:
 	~powerConfig();
 };

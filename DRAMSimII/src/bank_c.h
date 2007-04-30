@@ -5,6 +5,7 @@
 #include "queue.h"
 #include "globals.h"
 #include "command.h"
+#include "dramSettings.h"
 
 class bank_c
 {

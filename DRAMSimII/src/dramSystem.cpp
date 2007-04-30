@@ -31,11 +31,12 @@ tick_t dramSystem::nextTick() const
 	tick_t nextWake = TICK_T_MAX;
 
 	for (unsigned j = 0;j != channel.size(); j++)
-	{		
+	{
 		// first look for transactions
 		if (transaction *nextTrans = channel[j].read_transaction())
 		{
-			int tempGap = max(1,(int)(nextTrans->enqueueTime - channel[j].get_time()) + timing_specification.t_buffer_delay); // make sure it can finish
+			// make sure it can finish
+			int tempGap = max(1,(int)(nextTrans->enqueueTime - channel[j].get_time()) + timing_specification.t_buffer_delay); 
 			
 			assert(tempGap <= timing_specification.t_buffer_delay );
 			// whenever the next transaction is ready and there are available slots for the R/C/P commands

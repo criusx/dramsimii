@@ -1,5 +1,5 @@
 #include "bank_c.h"
-#include "dramSettings.h"
+
 
 bank_c::bank_c(const dramSettings *settings):
 per_bank_q(settings->perBankQueueDepth),
@@ -31,8 +31,7 @@ isActivated(false),
 ras_count(0),
 cas_count(0),
 casw_count(0)
-{	
-}
+{}
 
 bank_c::bank_c(const bank_c &b):
 per_bank_q(b.per_bank_q),
@@ -48,5 +47,4 @@ isActivated(b.isActivated),
 ras_count(b.ras_count),
 cas_count(b.cas_count),
 casw_count(b.casw_count)
-{	
-}
+{}
