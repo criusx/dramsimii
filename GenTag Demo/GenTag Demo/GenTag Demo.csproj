@@ -7,13 +7,13 @@
     <ProjectGuid>{2BB2FFF5-F1D5-4C0D-A1DB-CD507D7F9280}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GenTagDemo</RootNamespace>
-    <AssemblyName>GenTag Demo</AssemblyName>
+    <RootNamespace>GentagDemo</RootNamespace>
+    <AssemblyName>Gentag Demo</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
     <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
     <OSVersion>5.01</OSVersion>
-    <DeployDirSuffix>GenTag Demo</DeployDirSuffix>
+    <DeployDirSuffix>Gentag Demo</DeployDirSuffix>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FormFactorID>
     </FormFactorID>
@@ -32,7 +32,7 @@
     <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CodeAnalysisRules>-Microsoft.Globalization#CA1303</CodeAnalysisRules>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -47,6 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <CodeAnalysisRules>-Microsoft.Globalization#CA1303</CodeAnalysisRules>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="C1Lib_net_PPC, Version=1.0.2545.18356, Culture=neutral">
@@ -54,6 +55,8 @@
       <HintPath>..\..\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC\C1Lib_net_PPC.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsCE.Forms" />
+    <Reference Include="Microsoft.WindowsMobile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.WindowsMobile.Status, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -133,7 +136,7 @@
   <ItemGroup>
     <None Include="GentagKey.pfx" />
     <None Include="Resources\Gentag-logo.png" />
-    <None Include="Web References\org.dyndns.crius\GetDates1.datasource">
+    <None Include="Web References\org.dyndns.crius\GetDates.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Resources\blank.png" />

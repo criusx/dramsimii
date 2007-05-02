@@ -2,7 +2,7 @@
   <PropertyGroup>
     <DeployDeviceID>4118C335-430C-497f-BE48-11C3316B135Ed6518ffb-710f-11d3-99f2-00105a0df099</DeployDeviceID>
     <EnableSigning>true</EnableSigning>
-    <SigningCertHash>5E676DE66F567BCA1491B1A41043557687144DEF</SigningCertHash>
+    <SigningCertHash>7A5376BE9E2DE62BD9F68B1D86501EE8E1C96458</SigningCertHash>
     <ProvisionStore>priv</ProvisionStore>
   </PropertyGroup>
 </Project>

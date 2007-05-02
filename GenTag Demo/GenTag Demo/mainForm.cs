@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -18,11 +19,12 @@ using System.Globalization;
 using System.Threading;
 using System.Security.Permissions;
 using TestPocketGraphBar;
+using Microsoft.WindowsMobile.Status;
 
 
 [assembly: CLSCompliant(true)]
 //[assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]
-namespace GenTagDemo
+namespace GentagDemo
 {
     public partial class mainForm : Form
     {
@@ -34,13 +36,50 @@ namespace GenTagDemo
 
         nmeaInterpreter gpsNmea;
 
+        string DeviceUID;
+
         private CultureInfo cultureInfo;
+
+        private Hashtable cachedIDLookups;
+
+        private Queue tagQueue;
+
+        [DllImport("coredll.dll")]
+        private extern static int GetDeviceUniqueID(
+            [In, Out] byte[] appdata,
+            int cbApplictionData,
+            int dwDeviceIDVersion,
+            [In, Out] byte[] deviceIDOuput,
+            out uint pcbDeviceIDOutput);
 
         public mainForm()
         {
             InitializeComponent();
+           
+            // generate the device's UID
+            string AppString = GentagDemo.Properties.Resources.titleString;
+
+            byte[] AppData = new byte[AppString.Length];
+
+            for (int count = 0; count < AppString.Length; count++)
+                AppData[count] = (byte)AppString[count];
+
+            int appDataSize = AppData.Length;
+
+            byte[] dUID = new byte[20];
+
+            uint SizeOut = 20;
+
+            GetDeviceUniqueID(AppData, appDataSize, 1, dUID, out SizeOut);
+
+            for (int i = 0; i < 20; i++)
+                DeviceUID += dUID[i].ToString("X");
 
             mF = this;
+
+            cachedIDLookups = new Hashtable();
+
+            tagQueue = new Queue();
 
             cultureInfo = new CultureInfo("en-US");
 
@@ -56,14 +95,14 @@ namespace GenTagDemo
             gpsNmea.PDOPReceived += new nmeaInterpreter.PDOPReceivedEventHandler(gpsNmea_PDOPReceived);
             gpsNmea.HDOPReceived += new nmeaInterpreter.HDOPReceivedEventHandler(gpsNmea_HDOPReceived);
             gpsNmea.VDOPReceived += new nmeaInterpreter.VDOPReceivedEventHandler(gpsNmea_VDOPReceived);
-            gpsNmea.NumSatsReceived +=new nmeaInterpreter.NumberOfSatellitesInViewEventHandler(gpsNmea_NumSatsReceived);
+            gpsNmea.NumSatsReceived += new nmeaInterpreter.NumberOfSatellitesInViewEventHandler(gpsNmea_NumSatsReceived);
 
 
 
             ImageList myImageList = new ImageList();
-            myImageList.Images.Add(Image.FromHbitmap(GenTagDemo.Properties.Resources.blank.GetHbitmap()));
-            myImageList.Images.Add(Image.FromHbitmap(GenTagDemo.Properties.Resources.cancel.GetHbitmap()));
-            myImageList.Images.Add(Image.FromHbitmap(GenTagDemo.Properties.Resources.ok.GetHbitmap()));
+            myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.blank.GetHbitmap()));
+            myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.cancel.GetHbitmap()));
+            myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.ok.GetHbitmap()));
             treeView1.ImageList = myImageList;
 
             graph = new Graph();
@@ -73,22 +112,22 @@ namespace GenTagDemo
             tabPage2.Controls.Add(graph);
 
             // Load Localized values
-            readIDButton.Text = GenTagDemo.Properties.Resources.readIDButtonInit;
-            readLogButton.Text = GenTagDemo.Properties.Resources.readLogButtonInit;
-            manualIDButton.Text = GenTagDemo.Properties.Resources.manualIDButtonInit;
-            setValueButton.Text = GenTagDemo.Properties.Resources.setValueButtonInit;
-            readValueButton.Text = GenTagDemo.Properties.Resources.readValueButtonInit;
-            this.Text = GenTagDemo.Properties.Resources.titleString;
+            readIDButton.Text = GentagDemo.Properties.Resources.readIDButtonInit;
+            readLogButton.Text = GentagDemo.Properties.Resources.readLogButtonInit;
+            manualIDButton.Text = GentagDemo.Properties.Resources.manualIDButtonInit;
+            setValueButton.Text = GentagDemo.Properties.Resources.setValueButtonInit;
+            readValueButton.Text = GentagDemo.Properties.Resources.readValueButtonInit;
+            this.Text = GentagDemo.Properties.Resources.titleString;
 
-            tabControl1.TabPages[0].Text = GenTagDemo.Properties.Resources.tab2String;
-            tabControl1.TabPages[1].Text = GenTagDemo.Properties.Resources.tab1String;
-            tabControl1.TabPages[2].Text = GenTagDemo.Properties.Resources.tab3String;
-            tabControl1.TabPages[3].Text = GenTagDemo.Properties.Resources.tab4String;
+            tabControl1.TabPages[0].Text = GentagDemo.Properties.Resources.tab2String;
+            tabControl1.TabPages[1].Text = GentagDemo.Properties.Resources.tab1String;
+            tabControl1.TabPages[2].Text = GentagDemo.Properties.Resources.tab3String;
+            tabControl1.TabPages[3].Text = GentagDemo.Properties.Resources.tab4String;
 
-            label6.Text = label1.Text = GenTagDemo.Properties.Resources.hiLimitString;
-            label5.Text = label2.Text = GenTagDemo.Properties.Resources.loLimitString;
-            label7.Text = label3.Text = GenTagDemo.Properties.Resources.intervalString;
-            label4.Text = GenTagDemo.Properties.Resources.logString;
+            label6.Text = label1.Text = GentagDemo.Properties.Resources.hiLimitString;
+            label5.Text = label2.Text = GentagDemo.Properties.Resources.loLimitString;
+            label7.Text = label3.Text = GentagDemo.Properties.Resources.intervalString;
+            label4.Text = GentagDemo.Properties.Resources.logString;
 
             textBox9.Text = @"";
 
@@ -98,9 +137,9 @@ namespace GenTagDemo
 
             regKey = regKey.OpenSubKey(@"SOFTWARE", true);
 
-            if (Array.IndexOf(regKey.GetSubKeyNames(), @"GenTag", 0) == -1)
-                regKey.CreateSubKey(@"GenTag");
-            regKey = regKey.OpenSubKey(@"GenTag", true);
+            if (Array.IndexOf(regKey.GetSubKeyNames(), @"Gentag", 0) == -1)
+                regKey.CreateSubKey(@"Gentag");
+            regKey = regKey.OpenSubKey(@"Gentag", true);
 
             string[] settingKeys = regKey.GetSubKeyNames();
 
@@ -117,11 +156,11 @@ namespace GenTagDemo
         {
             if (C1Lib.C1.NET_C1_open_comm() != 1)
             {
-                MessageBox.Show(GenTagDemo.Properties.Resources.error1);
+                MessageBox.Show(GentagDemo.Properties.Resources.error1);
             }
             else if (C1Lib.C1.NET_C1_enable() != 1)
             {
-                MessageBox.Show(GenTagDemo.Properties.Resources.error2);
+                MessageBox.Show(GentagDemo.Properties.Resources.error2);
                 C1Lib.C1.NET_C1_disable();
             }
             else
@@ -153,66 +192,132 @@ namespace GenTagDemo
 
         private void readID()
         {
-            setWaitCursor(true);
+            setWaitCursor(true);            
 
-            setCheckBox(checkBox1, false);
-            string currentTag;
-
-            try
+            while (readerRunning == true)
             {
-                currentTag = readTagID();
-            }
-            catch (System.IO.IOException ex)
-            {
-                MessageBox.Show(ex.Message);
-                return;
-            }
+                setCheckBox(checkBox1, false);
 
-            setCheckBox(checkBox1, true);
-
-            int triesLeft = 8;
-            string failMessage = "";
-
-            org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-
-            while (triesLeft > 0)
-            {
-                // use the web service to retrieve a description  
                 try
                 {
-                    updateTreeView1(currentTag, ws.getDescription(currentTag), ws.isAuthenticated(currentTag));
-                    break;
+                    string currentTag = readTagID();
+
+                    countUp();
+                    lock (cachedIDLookups.SyncRoot)
+                    {
+                        if (cachedIDLookups.ContainsKey(currentTag) == false)
+                            lock (tagQueue.SyncRoot)
+                            {
+                                if (tagQueue.Contains(currentTag) == false)
+                                    tagQueue.Enqueue(currentTag);
+                            }
+                    }
                 }
-                catch (WebException ex)
-                {
-                    failMessage = "Problem connecting to web service: " + ex.Message;
-                    triesLeft--;
-                    Thread.Sleep(2000);
-                }
-                catch (SocketException ex)
-                {
-                    failMessage = ex.Message;
-                    triesLeft--;
-                    Thread.Sleep(2000);
-                }
-                catch (IOException ex)
+                catch (System.IO.IOException ex)
                 {
                     MessageBox.Show(ex.Message);
-                    return;
+                    readerRunning = false;
                 }
-            }
-            if (triesLeft == 0)
-            {
-                updateTreeView1(currentTag, @"No description found", false);
-                MessageBox.Show(failMessage);
-            }
+                catch (System.NotSupportedException xx)
+                {
+                    MessageBox.Show("not working");
+                }
 
-            readerRunning = false;
+                setCheckBox(checkBox1, true);
+
+
+                Thread.Sleep(100);
+            }
             setWaitCursor(false);
         }
 
-        private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated);
+        
+        private void doLookup()
+        {            
+            while (readerRunning == true)
+            {
+                string currentTag;
 
+                lock (tagQueue.SyncRoot)
+                {
+                    if (tagQueue.Count > 0)
+                        currentTag = (string)tagQueue.Dequeue();
+                    else
+                        currentTag = "";
+                }
+                if ((currentTag.Length < 2) || (cachedIDLookups.ContainsKey(currentTag) == true))
+                    Thread.Sleep(250);
+                else
+                {
+                    int triesLeft = 8;
+                    string failMessage = "";
+
+                    org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
+
+                    while (triesLeft > 0)
+                    {
+                        // use the web service to retrieve a description  
+                        try
+                        {
+                            countUp2();
+                            string description = ws.getDescription(currentTag);
+                            updateTreeView1(currentTag, description, ws.isAuthenticated(currentTag, DeviceUID, currentLatitude, currentLongitude));
+                            lock (cachedIDLookups.SyncRoot)
+                            {
+                                cachedIDLookups.Add(currentTag, description);
+                            }
+                            break;
+                        }
+                        catch (WebException ex)
+                        {
+                            failMessage = "Problem connecting to web service: " + ex.Message;
+                            triesLeft--;
+                            Thread.Sleep(2000);
+                        }
+                        catch (SocketException ex)
+                        {
+                            failMessage = ex.Message;
+                            triesLeft--;
+                            Thread.Sleep(2000);
+                        }
+                        catch (IOException ex)
+                        {
+                            //MessageBox.Show(ex.Message);
+                            //return;
+                        }
+                    }
+                    if (triesLeft == 0)
+                    {
+                        updateTreeView1(currentTag, @"No description found", false);
+                        //MessageBox.Show(failMessage);
+                    }
+                }
+            }
+        }
+
+        private delegate void incCounter();
+
+        private void countUp()
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new incCounter(countUp));
+                return;
+            }
+            numericUpDown1.Value++;
+        }
+
+        private void countUp2()
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new incCounter(countUp2));
+                return;
+            }
+            numericUpDown2.Value++;
+        }
+
+        private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated);
 
         private void updateTreeView1(string currentTag, string rfidDescr, bool isAuthenticated)
         {
@@ -228,12 +333,12 @@ namespace GenTagDemo
 
             foreach (TreeNode tn in treeView1.Nodes)
             {
-                Console.Out.WriteLine(tn.Text);
+                //Console.Out.WriteLine(tn.Text);
                 if (tn.Text == currentTag)
                 {
                     tn.Nodes.Clear();
                     TreeNode tN = new TreeNode(rfidDescr);
-                    tN.SelectedImageIndex = tN.ImageIndex = isAuthenticated ? 2 : 1;
+                    tn.SelectedImageIndex = tn.ImageIndex = isAuthenticated ? 2 : 1;
                     tn.Nodes.Add(tN);
                     exists = true;
                 }
@@ -241,10 +346,10 @@ namespace GenTagDemo
             if (!exists)
             {
                 TreeNode superTn = new TreeNode(currentTag);
-                superTn.SelectedImageIndex = superTn.ImageIndex = 0;
+                superTn.SelectedImageIndex = superTn.ImageIndex = isAuthenticated ? 2 : 1; ;
 
                 TreeNode subTn = new TreeNode(rfidDescr);
-                subTn.SelectedImageIndex = subTn.ImageIndex = isAuthenticated ? 2 : 1;
+                subTn.SelectedImageIndex = subTn.ImageIndex = 0;
 
                 superTn.Nodes.Add(subTn);
                 treeView1.Nodes.Add(superTn);
@@ -356,7 +461,10 @@ namespace GenTagDemo
                 if (sender == readLogButton)
                     new Thread(new ThreadStart(readLog)).Start();
                 else if (sender == readIDButton)
+                {
                     new Thread(new ThreadStart(readID)).Start();
+                    new Thread(new ThreadStart(doLookup)).Start();
+                }
                 else if (sender == setValueButton)
                     new Thread(new ThreadStart(setVSSettings)).Start();
                 else if (sender == readValueButton)
@@ -394,25 +502,25 @@ namespace GenTagDemo
             switch (errorCode)
             {
                 case -1:
-                    MessageBox.Show(GenTagDemo.Properties.Resources.error1);
+                    MessageBox.Show(GentagDemo.Properties.Resources.error1);
                     break;
                 case -2:
-                    MessageBox.Show(GenTagDemo.Properties.Resources.error2);
+                    MessageBox.Show(GentagDemo.Properties.Resources.error2);
                     break;
                 //case -3:
-                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error3;
+                //    mF.textBox9.Text = Gentag_Demo.Properties.Resources.error3;
                 //    break;
                 //case -4:
-                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error4;
+                //    mF.textBox9.Text = Gentag_Demo.Properties.Resources.error4;
                 //    break;
                 //case -5:
-                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error5;
+                //    mF.textBox9.Text = Gentag_Demo.Properties.Resources.error5;
                 //    break;
                 //case -6:
-                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error6;
+                //    mF.textBox9.Text = Gentag_Demo.Properties.Resources.error6;
                 //    break;
                 //case -7:
-                //    mF.textBox9.Text = GenTag_Demo.Properties.Resources.error7;
+                //    mF.textBox9.Text = Gentag_Demo.Properties.Resources.error7;
                 //    break;
                 default:
                     break;
@@ -442,19 +550,19 @@ namespace GenTagDemo
 
             if (obj == readLogButton)
             {
-                readLogButton.Text = GenTagDemo.Properties.Resources.readLogButtonInit;
+                readLogButton.Text = GentagDemo.Properties.Resources.readLogButtonInit;
             }
             else if (obj == setValueButton)
             {
-                setValueButton.Text = GenTagDemo.Properties.Resources.setValueButtonInit;
+                setValueButton.Text = GentagDemo.Properties.Resources.setValueButtonInit;
             }
             else if (obj == readValueButton)
             {
-                setValueButton.Text = GenTagDemo.Properties.Resources.readValueButtonInit;
+                setValueButton.Text = GentagDemo.Properties.Resources.readValueButtonInit;
             }
             else if (obj == setValueButton)
             {
-                readIDButton.Text = GenTagDemo.Properties.Resources.readIDButtonInit;
+                readIDButton.Text = GentagDemo.Properties.Resources.readIDButtonInit;
             }
         }
 
@@ -810,7 +918,7 @@ namespace GenTagDemo
         }
 
         private void connectGPSButton_Click(object sender, EventArgs e)
-        {            
+        {
             string errorMsg = "";
             for (int triesLeft = 5; triesLeft > 0; )
             {
@@ -872,13 +980,19 @@ namespace GenTagDemo
         {
             statusTextBox.Text = @"Searching";
         }
+
         private const double maximumHDOPValue = 7.0;
+
+        private string currentLatitude = "0";
+
+        private string currentLongitude = "0";
+
         private void gpsNmea_PositionReceived(string latitude, string longitude)
         {
             if (currentHDOPValue < maximumHDOPValue)
             {
-                latitudeTextBox.Text = latitude;
-                longitudeTextBox.Text = longitude;
+                currentLatitude = latitudeTextBox.Text = latitude;
+                currentLongitude = longitudeTextBox.Text = longitude;
             }
         }
         private void gpsNmea_SpeedReceived(double speed)
@@ -946,9 +1060,9 @@ namespace GenTagDemo
         {
 
         }
-        
+
         private double currentHDOPValue = 15;
-        
+
         private void gpsNmea_HDOPReceived(double value)
         {
             hdopTextBox.Text = value.ToString();

@@ -4,7 +4,7 @@ using System.Text;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace GenTagDemo
+namespace GentagDemo
 {
     class nmeaInterpreter
     {

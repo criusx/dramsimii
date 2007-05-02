@@ -1,4 +1,4 @@
-namespace GenTagDemo
+namespace GentagDemo
 {
     partial class mainForm
     {
@@ -114,6 +114,8 @@ namespace GenTagDemo
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.gpsSerialPort = new System.IO.Ports.SerialPort(this.components);
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -157,6 +159,8 @@ namespace GenTagDemo
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.tabPage1.Controls.Add(this.numericUpDown2);
+            this.tabPage1.Controls.Add(this.numericUpDown1);
             this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Controls.Add(this.readIDButton);
             this.tabPage1.Controls.Add(this.checkBox1);
@@ -296,7 +300,7 @@ namespace GenTagDemo
             this.tabPage3.Controls.Add(this.textBox4);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(240, 217);
+            this.tabPage3.Size = new System.Drawing.Size(232, 214);
             this.tabPage3.Text = "VarioSens/W";
             // 
             // treeView2
@@ -340,7 +344,7 @@ namespace GenTagDemo
             this.tabPage4.Controls.Add(this.label5);
             this.tabPage4.Location = new System.Drawing.Point(0, 0);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(240, 217);
+            this.tabPage4.Size = new System.Drawing.Size(232, 214);
             this.tabPage4.Text = "Manual";
             // 
             // getSetStatusBox
@@ -458,7 +462,7 @@ namespace GenTagDemo
             this.tabPage5.Controls.Add(this.patientNameBox);
             this.tabPage5.Location = new System.Drawing.Point(0, 0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(240, 217);
+            this.tabPage5.Size = new System.Drawing.Size(232, 214);
             this.tabPage5.Text = "Patient";
             // 
             // medicationButton
@@ -571,7 +575,7 @@ namespace GenTagDemo
             this.gpsPage.Controls.Add(this.progressBar1);
             this.gpsPage.Location = new System.Drawing.Point(0, 0);
             this.gpsPage.Name = "gpsPage";
-            this.gpsPage.Size = new System.Drawing.Size(240, 217);
+            this.gpsPage.Size = new System.Drawing.Size(232, 214);
             this.gpsPage.Text = "GPS";
             // 
             // satellitesUsedTextBox
@@ -900,6 +904,20 @@ namespace GenTagDemo
             this.gpsSerialPort.ReceivedBytesThreshold = 512;
             this.gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.gpsSerialPort_DataReceived);
             // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(3, 125);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(70, 22);
+            this.numericUpDown1.TabIndex = 5;
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(3, 145);
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(70, 22);
+            this.numericUpDown2.TabIndex = 5;
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1010,6 +1028,8 @@ namespace GenTagDemo
         private System.Windows.Forms.Label satLabel3;
         private System.Windows.Forms.Label satLabel2;
         private System.Windows.Forms.Label satLabel1;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown numericUpDown2;
     }
 }
 

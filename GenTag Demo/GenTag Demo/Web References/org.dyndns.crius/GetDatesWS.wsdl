@@ -59,10 +59,25 @@
           <xsd:element name="return" nillable="true" type="xsd:base64Binary" />
         </xsd:sequence>
       </xsd:complexType>
+      <xsd:element name="getRoute" type="tns:getRoute" />
+      <xsd:complexType name="getRoute">
+        <xsd:sequence>
+          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getRouteResponse" type="tns:getRouteResponse" />
+      <xsd:complexType name="getRouteResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:element name="isAuthenticated" type="tns:isAuthenticated" />
       <xsd:complexType name="isAuthenticated">
         <xsd:sequence>
           <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+          <xsd:element name="UID" nillable="true" type="xsd:string" />
+          <xsd:element name="lat" nillable="true" type="xsd:string" />
+          <xsd:element name="longit" nillable="true" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:element name="isAuthenticatedResponse" type="tns:isAuthenticatedResponse" />
@@ -97,6 +112,12 @@
   <message name="GetDatesWS_getPictureResponse">
     <part name="parameters" element="tns:getPictureResponse" />
   </message>
+  <message name="GetDatesWS_getRoute">
+    <part name="parameters" element="tns:getRoute" />
+  </message>
+  <message name="GetDatesWS_getRouteResponse">
+    <part name="parameters" element="tns:getRouteResponse" />
+  </message>
   <message name="GetDatesWS_isAuthenticated">
     <part name="parameters" element="tns:isAuthenticated" />
   </message>
@@ -119,6 +140,10 @@
     <operation name="getPicture">
       <input message="tns:GetDatesWS_getPicture" />
       <output message="tns:GetDatesWS_getPictureResponse" />
+    </operation>
+    <operation name="getRoute">
+      <input message="tns:GetDatesWS_getRoute" />
+      <output message="tns:GetDatesWS_getRouteResponse" />
     </operation>
     <operation name="isAuthenticated">
       <input message="tns:GetDatesWS_isAuthenticated" />
@@ -155,6 +180,15 @@
       </output>
     </operation>
     <operation name="getPicture">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getRoute">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />
