@@ -2,6 +2,21 @@
 <definitions xmlns:tns="http://datespackage/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GetDatesWS" targetNamespace="http://datespackage/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>
     <xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified" targetNamespace="http://datespackage/">
+      <xsd:element name="callIn" type="tns:callIn" />
+      <xsd:complexType name="callIn">
+        <xsd:sequence>
+          <xsd:element name="UID" nillable="true" type="xsd:string" />
+          <xsd:element name="lat" nillable="true" type="xsd:string" />
+          <xsd:element name="longit" nillable="true" type="xsd:string" />
+          <xsd:element name="timeSinceLastReading" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="callInResponse" type="tns:callInResponse" />
+      <xsd:complexType name="callInResponse">
+        <xsd:sequence>
+          <xsd:element name="return" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:element name="checkInteraction" type="tns:checkInteraction" />
       <xsd:complexType name="checkInteraction">
         <xsd:sequence>
@@ -71,6 +86,18 @@
           <xsd:element name="return" nillable="true" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
+      <xsd:element name="getSince" type="tns:getSince" />
+      <xsd:complexType name="getSince">
+        <xsd:sequence>
+          <xsd:element name="timestamp" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getSinceResponse" type="tns:getSinceResponse" />
+      <xsd:complexType name="getSinceResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="return" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:element name="isAuthenticated" type="tns:isAuthenticated" />
       <xsd:complexType name="isAuthenticated">
         <xsd:sequence>
@@ -88,6 +115,12 @@
       </xsd:complexType>
     </xsd:schema>
   </types>
+  <message name="GetDatesWS_callIn">
+    <part name="parameters" element="tns:callIn" />
+  </message>
+  <message name="GetDatesWS_callInResponse">
+    <part name="parameters" element="tns:callInResponse" />
+  </message>
   <message name="GetDatesWS_checkInteraction">
     <part name="parameters" element="tns:checkInteraction" />
   </message>
@@ -118,6 +151,12 @@
   <message name="GetDatesWS_getRouteResponse">
     <part name="parameters" element="tns:getRouteResponse" />
   </message>
+  <message name="GetDatesWS_getSince">
+    <part name="parameters" element="tns:getSince" />
+  </message>
+  <message name="GetDatesWS_getSinceResponse">
+    <part name="parameters" element="tns:getSinceResponse" />
+  </message>
   <message name="GetDatesWS_isAuthenticated">
     <part name="parameters" element="tns:isAuthenticated" />
   </message>
@@ -125,6 +164,10 @@
     <part name="parameters" element="tns:isAuthenticatedResponse" />
   </message>
   <portType name="GetDatesWS">
+    <operation name="callIn">
+      <input message="tns:GetDatesWS_callIn" />
+      <output message="tns:GetDatesWS_callInResponse" />
+    </operation>
     <operation name="checkInteraction">
       <input message="tns:GetDatesWS_checkInteraction" />
       <output message="tns:GetDatesWS_checkInteractionResponse" />
@@ -145,6 +188,10 @@
       <input message="tns:GetDatesWS_getRoute" />
       <output message="tns:GetDatesWS_getRouteResponse" />
     </operation>
+    <operation name="getSince">
+      <input message="tns:GetDatesWS_getSince" />
+      <output message="tns:GetDatesWS_getSinceResponse" />
+    </operation>
     <operation name="isAuthenticated">
       <input message="tns:GetDatesWS_isAuthenticated" />
       <output message="tns:GetDatesWS_isAuthenticatedResponse" />
@@ -152,6 +199,15 @@
   </portType>
   <binding name="GetDatesWSSoapHttp" type="tns:GetDatesWS">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="callIn">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
     <operation name="checkInteraction">
       <soap:operation soapAction="" />
       <input>
@@ -189,6 +245,15 @@
       </output>
     </operation>
     <operation name="getRoute">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getSince">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />

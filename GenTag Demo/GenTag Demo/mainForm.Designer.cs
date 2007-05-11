@@ -34,8 +34,8 @@ namespace GentagDemo
             this.readLogButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox9 = new System.Windows.Forms.TextBox();
@@ -76,6 +76,7 @@ namespace GentagDemo
             this.patientDescriptionBox = new System.Windows.Forms.TextBox();
             this.patientNameBox = new System.Windows.Forms.TextBox();
             this.gpsPage = new System.Windows.Forms.TabPage();
+            this.trackingCheckBox = new System.Windows.Forms.CheckBox();
             this.satellitesUsedTextBox = new System.Windows.Forms.TextBox();
             this.timeTextBox = new System.Windows.Forms.TextBox();
             this.hdopTextBox = new System.Windows.Forms.TextBox();
@@ -113,9 +114,8 @@ namespace GentagDemo
             this.progressBar3 = new System.Windows.Forms.ProgressBar();
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.queueSizeBar = new System.Windows.Forms.ProgressBar();
             this.gpsSerialPort = new System.IO.Ports.SerialPort(this.components);
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -159,16 +159,21 @@ namespace GentagDemo
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.tabPage1.Controls.Add(this.numericUpDown2);
-            this.tabPage1.Controls.Add(this.numericUpDown1);
+            this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Controls.Add(this.readIDButton);
-            this.tabPage1.Controls.Add(this.checkBox1);
             this.tabPage1.Controls.Add(this.treeView1);
             this.tabPage1.Location = new System.Drawing.Point(0, 0);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Size = new System.Drawing.Size(240, 217);
             this.tabPage1.Text = "Auth";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.panel1.Location = new System.Drawing.Point(7, 151);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(30, 30);
             // 
             // pictureBox1
             // 
@@ -178,14 +183,6 @@ namespace GentagDemo
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(154, 90);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(0, 163);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(25, 18);
-            this.checkBox1.TabIndex = 4;
             // 
             // treeView1
             // 
@@ -536,6 +533,7 @@ namespace GentagDemo
             // gpsPage
             // 
             this.gpsPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.gpsPage.Controls.Add(this.trackingCheckBox);
             this.gpsPage.Controls.Add(this.satellitesUsedTextBox);
             this.gpsPage.Controls.Add(this.timeTextBox);
             this.gpsPage.Controls.Add(this.hdopTextBox);
@@ -573,10 +571,19 @@ namespace GentagDemo
             this.gpsPage.Controls.Add(this.progressBar3);
             this.gpsPage.Controls.Add(this.progressBar2);
             this.gpsPage.Controls.Add(this.progressBar1);
+            this.gpsPage.Controls.Add(this.queueSizeBar);
             this.gpsPage.Location = new System.Drawing.Point(0, 0);
             this.gpsPage.Name = "gpsPage";
-            this.gpsPage.Size = new System.Drawing.Size(232, 214);
+            this.gpsPage.Size = new System.Drawing.Size(240, 217);
             this.gpsPage.Text = "GPS";
+            // 
+            // trackingCheckBox
+            // 
+            this.trackingCheckBox.Location = new System.Drawing.Point(72, 4);
+            this.trackingCheckBox.Name = "trackingCheckBox";
+            this.trackingCheckBox.Size = new System.Drawing.Size(59, 15);
+            this.trackingCheckBox.TabIndex = 40;
+            this.trackingCheckBox.Text = "Track";
             // 
             // satellitesUsedTextBox
             // 
@@ -896,6 +903,13 @@ namespace GentagDemo
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(71, 20);
             // 
+            // queueSizeBar
+            // 
+            this.queueSizeBar.Location = new System.Drawing.Point(72, 21);
+            this.queueSizeBar.Maximum = 10;
+            this.queueSizeBar.Name = "queueSizeBar";
+            this.queueSizeBar.Size = new System.Drawing.Size(59, 14);
+            // 
             // gpsSerialPort
             // 
             this.gpsSerialPort.BaudRate = 4800;
@@ -903,20 +917,6 @@ namespace GentagDemo
             this.gpsSerialPort.ReadBufferSize = 8192;
             this.gpsSerialPort.ReceivedBytesThreshold = 512;
             this.gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.gpsSerialPort_DataReceived);
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(3, 125);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(70, 22);
-            this.numericUpDown1.TabIndex = 5;
-            // 
-            // numericUpDown2
-            // 
-            this.numericUpDown2.Location = new System.Drawing.Point(3, 145);
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(70, 22);
-            this.numericUpDown2.TabIndex = 5;
             // 
             // mainForm
             // 
@@ -988,7 +988,6 @@ namespace GentagDemo
         private System.Windows.Forms.TextBox patientNameBox;
         private System.Windows.Forms.PictureBox drugPhoto;
         private System.Windows.Forms.TextBox getSetStatusBox;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.TabPage gpsPage;
         private System.Windows.Forms.ProgressBar progressBar7;
         private System.Windows.Forms.ProgressBar progressBar6;
@@ -996,7 +995,7 @@ namespace GentagDemo
         private System.Windows.Forms.ProgressBar progressBar4;
         private System.Windows.Forms.ProgressBar progressBar3;
         private System.Windows.Forms.ProgressBar progressBar2;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ProgressBar queueSizeBar;
         private System.Windows.Forms.ComboBox comPortsComboBox;
         private System.Windows.Forms.Button connectGPSButton;
         private System.Windows.Forms.Button scanCOMPortButton;
@@ -1028,8 +1027,10 @@ namespace GentagDemo
         private System.Windows.Forms.Label satLabel3;
         private System.Windows.Forms.Label satLabel2;
         private System.Windows.Forms.Label satLabel1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.CheckBox trackingCheckBox;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        
     }
 }
 

@@ -35,6 +35,33 @@ namespace GentagDemo.org.dyndns.crius {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("return")]
+        public bool callIn([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string UID, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string lat, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string longit, long timeSinceLastReading) {
+            object[] results = this.Invoke("callIn", new object[] {
+                        UID,
+                        lat,
+                        longit,
+                        timeSinceLastReading});
+            return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BegincallIn(string UID, string lat, string longit, long timeSinceLastReading, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("callIn", new object[] {
+                        UID,
+                        lat,
+                        longit,
+                        timeSinceLastReading}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public bool EndcallIn(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return")]
         public bool checkInteraction([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string ID, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string drugID) {
             object[] results = this.Invoke("checkInteraction", new object[] {
                         ID,
@@ -141,6 +168,27 @@ namespace GentagDemo.org.dyndns.crius {
         public string EndgetRoute(System.IAsyncResult asyncResult) {
             object[] results = this.EndInvoke(asyncResult);
             return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        public string[] getSince(long timestamp) {
+            object[] results = this.Invoke("getSince", new object[] {
+                        timestamp});
+            return ((string[])(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BegingetSince(long timestamp, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("getSince", new object[] {
+                        timestamp}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public string[] EndgetSince(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((string[])(results[0]));
         }
         
         /// <remarks/>

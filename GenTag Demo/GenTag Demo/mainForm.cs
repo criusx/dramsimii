@@ -44,6 +44,8 @@ namespace GentagDemo
 
         private Queue tagQueue;
 
+        private System.Threading.Timer reportGPSTimer;
+
         [DllImport("coredll.dll")]
         private extern static int GetDeviceUniqueID(
             [In, Out] byte[] appdata,
@@ -55,6 +57,9 @@ namespace GentagDemo
         public mainForm()
         {
             InitializeComponent();
+
+            reportGPSTimer =
+                new System.Threading.Timer(reportGPSPosition, null, 30000, 30000);
            
             // generate the device's UID
             string AppString = GentagDemo.Properties.Resources.titleString;
@@ -166,7 +171,7 @@ namespace GentagDemo
             else
             {
                 // wait while a tag is read
-                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0)) { Thread.Sleep(100); }
+                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0)) { Thread.Sleep(50); }
 
                 if (readerRunning == false)
                     throw new IOException("Reading of tag stopped");
@@ -196,13 +201,12 @@ namespace GentagDemo
 
             while (readerRunning == true)
             {
-                setCheckBox(checkBox1, false);
+                setPanel(panel1, System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255))))));                
 
                 try
                 {
                     string currentTag = readTagID();
-
-                    countUp();
+                   
                     lock (cachedIDLookups.SyncRoot)
                     {
                         if (cachedIDLookups.ContainsKey(currentTag) == false)
@@ -215,7 +219,7 @@ namespace GentagDemo
                 }
                 catch (System.IO.IOException ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    //MessageBox.Show(ex.Message);
                     readerRunning = false;
                 }
                 catch (System.NotSupportedException xx)
@@ -223,18 +227,17 @@ namespace GentagDemo
                     MessageBox.Show("not working");
                 }
 
-                setCheckBox(checkBox1, true);
+                setPanel(panel1, System.Drawing.Color.Green);
 
-
-                Thread.Sleep(100);
+                Thread.Sleep(150);
             }
             setWaitCursor(false);
         }
 
         
         private void doLookup()
-        {            
-            while (readerRunning == true)
+        {
+            while ((readerRunning == true) || (tagQueue.Count > 0))
             {
                 string currentTag;
 
@@ -259,7 +262,6 @@ namespace GentagDemo
                         // use the web service to retrieve a description  
                         try
                         {
-                            countUp2();
                             string description = ws.getDescription(currentTag);
                             updateTreeView1(currentTag, description, ws.isAuthenticated(currentTag, DeviceUID, currentLatitude, currentLongitude));
                             lock (cachedIDLookups.SyncRoot)
@@ -294,28 +296,7 @@ namespace GentagDemo
                 }
             }
         }
-
-        private delegate void incCounter();
-
-        private void countUp()
-        {
-            if (this.InvokeRequired)
-            {
-                Invoke(new incCounter(countUp));
-                return;
-            }
-            numericUpDown1.Value++;
-        }
-
-        private void countUp2()
-        {
-            if (this.InvokeRequired)
-            {
-                Invoke(new incCounter(countUp2));
-                return;
-            }
-            numericUpDown2.Value++;
-        }
+      
 
         private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated);
 
@@ -362,6 +343,7 @@ namespace GentagDemo
             if (e.KeyCode == System.Windows.Forms.Keys.Back)
             {
                 treeView1.Nodes.Clear();
+                cachedIDLookups.Clear();
             }
             else if (e.KeyCode == System.Windows.Forms.Keys.Q)
             {
@@ -801,6 +783,18 @@ namespace GentagDemo
                 Cursor.Current = Cursors.Default;
         }
 
+        private delegate void setPanelDelegate(Panel p, Color c);
+
+        private void setPanel(Panel p, Color c)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setPanelDelegate(setPanel), new object[] { p, c });
+                return;
+            }
+            p.BackColor = c;
+        }
+
         private delegate void setCheckBoxDelegate(CheckBox cB, bool check);
 
         private void setCheckBox(CheckBox cB, bool check)
@@ -811,6 +805,17 @@ namespace GentagDemo
                 return;
             }
             cB.Checked = check;
+        }
+
+        private delegate bool getCheckBoxDelegate(CheckBox cB);
+
+        private bool getCheckBox(CheckBox cB)
+        {
+            if (this.InvokeRequired)
+            {
+                return (bool)this.Invoke(new getCheckBoxDelegate(getCheckBox), new object[] { cB });                
+            }
+            return cB.Checked;
         }
 
         private delegate int getComboBoxIndexDelegate(ComboBox cB);
@@ -853,6 +858,23 @@ namespace GentagDemo
                 return;
             }
             tB.Text = val;
+        }
+
+        private delegate void setProgressBarDelegate(ProgressBar pB, int val);
+
+        private void setProgressBar(ProgressBar pB, int val)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setProgressBarDelegate(setProgressBar), new object[] { pB, val });
+                return;
+            }
+            if (val > pB.Maximum)
+                pB.Value = pB.Maximum;
+            else if (val < pB.Minimum)
+                pB.Value = pB.Minimum;
+            else
+                pB.Value = val;
         }
 
         private delegate string getTextBoxDelegate(TextBox tB);
@@ -933,6 +955,7 @@ namespace GentagDemo
                     else
                     {
                         gpsSerialPort.Close();
+                        trackingCheckBox.Checked = false; 
                         connectGPSButton.Text = "Connect";
                     }
                     errorMsg = "";
@@ -961,7 +984,7 @@ namespace GentagDemo
                     if (buffer[i].StartsWith(@"GPRMC") || buffer[i].StartsWith(@"GPGSV") || buffer[i].StartsWith(@"GPGSA"))
                         if (gpsNmea.Parse(@"$" + buffer[i].Substring(0, buffer[i].Length - 2)) == false)
                         {
-                            progressBar1.Value++;
+                            queueSizeBar.Value++;
                             //MessageBox.Show(buffer[i]);
                         }
             }
@@ -987,12 +1010,15 @@ namespace GentagDemo
 
         private string currentLongitude = "0";
 
+        private DateTime lastGPSUpdateTime = new DateTime(0);
+
         private void gpsNmea_PositionReceived(string latitude, string longitude)
         {
             if (currentHDOPValue < maximumHDOPValue)
             {
                 currentLatitude = latitudeTextBox.Text = latitude;
                 currentLongitude = longitudeTextBox.Text = longitude;
+                lastGPSUpdateTime = DateTime.Now;
             }
         }
         private void gpsNmea_SpeedReceived(double speed)
@@ -1013,7 +1039,7 @@ namespace GentagDemo
                 satLabel1.Text = satLabel2.Text = satLabel3.Text =
                     satLabel4.Text = satLabel5.Text = satLabel6.Text =
                     satLabel7.Text = satLabel8.Text = "#";
-                progressBar1.Value = progressBar2.Value = progressBar3.Value =
+                queueSizeBar.Value = progressBar2.Value = progressBar3.Value =
                     progressBar4.Value = progressBar5.Value =
                     progressBar6.Value = progressBar7.Value =
                     progressBar8.Value = 0;
@@ -1077,6 +1103,54 @@ namespace GentagDemo
         private void gpsNmea_NumSatsReceived(int value)
         {
             satellitesUsedTextBox.Text = value.ToString();
+        }
+
+       
+        Queue latitudeQueue = new Queue();
+        Queue longitudeQueue = new Queue();
+        Queue elapsedSinceReadQueue = new Queue();
+
+        private void reportGPSPosition(Object stateInfo)
+        {
+            if (!getCheckBox(trackingCheckBox))
+                return;
+            if (gpsSerialPort.IsOpen && (lastGPSUpdateTime.Ticks > 0))
+            {
+                // if the serial port is open and values for lat/long
+                // have been established recently, then send this reading in
+                // if the reading fails, queue it up
+                lock (latitudeQueue.SyncRoot)
+                {
+                    latitudeQueue.Enqueue(currentLatitude);
+                    longitudeQueue.Enqueue(currentLongitude);
+                    elapsedSinceReadQueue.Enqueue((DateTime.Now.Ticks - lastGPSUpdateTime.Ticks) / 1000);
+                    setProgressBar(queueSizeBar,latitudeQueue.Count);
+
+                    try
+                    {
+                        // attempt to unload the queues each time
+                        while (latitudeQueue.Count > 0)
+                        {
+                            org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
+                            bool success =
+                                ws.callIn(DeviceUID, (string)latitudeQueue.Peek(), (string)longitudeQueue.Peek(), (long)elapsedSinceReadQueue.Peek());
+                            if (success)
+                            {
+                                latitudeQueue.Dequeue();
+                                longitudeQueue.Dequeue();
+                                elapsedSinceReadQueue.Dequeue();
+                            }
+                            else
+                                break;
+                        }
+
+                    }
+                    catch (WebException ex)
+                    {
+                        //MessageBox.Show("Problem connecting to web service: " + ex.Message);
+                    }
+                }
+            }
         }
     }
 }
