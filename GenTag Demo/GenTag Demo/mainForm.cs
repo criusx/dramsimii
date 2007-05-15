@@ -984,7 +984,7 @@ namespace GentagDemo
                     if (buffer[i].StartsWith(@"GPRMC") || buffer[i].StartsWith(@"GPGSV") || buffer[i].StartsWith(@"GPGSA"))
                         if (gpsNmea.Parse(@"$" + buffer[i].Substring(0, buffer[i].Length - 2)) == false)
                         {
-                            queueSizeBar.Value++;
+                            //queueSizeBar.Value++;
                             //MessageBox.Show(buffer[i]);
                         }
             }
@@ -1039,7 +1039,7 @@ namespace GentagDemo
                 satLabel1.Text = satLabel2.Text = satLabel3.Text =
                     satLabel4.Text = satLabel5.Text = satLabel6.Text =
                     satLabel7.Text = satLabel8.Text = "#";
-                queueSizeBar.Value = progressBar2.Value = progressBar3.Value =
+                progressBar1.Value = progressBar2.Value = progressBar3.Value =
                     progressBar4.Value = progressBar5.Value =
                     progressBar6.Value = progressBar7.Value =
                     progressBar8.Value = 0;
@@ -1106,48 +1106,47 @@ namespace GentagDemo
         }
 
        
-        Queue latitudeQueue = new Queue();
-        Queue longitudeQueue = new Queue();
-        Queue elapsedSinceReadQueue = new Queue();
+        Queue<string> latitudeQueue = new Queue<string>();
+        Queue<string> longitudeQueue = new Queue<string>();
+        Queue<long> elapsedSinceReadQueue = new Queue<long>();
+        Queue<long> reportedTimeQueue = new Queue<long>();
 
         private void reportGPSPosition(Object stateInfo)
         {
-            if (!getCheckBox(trackingCheckBox))
+            // if tracking is disabled and there are no pending transfers
+            if (!getCheckBox(trackingCheckBox) && latitudeQueue.Count == 0)
                 return;
             if (gpsSerialPort.IsOpen && (lastGPSUpdateTime.Ticks > 0))
             {
                 // if the serial port is open and values for lat/long
                 // have been established recently, then send this reading in
                 // if the reading fails, queue it up
-                lock (latitudeQueue.SyncRoot)
+                lock (latitudeQueue)
                 {
                     latitudeQueue.Enqueue(currentLatitude);
                     longitudeQueue.Enqueue(currentLongitude);
+                    TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1).ToUniversalTime();
                     elapsedSinceReadQueue.Enqueue((DateTime.Now.Ticks - lastGPSUpdateTime.Ticks) / 1000);
+                    reportedTimeQueue.Enqueue((long)t.TotalMilliseconds);
                     setProgressBar(queueSizeBar,latitudeQueue.Count);
-
-                    try
+                    
+                    if (latitudeQueue.Count > 20)
                     {
-                        // attempt to unload the queues each time
-                        while (latitudeQueue.Count > 0)
+                        try
                         {
-                            org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-                            bool success =
-                                ws.callIn(DeviceUID, (string)latitudeQueue.Peek(), (string)longitudeQueue.Peek(), (long)elapsedSinceReadQueue.Peek());
-                            if (success)
+                            // attempt to unload the queues each time                            
+                            if ((new org.dyndns.crius.GetDatesWS()).callHome(DeviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray()))
                             {
-                                latitudeQueue.Dequeue();
-                                longitudeQueue.Dequeue();
-                                elapsedSinceReadQueue.Dequeue();
+                                latitudeQueue.Clear();
+                                longitudeQueue.Clear();
+                                elapsedSinceReadQueue.Clear();
+                                reportedTimeQueue.Clear();
                             }
-                            else
-                                break;
                         }
-
-                    }
-                    catch (WebException ex)
-                    {
-                        //MessageBox.Show("Problem connecting to web service: " + ex.Message);
+                        catch (WebException ex)
+                        {
+                            //MessageBox.Show("Problem connecting to web service: " + ex.Message);
+                        }
                     }
                 }
             }

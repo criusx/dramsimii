@@ -2,17 +2,18 @@
 <definitions xmlns:tns="http://datespackage/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GetDatesWS" targetNamespace="http://datespackage/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>
     <xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified" targetNamespace="http://datespackage/">
-      <xsd:element name="callIn" type="tns:callIn" />
-      <xsd:complexType name="callIn">
+      <xsd:element name="callHome" type="tns:callHome" />
+      <xsd:complexType name="callHome">
         <xsd:sequence>
           <xsd:element name="UID" nillable="true" type="xsd:string" />
-          <xsd:element name="lat" nillable="true" type="xsd:string" />
-          <xsd:element name="longit" nillable="true" type="xsd:string" />
-          <xsd:element name="timeSinceLastReading" type="xsd:long" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="lat" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="longit" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="timeSinceLastReading" type="xsd:long" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="reportedTime" type="xsd:long" />
         </xsd:sequence>
       </xsd:complexType>
-      <xsd:element name="callInResponse" type="tns:callInResponse" />
-      <xsd:complexType name="callInResponse">
+      <xsd:element name="callHomeResponse" type="tns:callHomeResponse" />
+      <xsd:complexType name="callHomeResponse">
         <xsd:sequence>
           <xsd:element name="return" type="xsd:boolean" />
         </xsd:sequence>
@@ -78,12 +79,13 @@
       <xsd:complexType name="getRoute">
         <xsd:sequence>
           <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+          <xsd:element name="sinceWhen" type="xsd:long" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:element name="getRouteResponse" type="tns:getRouteResponse" />
       <xsd:complexType name="getRouteResponse">
         <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="return" nillable="true" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:element name="getSince" type="tns:getSince" />
@@ -94,6 +96,16 @@
       </xsd:complexType>
       <xsd:element name="getSinceResponse" type="tns:getSinceResponse" />
       <xsd:complexType name="getSinceResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="return" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getUniqueUIDs" type="tns:getUniqueUIDs" />
+      <xsd:complexType name="getUniqueUIDs">
+        <xsd:sequence />
+      </xsd:complexType>
+      <xsd:element name="getUniqueUIDsResponse" type="tns:getUniqueUIDsResponse" />
+      <xsd:complexType name="getUniqueUIDsResponse">
         <xsd:sequence>
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="return" nillable="true" type="xsd:string" />
         </xsd:sequence>
@@ -115,11 +127,11 @@
       </xsd:complexType>
     </xsd:schema>
   </types>
-  <message name="GetDatesWS_callIn">
-    <part name="parameters" element="tns:callIn" />
+  <message name="GetDatesWS_callHome">
+    <part name="parameters" element="tns:callHome" />
   </message>
-  <message name="GetDatesWS_callInResponse">
-    <part name="parameters" element="tns:callInResponse" />
+  <message name="GetDatesWS_callHomeResponse">
+    <part name="parameters" element="tns:callHomeResponse" />
   </message>
   <message name="GetDatesWS_checkInteraction">
     <part name="parameters" element="tns:checkInteraction" />
@@ -157,6 +169,12 @@
   <message name="GetDatesWS_getSinceResponse">
     <part name="parameters" element="tns:getSinceResponse" />
   </message>
+  <message name="GetDatesWS_getUniqueUIDs">
+    <part name="parameters" element="tns:getUniqueUIDs" />
+  </message>
+  <message name="GetDatesWS_getUniqueUIDsResponse">
+    <part name="parameters" element="tns:getUniqueUIDsResponse" />
+  </message>
   <message name="GetDatesWS_isAuthenticated">
     <part name="parameters" element="tns:isAuthenticated" />
   </message>
@@ -164,9 +182,9 @@
     <part name="parameters" element="tns:isAuthenticatedResponse" />
   </message>
   <portType name="GetDatesWS">
-    <operation name="callIn">
-      <input message="tns:GetDatesWS_callIn" />
-      <output message="tns:GetDatesWS_callInResponse" />
+    <operation name="callHome">
+      <input message="tns:GetDatesWS_callHome" />
+      <output message="tns:GetDatesWS_callHomeResponse" />
     </operation>
     <operation name="checkInteraction">
       <input message="tns:GetDatesWS_checkInteraction" />
@@ -192,6 +210,10 @@
       <input message="tns:GetDatesWS_getSince" />
       <output message="tns:GetDatesWS_getSinceResponse" />
     </operation>
+    <operation name="getUniqueUIDs">
+      <input message="tns:GetDatesWS_getUniqueUIDs" />
+      <output message="tns:GetDatesWS_getUniqueUIDsResponse" />
+    </operation>
     <operation name="isAuthenticated">
       <input message="tns:GetDatesWS_isAuthenticated" />
       <output message="tns:GetDatesWS_isAuthenticatedResponse" />
@@ -199,7 +221,7 @@
   </portType>
   <binding name="GetDatesWSSoapHttp" type="tns:GetDatesWS">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <operation name="callIn">
+    <operation name="callHome">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />
@@ -254,6 +276,15 @@
       </output>
     </operation>
     <operation name="getSince">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getUniqueUIDs">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />

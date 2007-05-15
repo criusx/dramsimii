@@ -35,26 +35,28 @@ namespace GentagDemo.org.dyndns.crius {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("return")]
-        public bool callIn([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string UID, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string lat, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string longit, long timeSinceLastReading) {
-            object[] results = this.Invoke("callIn", new object[] {
+        public bool callHome([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string UID, [System.Xml.Serialization.XmlElementAttribute("lat", IsNullable=true)] string[] lat, [System.Xml.Serialization.XmlElementAttribute("longit", IsNullable=true)] string[] longit, [System.Xml.Serialization.XmlElementAttribute("timeSinceLastReading")] long[] timeSinceLastReading, [System.Xml.Serialization.XmlElementAttribute("reportedTime")] long[] reportedTime) {
+            object[] results = this.Invoke("callHome", new object[] {
                         UID,
                         lat,
                         longit,
-                        timeSinceLastReading});
+                        timeSinceLastReading,
+                        reportedTime});
             return ((bool)(results[0]));
         }
         
         /// <remarks/>
-        public System.IAsyncResult BegincallIn(string UID, string lat, string longit, long timeSinceLastReading, System.AsyncCallback callback, object asyncState) {
-            return this.BeginInvoke("callIn", new object[] {
+        public System.IAsyncResult BegincallHome(string UID, string[] lat, string[] longit, long[] timeSinceLastReading, long[] reportedTime, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("callHome", new object[] {
                         UID,
                         lat,
                         longit,
-                        timeSinceLastReading}, callback, asyncState);
+                        timeSinceLastReading,
+                        reportedTime}, callback, asyncState);
         }
         
         /// <remarks/>
-        public bool EndcallIn(System.IAsyncResult asyncResult) {
+        public bool EndcallHome(System.IAsyncResult asyncResult) {
             object[] results = this.EndInvoke(asyncResult);
             return ((bool)(results[0]));
         }
@@ -152,22 +154,24 @@ namespace GentagDemo.org.dyndns.crius {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
-        public string getRoute([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum) {
+        public string[] getRoute([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum, long sinceWhen) {
             object[] results = this.Invoke("getRoute", new object[] {
-                        RFIDNum});
-            return ((string)(results[0]));
+                        RFIDNum,
+                        sinceWhen});
+            return ((string[])(results[0]));
         }
         
         /// <remarks/>
-        public System.IAsyncResult BegingetRoute(string RFIDNum, System.AsyncCallback callback, object asyncState) {
+        public System.IAsyncResult BegingetRoute(string RFIDNum, long sinceWhen, System.AsyncCallback callback, object asyncState) {
             return this.BeginInvoke("getRoute", new object[] {
-                        RFIDNum}, callback, asyncState);
+                        RFIDNum,
+                        sinceWhen}, callback, asyncState);
         }
         
         /// <remarks/>
-        public string EndgetRoute(System.IAsyncResult asyncResult) {
+        public string[] EndgetRoute(System.IAsyncResult asyncResult) {
             object[] results = this.EndInvoke(asyncResult);
-            return ((string)(results[0]));
+            return ((string[])(results[0]));
         }
         
         /// <remarks/>
@@ -187,6 +191,25 @@ namespace GentagDemo.org.dyndns.crius {
         
         /// <remarks/>
         public string[] EndgetSince(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((string[])(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://datespackage/", ResponseNamespace="http://datespackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        public string[] getUniqueUIDs() {
+            object[] results = this.Invoke("getUniqueUIDs", new object[0]);
+            return ((string[])(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BegingetUniqueUIDs(System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("getUniqueUIDs", new object[0], callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public string[] EndgetUniqueUIDs(System.IAsyncResult asyncResult) {
             object[] results = this.EndInvoke(asyncResult);
             return ((string[])(results[0]));
         }
