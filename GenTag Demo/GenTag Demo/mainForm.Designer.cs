@@ -146,10 +146,10 @@ namespace GentagDemo
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.gpsPage);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -207,7 +207,7 @@ namespace GentagDemo
             this.tabPage2.Controls.Add(this.readLogButton);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(232, 214);
+            this.tabPage2.Size = new System.Drawing.Size(240, 217);
             this.tabPage2.Text = "VarioSens";
             // 
             // textBox9
@@ -459,7 +459,7 @@ namespace GentagDemo
             this.tabPage5.Controls.Add(this.patientNameBox);
             this.tabPage5.Location = new System.Drawing.Point(0, 0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(232, 214);
+            this.tabPage5.Size = new System.Drawing.Size(240, 217);
             this.tabPage5.Text = "Patient";
             // 
             // medicationButton

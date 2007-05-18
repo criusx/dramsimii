@@ -46,6 +46,10 @@ namespace GentagDemo
 
         private System.Threading.Timer reportGPSTimer;
 
+        const int checkGPSRate = 30;
+
+        const int minimumGPSCoordinatesToReport = 30;
+
         [DllImport("coredll.dll")]
         private extern static int GetDeviceUniqueID(
             [In, Out] byte[] appdata,
@@ -59,7 +63,7 @@ namespace GentagDemo
             InitializeComponent();
 
             reportGPSTimer =
-                new System.Threading.Timer(reportGPSPosition, null, 30000, 30000);
+                new System.Threading.Timer(reportGPSPosition, null, checkGPSRate * 1000, checkGPSRate * 1000);
            
             // generate the device's UID
             string AppString = GentagDemo.Properties.Resources.titleString;
@@ -939,6 +943,7 @@ namespace GentagDemo
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void connectGPSButton_Click(object sender, EventArgs e)
         {
             string errorMsg = "";
@@ -980,13 +985,13 @@ namespace GentagDemo
             {
                 string[] buffer = gpsSerialPort.ReadExisting().Split('$');
                 gpsSerialPort.DiscardInBuffer();
-                for (int i = 1; i < buffer.Length - 1; i++)
-                    if (buffer[i].StartsWith(@"GPRMC") || buffer[i].StartsWith(@"GPGSV") || buffer[i].StartsWith(@"GPGSA"))
-                        if (gpsNmea.Parse(@"$" + buffer[i].Substring(0, buffer[i].Length - 2)) == false)
-                        {
-                            //queueSizeBar.Value++;
-                            //MessageBox.Show(buffer[i]);
-                        }
+                foreach (string inString in buffer)
+                {
+                    if (inString.StartsWith(@"GPRMC") || inString.StartsWith(@"GPGSV") || inString.StartsWith(@"GPGSA"))
+                    {
+                        gpsNmea.Parse(@"$" + inString.Substring(0, inString.Length - 2));
+                    }
+                }
             }
 
         }
@@ -1033,12 +1038,12 @@ namespace GentagDemo
         private int satNumber;
         private void gpsNmea_SatelliteReceived(int pseudoRandomCode, int azimuth, int elevation, int signalToNoiseRatio, bool firstMessage)
         {
-            if (firstMessage == true)
+            if (firstMessage)
             {
                 satNumber = 0;
                 satLabel1.Text = satLabel2.Text = satLabel3.Text =
                     satLabel4.Text = satLabel5.Text = satLabel6.Text =
-                    satLabel7.Text = satLabel8.Text = "#";
+                    satLabel7.Text = satLabel8.Text = "";
                 progressBar1.Value = progressBar2.Value = progressBar3.Value =
                     progressBar4.Value = progressBar5.Value =
                     progressBar6.Value = progressBar7.Value =
@@ -1104,7 +1109,6 @@ namespace GentagDemo
         {
             satellitesUsedTextBox.Text = value.ToString();
         }
-
        
         Queue<string> latitudeQueue = new Queue<string>();
         Queue<string> longitudeQueue = new Queue<string>();
@@ -1129,24 +1133,26 @@ namespace GentagDemo
                     elapsedSinceReadQueue.Enqueue((DateTime.Now.Ticks - lastGPSUpdateTime.Ticks) / 1000);
                     reportedTimeQueue.Enqueue((long)t.TotalMilliseconds);
                     setProgressBar(queueSizeBar,latitudeQueue.Count);
-                    
-                    if (latitudeQueue.Count > 20)
+                }
+            }
+            if ((latitudeQueue.Count > minimumGPSCoordinatesToReport) || (!getCheckBox(trackingCheckBox) && latitudeQueue.Count > 0))
+            {
+                lock (latitudeQueue)
+                {
+                    try
                     {
-                        try
-                        {
-                            // attempt to unload the queues each time                            
-                            if ((new org.dyndns.crius.GetDatesWS()).callHome(DeviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray()))
-                            {
-                                latitudeQueue.Clear();
-                                longitudeQueue.Clear();
-                                elapsedSinceReadQueue.Clear();
-                                reportedTimeQueue.Clear();
-                            }
+                        // attempt to unload the queues each time                            
+                        if ((new org.dyndns.crius.GetDatesWS()).callHome(DeviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray()))
+                        {                            
+                            latitudeQueue.Clear();
+                            longitudeQueue.Clear();
+                            elapsedSinceReadQueue.Clear();
+                            reportedTimeQueue.Clear();
                         }
-                        catch (WebException ex)
-                        {
-                            //MessageBox.Show("Problem connecting to web service: " + ex.Message);
-                        }
+                    }
+                    catch (WebException ex)
+                    {
+                        //MessageBox.Show("Problem connecting to web service: " + ex.Message);
                     }
                 }
             }
