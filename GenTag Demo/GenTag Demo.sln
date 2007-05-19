@@ -11,6 +11,8 @@ Project("{B900F1C2-3D47-4FEC-85B3-04AAF18C3634}") = "Setup CAB", "Setup CAB\Setu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VarioSens Lib", "VarioSens Lib\VarioSens Lib.vcproj", "{7775ECF9-017E-489D-84B6-3BC6DF166494}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WineEntryClient", "WineEntryClient\WineEntryClient.csproj", "{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,20 @@ Global
 		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
 		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
 		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Debug|Pocket PC 2003 (ARMV4).ActiveCfg = Debug|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Debug|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Release|Pocket PC 2003 (ARMV4).ActiveCfg = Release|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Release|Win32.ActiveCfg = Release|Any CPU
+		{A90A3C2C-4305-4AD4-BA34-D8A9A6019980}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

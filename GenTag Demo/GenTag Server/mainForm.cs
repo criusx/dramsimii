@@ -45,7 +45,7 @@ namespace GenTag_Server
 
                 fldlg.InitialDirectory = @"C:\";
 
-                fldlg.Filter = "Image File (*.jpg;*.bmp;*.gif)|*.jpg;*.bmp;*.gif";
+                fldlg.Filter = "Image File (*.jpg;*.bmp;*.gif;*.png)|*.jpg;*.bmp;*.gif;*.png";
 
                 if (fldlg.ShowDialog() == DialogResult.OK)
                 {
@@ -54,7 +54,7 @@ namespace GenTag_Server
 
                     Bitmap newimg = new Bitmap(imagename);
 
-                    pictImg.SizeMode = PictureBoxSizeMode.StretchImage;
+                    pictImg.SizeMode = PictureBoxSizeMode.CenterImage;
 
                     pictImg.Image = (Image)newimg;
 

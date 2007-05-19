@@ -48,24 +48,6 @@ namespace GentagDemo
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.treeView2 = new System.Windows.Forms.TreeView();
-            this.manualIDButton = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.getSetStatusBox = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.readValueButton = new System.Windows.Forms.Button();
-            this.setValueButton = new System.Windows.Forms.Button();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.medicationButton = new System.Windows.Forms.Button();
             this.readPatientButton = new System.Windows.Forms.Button();
@@ -75,6 +57,14 @@ namespace GentagDemo
             this.patientPhoto = new System.Windows.Forms.PictureBox();
             this.patientDescriptionBox = new System.Windows.Forms.TextBox();
             this.patientNameBox = new System.Windows.Forms.TextBox();
+            this.winePage = new System.Windows.Forms.TabPage();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.wineVineyardLabel = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.wineYearLabel = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.winePictureBox = new System.Windows.Forms.PictureBox();
             this.gpsPage = new System.Windows.Forms.TabPage();
             this.trackingCheckBox = new System.Windows.Forms.CheckBox();
             this.satellitesUsedTextBox = new System.Windows.Forms.TextBox();
@@ -115,14 +105,36 @@ namespace GentagDemo
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.queueSizeBar = new System.Windows.Forms.ProgressBar();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.treeView2 = new System.Windows.Forms.TreeView();
+            this.manualIDButton = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.getSetStatusBox = new System.Windows.Forms.TextBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.readValueButton = new System.Windows.Forms.Button();
+            this.setValueButton = new System.Windows.Forms.Button();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.gpsSerialPort = new System.IO.Ports.SerialPort(this.components);
+            this.wineTypeLabel = new System.Windows.Forms.Label();
+            this.wineCountryLabel = new System.Windows.Forms.Label();
+            this.wineReadingStatusLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            this.winePage.SuspendLayout();
+            this.gpsPage.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            this.gpsPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // readIDButton
@@ -147,6 +159,7 @@ namespace GentagDemo
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.winePage);
             this.tabControl1.Controls.Add(this.gpsPage);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
@@ -207,7 +220,7 @@ namespace GentagDemo
             this.tabPage2.Controls.Add(this.readLogButton);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(240, 217);
+            this.tabPage2.Size = new System.Drawing.Size(232, 214);
             this.tabPage2.Text = "VarioSens";
             // 
             // textBox9
@@ -289,163 +302,6 @@ namespace GentagDemo
             this.textBox1.Size = new System.Drawing.Size(32, 21);
             this.textBox1.TabIndex = 1;
             // 
-            // tabPage3
-            // 
-            this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.tabPage3.Controls.Add(this.treeView2);
-            this.tabPage3.Controls.Add(this.manualIDButton);
-            this.tabPage3.Controls.Add(this.textBox4);
-            this.tabPage3.Location = new System.Drawing.Point(0, 0);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(232, 214);
-            this.tabPage3.Text = "VarioSens/W";
-            // 
-            // treeView2
-            // 
-            this.treeView2.Location = new System.Drawing.Point(0, 0);
-            this.treeView2.Name = "treeView2";
-            this.treeView2.Size = new System.Drawing.Size(240, 161);
-            this.treeView2.TabIndex = 2;
-            // 
-            // manualIDButton
-            // 
-            this.manualIDButton.Location = new System.Drawing.Point(8, 167);
-            this.manualIDButton.Name = "manualIDButton";
-            this.manualIDButton.Size = new System.Drawing.Size(72, 20);
-            this.manualIDButton.TabIndex = 1;
-            this.manualIDButton.Click += new System.EventHandler(this.manualLookupClick);
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(8, 193);
-            this.textBox4.MaxLength = 25;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(224, 21);
-            this.textBox4.TabIndex = 0;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.tabPage4.Controls.Add(this.getSetStatusBox);
-            this.tabPage4.Controls.Add(this.comboBox1);
-            this.tabPage4.Controls.Add(this.readValueButton);
-            this.tabPage4.Controls.Add(this.setValueButton);
-            this.tabPage4.Controls.Add(this.textBox5);
-            this.tabPage4.Controls.Add(this.textBox6);
-            this.tabPage4.Controls.Add(this.textBox8);
-            this.tabPage4.Controls.Add(this.textBox7);
-            this.tabPage4.Controls.Add(this.label8);
-            this.tabPage4.Controls.Add(this.label7);
-            this.tabPage4.Controls.Add(this.label6);
-            this.tabPage4.Controls.Add(this.label9);
-            this.tabPage4.Controls.Add(this.label5);
-            this.tabPage4.Location = new System.Drawing.Point(0, 0);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(232, 214);
-            this.tabPage4.Text = "Manual";
-            // 
-            // getSetStatusBox
-            // 
-            this.getSetStatusBox.Location = new System.Drawing.Point(8, 153);
-            this.getSetStatusBox.Name = "getSetStatusBox";
-            this.getSetStatusBox.Size = new System.Drawing.Size(100, 21);
-            this.getSetStatusBox.TabIndex = 14;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Items.Add("All");
-            this.comboBox1.Items.Add("Violations");
-            this.comboBox1.Location = new System.Drawing.Point(105, 81);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(60, 22);
-            this.comboBox1.TabIndex = 8;
-            // 
-            // readValueButton
-            // 
-            this.readValueButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.readValueButton.Location = new System.Drawing.Point(161, 194);
-            this.readValueButton.Name = "readValueButton";
-            this.readValueButton.Size = new System.Drawing.Size(72, 20);
-            this.readValueButton.TabIndex = 6;
-            this.readValueButton.Text = "Get";
-            this.readValueButton.Click += new System.EventHandler(this.readerClick);
-            // 
-            // setValueButton
-            // 
-            this.setValueButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.setValueButton.Location = new System.Drawing.Point(7, 194);
-            this.setValueButton.Name = "setValueButton";
-            this.setValueButton.Size = new System.Drawing.Size(72, 20);
-            this.setValueButton.TabIndex = 6;
-            this.setValueButton.Text = "Set";
-            this.setValueButton.Click += new System.EventHandler(this.readerClick);
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(105, 54);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(32, 21);
-            this.textBox5.TabIndex = 5;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(105, 27);
-            this.textBox6.MaxLength = 3;
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(60, 21);
-            this.textBox6.TabIndex = 4;
-            // 
-            // textBox8
-            // 
-            this.textBox8.Location = new System.Drawing.Point(105, 109);
-            this.textBox8.MaxLength = 3;
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(32, 21);
-            this.textBox8.TabIndex = 3;
-            // 
-            // textBox7
-            // 
-            this.textBox7.Location = new System.Drawing.Point(105, 0);
-            this.textBox7.MaxLength = 3;
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(60, 21);
-            this.textBox7.TabIndex = 3;
-            // 
-            // label8
-            // 
-            this.label8.Location = new System.Drawing.Point(8, 81);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(100, 20);
-            this.label8.Text = "logmode";
-            // 
-            // label7
-            // 
-            this.label7.Location = new System.Drawing.Point(8, 54);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(100, 20);
-            this.label7.Text = "logperiod";
-            // 
-            // label6
-            // 
-            this.label6.Location = new System.Drawing.Point(8, 27);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(100, 20);
-            this.label6.Text = "hilimit";
-            // 
-            // label9
-            // 
-            this.label9.Location = new System.Drawing.Point(7, 109);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(100, 20);
-            this.label9.Text = "batChiItv";
-            // 
-            // label5
-            // 
-            this.label5.Location = new System.Drawing.Point(8, 4);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(100, 20);
-            this.label5.Text = "lolimit";
-            // 
             // tabPage5
             // 
             this.tabPage5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
@@ -459,7 +315,7 @@ namespace GentagDemo
             this.tabPage5.Controls.Add(this.patientNameBox);
             this.tabPage5.Location = new System.Drawing.Point(0, 0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(240, 217);
+            this.tabPage5.Size = new System.Drawing.Size(232, 214);
             this.tabPage5.Text = "Patient";
             // 
             // medicationButton
@@ -530,6 +386,70 @@ namespace GentagDemo
             this.patientNameBox.Size = new System.Drawing.Size(100, 19);
             this.patientNameBox.TabIndex = 0;
             // 
+            // winePage
+            // 
+            this.winePage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.winePage.Controls.Add(this.wineReadingStatusLabel);
+            this.winePage.Controls.Add(this.wineCountryLabel);
+            this.winePage.Controls.Add(this.label23);
+            this.winePage.Controls.Add(this.wineTypeLabel);
+            this.winePage.Controls.Add(this.label22);
+            this.winePage.Controls.Add(this.wineVineyardLabel);
+            this.winePage.Controls.Add(this.label24);
+            this.winePage.Controls.Add(this.wineYearLabel);
+            this.winePage.Controls.Add(this.label21);
+            this.winePage.Controls.Add(this.winePictureBox);
+            this.winePage.Location = new System.Drawing.Point(0, 0);
+            this.winePage.Name = "winePage";
+            this.winePage.Size = new System.Drawing.Size(240, 217);
+            this.winePage.Text = "Wine";
+            // 
+            // label23
+            // 
+            this.label23.Location = new System.Drawing.Point(133, 132);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(100, 20);
+            this.label23.Text = "country";
+            // 
+            // label22
+            // 
+            this.label22.Location = new System.Drawing.Point(133, 88);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(100, 20);
+            this.label22.Text = "type";
+            // 
+            // wineVineyardLabel
+            // 
+            this.wineVineyardLabel.Location = new System.Drawing.Point(133, 22);
+            this.wineVineyardLabel.Name = "wineVineyardLabel";
+            this.wineVineyardLabel.Size = new System.Drawing.Size(100, 20);
+            // 
+            // label24
+            // 
+            this.label24.Location = new System.Drawing.Point(133, 0);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(100, 20);
+            this.label24.Text = "vineyard";
+            // 
+            // wineYearLabel
+            // 
+            this.wineYearLabel.Location = new System.Drawing.Point(133, 66);
+            this.wineYearLabel.Name = "wineYearLabel";
+            this.wineYearLabel.Size = new System.Drawing.Size(100, 20);
+            // 
+            // label21
+            // 
+            this.label21.Location = new System.Drawing.Point(133, 44);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(100, 20);
+            this.label21.Text = "year";
+            // 
+            // winePictureBox
+            // 
+            this.winePictureBox.Location = new System.Drawing.Point(3, 3);
+            this.winePictureBox.Name = "winePictureBox";
+            this.winePictureBox.Size = new System.Drawing.Size(124, 127);
+            // 
             // gpsPage
             // 
             this.gpsPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
@@ -574,7 +494,7 @@ namespace GentagDemo
             this.gpsPage.Controls.Add(this.queueSizeBar);
             this.gpsPage.Location = new System.Drawing.Point(0, 0);
             this.gpsPage.Name = "gpsPage";
-            this.gpsPage.Size = new System.Drawing.Size(240, 217);
+            this.gpsPage.Size = new System.Drawing.Size(232, 214);
             this.gpsPage.Text = "GPS";
             // 
             // trackingCheckBox
@@ -910,6 +830,163 @@ namespace GentagDemo
             this.queueSizeBar.Name = "queueSizeBar";
             this.queueSizeBar.Size = new System.Drawing.Size(59, 14);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.tabPage3.Controls.Add(this.treeView2);
+            this.tabPage3.Controls.Add(this.manualIDButton);
+            this.tabPage3.Controls.Add(this.textBox4);
+            this.tabPage3.Location = new System.Drawing.Point(0, 0);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(232, 214);
+            this.tabPage3.Text = "VarioSens/W";
+            // 
+            // treeView2
+            // 
+            this.treeView2.Location = new System.Drawing.Point(0, 0);
+            this.treeView2.Name = "treeView2";
+            this.treeView2.Size = new System.Drawing.Size(240, 161);
+            this.treeView2.TabIndex = 2;
+            // 
+            // manualIDButton
+            // 
+            this.manualIDButton.Location = new System.Drawing.Point(8, 167);
+            this.manualIDButton.Name = "manualIDButton";
+            this.manualIDButton.Size = new System.Drawing.Size(72, 20);
+            this.manualIDButton.TabIndex = 1;
+            this.manualIDButton.Click += new System.EventHandler(this.manualLookupClick);
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(8, 193);
+            this.textBox4.MaxLength = 25;
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(224, 21);
+            this.textBox4.TabIndex = 0;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.tabPage4.Controls.Add(this.getSetStatusBox);
+            this.tabPage4.Controls.Add(this.comboBox1);
+            this.tabPage4.Controls.Add(this.readValueButton);
+            this.tabPage4.Controls.Add(this.setValueButton);
+            this.tabPage4.Controls.Add(this.textBox5);
+            this.tabPage4.Controls.Add(this.textBox6);
+            this.tabPage4.Controls.Add(this.textBox8);
+            this.tabPage4.Controls.Add(this.textBox7);
+            this.tabPage4.Controls.Add(this.label8);
+            this.tabPage4.Controls.Add(this.label7);
+            this.tabPage4.Controls.Add(this.label6);
+            this.tabPage4.Controls.Add(this.label9);
+            this.tabPage4.Controls.Add(this.label5);
+            this.tabPage4.Location = new System.Drawing.Point(0, 0);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(232, 214);
+            this.tabPage4.Text = "Manual";
+            // 
+            // getSetStatusBox
+            // 
+            this.getSetStatusBox.Location = new System.Drawing.Point(8, 153);
+            this.getSetStatusBox.Name = "getSetStatusBox";
+            this.getSetStatusBox.Size = new System.Drawing.Size(100, 21);
+            this.getSetStatusBox.TabIndex = 14;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Items.Add("All");
+            this.comboBox1.Items.Add("Violations");
+            this.comboBox1.Location = new System.Drawing.Point(105, 81);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(60, 22);
+            this.comboBox1.TabIndex = 8;
+            // 
+            // readValueButton
+            // 
+            this.readValueButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.readValueButton.Location = new System.Drawing.Point(161, 194);
+            this.readValueButton.Name = "readValueButton";
+            this.readValueButton.Size = new System.Drawing.Size(72, 20);
+            this.readValueButton.TabIndex = 6;
+            this.readValueButton.Text = "Get";
+            this.readValueButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // setValueButton
+            // 
+            this.setValueButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.setValueButton.Location = new System.Drawing.Point(7, 194);
+            this.setValueButton.Name = "setValueButton";
+            this.setValueButton.Size = new System.Drawing.Size(72, 20);
+            this.setValueButton.TabIndex = 6;
+            this.setValueButton.Text = "Set";
+            this.setValueButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(105, 54);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(32, 21);
+            this.textBox5.TabIndex = 5;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(105, 27);
+            this.textBox6.MaxLength = 3;
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(60, 21);
+            this.textBox6.TabIndex = 4;
+            // 
+            // textBox8
+            // 
+            this.textBox8.Location = new System.Drawing.Point(105, 109);
+            this.textBox8.MaxLength = 3;
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(32, 21);
+            this.textBox8.TabIndex = 3;
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(105, 0);
+            this.textBox7.MaxLength = 3;
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(60, 21);
+            this.textBox7.TabIndex = 3;
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(8, 81);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(100, 20);
+            this.label8.Text = "logmode";
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(8, 54);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(100, 20);
+            this.label7.Text = "logperiod";
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(8, 27);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(100, 20);
+            this.label6.Text = "hilimit";
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(7, 109);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(100, 20);
+            this.label9.Text = "batChiItv";
+            // 
+            // label5
+            // 
+            this.label5.Location = new System.Drawing.Point(8, 4);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(100, 20);
+            this.label5.Text = "lolimit";
+            // 
             // gpsSerialPort
             // 
             this.gpsSerialPort.BaudRate = 4800;
@@ -917,6 +994,24 @@ namespace GentagDemo
             this.gpsSerialPort.ReadBufferSize = 8192;
             this.gpsSerialPort.ReceivedBytesThreshold = 512;
             this.gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.gpsSerialPort_DataReceived);
+            // 
+            // wineTypeLabel
+            // 
+            this.wineTypeLabel.Location = new System.Drawing.Point(133, 110);
+            this.wineTypeLabel.Name = "wineTypeLabel";
+            this.wineTypeLabel.Size = new System.Drawing.Size(100, 20);
+            // 
+            // wineCountryLabel
+            // 
+            this.wineCountryLabel.Location = new System.Drawing.Point(133, 154);
+            this.wineCountryLabel.Name = "wineCountryLabel";
+            this.wineCountryLabel.Size = new System.Drawing.Size(100, 20);
+            // 
+            // wineReadingStatusLabel
+            // 
+            this.wineReadingStatusLabel.Location = new System.Drawing.Point(0, 198);
+            this.wineReadingStatusLabel.Name = "wineReadingStatusLabel";
+            this.wineReadingStatusLabel.Size = new System.Drawing.Size(100, 20);
             // 
             // mainForm
             // 
@@ -934,10 +1029,11 @@ namespace GentagDemo
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
+            this.winePage.ResumeLayout(false);
+            this.gpsPage.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
-            this.tabPage5.ResumeLayout(false);
-            this.gpsPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1030,6 +1126,17 @@ namespace GentagDemo
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox trackingCheckBox;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.TabPage winePage;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.PictureBox winePictureBox;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label wineVineyardLabel;
+        private System.Windows.Forms.Label wineYearLabel;
+        private System.Windows.Forms.Label wineCountryLabel;
+        private System.Windows.Forms.Label wineTypeLabel;
+        private System.Windows.Forms.Label wineReadingStatusLabel;
         
     }
 }
