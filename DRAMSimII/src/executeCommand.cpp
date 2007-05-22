@@ -19,7 +19,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 	dramChannel &channel= dramSystem::channel[this_command->getAddress().chan_id];
 
 	// do power calculations
-	powerConfig.recordCommand(this_command, channel, timing_specification);
+	powerModel.recordCommand(this_command, channel, timing_specification);
 
 	rank_c &this_rank = channel.getRank(this_command->getAddress().rank_id);
 

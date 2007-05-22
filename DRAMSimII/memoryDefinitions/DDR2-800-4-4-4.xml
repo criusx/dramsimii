@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="style2.xsl"?>
 <!DOCTYPE dramspec SYSTEM "dramspec.dtd">
-<dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema2.xsd">
+<dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="schema2.xsd">
 	<timing>
 		<datarate>800000000</datarate>
 		<clockGranularity>2</clockGranularity>
@@ -64,6 +65,16 @@
 		<autoPrecharge>true</autoPrecharge>
 	</timing>
 	<power>
+		<!--all in terms of mW-->
+		<PdqRD>1.1</PdqRD>
+		<PdqWR>8.2</PdqWR>
+		<PdqRDoth>0</PdqRDoth>
+		<PdqWRoth>0</PdqWRoth>
+		<!--pins on the dram devices-->
+		<DQperDRAM>16</DQperDRAM>
+		<DQSperDRAM>4</DQSperDRAM>
+		<DMperDRAM>2</DMperDRAM>
+		<frequencySpec>600000000</frequencySpec>
 		<maxVCC>1.9</maxVCC>
 		<systemVDD>1.8</systemVDD>
 		<!--all are in mA-->
@@ -91,6 +102,6 @@
 		<outFile type="gz">standardOutFile.gz</outFile>
 		<requestCount>990000000</requestCount>
 		<!--may be "mase","k6","mapped","random"-->
-		<inputFile type="mase">equake.trc</inputFile>
+		<inputFile type="mase" />
 	</simulationParameters>
 </dramspec>

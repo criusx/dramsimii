@@ -66,9 +66,9 @@ PhysicalMemory(p), tickEvent(this), needRetry(false)
 	outStream << *ds << std::endl;
 }
 
-M5dramSystem::MemPort::MemPort(const std::string &_name,
-									   M5dramSystem *_memory)
-									   : SimpleTimingPort(_name), memory(_memory)
+M5dramSystem::MemPort::MemPort(const std::string &_name, M5dramSystem *_memory):
+SimpleTimingPort(_name),
+memory(_memory)
 { }
 
 Port *M5dramSystem::getPort(const string &if_name, int idx)
@@ -188,6 +188,14 @@ bool
 M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
+
+	static tick_t lastPowerCalculationTime = 0;
+	if (currentMemCycle - lastPowerCalculationTime > 5000000)
+	{
+		memory->ds->doPowerCalculation();
+		lastPowerCalculationTime = currentMemCycle;
+	}
+
 	outStream << "<-!Wake [" << curTick << "]/[" << currentMemCycle << "]";
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())

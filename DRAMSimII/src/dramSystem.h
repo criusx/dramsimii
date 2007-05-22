@@ -19,6 +19,7 @@
 #include "rank_c.h"
 #include "gzstream/gzstream.h"
 #include "dramSettings.h"
+#include "powerConfig.h"
 #include "globals.h"
 
 class dramSystem
@@ -32,6 +33,7 @@ private:
 	dramStatistics statistics;
 	dramAlgorithm algorithm;
 	inputStream input_stream;
+	powerConfig powerModel;
 	
 	tick_t time;	// master clock	
 	
@@ -62,6 +64,7 @@ public:
 	input_status_t waitForTransactionToFinish(transaction *trans);
 	double Frequency() const { return system_config.Frequency(); }
 	tick_t nextTick() const;
+	void doPowerCalculation() const { powerModel.doPowerCalculation(channel); }
 	void run_simulations();
 	void run_simulations2();
 	void run_simulations3();

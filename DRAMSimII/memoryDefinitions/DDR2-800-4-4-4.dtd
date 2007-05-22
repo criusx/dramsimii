@@ -20,6 +20,9 @@
 <!ELEMENT commandOrderingAlgorithm (#PCDATA)>
 <!ELEMENT completionQueueDepth (#PCDATA)>
 <!ELEMENT datarate (#PCDATA)>
+<!ELEMENT DQperDRAM (#PCDATA)>
+<!ELEMENT DQSperDRAM (#PCDATA)>
+<!ELEMENT DMperDRAM (#PCDATA)>
 <!ELEMENT dramspec (timing, power, simulationParameters)>
 <!ATTLIST dramspec
 	type CDATA #REQUIRED
@@ -31,12 +34,17 @@
 <!ELEMENT inputFile (#PCDATA)>
 <!ATTLIST inputFile type CDATA #REQUIRED>
 <!ELEMENT maxVCC (#PCDATA)>
+<!ELEMENT frequencySpec (#PCDATA)>
 <!ELEMENT outFile (#PCDATA)>
 <!ATTLIST outFile type CDATA #REQUIRED>
 <!ELEMENT perBankQueueDepth (#PCDATA)>
+<!ELEMENT PdqRD (#PCDATA)>
+<!ELEMENT PdqWR (#PCDATA)>
+<!ELEMENT PdqRDoth (#PCDATA)>
+<!ELEMENT PdqWRoth (#PCDATA)>
 <!ELEMENT physicalAddressMappingPolicy (#PCDATA)>
 <!ELEMENT postedCAS (#PCDATA)>
-<!ELEMENT power (maxVCC, systemVDD, IDD0, IDD2P, IDD2N, IDD3P, IDD3N, IDD4R, IDD4W, IDD5A)>
+<!ELEMENT power (PdqRD, PdqWR, PdqRDoth, PdqWRoth, DSperDRAM, DQSperDRAM, DMperDRAM, frequencySpec, maxVCC, systemVDD, IDD0, IDD2P, IDD2N, IDD3P, IDD3N, IDD4R, IDD4W, IDD5A)>
 <!ELEMENT ranks (#PCDATA)>
 <!ELEMENT readPercentage (#PCDATA)>
 <!ELEMENT readWriteGrouping (#PCDATA)>

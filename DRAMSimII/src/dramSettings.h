@@ -16,7 +16,7 @@ public:
 	unsigned requestCount;
 	refresh_policy_t refreshPolicy;
 	dram_type_t dramType;
-	unsigned dataRate;
+	unsigned dataRate; // frequency
 	command_ordering_algorithm_t commandOrderingAlgorithm;
 	transaction_ordering_algorithm_t transactionOrderingAlgorithm;
 	unsigned perBankQueueDepth;
@@ -68,6 +68,14 @@ public:
 	unsigned tBufferDelay;
 	//////////////////////////////////////////////////////////////////////////
 	// power data
+	float PdqRD;
+	float PdqWR;
+	float PdqRDoth;
+	float PdqWRoth;
+	unsigned DQperDRAM;
+	unsigned DQSperDRAM;
+	unsigned DMperDRAM;
+	unsigned frequencySpec;
 	float maxVCC;
 	float VDD;
 	unsigned IDD0;

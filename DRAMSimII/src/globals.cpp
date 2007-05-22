@@ -12,7 +12,6 @@
 #include "globals.h"
 #include "dramTimingSpecification.h"
 #include "dramStatistics.h"
-#include "gzstream/gzstream.h"
 
 
 using namespace std;
@@ -375,6 +374,22 @@ file_io_token_t dramTokenizer(const string &input)
 		return max_vcc_token;
 	else if (input == "systemVDD")
 		return vdd_token;
+	else if (input == "frequencySpec")
+		return frequency_spec_token;
+	else if (input == "PdqRD")
+		return p_dq_rd_token;
+	else if (input == "PdqWR")
+		return p_dq_wr_token;
+	else if (input == "PdqRDoth")
+		return p_dq_rd_oth_token;
+	else if (input == "PdqWRoth")
+		return p_dq_wr_oth_token;
+	else if (input == "DQperDRAM")
+		return dq_per_dram_token;
+	else if (input == "DQSperDRAM")
+		return dqs_per_dram_token;
+	else if (input == "DMperDRAM")
+		return dm_per_dram_token;
 	else if(input == "FETCH")
 		return FETCH;
 	else if (input == "IFETCH")

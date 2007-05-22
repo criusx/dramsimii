@@ -435,7 +435,7 @@ int dramSystem::convert_address(addresses &this_a) const
 		temp_b = input_a;				/* save away original address */
 		input_a >>= rank_addr_depth;
 		// strip out the rank address 
-		this_a.rank_id = temp_b ^ (input_a << rank_addr_depth);
+		this_a.rank_id = temp_b ^ (input_a << rank_addr_depth);		
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= col_id_hi_depth;
@@ -784,6 +784,7 @@ sim_parameters(settings),
 statistics(),
 algorithm(settings),
 input_stream(settings),
+powerModel(settings),
 time(0),
 event_q(COMMAND_QUEUE_SIZE)
 {

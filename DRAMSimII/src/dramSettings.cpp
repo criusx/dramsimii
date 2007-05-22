@@ -125,9 +125,9 @@ dramSettings::dramSettings(const int argc, const char **argv)
 							outFileType = UNCOMPRESSED;
 						else
 							outFileType = NONE;
-					}
-					break;
+					}					
 				}
+				break;
 			case XML_TEXT_NODE:				
 				if (xmlTextReaderConstName(reader))
 				{
@@ -142,6 +142,30 @@ dramSettings::dramSettings(const int argc, const char **argv)
 						break;
 					case output_file_token:
 						outFile = nodeValue;
+						break;
+					case frequency_spec_token:
+						toNumeric<unsigned>(frequencySpec,nodeValue,std::dec);
+						break;
+					case p_dq_rd_token:
+						toNumeric<float>(PdqRD,nodeValue,std::dec);
+						break;
+					case p_dq_wr_token:
+						toNumeric<float>(PdqWR,nodeValue,std::dec);
+						break;
+					case p_dq_rd_oth_token:
+						toNumeric<float>(PdqRDoth,nodeValue,std::dec);
+						break;
+					case p_dq_wr_oth_token:
+						toNumeric<float>(PdqWRoth,nodeValue,std::dec);
+						break;
+					case dq_per_dram_token:
+						toNumeric<unsigned>(DQperDRAM,nodeValue,std::dec);
+						break;
+					case dqs_per_dram_token:
+						toNumeric<unsigned>(DQSperDRAM,nodeValue,std::dec);
+						break;
+					case dm_per_dram_token:
+						toNumeric<unsigned>(DMperDRAM,nodeValue,std::dec);
 						break;
 					case request_count_token:
 						toNumeric<unsigned>(requestCount,nodeValue,std::dec);
@@ -366,7 +390,6 @@ dramSettings::dramSettings(const int argc, const char **argv)
 					}
 				}
 			case XML_CDATA_SECTION_NODE:
-				//cerr << endl;
 				break;
 			}
 		}
