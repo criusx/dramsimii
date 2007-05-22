@@ -118,7 +118,7 @@ namespace GentagDemo
             graph.Visible = false;
             graph.Size = new Size(240, 230);
             graph.Location = new Point(0, 0);
-            tabPage2.Controls.Add(graph);
+            VarioSens.Controls.Add(graph);
 
             // Load Localized values
             readIDButton.Text = GentagDemo.Properties.Resources.readIDButtonInit;
@@ -128,10 +128,10 @@ namespace GentagDemo
             readValueButton.Text = GentagDemo.Properties.Resources.readValueButtonInit;
             this.Text = GentagDemo.Properties.Resources.titleString;
 
-            tabControl1.TabPages[0].Text = GentagDemo.Properties.Resources.tab2String;
-            tabControl1.TabPages[1].Text = GentagDemo.Properties.Resources.tab1String;
-            tabControl1.TabPages[2].Text = GentagDemo.Properties.Resources.tab3String;
-            tabControl1.TabPages[3].Text = GentagDemo.Properties.Resources.tab4String;
+            //tabControl1.TabPages[0].Text = GentagDemo.Properties.Resources.tab2String;
+            //tabControl1.TabPages[1].Text = GentagDemo.Properties.Resources.tab1String;
+            //tabControl1.TabPages[2].Text = GentagDemo.Properties.Resources.tab3String;
+            //tabControl1.TabPages[3].Text = GentagDemo.Properties.Resources.tab4String;
 
             label6.Text = label1.Text = GentagDemo.Properties.Resources.hiLimitString;
             label5.Text = label2.Text = GentagDemo.Properties.Resources.loLimitString;
@@ -237,7 +237,6 @@ namespace GentagDemo
             }
             setWaitCursor(false);
         }
-
         
         private void doLookup()
         {
@@ -299,6 +298,66 @@ namespace GentagDemo
                     }
                 }
             }
+        }
+
+        Hashtable cachedWineLookups = new Hashtable();
+
+        private void readWineBottle()
+        {
+            setWaitCursor(true);
+
+            while (readerRunning == true)
+            {
+                setLabel(wineReadingStatusLabel, "Reading...");
+                setPanel(panel2, System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255))))));
+
+                try
+                {
+                    string currentTag = readTagID();
+
+                    org.dyndns.criusWine.wineBottle bottle;
+
+                    if (cachedWineLookups.Contains(currentTag))
+                    {
+                        bottle = (org.dyndns.criusWine.wineBottle)cachedWineLookups[currentTag];
+                    }
+                    else
+                    {
+                        org.dyndns.criusWine.wineWS ws = new org.dyndns.criusWine.wineWS();
+                        bottle = ws.retrieveBottleInformation(currentTag, DeviceUID, 0, 0); // TODO: get latitude,longitude as floats
+                        cachedWineLookups.Add(currentTag, bottle);
+                    }
+                    setLabel(wineCountryLabel, bottle.origin);
+                    setLabel(wineYearLabel, bottle.year.ToString());
+                    setLabel(wineTypeLabel, bottle.type);
+                    setLabel(wineVineyardLabel, bottle.vineyard);
+                    setTextBox(wineReviewTextBox, bottle.review);
+                    setPhoto(winePictureBox, bottle.image);
+                    if (bottle.authenticated)
+                        setPhoto(wineAuthPictureBox,Image.FromHbitmap(GentagDemo.Properties.Resources.cancel.GetHbitmap()));
+                    else
+                        setPhoto(wineAuthPictureBox,Image.FromHbitmap(GentagDemo.Properties.Resources.ok.GetHbitmap()));
+                }
+                catch (System.IO.IOException ex)
+                {
+                    //MessageBox.Show(ex.Message);
+                    readerRunning = false;
+                }
+                catch (System.NotSupportedException xx)
+                {
+                    MessageBox.Show("not working");
+                }
+                catch (WebException xx2)
+                {
+
+                }
+
+                setPanel(panel2, System.Drawing.Color.Green);
+
+                Thread.Sleep(150);
+            }
+            setLabel(wineReadingStatusLabel, "");
+            setWaitCursor(false);
         }
       
 
@@ -459,6 +518,8 @@ namespace GentagDemo
                     new Thread(new ThreadStart(readPatientData)).Start();
                 else if (sender == medicationButton)
                     new Thread(new ThreadStart(readDrugData)).Start();
+                else if (sender == wineButton)
+                    new Thread(new ThreadStart(readWineBottle)).Start();
             }
             else
             {
@@ -852,6 +913,18 @@ namespace GentagDemo
             }
         }
 
+        private delegate void setLabelDelegate(Label tB, string desc);
+
+        private void setLabel(Label tB, string val)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setLabelDelegate(setLabel), new object[] { tB, val });
+                return;
+            }
+            tB.Text = val;
+        }
+
         private delegate void setTextBoxDelegate(TextBox tB, string desc);
 
         private void setTextBox(TextBox tB, string val)
@@ -890,6 +963,26 @@ namespace GentagDemo
                 return (string)this.Invoke(new getTextBoxDelegate(getTextBox), new object[] { tB });
             }
             return tB.Text;
+        }
+
+        private delegate void setPhotoDelegateB(PictureBox pB, Image bA);
+
+        private void setPhoto(PictureBox pB, Image bA)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setPhotoDelegateB(setPhoto), new object[] { pB, bA });
+                return;
+            }
+            try
+            {
+                pB.Image = bA;
+                pB.Refresh();
+            }
+            catch (ArgumentException ex)
+            {
+
+            }
         }
 
         private delegate void setPhotoDelegate(PictureBox pB, byte[] bA);

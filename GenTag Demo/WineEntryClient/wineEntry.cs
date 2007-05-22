@@ -8,11 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Threading;
-using Oracle.DataAccess.Client;
 using System.Security.Permissions;
 using System.Runtime.InteropServices;
 using System.IO;
-using Oracle.DataAccess.Types;
 
 namespace WineEntryClient
 {
@@ -169,39 +167,11 @@ namespace WineEntryClient
 
                     fls.Close();
 
-                    string MyConString = @"User Id=" + usernameBox.Text + @";" +
-                        @"Password=" + passwordBox.Text + @";" +
-                        @"Data Source=" + dataSourceBox.Text;
+                    org.dyndns.crius.wineWS ws = new org.dyndns.crius.wineWS();
+                    ws.enterBottleInformation(new string[] { tagID }, wineTypeComboBox.Text, Convert.ToInt32(yearUpDown.Value), countryBox.Text, vineyardBox.Text, reviewBox.Text, blob);
+                    ws.Dispose();
 
-                    OracleConnection conn = new OracleConnection(MyConString);
-
-                    conn.Open();
-
-                    string query = "insert into winedescriptions " +
-                        "(id,vineyard,year,type,review,label,country) values('" +
-                        idBox.Text + "','" + vineyardBox.Text + "','" +
-                        yearUpDown.Value.ToString() + "','" + wineTypeComboBox.SelectedText +
-                        reviewBox.Text + "',:BlobParameter," + countryBox.SelectedText + ")";
-
-                    OracleParameter blobParameter = new OracleParameter();
-
-                    blobParameter.OracleDbType = OracleDbType.Blob;
-
-                    blobParameter.ParameterName = "BlobParameter";
-
-                    blobParameter.Value = blob;
-
-                    OracleCommand cmnd = new OracleCommand(query, conn);
-
-                    cmnd.Parameters.Add(blobParameter);
-
-                    cmnd.ExecuteNonQuery();
-
-                    cmnd.Dispose();
-
-                    conn.Close();
-
-                    conn.Dispose();
+                    return;                    
                 }
             }
             catch (Exception ex)
@@ -218,29 +188,7 @@ namespace WineEntryClient
 
         private void loadButton_Click(object sender, EventArgs e)
         {
-            string MyConString = @"User Id=" + usernameBox.Text + @";" +
-                        @"Password=" + passwordBox.Text + @";" +
-                        @"Data Source=" + dataSourceBox.Text;
-
-            OracleConnection conn = new OracleConnection(MyConString);
-            conn.Open();
-
-            OracleDataAdapter adap = new OracleDataAdapter();
-
-            //adap.SelectCommand = new OracleCommand("SELECT * from patientData WHERE (id='" + idBox.Text + "')");
-            OracleCommand cmd = new OracleCommand("SELECT * from patientData WHERE (id='" + idBox.Text + "')");
-            cmd.Connection = conn;
-            OracleDataReader dr = cmd.ExecuteReader();
-
-            dr.Read();
-            idBox.Text = dr.GetString(0);
-            //interactionBox.Text = dr.GetString(1);
-            reviewBox.Text = dr.GetString(2);
-
-            OracleBlob inBlob = dr.GetOracleBlob(3);
-            // MemoryStream s = new MemoryStream(inBlob.);
-            pictImg.Image = Image.FromStream(inBlob);
-            pictImg.Refresh();
+            
         }
 
 

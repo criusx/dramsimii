@@ -33,11 +33,11 @@ namespace GentagDemo
             this.readIDButton = new System.Windows.Forms.Button();
             this.readLogButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.authPage = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.VarioSens = new System.Windows.Forms.TabPage();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -48,7 +48,7 @@ namespace GentagDemo
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.patientPage = new System.Windows.Forms.TabPage();
             this.medicationButton = new System.Windows.Forms.Button();
             this.readPatientButton = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
@@ -127,10 +127,14 @@ namespace GentagDemo
             this.wineTypeLabel = new System.Windows.Forms.Label();
             this.wineCountryLabel = new System.Windows.Forms.Label();
             this.wineReadingStatusLabel = new System.Windows.Forms.Label();
+            this.wineReviewTextBox = new System.Windows.Forms.TextBox();
+            this.wineButton = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.wineAuthPictureBox = new System.Windows.Forms.PictureBox();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage5.SuspendLayout();
+            this.authPage.SuspendLayout();
+            this.VarioSens.SuspendLayout();
+            this.patientPage.SuspendLayout();
             this.winePage.SuspendLayout();
             this.gpsPage.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -156,9 +160,9 @@ namespace GentagDemo
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.authPage);
+            this.tabControl1.Controls.Add(this.VarioSens);
+            this.tabControl1.Controls.Add(this.patientPage);
             this.tabControl1.Controls.Add(this.winePage);
             this.tabControl1.Controls.Add(this.gpsPage);
             this.tabControl1.Controls.Add(this.tabPage3);
@@ -169,17 +173,17 @@ namespace GentagDemo
             this.tabControl1.Size = new System.Drawing.Size(240, 240);
             this.tabControl1.TabIndex = 5;
             // 
-            // tabPage1
+            // authPage
             // 
-            this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.tabPage1.Controls.Add(this.panel1);
-            this.tabPage1.Controls.Add(this.pictureBox1);
-            this.tabPage1.Controls.Add(this.readIDButton);
-            this.tabPage1.Controls.Add(this.treeView1);
-            this.tabPage1.Location = new System.Drawing.Point(0, 0);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(240, 217);
-            this.tabPage1.Text = "Auth";
+            this.authPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.authPage.Controls.Add(this.panel1);
+            this.authPage.Controls.Add(this.pictureBox1);
+            this.authPage.Controls.Add(this.readIDButton);
+            this.authPage.Controls.Add(this.treeView1);
+            this.authPage.Location = new System.Drawing.Point(0, 0);
+            this.authPage.Name = "authPage";
+            this.authPage.Size = new System.Drawing.Size(240, 217);
+            this.authPage.Text = "Auth";
             // 
             // panel1
             // 
@@ -204,24 +208,24 @@ namespace GentagDemo
             this.treeView1.Size = new System.Drawing.Size(234, 118);
             this.treeView1.TabIndex = 2;
             // 
-            // tabPage2
+            // VarioSens
             // 
-            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.tabPage2.Controls.Add(this.textBox9);
-            this.tabPage2.Controls.Add(this.listBox1);
-            this.tabPage2.Controls.Add(this.checkBox2);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Controls.Add(this.textBox3);
-            this.tabPage2.Controls.Add(this.textBox2);
-            this.tabPage2.Controls.Add(this.textBox1);
-            this.tabPage2.Controls.Add(this.readLogButton);
-            this.tabPage2.Location = new System.Drawing.Point(0, 0);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(232, 214);
-            this.tabPage2.Text = "VarioSens";
+            this.VarioSens.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.VarioSens.Controls.Add(this.textBox9);
+            this.VarioSens.Controls.Add(this.listBox1);
+            this.VarioSens.Controls.Add(this.checkBox2);
+            this.VarioSens.Controls.Add(this.label4);
+            this.VarioSens.Controls.Add(this.label3);
+            this.VarioSens.Controls.Add(this.label2);
+            this.VarioSens.Controls.Add(this.label1);
+            this.VarioSens.Controls.Add(this.textBox3);
+            this.VarioSens.Controls.Add(this.textBox2);
+            this.VarioSens.Controls.Add(this.textBox1);
+            this.VarioSens.Controls.Add(this.readLogButton);
+            this.VarioSens.Location = new System.Drawing.Point(0, 0);
+            this.VarioSens.Name = "VarioSens";
+            this.VarioSens.Size = new System.Drawing.Size(232, 214);
+            this.VarioSens.Text = "VarioSens";
             // 
             // textBox9
             // 
@@ -302,21 +306,21 @@ namespace GentagDemo
             this.textBox1.Size = new System.Drawing.Size(32, 21);
             this.textBox1.TabIndex = 1;
             // 
-            // tabPage5
+            // patientPage
             // 
-            this.tabPage5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.tabPage5.Controls.Add(this.medicationButton);
-            this.tabPage5.Controls.Add(this.readPatientButton);
-            this.tabPage5.Controls.Add(this.label11);
-            this.tabPage5.Controls.Add(this.label10);
-            this.tabPage5.Controls.Add(this.drugPhoto);
-            this.tabPage5.Controls.Add(this.patientPhoto);
-            this.tabPage5.Controls.Add(this.patientDescriptionBox);
-            this.tabPage5.Controls.Add(this.patientNameBox);
-            this.tabPage5.Location = new System.Drawing.Point(0, 0);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(232, 214);
-            this.tabPage5.Text = "Patient";
+            this.patientPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.patientPage.Controls.Add(this.medicationButton);
+            this.patientPage.Controls.Add(this.readPatientButton);
+            this.patientPage.Controls.Add(this.label11);
+            this.patientPage.Controls.Add(this.label10);
+            this.patientPage.Controls.Add(this.drugPhoto);
+            this.patientPage.Controls.Add(this.patientPhoto);
+            this.patientPage.Controls.Add(this.patientDescriptionBox);
+            this.patientPage.Controls.Add(this.patientNameBox);
+            this.patientPage.Location = new System.Drawing.Point(0, 0);
+            this.patientPage.Name = "patientPage";
+            this.patientPage.Size = new System.Drawing.Size(232, 214);
+            this.patientPage.Text = "Patient";
             // 
             // medicationButton
             // 
@@ -389,6 +393,9 @@ namespace GentagDemo
             // winePage
             // 
             this.winePage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.winePage.Controls.Add(this.panel2);
+            this.winePage.Controls.Add(this.wineButton);
+            this.winePage.Controls.Add(this.wineReviewTextBox);
             this.winePage.Controls.Add(this.wineReadingStatusLabel);
             this.winePage.Controls.Add(this.wineCountryLabel);
             this.winePage.Controls.Add(this.label23);
@@ -398,6 +405,7 @@ namespace GentagDemo
             this.winePage.Controls.Add(this.label24);
             this.winePage.Controls.Add(this.wineYearLabel);
             this.winePage.Controls.Add(this.label21);
+            this.winePage.Controls.Add(this.wineAuthPictureBox);
             this.winePage.Controls.Add(this.winePictureBox);
             this.winePage.Location = new System.Drawing.Point(0, 0);
             this.winePage.Name = "winePage";
@@ -409,14 +417,14 @@ namespace GentagDemo
             this.label23.Location = new System.Drawing.Point(133, 132);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(100, 20);
-            this.label23.Text = "country";
+            this.label23.Text = "Country";
             // 
             // label22
             // 
             this.label22.Location = new System.Drawing.Point(133, 88);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(100, 20);
-            this.label22.Text = "type";
+            this.label22.Text = "Type";
             // 
             // wineVineyardLabel
             // 
@@ -429,7 +437,7 @@ namespace GentagDemo
             this.label24.Location = new System.Drawing.Point(133, 0);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(100, 20);
-            this.label24.Text = "vineyard";
+            this.label24.Text = "Vineyard";
             // 
             // wineYearLabel
             // 
@@ -442,13 +450,14 @@ namespace GentagDemo
             this.label21.Location = new System.Drawing.Point(133, 44);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(100, 20);
-            this.label21.Text = "year";
+            this.label21.Text = "Year";
             // 
             // winePictureBox
             // 
             this.winePictureBox.Location = new System.Drawing.Point(3, 3);
             this.winePictureBox.Name = "winePictureBox";
             this.winePictureBox.Size = new System.Drawing.Size(124, 127);
+            this.winePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             // 
             // gpsPage
             // 
@@ -1009,9 +1018,39 @@ namespace GentagDemo
             // 
             // wineReadingStatusLabel
             // 
-            this.wineReadingStatusLabel.Location = new System.Drawing.Point(0, 198);
+            this.wineReadingStatusLabel.Location = new System.Drawing.Point(7, 132);
             this.wineReadingStatusLabel.Name = "wineReadingStatusLabel";
             this.wineReadingStatusLabel.Size = new System.Drawing.Size(100, 20);
+            // 
+            // wineReviewTextBox
+            // 
+            this.wineReviewTextBox.Location = new System.Drawing.Point(1, 171);
+            this.wineReviewTextBox.Multiline = true;
+            this.wineReviewTextBox.Name = "wineReviewTextBox";
+            this.wineReviewTextBox.Size = new System.Drawing.Size(239, 46);
+            this.wineReviewTextBox.TabIndex = 10;
+            // 
+            // wineButton
+            // 
+            this.wineButton.Location = new System.Drawing.Point(107, 131);
+            this.wineButton.Name = "wineButton";
+            this.wineButton.Size = new System.Drawing.Size(20, 20);
+            this.wineButton.TabIndex = 11;
+            this.wineButton.Text = "rd";
+            this.wineButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // panel2
+            // 
+            this.panel2.Location = new System.Drawing.Point(107, 152);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(20, 20);
+            // 
+            // wineAuthPictureBox
+            // 
+            this.wineAuthPictureBox.Location = new System.Drawing.Point(0, 150);
+            this.wineAuthPictureBox.Name = "wineAuthPictureBox";
+            this.wineAuthPictureBox.Size = new System.Drawing.Size(22, 22);
+            this.wineAuthPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             // 
             // mainForm
             // 
@@ -1027,9 +1066,9 @@ namespace GentagDemo
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainForm_KeyDown);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage5.ResumeLayout(false);
+            this.authPage.ResumeLayout(false);
+            this.VarioSens.ResumeLayout(false);
+            this.patientPage.ResumeLayout(false);
             this.winePage.ResumeLayout(false);
             this.gpsPage.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
@@ -1043,8 +1082,8 @@ namespace GentagDemo
         private System.Windows.Forms.Button readIDButton;
         private System.Windows.Forms.Button readLogButton;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage authPage;
+        private System.Windows.Forms.TabPage VarioSens;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox2;
@@ -1074,7 +1113,7 @@ namespace GentagDemo
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TabPage patientPage;
         private System.Windows.Forms.Button medicationButton;
         private System.Windows.Forms.Button readPatientButton;
         private System.Windows.Forms.Label label11;
@@ -1137,6 +1176,10 @@ namespace GentagDemo
         private System.Windows.Forms.Label wineCountryLabel;
         private System.Windows.Forms.Label wineTypeLabel;
         private System.Windows.Forms.Label wineReadingStatusLabel;
+        private System.Windows.Forms.TextBox wineReviewTextBox;
+        private System.Windows.Forms.Button wineButton;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.PictureBox wineAuthPictureBox;
         
     }
 }

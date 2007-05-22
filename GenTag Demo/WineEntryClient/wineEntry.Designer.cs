@@ -108,7 +108,7 @@ namespace WineEntryClient
             this.dataSourceBox.Name = "dataSourceBox";
             this.dataSourceBox.Size = new System.Drawing.Size(78, 20);
             this.dataSourceBox.TabIndex = 1;
-            this.dataSourceBox.Text = "crius.dyndns.org:1521:orcl1";
+            this.dataSourceBox.Text = "crius.dyndns.org";
             // 
             // idBox
             // 
