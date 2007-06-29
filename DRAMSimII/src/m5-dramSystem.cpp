@@ -261,7 +261,8 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			// if the packet did not fit, then send a NACK
 			//pkt->result = Packet::Nacked;
 			assert(pkt->needsResponse());
-			cerr << ".";
+			static tick_t numberOfDelays = 0;
+			cerr << "\r" << numberOfDelays++;
 			//pkt->makeTimingResponse();
 			//memoryPort->doSendTiming(pkt,0);
 			delete trans;
