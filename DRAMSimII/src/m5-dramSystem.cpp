@@ -262,7 +262,8 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			//pkt->result = Packet::Nacked;
 			assert(pkt->needsResponse());
 			static tick_t numberOfDelays = 0;
-			cerr << "\r" << numberOfDelays++;
+			if (numberOfDelays % 100000 == 0)
+				cerr << "\r" << numberOfDelays++;
 			//pkt->makeTimingResponse();
 			//memoryPort->doSendTiming(pkt,0);
 			delete trans;
