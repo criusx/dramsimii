@@ -12,19 +12,19 @@ class queue
 private:
 	unsigned depth;
 	unsigned count;
-	unsigned head_ptr;
-	unsigned tail_ptr;
-	T **entry;
+	unsigned head; // the point where items will be inserted
+	unsigned tail; // the point where items will be removed
+	T **entry; // the circular queue
 
 public:
-	explicit queue(): depth(0),count(0), head_ptr(0), tail_ptr(0), entry(NULL)
+	explicit queue(): depth(0),count(0), head(0), tail(0), entry(NULL)
 	{}
 
 	explicit queue(const queue<T>& a):
 	depth(a.depth),
 	count(0),
-	head_ptr(0),
-	tail_ptr(0),
+	head(0),
+	tail(0),
 	entry(new T *[a.depth])
 	{
 		//entry = new T *[a.depth];
@@ -49,8 +49,8 @@ public:
 	explicit queue(int size, bool preallocate = false):
 	depth(size),
 		count(0),
-		head_ptr(0),
-		tail_ptr(0),
+		head(0),
+		tail(0),
 		entry(new T *[size])
 	{
 		//entry = new T *[size];
@@ -81,22 +81,22 @@ public:
 		}
 	}
 
-	void init(int size, bool preallocate = false)
+	void init(unsigned size, bool preallocate = false)
 	{
 		depth = size;
 		count = 0;
-		head_ptr = 0;
-		tail_ptr = 0;
+		head = 0;
+		tail = 0;
 		entry = new T *[size];
 
 		if (preallocate)
 		{      
-			for (int i = 0; i < size; i++)
+			for (unsigned i = 0; i < size; i++)
 				enqueue(::new T);
 		}
 		else
 		{
-			for (int i=0 ; i<size ; i++)
+			for (unsigned i = 0 ; i < size; i++)
 			{
 				entry[i] = NULL;
 			}
@@ -118,8 +118,8 @@ public:
 		else
 		{
 			count++;
-			entry[tail_ptr] = item;
-			tail_ptr = (tail_ptr + 1) % depth; 	/*advance tail_ptr */
+			entry[tail] = item;
+			tail = (tail + 1) % depth; 	/*advance tail_ptr */
 			return SUCCESS;
 		}
 	}
@@ -142,9 +142,9 @@ public:
 		{
 			count--;
 
-			T *item = entry[head_ptr];
+			T *item = entry[head];
 
-			head_ptr = (head_ptr + 1) % depth;	//advance head_ptr
+			head = (head + 1) % depth;	//advance head_ptr
 
 			return item;
 		}
@@ -152,7 +152,7 @@ public:
 
 	T *read_back() const
 	{
-		return count ? entry[head_ptr] : NULL;
+		return count ? entry[head] : NULL;
 	}
 
 	inline int get_count() const
@@ -165,7 +165,7 @@ public:
 		if((offset >= count) || (offset < 0))
 			return NULL;
 		else
-			return entry[(head_ptr + offset) % depth];
+			return entry[(head + offset) % depth];
 	}
 
 	// release item into pool
@@ -179,9 +179,9 @@ public:
 
 	// this function makes this queue a non-FIFO queue.  
 	// Allows insertion into the middle or at any end
-	input_status_t insert(T *item,int offset)
+	input_status_t insert(T *item,unsigned offset)
 	{
-		if(count == depth)
+		if (count == depth)
 			return FAILURE;
 		else if (item == NULL)
 		{
@@ -192,14 +192,14 @@ public:
 		else
 		{
 			// move everything back by one unit
-			for (int i = count-1 ; i >= offset ; ++i)
-				entry[(head_ptr+i+1) % depth] = entry[(head_ptr+i) % depth];
+			for (unsigned i = count - 1 ; i >= offset ; ++i)
+				entry[(head+i+1) % depth] = entry[(head+i) % depth];
 
 			count++;
 
-			entry[(head_ptr+offset) % depth] = item;
+			entry[(head+offset) % depth] = item;
 
-			tail_ptr = (tail_ptr+1) % depth;	// advance tail_ptr
+			tail = (tail+1) % depth;	// advance tail_ptr
 
 			return SUCCESS;
 		}
@@ -223,7 +223,7 @@ public:
 		}
 		delete entry;
 		entry = new T *[right.depth];
-		head_ptr = tail_ptr = 0;
+		head = tail = 0;
 		count = right.count;
 		depth = right.depth;
 		while (right.count > 0)

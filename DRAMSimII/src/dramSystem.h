@@ -17,7 +17,6 @@
 #include "dramChannel.h"
 #include "enumTypes.h"
 #include "rank_c.h"
-#include "gzstream/gzstream.h"
 #include "dramSettings.h"
 #include "powerConfig.h"
 #include "globals.h"
