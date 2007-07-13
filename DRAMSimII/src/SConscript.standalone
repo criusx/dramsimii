@@ -20,7 +20,7 @@ sources = Split("""
 			globals.cpp
 			InputStream.cpp
 			main.cpp
-			gzstream/gzstream.C
+			powerConfig.cpp
 			minProtocolGap.cpp
 			rank_c.cpp
 			runSimulations.cpp
@@ -39,7 +39,7 @@ env = Environment(CCFLAGS = '-g -O3 -Weffc++',
 			OBJSUFFIC = ".o",
 			CPPPATH = '/usr/include/libxml2/')
 
-envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -malign-double -finline-functions -march=athlon -fno-exceptions',
+envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fno-exceptions',
 			OBJSUFFIX = '.fo',
 			CPPPATH = '/usr/include/libxml2/')
 
@@ -78,5 +78,5 @@ def makeEnv(label, objsfx, strip = False, **kwargs):
     envList.append(newEnv)
 
 #makeEnv('opt', '.o', CCFLAGS = Split('-g -O3'),CPPDEFINES = ['TRACING_ON=1'])
-env.Program('dramSimII',sources, LIBS=['z', 'libxml2'])
+env.Program('dramSimII',sources, LIBS=['boost_iostreams', 'libxml2'])
 envOpt.Program('dramSimII.opt',sources, LIBS=['z', 'libxml2'])
