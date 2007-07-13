@@ -39,7 +39,7 @@ env = Environment(CCFLAGS = '-g -O3 -Weffc++',
 			OBJSUFFIC = ".o",
 			CPPPATH = '/usr/include/libxml2/')
 
-envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fno-exceptions',
+envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64',
 			OBJSUFFIX = '.fo',
 			CPPPATH = '/usr/include/libxml2/')
 
@@ -79,4 +79,4 @@ def makeEnv(label, objsfx, strip = False, **kwargs):
 
 #makeEnv('opt', '.o', CCFLAGS = Split('-g -O3'),CPPDEFINES = ['TRACING_ON=1'])
 env.Program('dramSimII',sources, LIBS=['boost_iostreams', 'libxml2'])
-envOpt.Program('dramSimII.opt',sources, LIBS=['z', 'libxml2'])
+envOpt.Program('dramSimII.opt',sources, LIBS=['boost_iostreams', 'libxml2'])
