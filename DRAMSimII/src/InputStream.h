@@ -6,7 +6,7 @@
 #include <map>
 
 #include "enumTypes.h"
-#include "busevent.h"
+#include "busEvent.h"
 #include "globals.h"
 #include "dramSettings.h"
 
