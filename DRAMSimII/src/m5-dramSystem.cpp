@@ -418,7 +418,7 @@ INIT_PARAM(range, "Device Address Range"),
 INIT_PARAM(latency, "Memory access latency"),
 
 /* additional params for dram protocol*/
-INIT_PARAM_DFLT(settingsFile,"the xml file with the settings","/home/crius/m5/src/mem/DRAMSimII/memoryDefinitions/DDR2-800-4-4-4.xml"),
+INIT_PARAM_DFLT(settingsFile,"the xml file with the settings","/home/crius/m5-2.0b3/src/mem/DRAMSimII/memoryDefinitions/DDR2-800-4-4-4.xml"),
 INIT_PARAM_DFLT(cpu_ratio,"ratio between CPU speed and memory bus speed",5), 
 INIT_PARAM_DFLT(outFilename,"output file name","dramSimIIout.gz"),
 INIT_PARAM_DFLT(dramType,"type of DRAM, sdram, ddr, etc.","ddr2"),
