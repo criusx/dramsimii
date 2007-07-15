@@ -215,7 +215,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	if (!pkt->needsResponse() && !pkt->isWrite())
 	{
 		outStream << "packet not needing response." << endl;
-		if (pkt->cmd != Packet::UpgradeReq)
+		if (pkt->cmd != MemCmd::UpgradeReq)
 		{
 			delete pkt->req;
 			delete pkt;

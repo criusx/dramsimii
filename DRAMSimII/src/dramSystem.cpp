@@ -64,9 +64,9 @@ tick_t dramSystem::nextTick() const
 
 int dramSystem::convert_address(addresses &this_a) const
 {
-	unsigned int input_a;
-	unsigned int temp_a, temp_b;
-	unsigned int bit_15,bit_27,bits_26_to_16;
+	unsigned input_a;
+	unsigned temp_a, temp_b;
+	unsigned bit_15,bit_27,bits_26_to_16;
 
 	if (input_stream.type == MAPPED)
 		return 1;
