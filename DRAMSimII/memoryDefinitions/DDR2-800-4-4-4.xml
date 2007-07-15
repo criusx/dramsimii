@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="style2.xsl"?>
 <!DOCTYPE dramspec SYSTEM "dramspec.dtd">
 <dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

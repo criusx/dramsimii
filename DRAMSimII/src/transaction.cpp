@@ -35,7 +35,7 @@ originalTransaction(originalTrans)
 	case 1: type = READ_TRANSACTION; break;
 	case 2: type = WRITE_TRANSACTION; break;
 	case 3: type = PREFETCH_TRANSACTION; break;
-	default: cerr << "unknown type" << endl; exit(-11);
+	default: cerr << "unknown type of transaction" << endl; exit(-11);
 	}
 }
 

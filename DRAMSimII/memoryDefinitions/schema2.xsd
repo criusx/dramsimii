@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by CriuS (EMBRACE) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="dramspec">
 		<xs:complexType>
