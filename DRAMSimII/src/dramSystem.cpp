@@ -30,7 +30,8 @@ tick_t dramSystem::nextTick() const
 {
 	tick_t nextWake = TICK_T_MAX;
 
-	for (unsigned j = 0;j != channel.size(); j++)
+	// find the next time to wake from among all the channels
+	for (unsigned j = channel.size(); j > 0; j--)
 	{
 		// first look for transactions
 		if (transaction *nextTrans = channel[j].read_transaction())
@@ -50,6 +51,7 @@ tick_t dramSystem::nextTick() const
 		if (command *tempCommand = readNextCommand(j))
 		{
 			int tempGap = minProtocolGap(j,tempCommand);
+
 			if (tempGap + channel[j].get_time() < nextWake)
 			{
 				nextWake = tempGap + channel[j].get_time();
