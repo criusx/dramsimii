@@ -237,7 +237,14 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			sendTiming(pkt, rand() % 95996);
 		}
 #else		
-		transaction *trans = new transaction(pkt->cmd,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
+		int packetType = 0;
+
+		if (pkt->isRead())
+			packetType = 1;
+		else if (pkt->isWrite())
+			packetType = 2;
+
+		transaction *trans = new transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 		// convert the physical address to chan, rank, bank, etc.
 		memory->ds->convert_address(trans->addr);
@@ -313,7 +320,7 @@ M5dramSystem::TickEvent::process()
 	}
 	if (memory->needRetry)
 	{
-		memory->needRetry != false;
+		memory->needRetry = false;
 		memory->memoryPort->sendRetry();
 	}
 }

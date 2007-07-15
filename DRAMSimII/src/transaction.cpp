@@ -32,9 +32,9 @@ originalTransaction(originalTrans)
 {
 	switch(attribute & 0x07)
 	{
-	case 1 << 0: type = READ_TRANSACTION; break;
-	case 1 << 1: type = WRITE_TRANSACTION; break;
-	case 1 << 2: type = PREFETCH_TRANSACTION; break;
+	case 1: type = READ_TRANSACTION; break;
+	case 2: type = WRITE_TRANSACTION; break;
+	case 3: type = PREFETCH_TRANSACTION; break;
 	default: cerr << "unknown type" << endl; exit(-11);
 	}
 }
