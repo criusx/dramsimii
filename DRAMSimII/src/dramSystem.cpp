@@ -31,7 +31,7 @@ tick_t dramSystem::nextTick() const
 	tick_t nextWake = TICK_T_MAX;
 
 	// find the next time to wake from among all the channels
-	for (unsigned j = channel.size(); j > 0; j--)
+	for (unsigned j = channel.size() - 1; j >= 0; j--)
 	{
 		// first look for transactions
 		if (transaction *nextTrans = channel[j].read_transaction())
