@@ -155,7 +155,7 @@ public:
 		return count ? entry[head] : NULL;
 	}
 
-	inline int get_count() const
+	inline unsigned get_count() const
 	{
 		return count;
 	}

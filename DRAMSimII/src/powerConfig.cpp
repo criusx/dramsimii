@@ -78,7 +78,7 @@ void powerConfig::doPowerCalculation(const std::vector<dramChannel> &channels) c
 			for (std::vector<bank_c>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
 			{
 				// Psys(ACT)
-				totalRAS += l->ras_count;
+				totalRAS += l->RASCount;
 			}
 			tick_t tRRDsch = j->get_time() / totalRAS * tBurst / 2;
 			cerr << "Psys(ACT) " << setprecision(3) << PdsACT * tRC / tRRDsch * (VDD / VDDmax) * (VDD / VDDmax) << endl;

@@ -11,13 +11,13 @@
 class rank_c
 {
 public:
-	int bankCount;
-	int last_bank_id; // id of the last accessed bank of this rank
+	unsigned bankCount;
+	unsigned last_bank_id; // id of the last accessed bank of this rank
 	tick_t last_refresh_time;
 	tick_t last_cas_time;
 	tick_t last_casw_time;
-	int last_cas_length;
-	int last_casw_length;
+	unsigned last_cas_length;
+	unsigned last_casw_length;
 	queue<tick_t> last_ras_times; // ras time queue. useful to determine if t_faw is met
 	std::vector<bank_c> bank;
 

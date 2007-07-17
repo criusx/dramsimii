@@ -12,9 +12,12 @@ last_cas_length(8),
 last_casw_length(8),
 row_id(0),
 isActivated(false),
-ras_count(0),
-cas_count(0),
-casw_count(0)
+RASCount(0),
+previousRASCount(0),
+CASCount(0),
+previousCASCount(0),
+CASWCount(0),
+previousCASWCount(0)
 {}
 
 bank_c::bank_c(unsigned per_bank_queue_depth):
@@ -28,9 +31,12 @@ last_cas_length(8),
 last_casw_length(8),
 row_id(0),
 isActivated(false),
-ras_count(0),
-cas_count(0),
-casw_count(0)
+RASCount(0),
+previousRASCount(0),
+CASCount(0),
+previousCASCount(0),
+CASWCount(0),
+previousCASWCount(0)
 {}
 
 bank_c::bank_c(const bank_c &b):
@@ -44,7 +50,10 @@ last_cas_length(b.last_cas_length),
 last_casw_length(b.last_casw_length),
 row_id(b.row_id),
 isActivated(b.isActivated),
-ras_count(b.ras_count),
-cas_count(b.cas_count),
-casw_count(b.casw_count)
+RASCount(b.RASCount),
+previousRASCount(b.previousRASCount),
+CASCount(b.CASCount),
+previousCASCount(b.previousCASCount),
+CASWCount(b.CASWCount),
+previousCASWCount(b.previousCASWCount)
 {}

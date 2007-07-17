@@ -10,9 +10,9 @@ class dramChannel
 private:
 	tick_t time;						// channel time, allow for channel concurrency	
 	std::vector<rank_c> rank;			// vector of the array of ranks
-	int refresh_row_index;				// the row index to be refreshed
+	unsigned refresh_row_index;				// the row index to be refreshed
 	tick_t last_refresh_time;			// tells me when last refresh was done
-	int last_rank_id;					// id of the last accessed rank of this channel
+	unsigned last_rank_id;					// id of the last accessed rank of this channel
 	queue<transaction> transaction_q;	// transaction queue for the channel
 	queue<transaction> refreshQueue;	// queue of refresh transactions
 	queue<command> history_q;			// what were the last N commands to this channel?
@@ -26,7 +26,7 @@ public:
 	const std::vector<rank_c>& getRank() const { return rank; }
 	tick_t get_time() const { return time; }
 	void set_time(tick_t new_time) { time = new_time; }
-	int get_last_rank_id() const { return last_rank_id; }
+	unsigned get_last_rank_id() const { return last_rank_id; }
 	transaction *get_transaction() { return transaction_q.dequeue(); } // remove and return the oldest transaction
 	transaction *read_transaction() const { return transaction_q.read_back(); } // read the oldest transaction without affecting the queue
 	transaction *get_refresh() { return refreshQueue.dequeue(); }
@@ -36,7 +36,7 @@ public:
 	input_status_t complete(transaction *in) { return completion_q.enqueue(in); }
 	transaction *get_oldest_completed() { return completion_q.dequeue(); }
 	command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue
-	int getTransactionQueueCount() const { return transaction_q.get_count(); }
+	unsigned getTransactionQueueCount() const { return transaction_q.get_count(); }
 	void record_command(command *);
 	void initRefreshQueue(const unsigned, const unsigned, const unsigned); // init the RefreshQueue using selected algorithm
 

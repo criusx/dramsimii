@@ -12,20 +12,23 @@ class bank_c
 
 public:	
 	queue<command> per_bank_q;		// per bank queue
-	tick_t last_ras_time;			// when did last ras start?
-	tick_t last_cas_time;			// when did last cas start?
-	tick_t last_casw_time;			// when did last cas write start?
-	tick_t last_prec_time;			// when did last precharge start?
+	tick_t last_ras_time;			// when did last RAS command start?
+	tick_t last_cas_time;			// when did last CAS command start?
+	tick_t last_casw_time;			// when did last CASW command start?
+	tick_t last_prec_time;			// when did last Precharge command start?
 	tick_t last_refresh_all_time;	// must respect t_rfc. concurrent refresh takes time
-	int last_cas_length;
-	int last_casw_length;
-	int row_id;						// if the bank is open, what is the row id?
+	unsigned last_cas_length;		// the length of the last CAS command issued
+	unsigned last_casw_length;		// the length of the last CASW command issued
+	unsigned row_id;				// if the bank is open, what is the row id?
 	bool isActivated;				// if the bank is activated, else precharged
 	
 	// stats
-	int ras_count;
-	int cas_count;
-	int casw_count;
+	unsigned RASCount;
+	unsigned previousRASCount;		// the number of RAS commands since the last power calculation
+	unsigned CASCount;
+	unsigned previousCASCount;		// the number of CAS commands since the last power calculation
+	unsigned CASWCount;
+	unsigned previousCASWCount;		// the number of CASW commands since the last power calculation
 
 	// constructors
 	explicit bank_c(const dramSettings *settings);

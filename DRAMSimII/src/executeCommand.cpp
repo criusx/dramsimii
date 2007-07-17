@@ -47,7 +47,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 
 			*this_ras_time = this_bank.last_ras_time = channel.get_time();
 			this_bank.row_id = this_command->getAddress().row_id;
-			this_bank.ras_count++;
+			this_bank.RASCount++;
 
 			this_rank.last_ras_times.enqueue(this_ras_time);
 
@@ -68,7 +68,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		this_rank.last_cas_time = channel.get_time();
 		this_bank.last_cas_length = this_command->getLength();
 		this_rank.last_cas_length = this_command->getLength();
-		this_bank.cas_count++;
+		this_bank.CASCount++;
 		this_command->getHost()->completion_time = channel.get_time() + timing_specification.t_cas;
 		
 		// specific for CAS command
@@ -87,7 +87,7 @@ void dramSystem::executeCommand(command *this_command,const int gap)
 		this_rank.last_casw_time = channel.get_time();
 		this_bank.last_casw_length = this_command->getLength();
 		this_rank.last_casw_length = this_command->getLength();
-		this_bank.casw_count++;
+		this_bank.CASWCount++;
 		this_command->getHost()->completion_time = channel.get_time();
 		
 		// for the CAS write command
