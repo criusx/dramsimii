@@ -71,6 +71,8 @@ namespace GenTag_Server
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.interactionLoad = new System.Windows.Forms.Button();
+            this.drugNameTextBox = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.logLimitSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictImg)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -307,9 +309,11 @@ namespace GenTag_Server
             this.groupBox2.Controls.Add(this.drugPictureBox);
             this.groupBox2.Controls.Add(this.drugDescriptionBox);
             this.groupBox2.Controls.Add(this.drugSaveButton);
+            this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.drugIDBox);
             this.groupBox2.Controls.Add(this.drugClearButton);
             this.groupBox2.Controls.Add(this.drugLoadButton);
+            this.groupBox2.Controls.Add(this.drugNameTextBox);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Location = new System.Drawing.Point(391, 48);
@@ -511,6 +515,22 @@ namespace GenTag_Server
             this.interactionLoad.UseVisualStyleBackColor = true;
             this.interactionLoad.Click += new System.EventHandler(this.interactionLoad_Click);
             // 
+            // drugNameTextBox
+            // 
+            this.drugNameTextBox.Location = new System.Drawing.Point(88, 47);
+            this.drugNameTextBox.Name = "drugNameTextBox";
+            this.drugNameTextBox.Size = new System.Drawing.Size(226, 20);
+            this.drugNameTextBox.TabIndex = 5;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(7, 50);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(35, 13);
+            this.label13.TabIndex = 6;
+            this.label13.Text = "Name";
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -592,6 +612,8 @@ namespace GenTag_Server
         private System.Windows.Forms.TextBox drugIDAddBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox drugNameTextBox;
     }
 }
 

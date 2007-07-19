@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:tns="http://COREMedDemo/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="COREMedDemoWS" targetNamespace="http://COREMedDemo/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified" targetNamespace="http://COREMedDemo/">
+      <xsd:complexType name="drugInfo">
+        <xsd:sequence>
+          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+          <xsd:element name="picture" nillable="true" type="xsd:base64Binary" />
+          <xsd:element name="description" nillable="true" type="xsd:string" />
+          <xsd:element name="name" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="patientRecord">
+        <xsd:sequence>
+          <xsd:element name="image" nillable="true" type="xsd:base64Binary" />
+          <xsd:element name="middleName" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="allergies" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="medications" nillable="true" type="xsd:string" />
+          <xsd:element name="firstName" nillable="true" type="xsd:string" />
+          <xsd:element name="lastName" nillable="true" type="xsd:string" />
+          <xsd:element name="RFIDnum" nillable="true" type="xsd:string" />
+          <xsd:element name="DOB" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="enterDrugInfo" type="tns:enterDrugInfo" />
+      <xsd:complexType name="enterDrugInfo">
+        <xsd:sequence>
+          <xsd:element name="newDrug" nillable="true" type="tns:drugInfo" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="enterDrugInfoResponse" type="tns:enterDrugInfoResponse" />
+      <xsd:complexType name="enterDrugInfoResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="tns:errorReport" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="errorReport">
+        <xsd:sequence>
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="errorCode" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="enterPatientPhoto" type="tns:enterPatientPhoto" />
+      <xsd:complexType name="enterPatientPhoto">
+        <xsd:sequence>
+          <xsd:element name="newPatient" nillable="true" type="tns:patientRecord" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="enterPatientPhotoResponse" type="tns:enterPatientPhotoResponse" />
+      <xsd:complexType name="enterPatientPhotoResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="tns:errorReport" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="enterPatientRecord" type="tns:enterPatientRecord" />
+      <xsd:complexType name="enterPatientRecord">
+        <xsd:sequence>
+          <xsd:element name="newPatient" nillable="true" type="tns:patientRecord" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="enterPatientRecordResponse" type="tns:enterPatientRecordResponse" />
+      <xsd:complexType name="enterPatientRecordResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="tns:errorReport" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <message name="COREMedDemoWS_enterDrugInfo">
+    <part name="parameters" element="tns:enterDrugInfo" />
+  </message>
+  <message name="COREMedDemoWS_enterDrugInfoResponse">
+    <part name="parameters" element="tns:enterDrugInfoResponse" />
+  </message>
+  <message name="COREMedDemoWS_enterPatientPhoto">
+    <part name="parameters" element="tns:enterPatientPhoto" />
+  </message>
+  <message name="COREMedDemoWS_enterPatientPhotoResponse">
+    <part name="parameters" element="tns:enterPatientPhotoResponse" />
+  </message>
+  <message name="COREMedDemoWS_enterPatientRecord">
+    <part name="parameters" element="tns:enterPatientRecord" />
+  </message>
+  <message name="COREMedDemoWS_enterPatientRecordResponse">
+    <part name="parameters" element="tns:enterPatientRecordResponse" />
+  </message>
+  <portType name="COREMedDemoWS">
+    <operation name="enterDrugInfo">
+      <input message="tns:COREMedDemoWS_enterDrugInfo" />
+      <output message="tns:COREMedDemoWS_enterDrugInfoResponse" />
+    </operation>
+    <operation name="enterPatientPhoto">
+      <input message="tns:COREMedDemoWS_enterPatientPhoto" />
+      <output message="tns:COREMedDemoWS_enterPatientPhotoResponse" />
+    </operation>
+    <operation name="enterPatientRecord">
+      <input message="tns:COREMedDemoWS_enterPatientRecord" />
+      <output message="tns:COREMedDemoWS_enterPatientRecordResponse" />
+    </operation>
+  </portType>
+  <binding name="COREMedDemoWSSoapHttp" type="tns:COREMedDemoWS">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="enterDrugInfo">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="enterPatientPhoto">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="enterPatientRecord">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="COREMedDemoWS">
+    <port name="COREMedDemoWSSoapHttpPort" binding="tns:COREMedDemoWSSoapHttp">
+      <soap:address location="http://crius.dyndns.org:8888/GentagDemo/COREMedDemoWSSoapHttpPort" />
+    </port>
+  </service>
+</definitions>

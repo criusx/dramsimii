@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CORE_MedDemo.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CORE_MedDemo_COREMedDemoWS_COREMedDemoWS" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://crius.dyndns.org:8888/GentagDemo/COREMedDemoWSSoapHttpPort</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

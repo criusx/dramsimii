@@ -28,8 +28,7 @@ namespace GentagDemo.org.dyndns.criusWine {
         
         /// <remarks/>
         public wineWS() {
-            this.Url = "http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/wineWSSoapHttpP" +
-                "ort";
+            this.Url = "http://crius.dyndns.org:8888/GentagDemo/wineWSSoapHttpPort";
         }
         
         /// <remarks/>
@@ -63,6 +62,27 @@ namespace GentagDemo.org.dyndns.criusWine {
         public bool EndenterBottleInformation(System.IAsyncResult asyncResult) {
             object[] results = this.EndInvoke(asyncResult);
             return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://winePackage//getWineAccessesSince", RequestElementName="getWineAccessesSinceElement", RequestNamespace="http://winePackage/", ResponseElementName="getWineAccessesSinceResponseElement", ResponseNamespace="http://winePackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
+        public string[] getWineAccessesSince(long long_1) {
+            object[] results = this.Invoke("getWineAccessesSince", new object[] {
+                        long_1});
+            return ((string[])(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BegingetWineAccessesSince(long long_1, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("getWineAccessesSince", new object[] {
+                        long_1}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public string[] EndgetWineAccessesSince(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((string[])(results[0]));
         }
         
         /// <remarks/>
@@ -106,6 +126,10 @@ namespace GentagDemo.org.dyndns.criusWine {
         private bool authenticatedField;
         
         private byte[] imageField;
+        
+        private int lookedUpTimesField;
+        
+        private bool existsField;
         
         private string vineyardField;
         
@@ -154,6 +178,26 @@ namespace GentagDemo.org.dyndns.criusWine {
             }
             set {
                 this.imageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int lookedUpTimes {
+            get {
+                return this.lookedUpTimesField;
+            }
+            set {
+                this.lookedUpTimesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool exists {
+            get {
+                return this.existsField;
+            }
+            set {
+                this.existsField = value;
             }
         }
         

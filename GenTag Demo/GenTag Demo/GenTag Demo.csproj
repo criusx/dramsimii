@@ -18,7 +18,7 @@
     <FormFactorID>
     </FormFactorID>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>GentagKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Gentag Demo Key.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,20 +66,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientConnection.cs" />
     <Compile Include="Data.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="demoClientTest.cs" />
     <Compile Include="GraphMotor.cs" />
     <Compile Include="GraphPoint.cs" />
     <Compile Include="ListData.cs" />
     <Compile Include="ListGraphs.cs" />
-    <Compile Include="mainForm.cs">
+    <Compile Include="demoClient.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mainForm.Designer.cs">
-      <DependentUpon>mainForm.cs</DependentUpon>
+    <Compile Include="demoClient.Designer.cs">
+      <DependentUpon>demoClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="nmeaInterpreter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,9 +88,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>Data.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mainForm.resx">
+    <EmbeddedResource Include="demoClient.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>mainForm.cs</DependentUpon>
+      <DependentUpon>demoClient.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -111,15 +112,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="Web References\petWS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\org.dyndns.crius\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -129,10 +135,23 @@
       <CachedSettingsPropName>
       </CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/wineWSSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/petWSSoapHttpPort%3fWSDL">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\petWS\</RelPath>
+      <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/petWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>
+      </CachedAppSettingsObjectName>
+      <CachedSettingsPropName>
+      </CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/wineWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\org.dyndns.criusWine\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/wineWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/wineWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -152,7 +171,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="GentagKey.pfx" />
     <None Include="Resources\Gentag-logo.png" />
     <None Include="Web References\org.dyndns.criusWine\Reference.map">
@@ -167,8 +185,20 @@
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Resources\blank.png" />
+    <None Include="Web References\org.dyndns.crius\patientInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <Content Include="Resources\cancel.png" />
     <Content Include="Resources\ok.png" />
+    <None Include="Resources\question.png" />
+    <None Include="Web References\petWS\petInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\petWS\petWS.wsdl" />
+    <None Include="Web References\petWS\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="VarioSens Lib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

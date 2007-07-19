@@ -346,35 +346,14 @@ namespace GenTag_Server
 
                     fls.Close();
 
-                    string MyConString = @"User Id=" + usernameBox.Text + @";" +
-                        @"Password=" + passwordBox.Text + @";" +
-                        @"Data Source=" + dataSourceBox.Text;
+                    COREMedDemoWS.COREMedDemoWS ws = new COREMedDemoWS.COREMedDemoWS();
+                    COREMedDemoWS.drugInfo dI = new COREMedDemoWS.drugInfo();
+                    dI.name = drugNameTextBox.Text;
+                    dI.description = drugDescriptionBox.Text;
+                    dI.RFIDNum = drugIDBox.Text;
+                    dI.picture = blob;
 
-                    OracleConnection conn = new OracleConnection(MyConString);
-
-                    conn.Open();
-
-                    string query = "insert into drugData values ('" + drugIDBox.Text+ "'," + "'" + drugDescriptionBox.Text + "',:BlobParameter )";
-
-                    OracleParameter blobParameter = new OracleParameter();
-
-                    blobParameter.OracleDbType = OracleDbType.Blob;
-
-                    blobParameter.ParameterName = "BlobParameter";
-
-                    blobParameter.Value = blob;
-
-                    OracleCommand cmnd = new OracleCommand(query, conn);
-
-                    cmnd.Parameters.Add(blobParameter);
-
-                    cmnd.ExecuteNonQuery();
-
-                    cmnd.Dispose();
-
-                    conn.Close();
-
-                    conn.Dispose();
+                    ws.enterDrugInfo(dI);                    
                 }
             }
             catch (Exception ex)

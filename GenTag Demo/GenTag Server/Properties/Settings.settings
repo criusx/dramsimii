@@ -3,7 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="GenTag_Server_org_dyndns_crius_GetDatesWS" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://crius.dyndns.org:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort</Value>
+      <Value Profile="(Default)">http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort</Value>
+    </Setting>
+    <Setting Name="GenTag_Server_COREMedDemoWS_COREMedDemoWS" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://crius.dyndns.org:8888/GentagDemo/COREMedDemoWSSoapHttpPort</Value>
     </Setting>
   </Settings>
 </SettingsFile>

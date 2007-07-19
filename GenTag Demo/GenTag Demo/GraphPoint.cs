@@ -38,10 +38,10 @@ namespace PocketGraphBar
         {
         }
 
-        public GraphPoint(decimal X, decimal Y)
+        public GraphPoint(decimal x, decimal y)
         {
-            mX = X;
-            mY = Y;
+            mX = x;
+            mY = y;
         }
     }
 }

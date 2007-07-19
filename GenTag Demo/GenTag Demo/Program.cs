@@ -12,7 +12,7 @@ namespace GentagDemo
         [MTAThread]
         static void Main()
         {
-            Application.Run(new mainForm());
+            Application.Run(new demoClient());
         }
     }
 }

@@ -58,7 +58,7 @@ namespace TestPocketGraphBar
             try
             {
                 //In the load event the the object was filled
-                //Here wa only set its properties
+                //Here we only set its properties
 
                 graph.LeftMargin = 20;
                 graph.LegendFont = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular);
@@ -72,7 +72,7 @@ namespace TestPocketGraphBar
                 graph.DrawGraphs(e);
 
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 throw;
             }
@@ -95,9 +95,9 @@ namespace TestPocketGraphBar
             return;
         }
 
-        public void Add(int X, float Y)
+        public void Add(int x, float y)
         {
-            GraphPoint p = new GraphPoint(Convert.ToDecimal(X), Convert.ToDecimal(Y));
+            GraphPoint p = new GraphPoint(Convert.ToDecimal(x), Convert.ToDecimal(y));
             graph.Graphs[0].Add(p);
         }
 

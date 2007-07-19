@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Globalization;
 
 
 namespace PocketGraphBar
@@ -245,7 +246,7 @@ namespace PocketGraphBar
             System.Drawing.Pen linea = new System.Drawing.Pen(mAxisColor);
             e.Graphics.DrawLine(linea,mLeftMargin + 10,mMaxHeight + 10,mLeftMargin + 10,5);
             e.Graphics.DrawLine(linea,mLeftMargin + 10,mMaxHeight + 10,500,mMaxHeight + 10);
-            
+            linea.Dispose();
          
             //This is done in order to get clean numbers from my maximum value
             //decimal yInterval = GetYInterval(mMax);
@@ -255,7 +256,7 @@ namespace PocketGraphBar
             // Y axis numbering
             for (int z = 1; z <= 10; z++)
             {
-                e.Graphics.DrawString((z * yInterval).ToString("F"), mFont, legends, 0, ((mMaxHeight + 10) - ((mMaxHeight / 10) * z)));
+                e.Graphics.DrawString((z * yInterval).ToString("F", CultureInfo.CurrentUICulture), mFont, legends, 0, ((mMaxHeight + 10) - ((mMaxHeight / 10) * z)));
             }
          }
          catch(System.Exception ee)

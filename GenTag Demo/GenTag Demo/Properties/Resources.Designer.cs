@@ -72,6 +72,25 @@ namespace GentagDemo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warning! 
+        ///This drug should not be taken by this patient..
+        /// </summary>
+        internal static string DrugInteractionWarningMessage {
+            get {
+                return ResourceManager.GetString("DrugInteractionWarningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string emptyString {
+            get {
+                return ResourceManager.GetString("emptyString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please ensure that the Sirit reader is completely inserted.
         /// </summary>
         internal static string error1 {
@@ -142,24 +161,6 @@ namespace GentagDemo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hi Limit.
-        /// </summary>
-        internal static string hiLimitString {
-            get {
-                return ResourceManager.GetString("hiLimitString", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interval.
-        /// </summary>
-        internal static string intervalString {
-            get {
-                return ResourceManager.GetString("intervalString", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Temperature Violation Log.
         /// </summary>
         internal static string logString {
@@ -189,6 +190,13 @@ namespace GentagDemo.Properties {
         internal static System.Drawing.Bitmap ok {
             get {
                 object obj = ResourceManager.GetObject("ok", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap question {
+            get {
+                object obj = ResourceManager.GetObject("question", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
