@@ -21,6 +21,7 @@ using TestPocketGraphBar;
 using Microsoft.WindowsMobile.Status;
 using GentagDemo;
 using System.Web.Services.Protocols;
+using SiritReader;
 
 
 [assembly: CLSCompliant(true)]
@@ -87,6 +88,7 @@ namespace GentagDemo
             tagReader.TagReceived += new NativeMethods.TagReceivedEventHandler(tagReceived);
             tagReader.VarioSensSettingsReceived += new NativeMethods.VarioSensSettingsReceivedEventHandler(receiveVarioSensSettings);
             tagReader.ReaderError += new NativeMethods.ReaderErrorHandler(receiveReaderError);
+            tagReader.VarioSensLogReceived += new NativeMethods.VarioSensReadLogHandler(writeViolations);
 
             ImageList myImageList = new ImageList();
             myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.blank.GetHbitmap()));
@@ -242,7 +244,7 @@ namespace GentagDemo
 
         private void launchReadVSLog()
         {
-            tagReader.readLog(new NativeMethods.writeViolationsCB(writeViolations));
+            tagReader.readLog();
             readerRunning = false;
             setWaitCursor(false);
         }
@@ -250,26 +252,65 @@ namespace GentagDemo
         private void launchSetVSSettings()
         {
             int mode;
+            int errorCode = -1;
 
             if (getComboBoxIndex(logModeComboBox) == 0)
                 mode = 1;
             else
                 mode = 2;
 
-            int errorCode = tagReader.setVSSettings(mode,
-                float.Parse(getTextBox(hiLimitTextBox), CultureInfo.CurrentUICulture),
-                float.Parse(getTextBox(loLimitTextBox), CultureInfo.CurrentUICulture),
-                int.Parse(getTextBox(intervalTextBox), CultureInfo.CurrentUICulture),
-                int.Parse(getTextBox(batteryCheckIntervalTextBox), CultureInfo.CurrentUICulture));
+            for (int i = 50; i >= 0; --i)
+            {
+                errorCode = tagReader.setVSSettings(mode,
+                    float.Parse(getTextBox(hiLimitTextBox), CultureInfo.CurrentUICulture),
+                    float.Parse(getTextBox(loLimitTextBox), CultureInfo.CurrentUICulture),
+                    int.Parse(getTextBox(intervalTextBox), CultureInfo.CurrentUICulture),
+                    int.Parse(getTextBox(batteryCheckIntervalTextBox), CultureInfo.CurrentUICulture));
 
-            if (errorCode != 0)
-                setTextBox(getSetStatusBox, "Error writing tag");
+                if (errorCode != 0)
+                {
+                    string eC = "";
+                    switch (errorCode)
+                    {
+                        case -1:
+                            eC = "Cannot est. comm";
+                            break;
+                        case -2:
+                            eC = "Cannot enable reader";
+                            break;
+                        case -3:
+                            eC = "Cannot init reader";
+                            break;
+                        case -4:
+                            eC = "Cannot get log settings";
+                            break;
+                        case -5:
+                            eC = "Cannot set log timer";
+                            break;
+                        case -6:
+                            eC = "Cannot set log mode";
+                            break;
+                        case -7:
+                            eC = "Cannot start logging";
+                            break;
+                    }
+                    setTextBox(getSetStatusBox, eC + " (" + i + "/50)");
+                }
+                else
+                {
+                    setTextBox(getSetStatusBox, "Success");
+                    break;
+                }
+            }
+            readerRunning = false;
+            setWaitCursor(false);
         }
 
         private void launchGetVSSettings()
         {
             tagReader.running = true;
             tagReader.getVSSettings();
+            readerClick(readValueButton, new EventArgs());
         }
 
         private static DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));

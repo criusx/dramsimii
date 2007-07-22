@@ -129,6 +129,7 @@ namespace GentagDemo
             this.label6 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.authPage.SuspendLayout();
             this.VarioSens.SuspendLayout();
@@ -479,7 +480,7 @@ namespace GentagDemo
             this.petPage.Controls.Add(this.petPB);
             this.petPage.Location = new System.Drawing.Point(0, 0);
             this.petPage.Name = "petPage";
-            this.petPage.Size = new System.Drawing.Size(240, 217);
+            this.petPage.Size = new System.Drawing.Size(232, 214);
             this.petPage.Text = "Pet";
             // 
             // petButton
@@ -953,18 +954,20 @@ namespace GentagDemo
             this.varioSensWPage.Controls.Add(this.label8);
             this.varioSensWPage.Controls.Add(this.label7);
             this.varioSensWPage.Controls.Add(this.label6);
+            this.varioSensWPage.Controls.Add(this.label21);
             this.varioSensWPage.Controls.Add(this.label9);
             this.varioSensWPage.Controls.Add(this.label5);
             this.varioSensWPage.Location = new System.Drawing.Point(0, 0);
             this.varioSensWPage.Name = "varioSensWPage";
-            this.varioSensWPage.Size = new System.Drawing.Size(232, 214);
+            this.varioSensWPage.Size = new System.Drawing.Size(240, 217);
             this.varioSensWPage.Text = "VarioSens/W";
             // 
             // getSetStatusBox
             // 
-            this.getSetStatusBox.Location = new System.Drawing.Point(8, 153);
+            this.getSetStatusBox.Location = new System.Drawing.Point(46, 136);
             this.getSetStatusBox.Name = "getSetStatusBox";
-            this.getSetStatusBox.Size = new System.Drawing.Size(100, 21);
+            this.getSetStatusBox.ReadOnly = true;
+            this.getSetStatusBox.Size = new System.Drawing.Size(187, 21);
             this.getSetStatusBox.TabIndex = 14;
             // 
             // logModeComboBox
@@ -1061,6 +1064,13 @@ namespace GentagDemo
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(100, 20);
             this.label5.Text = "Low Limit";
+            // 
+            // label21
+            // 
+            this.label21.Location = new System.Drawing.Point(0, 136);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(49, 20);
+            this.label21.Text = "Status";
             // 
             // demoClient
             // 
@@ -1190,6 +1200,7 @@ namespace GentagDemo
         private System.Windows.Forms.Label petOwnerLabel;
         private System.Windows.Forms.Label petPhonenumberLabel;
         private System.Windows.Forms.PictureBox petPB;
+        private System.Windows.Forms.Label label21;
         
     }
 }

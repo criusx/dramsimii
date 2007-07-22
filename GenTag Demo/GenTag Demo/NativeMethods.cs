@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Globalization;
 
-namespace GentagDemo
+namespace SiritReader
 {
     class NativeMethods
     {
@@ -15,15 +15,22 @@ namespace GentagDemo
         public delegate void TagReceivedEventHandler(String tagID);
         public delegate void VarioSensSettingsReceivedEventHandler(Single hiLimit, Single loLimit, short period, short logMode, short batteryCheckInterval);
         public delegate void ReaderErrorHandler(string errorMessage);
+        public delegate void VarioSensReadLogHandler(
+           Single upperTempLimit,
+           Single lowerTempLimit,
+           Int32 len,
+           short recordPeriod,
+           [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] dateTime,
+           [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Byte[] logMode,
+           [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Single[] temperatures);
         #endregion
 
         #region Events
         public event TagReceivedEventHandler TagReceived;
         public event VarioSensSettingsReceivedEventHandler VarioSensSettingsReceived;
+        public event VarioSensReadLogHandler VarioSensLogReceived;
         public event ReaderErrorHandler ReaderError;
-        #endregion
-
-        private static NativeMethods existingNativeMethods;
+        #endregion        
 
         public NativeMethods()
         {
@@ -33,6 +40,10 @@ namespace GentagDemo
                 throw new ArgumentException("Too many NativeMethods classes created");
         }
 
+        private static NativeMethods existingNativeMethods;
+
+        #region DLL Imports
+
         [DllImport("coredll.dll")]
         internal extern static int GetDeviceUniqueID(
             [In, Out] byte[] appdata,
@@ -41,30 +52,25 @@ namespace GentagDemo
             [In, Out] byte[] deviceIDOuput,
             out uint pcbDeviceIDOutput);
 
-        public delegate void writeViolationsCB(
-            Single upperTempLimit,
-            Single lowerTempLimit,
-            Int32 len,
-            short recordPeriod,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] dateTime,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Byte[] logMode,
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Single[] temperatures);
-
         [DllImport("VarioSens Lib.dll")]
-        private static extern int getVarioSensLog(writeViolationsCB cb);
+        private static extern int getVarioSensLog(VarioSensReadLogHandler cb);
 
         [DllImport("VarioSens Lib.dll")]
         private static extern int setVarioSensSettings(float lowTemp, float hiTemp, int interval, int mode, int batteryCheckInterval);
 
+        [DllImport("VarioSens Lib.dll")]
+        private static extern IntPtr getVarioSensTagID();
+
+        [DllImport("VarioSens Lib.dll")]
+        private static extern int getVarioSensSettings(writeVSSettingsCB cb);
+
+        #endregion
         public delegate void writeVSSettingsCB(
             Single upperTempLimit,
             Single lowerTempLimit,
             short recordPeriod,
             short logMode,
             short batteryCheckInterval);
-
-        [DllImport("VarioSens Lib.dll")]
-        private static extern int getVarioSensSettings(writeVSSettingsCB cb);
 
         public delegate void writeViolationsDelegate(
             Single upperTempLimit,
@@ -75,7 +81,7 @@ namespace GentagDemo
             Byte[] logMode,
             Single[] temperatures);
 
-        private bool readerRunning;
+        private static bool readerRunning;
 
         public bool running
         {
@@ -84,14 +90,20 @@ namespace GentagDemo
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void readLog(writeViolationsCB mycb)
+        unsafe public static string readOneVSTagID()
+        {
+            return new string((char*)getVarioSensTagID());
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void readLog()
         {
             //writeViolationsCB mycb = new writeViolationsCB(writeViolations);
             readerRunning = true;
             int errorCode = 0;
             while (readerRunning == true)
             {
-                if ((errorCode = getVarioSensLog(mycb)) == 0)
+                if ((errorCode = getVarioSensLog(VarioSensLogReceived)) == 0)
                     readerRunning = false;
                 else if ((errorCode == -1) || (errorCode == -2) || (errorCode == -6))
                     readerRunning = false;
@@ -101,18 +113,14 @@ namespace GentagDemo
             switch (errorCode)
             {
                 case -1:
-                    MessageBox.Show(GentagDemo.Properties.Resources.error1);
+                    MessageBox.Show("Please ensure that the Sirit reader is completely inserted");
                     break;
                 case -2:
-                    MessageBox.Show(GentagDemo.Properties.Resources.error2);
-                    break;                
+                    MessageBox.Show("Unable to communicate with Sirit reader");
+                    break;
                 default:
                     break;
             }
-
-            // TODO: go do web service stuff
-
-            //resetButtons(readLogButton);
         }
 
         private static DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
@@ -120,12 +128,13 @@ namespace GentagDemo
         public int setVSSettings(int mode, float hiTemp, float loTemp, int interval, int batteryCheckInterval)
         {
             int errorCode = -1;
+            readerRunning = true;
             try
             {
                 errorCode = -1;
 
                 while ((readerRunning == true) &&
-                    ((errorCode = setVarioSensSettings(loTemp,hiTemp,interval,mode,batteryCheckInterval)) != 0))
+                    ((errorCode = setVarioSensSettings(loTemp, hiTemp, interval, mode, batteryCheckInterval)) != 0))
                     Thread.Sleep(100);
             }
             catch (ArgumentException ex)
@@ -173,13 +182,13 @@ namespace GentagDemo
         {
             if (C1Lib.C1.NET_C1_open_comm() != 1)
             {
-                ReaderError(GentagDemo.Properties.Resources.error1);
+                ReaderError("Please ensure that the Sirit reader is completely inserted");
                 return;
             }
             else if (C1Lib.C1.NET_C1_enable() != 1)
             {
                 C1Lib.C1.NET_C1_disable();
-                ReaderError(GentagDemo.Properties.Resources.error2);
+                ReaderError("Unable to communicate with Sirit reader");
                 return;
             }
             string oldTag = "";
@@ -194,6 +203,7 @@ namespace GentagDemo
                 if (readerRunning == false)
                     break;
 
+                // this code will read the contents of the tag
                 //while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
 
 
@@ -212,7 +222,7 @@ namespace GentagDemo
                     TagReceived(newTag.ToString());
                     oldTag = newTag;
                 }
-                
+
             }
             C1Lib.C1.NET_C1_disable();
             C1Lib.C1.NET_C1_close_comm();
@@ -223,12 +233,12 @@ namespace GentagDemo
         {
             if (C1Lib.C1.NET_C1_open_comm() != 1)
             {
-                throw new NotSupportedException(GentagDemo.Properties.Resources.error1);
+                throw new NotSupportedException("Please ensure that the Sirit reader is completely inserted");
             }
             else if (C1Lib.C1.NET_C1_enable() != 1)
             {
                 C1Lib.C1.NET_C1_disable();
-                throw new NotSupportedException(GentagDemo.Properties.Resources.error2);
+                throw new NotSupportedException("Unable to communicate with Sirit reader");
             }
 
             // wait while a tag is read

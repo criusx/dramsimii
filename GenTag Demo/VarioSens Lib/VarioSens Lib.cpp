@@ -4,11 +4,16 @@
 #include "VarioSens Lib.h"
 #include "c1lib.h"
 #include <sstream>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define MAXTRIES 1
 
 #define DEFAULTARRAYSIZE 1
 
+//////////////////////////////////////////////////////////////////////////
+// setVarioSensSettings
+//////////////////////////////////////////////////////////////////////////
 extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 														  float hiTemp,
 														  int interval,
@@ -110,6 +115,52 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 	return errorCode;
 }
 
+//////////////////////////////////////////////////////////////////////////
+// getVarioSensTagID 
+//////////////////////////////////////////////////////////////////////////
+extern "C" __declspec(dllexport) LPWSTR getVarioSensTagID()
+{
+	if (!C1_open_comm()) 
+	{
+		C1_close_comm();
+		return NULL;
+	}
+	else if (!C1_enable())
+	{
+		C1_close_comm();
+		return NULL;
+	}
+	else
+	{
+		tag_15693 myVarioSensTag = new_15693();
+
+		int failures = MAXTRIES + 50;
+
+		while (failures > 0)
+		{
+			// make sure it isn't doing a spin-wait
+			Sleep(50);
+
+			if (get_15693(&myVarioSensTag, NULL) &&
+				myVarioSensTag.tag_type == VARIOSENS)
+			{
+				LPWSTR tagID = new WCHAR[17];
+
+				for (int j = 0; j < 8; j++)
+				{
+					wsprintf(&(tagID[2*j]),L"%02X",myVarioSensTag.tag_id[j]);
+				}
+				return tagID;
+			}
+			failures--;
+		}
+	}
+	return NULL;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// getVarioSensSettings and associated callback
+//////////////////////////////////////////////////////////////////////////
 typedef void (*ARRAYCB2)(float upper,
 						 float lower,
 						 int period,
