@@ -9,6 +9,9 @@ using Microsoft.WindowsMobile.Forms;
 using System.IO;
 using System.Net;
 using SiritReader;
+using System.Collections;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace COREMobileMedDemo
 {
@@ -20,15 +23,18 @@ namespace COREMobileMedDemo
         {
             InitializeComponent();
 
-            nativeMethods.VarioSensLogReceived +=new NativeMethods.VarioSensReadLogHandler(VarioSensLogReceived);
+            nativeMethods.VarioSensLogReceived += new NativeMethods.VarioSensReadLogHandler(VarioSensLogReceived);
 
             selfReference = this;
-            
+
+            patientNameLabel.Text = "";
+            DOBLabel.Text = "";
+
         }
 
         byte[] image;
 
-        string RFIDnum;
+        private string RFIDnum = "";
 
         static mobileMedDemo selfReference;
 
@@ -36,9 +42,9 @@ namespace COREMobileMedDemo
         {
             CameraCaptureDialog newImage = new CameraCaptureDialog();
             newImage.StillQuality = CameraCaptureStillQuality.High;
-            newImage.Resolution = new Size(320,240);            
+            newImage.Resolution = new Size(320, 240);
             newImage.Owner = this;
-            newImage.Title = "Patient Photo";            
+            newImage.Title = "Patient Photo";
             newImage.Mode = CameraCaptureMode.Still;
 
             if (newImage.ShowDialog() == DialogResult.OK && newImage.FileName.Length > 0)
@@ -82,31 +88,61 @@ namespace COREMobileMedDemo
             }
         }
 
+        // the periodicity of sampling temperatures, will be written to the tag's settings and to the web service
+        private static int periodicity = 60;
+
         private void button1_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+            listView1.Items.Clear();
             // only want VS tags so we can grab temp data
             RFIDnum = textBox1.Text = NativeMethods.readOneVSTagID();
             if (RFIDnum.Length > 0)
             {
-                for (int i = 50; i >= 0; --i)
+                int i = 50;
+                for (; i >= 0; --i)
                 {
-                    if (nativeMethods.setVSSettings(1, 30.0f, 29.0f, 60, 360) == 0)
+                    if (nativeMethods.setVSSettings(1, 30.0f, 29.0f, periodicity, 360) == 0)
                         break;
                 }
-                MessageBox.Show("Please rescan the tag.", "Could not reset temp logging");
+                if (i < 0)
+                    MessageBox.Show("Please rescan the tag.", "Could not reset temp logging");
             }
             Cursor.Current = Cursors.Default;
         }
 
-
-
         private void button4_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            nativeMethods.readLog();
+            // get the tag id
+            RFIDnum = NativeMethods.readOneVSTagID();
+            if (RFIDnum.Length > 0)
+            {
+                // read the log
+                nativeMethods.readLog();
+                // then reset it
+                int i = 50;
+                for (; i >= 0; --i)
+                {
+                    if (nativeMethods.setVSSettings(1, 30.0f, 29.0f, periodicity, 360) == 0)
+                        break;
+                }
+                // then do patient lookup
+                AsyncCallback cb = new AsyncCallback(patientIDLookupFinished);
+                COREMedDemoWS.COREMedDemoWS ws = new COREMedDemoWS.COREMedDemoWS();
+                ws.Timeout = 300000;
+                IAsyncResult ar = ws.BegingetPatientRecord(RFIDnum, cb, ws);
+
+                currentlyBeingRetrievedPatientRecords[ar] = (string)RFIDnum.Clone();
+                if (i < 0)
+                    MessageBox.Show("Please rescan the tag.", "Could not reset temp logging");
+            }
             Cursor.Current = Cursors.Default;
         }
+
+        Hashtable currentlyBeingRecordedVitals = new Hashtable();
+
+        Hashtable currentlyBeingRetrievedPatientRecords = new Hashtable();
 
         private static void VarioSensLogReceived(
             Single upperTempLimit,
@@ -117,31 +153,21 @@ namespace COREMobileMedDemo
             Byte[] logMode,
             Single[] temperatures)
         {
-            //if (mF.InvokeRequired)
-            //{
-            //    mF.Invoke(new NativeMethods.writeViolationsDelegate(writeViolations),
-            //        new object[] { upperTempLimit, lowerTempLimit, len, recordPeriod, dateTime, logMode, temperatures });
-            //    return;
-            //}
-            //mF.textBox9.Text = @"";
-            //mF.textBox1.Text = upperTempLimit.ToString(CultureInfo.CurrentUICulture);
-            //mF.textBox2.Text = lowerTempLimit.ToString(CultureInfo.CurrentUICulture);
-            //mF.textBox3.Text = recordPeriod.ToString(CultureInfo.CurrentUICulture);
-            //mF.listBox1.Items.Clear();
-            //mF.graph.Clear();
-
             DateTime now = DateTime.Now;
 
             for (int i = 0; i < dateTime.Length; i++)
             {
                 if (logMode[i] == 1)
-                {                    
-                    now = now - new TimeSpan(0, 0, 60);
-                    ListViewItem lvi = new ListViewItem(new string[] {now.ToShortTimeString(),temperatures[i].ToString("0.0")});
+                {
+                    now = now - new TimeSpan(0, 0, periodicity);
+                    float currentTemp = 9 / 5 * (temperatures[i]) + 32;
+                    ListViewItem lvi = new ListViewItem(new string[] { now.ToShortTimeString(), currentTemp.ToString("0.0") });
+                    if (currentTemp > 100)
+                        lvi.BackColor = Color.Red;
                     selfReference.listView1.Items.Add(lvi);
-                    //mF.listBox1.Items.Add(temperatures[i].ToString("F", CultureInfo.CurrentUICulture));
-                    //mF.graph.Add(i, temperatures[i]);
+
                 }
+                // violation mode
                 else if (logMode[i] == 2)
                 {
                     return;
@@ -158,22 +184,157 @@ namespace COREMobileMedDemo
 
                 }
             }
-            //if (logMode[0] == 1)
-            //{
-            //    try
-            //    {
-            //        if (mF.listBox1.Items.Count > 1)
-            //        {
-            //            mF.graph.Visible = true;
-            //            mF.graph.BringToFront();
-            //        }
-            //    }
-            //    catch (Exception)
-            //    {
-            //        throw;
-            //    }
-            //}
+            // then record these to the db
+            AsyncCallback cb = new AsyncCallback(selfReference.vitalsRecordedConfirmation);
+            COREMedDemoWS.COREMedDemoWS ws = new COREMedDemoWS.COREMedDemoWS();
+            ws.Timeout = 300000;
+            IAsyncResult ar = ws.BeginlogPatientVitals(selfReference.RFIDnum, temperatures, periodicity, cb, ws);
+            patientVitals pV = new patientVitals(selfReference.RFIDnum, temperatures);
+            selfReference.currentlyBeingRecordedVitals[ar] = pV;
         }
-      
+
+        private void patientIDLookupFinished(IAsyncResult ar)
+        {
+            try
+            {
+                COREMedDemoWS.COREMedDemoWS ws = (COREMedDemoWS.COREMedDemoWS)ar.AsyncState;
+                COREMedDemoWS.patientRecord pR = ws.EndgetPatientRecord(ar);
+                if (pR.exists)
+                {
+                    setPhoto(patientPhotoPB, pR.image);
+                    setLabel(patientNameLabel, pR.lastName + ", " + pR.firstName + " " + pR.middleName);
+                    setLabel(DOBLabel, (new DateTime(pR.DOB) - new DateTime(1970, 1, 1)).ToString());
+                }
+            }
+            catch (WebException)
+            {
+                rescheduleLookup(ar, currentlyBeingRetrievedPatientRecords);
+            }
+            catch (ArgumentNullException)
+            {
+                rescheduleLookup(ar, currentlyBeingRetrievedPatientRecords);
+            }
+            catch (MemberAccessException)
+            {
+                MessageBox.Show("unexpected: ");
+            }
+            catch (SocketException)
+            {
+                Thread.Sleep(2000);
+                rescheduleLookup(ar, currentlyBeingRetrievedPatientRecords);
+            }
+            catch (IOException)
+            {
+                //MessageBox.Show(ex.Message);
+                return;
+            }
+            catch (InvalidCastException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            catch (InvalidOperationException)
+            {
+                MessageBox.Show("Possible timeout error");
+            }
+
+            catch (IndexOutOfRangeException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            catch (NullReferenceException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        private void vitalsRecordedConfirmation(IAsyncResult ar)
+        {
+            try
+            {
+                COREMedDemoWS.COREMedDemoWS ws = (COREMedDemoWS.COREMedDemoWS)ar.AsyncState;
+                COREMedDemoWS.errorReport eR = ws.EndlogPatientVitals(ar);
+                if (eR.errorCode != 0)
+                    MessageBox.Show(eR.errorMessage);
+            }
+            catch (WebException)
+            {
+                rescheduleLookup(ar, currentlyBeingRecordedVitals);
+            }
+            catch (ArgumentNullException)
+            {
+                rescheduleLookup(ar, currentlyBeingRecordedVitals);
+            }
+            catch (MemberAccessException)
+            {
+                MessageBox.Show("unexpected: ");
+            }
+            catch (SocketException)
+            {
+                Thread.Sleep(2000);
+                rescheduleLookup(ar, currentlyBeingRecordedVitals);
+            }
+            catch (IOException)
+            {
+                //MessageBox.Show(ex.Message);
+                return;
+            }
+            catch (InvalidCastException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            catch (InvalidOperationException)
+            {
+                MessageBox.Show("Possible timeout error");
+            }
+
+            catch (IndexOutOfRangeException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            catch (NullReferenceException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        private void rescheduleLookup(IAsyncResult ar, Hashtable lookupTable)
+        {
+            if (lookupTable == currentlyBeingRetrievedPatientRecords)
+            {
+                AsyncCallback cb = new AsyncCallback(patientIDLookupFinished);
+                string currentID;
+                lock (currentlyBeingRetrievedPatientRecords)
+                {
+                    currentID = (string)currentlyBeingRetrievedPatientRecords[ar];
+                    currentlyBeingRetrievedPatientRecords.Remove(ar);
+                }
+                COREMedDemoWS.COREMedDemoWS ws = new COREMedDemoWS.COREMedDemoWS();
+                ws.Timeout = 300000;
+                IAsyncResult handle = ws.BegingetPatientRecord(RFIDnum, cb, ws);
+
+                lock (currentlyBeingRetrievedPatientRecords.SyncRoot)
+                {
+                    currentlyBeingRetrievedPatientRecords[handle] = currentID;
+                    currentlyBeingRetrievedPatientRecords.Remove(ar);
+                }
+            }
+            else if (lookupTable == currentlyBeingRecordedVitals)
+            {
+                AsyncCallback cb = new AsyncCallback(vitalsRecordedConfirmation);
+                patientVitals pV = (patientVitals)currentlyBeingRecordedVitals[ar];
+
+                COREMedDemoWS.COREMedDemoWS ws = new COREMedDemoWS.COREMedDemoWS();
+
+                ws.Timeout = 300000;
+
+                IAsyncResult handle = ws.BeginlogPatientVitals(pV.RFID, pV.temps, periodicity, cb, ws);
+
+                lock (currentlyBeingRecordedVitals.SyncRoot)
+                {
+                    currentlyBeingRecordedVitals[handle] = pV;
+                    currentlyBeingRecordedVitals.Remove(ar);
+                }
+            }
+        }
     }
 }

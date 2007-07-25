@@ -225,157 +225,7 @@ namespace GentagDemo
             setButtonColor(button, backup);
         }
 
-        #region VarioSens functions
-        private void receiveVarioSensSettings(Single upper, Single lower, short period, short logMode, short batteryCheckInterval)
-        {
-            setWaitCursor(false);
-            if (logMode < 0)
-            {
-                mF.setTextBox(getSetStatusBox, "Error reading tag");
-                return;
-            }
-            mF.setTextBox(getSetStatusBox, "");
-            mF.setTextBox(loLimitTextBox, lower.ToString(CultureInfo.CurrentUICulture));
-            mF.setTextBox(hiLimitTextBox, upper.ToString(CultureInfo.CurrentUICulture));
-            mF.setTextBox(intervalTextBox, period.ToString(CultureInfo.CurrentUICulture));
-            mF.setComboBoxIndex(mF.logModeComboBox, logMode - 1);
-            mF.setTextBox(batteryCheckIntervalTextBox, batteryCheckInterval.ToString(CultureInfo.CurrentUICulture));
-        }
-
-        private void launchReadVSLog()
-        {
-            tagReader.readLog();
-            readerRunning = false;
-            setWaitCursor(false);
-        }
-
-        private void launchSetVSSettings()
-        {
-            int mode;
-            int errorCode = -1;
-
-            if (getComboBoxIndex(logModeComboBox) == 0)
-                mode = 1;
-            else
-                mode = 2;
-
-            for (int i = 50; i >= 0; --i)
-            {
-                errorCode = tagReader.setVSSettings(mode,
-                    float.Parse(getTextBox(hiLimitTextBox), CultureInfo.CurrentUICulture),
-                    float.Parse(getTextBox(loLimitTextBox), CultureInfo.CurrentUICulture),
-                    int.Parse(getTextBox(intervalTextBox), CultureInfo.CurrentUICulture),
-                    int.Parse(getTextBox(batteryCheckIntervalTextBox), CultureInfo.CurrentUICulture));
-
-                if (errorCode != 0)
-                {
-                    string eC = "";
-                    switch (errorCode)
-                    {
-                        case -1:
-                            eC = "Cannot est. comm";
-                            break;
-                        case -2:
-                            eC = "Cannot enable reader";
-                            break;
-                        case -3:
-                            eC = "Cannot init reader";
-                            break;
-                        case -4:
-                            eC = "Cannot get log settings";
-                            break;
-                        case -5:
-                            eC = "Cannot set log timer";
-                            break;
-                        case -6:
-                            eC = "Cannot set log mode";
-                            break;
-                        case -7:
-                            eC = "Cannot start logging";
-                            break;
-                    }
-                    setTextBox(getSetStatusBox, eC + " (" + i + "/50)");
-                }
-                else
-                {
-                    setTextBox(getSetStatusBox, "Success");
-                    break;
-                }
-            }
-            readerRunning = false;
-            setWaitCursor(false);
-        }
-
-        private void launchGetVSSettings()
-        {
-            tagReader.running = true;
-            tagReader.getVSSettings();
-            readerClick(readValueButton, new EventArgs());
-        }
-
-        private static DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
-
-        private static void writeViolations(
-            Single upperTempLimit,
-            Single lowerTempLimit,
-            Int32 len,
-            short recordPeriod,
-            int[] dateTime,
-            Byte[] logMode,
-            Single[] temperatures)
-        {
-            if (mF.InvokeRequired)
-            {
-                mF.Invoke(new NativeMethods.writeViolationsDelegate(writeViolations),
-                    new object[] { upperTempLimit, lowerTempLimit, len, recordPeriod, dateTime, logMode, temperatures });
-                return;
-            }
-            mF.textBox9.Text = @"";
-            mF.textBox1.Text = upperTempLimit.ToString(CultureInfo.CurrentUICulture);
-            mF.textBox2.Text = lowerTempLimit.ToString(CultureInfo.CurrentUICulture);
-            mF.textBox3.Text = recordPeriod.ToString(CultureInfo.CurrentUICulture);
-            mF.listBox1.Items.Clear();
-            mF.graph.Clear();
-
-            for (int i = 0; i < dateTime.Length; i++)
-            {
-                if (logMode[i] == 1)
-                {
-                    mF.listBox1.Items.Add(temperatures[i].ToString("F", CultureInfo.CurrentUICulture));
-                    mF.graph.Add(i, temperatures[i]);
-                }
-                else if (logMode[i] == 2)
-                {
-                    UInt32 time_t = Convert.ToUInt32(dateTime[i]);
-
-                    DateTime convertedValue = origin + new TimeSpan(time_t * TimeSpan.TicksPerSecond);
-                    if (System.TimeZone.CurrentTimeZone.IsDaylightSavingTime(convertedValue) == true)
-                    {
-                        System.Globalization.DaylightTime daylightTime = System.TimeZone.CurrentTimeZone.GetDaylightChanges(convertedValue.Year);
-                        convertedValue = convertedValue + daylightTime.Delta;
-                    }
-                    mF.listBox1.Items.Add(temperatures[i].ToString("F", CultureInfo.CurrentCulture) + " C" + convertedValue.ToString());
-
-                }
-            }
-            if (logMode[0] == 1)
-            {
-                try
-                {
-                    if (mF.listBox1.Items.Count > 1)
-                    {
-                        mF.graph.Visible = true;
-                        mF.graph.BringToFront();
-                    }
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-            }
-        }
-
-        #endregion
+       
 
 
         private Hashtable cachedWineLookups = new Hashtable();
@@ -644,6 +494,158 @@ namespace GentagDemo
                 setPhoto(petPB, (System.Drawing.Image)null);
             }
         }
+
+        #region VarioSens functions
+        private void receiveVarioSensSettings(Single upper, Single lower, short period, short logMode, short batteryCheckInterval)
+        {
+            setWaitCursor(false);
+            if (logMode < 0)
+            {
+                mF.setTextBox(getSetStatusBox, "Error reading tag");
+                return;
+            }
+            mF.setTextBox(getSetStatusBox, "");
+            mF.setTextBox(loLimitTextBox, lower.ToString(CultureInfo.CurrentUICulture));
+            mF.setTextBox(hiLimitTextBox, upper.ToString(CultureInfo.CurrentUICulture));
+            mF.setTextBox(intervalTextBox, period.ToString(CultureInfo.CurrentUICulture));
+            mF.setComboBoxIndex(mF.logModeComboBox, logMode - 1);
+            mF.setTextBox(batteryCheckIntervalTextBox, batteryCheckInterval.ToString(CultureInfo.CurrentUICulture));
+        }
+
+        private void launchReadVSLog()
+        {
+            tagReader.readLog();
+            readerRunning = false;
+            setWaitCursor(false);
+        }
+
+        private void launchSetVSSettings()
+        {
+            int mode;
+            int errorCode = -1;
+
+            if (getComboBoxIndex(logModeComboBox) == 0)
+                mode = 1;
+            else
+                mode = 2;
+
+            for (int i = 50; i >= 0; --i)
+            {
+                errorCode = tagReader.setVSSettings(mode,
+                    float.Parse(getTextBox(hiLimitTextBox), CultureInfo.CurrentUICulture),
+                    float.Parse(getTextBox(loLimitTextBox), CultureInfo.CurrentUICulture),
+                    int.Parse(getTextBox(intervalTextBox), CultureInfo.CurrentUICulture),
+                    int.Parse(getTextBox(batteryCheckIntervalTextBox), CultureInfo.CurrentUICulture));
+
+                if (errorCode != 0)
+                {
+                    string eC = "";
+                    switch (errorCode)
+                    {
+                        case -1:
+                            eC = "Cannot est. comm";
+                            break;
+                        case -2:
+                            eC = "Cannot enable reader";
+                            break;
+                        case -3:
+                            eC = "Cannot init reader";
+                            break;
+                        case -4:
+                            eC = "Cannot get log settings";
+                            break;
+                        case -5:
+                            eC = "Cannot set log timer";
+                            break;
+                        case -6:
+                            eC = "Cannot set log mode";
+                            break;
+                        case -7:
+                            eC = "Cannot start logging";
+                            break;
+                    }
+                    setTextBox(getSetStatusBox, eC + " (" + i + "/50)");
+                }
+                else
+                {
+                    setTextBox(getSetStatusBox, "Success");
+                    break;
+                }
+            }
+            readerRunning = false;
+            setWaitCursor(false);
+        }
+
+        private void launchGetVSSettings()
+        {
+            tagReader.running = true;
+            tagReader.getVSSettings();
+            readerClick(readValueButton, new EventArgs());
+        }
+
+        private static DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
+
+        private static void writeViolations(
+            Single upperTempLimit,
+            Single lowerTempLimit,
+            Int32 len,
+            short recordPeriod,
+            int[] dateTime,
+            Byte[] logMode,
+            Single[] temperatures)
+        {
+            if (mF.InvokeRequired)
+            {
+                mF.Invoke(new NativeMethods.writeViolationsDelegate(writeViolations),
+                    new object[] { upperTempLimit, lowerTempLimit, len, recordPeriod, dateTime, logMode, temperatures });
+                return;
+            }
+            mF.textBox9.Text = @"";
+            mF.textBox1.Text = upperTempLimit.ToString(CultureInfo.CurrentUICulture);
+            mF.textBox2.Text = lowerTempLimit.ToString(CultureInfo.CurrentUICulture);
+            mF.textBox3.Text = recordPeriod.ToString(CultureInfo.CurrentUICulture);
+            mF.listBox1.Items.Clear();
+            mF.graph.Clear();
+
+            for (int i = 0; i < dateTime.Length; i++)
+            {
+                if (logMode[i] == 1)
+                {
+                    mF.listBox1.Items.Add(temperatures[i].ToString("F", CultureInfo.CurrentUICulture));
+                    mF.graph.Add(i, temperatures[i]);
+                }
+                else if (logMode[i] == 2)
+                {
+                    UInt32 time_t = Convert.ToUInt32(dateTime[i]);
+
+                    DateTime convertedValue = origin + new TimeSpan(time_t * TimeSpan.TicksPerSecond);
+                    if (System.TimeZone.CurrentTimeZone.IsDaylightSavingTime(convertedValue) == true)
+                    {
+                        System.Globalization.DaylightTime daylightTime = System.TimeZone.CurrentTimeZone.GetDaylightChanges(convertedValue.Year);
+                        convertedValue = convertedValue + daylightTime.Delta;
+                    }
+                    mF.listBox1.Items.Add(temperatures[i].ToString("F", CultureInfo.CurrentCulture) + " C" + convertedValue.ToString());
+
+                }
+            }
+            if (logMode[0] == 1)
+            {
+                try
+                {
+                    if (mF.listBox1.Items.Count > 1)
+                    {
+                        mF.graph.Visible = true;
+                        mF.graph.BringToFront();
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        #endregion
 
         private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated, bool isNew);
 

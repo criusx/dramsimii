@@ -13,6 +13,7 @@
       <xsd:complexType name="patientRecord">
         <xsd:sequence>
           <xsd:element name="image" nillable="true" type="xsd:base64Binary" />
+          <xsd:element name="exists" type="xsd:boolean" />
           <xsd:element name="middleName" nillable="true" type="xsd:string" />
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="allergies" nillable="true" type="xsd:string" />
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="medications" nillable="true" type="xsd:string" />
@@ -64,6 +65,32 @@
           <xsd:element name="return" nillable="true" type="tns:errorReport" />
         </xsd:sequence>
       </xsd:complexType>
+      <xsd:element name="getPatientRecord" type="tns:getPatientRecord" />
+      <xsd:complexType name="getPatientRecord">
+        <xsd:sequence>
+          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getPatientRecordResponse" type="tns:getPatientRecordResponse" />
+      <xsd:complexType name="getPatientRecordResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="tns:patientRecord" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="logPatientVitals" type="tns:logPatientVitals" />
+      <xsd:complexType name="logPatientVitals">
+        <xsd:sequence>
+          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="temperatures" type="xsd:float" />
+          <xsd:element name="periodicity" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="logPatientVitalsResponse" type="tns:logPatientVitalsResponse" />
+      <xsd:complexType name="logPatientVitalsResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="tns:errorReport" />
+        </xsd:sequence>
+      </xsd:complexType>
     </xsd:schema>
   </types>
   <message name="COREMedDemoWS_enterDrugInfo">
@@ -84,6 +111,18 @@
   <message name="COREMedDemoWS_enterPatientRecordResponse">
     <part name="parameters" element="tns:enterPatientRecordResponse" />
   </message>
+  <message name="COREMedDemoWS_getPatientRecord">
+    <part name="parameters" element="tns:getPatientRecord" />
+  </message>
+  <message name="COREMedDemoWS_getPatientRecordResponse">
+    <part name="parameters" element="tns:getPatientRecordResponse" />
+  </message>
+  <message name="COREMedDemoWS_logPatientVitals">
+    <part name="parameters" element="tns:logPatientVitals" />
+  </message>
+  <message name="COREMedDemoWS_logPatientVitalsResponse">
+    <part name="parameters" element="tns:logPatientVitalsResponse" />
+  </message>
   <portType name="COREMedDemoWS">
     <operation name="enterDrugInfo">
       <input message="tns:COREMedDemoWS_enterDrugInfo" />
@@ -96,6 +135,14 @@
     <operation name="enterPatientRecord">
       <input message="tns:COREMedDemoWS_enterPatientRecord" />
       <output message="tns:COREMedDemoWS_enterPatientRecordResponse" />
+    </operation>
+    <operation name="getPatientRecord">
+      <input message="tns:COREMedDemoWS_getPatientRecord" />
+      <output message="tns:COREMedDemoWS_getPatientRecordResponse" />
+    </operation>
+    <operation name="logPatientVitals">
+      <input message="tns:COREMedDemoWS_logPatientVitals" />
+      <output message="tns:COREMedDemoWS_logPatientVitalsResponse" />
     </operation>
   </portType>
   <binding name="COREMedDemoWSSoapHttp" type="tns:COREMedDemoWS">
@@ -119,6 +166,24 @@
       </output>
     </operation>
     <operation name="enterPatientRecord">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getPatientRecord">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="logPatientVitals">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />

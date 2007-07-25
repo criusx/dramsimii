@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gentag Demo", "GenTag Demo\Gentag Demo.csproj", "{2BB2FFF5-F1D5-4C0D-A1DB-CD507D7F9280}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7775ECF9-017E-489D-84B6-3BC6DF166494} = {7775ECF9-017E-489D-84B6-3BC6DF166494}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drug Interaction Client", "GenTag Server\Drug Interaction Client.csproj", "{550F5C11-A801-41C8-BA5F-EA2A623E957E}"
 EndProject

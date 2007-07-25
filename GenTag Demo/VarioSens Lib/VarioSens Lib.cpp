@@ -2,7 +2,7 @@
 //
 #include "stdafx.h"
 #include "VarioSens Lib.h"
-#include "c1lib.h"
+#include "C1lib.h"
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>

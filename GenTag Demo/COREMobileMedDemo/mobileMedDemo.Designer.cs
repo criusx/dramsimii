@@ -40,9 +40,12 @@ namespace COREMobileMedDemo
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.label2 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.patientNameLabel = new System.Windows.Forms.Label();
+            this.patientPhotoPB = new System.Windows.Forms.PictureBox();
             this.button4 = new System.Windows.Forms.Button();
+            this.DOBLabel = new System.Windows.Forms.Label();
+            this.button5 = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -122,8 +125,11 @@ namespace COREMobileMedDemo
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.listView1);
-            this.tabPage2.Controls.Add(this.label2);
+            this.tabPage2.Controls.Add(this.DOBLabel);
+            this.tabPage2.Controls.Add(this.patientNameLabel);
             this.tabPage2.Controls.Add(this.pictureBox2);
+            this.tabPage2.Controls.Add(this.patientPhotoPB);
+            this.tabPage2.Controls.Add(this.button5);
             this.tabPage2.Controls.Add(this.button4);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
@@ -153,18 +159,19 @@ namespace COREMobileMedDemo
             this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader2.Width = 40;
             // 
-            // label2
+            // patientNameLabel
             // 
-            this.label2.Location = new System.Drawing.Point(137, 97);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 20);
-            this.label2.Text = "label2";
+            this.patientNameLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.patientNameLabel.Location = new System.Drawing.Point(121, 97);
+            this.patientNameLabel.Name = "patientNameLabel";
+            this.patientNameLabel.Size = new System.Drawing.Size(100, 20);
+            this.patientNameLabel.Text = "label2";
             // 
-            // pictureBox2
+            // patientPhotoPB
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(121, 7);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(116, 87);
+            this.patientPhotoPB.Location = new System.Drawing.Point(121, 7);
+            this.patientPhotoPB.Name = "patientPhotoPB";
+            this.patientPhotoPB.Size = new System.Drawing.Size(116, 87);
             // 
             // button4
             // 
@@ -175,6 +182,30 @@ namespace COREMobileMedDemo
             this.button4.TabIndex = 0;
             this.button4.Text = "Read";
             this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // DOBLabel
+            // 
+            this.DOBLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.DOBLabel.Location = new System.Drawing.Point(121, 117);
+            this.DOBLabel.Name = "DOBLabel";
+            this.DOBLabel.Size = new System.Drawing.Size(100, 20);
+            this.DOBLabel.Text = "label2";
+            // 
+            // button5
+            // 
+            this.button5.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Bold);
+            this.button5.Location = new System.Drawing.Point(77, 3);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(38, 20);
+            this.button5.TabIndex = 0;
+            this.button5.Text = "Med";
+            this.button5.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Location = new System.Drawing.Point(121, 140);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(116, 75);
             // 
             // mobileMedDemo
             // 
@@ -206,12 +237,15 @@ namespace COREMobileMedDemo
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox patientPhotoPB;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label patientNameLabel;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         protected internal System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.Label DOBLabel;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Button button5;
     }
 }
 

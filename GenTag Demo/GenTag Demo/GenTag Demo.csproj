@@ -32,7 +32,7 @@
     <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRules>-Microsoft.Globalization#CA1303</CodeAnalysisRules>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">

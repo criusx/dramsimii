@@ -93,6 +93,52 @@ namespace COREMobileMedDemo.COREMedDemoWS {
             object[] results = this.EndInvoke(asyncResult);
             return ((errorReport)(results[0]));
         }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        public patientRecord getPatientRecord([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum) {
+            object[] results = this.Invoke("getPatientRecord", new object[] {
+                        RFIDNum});
+            return ((patientRecord)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BegingetPatientRecord(string RFIDNum, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("getPatientRecord", new object[] {
+                        RFIDNum}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public patientRecord EndgetPatientRecord(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((patientRecord)(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        public errorReport logPatientVitals([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum, [System.Xml.Serialization.XmlElementAttribute("temperatures")] float[] temperatures, int periodicity) {
+            object[] results = this.Invoke("logPatientVitals", new object[] {
+                        RFIDNum,
+                        temperatures,
+                        periodicity});
+            return ((errorReport)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginlogPatientVitals(string RFIDNum, float[] temperatures, int periodicity, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("logPatientVitals", new object[] {
+                        RFIDNum,
+                        temperatures,
+                        periodicity}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public errorReport EndlogPatientVitals(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((errorReport)(results[0]));
+        }
     }
     
     /// <remarks/>
@@ -162,6 +208,8 @@ namespace COREMobileMedDemo.COREMedDemoWS {
         
         private byte[] imageField;
         
+        private bool existsField;
+        
         private string middleNameField;
         
         private string[] allergiesField;
@@ -184,6 +232,16 @@ namespace COREMobileMedDemo.COREMedDemoWS {
             }
             set {
                 this.imageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool exists {
+            get {
+                return this.existsField;
+            }
+            set {
+                this.existsField = value;
             }
         }
         
