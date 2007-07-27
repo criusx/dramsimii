@@ -30,25 +30,6 @@ history_q(settings->historyQueueDepth),
 completion_q(settings->completionQueueDepth)
 {}
 
-dramChannel::dramChannel(int transaction_queue_depth,
-						 int history_queue_depth,
-						 int completion_queue_depth,
-						 int refresh_queue_depth,
-						 int rank_count,
-						 int bank_count,
-						 int per_bank_queue_depth):
-time(0),
-rank(rank_count,rank_c(bank_count,per_bank_queue_depth)),
-refresh_row_index(0),
-last_refresh_time(0),
-last_rank_id(0),
-transaction_q(transaction_queue_depth),
-refreshQueue(refresh_queue_depth,true),
-history_q(history_queue_depth),
-completion_q(completion_queue_depth)
-{
-}
-
 dramChannel::dramChannel(const dramChannel &dc):
 time(dc.time),
 rank(dc.rank),

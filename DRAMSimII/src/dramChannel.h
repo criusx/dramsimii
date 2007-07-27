@@ -49,8 +49,7 @@ public:
 	void initRefreshQueue(const unsigned, const unsigned, const unsigned); // init the RefreshQueue using selected algorithm
 
 	// constructors
-	explicit dramChannel();
-	explicit dramChannel(int, int, int, int, int, int, int);
+	explicit dramChannel();	
 	explicit dramChannel(const dramSettings *settings);
 	dramChannel(const dramChannel &);
 
