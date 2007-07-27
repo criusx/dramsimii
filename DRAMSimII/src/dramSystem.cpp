@@ -896,8 +896,7 @@ ostream &operator<<(ostream &os, const dramSystem &this_a)
 	os << "BQD[" << this_a.system_config.getPerBankQueueDepth() << "] ";
 	os << "BLR[" << setprecision(0) << floor(100*(this_a.system_config.getShortBurstRatio() + 0.0001) + .5) << "] ";
 	os << "RP[" << (int)(100*this_a.system_config.getReadPercentage()) << "] ";
-
-	os << this_a.timing_specification;
+	
 	os << this_a.statistics;
 	os << this_a.system_config;
 
