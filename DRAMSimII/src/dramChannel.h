@@ -19,15 +19,17 @@ private:
 	queue<transaction> refreshQueue;	// queue of refresh transactions
 	queue<command> history_q;			// what were the last N commands to this channel?
 	queue<transaction> completion_q;	// completed_q, can send status back to memory controller
+	dramSystemConfiguration *system_config; // a pointer to common system config values
 
 public:
 	// functions
-	command *getNextCommand(const int);
-	command *readNextCommand(const int) const;
+	command *getNextCommand();
+	command *readNextCommand() const;
 	int minProtocolGap(const command *thisCommand) const;
 
 
 	// the get_ functions
+	void setSystemConfig(dramSystemConfiguration *_system_config) { system_config = _system_config; } // TODO: remove this and have parameters stored locally
 	const dramTimingSpecification& getTimingSpecification() const { return timing_specification; }
 	rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }
 	const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }

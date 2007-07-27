@@ -831,11 +831,12 @@ event_q(COMMAND_QUEUE_SIZE)
 	// don't init the refresh queues if there's no need
 	if (system_config.refresh_policy != NO_REFRESH)
 	{
-		// init the refresh queue for each channel
+		// init the refresh queue for each channel and set the system_config pointers
 		unsigned cnt = 0;
 		for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 		{
 			i->initRefreshQueue(settings->rowCount, settings->refreshTime, cnt++);
+			i->setSystemConfig(system_config);
 		}
 	}
 }

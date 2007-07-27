@@ -13,18 +13,18 @@ using namespace std;
 /// Command returned has already been removed from the per_bank_command_queue
 /// from which it was selected
 /// </summary>
-command *dramSystem::getNextCommand(const int chan_id)
+command *dramChannel::getNextCommand(const int chan_id)
 {
-	dramChannel &channel= dramSystem::channel[chan_id];
+	//dramChannel &channel= dramSystem::channel[chan_id];
 
 	// look at the most recently retired command in this channel's history
 	const command *lastCommand = channel.get_most_recent_command();
 
-	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank_id : system_config.bank_count - 1;
-	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : system_config.rank_count - 1;
+	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank_id : system_config->bank_count - 1;
+	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : system_config->rank_count - 1;
 	const command_type_t lastCommandType = lastCommand ? lastCommand->getCommandType() : CAS_WRITE_AND_PRECHARGE_COMMAND;
 
-	switch (system_config.command_ordering_algorithm)
+	switch (system_config->command_ordering_algorithm)
 	{
 	case STRICT_ORDER: // look for oldest command, execute that
 		{
@@ -34,7 +34,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 			vector<rank_c>::iterator oldest_rank_id;
 
 			// search each rank and each bank to find the oldest command
-			for (vector<rank_c>::iterator rank_id = channel.getRank().begin(); rank_id != channel.getRank().end(); rank_id++)
+			for (vector<rank_c>::iterator rank_id = rank.begin(); rank_id != rank.end(); rank_id++)
 			{
 				bool notAllRefresh = false;
 
@@ -113,12 +113,12 @@ command *dramSystem::getNextCommand(const int chan_id)
 
 			if (lastCommandType == RAS_COMMAND)
 			{
-				command *temp_c =  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.read(0);
+				command *temp_c =  rank[lastRankId].bank[lastBankId].per_bank_q.read(0);
 
 				if ((temp_c != NULL) &&
 					((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND)))
 				{
-					return channel.getRank(lastRankId).bank[lastBankId].per_bank_q.dequeue();
+					return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
 				}
 				else
 				{
@@ -144,11 +144,11 @@ command *dramSystem::getNextCommand(const int chan_id)
 
 			while (candidate_found == false)
 			{
-				lastRankId = (lastRankId + 1) % system_config.rank_count; // try the next rank
+				lastRankId = (lastRankId + 1) % system_config->rank_count; // try the next rank
 
 				if (lastRankId == 0)
 				{
-					lastBankId = (lastBankId + 1) % system_config.bank_count; // try the next bank
+					lastBankId = (lastBankId + 1) % system_config->bank_count; // try the next bank
 
 					if (lastBankId == 0)
 					{
@@ -156,22 +156,22 @@ command *dramSystem::getNextCommand(const int chan_id)
 					}
 				}
 
-				command *temp_c =  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.read(0);
+				command *temp_c =  rank[lastRankId].bank[lastBankId].per_bank_q.read(0);
 
 				if(temp_c != NULL)
 				{
-					if(system_config.read_write_grouping == false)
+					if(system_config->read_write_grouping == false)
 					{
-						return channel.getRank(lastRankId).bank[lastBankId].per_bank_q.dequeue();
+						return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
 					}
 					else // have to follow read_write grouping considerations 
 					{
-						command *next_c =  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.read(1);	/* look at the second command */
+						command *next_c =  rank[lastRankId].bank[lastBankId].per_bank_q.read(1);	/* look at the second command */
 
 						if (((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
 							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION)))
 						{
-							return channel.getRank(lastRankId).bank[lastBankId].per_bank_q.dequeue();
+							return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
 						}
 					}
 
@@ -180,7 +180,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 					cerr << temp_c->this_command;
 					cerr << " followed by ";
 					cerr << next_c->this_command;
-					cerr << "count [" << channel.getRank(lastRankId).bank[lastBankId].per_bank_q.get_count() << "]" << endl;
+					cerr << "count [" << rank[lastRankId].bank[lastBankId].per_bank_q.get_count() << "]" << endl;
 #endif
 
 				}
@@ -198,11 +198,11 @@ command *dramSystem::getNextCommand(const int chan_id)
 			transaction_type_t transaction_type;
 			if (lastCommandType == RAS_COMMAND)
 			{
-				command *temp_c = channel.getRank(lastRankId).bank[lastBankId].per_bank_q.read(0);
+				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.read(0);
 
 				if((temp_c != NULL) &&
 					((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND))){
-						return channel.getRank(lastRankId).bank[lastBankId].per_bank_q.dequeue();
+						return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
 				}
 				else
 				{
@@ -227,10 +227,10 @@ command *dramSystem::getNextCommand(const int chan_id)
 
 			while (candidate_found == false)
 			{
-				lastBankId = (lastBankId + 1) % system_config.bank_count;
+				lastBankId = (lastBankId + 1) % system_config->bank_count;
 				if (lastBankId == 0)
 				{
-					lastRankId = (lastRankId + 1) % system_config.rank_count;
+					lastRankId = (lastRankId + 1) % system_config->rank_count;
 					if (lastRankId  == 0)
 					{
 						if (transaction_type == WRITE_TRANSACTION)
@@ -244,11 +244,11 @@ command *dramSystem::getNextCommand(const int chan_id)
 					}
 				}
 
-				command *temp_c = channel.getRank(lastRankId).bank[lastBankId].per_bank_q.read(0);
+				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.read(0);
 
 				if(temp_c != NULL)
 				{	
-					if(system_config.read_write_grouping == false)
+					if(system_config->read_write_grouping == false)
 					{
 						return temp_c;
 					}
@@ -273,7 +273,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 		break;
 
 	case WANG_RANK_HOP:	
-		if(system_config.config_type == BASELINE_CONFIG)	/* baseline*/
+		if(system_config->config_type == BASELINE_CONFIG)	/* baseline*/
 		{
 			bool candidate_found = false;
 
@@ -290,7 +290,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 					{
 						if(lastBankId == 0)	// see if this rank needs a R/W switch around
 						{
-							algorithm.getTransactionType()[lastRankId] = channel.set_read_write_type(lastRankId,system_config.bank_count);
+							algorithm.getTransactionType()[lastRankId] = channel.set_read_write_type(lastRankId,system_config->bank_count);
 						}
 
 						command *next_c =  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.read(1);
@@ -335,9 +335,9 @@ command *dramSystem::getNextCommand(const int chan_id)
 
 			int candidate_gap = INT_MAX;
 
-			for (unsigned rank_id = 0; rank_id < system_config.rank_count; ++rank_id)
+			for (unsigned rank_id = 0; rank_id < system_config->rank_count; ++rank_id)
 			{
-				for (unsigned bank_id = 0; bank_id < system_config.bank_count ; ++bank_id)
+				for (unsigned bank_id = 0; bank_id < system_config->bank_count ; ++bank_id)
 				{
 					command *challenger_command = channel.getRank(rank_id).bank[bank_id].per_bank_q.read(0);
 
@@ -381,7 +381,7 @@ command *dramSystem::getNextCommand(const int chan_id)
 /// Command returned is not yet removed from the per_bank_command_queue
 /// from which it was selected
 /// </summary>
-command *dramSystem::readNextCommand(const int chan_id) const
+command *dramChannel::readNextCommand() const
 {
 	const dramChannel &channel= dramSystem::channel[chan_id];
 
@@ -389,11 +389,11 @@ command *dramSystem::readNextCommand(const int chan_id) const
 
 	const command *lastCommand = channel.get_most_recent_command();
 
-	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank_id : system_config.bank_count - 1;
-	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : system_config.rank_count - 1;
+	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank_id : system_config->bank_count - 1;
+	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : system_config->rank_count - 1;
 	const command_type_t lastCommandType = lastCommand ? lastCommand->getCommandType() : CAS_WRITE_AND_PRECHARGE_COMMAND;
 
-	switch (system_config.command_ordering_algorithm)
+	switch (system_config->command_ordering_algorithm)
 	{
 	case STRICT_ORDER: // look for oldest command, execute that
 		{
@@ -421,9 +421,9 @@ command *dramSystem::readNextCommand(const int chan_id) const
 							{
 								if (!notAllRefresh)
 								{
-									for (vector<bank_c>::const_iterator cur_bank = rank_id->bank.begin(); cur_bank != rank_id->bank.end(); cur_bank++)
+									for (vector<bank_c>::const_iterator currentBank = rank_id->bank.begin(); currentBank != rank_id->bank.end(); currentBank++)
 									{
-										if (cur_bank->per_bank_q.read_back()->getCommandType() != REFRESH_ALL_COMMAND)
+										if (currentBank->per_bank_q.read_back()->getCommandType() != REFRESH_ALL_COMMAND)
 										{
 											notAllRefresh = true;
 											break;
@@ -517,11 +517,11 @@ command *dramSystem::readNextCommand(const int chan_id) const
 
 			while (candidate_found == false)
 			{
-				lastRankId = (lastRankId + 1) % system_config.rank_count; // try the next rank
+				lastRankId = (lastRankId + 1) % system_config->rank_count; // try the next rank
 
 				if (lastRankId == 0)
 				{
-					lastBankId = (lastBankId + 1) % system_config.bank_count; // try the next bank
+					lastBankId = (lastBankId + 1) % system_config->bank_count; // try the next bank
 
 					if (lastBankId == 0)
 					{
@@ -533,7 +533,7 @@ command *dramSystem::readNextCommand(const int chan_id) const
 
 				if(temp_c != NULL)
 				{
-					if (system_config.read_write_grouping == false)
+					if (system_config->read_write_grouping == false)
 					{
 						return channel.getRank(lastRankId).bank[lastBankId].per_bank_q.read_back();
 					}
@@ -602,10 +602,10 @@ command *dramSystem::readNextCommand(const int chan_id) const
 
 			while (candidate_found == false)
 			{
-				lastBankId = (lastBankId + 1) % system_config.bank_count;
+				lastBankId = (lastBankId + 1) % system_config->bank_count;
 				if (lastBankId == 0)
 				{
-					lastRankId = (lastRankId + 1) % system_config.rank_count;
+					lastRankId = (lastRankId + 1) % system_config->rank_count;
 					if (lastRankId == 0)
 					{
 						transaction_type = (transaction_type == WRITE_TRANSACTION) ? READ_TRANSACTION : WRITE_TRANSACTION;
@@ -616,7 +616,7 @@ command *dramSystem::readNextCommand(const int chan_id) const
 
 				if (temp_c != NULL)
 				{	
-					if(system_config.read_write_grouping == false)
+					if(system_config->read_write_grouping == false)
 					{
 						return temp_c;
 					}
@@ -646,9 +646,9 @@ command *dramSystem::readNextCommand(const int chan_id) const
 
 			int candidate_gap = INT_MAX;
 
-			for (unsigned rank_id = 0; rank_id < system_config.rank_count; ++rank_id)
+			for (unsigned rank_id = 0; rank_id < system_config->rank_count; ++rank_id)
 			{
-				for (unsigned bank_id = 0; bank_id < system_config.bank_count ; ++bank_id)
+				for (unsigned bank_id = 0; bank_id < system_config->bank_count ; ++bank_id)
 				{
 					command *challenger_command = channel.getRank(rank_id).bank[bank_id].per_bank_q.read(0);
 
