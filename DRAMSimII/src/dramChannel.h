@@ -28,6 +28,7 @@ public:
 
 
 	// the get_ functions
+	dramTimingSpecification& getTimingSpecification() { return timing_specification; }
 	rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }
 	const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }
 	std::vector<rank_c>& getRank() { return rank; }

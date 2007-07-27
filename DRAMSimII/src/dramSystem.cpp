@@ -37,9 +37,9 @@ tick_t dramSystem::nextTick() const
 		if (transaction *nextTrans = channel[j].read_transaction())
 		{
 			// make sure it can finish
-			int tempGap = max(1,(int)(nextTrans->enqueueTime - channel[j].get_time()) + timing_specification.t_buffer_delay); 
+			int tempGap = max(1,(int)(nextTrans->enqueueTime - channel[j].get_time()) + channel[j].getTimingSpecification().t_buffer_delay); 
 			
-			assert(tempGap <= timing_specification.t_buffer_delay );
+			assert(tempGap <= channel[j].getTimingSpecification().t_buffer_delay );
 			// whenever the next transaction is ready and there are available slots for the R/C/P commands
 			if ((tempGap + channel[j].get_time() < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
 			{
@@ -48,9 +48,9 @@ tick_t dramSystem::nextTick() const
 		}
 
 		// then check to see when the next command occurs
-		if (command *tempCommand = readNextCommand(j))
+		if (command *tempCommand = channel[j].readNextCommand())
 		{
-			int tempGap = minProtocolGap(j,tempCommand);
+			int tempGap = channel[j].minProtocolGap(j);
 
 			if (tempGap + channel[j].get_time() < nextWake)
 			{
@@ -251,7 +251,8 @@ int dramSystem::convert_address(addresses &this_a) const
 		}
 		break;
 
-	case SDRAM_BASE_MAP:		/* works for SDRAM and DDR SDRAM too! */
+	case SDRAM_BASE_MAP:		
+		/* works for SDRAM and DDR SDRAM too! */
 
 		/*
 		*               Basic SDRAM Mapping scheme (As found on user-upgradable memory systems)
