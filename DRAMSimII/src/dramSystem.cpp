@@ -836,7 +836,7 @@ event_q(COMMAND_QUEUE_SIZE)
 		for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 		{
 			i->initRefreshQueue(settings->rowCount, settings->refreshTime, cnt++);
-			i->setSystemConfig(system_config);
+			i->setSystemConfig(&system_config);
 		}
 	}
 }
