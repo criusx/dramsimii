@@ -50,7 +50,7 @@ tick_t dramSystem::nextTick() const
 		// then check to see when the next command occurs
 		if (command *tempCommand = channel[j].readNextCommand())
 		{
-			int tempGap = channel[j].minProtocolGap(j);
+			int tempGap = channel[j].minProtocolGap(tempCommand);
 
 			if (tempGap + channel[j].get_time() < nextWake)
 			{
@@ -664,119 +664,119 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 	return SUCCESS;
 }
 
-void dramSystem::set_dram_timing_specification(enum dram_type_t dram_type)
-{
-	/// references to make reading this function easier
-	int &t_al = timing_specification.t_al;
-	int &t_burst = timing_specification.t_burst;
-	int &t_cas = timing_specification.t_cas;
-	int &t_cmd = timing_specification.t_cmd;
-	int &t_cwd = timing_specification.t_cwd;
-	int &t_int_burst = timing_specification.t_int_burst;
-	int &t_faw = timing_specification.t_faw;
-	int &t_ras = timing_specification.t_ras;
-	int &t_rc = timing_specification.t_rc;
-	int &t_rcd = timing_specification.t_rcd;
-	int &t_rfc = timing_specification.t_rfc;
-	int &t_rp = timing_specification.t_rp;
-	int &t_rrd = timing_specification.t_rrd;
-	int &t_rtp = timing_specification.t_rtp;
-	int &t_rtrs = timing_specification.t_rtrs;
-	int &t_wr = timing_specification.t_wr;
-	int &t_wtr = timing_specification.t_wtr;
-
-	switch (dram_type)
-	{
-
-	case SDRAM:	// @ 100 MHz
-		t_al = 0;			// no such thing as posted CAS in SDRAM
-		t_burst = 8;		// depending on system config! can be 1, 2, 4, or 8
-		t_cas = 2;
-		t_cmd = 1;			// protocol specific, cannot be changed
-		t_cwd = 0;			// no such thing in SDRAM
-		t_int_burst = 1;	// prefetch length is 1
-		t_faw = 0;			// no such thing in SDRAM
-		t_ras = 5;			// */
-		t_rc = 7;		
-		t_rcd = 2;
-		t_rfc = 7;			// same as t_rc
-		t_rp = 2;			// 12 ns @ 1.25ns per cycle = 9.6 cycles
-		t_rrd = 0;			// no such thing in SDRAM
-		t_rtp = 1;
-		t_rtrs = 0;			// no such thing in SDRAM
-		t_wr = 2;		
-		break;
-
-	case DDR:				// @ 200 MHz (400 Mbps)
-		t_al = 0;			// no such thing in DDR
-		t_burst = 8;		// depending on system config! can be 2, 4, or 8
-		t_cas = 6;
-		t_cmd = 2;			// protocol specific, cannot be changed
-		t_cwd = 2;			// protocol specific, cannot be changed
-		t_int_burst = 2;	// protocol specific, cannot be changed
-		t_faw = 0;			// no such thing in DDR
-		t_ras = 16;			// 40 ns @ 2.5 ns per beat == 16 beats
-		t_rc = 22;			// 55 ns t_rc
-		t_rcd = 6;
-		t_rfc = 28;			// 70 ns @ 2.5 ns per beat == 28 beats
-		t_rp = 6;			// 15 ns @ 2.5ns per beat = 6 beats
-		t_rrd = 0;
-		t_rtp = 2;
-		t_rtrs = 2;
-		t_wr = 6;			// 15 ns @ 2.5 ns per beat = 6 beats
-		t_wtr = 4;
-		break;
-
-	case DDR2:				// @ 800 Mbps
-		t_al = 0;
-		t_burst = 8;		// depending on system config! can be 4, or 8
-		t_cas = 10;
-		t_cmd = 2;			// protocol specific, cannot be changed
-		t_cwd = t_cas - 2;	// protocol specific, cannot be changed
-		t_int_burst = 4;	// protocol specific, cannot be changed
-		t_faw = 30;
-		t_ras = 36;			// 45 ns @ 1.25ns per beat = 36 beats
-		t_rc = 46;			// 57 ns @ 1.25ns per beat = 45.6 beats
-		t_rcd = 10;
-		t_rfc = 102;		// 128 ns @ 1.25ns per beat ~= 102 beats
-		t_rp = 10;			// 12 ns @ 1.25ns per beat = 9.6 beats
-		t_rrd = 6;			// 7.5 ns
-		t_rtp = 6;
-		t_rtrs = 2;
-		t_wr = 12;
-		t_wtr = 6;
-		break;
-
-	case DDR3:				// @ 1.33 Gbps = 0.75 ns per beat
-		t_al = 0;
-		t_burst = 8;		// protocol specific, cannot be changed
-		t_cas = 10;
-		t_cmd = 2;			// protocol specific, cannot be changed
-		t_cwd = t_cas - 2;
-		t_int_burst = 8;	// protocol specific, cannot be changed
-		t_faw = 30;
-		t_ras = 36;			// 27 ns @ 0.75ns per beat = 36 beats
-		t_rc = 48;			// 36 ns @ 0.75ns per beat = 48 beats
-		t_rcd = 12;
-		t_rfc = 280;
-		t_rp = 12;			// 9 ns @ 0.75ns per beat = 12 beats
-		t_rrd = 8;
-		t_rtrs = 2;
-		t_rtp = 8;
-		t_wr = 12;
-		t_wtr = 8;
-		break;
-
-	case DRDRAM:	// FIXME
-		// not currently supported
-		cerr << "Not yet supported" << endl;
-		break;
-
-	default:
-		cerr << "Not supported" << endl;
-		break;
-	}
-}
+//void dramSystem::set_dram_timing_specification(enum dram_type_t dram_type)
+//{
+//	/// references to make reading this function easier
+//	int &t_al = timing_specification.t_al;
+//	int &t_burst = timing_specification.t_burst;
+//	int &t_cas = timing_specification.t_cas;
+//	int &t_cmd = timing_specification.t_cmd;
+//	int &t_cwd = timing_specification.t_cwd;
+//	int &t_int_burst = timing_specification.t_int_burst;
+//	int &t_faw = timing_specification.t_faw;
+//	int &t_ras = timing_specification.t_ras;
+//	int &t_rc = timing_specification.t_rc;
+//	int &t_rcd = timing_specification.t_rcd;
+//	int &t_rfc = timing_specification.t_rfc;
+//	int &t_rp = timing_specification.t_rp;
+//	int &t_rrd = timing_specification.t_rrd;
+//	int &t_rtp = timing_specification.t_rtp;
+//	int &t_rtrs = timing_specification.t_rtrs;
+//	int &t_wr = timing_specification.t_wr;
+//	int &t_wtr = timing_specification.t_wtr;
+//
+//	switch (dram_type)
+//	{
+//
+//	case SDRAM:	// @ 100 MHz
+//		t_al = 0;			// no such thing as posted CAS in SDRAM
+//		t_burst = 8;		// depending on system config! can be 1, 2, 4, or 8
+//		t_cas = 2;
+//		t_cmd = 1;			// protocol specific, cannot be changed
+//		t_cwd = 0;			// no such thing in SDRAM
+//		t_int_burst = 1;	// prefetch length is 1
+//		t_faw = 0;			// no such thing in SDRAM
+//		t_ras = 5;			// */
+//		t_rc = 7;		
+//		t_rcd = 2;
+//		t_rfc = 7;			// same as t_rc
+//		t_rp = 2;			// 12 ns @ 1.25ns per cycle = 9.6 cycles
+//		t_rrd = 0;			// no such thing in SDRAM
+//		t_rtp = 1;
+//		t_rtrs = 0;			// no such thing in SDRAM
+//		t_wr = 2;		
+//		break;
+//
+//	case DDR:				// @ 200 MHz (400 Mbps)
+//		t_al = 0;			// no such thing in DDR
+//		t_burst = 8;		// depending on system config! can be 2, 4, or 8
+//		t_cas = 6;
+//		t_cmd = 2;			// protocol specific, cannot be changed
+//		t_cwd = 2;			// protocol specific, cannot be changed
+//		t_int_burst = 2;	// protocol specific, cannot be changed
+//		t_faw = 0;			// no such thing in DDR
+//		t_ras = 16;			// 40 ns @ 2.5 ns per beat == 16 beats
+//		t_rc = 22;			// 55 ns t_rc
+//		t_rcd = 6;
+//		t_rfc = 28;			// 70 ns @ 2.5 ns per beat == 28 beats
+//		t_rp = 6;			// 15 ns @ 2.5ns per beat = 6 beats
+//		t_rrd = 0;
+//		t_rtp = 2;
+//		t_rtrs = 2;
+//		t_wr = 6;			// 15 ns @ 2.5 ns per beat = 6 beats
+//		t_wtr = 4;
+//		break;
+//
+//	case DDR2:				// @ 800 Mbps
+//		t_al = 0;
+//		t_burst = 8;		// depending on system config! can be 4, or 8
+//		t_cas = 10;
+//		t_cmd = 2;			// protocol specific, cannot be changed
+//		t_cwd = t_cas - 2;	// protocol specific, cannot be changed
+//		t_int_burst = 4;	// protocol specific, cannot be changed
+//		t_faw = 30;
+//		t_ras = 36;			// 45 ns @ 1.25ns per beat = 36 beats
+//		t_rc = 46;			// 57 ns @ 1.25ns per beat = 45.6 beats
+//		t_rcd = 10;
+//		t_rfc = 102;		// 128 ns @ 1.25ns per beat ~= 102 beats
+//		t_rp = 10;			// 12 ns @ 1.25ns per beat = 9.6 beats
+//		t_rrd = 6;			// 7.5 ns
+//		t_rtp = 6;
+//		t_rtrs = 2;
+//		t_wr = 12;
+//		t_wtr = 6;
+//		break;
+//
+//	case DDR3:				// @ 1.33 Gbps = 0.75 ns per beat
+//		t_al = 0;
+//		t_burst = 8;		// protocol specific, cannot be changed
+//		t_cas = 10;
+//		t_cmd = 2;			// protocol specific, cannot be changed
+//		t_cwd = t_cas - 2;
+//		t_int_burst = 8;	// protocol specific, cannot be changed
+//		t_faw = 30;
+//		t_ras = 36;			// 27 ns @ 0.75ns per beat = 36 beats
+//		t_rc = 48;			// 36 ns @ 0.75ns per beat = 48 beats
+//		t_rcd = 12;
+//		t_rfc = 280;
+//		t_rp = 12;			// 9 ns @ 0.75ns per beat = 12 beats
+//		t_rrd = 8;
+//		t_rtrs = 2;
+//		t_rtp = 8;
+//		t_wr = 12;
+//		t_wtr = 8;
+//		break;
+//
+//	case DRDRAM:	// FIXME
+//		// not currently supported
+//		cerr << "Not yet supported" << endl;
+//		break;
+//
+//	default:
+//		cerr << "Not supported" << endl;
+//		break;
+//	}
+//}
 
 dramSystem::dramSystem(const dramSettings *settings): 
 system_config(settings),

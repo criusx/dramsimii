@@ -39,7 +39,7 @@ private:
 
 	//functions
 	void read_dram_config_from_file();
-	void set_dram_timing_specification(enum dram_type_t);
+	//void set_dram_timing_specification(enum dram_type_t);
 	enum input_status_t transaction2commands(transaction *);
 	int find_oldest_channel() const;
 	void executeCommand(command *, const int);
