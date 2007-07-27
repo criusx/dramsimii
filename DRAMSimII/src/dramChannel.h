@@ -4,6 +4,7 @@
 
 #include "globals.h"
 #include "rank_c.h"
+#include "dramTimingSpecification.h"
 
 class dramChannel
 {
