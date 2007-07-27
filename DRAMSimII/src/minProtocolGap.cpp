@@ -7,18 +7,18 @@ using namespace std;
 /// <summary>
 /// find the protocol gap between a command and current system state
 /// </summary>
-int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) const
+int dramChannel::minProtocolGap(const command *this_c) const
 { 
-	//FIXME: some max() functions take uninit values
+	// TODO: some max() functions take uninit values
 	int min_gap;
 
-	const dramChannel &channel = dramSystem::channel[channel_id];
+	//const dramChannel &channel = dramSystem::channel[channel_id];
 
 	const unsigned this_rank = this_c->getAddress().rank_id;
 	const unsigned this_bank = this_c->getAddress().bank_id;
-	const rank_c &this_r = channel.getRank(this_rank);
+	const rank_c &this_r = rank[this_rank];
 	const bank_c &this_b = this_r.bank[this_bank];
-	const tick_t now = channel.get_time();
+	const tick_t now = time;
 	int t_ras_gap = 0;
 	tick_t other_r_last_cas_time;
 	tick_t other_r_last_casw_time;
@@ -90,19 +90,19 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 			other_r_last_casw_length = timing_specification.t_burst;
 
 			// find the most recent cas(w) time and length
-			for (unsigned rank_id = 0; rank_id < system_config.rank_count ; rank_id++)
+			for (unsigned rank_id = 0; rank_id < rank.size() ; rank_id++)
 			{
 				if (rank_id != this_rank)
 				{
-					if (channel.getRank(rank_id).last_cas_time > other_r_last_cas_time)
+					if (rank[rank_id].last_cas_time > other_r_last_cas_time)
 					{
-						other_r_last_cas_time = channel.getRank(rank_id).last_cas_time;
-						other_r_last_cas_length = channel.getRank(rank_id).last_cas_length;
+						other_r_last_cas_time = rank[rank_id].last_cas_time;
+						other_r_last_cas_length = rank[rank_id].last_cas_length;
 					}
-					if (channel.getRank(rank_id).last_casw_time > other_r_last_casw_time)
+					if (rank[rank_id].last_casw_time > other_r_last_casw_time)
 					{
-						other_r_last_casw_time = channel.getRank(rank_id).last_casw_time;
-						other_r_last_casw_length = channel.getRank(rank_id).last_casw_length;
+						other_r_last_casw_time = rank[rank_id].last_casw_time;
+						other_r_last_casw_length = rank[rank_id].last_casw_length;
 					}
 				}
 			}
@@ -120,7 +120,7 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
 			t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wtr - now));
 
-			if (system_config.rank_count > 1) 
+			if (rank.size() > 1) 
 			{
 				//respect most recent cas of different rank
 				t_cas_gap = max(t_cas_gap,(int)(other_r_last_cas_time + other_r_last_cas_length + timing_specification.t_rtrs - now));
@@ -149,19 +149,19 @@ int dramSystem::minProtocolGap(const unsigned channel_id,const command *this_c) 
 			other_r_last_casw_time = now - 1000;
 			other_r_last_casw_length= timing_specification.t_burst;
 
-			for (unsigned rank_id = 0 ; rank_id < system_config.rank_count ; rank_id++)
+			for (unsigned rank_id = 0 ; rank_id < rank.size() ; rank_id++)
 			{
 				if (rank_id != this_rank)
 				{
-					if (channel.getRank(rank_id).last_cas_time > other_r_last_cas_time)
+					if (rank[rank_id].last_cas_time > other_r_last_cas_time)
 					{
-						other_r_last_cas_time = channel.getRank(rank_id).last_cas_time;
-						other_r_last_cas_length = channel.getRank(rank_id).last_cas_length;
+						other_r_last_cas_time = rank[rank_id].last_cas_time;
+						other_r_last_cas_length = rank[rank_id].last_cas_length;
 					}
-					if ( channel.getRank(rank_id).last_casw_time > other_r_last_casw_time)
+					if (rank[rank_id].last_casw_time > other_r_last_casw_time)
 					{
-						other_r_last_casw_time = channel.getRank(rank_id).last_casw_time;
-						other_r_last_casw_length = channel.getRank(rank_id).last_casw_length;
+						other_r_last_casw_time = rank[rank_id].last_casw_time;
+						other_r_last_casw_length = rank[rank_id].last_casw_length;
 					}
 				}
 			}

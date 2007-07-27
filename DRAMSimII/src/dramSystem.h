@@ -26,8 +26,7 @@ class dramSystem
 private:
 	// members
 	dramSystemConfiguration system_config;
-	std::vector<dramChannel> channel;
-	dramTimingSpecification timing_specification;
+	std::vector<dramChannel> channel;	
 	simulationParameters sim_parameters;
 	dramStatistics statistics;
 	dramAlgorithm algorithm;
@@ -41,10 +40,7 @@ private:
 	//functions
 	void read_dram_config_from_file();
 	void set_dram_timing_specification(enum dram_type_t);
-	command *getNextCommand(const int);
-	command *readNextCommand(const int) const;
 	enum input_status_t transaction2commands(transaction *);
-	int minProtocolGap(const unsigned,const command *) const;
 	int find_oldest_channel() const;
 	void executeCommand(command *, const int);
 	void update_system_time();

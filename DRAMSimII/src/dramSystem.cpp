@@ -781,7 +781,6 @@ dramSystem::dramSystem(const dramSettings *settings):
 system_config(settings),
 channel(system_config.chan_count,
 		dramChannel(settings)),
-timing_specification(settings),
 sim_parameters(settings),
 statistics(),
 algorithm(settings),

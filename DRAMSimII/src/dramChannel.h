@@ -10,15 +10,22 @@ class dramChannel
 private:
 	tick_t time;						// channel time, allow for channel concurrency	
 	std::vector<rank_c> rank;			// vector of the array of ranks
-	unsigned refresh_row_index;				// the row index to be refreshed
+	unsigned refresh_row_index;			// the row index to be refreshed
 	tick_t last_refresh_time;			// tells me when last refresh was done
-	unsigned last_rank_id;					// id of the last accessed rank of this channel
+	unsigned last_rank_id;				// id of the last accessed rank of this channel
+	dramTimingSpecification timing_specification; // the timing specs for this channel
 	queue<transaction> transaction_q;	// transaction queue for the channel
 	queue<transaction> refreshQueue;	// queue of refresh transactions
 	queue<command> history_q;			// what were the last N commands to this channel?
 	queue<transaction> completion_q;	// completed_q, can send status back to memory controller
 
 public:
+	// functions
+	command *getNextCommand(const int);
+	command *readNextCommand(const int) const;
+	int minProtocolGap(const command *thisCommand) const;
+
+
 	// the get_ functions
 	rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }
 	const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }
