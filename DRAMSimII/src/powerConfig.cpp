@@ -40,33 +40,33 @@ lastCalculation(0)
 powerConfig::~powerConfig()
 {}
 
-void powerConfig::recordCommand(const command *cmd, const dramChannel &channel, const dramTimingSpecification &timing)
-{
-	switch (cmd->getCommandType())
-	{
-	case RAS_COMMAND:
-
-		break;
-	case CAS_AND_PRECHARGE_COMMAND:
-		//RDsch += timing.t_burst;
-		break;
-	case CAS_COMMAND:
-		//RDsch += timing.t_burst;
-		break;
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-		//WRsch += timing.t_burst;
-		break;
-	case CAS_WRITE_COMMAND:
-		//WRsch += timing.t_burst;
-		break;
-	case PRECHARGE_COMMAND:
-		break;
-	case REFRESH_ALL_COMMAND:
-		break;
-	default:
-		break;
-	}
-}
+//void powerConfig::recordCommand(const command *cmd, const dramChannel &channel, const dramTimingSpecification &timing)
+//{
+//	switch (cmd->getCommandType())
+//	{
+//	case RAS_COMMAND:
+//
+//		break;
+//	case CAS_AND_PRECHARGE_COMMAND:
+//		//RDsch += timing.t_burst;
+//		break;
+//	case CAS_COMMAND:
+//		//RDsch += timing.t_burst;
+//		break;
+//	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+//		//WRsch += timing.t_burst;
+//		break;
+//	case CAS_WRITE_COMMAND:
+//		//WRsch += timing.t_burst;
+//		break;
+//	case PRECHARGE_COMMAND:
+//		break;
+//	case REFRESH_ALL_COMMAND:
+//		break;
+//	default:
+//		break;
+//	}
+//}
 
 // calculate the power consumed by this channel during the last epoch
 void powerConfig::doPowerCalculation() 

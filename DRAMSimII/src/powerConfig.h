@@ -57,7 +57,7 @@ protected:
 public:
 	powerConfig();
 	powerConfig(const dramSettings *settings);
-	void recordCommand(const command *, const dramChannel &channel, const dramTimingSpecification &timing);
+	//void recordCommand(const command *, const dramChannel &channel, const dramTimingSpecification &timing);
 	void doPowerCalculation();
 	
 public:
