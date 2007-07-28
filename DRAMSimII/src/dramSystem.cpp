@@ -906,7 +906,7 @@ void dramSystem::doPowerCalculation()
 {
 	for (vector<dramChannel>::iterator currentChannel = channel.begin(); currentChannel != channel.end(); currentChannel++)
 	{
-		 currentChannel.doPowerCalculation();
+		 currentChannel->doPowerCalculation();
 	}
 }
 
