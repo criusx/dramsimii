@@ -786,7 +786,6 @@ sim_parameters(settings),
 statistics(),
 algorithm(settings),
 input_stream(settings),
-powerModel(settings),
 time(0),
 event_q(COMMAND_QUEUE_SIZE)
 {

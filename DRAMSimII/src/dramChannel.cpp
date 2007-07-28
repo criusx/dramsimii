@@ -27,7 +27,9 @@ timing_specification(settings),
 transaction_q(settings->transactionQueueDepth),
 refreshQueue(settings->rowCount * settings->rankCount,true),
 history_q(settings->historyQueueDepth),
-completion_q(settings->completionQueueDepth)
+completion_q(settings->completionQueueDepth),
+system_config(NULL),
+powerModel(settings)
 {}
 
 dramChannel::dramChannel(const dramChannel &dc):
@@ -40,7 +42,9 @@ timing_specification(dc.timing_specification),
 transaction_q(dc.transaction_q),
 refreshQueue(dc.refreshQueue),
 history_q(dc.history_q),
-completion_q(dc.completion_q)
+completion_q(dc.completion_q),
+system_config(NULL),
+powerModel(dc.powerModel)
 {
 }
 
