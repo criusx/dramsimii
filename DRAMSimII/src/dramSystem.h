@@ -58,7 +58,7 @@ public:
 	input_status_t waitForTransactionToFinish(transaction *trans);
 	double Frequency() const { return system_config.Frequency(); }
 	tick_t nextTick() const;
-	void doPowerCalculation() const { powerModel.doPowerCalculation(channel); }
+	void doPowerCalculation();
 	void run_simulations();
 	void run_simulations2();
 	void run_simulations3();
