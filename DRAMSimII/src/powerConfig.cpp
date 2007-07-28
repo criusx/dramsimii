@@ -33,7 +33,8 @@ DMperDRAM(settings->DMperDRAM),
 frequency(settings->dataRate),
 frequencySpec(settings->frequencySpec),
 tBurst(settings->tBurst),
-tRC(settings->tRC)
+tRC(settings->tRC),
+lastCalculation(0)
 {}
 
 powerConfig::~powerConfig()
@@ -67,21 +68,19 @@ void powerConfig::recordCommand(const command *cmd, const dramChannel &channel, 
 	}
 }
 
-
-void powerConfig::doPowerCalculation(const std::vector<dramChannel> &channels) const 
+// calculate the power consumed by this channel during the last epoch
+void powerConfig::doPowerCalculation() 
 {
-	for (std::vector<dramChannel>::const_iterator j = channels.begin();j != channels.end();j++)
-	{		
-		for (std::vector<rank_c>::const_iterator k = j->getRank().begin(); k != j->getRank().end(); k++)
+	for (std::vector<rank_c>::const_iterator k = j->getRank().begin(); k != j->getRank().end(); k++)
+	{
+		tick_t totalRAS = 1;
+		for (std::vector<bank_c>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
-			tick_t totalRAS = 1;
-			for (std::vector<bank_c>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
-			{
-				// Psys(ACT)
-				totalRAS += l->RASCount;
-			}
-			tick_t tRRDsch = j->get_time() / totalRAS * tBurst / 2;
-			cerr << "Psys(ACT) " << setprecision(3) << PdsACT * tRC / tRRDsch * (VDD / VDDmax) * (VDD / VDDmax) << endl;
+			// Psys(ACT)
+			totalRAS += l->RASCount;
 		}
+		tick_t tRRDsch = (j->get_time() - lastCalculation) / totalRAS * tBurst / 2;
+		cerr << "Psys(ACT) " << setprecision(3) << PdsACT * tRC / tRRDsch * (VDD / VDDmax) * (VDD / VDDmax) << endl;
+		lastCalculation = time;
 	}
 }

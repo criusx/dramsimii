@@ -47,6 +47,8 @@ protected:
 	unsigned tBurst;
 	unsigned tRC;
 
+	tick_t lastCalculation;
+
 	//tick_t allBanksPrecharged;
 	//tick_t RDsch; // number of clock cycles spent sending data
 	//tick_t WRsch; // number of clock cycles spent receiving data
@@ -56,7 +58,7 @@ public:
 	powerConfig();
 	powerConfig(const dramSettings *settings);
 	void recordCommand(const command *, const dramChannel &channel, const dramTimingSpecification &timing);
-	void doPowerCalculation(const std::vector<dramChannel> &channels) const;
+	void doPowerCalculation();
 	
 public:
 	~powerConfig();
