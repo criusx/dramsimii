@@ -34,7 +34,6 @@ class bank_c;
 class transaction;
 class command;
 class dramSystem;
-class ogzstream;
 class dramSettings;
 
 
@@ -70,17 +69,17 @@ class dramSettings;
 
 #define COMMAND_QUEUE_SIZE 32
 
-//#define DEBUG_FLAG
+#define DEBUG_FLAG
 
 #define DEBUG_COMMAND
 
 #define DEBUG_TRANSACTION
 
-//#define DEBUG_RAND
+#define DEBUG_RAND
 
-//#define DEBUG_MIN_PROTOCOL_GAP
+#define DEBUG_MIN_PROTOCOL_GAP
 
-//#define DEBUG_FLAG_2
+#define DEBUG_FLAG_2
 
 unsigned inline log2(unsigned input)
 {

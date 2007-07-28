@@ -31,7 +31,7 @@ private:
 	dramStatistics statistics;
 	dramAlgorithm algorithm;
 	inputStream input_stream;
-	powerConfig powerModel;
+	
 	
 	tick_t time;	// master clock	
 	
@@ -41,8 +41,7 @@ private:
 	void read_dram_config_from_file();
 	//void set_dram_timing_specification(enum dram_type_t);
 	enum input_status_t transaction2commands(transaction *);
-	int find_oldest_channel() const;
-	void executeCommand(command *, const int);
+	int find_oldest_channel() const;	
 	void update_system_time();
 	
 	enum input_status_t getNextIncomingTransaction(transaction *&);
