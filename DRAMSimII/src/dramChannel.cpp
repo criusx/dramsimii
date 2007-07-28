@@ -59,14 +59,14 @@ void dramChannel::init_controller(int transaction_queue_depth,
 	transaction_q.init(transaction_queue_depth);
 	history_q.init(history_queue_depth);
 	completion_q.init(completion_queue_depth);
-	
+
 
 	time = 0;
 	last_refresh_time = 0;
 	refresh_row_index = 0;
 	last_rank_id = 0;
 
-	
+
 	refreshQueue.init(refresh_queue_depth,  true);
 }
 
@@ -135,4 +135,21 @@ enum transaction_type_t	dramChannel::set_read_write_type(const int rank_id,const
 		return READ_TRANSACTION;
 	else
 		return WRITE_TRANSACTION;
+}
+
+// calculate the power consumed by this channel during the last epoch
+void dramChannel::doPowerCalculation()
+{	
+	for (std::vector<rank_c>::const_iterator k = rank.begin(); k != rank.end(); k++)
+	{
+		tick_t totalRAS = 1;
+		for (std::vector<bank_c>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
+		{
+			// Psys(ACT)
+			totalRAS += l->RASCount;
+		}
+		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
+		cerr << "Psys(ACT) " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) << endl;
+		powerModel.lastCalculation = time;
+	}
 }

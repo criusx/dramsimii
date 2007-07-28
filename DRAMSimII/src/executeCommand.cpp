@@ -19,7 +19,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	//dramChannel &channel= dramSystem::channel[this_command->getAddress().chan_id];
 
 	// do power calculations
-	powerModel.recordCommand(this_command, channel, timing_specification);
+	//powerModel.recordCommand(this_command, channel, timing_specification);
 
 	rank_c &this_rank = rank[this_command->getAddress().rank_id];
 
@@ -59,7 +59,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	case CAS_AND_PRECHARGE_COMMAND:
 
 		this_bank.isActivated = false;
-		this_bank.last_prec_time = max(channel.get_time() + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_bank.last_ras_time + timing_specification.t_ras);
+		this_bank.last_prec_time = max(time + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_bank.last_ras_time + timing_specification.t_ras);
 		// lack of break is intentional
 
 	case CAS_COMMAND:

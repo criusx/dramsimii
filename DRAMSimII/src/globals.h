@@ -19,23 +19,10 @@ To do list:
 #pragma once
 
 #include <limits>
-#include <sstream>
 #include <iostream>
 
 #define tick_t long long
 #define TICK_T_MAX LLONG_MAX
-
-// class forward declarations
-class dramSystemConfiguration;
-class dramTimingSpecification;
-class dramAlgorithm;
-class rank_c;
-class bank_c;
-class transaction;
-class command;
-class dramSystem;
-class dramSettings;
-
 
 #include <iostream>
 #include <map>
@@ -69,17 +56,17 @@ class dramSettings;
 
 #define COMMAND_QUEUE_SIZE 32
 
-#define DEBUG_FLAG
+//#define DEBUG_FLAG
 
 #define DEBUG_COMMAND
 
 #define DEBUG_TRANSACTION
 
-#define DEBUG_RAND
+//#define DEBUG_RAND
 
-#define DEBUG_MIN_PROTOCOL_GAP
+//#define DEBUG_MIN_PROTOCOL_GAP
 
-#define DEBUG_FLAG_2
+//#define DEBUG_FLAG_2
 
 unsigned inline log2(unsigned input)
 {
@@ -91,13 +78,17 @@ unsigned inline log2(unsigned input)
 	return l2;
 }
 
-
+#include <sstream>
 template <class T>
 bool toNumeric(T& t, const std::string& s, std::ios_base& (*f)(std::ios_base&))
 {
 	std::istringstream iss(s);
 	return !(iss >> f >> t).fail();
 }
+
+class command;
+class addresses;
+class transaction;
 
 // overloaded insertion operator functions for printing various aspects of the dram system
 std::ostream &operator<<(std::ostream &, const command_type_t &);

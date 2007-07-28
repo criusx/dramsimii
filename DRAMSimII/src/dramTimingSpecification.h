@@ -36,6 +36,7 @@ public:
 
 	// friends
 	friend std::ostream &operator<<( std::ostream&, const dramTimingSpecification &);
+	friend class dramChannel; // TODO: change how this works, no need for friends when there's accessors
 	friend class dramSystem;
 };
 

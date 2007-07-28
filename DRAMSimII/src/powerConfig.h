@@ -6,13 +6,12 @@
 #include <string>
 
 #include "globals.h"
-#include "dramChannel.h"
 #include "enumTypes.h"
 #include "dramSettings.h"
 
 class powerConfig
 {
-protected:
+public:
 	float VDD;
 	float VDDmax;
 	int IDD0; // Operating Current: One Bank Active-Precharge in mA
@@ -58,7 +57,7 @@ public:
 	powerConfig();
 	powerConfig(const dramSettings *settings);
 	//void recordCommand(const command *, const dramChannel &channel, const dramTimingSpecification &timing);
-	void doPowerCalculation();
+	//void doPowerCalculation(dramChannel * const chan);
 	
 public:
 	~powerConfig();

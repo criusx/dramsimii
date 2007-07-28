@@ -68,19 +68,4 @@ powerConfig::~powerConfig()
 //	}
 //}
 
-// calculate the power consumed by this channel during the last epoch
-void powerConfig::doPowerCalculation() 
-{
-	for (std::vector<rank_c>::const_iterator k = j->getRank().begin(); k != j->getRank().end(); k++)
-	{
-		tick_t totalRAS = 1;
-		for (std::vector<bank_c>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
-		{
-			// Psys(ACT)
-			totalRAS += l->RASCount;
-		}
-		tick_t tRRDsch = (j->get_time() - lastCalculation) / totalRAS * tBurst / 2;
-		cerr << "Psys(ACT) " << setprecision(3) << PdsACT * tRC / tRRDsch * (VDD / VDDmax) * (VDD / VDDmax) << endl;
-		lastCalculation = time;
-	}
-}
+

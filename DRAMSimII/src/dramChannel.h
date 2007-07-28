@@ -6,6 +6,7 @@
 #include "rank_c.h"
 #include "powerConfig.h"
 #include "dramTimingSpecification.h"
+#include "dramSystemConfiguration.h"
 
 class dramChannel
 {

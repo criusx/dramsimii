@@ -2,6 +2,8 @@
 #define COMMAND_H
 #pragma once
 
+class transaction;
+
 #include "globals.h"
 #include "addresses.h"
 #include "enumTypes.h"

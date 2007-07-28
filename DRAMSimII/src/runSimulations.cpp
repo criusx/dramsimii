@@ -82,7 +82,7 @@ void dramSystem::run_simulations3()
 			}
 			else
 				// figure that the cpu <=> mch bus runs at the mostly the same speed
-				input_t->arrival_time += timing_specification.t_cmd;
+				input_t->arrival_time += channel[0].getTimingSpecification().t_cmd;
 		}
 		nextArrival = nextTick();
 	}
@@ -124,11 +124,11 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 			// if it can't fit in the transaction queue, drain the queue
 			while (transaction2commands(temp_t) != SUCCESS)
 			{
-				command *temp_c = getNextCommand(chan);
+				command *temp_c = channel[chan].getNextCommand();
 
-				int min_gap = minProtocolGap(chan, temp_c);
+				int min_gap = channel[chan].minProtocolGap(temp_c);
 
-				executeCommand(temp_c, min_gap);
+				channel[chan].executeCommand(temp_c, min_gap);
 
 #ifdef DEBUG_COMMAND
 				outStream << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
@@ -188,13 +188,13 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 		// convert them into commands after a fixed amount of time		
 		transaction *temp_t = channel[chan].read_transaction();		
 
-		if ((temp_t) && (channel[chan].get_time() - temp_t->enqueueTime < timing_specification.t_buffer_delay))
+		if ((temp_t) && (channel[chan].get_time() - temp_t->enqueueTime < channel[chan].getTimingSpecification().t_buffer_delay))
 		{
 #ifdef M5DEBUG
 			outStream << "resetting: ";
 			outStream << channel[chan].get_time() << " ";
 			outStream << temp_t->enqueueTime << " ";
-			outStream << timing_specification.t_buffer_delay << endl;
+			outStream << channel[chan].getTimingSpecification().t_buffer_delay << endl;
 #endif
 			temp_t = NULL; // not enough time has passed
 			processingTransaction = true;
@@ -206,18 +206,18 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 		if ((temp_t == NULL) || (transaction2commands(temp_t) != SUCCESS))
 		{			
 			// move time up by executing commands
-			command *temp_c = readNextCommand(chan);
+			command *temp_c = channel[chan].readNextCommand();
 
 			if (temp_c == NULL)
 			{
 				// the transaction queue and all the per bank queues are empty,
 				// so just move time forward to the point where the transaction starts
 				// or move time forward until the transaction is ready to be decoded
-				if ((processingTransaction) && (channel[chan].get_time() + timing_specification.t_buffer_delay <= endTime))
+				if ((processingTransaction) && (channel[chan].get_time() + channel[chan].getTimingSpecification().t_buffer_delay <= endTime))
 				{
 					processingTransaction = false;
 					// FIXME: this should move time forward until the trans can be successfully converted
-					channel[chan].set_time(channel[chan].get_time() + timing_specification.t_buffer_delay);
+					channel[chan].set_time(channel[chan].get_time() + channel[chan].getTimingSpecification().t_buffer_delay);
 				}
 				else
 				{
@@ -226,16 +226,16 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 			}
 			else
 			{
-				int min_gap = minProtocolGap(chan, temp_c);
+				int min_gap = channel[chan].minProtocolGap(temp_c);
 #ifdef M5DEBUG
 				outStream << "mg: " << min_gap << endl;
 #endif
 
 				if (min_gap + channel[chan].get_time() <= endTime)
 				{
-					temp_c = getNextCommand(chan);
+					temp_c = channel[chan].getNextCommand();
 
-					executeCommand(temp_c, min_gap);
+					channel[chan].executeCommand(temp_c, min_gap);
 
 #ifdef DEBUG_COMMAND
 					outStream << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
@@ -312,7 +312,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 		if ((temp_t == NULL) || (transaction2commands(temp_t) != SUCCESS))
 		{
 			// move time up by executing commands
-			command *temp_c = getNextCommand(chan);
+			command *temp_c = channel[chan].getNextCommand();
 
 			if (temp_c == NULL)
 			{
@@ -324,9 +324,9 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 			}
 			else
 			{
-				int min_gap = minProtocolGap(chan, temp_c);
+				int min_gap = channel[chan].minProtocolGap(temp_c);
 
-				executeCommand(temp_c, min_gap);
+				channel[chan].executeCommand(temp_c, min_gap);
 
 				update_system_time(); 
 
@@ -393,14 +393,14 @@ void dramSystem::run_simulations()
 					// if it can't fit in the transaction queue, drain the queue
 					while(transaction2commands(temp_t) != SUCCESS)
 					{
-						command *temp_c = getNextCommand(oldest_chan_id);
-						int min_gap = minProtocolGap(input_t->addr.chan_id, temp_c);
+						command *temp_c = channel[oldest_chan_id].getNextCommand();
+						int min_gap = channel[input_t->addr.chan_id].minProtocolGap(temp_c);
 
 #ifdef DEBUG_COMMAND
 						outStream << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
-						executeCommand(temp_c, min_gap);
+						channel[temp_c->getAddress().chan_id].executeCommand(temp_c, min_gap);
 						update_system_time(); 
 						transaction *completed_t = channel[oldest_chan_id].get_oldest_completed();
 						if(completed_t != NULL)

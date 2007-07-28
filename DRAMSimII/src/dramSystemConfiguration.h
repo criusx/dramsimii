@@ -8,6 +8,9 @@
 #include "globals.h"
 #include "dramSettings.h"
 
+class dramChannel;
+class dramSystem;
+
 class dramSystemConfiguration
 { 
 
@@ -64,6 +67,8 @@ public:
 
 	// friends
 	friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
+	friend class dramChannel;
+	friend class dramSystem;
 };
 
 #endif
