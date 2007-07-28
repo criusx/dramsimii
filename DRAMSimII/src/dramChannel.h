@@ -29,6 +29,7 @@ public:
 	command *readNextCommand() const;
 	int minProtocolGap(const command *thisCommand) const;
 	void executeCommand(command *, const int);
+	void doPowerCalculation();
 
 
 	// accessors and mutators

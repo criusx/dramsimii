@@ -902,6 +902,7 @@ ostream &operator<<(ostream &os, const dramSystem &this_a)
 	return os;
 }
 
+// do the power calculation on all the channels
 void dramSystem::doPowerCalculation()
 {
 	for (vector<dramChannel>::iterator currentChannel = channel.begin(); currentChannel != channel.end(); currentChannel++)
