@@ -728,9 +728,12 @@ channel(system_config.chan_count,
 		unsigned cnt = 0;
 		for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 		{
-			i->initRefreshQueue(settings->rowCount, settings->refreshTime, cnt++);
-			i->setSystemConfig(&system_config);
+			i->initRefreshQueue(settings->rowCount, settings->refreshTime, cnt++);			
 		}
+	}
+	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
+	{
+		i->setSystemConfig(&system_config);
 	}
 }
 

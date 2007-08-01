@@ -20,8 +20,8 @@ command *dramChannel::getNextCommand()
 	// look at the most recently retired command in this channel's history
 	const command *lastCommand = get_most_recent_command();
 
-	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank_id : system_config->bank_count - 1;
-	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : system_config->rank_count - 1;
+	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank_id : rank[0].bank.size() - 1;
+	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : rank.size() - 1;
 	const command_type_t lastCommandType = lastCommand ? lastCommand->getCommandType() : CAS_WRITE_AND_PRECHARGE_COMMAND;
 
 	switch (system_config->command_ordering_algorithm)
