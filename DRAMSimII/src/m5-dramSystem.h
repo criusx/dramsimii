@@ -76,7 +76,7 @@ private:
 protected:
 	MemPort *memoryPort;
 	// the whole point of the wrapper class
-	dramSystem *ds;
+	DRAMSimII::dramSystem *ds;
 	bool needRetry;
 	int cpuRatio;
 	void getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop);

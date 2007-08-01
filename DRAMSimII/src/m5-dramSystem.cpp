@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 using namespace std;
+using namespace DRAMSimII;
 
 M5dramSystem::M5dramSystem(Params *p):
 PhysicalMemory(p), tickEvent(this), needRetry(false)
