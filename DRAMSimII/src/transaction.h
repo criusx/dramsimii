@@ -8,31 +8,32 @@
 #include "enumTypes.h"
 #include "queue.h"
 
-
-class transaction
+namespace DRAMSimII
 {
-private:
-	static queue<transaction> freeTransactionPool;	// transactions are stored here to avoid allocating memory after initialization
+	class transaction
+	{
+	private:
+		static queue<transaction> freeTransactionPool;	// transactions are stored here to avoid allocating memory after initialization
 
-public:
-	int event_no;
-	transaction_type_t type;	// transaction type
-	int status;
-	int length;					// how long?
-	tick_t arrival_time;		// time when first seen by memory controller in DRAM ticks
-	tick_t enqueueTime;			// time when the transaction enters the MC queue
-	tick_t completion_time;		// time when transaction has completed in DRAM ticks
-	
-	addresses addr;
-	const void *originalTransaction;	// utility pointer in the event that this transaction represents another version of a transaction
+	public:
+		int event_no;
+		transaction_type_t type;	// transaction type
+		int status;
+		int length;					// how long?
+		tick_t arrival_time;		// time when first seen by memory controller in DRAM ticks
+		tick_t enqueueTime;			// time when the transaction enters the MC queue
+		tick_t completion_time;		// time when transaction has completed in DRAM ticks
 
-	// constructors
-	explicit transaction();
-	explicit transaction(const int,const  tick_t,const int,const unsigned long long, const void *);
-	friend std::ostream &operator<<(std::ostream &, const transaction *);
+		addresses addr;
+		const void *originalTransaction;	// utility pointer in the event that this transaction represents another version of a transaction
 
-	void *operator new(size_t size);
-	void operator delete(void *);
-};
+		// constructors
+		explicit transaction();
+		explicit transaction(const int,const  tick_t,const int,const unsigned long long, const void *);
+		friend std::ostream &operator<<(std::ostream &, const transaction *);
 
+		void *operator new(size_t size);
+		void operator delete(void *);
+	};
+}
 #endif

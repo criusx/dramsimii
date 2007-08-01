@@ -3,6 +3,7 @@
 #include "transaction.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 // initialize the static member
 queue<transaction> transaction::freeTransactionPool(4*COMMAND_QUEUE_SIZE,true);
@@ -52,7 +53,7 @@ void transaction::operator delete(void *mem)
 }
 
 
-std::ostream &operator<<(std::ostream &os, const transaction *this_t)
+std::ostream &DRAMSimII::operator<<(std::ostream &os, const transaction *this_t)
 {
 	os << "S[" << std::setw(8) << std::dec << this_t->arrival_time << "] ";
 	os << "Q[" << std::setw(8) << std::dec << this_t->enqueueTime << "] ";
@@ -62,7 +63,7 @@ std::ostream &operator<<(std::ostream &os, const transaction *this_t)
 	return os;
 }
 
-ostream &operator<<(ostream &os, const transaction_type_t type)
+ostream &DRAMSimII::operator<<(ostream &os, const transaction_type_t type)
 {
 	switch (type)
 	{

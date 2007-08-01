@@ -1,5 +1,7 @@
 #include "dramStatistics.h"
 
+using namespace DRAMSimII;
+
 dramStatistics::dramStatistics()
 {
 	//fout.o    = std::cout;

@@ -15,11 +15,12 @@
 
 
 using namespace std;
+using namespace DRAMSimII;
 
 // modified, writes to cerr or a compressed output file
-boost::iostreams::filtering_ostream outStream;
+boost::iostreams::filtering_ostream DRAMSimII::outStream;
 
-double ascii2multiplier(const string &input)
+double DRAMSimII::ascii2multiplier(const string &input)
 {
 	switch(dramTokenizer(input))
 	{
@@ -45,7 +46,7 @@ double ascii2multiplier(const string &input)
 	}
 }
 
-void create_input_map(int argc,const char **argv,map<enum file_io_token_t, string> &parameters)
+void DRAMSimII::create_input_map(int argc,const char **argv,map<enum file_io_token_t, string> &parameters)
 {
 	int argc_index=1;
 	string trace_filename;
@@ -150,7 +151,7 @@ void create_input_map(int argc,const char **argv,map<enum file_io_token_t, strin
 	}
 }
 
-void create_input_map_from_input_file(map<enum file_io_token_t,string> &parameters,ifstream &cfg_file)
+void DRAMSimII::create_input_map_from_input_file(map<enum file_io_token_t,string> &parameters,ifstream &cfg_file)
 {
 
 	while (!cfg_file.eof())
@@ -213,7 +214,7 @@ void create_input_map_from_input_file(map<enum file_io_token_t,string> &paramete
 	}
 }
 
-ostream &operator<<(ostream &os, const dramStatistics &this_a)
+ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
 {
 	os << "RR[" << setw(6) << setprecision(6) << (double)this_a.end_time/max(1,this_a.bo4_count + this_a.bo8_count);
 	os << "] BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick_t)1);
@@ -222,13 +223,13 @@ ostream &operator<<(ostream &os, const dramStatistics &this_a)
 
 }
 
-file_io_token_t fileIOToken(const unsigned char *input)
+file_io_token_t DRAMSimII::fileIOToken(const unsigned char *input)
 {
 	const string inputS((const char *)input);
 	return dramTokenizer(inputS);
 }
 
-file_io_token_t dramTokenizer(const string &input)
+file_io_token_t DRAMSimII::dramTokenizer(const string &input)
 {
 	if (input.length() == 0)
 		return unknown_token;
@@ -462,7 +463,7 @@ file_io_token_t dramTokenizer(const string &input)
 //std::ostream &operator<<(outputStream& os, std::ostream
 
 
-ostream &operator<<(ostream &os, const addresses &this_a)
+ostream &DRAMSimII::operator<<(ostream &os, const addresses &this_a)
 {
 	os << "addr[0x" << setbase(16) << this_a.phys_addr <<
 		"] chan[" << setbase(16) << this_a.chan_id << "] rank[" <<
@@ -472,7 +473,7 @@ ostream &operator<<(ostream &os, const addresses &this_a)
 	return os;
 }
 
-ostream &operator<<(ostream &os, const address_mapping_scheme_t &this_ams)
+ostream &DRAMSimII::operator<<(ostream &os, const address_mapping_scheme_t &this_ams)
 {
 	switch (this_ams)
 	{

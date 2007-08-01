@@ -2,6 +2,7 @@
 #include "command.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 // initialize the static member
 queue<command> command::freeCommandPool(4*COMMAND_QUEUE_SIZE,true);
@@ -75,7 +76,7 @@ posted_cas(postedCAS),
 length(_length)
 {}
 
-ostream &operator<<(ostream &os, const command_type_t &command)
+ostream &DRAMSimII::operator<<(ostream &os, const command_type_t &command)
 {
 	switch(command)
 	{
@@ -121,7 +122,8 @@ ostream &operator<<(ostream &os, const command_type_t &command)
 	}
 	return os;
 }
-ostream &operator<<(ostream &os, const command &this_c)
+
+ostream &DRAMSimII::operator<<(ostream &os, const command &this_c)
 {
 	os << this_c.this_command << this_c.addr << " S[" << std::dec << this_c.start_time << "] Q[" << std::dec << this_c.enqueue_time << "] E[" << std::dec << this_c.completion_time << std::dec << "] T[" << this_c.completion_time - this_c.start_time << "] DLY[" << std::dec << this_c.start_time - this_c.enqueue_time << "]";
 	return os;

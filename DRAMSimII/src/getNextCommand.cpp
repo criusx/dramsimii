@@ -2,10 +2,10 @@
 #include <climits>
 #include <limits>
 
-#include "rank_c.h"
-#include "dramSystem.h"
+#include "dramChannel.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 /// <summary>
 /// Chooses the command which should be executed next from the given channel

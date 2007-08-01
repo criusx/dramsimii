@@ -1,5 +1,7 @@
 #include "addresses.h"
 
+using namespace DRAMSimII;
+
 addresses::addresses():
 virt_addr(0),
 phys_addr(0),

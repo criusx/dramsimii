@@ -4,6 +4,7 @@
 #include "dramSystem.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 bool dramSystem::checkForAvailableCommandSlots(const transaction *trans) const
 {

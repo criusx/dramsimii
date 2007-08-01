@@ -2,6 +2,7 @@
 #include "event.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 // initialize the static member
 queue<event> event::freeEventPool(4*COMMAND_QUEUE_SIZE,true);

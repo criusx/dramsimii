@@ -1,5 +1,6 @@
 #include "bank_c.h"
 
+using namespace DRAMSimII;
 
 bank_c::bank_c(const dramSettings *settings):
 per_bank_q(settings->perBankQueueDepth),

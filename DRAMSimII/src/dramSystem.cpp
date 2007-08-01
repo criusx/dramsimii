@@ -18,9 +18,8 @@
 
 #include "dramSystem.h"
 
-
 using namespace std;
-
+using namespace DRAMSimII;
 
 // returns the time when the memory system next has an event
 // the event may either be a conversion of a transaction into commands
@@ -38,7 +37,7 @@ tick_t dramSystem::nextTick() const
 		{
 			// make sure it can finish
 			int tempGap = max(1,(int)(nextTrans->enqueueTime - channel[j].get_time()) + channel[j].getTimingSpecification().t_buffer_delay); 
-			
+
 			assert(tempGap <= channel[j].getTimingSpecification().t_buffer_delay );
 			// whenever the next transaction is ready and there are available slots for the R/C/P commands
 			if ((tempGap + channel[j].get_time() < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
@@ -68,7 +67,8 @@ int dramSystem::convert_address(addresses &this_a) const
 	unsigned temp_a, temp_b;
 	unsigned bit_15,bit_27,bits_26_to_16;
 
-	if (input_stream.type == MAPPED)
+	// if there's a test involving specific ranks/banks and the mapping is predetermined
+	if (input_stream.getType() == MAPPED)
 		return 1;
 	//int	mapping_scheme;
 	//int	chan_count, rank_count, bank_count, col_count, row_count;
@@ -107,26 +107,26 @@ int dramSystem::convert_address(addresses &this_a) const
 	unsigned col_id_lo_depth;
 	unsigned col_id_hi;
 	unsigned col_id_hi_depth;
-	
+
 	switch (system_config.addr_mapping_scheme)
 	{
 	case BURGER_BASE_MAP:		/* Good for only Rambus memory really */
-	
-	// BURGER BASE :
-	// |<-------------------------------->|<------>|<------>|<---------------->|<----------------->|<----------->|
-	//                          row id     bank id   Rank id   Column id         Channel id          Byte Address
-	//                                                         DRAM page size/   intlog2(chan. count)   within packet
-	//                                                         Bus Width         used if chan. > 1
-	//
-	//               As applied to system (1 chan) using 256 Mbit RDRAM chips:
-	//               512 rows X 32 banks X 128 columns X 16 bytes per column.
-	//		 16 ranks gets us to 512 MByte.	
-	//
-	//    31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
-	//             |<---------------------->| |<---------->| |<------->| |<---------------->|  |<------>|
-	//                      row id                 bank         rank          Col id            16 byte
-	//                      (512 rows)              id           id           2KB/16B            packet
-		
+
+		// BURGER BASE :
+		// |<-------------------------------->|<------>|<------>|<---------------->|<----------------->|<----------->|
+		//                          row id     bank id   Rank id   Column id         Channel id          Byte Address
+		//                                                         DRAM page size/   intlog2(chan. count)   within packet
+		//                                                         Bus Width         used if chan. > 1
+		//
+		//               As applied to system (1 chan) using 256 Mbit RDRAM chips:
+		//               512 rows X 32 banks X 128 columns X 16 bytes per column.
+		//		 16 ranks gets us to 512 MByte.	
+		//
+		//    31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+		//             |<---------------------->| |<---------->| |<------->| |<---------------->|  |<------>|
+		//                      row id                 bank         rank          Col id            16 byte
+		//                      (512 rows)              id           id           2KB/16B            packet
+
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> chan_addr_depth;
@@ -285,7 +285,7 @@ int dramSystem::convert_address(addresses &this_a) const
 		*
 		*/
 
-		
+
 
 		cacheline_size = system_config.cacheline_size;
 		cacheline_size_depth = log2(cacheline_size);
@@ -496,14 +496,14 @@ void dramSystem::update_system_time()
 
 void dramSystem::get_next_random_request(transaction *this_t)
 {
-	if (input_stream.type == RANDOM)
+	if (input_stream.getType() == RANDOM)
 	{
 		unsigned int j;
 
 		rand_s(&j);
 
 		// check against last transaction to see what the chan_id was, and whether we need to change channels or not
-		if (input_stream.chan_locality * UINT_MAX < j)
+		if (input_stream.getChannelLocality() * UINT_MAX < j)
 		{
 			this_t->addr.chan_id = (this_t->addr.chan_id + (j % (system_config.chan_count - 1))) % system_config.chan_count;
 		}
@@ -514,7 +514,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 		int rank_id = channel[this_t->addr.chan_id].get_last_rank_id();
 
 		rand_s(&j);
-		if ((input_stream.rank_locality * UINT_MAX < j) && (system_config.rank_count > 1))
+		if ((input_stream.getRankLocality() * UINT_MAX < j) && (system_config.rank_count > 1))
 		{
 			rank_id = this_t->addr.rank_id = 
 				(rank_id + 1 + (j % (system_config.rank_count - 1))) % system_config.rank_count;
@@ -528,7 +528,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 
 		rand_s(&j);
 
-		if ((input_stream.bank_locality * UINT_MAX < j) && (system_config.bank_count > 1))
+		if ((input_stream.getBankLocality() * UINT_MAX < j) && (system_config.bank_count > 1))
 		{
 			bank_id = this_t->addr.bank_id =
 				(bank_id + 1 + (j % (system_config.bank_count - 1))) % system_config.bank_count;
@@ -542,7 +542,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 
 		rand_s(&j);
 
-		if (input_stream.row_locality * UINT_MAX < j)
+		if (input_stream.getRowLocality() * UINT_MAX < j)
 		{
 			this_t->addr.row_id = (row_id + 1 + (j % (system_config.row_count - 1))) % system_config.row_count;
 			row_id = this_t->addr.row_id;
@@ -554,7 +554,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 
 		rand_s(&j);
 
-		if (input_stream.read_percentage * UINT_MAX > j)
+		if (input_stream.getReadPercentage() * UINT_MAX > j)
 		{
 			this_t->type = READ_TRANSACTION;
 		}
@@ -565,7 +565,7 @@ void dramSystem::get_next_random_request(transaction *this_t)
 
 		rand_s(&j);
 
-		if (input_stream.short_burst_ratio * UINT_MAX > j)
+		if (input_stream.getShortBurstRatio() * UINT_MAX > j)
 		{
 			this_t->length = 4;
 		}
@@ -580,28 +580,28 @@ void dramSystem::get_next_random_request(transaction *this_t)
 		{
 			rand_s(&j);
 
-			if (j > input_stream.arrival_thresh_hold * UINT_MAX) /* interarrival probability function */
+			if (j > input_stream.getArrivalThreshhold() * UINT_MAX) /* interarrival probability function */
 			{
 
 				// Gaussian distribution function
-				if (input_stream.interarrival_distribution_model == GAUSSIAN_DISTRIBUTION)
+				if (input_stream.getInterarrivalDistributionModel() == GAUSSIAN_DISTRIBUTION)
 				{
-					input_stream.arrival_thresh_hold = 1.0 - (1.0 / input_stream.box_muller((double)input_stream.average_interarrival_cycle_count, 10));
+					input_stream.setArrivalThreshhold(1.0F - (1.0F / input_stream.box_muller(input_stream.getAverageInterarrivalCycleCount(), 10)));
 				}
 				// Poisson distribution function
-				else if (input_stream.interarrival_distribution_model == POISSON_DISTRIBUTION)
+				else if (input_stream.getInterarrivalDistributionModel() == POISSON_DISTRIBUTION)
 				{
-					input_stream.arrival_thresh_hold = 1.0 - (1.0 / input_stream.poisson_rng((double)input_stream.average_interarrival_cycle_count));
+					input_stream.setArrivalThreshhold(1.0F - (1.0F / input_stream.poisson_rng(input_stream.getAverageInterarrivalCycleCount())));
 				}
 				break;
 			}
 			else
 			{
-				++input_stream.time;
+				input_stream.setTime(input_stream.getTime() + 1);
 			}
 		}
 
-		this_t->arrival_time = input_stream.time;
+		this_t->arrival_time = input_stream.getTime();
 		this_t->addr.col_id = 0;
 	}
 }
@@ -614,32 +614,41 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 	{
 		temp_t = new transaction;
 
-		if (input_stream.type == RANDOM)
+		switch (input_stream.getType())
 		{
+		case RANDOM:
 			get_next_random_request(temp_t);
-		}
-		else if((input_stream.type == K6_TRACE) || (input_stream.type == MASE_TRACE) || (input_stream.type == MAPPED))
-		{
-			static busEvent this_e;
-
-			if(input_stream.get_next_bus_event(this_e) == FAILURE)
+			break;
+		case K6_TRACE:
+		case MASE_TRACE:
+		case MAPPED:
 			{
-				/* EOF reached */
-				delete temp_t;
-				return FAILURE;
-			} 
-			else
-			{
-				temp_t->addr = this_e.address;
-				// FIXME: ignores return type
-				convert_address(temp_t->addr);
-				++(temp_t->event_no);
-				temp_t->type = this_e.attributes;
-				temp_t->length = 8;			// assume burst length of 8
-				temp_t->arrival_time = this_e.timestamp;
-				// need to adjust arrival time for K6 traces to cycles
+				static busEvent this_e;
 
+				if(input_stream.getNextBusEvent(this_e) == FAILURE)
+				{
+					/* EOF reached */
+					delete temp_t;
+					return FAILURE;
+				} 
+				else
+				{
+					temp_t->addr = this_e.address;
+					// FIXME: ignores return type
+					convert_address(temp_t->addr);
+					++(temp_t->event_no);
+					temp_t->type = this_e.attributes;
+					temp_t->length = 8;			// assume burst length of 8
+					temp_t->arrival_time = this_e.timestamp;
+					// need to adjust arrival time for K6 traces to cycles
+
+				}
 			}
+			break;
+		default:
+			cerr << "Unknown input trace format" << endl;
+			exit(-20);
+			break;
 		}
 	}
 
@@ -664,136 +673,21 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 	return SUCCESS;
 }
 
-//void dramSystem::set_dram_timing_specification(enum dram_type_t dram_type)
-//{
-//	/// references to make reading this function easier
-//	int &t_al = timing_specification.t_al;
-//	int &t_burst = timing_specification.t_burst;
-//	int &t_cas = timing_specification.t_cas;
-//	int &t_cmd = timing_specification.t_cmd;
-//	int &t_cwd = timing_specification.t_cwd;
-//	int &t_int_burst = timing_specification.t_int_burst;
-//	int &t_faw = timing_specification.t_faw;
-//	int &t_ras = timing_specification.t_ras;
-//	int &t_rc = timing_specification.t_rc;
-//	int &t_rcd = timing_specification.t_rcd;
-//	int &t_rfc = timing_specification.t_rfc;
-//	int &t_rp = timing_specification.t_rp;
-//	int &t_rrd = timing_specification.t_rrd;
-//	int &t_rtp = timing_specification.t_rtp;
-//	int &t_rtrs = timing_specification.t_rtrs;
-//	int &t_wr = timing_specification.t_wr;
-//	int &t_wtr = timing_specification.t_wtr;
-//
-//	switch (dram_type)
-//	{
-//
-//	case SDRAM:	// @ 100 MHz
-//		t_al = 0;			// no such thing as posted CAS in SDRAM
-//		t_burst = 8;		// depending on system config! can be 1, 2, 4, or 8
-//		t_cas = 2;
-//		t_cmd = 1;			// protocol specific, cannot be changed
-//		t_cwd = 0;			// no such thing in SDRAM
-//		t_int_burst = 1;	// prefetch length is 1
-//		t_faw = 0;			// no such thing in SDRAM
-//		t_ras = 5;			// */
-//		t_rc = 7;		
-//		t_rcd = 2;
-//		t_rfc = 7;			// same as t_rc
-//		t_rp = 2;			// 12 ns @ 1.25ns per cycle = 9.6 cycles
-//		t_rrd = 0;			// no such thing in SDRAM
-//		t_rtp = 1;
-//		t_rtrs = 0;			// no such thing in SDRAM
-//		t_wr = 2;		
-//		break;
-//
-//	case DDR:				// @ 200 MHz (400 Mbps)
-//		t_al = 0;			// no such thing in DDR
-//		t_burst = 8;		// depending on system config! can be 2, 4, or 8
-//		t_cas = 6;
-//		t_cmd = 2;			// protocol specific, cannot be changed
-//		t_cwd = 2;			// protocol specific, cannot be changed
-//		t_int_burst = 2;	// protocol specific, cannot be changed
-//		t_faw = 0;			// no such thing in DDR
-//		t_ras = 16;			// 40 ns @ 2.5 ns per beat == 16 beats
-//		t_rc = 22;			// 55 ns t_rc
-//		t_rcd = 6;
-//		t_rfc = 28;			// 70 ns @ 2.5 ns per beat == 28 beats
-//		t_rp = 6;			// 15 ns @ 2.5ns per beat = 6 beats
-//		t_rrd = 0;
-//		t_rtp = 2;
-//		t_rtrs = 2;
-//		t_wr = 6;			// 15 ns @ 2.5 ns per beat = 6 beats
-//		t_wtr = 4;
-//		break;
-//
-//	case DDR2:				// @ 800 Mbps
-//		t_al = 0;
-//		t_burst = 8;		// depending on system config! can be 4, or 8
-//		t_cas = 10;
-//		t_cmd = 2;			// protocol specific, cannot be changed
-//		t_cwd = t_cas - 2;	// protocol specific, cannot be changed
-//		t_int_burst = 4;	// protocol specific, cannot be changed
-//		t_faw = 30;
-//		t_ras = 36;			// 45 ns @ 1.25ns per beat = 36 beats
-//		t_rc = 46;			// 57 ns @ 1.25ns per beat = 45.6 beats
-//		t_rcd = 10;
-//		t_rfc = 102;		// 128 ns @ 1.25ns per beat ~= 102 beats
-//		t_rp = 10;			// 12 ns @ 1.25ns per beat = 9.6 beats
-//		t_rrd = 6;			// 7.5 ns
-//		t_rtp = 6;
-//		t_rtrs = 2;
-//		t_wr = 12;
-//		t_wtr = 6;
-//		break;
-//
-//	case DDR3:				// @ 1.33 Gbps = 0.75 ns per beat
-//		t_al = 0;
-//		t_burst = 8;		// protocol specific, cannot be changed
-//		t_cas = 10;
-//		t_cmd = 2;			// protocol specific, cannot be changed
-//		t_cwd = t_cas - 2;
-//		t_int_burst = 8;	// protocol specific, cannot be changed
-//		t_faw = 30;
-//		t_ras = 36;			// 27 ns @ 0.75ns per beat = 36 beats
-//		t_rc = 48;			// 36 ns @ 0.75ns per beat = 48 beats
-//		t_rcd = 12;
-//		t_rfc = 280;
-//		t_rp = 12;			// 9 ns @ 0.75ns per beat = 12 beats
-//		t_rrd = 8;
-//		t_rtrs = 2;
-//		t_rtp = 8;
-//		t_wr = 12;
-//		t_wtr = 8;
-//		break;
-//
-//	case DRDRAM:	// FIXME
-//		// not currently supported
-//		cerr << "Not yet supported" << endl;
-//		break;
-//
-//	default:
-//		cerr << "Not supported" << endl;
-//		break;
-//	}
-//}
-
 dramSystem::dramSystem(const dramSettings *settings): 
 system_config(settings),
 channel(system_config.chan_count,
 		dramChannel(settings)),
-sim_parameters(settings),
-statistics(),
-algorithm(settings),
-input_stream(settings),
-time(0),
-event_q(COMMAND_QUEUE_SIZE)
+		sim_parameters(settings),
+		statistics(),
+		input_stream(settings),
+		time(0),
+		event_q(COMMAND_QUEUE_SIZE)
 {
 	if (settings->outFileType == BZ)
 	{	
 		outStream.push(boost::iostreams::bzip2_compressor());
 		outStream.push(boost::iostreams::file_sink((settings->outFile + ".bz").c_str()));
-		
+
 		if (!outStream.good())
 		{
 			cerr << "Error opening file \"" << settings->outFile << "\" for writing" << endl;
@@ -856,7 +750,7 @@ int dramSystem::find_oldest_channel() const
 	return oldest_chan_id;
 }
 
-ostream &operator<<(ostream &os, const dramSystem &this_a)
+ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &this_a)
 {
 	os << "SYS[";
 	switch(this_a.system_config.getConfigType())
@@ -895,19 +789,20 @@ ostream &operator<<(ostream &os, const dramSystem &this_a)
 	os << "BQD[" << this_a.system_config.getPerBankQueueDepth() << "] ";
 	os << "BLR[" << setprecision(0) << floor(100*(this_a.system_config.getShortBurstRatio() + 0.0001) + .5) << "] ";
 	os << "RP[" << (int)(100*this_a.system_config.getReadPercentage()) << "] ";
-	
+
 	os << this_a.statistics;
 	os << this_a.system_config;
 
 	return os;
 }
 
+
 // do the power calculation on all the channels
 void dramSystem::doPowerCalculation()
 {
 	for (vector<dramChannel>::iterator currentChannel = channel.begin(); currentChannel != channel.end(); currentChannel++)
 	{
-		 currentChannel->doPowerCalculation();
+		currentChannel->doPowerCalculation();
 	}
 }
 

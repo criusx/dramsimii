@@ -4,6 +4,7 @@
 #include "dramSystemConfiguration.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 dramSystemConfiguration::dramSystemConfiguration(const dramSettings *settings):
 dram_type(settings->dramType),
@@ -334,7 +335,7 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 		refresh_queue_depth = row_count * rank_count;
 }
 
-ostream &operator<<(ostream &os, const dramSystemConfiguration &this_a)
+ostream &DRAMSimII::operator<<(ostream &os, const dramSystemConfiguration &this_a)
 {
 	os << "PerBankQ[" << this_a.per_bank_queue_depth << "] ";
 	os << "CH[" << this_a.chan_count << "] ";
@@ -343,6 +344,7 @@ ostream &operator<<(ostream &os, const dramSystemConfiguration &this_a)
 
 	return os;
 }
+
 
 #ifdef M5
 dramSystemConfiguration::dramSystemConfiguration(dramSystem::Params *parameter)

@@ -7,15 +7,10 @@
 #include <fstream>
 #include <vector>
 
-#include "rank_c.h"
-#include "globals.h"
 #include "dramChannel.h"
-#include "queue.h"
-#include "transaction.h"
-#include "command.h"
-#include "dramSettings.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 dramChannel::dramChannel(const dramSettings *settings):
 time(0),
@@ -29,7 +24,8 @@ refreshQueue(settings->rowCount * settings->rankCount,true),
 history_q(settings->historyQueueDepth),
 completion_q(settings->completionQueueDepth),
 system_config(NULL),
-powerModel(settings)
+powerModel(settings),
+algorithm(settings)
 {}
 
 dramChannel::dramChannel(const dramChannel &dc):
@@ -44,7 +40,8 @@ refreshQueue(dc.refreshQueue),
 history_q(dc.history_q),
 completion_q(dc.completion_q),
 system_config(NULL),
-powerModel(dc.powerModel)
+powerModel(dc.powerModel),
+algorithm(dc.algorithm)
 {
 }
 

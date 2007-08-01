@@ -1,5 +1,5 @@
-#ifndef DRAMSYSTEM_H
-#define DRAMSYSTEM_H
+#ifndef DRAMSYSTEM
+#define DRAMSYSTEM
 #pragma once
 
 #include <vector>
@@ -20,54 +20,54 @@
 #include "dramSettings.h"
 #include "powerConfig.h"
 #include "globals.h"
+#include "dramSystemConfiguration.h"
 
-class dramSystem
+namespace DRAMSimII
 {
-private:
-	// members
-	dramSystemConfiguration system_config;
-	std::vector<dramChannel> channel;	
-	simulationParameters sim_parameters;
-	dramStatistics statistics;
-	dramAlgorithm algorithm;
-	inputStream input_stream;
-	
-	
-	tick_t time;	// master clock	
-	
-	queue<event> event_q;	// pending event queue	
+	class dramSystem
+	{
+	private:
+		// members
+		dramSystemConfiguration system_config;
+		std::vector<dramChannel> channel;	
+		simulationParameters sim_parameters;
+		dramStatistics statistics;	
+		inputStream input_stream;
 
-	//functions
-	void read_dram_config_from_file();
-	//void set_dram_timing_specification(enum dram_type_t);
-	enum input_status_t transaction2commands(transaction *);
-	int find_oldest_channel() const;	
-	void update_system_time();
-	
-	enum input_status_t getNextIncomingTransaction(transaction *&);
-	void get_next_random_request(transaction *);
+		tick_t time;	// master clock	
 
-public:
+		queue<event> event_q;	// pending event queue	
 
-	bool checkForAvailableCommandSlots(const transaction *trans) const;	
-	int convert_address(addresses &) const;
-	const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
-	const void *moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime);
-	bool enqueue(transaction* trans);
-	void enqueueTimeShift(transaction* trans);
-	input_status_t waitForTransactionToFinish(transaction *trans);
-	double Frequency() const { return system_config.Frequency(); }
-	tick_t nextTick() const;
-	void doPowerCalculation();
-	void run_simulations();
-	void run_simulations2();
-	void run_simulations3();
+		//functions
+		void read_dram_config_from_file();
+		enum input_status_t transaction2commands(transaction *);
+		int find_oldest_channel() const;	
+		void update_system_time();
 
-	// constructors	
-	explicit dramSystem(const dramSettings *settings);
+		enum input_status_t getNextIncomingTransaction(transaction *&);
+		void get_next_random_request(transaction *);
 
-	// friends
-	friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
-};
+	public:
 
+		bool checkForAvailableCommandSlots(const transaction *trans) const;	
+		int convert_address(addresses &) const;
+		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
+		const void *moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime);
+		bool enqueue(transaction* trans);
+		void enqueueTimeShift(transaction* trans);
+		input_status_t waitForTransactionToFinish(transaction *trans);
+		double Frequency() const { return system_config.Frequency(); }
+		tick_t nextTick() const;
+		void doPowerCalculation();
+		void run_simulations();
+		void run_simulations2();
+		void run_simulations3();
+
+		// constructors	
+		explicit dramSystem(const dramSettings *settings);
+
+		// friends
+		friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
+	};
+}
 #endif

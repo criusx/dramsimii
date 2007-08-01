@@ -8,6 +8,7 @@
 #include "dramSettings.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 int main(int argc,const char **argv, char *envp[])
 {

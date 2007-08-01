@@ -2,17 +2,17 @@
 #include <string>
 #include <sstream>
 
-#include "globals.h"
-#include "enumTypes.h"
 #include "dramTimingSpecification.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
-ostream &operator<<(ostream &os, const dramTimingSpecification &this_a)
+ostream &DRAMSimII::operator<<(ostream &os, const dramTimingSpecification &this_a)
 {
 	os << "rtrs[" << this_a.t_rtrs << "] ";
 	return os;
 }
+
 
 dramTimingSpecification::dramTimingSpecification(const dramSettings *settings)
 {

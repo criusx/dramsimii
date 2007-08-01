@@ -1,8 +1,9 @@
 #include <iostream>
 
-#include "dramSystem.h"
+#include "dramChannel.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 /// <summary>
 /// find the protocol gap between a command and current system state

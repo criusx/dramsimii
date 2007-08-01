@@ -3,9 +3,9 @@
 #include <cassert>
 
 #include "dramSystem.h"
-#include "globals.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 void dramSystem::run_simulations2()
 {

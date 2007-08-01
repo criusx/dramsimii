@@ -6,19 +6,21 @@
 #include "dramSettings.h"
 #include "globals.h"
 
-class simulationParameters 
+namespace DRAMSimII
 {
-private:
-	int request_count;
-	int input_type;
+	class simulationParameters 
+	{
+	private:
+		int request_count;
+		int input_type;
 
-public:
-	// constructors
-	simulationParameters(std::map<file_io_token_t,std::string> &);
-	simulationParameters(const dramSettings *settings);
+	public:
+		// constructors
+		simulationParameters(std::map<file_io_token_t,std::string> &);
+		simulationParameters(const dramSettings *settings);
 
-	// functions
-	int get_request_count() {return request_count;}
-};
-
+		// functions
+		int get_request_count() {return request_count;}
+	};
+}
 #endif

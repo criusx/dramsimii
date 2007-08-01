@@ -11,6 +11,7 @@
 #include "InputStream.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 inputStream::inputStream(const dramSettings *settings):
 type(settings->inFileType),
@@ -45,10 +46,10 @@ bank_locality(1 / settings->bankCount)
 ///
 /// from the book "Numerical Recipes in C: The Art of Scientific Computing"///
 
-double inputStream::poisson_rng (double xm) const
+float inputStream::poisson_rng (float xm) const
 {	
-	static double sq, alxm, g, oldm = (-1.0);
-	double em, t, y;
+	static float sq, alxm, g, oldm = -1.0F;
+	float em, t, y;
 
 	if (xm < 12.0) 
 	{
@@ -64,7 +65,7 @@ double inputStream::poisson_rng (double xm) const
 			++em;
 			unsigned int j;
 			rand_s(&j);
-			t *= (double)j/(double)UINT_MAX;
+			t *= (float)j/(float)UINT_MAX;
 		} while (t > g);		
 	}
 	else
@@ -82,70 +83,70 @@ double inputStream::poisson_rng (double xm) const
 			do
 			{
 				rand_s(&j);
-				y = tan(PI * (double)j/(double)UINT_MAX);
+				y = tan(PI * (float)j/(float)UINT_MAX);
 				em = sq * y + xm;
 
 			} while (em < 0.0);
 			em = floor(em);
 			t = 0.9 * (1.0 + y*y) * exp(em * alxm - gammaln(em+1.0) -g);
 			rand_s(&j);
-		} while ((double)j/(double)UINT_MAX > t);
+		} while ((float)j/(float)UINT_MAX > t);
 	}
 	return em;
 }
 
-double inputStream::gammaln(const double xx) const
+float inputStream::gammaln(const float xx) const
 {
-	static double cof[6] = 
-	{76.18009172947146, -86.50532032941677,
-	24.01409824083091, -1.231739572450155,
-	0.1208650973866179e-2, -0.5395239384953e-5};
+	static float cof[6] = 
+	{76.18009172947146F, -86.50532032941677F,
+	24.01409824083091F, -1.231739572450155F,
+	0.1208650973866179e-2F, -0.5395239384953e-5F};
 
-	double y = xx;
-	double const x = xx;
-	double tmp = x + 5.5;
+	float y = xx;
+	float x = xx;
+	float tmp = x + 5.5;
 	tmp -= (x+0.5) * log(tmp);
-	double ser = 1.000000000190015;
+	float ser = 1.000000000190015F;
 	for (int j=0; j<=5; j++)
 		ser += cof[j]/++y;
-	return -tmp + log(2.5066282746310005 * ser/x);
+	return -tmp + log(2.5066282746310005F * ser/x);
 
 }
 
-double inputStream::box_muller(double m, double s) const
+float inputStream::box_muller(const float m, const float s) const
 {
-	double w, y1;
-	static double y2;
-	static int use_last = 0;
+	float w, y1;
+	static float y2;
+	static bool use_last = false;
 
 	if (use_last)		        /// use value from previous call
 	{
 		y1 = y2;
-		use_last = 0;
+		use_last = false;
 	}
 	else
 	{
-		double x1, x2;
+		float x1, x2;
 		do 
 		{
 			unsigned int j;
 			rand_s(&j);
-			x1 = 2.0 * (double)j/(double)UINT_MAX - 1.0;
+			x1 = 2.0 * (float)j/(float)UINT_MAX - 1.0;
 			rand_s(&j);
-			x2 = 2.0 * (double)j/(double)UINT_MAX - 1.0;
+			x2 = 2.0 * (float)j/(float)UINT_MAX - 1.0;
 			w = x1 * x1 + x2 * x2;
 		} while ( w >= 1.0 );
 
 		w = sqrt( (-2.0 * log( w ) ) / w );
 		y1 = x1 * w;
 		y2 = x2 * w;
-		use_last = 1;
+		use_last = true;
 	}
 	return floor(m + y1 * s);
 }
 
 
-enum input_status_t inputStream::get_next_bus_event(busEvent &this_e)
+enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 {	
 	enum file_io_token_t control;	
 	string input;	

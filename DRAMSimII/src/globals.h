@@ -25,13 +25,11 @@ To do list:
 #define TICK_T_MAX LLONG_MAX
 
 #include <iostream>
+#include <sstream>
 #include <map>
 #include <boost/iostreams/filtering_stream.hpp>
 
-#include "addresses.h"
-#include "command.h"
 #include "enumTypes.h"
-#include "transaction.h"
 
 // this is to take care of some nonstandard differences that arise due to having different platforms
 // check ISO24731 for details on what rand_s() will be
@@ -68,48 +66,56 @@ To do list:
 
 //#define DEBUG_FLAG_2
 
-unsigned inline log2(unsigned input)
+// global vars and functions
+namespace DRAMSimII
 {
-	int l2 = 0;
-	for (input >>= 1; input > 0; input >>= 1)
+	// class forward declarations
+	class command;
+	class addresses;
+	class transaction;
+	class dramSystem;
+	class dramChannel;
+
+	// overloaded insertion operator functions for printing various aspects of the dram system
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::command_type_t &);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::command &);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::addresses &);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::transaction *&);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::address_mapping_scheme_t &);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::transaction_type_t );
+
+	// will compute log2(n)=x for any n, where n=2**x
+	unsigned inline log2(unsigned input)
 	{
-		l2++;
+		int l2 = 0;
+		for (input >>= 1; input > 0; input >>= 1)
+		{
+			l2++;
+		}
+		return l2;
 	}
-	return l2;
+
+	// converts a string to a number using stringstreams
+	template <class T>
+	bool toNumeric(T& t, const std::string& s, std::ios_base& (*f)(std::ios_base&))
+	{
+		std::istringstream iss(s);
+		return !(iss >> f >> t).fail();
+	}	
+
+	// global var forward
+	extern boost::iostreams::filtering_ostream outStream;
+
+	// converts a string to a file_io_token
+	file_io_token_t dramTokenizer(const std::string &);
+	file_io_token_t fileIOToken(const unsigned char *input);
+
+	// converts a string to its corresponding magnitude representation
+	double ascii2multiplier(const std::string &);
+
+	// maps the inputs to file_io_tokens and corresponding strings to simplify initialization
+	void create_input_map(int ,const char **,std::map<file_io_token_t, std::string> &);
+	void create_input_map_from_input_file(std::map<file_io_token_t, std::string> &,std::ifstream &);
 }
-
-#include <sstream>
-template <class T>
-bool toNumeric(T& t, const std::string& s, std::ios_base& (*f)(std::ios_base&))
-{
-	std::istringstream iss(s);
-	return !(iss >> f >> t).fail();
-}
-
-class command;
-class addresses;
-class transaction;
-
-// overloaded insertion operator functions for printing various aspects of the dram system
-std::ostream &operator<<(std::ostream &, const command_type_t &);
-std::ostream &operator<<(std::ostream &, const command &);
-std::ostream &operator<<(std::ostream &, const addresses &);
-std::ostream &operator<<(std::ostream &, const transaction *&);
-std::ostream &operator<<(std::ostream &, const address_mapping_scheme_t &);
-std::ostream &operator<<(std::ostream &, const transaction_type_t );
-
-// global var forward
-extern boost::iostreams::filtering_ostream outStream;
-
-// converts a string to a file_io_token
-file_io_token_t dramTokenizer(const std::string &);
-file_io_token_t fileIOToken(const unsigned char *input);
-
-// converts a string to its corresponding magnitude representation
-double ascii2multiplier(const std::string &);
-
-// maps the inputs to file_io_tokens and corresponding strings to simplify initialization
-void create_input_map(int ,const char **,std::map<file_io_token_t, std::string> &);
-void create_input_map_from_input_file(std::map<file_io_token_t, std::string> &,std::ifstream &);
 
 #endif

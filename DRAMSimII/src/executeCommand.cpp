@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "rank_c.h"
-#include "dramSystem.h"
+#include "dramChannel.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 /// <summary>
 /// Updates the channel time to what it would be had this command been executed

@@ -5,12 +5,10 @@
 #include <iostream>
 #include <string>
 
-#include "enumTypes.h"
-#include "globals.h"
 #include "dramSettings.h"
 
-
 using namespace std;
+using namespace DRAMSimII;
 
 dramSettings::dramSettings(const int argc, const char **argv)
 {

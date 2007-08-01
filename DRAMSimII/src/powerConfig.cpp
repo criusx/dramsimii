@@ -6,6 +6,7 @@
 #include "powerConfig.h"
 
 using namespace std;
+using namespace DRAMSimII;
 
 powerConfig::powerConfig(const dramSettings *settings):
 VDD(settings->VDD),

@@ -1,5 +1,7 @@
 #include "rank_c.h"
 
+using namespace DRAMSimII;
+
 rank_c::rank_c(const dramSettings *settings):
 bankCount(settings->bankCount),
 last_bank_id(settings->bankCount - 1),
