@@ -41,11 +41,11 @@ namespace DRAMSimII
 		//functions
 		void read_dram_config_from_file();
 		enum input_status_t transaction2commands(transaction *);
-		int find_oldest_channel() const;	
+		int findOldestChannel() const;	
 		void update_system_time();
 
 		enum input_status_t getNextIncomingTransaction(transaction *&);
-		void get_next_random_request(transaction *);
+		void getNextRandomRequest(transaction *);
 
 	public:
 

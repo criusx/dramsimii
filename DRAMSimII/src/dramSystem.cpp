@@ -30,30 +30,31 @@ tick_t dramSystem::nextTick() const
 	tick_t nextWake = TICK_T_MAX;
 
 	// find the next time to wake from among all the channels
-	for (unsigned j = 0; j < channel.size(); j++)
+	for (vector<dramChannel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
 		// first look for transactions
-		if (transaction *nextTrans = channel[j].read_transaction())
+		if (transaction *nextTrans = currentChan->read_transaction())
 		{
 			// make sure it can finish
-			int tempGap = max(1,(int)(nextTrans->enqueueTime - channel[j].get_time()) + channel[j].getTimingSpecification().t_buffer_delay); 
+			int tempGap = max(1,(int)(nextTrans->enqueueTime - currentChan->get_time()) + currentChan->getTimingSpecification().t_buffer_delay); 
 
-			assert(tempGap <= channel[j].getTimingSpecification().t_buffer_delay );
+			assert(nextTrans->enqueueTime <= currentChan->get_time());
+			assert(tempGap <= currentChan->getTimingSpecification().t_buffer_delay );
 			// whenever the next transaction is ready and there are available slots for the R/C/P commands
-			if ((tempGap + channel[j].get_time() < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
+			if ((tempGap + currentChan->get_time() < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
 			{
-				nextWake = tempGap + channel[j].get_time();
+				nextWake = tempGap + currentChan->get_time();
 			}
 		}
 
 		// then check to see when the next command occurs
-		if (command *tempCommand = channel[j].readNextCommand())
+		if (command *tempCommand = currentChan->readNextCommand())
 		{
-			int tempGap = channel[j].minProtocolGap(tempCommand);
+			int tempGap = currentChan->minProtocolGap(tempCommand);
 
-			if (tempGap + channel[j].get_time() < nextWake)
+			if (tempGap + currentChan->get_time() < nextWake)
 			{
-				nextWake = tempGap + channel[j].get_time();
+				nextWake = tempGap + currentChan->get_time();
 			}
 		}
 	}
@@ -494,7 +495,7 @@ void dramSystem::update_system_time()
 }
 
 
-void dramSystem::get_next_random_request(transaction *this_t)
+void dramSystem::getNextRandomRequest(transaction *this_t)
 {
 	if (input_stream.getType() == RANDOM)
 	{
@@ -617,7 +618,7 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 		switch (input_stream.getType())
 		{
 		case RANDOM:
-			get_next_random_request(temp_t);
+			getNextRandomRequest(temp_t);
 			break;
 		case K6_TRACE:
 		case MASE_TRACE:
@@ -737,7 +738,7 @@ channel(system_config.chan_count,
 	}
 }
 
-int dramSystem::find_oldest_channel() const
+int dramSystem::findOldestChannel() const
 {
 	int oldest_chan_id = 0;
 	tick_t oldest_time = channel[0].get_time();

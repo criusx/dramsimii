@@ -378,7 +378,7 @@ void dramSystem::run_simulations()
 				// tried to stuff req in channel queue, stalled, so try to drain channel queue first 
 				// and drain it completely 
 				// unfortunately, we may have to drain another channel first. 
-				int oldest_chan_id = find_oldest_channel();
+				int oldest_chan_id = findOldestChannel();
 				transaction *temp_t = channel[oldest_chan_id].get_transaction();
 
 #ifdef DEBUG_TRANSACTION
