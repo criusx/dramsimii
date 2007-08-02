@@ -73,7 +73,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libxml2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Users\CriuS\Work\boost\bin.v2\libs\iostreams\build\zlib\msvc-8.0\debug\threading-multi&quot;;&quot;C:\Users\CriuS\Work\boost\bin.v2\libs\iostreams\build\bzip2\msvc-8.0\debug\threading-multi&quot;;&quot;C:\Users\CriuS\Work\boost\bin.v2\libs\iostreams\build\msvc-8.0\debug\threading-multi&quot;;C:\Users\CriuS\Work\boost\libs;&quot;C:\Users\CriuS\Work\libxml2-2.6.27.win32\lib&quot;;&quot;C:\temp\zlib\zlib-dll\lib&quot;;&quot;C:\temp\boost_1_33_1\bin\boost\libs\iostreams\build\libboost_iostreams.lib\vc-8_0\release\threading-multi&quot;"
+				AdditionalLibraryDirectories="C:\Users\CriuS\Work\boost\bin.v2\libs;&quot;C:\Users\CriuS\Work\libxml2-2.6.27.win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"

@@ -137,13 +137,14 @@ enum transaction_type_t	dramChannel::set_read_write_type(const int rank_id,const
 // calculate the power consumed by this channel during the last epoch
 void dramChannel::doPowerCalculation()
 {	
-	for (std::vector<rank_c>::const_iterator k = rank.begin(); k != rank.end(); k++)
+	for (std::vector<rank_c>::iterator k = rank.begin(); k != rank.end(); k++)
 	{
 		tick_t totalRAS = 1;
-		for (std::vector<bank_c>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
+		for (std::vector<bank_c>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
 			// Psys(ACT)
-			totalRAS += l->RASCount;
+			totalRAS += (l->RASCount - l->previousRASCount);
+			l->previousRASCount = l->RASCount;
 		}
 		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 		cerr << "Psys(ACT) " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) << endl;
