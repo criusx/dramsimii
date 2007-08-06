@@ -212,7 +212,8 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 
 	outStream << "0x" << std::hex << pkt->getAddr() << endl;
 
-	cerr << "0x" << std::hex << pkt->getSize() << endl;
+	if (pkt->getSize() != 0x40)
+		cerr << "0x" << std::hex << pkt->getSize() << endl;
 
 	// any packet which doesn't need a response and isn't a write
 	if (!pkt->needsResponse() && !pkt->isWrite())
