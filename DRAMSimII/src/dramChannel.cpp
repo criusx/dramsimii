@@ -77,7 +77,7 @@ void dramChannel::initRefreshQueue(const unsigned rowCount,
 	int count = 0;
 
 	for (int i = rowCount - 1; i >= 0; i--)
-		for (size_type j = rank.size() - 1; j >= 0; j--)
+		for (std::vector::size_type j = rank.size() - 1; j >= 0; j--)
 		{
 			refreshQueue.read(count)->arrival_time = count * step;
 			refreshQueue.read(count)->type = AUTO_REFRESH_TRANSACTION;
