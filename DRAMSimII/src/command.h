@@ -42,6 +42,7 @@ namespace DRAMSimII
 	public:
 		explicit command();
 		explicit command(const command &);
+		explicit command(const command *);
 		explicit command(const addresses address, const command_type_t commandType, const tick_t enqueueTime, transaction *hostTransaction, const bool postedCAS);
 		explicit command(const addresses address, const command_type_t commandType, const tick_t enqueueTime, transaction *hostTransaction, const bool postedCAS, const int length);
 		void *operator new(size_t size);

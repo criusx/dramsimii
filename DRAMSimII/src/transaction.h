@@ -30,6 +30,7 @@ namespace DRAMSimII
 		// constructors
 		explicit transaction();
 		explicit transaction(const int,const  tick_t,const int,const unsigned long long, const void *);
+		explicit transaction(const transaction *rs);
 		friend std::ostream &operator<<(std::ostream &, const transaction *);
 
 		void *operator new(size_t size);

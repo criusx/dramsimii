@@ -17,6 +17,7 @@ namespace DRAMSimII
 {
 	class dramChannel
 	{
+		// members
 	private:
 		tick_t time;						// channel time, allow for channel concurrency	
 		std::vector<rank_c> rank;			// vector of the array of ranks
@@ -68,6 +69,9 @@ namespace DRAMSimII
 		explicit dramChannel();	
 		explicit dramChannel(const dramSettings *settings);
 		dramChannel(const dramChannel &);
+
+		// operator overloads
+		dramChannel& operator =(const dramChannel &rs);
 
 
 		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }

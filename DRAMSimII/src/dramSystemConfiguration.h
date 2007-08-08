@@ -48,6 +48,7 @@ namespace DRAMSimII
 		// constructors
 		explicit dramSystemConfiguration(std::map<file_io_token_t,std::string> &);
 		explicit dramSystemConfiguration(const dramSettings *settings);
+		explicit dramSystemConfiguration(const dramSystemConfiguration *rhs);
 
 		// accessors
 		command_ordering_algorithm_t getCommandOrderingAlgorithm() const { return command_ordering_algorithm; }

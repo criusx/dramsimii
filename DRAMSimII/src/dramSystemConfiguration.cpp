@@ -41,6 +41,42 @@ read_percentage(settings->readPercentage),
 short_burst_ratio(settings->shortBurstRatio)
 {}
 
+
+dramSystemConfiguration::dramSystemConfiguration(const dramSystemConfiguration *rhs):
+dram_type(rhs->dram_type),
+row_buffer_management_policy(rhs->row_buffer_management_policy),
+auto_precharge(rhs->auto_precharge),
+addr_mapping_scheme(rhs->addr_mapping_scheme),
+datarate(rhs->datarate),
+refresh_time(rhs->refresh_time),
+read_write_grouping(rhs->read_write_grouping),
+refresh_policy(rhs->refresh_policy),
+seniority_age_limit(rhs->seniority_age_limit),
+posted_cas(rhs->posted_cas),
+clock_granularity(rhs->clock_granularity),
+row_count(rhs->row_count),
+cachelines_per_row(rhs->cachelines_per_row),
+col_count(rhs->col_count),
+col_size(rhs->col_size),
+row_size(rhs->row_size),
+cacheline_size(rhs->cacheline_size),
+// any of these really needed?
+history_queue_depth(rhs->history_queue_depth),
+completion_queue_depth(rhs->completion_queue_depth),
+transaction_queue_depth(rhs->transaction_queue_depth),
+event_queue_depth(rhs->event_queue_depth),
+per_bank_queue_depth(rhs->per_bank_queue_depth),
+chan_count(rhs->chan_count),
+rank_count(rhs->rank_count),
+bank_count(rhs->bank_count),
+refresh_queue_depth(rhs->refresh_queue_depth),
+//
+command_ordering_algorithm(rhs->command_ordering_algorithm),
+config_type(rhs->config_type),
+read_percentage(rhs->read_percentage),
+short_burst_ratio(rhs->short_burst_ratio)
+{}
+
 /// Contains all of the configuration information.
 /// Constructor for the dram_system_configuration class
 dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &parameter)
@@ -211,7 +247,7 @@ dramSystemConfiguration::dramSystemConfiguration(map<file_io_token_t,string> &pa
 		temp2 >> row_size;
 	}
 	else
-		row_size = INVALID;
+		row_size = 0;
 
 	if ((temp=parameter.find(cacheline_size_token))!=parameter.end())
 	{

@@ -34,6 +34,7 @@ namespace DRAMSimII
 	public: 
 		// constructors	
 		inputStream(const dramSettings *settings);
+		
 
 		// functions
 		float box_muller(float, float) const;

@@ -20,6 +20,18 @@ addr(),
 originalTransaction(0)
 {}
 
+transaction::transaction(const transaction *rs):
+event_no(rs->event_no),
+type(rs->type),
+status(rs->status),
+length(rs->length),
+arrival_time(rs->arrival_time),
+enqueueTime(rs->enqueueTime),
+completion_time(rs->completion_time),
+addr(rs->addr),
+originalTransaction(rs->originalTransaction)
+{}
+
 transaction::transaction(const int attribute,const tick_t enqueueTime,const int Size,const unsigned long long address, const void *originalTrans):
 event_no(0),
 status(0),

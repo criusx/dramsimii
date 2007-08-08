@@ -62,6 +62,23 @@ tick_t dramSystem::nextTick() const
 	return nextWake;
 }
 
+dramSystem& dramSystem::operator =(const DRAMSimII::dramSystem &rs)
+{
+	if (this == &rs)
+	{
+		return *this;
+	}
+	system_config = rs.system_config;
+	channel = rs.channel;
+	sim_parameters = rs.sim_parameters;
+	statistics = rs.statistics;
+	//input_stream = rs.input_stream;
+	time = rs.time;
+	event_q = rs.event_q;
+
+	return *this;
+}
+
 int dramSystem::convert_address(addresses &this_a) const
 {
 	unsigned input_a;
@@ -100,7 +117,7 @@ int dramSystem::convert_address(addresses &this_a) const
 	// strip away the byte address portion
 	input_a = this_a.phys_addr >> col_size_depth;
 
-	unsigned int address = static_cast<unsigned>(this_a.phys_addr);
+	//unsigned int address = static_cast<unsigned>(this_a.phys_addr);
 
 	unsigned cacheline_size;
 	unsigned cacheline_size_depth;	/* address bit depth */
@@ -575,7 +592,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 			this_t->length = 8;
 		}
 
-		int time_gap = 0;
+		//int time_gap = 0;
 
 		while (true)
 		{

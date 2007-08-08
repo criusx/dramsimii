@@ -216,8 +216,11 @@ namespace DRAMSimII
 			return read(count - 1);
 		}
 
-		T &operator=(const queue<T> &right)
+		queue<T> &operator=(const queue<T> &right)
 		{
+			if (&right == this)
+				return *this;
+
 			while (count > 0)
 			{
 				delete dequeue();
@@ -227,10 +230,12 @@ namespace DRAMSimII
 			head = tail = 0;
 			count = right.count;
 			depth = right.depth;
-			while (right.count > 0)
+
+			for (unsigned i = 0; i < right.depth; i++)
 			{
-				enqueue(right.dequeue());
+				enqueue(right.read(i));
 			}
+			return *this;
 		}
 	};
 }

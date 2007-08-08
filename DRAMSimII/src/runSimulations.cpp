@@ -64,7 +64,7 @@ void dramSystem::run_simulations3()
 		
 
 		tick_t nearFinish = 0;
-		const void *error;
+		//const void *error;
 
 		nextArrival = min(input_t->arrival_time,nextArrival);
 		// as long as transactions keep happening prior to this time

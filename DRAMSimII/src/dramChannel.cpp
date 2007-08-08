@@ -77,7 +77,7 @@ void dramChannel::initRefreshQueue(const unsigned rowCount,
 	int count = 0;
 
 	for (int i = rowCount - 1; i >= 0; i--)
-		for (int j = rank.size() - 1; j >= 0; j--)
+		for (size_type j = rank.size() - 1; j >= 0; j--)
 		{
 			refreshQueue.read(count)->arrival_time = count * step;
 			refreshQueue.read(count)->type = AUTO_REFRESH_TRANSACTION;
@@ -134,7 +134,7 @@ enum transaction_type_t	dramChannel::set_read_write_type(const int rank_id,const
 		return WRITE_TRANSACTION;
 }
 
-// calculate the power consumed by this channel during the last epoch
+// calculate the power consumed by all channels during the last epoch
 void dramChannel::doPowerCalculation()
 {	
 	for (std::vector<rank_c>::iterator k = rank.begin(); k != rank.end(); k++)
@@ -147,7 +147,28 @@ void dramChannel::doPowerCalculation()
 			l->previousRASCount = l->RASCount;
 		}
 		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
-		cerr << "Psys(ACT) " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) << endl;
+		cerr << "Psys(ACT) " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
+			"(" << totalRAS << ")" << endl;
 		powerModel.lastCalculation = time;
 	}
+}
+
+dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
+{
+	if (this == &rs)
+	{
+		return *this;
+	}
+	time = rs.time;
+	rank = rs.rank;
+	refresh_row_index = rs.refresh_row_index;
+	last_rank_id = rs.last_rank_id;
+	timing_specification = rs.timing_specification;
+	transaction_q = rs.transaction_q;
+	refreshQueue = rs.refreshQueue;
+	history_q = rs.history_q;
+	completion_q = rs.completion_q;
+	system_config = new dramSystemConfiguration(rs.system_config);
+	powerModel = rs.powerModel;
+	algorithm = rs.algorithm;
 }
