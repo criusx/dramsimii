@@ -62,6 +62,7 @@ namespace DRAMSimII
 		transaction *get_oldest_completed() { return completion_q.dequeue(); }
 		command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue
 		unsigned getTransactionQueueCount() const { return transaction_q.get_count(); }
+		unsigned getTransactionQueueDepth() const { return transaction_q.get_depth(); }
 		void record_command(command *);
 		void initRefreshQueue(const unsigned, const unsigned, const unsigned); // init the RefreshQueue using selected algorithm
 

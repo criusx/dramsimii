@@ -161,6 +161,11 @@ namespace DRAMSimII
 			return count;
 		}
 
+		inline unsigned get_depth() const
+		{
+			return depth;
+		}
+
 		T *read(const unsigned offset) const
 		{
 			if((offset >= count) || (offset < 0))

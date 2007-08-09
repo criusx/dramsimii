@@ -190,8 +190,8 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
 
-	static tick_t lastPowerCalculationTime = 0;
-	if (currentMemCycle - lastPowerCalculationTime > 5000000)
+	static tick_t lastPowerCalculationTime = 5000000;
+	if (lastPowerCalculationTime-- == 0)
 	{
 		memory->ds->doPowerCalculation();
 		lastPowerCalculationTime = currentMemCycle;
@@ -273,8 +273,8 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			//pkt->result = Packet::Nacked;
 			assert(pkt->needsResponse());
 			static tick_t numberOfDelays = 0;
-			if (numberOfDelays % 100000 == 0)
-				cerr << "\r" << numberOfDelays++;
+			if (++numberOfDelays % 100000 == 0)
+				cerr << "\r" << numberOfDelays;
 			//pkt->makeTimingResponse();
 			//memoryPort->doSendTiming(pkt,0);
 			delete trans;

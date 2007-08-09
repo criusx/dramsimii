@@ -97,6 +97,9 @@ bool dramSystem::enqueue(transaction *trans)
 
 	if (channel[trans->addr.chan_id].enqueue(trans) == FAILURE)
 	{
+#ifdef M5DEBUG
+		outStream << "!+T(" << channel[trans->addr.chan_id].getTransactionQueueCount() << "/" << channel[trans->addr.chan_id].getTransactionQueueDepth() << ")" << endl;
+#endif
 		return false;
 	}
 	else
@@ -112,7 +115,7 @@ bool dramSystem::enqueue(transaction *trans)
 /// Move time forward to ensure that the command was successfully enqueued
 void dramSystem::enqueueTimeShift(transaction* trans)
 {
-	const int chan = trans->addr.chan_id;
+	const unsigned chan = trans->addr.chan_id;
 
 	// as long 
 	while (channel[chan].enqueue(trans) == FAILURE)
