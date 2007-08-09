@@ -62,6 +62,8 @@ To do list:
 
 //#define DEBUG_RAND
 
+#define DEBUG
+
 //#define DEBUG_MIN_PROTOCOL_GAP
 
 //#define DEBUG_FLAG_2
