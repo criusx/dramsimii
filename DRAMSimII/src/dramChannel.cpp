@@ -171,4 +171,5 @@ dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
 	system_config = new dramSystemConfiguration(rs.system_config);
 	powerModel = rs.powerModel;
 	algorithm = rs.algorithm;
+	return *this;
 }

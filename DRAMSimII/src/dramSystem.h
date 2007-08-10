@@ -39,11 +39,9 @@ namespace DRAMSimII
 		queue<event> event_q;	// pending event queue	
 
 		//functions
-		void read_dram_config_from_file();
-		enum input_status_t transaction2commands(transaction *);
+		void read_dram_config_from_file();		
 		int findOldestChannel() const;	
 		void update_system_time();
-
 		enum input_status_t getNextIncomingTransaction(transaction *&);
 		void getNextRandomRequest(transaction *);
 
@@ -51,8 +49,7 @@ namespace DRAMSimII
 
 		bool checkForAvailableCommandSlots(const transaction *trans) const;	
 		int convert_address(addresses &) const;
-		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
-		const void *moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime);
+		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);		
 		bool enqueue(transaction* trans);
 		void enqueueTimeShift(transaction* trans);
 		input_status_t waitForTransactionToFinish(transaction *trans);

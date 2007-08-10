@@ -753,6 +753,11 @@ channel(system_config.chan_count,
 	{
 		i->setSystemConfig(&system_config);
 	}
+	// set the channelID so that each channel may know its ordinal value
+	for (unsigned i = 0; i < settings->channelCount; i++)
+	{
+		channel[i].setChannelID(i);
+	}
 }
 
 int dramSystem::findOldestChannel() const

@@ -25,12 +25,10 @@ void dramSystem::run_simulations2()
 			// record stats
 			statistics.collect_transaction_stats(input_t);
 
-			int chan = input_t->addr.chan_id;
-
 			// first try to update the channel so that it is one command past this
 			// transaction's start time
 			tick_t finishTime;
-			while (moveChannelToTime(input_t->arrival_time,chan,&finishTime)) {;}
+			while (channel[input_t->addr.chan_id].moveChannelToTime(input_t->arrival_time,&finishTime)) {;}
 
 			// attempt to enqueue, if there is no room, move time forward until there is
 			enqueueTimeShift(input_t);
@@ -94,7 +92,10 @@ void dramSystem::run_simulations3()
 /// Return true if there was room, else false
 bool dramSystem::enqueue(transaction *trans)
 {
+	// map the PA of this transaction to this system
+	convert_address(trans->addr);
 
+	// attempt to insert the transaction into the per-channel transaction queue
 	if (channel[trans->addr.chan_id].enqueue(trans) == FAILURE)
 	{
 #ifdef M5DEBUG
@@ -107,6 +108,7 @@ bool dramSystem::enqueue(transaction *trans)
 #ifdef M5DEBUG
 		outStream << "+T(" << trans->addr.chan_id << ")[" << channel[trans->addr.chan_id].getTransactionQueueCount() << "]" << endl;
 #endif
+		// if the transaction was successfully enqueued, set its enqueue time
 		trans->enqueueTime = channel[trans->addr.chan_id].get_time();
 		return true;
 	}
@@ -125,7 +127,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 		if(temp_t != NULL)
 		{
 			// if it can't fit in the transaction queue, drain the queue
-			while (transaction2commands(temp_t) != SUCCESS)
+			while (channel[temp_t->addr.chan_id].transaction2commands(temp_t))
 			{
 				command *temp_c = channel[chan].getNextCommand();
 
@@ -171,33 +173,34 @@ const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *tran
 #if M5DEBUG
 	outStream << "move forward until: " << endTime << endl;
 #endif
-	for (unsigned i = 0; i < channel.size(); i++)
+	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
-		const void *finishedTrans = moveChannelToTime(endTime, i, transFinishTime);
+		const void *finishedTrans = i->moveChannelToTime(endTime, transFinishTime);
 		if (finishedTrans)
 			return finishedTrans;
 	}
+	update_system_time();
 	return NULL;
 }
 
 /// Moves the specified channel to at least the time given
-const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, tick_t *transFinishTime)
+const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFinishTime)
 {
 	bool processingTransaction = false;
 
-	while (channel[chan].get_time() < endTime)
+	while (time < endTime)
 	{
 		// attempt first to move transactions out of the transactions queue and
 		// convert them into commands after a fixed amount of time		
-		transaction *temp_t = channel[chan].read_transaction();		
+		transaction *temp_t = read_transaction();		
 
-		if ((temp_t) && (channel[chan].get_time() - temp_t->enqueueTime < channel[chan].getTimingSpecification().t_buffer_delay))
+		if ((temp_t) && (time - temp_t->enqueueTime < timing_specification.t_buffer_delay))
 		{
 #ifdef M5DEBUG
 			outStream << "resetting: ";
-			outStream << channel[chan].get_time() << " ";
+			outStream << time << " ";
 			outStream << temp_t->enqueueTime << " ";
-			outStream << channel[chan].getTimingSpecification().t_buffer_delay << endl;
+			outStream << timing_specification.t_buffer_delay << endl;
 #endif
 			temp_t = NULL; // not enough time has passed
 			processingTransaction = true;
@@ -209,56 +212,56 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 		if ((temp_t == NULL) || (transaction2commands(temp_t) != SUCCESS))
 		{			
 			// move time up by executing commands
-			command *temp_c = channel[chan].readNextCommand();
+			command *temp_c = readNextCommand();
 
 			if (temp_c == NULL)
 			{
 				// the transaction queue and all the per bank queues are empty,
 				// so just move time forward to the point where the transaction starts
 				// or move time forward until the transaction is ready to be decoded
-				if ((processingTransaction) && (channel[chan].get_time() + channel[chan].getTimingSpecification().t_buffer_delay <= endTime))
+				if ((processingTransaction) && (time + timing_specification.t_buffer_delay <= endTime))
 				{
 					processingTransaction = false;
 					// FIXME: this should move time forward until the trans can be successfully converted
-					channel[chan].set_time(channel[chan].get_time() + channel[chan].getTimingSpecification().t_buffer_delay);
+					time = time + timing_specification.t_buffer_delay;
 				}
 				else
 				{
-					channel[chan].set_time(endTime);				
+					time = endTime;
 				}
 			}
 			else
 			{
-				int min_gap = channel[chan].minProtocolGap(temp_c);
+				int min_gap = minProtocolGap(temp_c);
 #ifdef M5DEBUG
 				outStream << "mg: " << min_gap << endl;
 #endif
 
-				if (min_gap + channel[chan].get_time() <= endTime)
+				if (min_gap + time <= endTime)
 				{
-					temp_c = channel[chan].getNextCommand();
+					temp_c = getNextCommand();
 
-					channel[chan].executeCommand(temp_c, min_gap);
+					executeCommand(temp_c, min_gap);
 
 #ifdef DEBUG_COMMAND
 					outStream << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
-					update_system_time(); 
+					
 
-					transaction *completed_t = channel[chan].get_oldest_completed();
+					transaction *completed_t = completion_q.dequeue();
 
 					if (completed_t != NULL)
 					{
 #ifdef DEBUG_TRANSACTION
-						outStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
+						outStream << "CH[" << setw(2) << channelID << "] " << completed_t << endl;
 #endif
 						// reuse the refresh transactions
 						if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 						{
-							completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
+							completed_t->arrival_time += 7 / 8 * system_config->refresh_time;
 							//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
-							channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
+							enqueueRefresh(completed_t);
 						}
 						else // return what was pointed to
 						{
@@ -279,7 +282,7 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 				}
 				else
 				{
-					channel[chan].set_time(endTime);
+					time = endTime;
 				}
 			}
 		}
@@ -287,15 +290,15 @@ const void *dramSystem::moveChannelToTime(const tick_t endTime, const int chan, 
 		{
 			//channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
 			//update_system_time(); 
-			transaction *completedTransaction = channel[chan].get_transaction();
+			transaction *completedTransaction = get_transaction();
 			assert(temp_t == completedTransaction);
-			outStream << "T->C [" << channel[chan].get_time() << "] Q[" << channel[chan].getTransactionQueueCount() << "]" << endl;
+			outStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << endl;
 		}
 	}
-	assert(channel[chan].get_time() == endTime);
+	assert(time == endTime);
 	*transFinishTime = endTime;
 #ifdef M5DEBUG
-	outStream << "ch[" << chan << "] @ " << std::dec << channel[chan].get_time() << endl;
+	outStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
 #endif
 	return NULL;
 }
@@ -312,7 +315,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 
 		// if there were no transactions left in the queue or there was not
 		// enough room to split the transaction into commands
-		if ((temp_t == NULL) || (transaction2commands(temp_t) != SUCCESS))
+		if (!temp_t || !channel[temp_t->addr.chan_id].transaction2commands(temp_t))
 		{
 			// move time up by executing commands
 			command *temp_c = channel[chan].getNextCommand();
@@ -394,7 +397,7 @@ void dramSystem::run_simulations()
 					//bank_id = temp_t->addr.bank_id;
 					//bank_q = (((channel[oldest_chan_id]).rank[temp_t->addr.rank_id]).bank[bank_id]).per_bank_q;
 					// if it can't fit in the transaction queue, drain the queue
-					while(transaction2commands(temp_t) != SUCCESS)
+					while (!channel[temp_t->addr.chan_id].transaction2commands(temp_t))
 					{
 						command *temp_c = channel[oldest_chan_id].getNextCommand();
 						int min_gap = channel[input_t->addr.chan_id].minProtocolGap(temp_c);

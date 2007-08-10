@@ -97,18 +97,21 @@ bool dramSystem::checkForAvailableCommandSlots(const transaction *trans) const
 /// Functionality similar to that of the memory controller moving between the
 /// transaction queue and the per bank command queues 
 /// </summary>
-enum input_status_t dramSystem::transaction2commands(transaction *this_t) 
+bool dramChannel::transaction2commands(transaction *this_t) 
 {
 	if (this_t == NULL)
 	{
-		return FAILURE;
+		return false;
 	}
-	queue<command> *bank_q = &(channel[this_t->addr.chan_id].getRank(this_t->addr.rank_id).bank[this_t->addr.bank_id].per_bank_q);
+// ensure that this transaction belongs on this channel
+	assert (this_t->addr.chan_id == channelID);
+
+	queue<command> *bank_q = &(rank[this_t->addr.rank_id].bank[this_t->addr.bank_id].per_bank_q);
 	
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
 	// RAS, CAS+Precharge
-	if (system_config.row_buffer_management_policy == CLOSE_PAGE)
+	if (system_config->row_buffer_management_policy == CLOSE_PAGE)
 	{
 		int empty_command_slot_count = bank_q->freecount();
 
@@ -116,51 +119,51 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		if (this_t->type == AUTO_REFRESH_TRANSACTION)
 		{
 			// check to see if every per bank command queue has room for one command
-			rank_c &rank = channel[this_t->addr.chan_id].getRank(this_t->addr.rank_id);
+			rank_c &currentRank = rank[this_t->addr.rank_id];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
-			for (vector<bank_c>::iterator i = rank.bank.begin(); i != rank.bank.end(); i++)
+			for (vector<bank_c>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
 				if (i->per_bank_q.freecount() < 1)
-					return FAILURE;
+					return false;
 			}
 			// then add the command to all queues
-			for (vector<bank_c>::iterator i = rank.bank.begin(); i != rank.bank.end(); i++)
+			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				i->per_bank_q.enqueue(new command(this_t->addr, REFRESH_ALL_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
+				i->per_bank_q.enqueue(new command(this_t->addr, REFRESH_ALL_COMMAND,time,this_t,system_config->posted_cas));
 			}
 		}
 		// every transaction translates into at least two commands
 		else if (empty_command_slot_count < 2)
 		{
-			return FAILURE;
+			return false;
 		}
 		// or three commands if the CAS+Precharge command is not available
-		else if ((system_config.auto_precharge == false) && (empty_command_slot_count < 3))
+		else if ((system_config->auto_precharge == false) && (empty_command_slot_count < 3))
 		{
-			return FAILURE;
+			return false;
 		}
 		// if there is enough space to insert the commands that this transaction becomes
 		else
 		{
 			// command one, the RAS command to activate the row
-			bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,channel[this_t->addr.chan_id].get_time(),NULL,system_config.posted_cas));
+			bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,time,NULL,system_config->posted_cas));
 
 			// command two, CAS or CAS+Precharge
 
 			// if CAS+Precharge is unavailable
-			if (system_config.auto_precharge == false)
+			if (system_config->auto_precharge == false)
 			{
 				switch (this_t->type)
 				{
 				case WRITE_TRANSACTION:					
-					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config->posted_cas));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config->posted_cas));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << this_t->type;
@@ -170,21 +173,21 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 
 				// command three, the Precharge command
 				// only one of these commands has a pointer to the original transaction, thus NULL
-				bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),NULL,system_config.posted_cas));
+				bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,time,NULL,system_config->posted_cas));
 			}
 			else // precharge is implied, only need two commands
 			{
 				switch(this_t->type)
 				{
 				case WRITE_TRANSACTION:
-					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_AND_PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,CAS_WRITE_AND_PRECHARGE_COMMAND,time,this_t,system_config->posted_cas));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					bank_q->enqueue(new command(this_t->addr,CAS_AND_PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,CAS_AND_PRECHARGE_COMMAND,time,this_t,system_config->posted_cas));
 					break;
 				case PER_BANK_REFRESH_TRANSACTION:
-					bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas));
+					bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,time,this_t,system_config->posted_cas));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << this_t->type;
@@ -197,7 +200,7 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 
 	// open page systems may, in the best case, add a CAS command to an already open row
 	// closing the row and precharging may be delayed
-	else if (system_config.row_buffer_management_policy == OPEN_PAGE)
+	else if (system_config->row_buffer_management_policy == OPEN_PAGE)
 	{
 		int queued_command_count = bank_q->get_count();
 		int empty_command_slot_count = bank_q->freecount();
@@ -216,37 +219,37 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 						return FAILURE;
 
 					if (this_t->type == WRITE_TRANSACTION)
-						bank_q->insert(new command(this_t->addr,CAS_WRITE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length), tail_offset);	/* insert at this location */						
+						bank_q->insert(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config->posted_cas,this_t->length), tail_offset);	/* insert at this location */						
 					else if (this_t->type == READ_TRANSACTION)
-						bank_q->insert(new command(this_t->addr,CAS_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length), tail_offset);	/* insert at this location */
+						bank_q->insert(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config->posted_cas,this_t->length), tail_offset);	/* insert at this location */
 					
-					return SUCCESS;
+					return true;
 				}
 			}
 
 			// even STRICT ORDER allows you to look at the tail of the queue to see if that's the precharge
 			// command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
 
-			if ((system_config.command_ordering_algorithm == STRICT_ORDER) 
-				|| ((int)(channel[this_t->addr.chan_id].get_time() - temp_c->getEnqueueTime()) > system_config.seniority_age_limit))
+			if ((system_config->command_ordering_algorithm == STRICT_ORDER) 
+				|| ((int)(time - temp_c->getEnqueueTime()) > system_config->seniority_age_limit))
 			{
 				bypass_allowed = false;
 			}
 		}
 		if (empty_command_slot_count < 3)
 		{
-			return FAILURE;
+			return false;
 		}
 
-		bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,channel[this_t->addr.chan_id].get_time(),NULL,system_config.posted_cas,this_t->length));
+		bank_q->enqueue(new command(this_t->addr,RAS_COMMAND,time,NULL,system_config->posted_cas,this_t->length));
 
 		if (this_t->type == WRITE_TRANSACTION)
 		{
-			bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length));
+			bank_q->enqueue(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config->posted_cas,this_t->length));
 		}
 		else if ((this_t->type == READ_TRANSACTION) || (this_t->type == IFETCH_TRANSACTION))
 		{
-			bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,channel[this_t->addr.chan_id].get_time(),this_t,system_config.posted_cas,this_t->length));
+			bank_q->enqueue(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config->posted_cas,this_t->length));
 		}
 		else
 		{
@@ -255,12 +258,12 @@ enum input_status_t dramSystem::transaction2commands(transaction *this_t)
 		}
 
 		// last, the precharge command
-		bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,channel[this_t->addr.chan_id].get_time(),NULL,system_config.posted_cas,this_t->length));
+		bank_q->enqueue(new command(this_t->addr,PRECHARGE_COMMAND,time,NULL,system_config->posted_cas,this_t->length));
 	}
 	else
 	{
 		cerr << "Unhandled row buffer management policy" << endl;
-		return FAILURE;
+		return false;
 	}
-	return SUCCESS;
+	return true;
 }

@@ -32,11 +32,14 @@ namespace DRAMSimII
 		dramSystemConfiguration *system_config; // a pointer to common system config values
 		powerConfig powerModel;
 		dramAlgorithm algorithm;
+		unsigned channelID;					// the ordinal value of this channel (0..n)
 
 	public:
 		// functions
+		bool transaction2commands(transaction *);
 		command *getNextCommand();
 		command *readNextCommand() const;
+		const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
 		int minProtocolGap(const command *thisCommand) const;
 		void executeCommand(command *, const int);
 		void doPowerCalculation();
@@ -65,6 +68,7 @@ namespace DRAMSimII
 		unsigned getTransactionQueueDepth() const { return transaction_q.get_depth(); }
 		void record_command(command *);
 		void initRefreshQueue(const unsigned, const unsigned, const unsigned); // init the RefreshQueue using selected algorithm
+		void setChannelID(const unsigned value) { channelID = value; }
 
 		// constructors
 		explicit dramChannel();	
