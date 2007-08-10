@@ -209,8 +209,12 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 		// if there were no transactions left in the queue or there was not
 		// enough room to split the transaction into commands
-		if ((temp_t == NULL) || (transaction2commands(temp_t) != SUCCESS))
-		{			
+		if (!transaction2commands(temp_t))
+		{
+#ifdef M5DEBUG
+			if (temp_t)
+			outStream << "t2c fails" << temp_t << endl;
+#endif
 			// move time up by executing commands
 			command *temp_c = readNextCommand();
 
@@ -290,9 +294,13 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 		{
 			//channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
 			//update_system_time(); 
+
+			// actually remove it from the queue now
 			transaction *completedTransaction = get_transaction();
 			assert(temp_t == completedTransaction);
+#ifdef DEBUG_TRANSACTION
 			outStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << endl;
+#endif
 		}
 	}
 	assert(time == endTime);
@@ -315,7 +323,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 
 		// if there were no transactions left in the queue or there was not
 		// enough room to split the transaction into commands
-		if (!temp_t || !channel[temp_t->addr.chan_id].transaction2commands(temp_t))
+		if (!channel[temp_t->addr.chan_id].transaction2commands(temp_t))
 		{
 			// move time up by executing commands
 			command *temp_c = channel[chan].getNextCommand();

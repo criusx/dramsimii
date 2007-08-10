@@ -49,7 +49,7 @@ bool dramSystem::checkForAvailableCommandSlots(const transaction *trans) const
 	{
 		int queued_command_count = bank_q->get_count();
 		int empty_command_slot_count = bank_q->freecount();
-		
+
 		// look in the bank_q and see if there's a precharge for this row
 		bool bypass_allowed = true;
 		// go from tail to head
@@ -103,11 +103,11 @@ bool dramChannel::transaction2commands(transaction *this_t)
 	{
 		return false;
 	}
-// ensure that this transaction belongs on this channel
+	// ensure that this transaction belongs on this channel
 	assert (this_t->addr.chan_id == channelID);
 
 	queue<command> *bank_q = &(rank[this_t->addr.rank_id].bank[this_t->addr.bank_id].per_bank_q);
-	
+
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
 	// RAS, CAS+Precharge
@@ -222,7 +222,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 						bank_q->insert(new command(this_t->addr,CAS_WRITE_COMMAND,time,this_t,system_config->posted_cas,this_t->length), tail_offset);	/* insert at this location */						
 					else if (this_t->type == READ_TRANSACTION)
 						bank_q->insert(new command(this_t->addr,CAS_COMMAND,time,this_t,system_config->posted_cas,this_t->length), tail_offset);	/* insert at this location */
-					
+
 					return true;
 				}
 			}
