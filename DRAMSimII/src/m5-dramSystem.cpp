@@ -281,7 +281,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			memory->needRetry = true;
 			memory->mostRecentChannel = trans->addr.chan_id;
 #ifdef M5DEBUG
-			outStream << "Wait for retry before sending more to ch[" << trans->addr.chan_id << "]" endl;
+			outStream << "Wait for retry before sending more to ch[" << trans->addr.chan_id << "]" << endl;
 #endif
 			return false;
 		}
