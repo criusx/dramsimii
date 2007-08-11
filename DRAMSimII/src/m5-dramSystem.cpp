@@ -278,7 +278,9 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			// and do not send packets until that time
 			pkt->result = Packet::Nacked;
 			assert(pkt->needsResponse());
+			short dst = pkt->getDest();
 			pkt->setDest(pkt->getSrc());
+			pkt->setSrc(dst);
 			doSendTiming(pkt,0);
 
 			delete trans;
