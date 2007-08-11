@@ -77,7 +77,8 @@ protected:
 	MemPort *memoryPort;
 	// the whole point of the wrapper class
 	DRAMSimII::dramSystem *ds;
-	bool needRetry;
+	bool needRetry; // if the memory system needs to issue a retry statement before any more requests will come in
+	unsigned mostRecentChannel; // the most recent channel that a request was sent to
 	int cpuRatio;
 	void getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop);
 	//virtual Tick calculateLatency(Packet *);

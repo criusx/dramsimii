@@ -61,6 +61,7 @@ namespace DRAMSimII
 		transaction *read_refresh() { return refreshQueue.read_back(); }
 		bool enqueueRefresh(transaction *in) { return refreshQueue.enqueue(in); }
 		bool enqueue(transaction *in) { return transaction_q.enqueue(in); }
+		bool isFull() const { return transaction_q.freecount() == 0; }
 		bool complete(transaction *in) { return completion_q.enqueue(in); }
 		transaction *get_oldest_completed() { return completion_q.dequeue(); }
 		command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue

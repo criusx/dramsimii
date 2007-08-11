@@ -57,7 +57,7 @@ namespace DRAMSimII
 
 			if (preallocate)
 			{      
-				while (enqueue(::new T) == SUCCESS) {}
+				while (enqueue(::new T)) {}
 			}
 			else
 			{
@@ -211,7 +211,7 @@ namespace DRAMSimII
 			}
 		}
 
-		int freecount() const
+		unsigned freecount() const
 		{
 			return depth - count;
 		}

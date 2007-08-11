@@ -197,7 +197,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		lastPowerCalculationTime = currentMemCycle;
 	}
 
-	outStream << "<-!Wake [" << curTick << "]/[" << currentMemCycle << "]";
+	outStream << "extWake [" << curTick << "]/[" << currentMemCycle << "]";
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())
 		outStream << "R ";
@@ -279,8 +279,9 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			//memoryPort->doSendTiming(pkt,0);
 			delete trans;
 			memory->needRetry = true;
+			memory->mostRecentChannel = trans->addr.chan_id;
 #ifdef M5DEBUG
-			outStream << "Wait for retry before sending more" << endl;
+			outStream << "Wait for retry before sending more to ch[" << trans->addr.chan_id << "]" endl;
 #endif
 			return false;
 		}
@@ -293,7 +294,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			assert(next < TICK_T_MAX);
 			if (next < TICK_T_MAX)
 			{
-				outStream << "->Wake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]" << endl;
+				outStream << "schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]" << endl;
 				memory->tickEvent.schedule(memory->getCpuRatio() * next);
 			}
 			return true;
@@ -305,8 +306,8 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 void
 M5dramSystem::TickEvent::process()
 {	
-	tick_t now = curTick / memory->getCpuRatio();
-	outStream << "<-Wake [" << std::dec << curTick << "][" << std::dec << now << "]" << endl;
+	tick_t now = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
+	outStream << "intWake [" << std::dec << curTick << "][" << std::dec << now << "]" << endl;
 
 	// move memory channels to the current time
 	memory->moveDramSystemToTime(now);
@@ -321,18 +322,11 @@ M5dramSystem::TickEvent::process()
 	// nextTick() returns TICK_T_MAX if there is nothing else to wake up for
 	if (next < TICK_T_MAX)
 	{	
-		outStream << "->Wake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]" << endl;
+		outStream << "schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]" << endl;
 		assert(next * memory->getCpuRatio() > curTick);
 		schedule(static_cast<Tick>(next * memory->getCpuRatio()));
 	}
-	if (memory->needRetry)
-	{
-#ifdef M5DEBUG
-		outStream << "Allow retrys" << endl;
-#endif
-		memory->needRetry = false;
-		memory->memoryPort->sendRetry();
-	}
+	
 }
 
 void M5dramSystem::moveDramSystemToTime(tick_t now)
@@ -357,6 +351,15 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 		{
 			delete packet->req;
 			delete packet;
+		}
+		// if there is now room, allow a retry to happen
+		if (needRetry && !ds->isFull(mostRecentChannel))
+		{
+#ifdef M5DEBUG
+			outStream << "Allow retrys" << endl;
+#endif
+			needRetry = false;
+			memoryPort->sendRetry();
 		}
 	}
 }
