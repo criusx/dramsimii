@@ -270,13 +270,13 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		{
 			outStream << "+T fails" << endl;
 			// if the packet did not fit, then send a NACK
-			//pkt->result = Packet::Nacked;
+			pkt->result = Packet::Nacked;
 			assert(pkt->needsResponse());
 			static tick_t numberOfDelays = 0;
 			if (++numberOfDelays % 100000 == 0)
 				cerr << "\r" << numberOfDelays;
 			//pkt->makeTimingResponse();
-			//memoryPort->doSendTiming(pkt,0);
+			memoryPort->doSendTiming(pkt,0);
 			delete trans;
 			memory->needRetry = true;
 			memory->mostRecentChannel = trans->addr.chan_id;
