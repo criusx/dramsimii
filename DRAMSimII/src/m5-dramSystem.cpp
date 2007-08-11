@@ -279,6 +279,9 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			//memoryPort->doSendTiming(pkt,0);
 			delete trans;
 			memory->needRetry = true;
+#ifdef M5DEBUG
+			outStream << "Wait for retry before sending more" << endl;
+#endif
 			return false;
 		}
 		else
@@ -324,6 +327,9 @@ M5dramSystem::TickEvent::process()
 	}
 	if (memory->needRetry)
 	{
+#ifdef M5DEBUG
+		outStream << "Allow retrys" << endl;
+#endif
 		memory->needRetry = false;
 		memory->memoryPort->sendRetry();
 	}

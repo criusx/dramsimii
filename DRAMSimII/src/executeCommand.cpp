@@ -102,6 +102,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		break;
 
 	case REFRESH_ALL_COMMAND:
+
 		this_bank.last_refresh_all_time = time;
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rfc);
 		this_command->getHost()->completion_time = this_command->getCompletionTime();
@@ -128,10 +129,10 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	// transaction complete? if so, put in completion queue
 	// note that the host transaction should only be pointed to by a CAS command
-	// since this is when a transaction is done from the standpoint of the requestor
+	// since this is when a transaction is done from the standpoint of the requester
 	if (this_command->getHost() != NULL) 
 	{
-		if (complete(this_command->getHost()) == FAILURE)
+		if (!complete(this_command->getHost()))
 		{
 			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
 			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;

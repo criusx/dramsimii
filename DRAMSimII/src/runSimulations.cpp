@@ -96,7 +96,7 @@ bool dramSystem::enqueue(transaction *trans)
 	convert_address(trans->addr);
 
 	// attempt to insert the transaction into the per-channel transaction queue
-	if (channel[trans->addr.chan_id].enqueue(trans) == FAILURE)
+	if (!channel[trans->addr.chan_id].enqueue(trans))
 	{
 #ifdef M5DEBUG
 		outStream << "!+T(" << channel[trans->addr.chan_id].getTransactionQueueCount() << "/" << channel[trans->addr.chan_id].getTransactionQueueDepth() << ")" << endl;
@@ -120,7 +120,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 	const unsigned chan = trans->addr.chan_id;
 
 	// as long 
-	while (channel[chan].enqueue(trans) == FAILURE)
+	while (!channel[chan].enqueue(trans))
 	{
 		transaction *temp_t = channel[chan].get_transaction();
 
@@ -203,6 +203,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 			outStream << timing_specification.t_buffer_delay << endl;
 #endif
 			temp_t = NULL; // not enough time has passed
+			// make sure that it is known that there may be time to divide up a command before the end of the epoch
 			processingTransaction = true;
 		}
 
@@ -387,7 +388,7 @@ void dramSystem::run_simulations()
 		{
 			statistics.collect_transaction_stats(input_t);
 
-			while (channel[input_t->addr.chan_id].enqueue(input_t) == FAILURE)
+			while (!channel[input_t->addr.chan_id].enqueue(input_t))
 			{
 				// tried to stuff req in channel queue, stalled, so try to drain channel queue first 
 				// and drain it completely 

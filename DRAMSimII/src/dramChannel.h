@@ -59,9 +59,9 @@ namespace DRAMSimII
 		transaction *read_transaction() const { return transaction_q.read_back(); } // read the oldest transaction without affecting the queue
 		transaction *get_refresh() { return refreshQueue.dequeue(); }
 		transaction *read_refresh() { return refreshQueue.read_back(); }
-		input_status_t enqueueRefresh(transaction *in) { return refreshQueue.enqueue(in); }
-		input_status_t enqueue(transaction *in) { return transaction_q.enqueue(in); }
-		input_status_t complete(transaction *in) { return completion_q.enqueue(in); }
+		bool enqueueRefresh(transaction *in) { return refreshQueue.enqueue(in); }
+		bool enqueue(transaction *in) { return transaction_q.enqueue(in); }
+		bool complete(transaction *in) { return completion_q.enqueue(in); }
 		transaction *get_oldest_completed() { return completion_q.dequeue(); }
 		command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue
 		unsigned getTransactionQueueCount() const { return transaction_q.get_count(); }

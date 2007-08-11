@@ -2,7 +2,6 @@
 #define QUEUE_H
 #pragma once
 
-#include "enumTypes.h"
 #include <iostream>
 
 namespace DRAMSimII
@@ -106,14 +105,14 @@ namespace DRAMSimII
 
 		// queue: When you add stuff, tail pointer increments, if full, return FAILURE flag
 		// I'm adding to the tail and removing from the head
-		input_status_t enqueue(T *item)
+		bool enqueue(T *item)
 		{
 			if (count == depth)
-				return FAILURE;
+				return false;
 			else if (item == NULL)
 			{
 				std::cerr << "Input pointer is NULL" << std::endl;
-				return FAILURE;
+				return false;
 				//_exit(2);
 			}
 			else
@@ -121,7 +120,7 @@ namespace DRAMSimII
 				count++;
 				entry[tail] = item;
 				tail = (tail + 1) % depth; 	/*advance tail_ptr */
-				return SUCCESS;
+				return true;
 			}
 		}
 
@@ -166,6 +165,7 @@ namespace DRAMSimII
 			return depth;
 		}
 
+		// get a pointer to the item at this offset without removing it
 		T *read(const unsigned offset) const
 		{
 			if((offset >= count) || (offset < 0))
@@ -179,20 +179,20 @@ namespace DRAMSimII
 		// and one would like to store them when they are not in use
 		void release_item(T *item)
 		{
-			if(enqueue(item) == FAILURE)
+			if(!enqueue(item))
 				::delete item;
 		}
 
 		// this function makes this queue a non-FIFO queue.  
 		// Allows insertion into the middle or at any end
-		input_status_t insert(T *item,unsigned offset)
+		bool insert(T *item,unsigned offset)
 		{
 			if (count == depth)
-				return FAILURE;
+				return false;
 			else if (item == NULL)
 			{
 				std::cerr << "Attempting to insert NULL into queue" << std::endl;
-				return FAILURE;
+				return false;
 				//_exit(2);
 			}
 			else
@@ -207,7 +207,7 @@ namespace DRAMSimII
 
 				tail = (tail+1) % depth;	// advance tail_ptr
 
-				return SUCCESS;
+				return true;
 			}
 		}
 
