@@ -270,14 +270,20 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		{
 			outStream << "+T fails" << endl;
 			// if the packet did not fit, then send a NACK
-			pkt->result = Packet::Nacked;
-			assert(pkt->needsResponse());
 			static tick_t numberOfDelays = 0;
 			if (++numberOfDelays % 100000 == 0)
 				cerr << "\r" << numberOfDelays;
-			//pkt->makeTimingResponse();
-			memoryPort->doSendTiming(pkt,0);
+
+			// tell the sender that the memory system is full until it hears otherwise
+			// and do not send packets until that time
+			pkt->result = Packet::Nacked;
+			assert(pkt->needsResponse());
+			pkt->makeTimingResponse();
+			doSendTiming(pkt,0);
+
 			delete trans;
+			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
+			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
 			memory->needRetry = true;
 			memory->mostRecentChannel = trans->addr.chan_id;
 #ifdef M5DEBUG
