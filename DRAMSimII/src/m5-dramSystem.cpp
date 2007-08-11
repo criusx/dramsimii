@@ -277,10 +277,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			// tell the sender that the memory system is full until it hears otherwise
 			// and do not send packets until that time
 			pkt->result = Packet::Nacked;
-			assert(pkt->needsResponse());
-			short dst = pkt->getDest();
-			pkt->setDest(pkt->getSrc());
-			pkt->setSrc(dst);
+			pkt->makeTimingResponse();
 			doSendTiming(pkt,0);
 
 			delete trans;
