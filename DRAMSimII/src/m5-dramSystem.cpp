@@ -188,6 +188,9 @@ M5dramSystem::TickEvent::description()
 bool
 M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
+	if (memory->needRetry)
+		return false;
+
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
 
 	static tick_t lastPowerCalculationTime = 5000000;
@@ -268,12 +271,13 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		// attempt to add the transaction to the memory system
 		if (!memory->ds->enqueue(trans))
 		{
-			outStream << "+T fails" << endl;
-			// if the packet did not fit, then send a NACK
+#ifdef M5DEBUG						
 			static tick_t numberOfDelays = 0;
 			if (++numberOfDelays % 100000 == 0)
 				cerr << "\r" << numberOfDelays;
+#endif
 
+			// if the packet did not fit, then send a NACK
 			// tell the sender that the memory system is full until it hears otherwise
 			// and do not send packets until that time
 			pkt->result = Packet::Nacked;
