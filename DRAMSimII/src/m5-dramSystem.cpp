@@ -188,8 +188,9 @@ M5dramSystem::TickEvent::description()
 bool
 M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
-	//if (memory->needRetry)
-	//	return false;
+	// FIXME: shouldn't need to turn away packets, the requester should hold off once NACK'd
+	if (memory->needRetry)
+		return false;
 
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
 
@@ -280,11 +281,11 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			// if the packet did not fit, then send a NACK
 			// tell the sender that the memory system is full until it hears otherwise
 			// and do not send packets until that time
-			pkt->result = Packet::Nacked;
+			//pkt->result = Packet::Nacked;
 			//short memID = pkt->getDest();
-			pkt->makeTimingResponse();
+			//pkt->makeTimingResponse();
 			//pkt->setSrc(memID);
-			doSendTiming(pkt,0);
+			//doSendTiming(pkt,0);
 
 			delete trans;
 			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
