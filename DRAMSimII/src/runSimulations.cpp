@@ -306,7 +306,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 #endif
 		}
 	}
-	assert(time == endTime);
+	assert(time <= endTime + timing_specification.t_cmd);
 	*transFinishTime = endTime;
 #ifdef M5DEBUG
 	outStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
