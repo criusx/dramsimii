@@ -198,7 +198,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	if (lastPowerCalculationTime-- == 0)
 	{
 		memory->ds->doPowerCalculation();
-		lastPowerCalculationTime = currentMemCycle;
+		lastPowerCalculationTime = 5000000;
 	}
 
 	outStream << "extWake [" << curTick << "]/[" << currentMemCycle << "]";
