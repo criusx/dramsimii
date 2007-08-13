@@ -188,8 +188,8 @@ M5dramSystem::TickEvent::description()
 bool
 M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
-	if (memory->needRetry)
-		return false;
+	//if (memory->needRetry)
+	//	return false;
 
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
 
@@ -281,9 +281,9 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			// tell the sender that the memory system is full until it hears otherwise
 			// and do not send packets until that time
 			pkt->result = Packet::Nacked;
-			short memID = pkt->getDest();
+			//short memID = pkt->getDest();
 			pkt->makeTimingResponse();
-			pkt->setSrc(memID);
+			//pkt->setSrc(memID);
 			doSendTiming(pkt,0);
 
 			delete trans;

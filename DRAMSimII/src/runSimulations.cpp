@@ -242,7 +242,9 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				outStream << "mg: " << min_gap << endl;
 #endif
 
-				if (min_gap + time <= endTime)
+				// allow system to overrun so that it may send a command
+				// FIXME: will this work?
+				if ((min_gap + time <= endTime) || (min_gap + time <= endTime + timing_specification.t_cmd))
 				{
 					temp_c = getNextCommand();
 
