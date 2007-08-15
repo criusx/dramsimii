@@ -290,7 +290,6 @@ dramSettings::dramSettings(const int argc, const char **argv)
 						break;
 					case col_size_token:
 						toNumeric<unsigned>(columnSize,nodeValue,std::dec);
-						cerr << columnSize << " " << nodeValue << endl;
 						break;
 					case channel_width_token:
 						toNumeric<unsigned>(channelWidth,nodeValue,std::dec);
