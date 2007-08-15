@@ -91,15 +91,12 @@ bool dramSystem::convert_address(addresses &this_a) const
 	//int	mapping_scheme;
 	//int	chan_count, rank_count, bank_count, col_count, row_count;
 	//int	chan_addr_depth, rank_addr_depth, bank_addr_depth, row_addr_depth, col_addr_depth;
-	unsigned col_size;
+	
 	//, col_size_depth;
 
 	//mapping_scheme = config->addr_mapping_scheme;
 
-	if(system_config.dram_type == DRDRAM) //FIXME: shouldn't this already be set appropriately?
-		col_size = 16;
-	else
-		col_size = system_config.col_size;
+	
 
 	//chan_count = config->chan_count;
 	//rank_count = config->rank_count;
@@ -111,7 +108,8 @@ bool dramSystem::convert_address(addresses &this_a) const
 	unsigned bank_addr_depth = log2(system_config.bank_count);
 	unsigned row_addr_depth  = log2(system_config.row_count);
 	unsigned col_addr_depth  = log2(system_config.col_count);
-	unsigned col_size_depth	= log2(col_size);
+	//FIXME: shouldn't this already be set appropriately?
+	unsigned col_size_depth	= log2(system_config.dram_type == DRDRAM ? 16 : system_config.col_size);
 
 	//input_a = this_a->phys_addr;
 	// strip away the byte address portion
@@ -231,7 +229,7 @@ bool dramSystem::convert_address(addresses &this_a) const
 		col_id_lo_depth = cacheline_size_depth - col_size_depth;
 		col_id_hi_depth = col_addr_depth - col_id_lo_depth;
 
-		cerr << "cacheline_size_depth " << cacheline_size_depth << " col_size_depth " << col_size_depth << " col_size " << col_size << endl;
+		cerr << "cacheline_size_depth " << cacheline_size_depth << " col_size_depth " << col_size_depth << " col_size " << system_config.col_size << endl;
 		//cerr << "cacheline_size " << cacheline_size << " cacheline_size_depth " << cacheline_size_depth << " col_id_lo_depth " << col_id_lo_depth << " col_id_hi_depth" << col_id_hi_depth << " chan_addr_depth " << chan_addr_depth << endl;
 		
 		temp_b = input_a;				/* save away original address */
