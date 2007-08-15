@@ -79,7 +79,7 @@ dramSystem& dramSystem::operator =(const DRAMSimII::dramSystem &rs)
 	return *this;
 }
 
-int dramSystem::convert_address(addresses &this_a) const
+bool dramSystem::convert_address(addresses &this_a) const
 {
 	unsigned input_a;
 	unsigned temp_a, temp_b;
@@ -87,7 +87,7 @@ int dramSystem::convert_address(addresses &this_a) const
 
 	// if there's a test involving specific ranks/banks and the mapping is predetermined
 	if (input_stream.getType() == MAPPED)
-		return 1;
+		return true;
 	//int	mapping_scheme;
 	//int	chan_count, rank_count, bank_count, col_count, row_count;
 	//int	chan_addr_depth, rank_addr_depth, bank_addr_depth, row_addr_depth, col_addr_depth;
@@ -486,7 +486,8 @@ int dramSystem::convert_address(addresses &this_a) const
 		this_a.col_id  = 0;
 		break;
 	}
-	return 1;
+	cerr << this_a;
+	return true;
 }
 
 /// <summary>
