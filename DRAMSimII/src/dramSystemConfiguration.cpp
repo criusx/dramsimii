@@ -89,6 +89,46 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramSystemConfiguration &this_
 	return os;
 }
 
+dramSystemConfiguration& dramSystemConfiguration::operator =(const DRAMSimII::dramSystemConfiguration &rs)
+{
+	if (this == &rs)
+	{
+		return *this;
+	}
+	command_ordering_algorithm = rs.command_ordering_algorithm;
+	per_bank_queue_depth = rs.per_bank_queue_depth;
+	config_type = rs.config_type;
+	refresh_time = rs.refresh_time;
+	refresh_policy = rs.refresh_policy;
+	col_size = rs.col_size;
+	row_size = rs.row_size;
+	row_count = rs.row_count;
+	col_count = rs.col_count;
+	cacheline_size = rs.cacheline_size;
+	history_queue_depth = rs.history_queue_depth;
+	completion_queue_depth = rs.completion_queue_depth;
+	transaction_queue_depth = rs.transaction_queue_depth;
+	event_queue_depth = rs.event_queue_depth;
+	refresh_queue_depth = rs.refresh_queue_depth;
+	seniority_age_limit = rs.seniority_age_limit;
+	dram_type = rs.dram_type;
+	row_buffer_management_policy = rs.row_buffer_management_policy;
+	addr_mapping_scheme = rs.addr_mapping_scheme;
+	datarate = rs.datarate;
+	posted_cas = rs.posted_cas;
+	read_write_grouping = rs.read_write_grouping;
+	auto_precharge = rs.auto_precharge;
+	clock_granularity = rs.clock_granularity;
+	cachelines_per_row = rs.cachelines_per_row;
+	chan_count = rs.chan_count;
+	rank_count = rs.rank_count;
+	bank_count = rs.bank_count;
+	short_burst_ratio = rs.short_burst_ratio;
+	read_percentage = rs.read_percentage;
+
+	return *this;
+}
+
 
 #ifdef M5
 dramSystemConfiguration::dramSystemConfiguration(dramSystem::Params *parameter)

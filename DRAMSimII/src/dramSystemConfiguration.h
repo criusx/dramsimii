@@ -73,6 +73,9 @@ namespace DRAMSimII
 		double getReadPercentage() const { return read_percentage; }
 		double Frequency() const { return datarate; }
 
+		// operator overloads
+		dramSystemConfiguration& operator =(const dramSystemConfiguration &rs);
+
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
 		friend std::ostream &operator<<(std::ostream &, const dramSystemConfiguration &);		
