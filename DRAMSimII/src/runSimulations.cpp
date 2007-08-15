@@ -147,7 +147,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 				{
 					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 					{
-						completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
+						completed_t->arrival_time += 7 / 8 * system_config.getRefreshTime();
 						channel[chan].enqueueRefresh(completed_t);
 					}
 					else
@@ -354,7 +354,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 					// reuse the refresh transactions
 					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 					{
-						completed_t->arrival_time += 7 / 8 * system_config.refresh_time;
+						completed_t->arrival_time += 7 / 8 * system_config.getRefreshTime();
 						//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
 						channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
 					}

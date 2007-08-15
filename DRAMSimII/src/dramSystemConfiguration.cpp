@@ -39,7 +39,7 @@ command_ordering_algorithm(settings->commandOrderingAlgorithm),
 config_type(BASELINE_CONFIG),
 read_percentage(settings->readPercentage),
 short_burst_ratio(settings->shortBurstRatio)
-{cerr << col_size << endl;}
+{}
 
 
 dramSystemConfiguration::dramSystemConfiguration(const dramSystemConfiguration *rhs):

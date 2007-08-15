@@ -103,13 +103,13 @@ bool dramSystem::convert_address(addresses &this_a) const
 	//bank_count = config->bank_count;
 	//row_count  = config->row_count;
 	//col_count  = config->col_count;
-	unsigned chan_addr_depth = log2(system_config.chan_count);
-	unsigned rank_addr_depth = log2(system_config.rank_count);
-	unsigned bank_addr_depth = log2(system_config.bank_count);
-	unsigned row_addr_depth  = log2(system_config.row_count);
-	unsigned col_addr_depth  = log2(system_config.col_count);
+	unsigned chan_addr_depth = log2(system_config.getChannelCount());
+	unsigned rank_addr_depth = log2(system_config.getRankCount());
+	unsigned bank_addr_depth = log2(system_config.getBankCount());
+	unsigned row_addr_depth  = log2(system_config.getRowCount());
+	unsigned col_addr_depth  = log2(system_config.getColumnCount());
 	//FIXME: shouldn't this already be set appropriately?
-	unsigned col_size_depth	= log2(system_config.dram_type == DRDRAM ? 16 : system_config.col_size);
+	unsigned col_size_depth	= log2(system_config.getDRAMType() == DRDRAM ? 16 : system_config.getColumnSize());
 
 	//input_a = this_a->phys_addr;
 	// strip away the byte address portion
@@ -124,7 +124,7 @@ bool dramSystem::convert_address(addresses &this_a) const
 	unsigned col_id_hi;
 	unsigned col_id_hi_depth;
 
-	switch (system_config.addr_mapping_scheme)
+	switch (system_config.getAddressMappingScheme())
 	{
 	case BURGER_BASE_MAP:		/* Good for only Rambus memory really */
 
@@ -223,13 +223,13 @@ bool dramSystem::convert_address(addresses &this_a) const
 
 		//
 
-		cacheline_size = system_config.cacheline_size;
+		cacheline_size = system_config.getCachelineSize();
 		cacheline_size_depth = log2(cacheline_size);
 
 		col_id_lo_depth = cacheline_size_depth - col_size_depth;
 		col_id_hi_depth = col_addr_depth - col_id_lo_depth;
 
-		cerr << "cacheline_size_depth " << cacheline_size_depth << " col_size_depth " << col_size_depth << " col_size " << system_config.col_size << endl;
+		cerr << "cacheline_size_depth " << cacheline_size_depth << " col_size_depth " << col_size_depth << " col_size " << system_config.getColumnSize() << endl;
 		//cerr << "cacheline_size " << cacheline_size << " cacheline_size_depth " << cacheline_size_depth << " col_id_lo_depth " << col_id_lo_depth << " col_id_hi_depth" << col_id_hi_depth << " chan_addr_depth " << chan_addr_depth << endl;
 		
 		temp_b = input_a;				/* save away original address */
@@ -306,7 +306,7 @@ bool dramSystem::convert_address(addresses &this_a) const
 
 
 
-		cacheline_size = system_config.cacheline_size;
+		cacheline_size = system_config.getCachelineSize();
 		cacheline_size_depth = log2(cacheline_size);
 
 		col_id_lo_depth = cacheline_size_depth - col_size_depth;
@@ -430,7 +430,7 @@ bool dramSystem::convert_address(addresses &this_a) const
 		*                                                   1KB     / 8B        id    id      low    Byte Addr
 		*/		
 
-		cacheline_size_depth = log2(system_config.cacheline_size);
+		cacheline_size_depth = log2(system_config.getCachelineSize());
 
 		// this is really cacheline_size / col_size
 		col_id_lo_depth = cacheline_size_depth - col_size_depth;
@@ -479,7 +479,7 @@ bool dramSystem::convert_address(addresses &this_a) const
 		break;
 
 	default:
-		cerr << "Unknown address mapping scheme, mapping chan, rank, bank to zero: " << system_config.addr_mapping_scheme << endl;
+		cerr << "Unknown address mapping scheme, mapping chan, rank, bank to zero: " << system_config.getAddressMappingScheme() << endl;
 		this_a.chan_id = 0;				/* don't know what this policy is.. Map everything to 0 */
 		this_a.rank_id = 0;
 		this_a.bank_id = 0;
@@ -498,10 +498,10 @@ bool dramSystem::convert_address(addresses &this_a) const
 /// </summary>
 void dramSystem::update_system_time()
 {
-	int oldest_chan_id = system_config.chan_count - 1;
+	int oldest_chan_id = system_config.getChannelCount() - 1;
 	tick_t oldest_time = channel[oldest_chan_id].get_time();
 
-	for (int chan_id = system_config.chan_count - 2; chan_id >= 0; chan_id--)
+	for (int chan_id = system_config.getChannelCount() - 2; chan_id >= 0; chan_id--)
 	{
 		if (channel[chan_id].get_time() < oldest_time)
 		{
@@ -525,7 +525,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 		// check against last transaction to see what the chan_id was, and whether we need to change channels or not
 		if (input_stream.getChannelLocality() * UINT_MAX < j)
 		{
-			this_t->addr.chan_id = (this_t->addr.chan_id + (j % (system_config.chan_count - 1))) % system_config.chan_count;
+			this_t->addr.chan_id = (this_t->addr.chan_id + (j % (system_config.getChannelCount() - 1))) % system_config.getChannelCount();
 		}
 
 		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
@@ -534,10 +534,10 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 		int rank_id = channel[this_t->addr.chan_id].get_last_rank_id();
 
 		rand_s(&j);
-		if ((input_stream.getRankLocality() * UINT_MAX < j) && (system_config.rank_count > 1))
+		if ((input_stream.getRankLocality() * UINT_MAX < j) && (system_config.getRankCount() > 1))
 		{
 			rank_id = this_t->addr.rank_id = 
-				(rank_id + 1 + (j % (system_config.rank_count - 1))) % system_config.rank_count;
+				(rank_id + 1 + (j % (system_config.getRankCount() - 1))) % system_config.getRankCount();
 		}
 		else
 		{
@@ -548,10 +548,10 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 
 		rand_s(&j);
 
-		if ((input_stream.getBankLocality() * UINT_MAX < j) && (system_config.bank_count > 1))
+		if ((input_stream.getBankLocality() * UINT_MAX < j) && (system_config.getBankCount() > 1))
 		{
 			bank_id = this_t->addr.bank_id =
-				(bank_id + 1 + (j % (system_config.bank_count - 1))) % system_config.bank_count;
+				(bank_id + 1 + (j % (system_config.getBankCount() - 1))) % system_config.getBankCount();
 		}
 		else
 		{
@@ -564,7 +564,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 
 		if (input_stream.getRowLocality() * UINT_MAX < j)
 		{
-			this_t->addr.row_id = (row_id + 1 + (j % (system_config.row_count - 1))) % system_config.row_count;
+			this_t->addr.row_id = (row_id + 1 + (j % (system_config.getRowCount() - 1))) % system_config.getRowCount();
 			row_id = this_t->addr.row_id;
 		}
 		else
@@ -672,7 +672,7 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 		}
 	}
 
-	if (system_config.refresh_policy == NO_REFRESH)
+	if (system_config.getRefreshPolicy() == NO_REFRESH)
 	{
 		this_t = temp_t;
 		temp_t = NULL;
@@ -695,7 +695,7 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 
 dramSystem::dramSystem(const dramSettings *settings): 
 system_config(settings),
-channel(system_config.chan_count,
+channel(system_config.getChannelCount(),
 		dramChannel(settings)),
 		sim_parameters(settings),
 		statistics(),
@@ -742,7 +742,7 @@ channel(system_config.chan_count,
 
 
 	// don't init the refresh queues if there's no need
-	if (system_config.refresh_policy != NO_REFRESH)
+	if (system_config.getRefreshPolicy() != NO_REFRESH)
 	{
 		// init the refresh queue for each channel and set the system_config pointers
 		unsigned cnt = 0;

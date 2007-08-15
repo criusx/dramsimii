@@ -13,7 +13,7 @@ bool dramSystem::checkForAvailableCommandSlots(const transaction *trans) const
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
 	// RAS, CAS+Precharge
-	if (system_config.row_buffer_management_policy == CLOSE_PAGE)
+	if (system_config.getRowBufferManagementPolicy() == CLOSE_PAGE)
 	{
 		int empty_command_slot_count = bank_q->freecount();
 
@@ -38,14 +38,14 @@ bool dramSystem::checkForAvailableCommandSlots(const transaction *trans) const
 			return false;
 		}
 		// or three commands if the CAS+Precharge command is not available
-		else if ((system_config.auto_precharge == false) && (empty_command_slot_count < 3))
+		else if ((system_config.getAutoPrecharge() == false) && (empty_command_slot_count < 3))
 		{
 			return false;
 		}
 	}
 	// open page systems may, in the best case, add a CAS command to an already open row
 	// closing the row and precharging may be delayed
-	else if (system_config.row_buffer_management_policy == OPEN_PAGE)
+	else if (system_config.getRowBufferManagementPolicy() == OPEN_PAGE)
 	{
 		int queued_command_count = bank_q->get_count();
 		int empty_command_slot_count = bank_q->freecount();
@@ -72,8 +72,8 @@ bool dramSystem::checkForAvailableCommandSlots(const transaction *trans) const
 			// to see if that's the precharge command that you need. If so,
 			// insert CAS COMMAND in front of PRECHARGE COMMAND
 
-			if ((system_config.command_ordering_algorithm == STRICT_ORDER) 
-				|| ((int)(channel[trans->addr.chan_id].get_time() - temp_c->getEnqueueTime()) > system_config.seniority_age_limit))
+			if ((system_config.getCommandOrderingAlgorithm() == STRICT_ORDER) 
+				|| ((int)(channel[trans->addr.chan_id].get_time() - temp_c->getEnqueueTime()) > system_config.getSeniorityAgeLimit()))
 			{
 				bypass_allowed = false;
 			}

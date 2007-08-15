@@ -51,11 +51,23 @@ namespace DRAMSimII
 		explicit dramSystemConfiguration(const dramSystemConfiguration *rhs);
 
 		// accessors
+		row_buffer_policy_t getRowBufferManagementPolicy() const { return row_buffer_management_policy; }
+		address_mapping_scheme_t getAddressMappingScheme() const { return addr_mapping_scheme; }
 		command_ordering_algorithm_t getCommandOrderingAlgorithm() const { return command_ordering_algorithm; }
 		system_configuration_type_t getConfigType() const { return config_type; }
 		unsigned getPerBankQueueDepth() const { return per_bank_queue_depth; }
 		unsigned getRankCount() const { return rank_count; }
 		unsigned getBankCount() const { return bank_count; }
+		unsigned getChannelCount() const { return chan_count; }
+		unsigned getRowCount() const { return row_count; }
+		unsigned getColumnCount() const { return col_count; }
+		unsigned getColumnSize() const { return col_size; }
+		unsigned getCachelineSize() const { return cacheline_size; }
+		unsigned getRefreshTime() const { return refresh_time; }
+		unsigned getSeniorityAgeLimit() const { return seniority_age_limit; }
+		refresh_policy_t getRefreshPolicy() const { return refresh_policy; }
+		dram_type_t getDRAMType() const { return dram_type; }
+		bool getAutoPrecharge() const { return auto_precharge; }
 		double getShortBurstRatio() const { return short_burst_ratio; }
 		double getReadPercentage() const { return read_percentage; }
 		double Frequency() const { return datarate; }
@@ -63,8 +75,7 @@ namespace DRAMSimII
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
 		friend std::ostream &operator<<(std::ostream &, const dramSystemConfiguration &);
-		friend class dramChannel;
-		friend class dramSystem;
+		friend class dramChannel;		
 	};
 }
 #endif
