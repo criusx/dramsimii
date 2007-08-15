@@ -229,7 +229,7 @@ bool dramSystem::convert_address(addresses &this_a) const
 		col_id_lo_depth = cacheline_size_depth - col_size_depth;
 		col_id_hi_depth = col_addr_depth - col_id_lo_depth;
 
-		cerr << "cacheline_size_depth " << cacheline_size_depth << " col_size_depth " << col_size_depth << " col_size " << system_config.getColumnSize() << endl;
+		cerr << "cacheline_size_depth " << cacheline_size_depth << " col_size_depth " << col_size_depth << " col_size " << std::dec << system_config.getColumnSize() << endl;
 		cerr << "system_config_addr " << &system_config << endl;
 		//cerr << "cacheline_size " << cacheline_size << " cacheline_size_depth " << cacheline_size_depth << " col_id_lo_depth " << col_id_lo_depth << " col_id_hi_depth" << col_id_hi_depth << " chan_addr_depth " << chan_addr_depth << endl;
 		
