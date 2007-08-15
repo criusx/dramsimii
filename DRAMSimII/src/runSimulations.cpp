@@ -266,7 +266,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 						// reuse the refresh transactions
 						if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 						{
-							completed_t->arrival_time += 7 / 8 * system_config->refresh_time;
+							completed_t->arrival_time += 7 / 8 * system_config->getRefreshTime();
 							//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
 							enqueueRefresh(completed_t);
 						}

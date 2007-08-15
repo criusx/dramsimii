@@ -24,7 +24,7 @@ command *dramChannel::getNextCommand()
 	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : rank.size() - 1;
 	const command_type_t lastCommandType = lastCommand ? lastCommand->getCommandType() : CAS_WRITE_AND_PRECHARGE_COMMAND;
 
-	switch (system_config->command_ordering_algorithm)
+	switch (system_config->getCommandOrderingAlgorithm())
 	{
 	case STRICT_ORDER: // look for oldest command, execute that
 		{
@@ -144,11 +144,11 @@ command *dramChannel::getNextCommand()
 
 			while (candidate_found == false)
 			{
-				lastRankId = (lastRankId + 1) % system_config->rank_count; // try the next rank
+				lastRankId = (lastRankId + 1) % rank.size(); // try the next rank
 
 				if (lastRankId == 0)
 				{
-					lastBankId = (lastBankId + 1) % system_config->bank_count; // try the next bank
+					lastBankId = (lastBankId + 1) % rank[lastRankId].bank.size(); // try the next bank
 
 					if (lastBankId == 0)
 					{
@@ -160,7 +160,7 @@ command *dramChannel::getNextCommand()
 
 				if(temp_c != NULL)
 				{
-					if(system_config->read_write_grouping == false)
+					if(system_config->isReadWriteGrouping() == false)
 					{
 						return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
 					}
@@ -227,10 +227,10 @@ command *dramChannel::getNextCommand()
 
 			while (candidate_found == false)
 			{
-				lastBankId = (lastBankId + 1) % system_config->bank_count;
+				lastBankId = (lastBankId + 1) % system_config->getBankCount();
 				if (lastBankId == 0)
 				{
-					lastRankId = (lastRankId + 1) % system_config->rank_count;
+					lastRankId = (lastRankId + 1) % rank.size();
 					if (lastRankId  == 0)
 					{
 						if (transaction_type == WRITE_TRANSACTION)
@@ -248,7 +248,7 @@ command *dramChannel::getNextCommand()
 
 				if(temp_c != NULL)
 				{	
-					if(system_config->read_write_grouping == false)
+					if(system_config->isReadWriteGrouping() == false)
 					{
 						return temp_c;
 					}
@@ -335,9 +335,9 @@ command *dramChannel::getNextCommand()
 
 			int candidate_gap = INT_MAX;
 
-			for (unsigned rank_id = 0; rank_id < system_config->rank_count; ++rank_id)
+			for (unsigned rank_id = 0; rank_id < rank.size(); ++rank_id)
 			{
-				for (unsigned bank_id = 0; bank_id < system_config->bank_count ; ++bank_id)
+				for (unsigned bank_id = 0; bank_id < rank[rank_id].bank.size() ; ++bank_id)
 				{
 					command *challenger_command = rank[rank_id].bank[bank_id].per_bank_q.read(0);
 
@@ -389,11 +389,11 @@ command *dramChannel::readNextCommand() const
 
 	const command *lastCommand = get_most_recent_command();
 
-	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank_id : system_config->bank_count - 1;
-	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : system_config->rank_count - 1;
+	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank_id : system_config->getBankCount() - 1;
+	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : system_config->getRankCount() - 1;
 	const command_type_t lastCommandType = lastCommand ? lastCommand->getCommandType() : CAS_WRITE_AND_PRECHARGE_COMMAND;
 
-	switch (system_config->command_ordering_algorithm)
+	switch (system_config->getCommandOrderingAlgorithm())
 	{
 	case STRICT_ORDER: // look for oldest command, execute that
 		{
@@ -517,11 +517,11 @@ command *dramChannel::readNextCommand() const
 
 			while (candidate_found == false)
 			{
-				lastRankId = (lastRankId + 1) % system_config->rank_count; // try the next rank
+				lastRankId = (lastRankId + 1) % system_config->getRankCount(); // try the next rank
 
 				if (lastRankId == 0)
 				{
-					lastBankId = (lastBankId + 1) % system_config->bank_count; // try the next bank
+					lastBankId = (lastBankId + 1) % system_config->getBankCount(); // try the next bank
 
 					if (lastBankId == 0)
 					{
@@ -533,7 +533,7 @@ command *dramChannel::readNextCommand() const
 
 				if(temp_c != NULL)
 				{
-					if (system_config->read_write_grouping == false)
+					if (system_config->isReadWriteGrouping() == false)
 					{
 						return rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
 					}
@@ -602,10 +602,10 @@ command *dramChannel::readNextCommand() const
 
 			while (candidate_found == false)
 			{
-				lastBankId = (lastBankId + 1) % system_config->bank_count;
+				lastBankId = (lastBankId + 1) % system_config->getBankCount();
 				if (lastBankId == 0)
 				{
-					lastRankId = (lastRankId + 1) % system_config->rank_count;
+					lastRankId = (lastRankId + 1) % system_config->getRankCount();
 					if (lastRankId == 0)
 					{
 						transaction_type = (transaction_type == WRITE_TRANSACTION) ? READ_TRANSACTION : WRITE_TRANSACTION;
@@ -616,7 +616,7 @@ command *dramChannel::readNextCommand() const
 
 				if (temp_c != NULL)
 				{	
-					if(system_config->read_write_grouping == false)
+					if(system_config->isReadWriteGrouping() == false)
 					{
 						return temp_c;
 					}
@@ -646,9 +646,9 @@ command *dramChannel::readNextCommand() const
 
 			int candidate_gap = INT_MAX;
 
-			for (unsigned rank_id = 0; rank_id < system_config->rank_count; ++rank_id)
+			for (unsigned rank_id = 0; rank_id < system_config->getRankCount(); ++rank_id)
 			{
-				for (unsigned bank_id = 0; bank_id < system_config->bank_count ; ++bank_id)
+				for (unsigned bank_id = 0; bank_id < system_config->getBankCount() ; ++bank_id)
 				{
 					command *challenger_command = rank[rank_id].bank[bank_id].per_bank_q.read(0);
 

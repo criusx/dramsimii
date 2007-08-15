@@ -3,7 +3,7 @@
 #pragma once
 
 #include <fstream>
-#include <map>
+
 #include "enumTypes.h"
 #include "globals.h"
 #include "dramSettings.h"
@@ -46,7 +46,6 @@ namespace DRAMSimII
 
 	public:
 		// constructors
-		explicit dramSystemConfiguration(std::map<file_io_token_t,std::string> &);
 		explicit dramSystemConfiguration(const dramSettings *settings);
 		explicit dramSystemConfiguration(const dramSystemConfiguration *rhs);
 
@@ -67,15 +66,16 @@ namespace DRAMSimII
 		unsigned getSeniorityAgeLimit() const { return seniority_age_limit; }
 		refresh_policy_t getRefreshPolicy() const { return refresh_policy; }
 		dram_type_t getDRAMType() const { return dram_type; }
-		bool getAutoPrecharge() const { return auto_precharge; }
+		bool isAutoPrecharge() const { return auto_precharge; }
+		bool isReadWriteGrouping() const { return read_write_grouping; }
+		bool isPostedCAS() const { return posted_cas; }
 		double getShortBurstRatio() const { return short_burst_ratio; }
 		double getReadPercentage() const { return read_percentage; }
 		double Frequency() const { return datarate; }
 
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
-		friend std::ostream &operator<<(std::ostream &, const dramSystemConfiguration &);
-		friend class dramChannel;		
+		friend std::ostream &operator<<(std::ostream &, const dramSystemConfiguration &);		
 	};
 }
 #endif
