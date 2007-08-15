@@ -231,6 +231,8 @@ bool dramSystem::convert_address(addresses &this_a) const
 		col_id_lo_depth = cacheline_size_depth - col_size_depth;
 		col_id_hi_depth = col_addr_depth - col_id_lo_depth;
 
+		cerr << "cacheline_size " << cacheline_size << " cacheline_size_depth " << cacheline_size_depth << " col_id_lo_depth " << col_id_lo_depth << " col_id_hi_depth" << col_id_hi_depth << " chan_addr_depth " << chan_addr_depth << endl;
+		
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> col_id_lo_depth;
 		temp_a  = input_a << col_id_lo_depth;
@@ -486,7 +488,7 @@ bool dramSystem::convert_address(addresses &this_a) const
 		this_a.col_id  = 0;
 		break;
 	}
-	cerr << this_a;
+	cerr << this_a << endl;
 	return true;
 }
 
