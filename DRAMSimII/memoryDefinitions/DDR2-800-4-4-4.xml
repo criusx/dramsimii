@@ -53,7 +53,7 @@
 		<perBankQueueDepth>8</perBankQueueDepth>
 		<!--sets FBD mode otherwise-->
 		<systemConfigurationType>baseline</systemConfigurationType>
-		<cacheLineSize>8</cacheLineSize>
+		<cacheLineSize>64</cacheLineSize>
 		<historyQueueDepth>16</historyQueueDepth>
 		<completionQueueDepth>32</completionQueueDepth>
 		<transactionQueueDepth>8</transactionQueueDepth>
