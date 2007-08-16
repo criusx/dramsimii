@@ -76,6 +76,6 @@
 <!ELEMENT tRTRS (#PCDATA)>
 <!ELEMENT tWR (#PCDATA)>
 <!ELEMENT tWTR (#PCDATA)>
-<!ELEMENT timing (datarate, clockGranularity, channels, channelWidth, physicalAddressMappingPolicy, rowBufferPolicy, ranks, banks, rows, rowSize, columns, columnSize, tBufferDelay, tBurst, tCAS, tCMD, tCWD, tFAW, tRAS, tRC, tRCD, tRFC, tRRD, tRP, tRTP, tRTRS, tWR, tWTR, postedCAS, tAL, autoRefresh, autoRefreshPolicy, refreshTime, tREFI, commandOrderingAlgorithm, transactionOrderingAlgorithm, perBankQueueDepth, systemConfigurationType, cacheLineSize, historyQueueDepth, completionQueueDepth, transactionQueueDepth, eventQueueDepth, refreshQueueDepth, seniorityAgeLimit, readWriteGrouping, autoPrecharge)>
+<!ELEMENT timing (datarate, clockGranularity, channels, channelWidth, physicalAddressMappingPolicy, rowBufferPolicy, ranks, banks, rows, rowSize, columns, columnSize, tBufferDelay, tBurst, tCAS, tCMD, tCWD, tFAW, tRAS, tRC, tRCD, tRFC, tRRD, tRP, tRTP, tRTRS, tWR, tWTR, postedCAS, tAL, autoRefreshPolicy, refreshTime, tREFI, commandOrderingAlgorithm, transactionOrderingAlgorithm, perBankQueueDepth, systemConfigurationType, cacheLineSize, historyQueueDepth, completionQueueDepth, transactionQueueDepth, eventQueueDepth, refreshQueueDepth, seniorityAgeLimit, readWriteGrouping, autoPrecharge)>
 <!ELEMENT transactionOrderingAlgorithm (#PCDATA)>
 <!ELEMENT transactionQueueDepth (#PCDATA)>
