@@ -19,14 +19,13 @@ To do list:
 #pragma once
 
 #include <limits>
-#include <iostream>
 
 #define tick_t long long
 #define TICK_T_MAX LLONG_MAX
 
 #include <iostream>
 #include <sstream>
-#include <map>
+//#include <map>
 #include <boost/iostreams/filtering_stream.hpp>
 
 #include "enumTypes.h"
@@ -106,18 +105,10 @@ namespace DRAMSimII
 	}	
 
 	// global var forward
-	extern boost::iostreams::filtering_ostream outStream;
-
-	// converts a string to a file_io_token
-	file_io_token_t dramTokenizer(const std::string &);
-	file_io_token_t fileIOToken(const unsigned char *input);
+	extern boost::iostreams::filtering_ostream outStream;	
 
 	// converts a string to its corresponding magnitude representation
-	double ascii2multiplier(const std::string &);
-
-	// maps the inputs to file_io_tokens and corresponding strings to simplify initialization
-	void create_input_map(int ,const char **,std::map<file_io_token_t, std::string> &);
-	void create_input_map_from_input_file(std::map<file_io_token_t, std::string> &,std::ifstream &);
+	double ascii2multiplier(const std::string &);	
 }
 
 #endif

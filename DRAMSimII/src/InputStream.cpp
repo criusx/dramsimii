@@ -16,7 +16,7 @@ using namespace DRAMSimII;
 inputStream::inputStream(const dramSettings *settings):
 type(settings->inFileType),
 time(0),
-row_locality(0.2),
+row_locality(0.2f),
 average_interarrival_cycle_count(10),
 interarrival_distribution_model(UNIFORM_DISTRIBUTION),
 chan_locality(1 / static_cast<double>(settings->channelCount)),
@@ -172,7 +172,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 				return FAILURE;
 			}
 
-			control = dramTokenizer(input);
+			control = dramSettings::dramTokenizer(input);
 
 			if(control == unknown_token)
 			{
@@ -223,7 +223,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 			return FAILURE;
 		}
 
-		control = dramTokenizer(input);
+		control = dramSettings::dramTokenizer(input);
 
 		switch (control)
 		{
@@ -256,7 +256,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 			return FAILURE;
 		}
 
-		control = dramTokenizer(input);
+		control = dramSettings::dramTokenizer(input);
 
 		switch (control)
 		{

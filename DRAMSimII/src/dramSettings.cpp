@@ -323,6 +323,10 @@ dramSettings::dramSettings(const int argc, const char **argv)
 					case refresh_time_token:
 						toNumeric<unsigned>(refreshTime,nodeValue,std::dec);
 						break;
+					case system_configuration_type_token:
+						// TODO: if baseline, then normal system, if FBD, then make a FBD system
+
+						break;
 					case transaction_ordering_policy_token:
 						if (nodeValue == "strict")
 							transactionOrderingAlgorithm = STRICT;
@@ -400,4 +404,8 @@ dramSettings::dramSettings(const int argc, const char **argv)
 		// close the reader
 		xmlFreeTextReader(reader);
 	}
+
+	
+
+	
 }

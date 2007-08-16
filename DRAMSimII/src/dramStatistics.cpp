@@ -1,6 +1,10 @@
 #include "dramStatistics.h"
+#include "globals.h"
+#include <iomanip>
+#include <iostream>
 
 using namespace DRAMSimII;
+using namespace std;
 
 dramStatistics::dramStatistics()
 {
@@ -24,4 +28,13 @@ void dramStatistics::collect_transaction_stats(transaction *this_t)
 	{
 		++bo4_count;
 	}
+}
+
+ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
+{
+	os << "RR[" << setw(6) << setprecision(6) << (double)this_a.end_time/max(1,this_a.bo4_count + this_a.bo8_count);
+	os << "] BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick_t)1);
+	os << "]";
+	return os;
+
 }

@@ -35,8 +35,7 @@
 							<xs:element name="tWR" type="xs:integer"/>
 							<xs:element name="tWTR" type="xs:integer"/>
 							<xs:element name="postedCAS" type="xs:boolean"/>
-							<xs:element name="tAL" type="xs:integer"/>
-							<xs:element name="autoRefresh" type="xs:boolean"/>
+							<xs:element name="tAL" type="xs:integer"/>							
 							<xs:element name="autoRefreshPolicy"/>
 							<xs:element name="refreshTime" type="xs:integer"/>
 							<xs:element name="tREFI" type="xs:integer"/>
