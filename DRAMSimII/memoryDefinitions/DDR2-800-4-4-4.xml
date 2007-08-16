@@ -40,7 +40,6 @@
 		<postedCAS>true</postedCAS>
 		<!--additive latency, the dram device may buffer a command for up to this length of time to allow it to be transferred and help until timing parameters are met, see Micron doc TN4710-->
 		<tAL>10</tAL>
-		<!--autoRefresh>true</autoRefresh-->
 		<!--may be none, refreshOneChanAllRankAllBank, etc.-->
 		<autoRefreshPolicy>none</autoRefreshPolicy>
 		<!--given in us-->
