@@ -8,7 +8,6 @@
 <!ELEMENT IDD4W (#PCDATA)>
 <!ELEMENT IDD5A (#PCDATA)>
 <!ELEMENT autoPrecharge (#PCDATA)>
-<!ELEMENT autoRefresh (#PCDATA)>
 <!ELEMENT autoRefreshPolicy (#PCDATA)>
 <!ELEMENT banks (#PCDATA)>
 <!ELEMENT cacheLineSize (#PCDATA)>
