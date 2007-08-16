@@ -148,9 +148,9 @@ void dramChannel::doPowerCalculation()
 		}
 		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 		cerr << "Psys(ACT) ch[" << channelID << "] r[]" << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
-			"(" << totalRAS << ")" << endl;
-		powerModel.lastCalculation = time;
+			"(" << totalRAS << ")" << endl;		
 	}
+	powerModel.lastCalculation = time;
 }
 
 dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
