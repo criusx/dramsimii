@@ -62,7 +62,6 @@ void dramSystem::run_simulations3()
 		
 
 		tick_t nearFinish = 0;
-		tick_t sendBackTime;
 		//const void *error;
 
 		nextArrival = min(input_t->arrival_time,nextArrival);

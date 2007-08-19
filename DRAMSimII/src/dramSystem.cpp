@@ -703,22 +703,62 @@ channel(system_config.getChannelCount(),
 	if (settings->outFileType == BZ)
 	{	
 		outStream.push(boost::iostreams::bzip2_compressor());
-		outStream.push(boost::iostreams::file_sink((settings->outFile + ".bz").c_str()));
+		string outFilename = settings->outFile;
 
+		if (outFilename.find(".bz2") > 0)
+			outFilename = outFilename.substr(outFilename.find(".bz2"));
+
+		int counter = 0;
+		ifstream fin;
+		stringstream openFile;
+		openFile << outFilename << ".bz2";
+		fin.open(openFile.str().c_str(),ifstream::in);
+		fin.close();
+		while (!fin.fail())
+		{
+			fin.clear(ios::failbit);
+			counter++;
+			openFile.clear();
+			openFile << outFilename << counter << ".bz2";			
+			fin.open(openFile.str().c_str(),ifstream::in);
+			fin.close();
+		}
+
+		outStream.push(boost::iostreams::file_sink(openFile.str().c_str()));
 		if (!outStream.good())
 		{
-			cerr << "Error opening file \"" << settings->outFile << "\" for writing" << endl;
+			cerr << "Error opening file \"" << openFile << "\" for writing" << endl;
 			exit(-12);
 		}
 	}
 	else if (settings->outFileType == GZ)
 	{
 		outStream.push(boost::iostreams::gzip_compressor());
-		outStream.push(boost::iostreams::file_sink((settings->outFile + ".gz").c_str()));
+		string outFilename = settings->outFile;
 
+		if (outFilename.find(".gz") > 0)
+			outFilename = outFilename.substr(outFilename.find(".gz"));
+
+		int counter = 0;
+		ifstream fin;
+		stringstream openFile;
+		openFile << outFilename << ".gz";
+		fin.open(openFile.str().c_str(),ifstream::in);
+		fin.close();
+		while (!fin.fail())
+		{
+			fin.clear(ios::failbit);
+			counter++;
+			openFile.clear();
+			openFile << outFilename << counter << ".gz";			
+			fin.open(openFile.str().c_str(),ifstream::in);
+			fin.close();
+		}
+
+		outStream.push(boost::iostreams::file_sink(openFile.str().c_str()));
 		if (!outStream.good())
 		{
-			cerr << "Error opening file \"" << settings->outFile << "\" for writing" << endl;
+			cerr << "Error opening file \"" << openFile << "\" for writing" << endl;
 			exit(-12);
 		}
 	}
