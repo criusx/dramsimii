@@ -329,6 +329,7 @@ M5dramSystem::TickEvent::process()
 	if (memory->tickEvent.scheduled())
 		memory->tickEvent.deschedule();
 
+	// determine the next time to wake up
 	tick_t next = memory->ds->nextTick();	
 
 	// nextTick() returns TICK_T_MAX if there is nothing else to wake up for
@@ -344,8 +345,9 @@ M5dramSystem::TickEvent::process()
 void M5dramSystem::moveDramSystemToTime(tick_t now)
 {
 	tick_t finishTime;
+	tick_t sendBackTime;
 
-	while (Packet *packet = (Packet *)ds->moveAllChannelsToTime(now, &finishTime))
+	while (Packet *packet = (Packet *)ds->moveAllChannelsToTime(now, &finishTime, &sendBackTime))
 	{
 		// for debug purposes, remove this later
 		assert(packet->isRead() | packet->isWrite() || packet->isInvalidate());
@@ -356,8 +358,10 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 		{			
 			packet->makeTimingResponse();
 			assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
-			outStream << "<-T [" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
-			memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
+			//outStream << "<-T [" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
+			outStream << "<-T [@" << std::dec << static_cast<Tick>(sendBackTime * getCpuRatio()) << "][+" << static_cast<Tick>(sendBackTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
+			//memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
+			memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(sendBackTime * getCpuRatio() - curTick));
 		}
 		else
 		{

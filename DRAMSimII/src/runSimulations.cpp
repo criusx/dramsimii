@@ -168,7 +168,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 
 /// Moves all channels to the specified time
 /// If a transaction completes, then it is returned without completing the movement
-const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime)
+const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime, tick_t *sendBackTime)
 {
 #if M5DEBUG
 	outStream << "move forward until: " << endTime << endl;
@@ -177,7 +177,10 @@ const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *tran
 	{
 		const void *finishedTrans = i->moveChannelToTime(endTime, transFinishTime);
 		if (finishedTrans)
+		{
+			*sendBackTime = finishedTrans->endTime;
 			return finishedTrans;
+		}
 	}
 	update_system_time();
 	return NULL;
@@ -255,7 +258,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 #endif
 
 					
-
+					// only get completed commands if they have finished TODO:
 					transaction *completed_t = completion_q.dequeue();
 
 					if (completed_t != NULL)

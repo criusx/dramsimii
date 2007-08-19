@@ -32,8 +32,10 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	// update the channel's idea of what time it is and set the start time for the command
 	// ensure that the command is never started before it is enqueued
 	// this implies that if there was an idle period for the memory system, commands
-	// will not be seen as executing during this time
+	// will not be seen as executing during this time	
 	this_command->setStartTime(max(time + gap, this_command->getEnqueueTime()));
+	
+	// set this channel's time to the start time of this command
 	time = this_command->getStartTime();
 
 	switch(this_command->getCommandType())
@@ -69,10 +71,12 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		this_bank.last_cas_length = this_command->getLength();
 		this_rank.last_cas_length = this_command->getLength();
 		this_bank.CASCount++;
-		this_command->getHost()->completion_time = time + timing_specification.t_cas;
+		//this_command->getHost()->completion_time = time + timing_specification.t_cas;
 		
 		// specific for CAS command
-		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cas + timing_specification.t_burst);
+		// should account for tAL buffering the CAS command until the right moment
+		this_command->setCompletionTime(max(this_bank->last_ras_time + timing_specification.t_rcd + timing_specification.t_cas + timing_specification.t_burst, this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cas + timing_specification.t_burst);
+		this_command->getHost()->completion_time = this_command->getCompletionTime();
 		break;
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
@@ -130,7 +134,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	// transaction complete? if so, put in completion queue
 	// note that the host transaction should only be pointed to by a CAS command
 	// since this is when a transaction is done from the standpoint of the requester
-	if (this_command->getHost() != NULL) 
+	if (this_command->getHost()) 
 	{
 		if (!complete(this_command->getHost()))
 		{
