@@ -62,11 +62,12 @@ void dramSystem::run_simulations3()
 		
 
 		tick_t nearFinish = 0;
+		tick_t sendBackTime;
 		//const void *error;
 
 		nextArrival = min(input_t->arrival_time,nextArrival);
 		// as long as transactions keep happening prior to this time
-		if (moveAllChannelsToTime(nextArrival,&nearFinish))
+		if (moveAllChannelsToTime(nextArrival,&nearFinish,&sendBackTime))
 		{
 			cerr << "not right, no host transactions here" << endl;
 		}
@@ -178,7 +179,7 @@ const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *tran
 		const void *finishedTrans = i->moveChannelToTime(endTime, transFinishTime);
 		if (finishedTrans)
 		{
-			*sendBackTime = finishedTrans->endTime;
+			*sendBackTime = ((transaction *)finishedTrans)->completion_time;
 			return finishedTrans;
 		}
 	}
