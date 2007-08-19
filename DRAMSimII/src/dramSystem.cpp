@@ -718,7 +718,7 @@ channel(system_config.getChannelCount(),
 		{
 			fin.clear(ios::failbit);
 			counter++;
-			openFile.clear();
+			openFile.str("");
 			openFile << outFilename << counter << ".bz2";			
 			fin.open(openFile.str().c_str(),ifstream::in);
 			fin.close();
@@ -749,7 +749,7 @@ channel(system_config.getChannelCount(),
 		{
 			fin.clear(ios::failbit);
 			counter++;
-			openFile.clear();
+			openFile.str("");
 			openFile << outFilename << counter << ".gz";			
 			fin.open(openFile.str().c_str(),ifstream::in);
 			fin.close();
