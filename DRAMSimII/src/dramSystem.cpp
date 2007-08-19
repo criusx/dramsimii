@@ -700,49 +700,34 @@ channel(system_config.getChannelCount(),
 		time(0),
 		event_q(COMMAND_QUEUE_SIZE)
 {
-	if (settings->outFileType == BZ)
-	{	
+	string suffix;
+	switch (settings->outFileType)
+	{
+	case BZ:
 		outStream.push(boost::iostreams::bzip2_compressor());
-		string outFilename = settings->outFile;
-
-		if (outFilename.find(".bz2") > 0)
-			outFilename = outFilename.substr(0,outFilename.find(".bz2"));
-
-		int counter = 0;
-		ifstream fin;
-		stringstream openFile;
-		openFile << outFilename << ".bz2";
-		fin.open(openFile.str().c_str(),ifstream::in);
-		fin.close();
-		while (!fin.fail())
-		{
-			fin.clear(ios::failbit);
-			counter++;
-			openFile.str("");
-			openFile << outFilename << counter << ".bz2";			
-			fin.open(openFile.str().c_str(),ifstream::in);
-			fin.close();
-		}
-
-		outStream.push(boost::iostreams::file_sink(openFile.str().c_str()));
-		if (!outStream.good())
-		{
-			cerr << "Error opening file \"" << openFile << "\" for writing" << endl;
-			exit(-12);
-		}
-	}
-	else if (settings->outFileType == GZ)
-	{
+		suffix = ".bz2";
+		break;
+	case GZ:		
 		outStream.push(boost::iostreams::gzip_compressor());
+		suffix = ".gz";
+		break;
+	case UNCOMPRESSED:
+		break;
+	case COUT:
+		outStream.push(std::cout);
+		break;
+	}
+	if (settings->outFileType == GZ || settings->outFileType == BZ || settings->outFileType == UNCOMPRESSED)
+	{
 		string outFilename = settings->outFile;
 
-		if (outFilename.find(".gz") > 0)
-			outFilename = outFilename.substr(0,outFilename.find(".gz"));
+		if (outFilename.find(suffix) > 0)
+			outFilename = outFilename.substr(0,outFilename.find(suffix));
 
 		int counter = 0;
 		ifstream fin;
 		stringstream openFile;
-		openFile << outFilename << ".gz";
+		openFile << outFilename << suffix;
 		fin.open(openFile.str().c_str(),ifstream::in);
 		fin.close();
 		while (!fin.fail())
@@ -750,7 +735,7 @@ channel(system_config.getChannelCount(),
 			fin.clear(ios::failbit);
 			counter++;
 			openFile.str("");
-			openFile << outFilename << counter << ".gz";			
+			openFile << outFilename << counter << suffix;			
 			fin.open(openFile.str().c_str(),ifstream::in);
 			fin.close();
 		}
@@ -762,21 +747,6 @@ channel(system_config.getChannelCount(),
 			exit(-12);
 		}
 	}
-	else if (settings->outFileType == UNCOMPRESSED)
-	{
-		outStream.push(boost::iostreams::file_sink(settings->outFile.c_str()));
-
-		if (!outStream.good())
-		{
-			cerr << "Error opening file \"" << settings->outFile << "\" for writing" << endl;
-			exit(-12);
-		}
-	}
-	else if (settings->outFileType == COUT) 
-	{
-		outStream.push(std::cout);
-	}
-
 
 	// don't init the refresh queues if there's no need
 	if (system_config.getRefreshPolicy() != NO_REFRESH)
