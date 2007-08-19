@@ -67,7 +67,7 @@ void dramSystem::run_simulations3()
 
 		nextArrival = min(input_t->arrival_time,nextArrival);
 		// as long as transactions keep happening prior to this time
-		if (moveAllChannelsToTime(nextArrival,&nearFinish,&sendBackTime))
+		if (moveAllChannelsToTime(nextArrival,&nearFinish))
 		{
 			cerr << "not right, no host transactions here" << endl;
 		}
@@ -169,7 +169,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 
 /// Moves all channels to the specified time
 /// If a transaction completes, then it is returned without completing the movement
-const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime, tick_t *sendBackTime)
+const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime)
 {
 #if M5DEBUG
 	outStream << "move forward until: " << endTime << endl;
@@ -178,9 +178,7 @@ const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *tran
 	{
 		const void *finishedTrans = i->moveChannelToTime(endTime, transFinishTime);
 		if (finishedTrans)
-		{
-			*sendBackTime = ((transaction *)finishedTrans)->completion_time;
-			cerr << *sendBackTime << endl;
+		{			
 			return finishedTrans;
 		}
 	}
