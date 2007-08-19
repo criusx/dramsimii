@@ -77,6 +77,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		// should account for tAL buffering the CAS command until the right moment
 		this_command->setCompletionTime(max(this_bank.last_ras_time + timing_specification.t_rcd + timing_specification.t_cas + timing_specification.t_burst, this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cas + timing_specification.t_burst));
 		this_command->getHost()->completion_time = this_command->getCompletionTime();
+		outStream << this_command->getCompletionTime() << endl;
 		break;
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
