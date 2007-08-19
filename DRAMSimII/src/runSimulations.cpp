@@ -180,6 +180,7 @@ const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *tran
 		if (finishedTrans)
 		{
 			*sendBackTime = ((transaction *)finishedTrans)->completion_time;
+			cerr << *sendBackTime << endl;
 			return finishedTrans;
 		}
 	}
