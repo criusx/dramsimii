@@ -706,7 +706,7 @@ channel(system_config.getChannelCount(),
 		string outFilename = settings->outFile;
 
 		if (outFilename.find(".bz2") > 0)
-			outFilename = outFilename.substr(outFilename.find(".bz2"));
+			outFilename = outFilename.substr(0,outFilename.find(".bz2"));
 
 		int counter = 0;
 		ifstream fin;
@@ -737,7 +737,7 @@ channel(system_config.getChannelCount(),
 		string outFilename = settings->outFile;
 
 		if (outFilename.find(".gz") > 0)
-			outFilename = outFilename.substr(outFilename.find(".gz"));
+			outFilename = outFilename.substr(0,outFilename.find(".gz"));
 
 		int counter = 0;
 		ifstream fin;
