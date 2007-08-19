@@ -145,8 +145,8 @@ namespace GentagDemo
             if (readerRunning == false)
             {
                 readerRunning = true;
-                Cursor.Current = Cursors.WaitCursor;
-
+                setWaitCursor(true);
+                
                 if (sender == readLogButton)
                     new Thread(new ThreadStart(launchReadVSLog)).Start();
                 else if ((sender == readIDButton) || (sender == wineButton) || (sender == petButton))
@@ -702,7 +702,7 @@ namespace GentagDemo
             {
                 readerRunning = false;
                 tagReader.running = false;
-                Application.Exit();
+                this.Close();
             }
             else if (e.KeyCode == System.Windows.Forms.Keys.F2)
             {

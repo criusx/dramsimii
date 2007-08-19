@@ -32,6 +32,8 @@ namespace COREMobileMedDemo
 
         }
 
+        medEntryForm meF = new medEntryForm();
+
         byte[] image;
 
         private string RFIDnum = "";
@@ -94,7 +96,7 @@ namespace COREMobileMedDemo
         private void button1_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            listView1.Items.Clear();
+            patientVitalsListView.Items.Clear();
             // only want VS tags so we can grab temp data
             RFIDnum = textBox1.Text = NativeMethods.readOneVSTagID();
             if (RFIDnum.Length > 0)
@@ -111,7 +113,7 @@ namespace COREMobileMedDemo
             Cursor.Current = Cursors.Default;
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void readPatientTagClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             // get the tag id
@@ -164,7 +166,7 @@ namespace COREMobileMedDemo
                     ListViewItem lvi = new ListViewItem(new string[] { now.ToShortTimeString(), currentTemp.ToString("0.0") });
                     if (currentTemp > 100)
                         lvi.BackColor = Color.Red;
-                    selfReference.listView1.Items.Add(lvi);
+                    selfReference.patientVitalsListView.Items.Add(lvi);
 
                 }
                 // violation mode
@@ -193,12 +195,14 @@ namespace COREMobileMedDemo
             selfReference.currentlyBeingRecordedVitals[ar] = pV;
         }
 
+        COREMedDemoWS.patientRecord currentPatient;
+
         private void patientIDLookupFinished(IAsyncResult ar)
         {
             try
             {
                 COREMedDemoWS.COREMedDemoWS ws = (COREMedDemoWS.COREMedDemoWS)ar.AsyncState;
-                COREMedDemoWS.patientRecord pR = ws.EndgetPatientRecord(ar);
+                COREMedDemoWS.patientRecord pR = currentPatient = ws.EndgetPatientRecord(ar);
                 if (pR.exists)
                 {
                     setPhoto(patientPhotoPB, pR.image);
@@ -335,6 +339,58 @@ namespace COREMobileMedDemo
                     currentlyBeingRecordedVitals.Remove(ar);
                 }
             }
+        }
+
+        string MedRFIDNum;
+
+        private void readMedIDClick(object sender, EventArgs e)
+        {
+            setWaitCursor(true);
+            // get the tag id
+            MedRFIDNum = NativeMethods.readOneTagID();
+            setWaitCursor(false);
+            setWaitCursor(true);
+            try
+            {
+                if (MedRFIDNum.Length > 0)
+                {
+                    // then do patient lookup
+                    COREMedDemoWS.COREMedDemoWS ws = new COREMedDemoWS.COREMedDemoWS();
+                    ws.Timeout = 300000;
+
+                    COREMedDemoWS.drugInfo dI = ws.getDrugInfo(MedRFIDNum); // catch webexception
+
+                    if (!dI.exists)
+                    {
+                        MessageBox.Show("Not a known drug");
+                        MedRFIDNum = "";
+                        return;
+                    }
+                    setPhoto(medPB, dI.picture);
+
+
+                    if (ws.checkInteraction(RFIDnum, MedRFIDNum))
+                        MessageBox.Show("This medication is contraindicated for " + currentPatient.firstName + " " + currentPatient.lastName);
+                    else
+                    {
+                        setLabel(meF.medicationName, dI.name);
+                        setLabel(meF.patientName, currentPatient.lastName + ", " + currentPatient.firstName + " " + currentPatient.middleName);
+                        setPhoto(meF.medicinePicture, dI.picture);
+                        if (meF.ShowDialog() == DialogResult.OK)
+                        {
+                            // then submit dosage to db
+                            if (!ws.registerDoseGiven(RFIDnum, MedRFIDNum, "000", decimal.ToInt32(meF.dosageValue)))
+                                MessageBox.Show("This dose has been disallowed");
+                        }
+                    }
+
+                }
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show("lookup error, please try again.");
+            }
+            setWaitCursor(false);
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Globalization;
 namespace PocketGraphBar
 {
 	/// <summary>
-	/// Controls data in diferent from a collection of series an retrieves proper graph output
+	/// Controls data in different from a collection of series an retrieves proper graph output
 	/// </summary>
 	public class GraphMotor
 	{

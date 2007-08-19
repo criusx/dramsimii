@@ -4,16 +4,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F65DA4CC-5EFF-4307-B519-41AD6EBD9AC2}</ProjectGuid>
+    <ProjectGuid>{3FF8F886-D438-4760-8801-A97DCAC9C84D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>COREMobileMedDemo</RootNamespace>
-    <AssemblyName>COREMobileMedDemo</AssemblyName>
+    <RootNamespace>DHL_Demo</RootNamespace>
+    <AssemblyName>DHL Demo</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
     <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
     <OSVersion>5.01</OSVersion>
-    <DeployDirSuffix>COREMobileMedDemo</DeployDirSuffix>
+    <DeployDirSuffix>DHL_Demo</DeployDirSuffix>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FormFactorID>
     </FormFactorID>
@@ -43,17 +43,13 @@
     <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="C1Lib_net_PPC, Version=1.0.2545.18356, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC\C1Lib_net_PPC.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsMobile.Forms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Windows Mobile 5.0 SDK R2\Managed Libraries\Microsoft.WindowsMobile.Forms.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -63,26 +59,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="medEntryForm.cs">
+    <Compile Include="Checkpoint.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mobileMedDemo.cs">
+    <Compile Include="Checkpoint.Designer.cs">
+      <DependentUpon>Checkpoint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DHLDemo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mobileMedDemo.Designer.cs">
-      <DependentUpon>mobileMedDemo.cs</DependentUpon>
+    <Compile Include="DHLDemo.Designer.cs">
+      <DependentUpon>DHLDemo.cs</DependentUpon>
     </Compile>
     <Compile Include="NativeMethods.cs" />
-    <Compile Include="patientVitals.cs" />
+    <Compile Include="nmeaInterpreter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="medEntryForm.resx">
+    <EmbeddedResource Include="Checkpoint.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>medEntryForm.cs</DependentUpon>
+      <DependentUpon>Checkpoint.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mobileMedDemo.resx">
+    <EmbeddedResource Include="DHLDemo.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>mobileMedDemo.cs</DependentUpon>
+      <DependentUpon>DHLDemo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -94,15 +93,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="safeAccessorMutator.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Web References\COREMedDemoWS\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
-    <Compile Include="Web References\MultiWS\Reference.cs">
+    <Compile Include="Web References\org.dyndns.crius\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -112,22 +103,9 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/COREMedDemoWSSoapHttpPort%3fWSDL">
-      <UrlBehavior>Static</UrlBehavior>
-      <RelPath>Web References\COREMedDemoWS\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/COREMedDemoWSSoapHttpPort%3fWSDL</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>
-      </CachedAppSettingsObjectName>
-      <CachedSettingsPropName>
-      </CachedSettingsPropName>
-    </WebReferenceUrl>
     <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
-      <RelPath>Web References\MultiWS\</RelPath>
+      <RelPath>Web References\org.dyndns.crius\</RelPath>
       <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
@@ -140,36 +118,17 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Web References\COREMedDemoWS\COREMedDemoWS.wsdl" />
-    <None Include="Web References\COREMedDemoWS\drugInfo.datasource">
+    <None Include="Web References\org.dyndns.crius\GetDates.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\COREMedDemoWS\errorReport.datasource">
+    <None Include="Web References\org.dyndns.crius\GetDatesWS.wsdl" />
+    <None Include="Web References\org.dyndns.crius\patientInfo.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\COREMedDemoWS\patientRecord.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\COREMedDemoWS\Reference.map">
+    <None Include="Web References\org.dyndns.crius\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Web References\MultiWS\GetDates.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\MultiWS\GetDatesWS.wsdl" />
-    <None Include="Web References\MultiWS\patientInfo.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\MultiWS\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="VarioSens Lib.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
   <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

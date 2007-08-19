@@ -33,6 +33,29 @@ namespace COREMobileMedDemo.COREMedDemoWS {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return")]
+        public bool checkInteraction([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string ID, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string drugID) {
+            object[] results = this.Invoke("checkInteraction", new object[] {
+                        ID,
+                        drugID});
+            return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BegincheckInteraction(string ID, string drugID, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("checkInteraction", new object[] {
+                        ID,
+                        drugID}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public bool EndcheckInteraction(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
         public errorReport enterDrugInfo([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] drugInfo newDrug) {
             object[] results = this.Invoke("enterDrugInfo", new object[] {
@@ -97,6 +120,27 @@ namespace COREMobileMedDemo.COREMedDemoWS {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        public drugInfo getDrugInfo([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum) {
+            object[] results = this.Invoke("getDrugInfo", new object[] {
+                        RFIDNum});
+            return ((drugInfo)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BegingetDrugInfo(string RFIDNum, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("getDrugInfo", new object[] {
+                        RFIDNum}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public drugInfo EndgetDrugInfo(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((drugInfo)(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
         public patientRecord getPatientRecord([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum) {
             object[] results = this.Invoke("getPatientRecord", new object[] {
                         RFIDNum});
@@ -139,6 +183,33 @@ namespace COREMobileMedDemo.COREMedDemoWS {
             object[] results = this.EndInvoke(asyncResult);
             return ((errorReport)(results[0]));
         }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return")]
+        public bool registerDoseGiven([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string patientRFIDNum, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string drugRFIDNum, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string nurseID, int dose) {
+            object[] results = this.Invoke("registerDoseGiven", new object[] {
+                        patientRFIDNum,
+                        drugRFIDNum,
+                        nurseID,
+                        dose});
+            return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginregisterDoseGiven(string patientRFIDNum, string drugRFIDNum, string nurseID, int dose, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("registerDoseGiven", new object[] {
+                        patientRFIDNum,
+                        drugRFIDNum,
+                        nurseID,
+                        dose}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public bool EndregisterDoseGiven(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((bool)(results[0]));
+        }
     }
     
     /// <remarks/>
@@ -152,6 +223,8 @@ namespace COREMobileMedDemo.COREMedDemoWS {
         private byte[] pictureField;
         
         private string descriptionField;
+        
+        private bool existsField;
         
         private string nameField;
         
@@ -185,6 +258,16 @@ namespace COREMobileMedDemo.COREMedDemoWS {
             }
             set {
                 this.descriptionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool exists {
+            get {
+                return this.existsField;
+            }
+            set {
+                this.existsField = value;
             }
         }
         

@@ -7,6 +7,7 @@
           <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
           <xsd:element name="picture" nillable="true" type="xsd:base64Binary" />
           <xsd:element name="description" nillable="true" type="xsd:string" />
+          <xsd:element name="exists" type="xsd:boolean" />
           <xsd:element name="name" nillable="true" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
@@ -21,6 +22,19 @@
           <xsd:element name="lastName" nillable="true" type="xsd:string" />
           <xsd:element name="RFIDnum" nillable="true" type="xsd:string" />
           <xsd:element name="DOB" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="checkInteraction" type="tns:checkInteraction" />
+      <xsd:complexType name="checkInteraction">
+        <xsd:sequence>
+          <xsd:element name="ID" nillable="true" type="xsd:string" />
+          <xsd:element name="drugID" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="checkInteractionResponse" type="tns:checkInteractionResponse" />
+      <xsd:complexType name="checkInteractionResponse">
+        <xsd:sequence>
+          <xsd:element name="return" type="xsd:boolean" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:element name="enterDrugInfo" type="tns:enterDrugInfo" />
@@ -65,6 +79,18 @@
           <xsd:element name="return" nillable="true" type="tns:errorReport" />
         </xsd:sequence>
       </xsd:complexType>
+      <xsd:element name="getDrugInfo" type="tns:getDrugInfo" />
+      <xsd:complexType name="getDrugInfo">
+        <xsd:sequence>
+          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getDrugInfoResponse" type="tns:getDrugInfoResponse" />
+      <xsd:complexType name="getDrugInfoResponse">
+        <xsd:sequence>
+          <xsd:element name="return" nillable="true" type="tns:drugInfo" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:element name="getPatientRecord" type="tns:getPatientRecord" />
       <xsd:complexType name="getPatientRecord">
         <xsd:sequence>
@@ -91,8 +117,29 @@
           <xsd:element name="return" nillable="true" type="tns:errorReport" />
         </xsd:sequence>
       </xsd:complexType>
+      <xsd:element name="registerDoseGiven" type="tns:registerDoseGiven" />
+      <xsd:complexType name="registerDoseGiven">
+        <xsd:sequence>
+          <xsd:element name="patientRFIDNum" nillable="true" type="xsd:string" />
+          <xsd:element name="drugRFIDNum" nillable="true" type="xsd:string" />
+          <xsd:element name="nurseID" nillable="true" type="xsd:string" />
+          <xsd:element name="dose" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="registerDoseGivenResponse" type="tns:registerDoseGivenResponse" />
+      <xsd:complexType name="registerDoseGivenResponse">
+        <xsd:sequence>
+          <xsd:element name="return" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
     </xsd:schema>
   </types>
+  <message name="COREMedDemoWS_checkInteraction">
+    <part name="parameters" element="tns:checkInteraction" />
+  </message>
+  <message name="COREMedDemoWS_checkInteractionResponse">
+    <part name="parameters" element="tns:checkInteractionResponse" />
+  </message>
   <message name="COREMedDemoWS_enterDrugInfo">
     <part name="parameters" element="tns:enterDrugInfo" />
   </message>
@@ -111,6 +158,12 @@
   <message name="COREMedDemoWS_enterPatientRecordResponse">
     <part name="parameters" element="tns:enterPatientRecordResponse" />
   </message>
+  <message name="COREMedDemoWS_getDrugInfo">
+    <part name="parameters" element="tns:getDrugInfo" />
+  </message>
+  <message name="COREMedDemoWS_getDrugInfoResponse">
+    <part name="parameters" element="tns:getDrugInfoResponse" />
+  </message>
   <message name="COREMedDemoWS_getPatientRecord">
     <part name="parameters" element="tns:getPatientRecord" />
   </message>
@@ -123,7 +176,17 @@
   <message name="COREMedDemoWS_logPatientVitalsResponse">
     <part name="parameters" element="tns:logPatientVitalsResponse" />
   </message>
+  <message name="COREMedDemoWS_registerDoseGiven">
+    <part name="parameters" element="tns:registerDoseGiven" />
+  </message>
+  <message name="COREMedDemoWS_registerDoseGivenResponse">
+    <part name="parameters" element="tns:registerDoseGivenResponse" />
+  </message>
   <portType name="COREMedDemoWS">
+    <operation name="checkInteraction">
+      <input message="tns:COREMedDemoWS_checkInteraction" />
+      <output message="tns:COREMedDemoWS_checkInteractionResponse" />
+    </operation>
     <operation name="enterDrugInfo">
       <input message="tns:COREMedDemoWS_enterDrugInfo" />
       <output message="tns:COREMedDemoWS_enterDrugInfoResponse" />
@@ -136,6 +199,10 @@
       <input message="tns:COREMedDemoWS_enterPatientRecord" />
       <output message="tns:COREMedDemoWS_enterPatientRecordResponse" />
     </operation>
+    <operation name="getDrugInfo">
+      <input message="tns:COREMedDemoWS_getDrugInfo" />
+      <output message="tns:COREMedDemoWS_getDrugInfoResponse" />
+    </operation>
     <operation name="getPatientRecord">
       <input message="tns:COREMedDemoWS_getPatientRecord" />
       <output message="tns:COREMedDemoWS_getPatientRecordResponse" />
@@ -144,9 +211,22 @@
       <input message="tns:COREMedDemoWS_logPatientVitals" />
       <output message="tns:COREMedDemoWS_logPatientVitalsResponse" />
     </operation>
+    <operation name="registerDoseGiven">
+      <input message="tns:COREMedDemoWS_registerDoseGiven" />
+      <output message="tns:COREMedDemoWS_registerDoseGivenResponse" />
+    </operation>
   </portType>
   <binding name="COREMedDemoWSSoapHttp" type="tns:COREMedDemoWS">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="checkInteraction">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
     <operation name="enterDrugInfo">
       <soap:operation soapAction="" />
       <input>
@@ -174,6 +254,15 @@
         <soap:body use="literal" />
       </output>
     </operation>
+    <operation name="getDrugInfo">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
     <operation name="getPatientRecord">
       <soap:operation soapAction="" />
       <input>
@@ -184,6 +273,15 @@
       </output>
     </operation>
     <operation name="logPatientVitals">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="registerDoseGiven">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />
