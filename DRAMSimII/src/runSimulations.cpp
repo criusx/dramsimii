@@ -310,6 +310,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 	{
 		// attempt first to move transactions out of the transactions queue and
 		// convert them into commands
+		// FIXME: no longer returns transactions
 		transaction *temp_t = channel[chan].read_transaction();
 
 		// if there were no transactions left in the queue or there was not
