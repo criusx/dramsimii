@@ -153,7 +153,7 @@ void dramChannel::doPowerCalculation()
 		}
 		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS;
-		cerr << "Psys(ACT) ch[" << channelID << "] r[] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
+		cerr << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
 			"(" << totalRAS << ") tRRDsch(" << tRRDsch << ") lastCalc[" << powerModel.lastCalculation << "] time[" << 
 			time << "]" << endl;		
 	}

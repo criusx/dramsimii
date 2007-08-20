@@ -31,6 +31,8 @@ namespace DRAMSimII
 		explicit rank_c(const dramSettings *settings);
 
 		// accessors
+		unsigned getRankID() const { return rankID; }
+		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
 	};
 }
