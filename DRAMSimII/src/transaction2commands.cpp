@@ -86,7 +86,7 @@ bool dramSystem::checkForAvailableCommandSlots(const transaction *trans) const
 	else
 	{
 		cerr << "Unhandled row buffer management policy" << endl;
-		return FAILURE;
+		return false;
 	}
 	return true;
 }

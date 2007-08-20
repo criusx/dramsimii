@@ -22,12 +22,16 @@ namespace DRAMSimII
 		unsigned last_casw_length;
 		queue<tick_t> last_ras_times; // ras time queue. useful to determine if t_faw is met
 		std::vector<bank_c> bank;
+		unsigned rankID;		// the ordinal number of this rank
 
 		// constructors
 		explicit rank_c();
 		rank_c(const rank_c &);
 		explicit rank_c(const unsigned,const unsigned);	
 		explicit rank_c(const dramSettings *settings);
+
+		// accessors
+		void setRankID(const unsigned value) { rankID = value; }
 	};
 }
 #endif

@@ -26,7 +26,12 @@ completion_q(settings->completionQueueDepth),
 system_config(NULL),
 powerModel(settings),
 algorithm(settings)
-{}
+{
+	for (unsigned i = 0; i < settings->rankCount; i++)
+	{
+		rank[i].setRankID(i);
+	}
+}
 
 dramChannel::dramChannel(const dramChannel &dc):
 time(dc.time),
@@ -146,7 +151,8 @@ void dramChannel::doPowerCalculation()
 			totalRAS += (l->RASCount - l->previousRASCount);
 			l->previousRASCount = l->RASCount;
 		}
-		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
+		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
+		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS;
 		cerr << "Psys(ACT) ch[" << channelID << "] r[] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
 			"(" << totalRAS << ") tRRDsch(" << tRRDsch << ") lastCalc[" << powerModel.lastCalculation << "] time[" << 
 			time << "]" << endl;		
