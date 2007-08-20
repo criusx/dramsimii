@@ -154,6 +154,22 @@ void dramChannel::doPowerCalculation()
 	powerModel.lastCalculation = time;
 }
 
+transaction *dramChannel::read_transaction() const
+{
+	transaction *temp_t = transaction_q.read_back(); 
+	if ((temp_t) && (time - temp_t->enqueueTime < timing_specification.t_buffer_delay))
+	{
+#ifdef M5DEBUG
+		outStream << "resetting: ";
+		outStream << time << " ";
+		outStream << temp_t->enqueueTime << " ";
+		outStream << timing_specification.t_buffer_delay << endl;
+#endif
+		temp_t = NULL; // not enough time has passed		
+	}
+	return temp_t;
+}
+
 dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
 {
 	if (this == &rs)

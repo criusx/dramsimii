@@ -188,26 +188,11 @@ const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *tran
 /// Moves the specified channel to at least the time given
 const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFinishTime)
 {
-	bool processingTransaction = false;
-
 	while (time < endTime)
 	{
 		// attempt first to move transactions out of the transactions queue and
 		// convert them into commands after a fixed amount of time		
-		transaction *temp_t = read_transaction();		
-
-		if ((temp_t) && (time - temp_t->enqueueTime < timing_specification.t_buffer_delay))
-		{
-#ifdef M5DEBUG
-			outStream << "resetting: ";
-			outStream << time << " ";
-			outStream << temp_t->enqueueTime << " ";
-			outStream << timing_specification.t_buffer_delay << endl;
-#endif
-			temp_t = NULL; // not enough time has passed
-			// make sure that it is known that there may be time to divide up a command before the end of the epoch
-			processingTransaction = true;
-		}
+		transaction *temp_t = read_transaction();
 
 
 		// if there were no transactions left in the queue or there was not
@@ -226,12 +211,13 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				// the transaction queue and all the per bank queues are empty,
 				// so just move time forward to the point where the transaction starts
 				// or move time forward until the transaction is ready to be decoded
-				if ((processingTransaction) && (time + timing_specification.t_buffer_delay <= endTime))
+				if ((transaction_q.get_count() > 0) && (time + timing_specification.t_buffer_delay <= endTime))
 				{
-					processingTransaction = false;
-					// FIXME: this should move time forward until the trans can be successfully converted
-					time = time + timing_specification.t_buffer_delay;
+					tick_t oldTime = time;
+					time = timing_specification.t_buffer_delay + transaction_q.read_back()->enqueueTime;
+					assert(oldTime < time);
 				}
+				// no transactions to convert, no commands to issue, just go forward
 				else
 				{
 					time = endTime;
