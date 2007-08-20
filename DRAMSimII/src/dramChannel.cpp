@@ -152,9 +152,9 @@ void dramChannel::doPowerCalculation()
 			l->previousRASCount = l->RASCount;
 		}
 		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
-		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS;
+		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS / system_config->Frequency();
 		cerr << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
-			"(" << totalRAS << ") tRRDsch(" << tRRDsch << ") lastCalc[" << powerModel.lastCalculation << "] time[" << 
+			"(" << totalRAS << ") tRRDsch(" << tRRDsch << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 			time << "]" << endl;		
 	}
 	powerModel.lastCalculation = time;
