@@ -23,6 +23,8 @@ namespace DHL_Demo
 
         Checkpoint checkpointDialog = new Checkpoint();
 
+        Browser bR = new Browser();
+
         public dhlDemoForm()
         {
             InitializeComponent();
@@ -61,7 +63,7 @@ namespace DHL_Demo
             gpsInterpreter.VDOPReceived += new nmeaInterpreter.VDOPReceivedEventHandler(gpsNmea_VDOPReceived);
             gpsInterpreter.NumSatsReceived += new nmeaInterpreter.NumberOfSatellitesInViewEventHandler(gpsNmea_NumSatsReceived);
             gpsInterpreter.QueueUpdated += new nmeaInterpreter.SetQueuedRequestsEventHandler(pendingQueueUpdate);
-        }      
+        }
 
         #region GPS Event Handlers
 
@@ -467,39 +469,56 @@ namespace DHL_Demo
         // submit
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            setWaitCursor(true);
-            try
+            int failCount = 5;
+
+            if (rfidTB.Text.Length < 12 || recipientTB.Text.Length < 2 || emailTB.Text.Length < 6 || address1TB.Text.Length < 9 || cityTB.Text.Length < 4 || stateTB.Text.Length != 2 || zipTB.Text.Length != 5)
             {
-                if (getPanel(panel1) != Color.Green)
-                {
-                    setWaitCursor(false);
-                    MessageBox.Show("GPS fix not acquired");
-                    return;
-                }
-                
-            //    org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-            //    ws.Timeout = 30000;
-            //    org.dyndns.crius.patientInfo values = ws.getPatientInfo(patientID);
-            //    setTextBox(patientNameBox, values.name);
-            //    setTextBox(patientDescriptionBox, values.description);
-            //    setPhoto(patientPhoto, values.image);
+                MessageBox.Show("Please fill in all fields before submitting");
+                return;
             }
-            catch (NotSupportedException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            catch (IOException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            catch (WebException ex)
-            {
-                MessageBox.Show("Problem connecting to web service: " + ex.Message);
-            }
-            finally
+
+
+            if (getPanel(panel1) != Color.Green)
             {
                 setWaitCursor(false);
+                MessageBox.Show("GPS fix not acquired, cannot submit");
+                return;
             }
+            checkpointDialog.setMovementVisibility(false);
+            checkpointDialog.setInfo(emailTB.Text, address1TB.Text, address2TB.Text, cityTB.Text, stateTB.Text, zipTB.Text, rfidTB.Text, recipientTB.Text, pagerTB.Text);
+            if (checkpointDialog.ShowDialog() == DialogResult.OK)
+            {
+                setWaitCursor(true);
+                DHLDemoWS.DhlDemoWS ws = new DHLDemoWS.DhlDemoWS();
+                ws.Timeout = 40000;
+                
+
+            retry:
+                try
+                {
+                    ws.setPackageInfo(checkpointDialog.getPackageInfo());
+                }
+                catch (NotSupportedException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                catch (WebException ex)
+                {
+                    if (failCount-- > 0)
+                        goto retry;
+                    MessageBox.Show("Problem connecting to web service: " + ex.Message);
+                }
+                finally
+                {
+                    setWaitCursor(false);
+                }
+            }
+
+
         }
 
         string newPackageID;
@@ -523,45 +542,118 @@ namespace DHL_Demo
             {
                 setWaitCursor(false);
             }
-        }
+        }        
 
-        private void genTrackingNoButton_Click(object sender, EventArgs e)
-        {
-            Random rN = new Random();
-            trackingNoTB.Text = "";
-            for (int i = 0; i < 12; i++)
-                trackingNoTB.Text += rN.Next(10);
-        }
+        bool one = false;
 
         private void dhlDemoForm_KeyDown(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode == System.Windows.Forms.Keys.Up))
             {
-                // Up
+                one = true;
             }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Down))
+            else if ((e.KeyCode == System.Windows.Forms.Keys.Down) && one)
             {
-                // Down
+                Application.Exit();
             }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Left))
+            else
             {
-                // Left
+                one = false;
             }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Right))
-            {
-                // Right
-            }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Enter))
-            {
-                // Enter
-            }
+
             if ((e.KeyCode == System.Windows.Forms.Keys.F1))
             {
                 // do scan on scan page
                 tabControl1.SelectedIndex = 1;
                 string RFIDNum = NativeMethods.readOneTagID();
-                // go grab the info on this package
 
+                setWaitCursor(true);
+                checkpointDialog.setMovementVisibility(true);
+
+                DHLDemoWS.DhlDemoWS ws = new DHLDemoWS.DhlDemoWS();
+                ws.Timeout = 40000;
+                DHLDemoWS.packageInfo pI = new DHLDemoWS.packageInfo();
+                int failCount = 5;
+
+            retry0:
+                try
+                {
+                    pI = ws.getPackageInfo(RFIDNum);
+                    if (pI.exists)
+                        checkpointDialog.setInfo(pI.recipientEmail, pI.deliveryAddress, pI.deliveryAddress2, pI.city, pI.state, pI.zip, pI.RFIDNum, pI.recipient, pI.recipientPager);
+                    else
+                    {
+                        MessageBox.Show("Not yet entered into the system");
+                        setWaitCursor(false);
+                        return;
+                    }
+                }
+                catch (NotSupportedException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                catch (WebException ex)
+                {
+                    if (failCount-- > 0)
+                        goto retry0;
+                    MessageBox.Show("Problem connecting to web service: " + ex.Message);
+                }
+                finally
+                {
+                    setWaitCursor(false);
+                }
+                
+                if (checkpointDialog.ShowDialog() == DialogResult.Cancel)
+                    return;
+                // go grab the info on this package
+                setWaitCursor(true);
+                failCount = 5;
+            retry:
+                try
+                {
+                    if (getPanel(panel1) != Color.Green)
+                    {
+                        setWaitCursor(false);
+                        MessageBox.Show("GPS fix not acquired");
+                        return;
+                    }
+                    
+                    
+                    DHLDemoWS.packageScan pS = new DHLDemoWS.packageScan();
+                    pS.actionTaken = (int)checkpointDialog.whichDeliveryOption;
+                    pS.latitude = gpsInterpreter.getLatitude();
+                    pS.longitude = gpsInterpreter.getLongitude();
+                    pS.RFIDNum = RFIDNum;
+                    rfidScanTB.Text = RFIDNum;
+                    pS.scannerID = DeviceUID;
+                    pI = ws.scanPackage(pS);
+                    trackingNumScanTB.Text = pI.trackingNumber;
+                    emailScanTB.Text = pI.recipientEmail;
+                    pagerScanTB.Text = pI.recipientPager;
+                    addressScanTB.Text = pI.deliveryAddress;
+                }
+                catch (NotSupportedException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                catch (WebException ex)
+                {
+                    if (failCount-- > 0)
+                        goto retry;
+                    MessageBox.Show("Problem connecting to web service: " + ex.Message);
+                }
+                finally
+                {
+                    setWaitCursor(false);
+                }
                 // set the info for it
             }
 
@@ -570,6 +662,16 @@ namespace DHL_Demo
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             dhlDemoForm_KeyDown(this, new KeyEventArgs(System.Windows.Forms.Keys.F1));
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            gpsInterpreter.simulate();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -135,6 +135,28 @@ namespace DHL_Demo
             return currentLatitude;
         }
 
+        public void simulate()
+        {
+            string Latitude = "38°59.5301\"N";
+            string Longitude = "76°53.9224\"W";
+            PositionReceived(Latitude, Longitude);
+            currentLatitude = 38.992294f;
+            currentLongitude = -76.89886f;
+
+            System.DateTime Today = System.DateTime.Now.ToUniversalTime();
+            System.DateTime SatelliteTime = new System.DateTime(Today.Year, Today.Month, Today.Day, 13, 48, 50, 324);
+            DateTimeChanged(SatelliteTime.ToLocalTime());
+
+            SpeedReceived(64);
+
+            BearingReceived(189.8);
+
+            FixObtained();
+            PDOPReceived(2);
+            HDOPReceived(2.1);
+            VDOPReceived(2.2);
+        }
+
         /// <summary>
         /// Get the longitude
         /// </summary>
