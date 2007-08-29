@@ -55,11 +55,11 @@ namespace DRAMSimII
 		tick_t get_time() const { return time; }
 		void set_time(tick_t new_time) { time = new_time; }
 		unsigned get_last_rank_id() const { return last_rank_id; }
-		transaction *get_transaction() { return transaction_q.dequeue(); } // remove and return the oldest transaction
+		transaction *getTransaction() { return transaction_q.dequeue(); } // remove and return the oldest transaction
 		transaction *read_transaction() const;  // read the oldest transaction without affecting the queue
 		transaction *read_transaction_simple() const { return transaction_q.read_back(); }
-		transaction *get_refresh() { return refreshQueue.dequeue(); }
-		transaction *read_refresh() { return refreshQueue.read_back(); }
+		transaction *getRefresh() { return refreshQueue.dequeue(); }
+		transaction *readRefresh() { return refreshQueue.read_back(); }
 		bool enqueueRefresh(transaction *in) { return refreshQueue.enqueue(in); }
 		bool enqueue(transaction *in) { return transaction_q.enqueue(in); }
 		bool isFull() const { return transaction_q.freecount() == 0; }

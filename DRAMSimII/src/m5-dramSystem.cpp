@@ -190,7 +190,12 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 { 
 	// FIXME: shouldn't need to turn away packets, the requester should hold off once NACK'd
 	if (memory->needRetry)
+	{
+		static unsigned numCallsWhileBlocked = 0;
+		if (numCallsWhileBlocked++ % 100000 == 0)
+			cerr << numCallsWhileBlocked << "\r";
 		return false;
+	}
 
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
 
@@ -288,6 +293,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			//doSendTiming(pkt,0);
 
 			delete trans;
+			// http://m5.eecs.umich.edu/wiki/index.php/Memory_System
 			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
 			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
 			memory->needRetry = true;

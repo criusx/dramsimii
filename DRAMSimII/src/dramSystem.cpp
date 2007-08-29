@@ -677,10 +677,10 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 	else
 	{
 		// read but do not remove
-		transaction *refresh_t = channel[temp_t->addr.chan_id].read_refresh();
+		transaction *refresh_t = channel[temp_t->addr.chan_id].readRefresh();
 
 		if (refresh_t->arrival_time < temp_t->arrival_time)
-			this_t = channel[temp_t->addr.chan_id].get_refresh();
+			this_t = channel[temp_t->addr.chan_id].getRefresh();
 		else
 		{
 			this_t = temp_t;

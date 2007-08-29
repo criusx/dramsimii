@@ -343,6 +343,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\fbdSystem.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\getNextCommand.cpp"
 				>
 			</File>
@@ -420,6 +424,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\fbdSystem.h"
+				>
+			</File>
 			<File
 				RelativePath=".\powerConfig.h"
 				>

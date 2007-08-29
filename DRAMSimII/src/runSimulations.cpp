@@ -122,7 +122,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 	// as long 
 	while (!channel[chan].enqueue(trans))
 	{
-		transaction *temp_t = channel[chan].get_transaction();
+		transaction *temp_t = channel[chan].getTransaction();
 
 		if(temp_t != NULL)
 		{
@@ -287,7 +287,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 			//update_system_time(); 
 
 			// actually remove it from the queue now
-			transaction *completedTransaction = get_transaction();
+			transaction *completedTransaction = getTransaction();
 			assert(temp_t == completedTransaction);
 #ifdef DEBUG_TRANSACTION
 			outStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << endl;
@@ -364,7 +364,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 		}
 		else // successfully converted to commands, dequeue
 		{
-			transaction *completedTrans = channel[chan].get_transaction();
+			transaction *completedTrans = channel[chan].getTransaction();
 			assert(temp_t == completedTrans);
 		}
 	}
@@ -385,7 +385,7 @@ void dramSystem::run_simulations()
 				// and drain it completely 
 				// unfortunately, we may have to drain another channel first. 
 				int oldest_chan_id = findOldestChannel();
-				transaction *temp_t = channel[oldest_chan_id].get_transaction();
+				transaction *temp_t = channel[oldest_chan_id].getTransaction();
 
 #ifdef DEBUG_TRANSACTION
 				outStream << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
