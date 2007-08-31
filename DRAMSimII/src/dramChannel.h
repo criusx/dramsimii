@@ -34,11 +34,15 @@ namespace DRAMSimII
 		dramAlgorithm algorithm;
 		unsigned channelID;					// the ordinal value of this channel (0..n)
 
+		// functions
+		command *chooseNextCommand() const;
+
 	public:
 		// functions
 		bool transaction2commands(transaction *);
 		command *getNextCommand();
 		command *readNextCommand() const;
+		
 		const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
 		int minProtocolGap(const command *thisCommand) const;
 		void executeCommand(command *, const int);
