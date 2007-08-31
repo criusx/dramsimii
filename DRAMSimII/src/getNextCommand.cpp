@@ -454,9 +454,10 @@ command *dramChannel::readNextCommand() const
 			// if there was a command found
 			if (oldest_command_time < ll.max())
 			{
-				assert(rank[oldest_bank_id->per_bank_q.read_back()->getAddress().rank_id].bank[oldest_bank_id->per_bank_q.read_back()->getAddress().rank_id].per_bank_q.read_back() == oldest_bank_id->per_bank_q.read_back());
+				command *temp_c = oldest_bank_id->per_bank_q.read_back();				
+				assert(rank[temp_c->getAddress().rank_id].bank[temp_c->getAddress().bank_id].per_bank_q.read_back() == oldest_bank_id->per_bank_q.read_back());
 
-				return oldest_bank_id->per_bank_q.read_back();				
+				return oldest_bank_id->per_bank_q.read_back();
 			}
 			else
 				return NULL;
