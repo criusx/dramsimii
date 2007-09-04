@@ -15,15 +15,15 @@ using namespace DRAMSimII;
 dramChannel::dramChannel(const dramSettings *settings):
 time(0),
 rank(settings->rankCount, rank_c(settings)),
-refresh_row_index(0),
-last_refresh_time(0),
-last_rank_id(0),
+refreshRowIndex(0),
+lastRefreshTime(0),
+lastRankID(0),
 timing_specification(settings),
-transaction_q(settings->transactionQueueDepth),
+transactionQueue(settings->transactionQueueDepth),
 refreshQueue(settings->rowCount * settings->rankCount,true),
-history_q(settings->historyQueueDepth),
-completion_q(settings->completionQueueDepth),
-system_config(NULL),
+historyQueue(settings->historyQueueDepth),
+completionQueue(settings->completionQueueDepth),
+systemConfig(NULL),
 powerModel(settings),
 algorithm(settings)
 {
@@ -36,41 +36,20 @@ algorithm(settings)
 dramChannel::dramChannel(const dramChannel &dc):
 time(dc.time),
 rank(dc.rank),
-refresh_row_index(dc.refresh_row_index),
-last_refresh_time(dc.last_refresh_time),
-last_rank_id(dc.last_rank_id),
+refreshRowIndex(dc.refreshRowIndex),
+lastRefreshTime(dc.lastRefreshTime),
+lastRankID(dc.lastRankID),
 timing_specification(dc.timing_specification),
-transaction_q(dc.transaction_q),
+transactionQueue(dc.transactionQueue),
 refreshQueue(dc.refreshQueue),
-history_q(dc.history_q),
-completion_q(dc.completion_q),
-system_config(NULL),
+historyQueue(dc.historyQueue),
+completionQueue(dc.completionQueue),
+systemConfig(NULL),
 powerModel(dc.powerModel),
 algorithm(dc.algorithm)
 {
 }
 
-void dramChannel::init_controller(int transaction_queue_depth,
-								  int history_queue_depth,
-								  int completion_queue_depth,
-								  int refresh_queue_depth,
-								  int rank_count,
-								  int bank_count,
-								  int per_bank_queue_depth)
-{
-	transaction_q.init(transaction_queue_depth);
-	history_q.init(history_queue_depth);
-	completion_q.init(completion_queue_depth);
-
-
-	time = 0;
-	last_refresh_time = 0;
-	refresh_row_index = 0;
-	last_rank_id = 0;
-
-
-	refreshQueue.init(refresh_queue_depth,  true);
-}
 
 void dramChannel::initRefreshQueue(const unsigned rowCount,
 								   const unsigned refreshTime,
@@ -96,9 +75,9 @@ void dramChannel::initRefreshQueue(const unsigned rowCount,
 
 void dramChannel::record_command(command *latest_command)
 {
-	while (history_q.enqueue(latest_command) == FAILURE)
+	while (historyQueue.enqueue(latest_command) == FAILURE)
 	{
-		delete history_q.dequeue();
+		delete historyQueue.dequeue();
 	}
 }
 
@@ -154,7 +133,7 @@ void dramChannel::doPowerCalculation()
 		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS;
 		cerr << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
-			"(" << totalRAS << ") tRRDsch(" << tRRDsch / system_config->Frequency() / 1.0E-9 << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
+			"(" << totalRAS << ") tRRDsch(" << tRRDsch / systemConfig->Frequency() / 1.0E-9 << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 			time << "]" << endl;		
 	}
 	powerModel.lastCalculation = time;
@@ -162,7 +141,7 @@ void dramChannel::doPowerCalculation()
 
 transaction *dramChannel::read_transaction() const
 {
-	transaction *temp_t = transaction_q.read_back(); 
+	transaction *temp_t = transactionQueue.read_back(); 
 	if ((temp_t) && (time - temp_t->enqueueTime < timing_specification.t_buffer_delay))
 	{
 #ifdef M5DEBUG
@@ -184,14 +163,14 @@ dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
 	}
 	time = rs.time;
 	rank = rs.rank;
-	refresh_row_index = rs.refresh_row_index;
-	last_rank_id = rs.last_rank_id;
+	refreshRowIndex = rs.refreshRowIndex;
+	lastRankID = rs.lastRankID;
 	timing_specification = rs.timing_specification;
-	transaction_q = rs.transaction_q;
+	transactionQueue = rs.transactionQueue;
 	refreshQueue = rs.refreshQueue;
-	history_q = rs.history_q;
-	completion_q = rs.completion_q;
-	system_config = new dramSystemConfiguration(rs.system_config);
+	historyQueue = rs.historyQueue;
+	completionQueue = rs.completionQueue;
+	systemConfig = new dramSystemConfiguration(rs.systemConfig);
 	powerModel = rs.powerModel;
 	algorithm = rs.algorithm;
 	return *this;

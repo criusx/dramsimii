@@ -147,7 +147,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 				{
 					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 					{
-						completed_t->arrival_time += 7 / 8 * system_config.getRefreshTime();
+						completed_t->arrival_time += 7 / 8 * systemConfig.getRefreshTime();
 						channel[chan].enqueueRefresh(completed_t);
 					}
 					else
@@ -211,10 +211,10 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				// the transaction queue and all the per bank queues are empty,
 				// so just move time forward to the point where the transaction starts
 				// or move time forward until the transaction is ready to be decoded
-				if ((transaction_q.get_count() > 0) && (time + timing_specification.t_buffer_delay <= endTime))
+				if ((transactionQueue.get_count() > 0) && (time + timing_specification.t_buffer_delay <= endTime))
 				{
 					tick_t oldTime = time;
-					time = timing_specification.t_buffer_delay + transaction_q.read_back()->enqueueTime;
+					time = timing_specification.t_buffer_delay + transactionQueue.read_back()->enqueueTime;
 					assert(oldTime < time);
 				}
 				// no transactions to convert, no commands to issue, just go forward
@@ -244,7 +244,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 					
 					// only get completed commands if they have finished TODO:
-					transaction *completed_t = completion_q.dequeue();
+					transaction *completed_t = completionQueue.dequeue();
 
 					if (completed_t != NULL)
 					{
@@ -254,7 +254,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 						// reuse the refresh transactions
 						if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 						{
-							completed_t->arrival_time += 7 / 8 * system_config->getRefreshTime();
+							completed_t->arrival_time += 7 / 8 * systemConfig->getRefreshTime();
 							//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
 							enqueueRefresh(completed_t);
 						}
@@ -343,7 +343,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 					// reuse the refresh transactions
 					if (completed_t->type == AUTO_REFRESH_TRANSACTION)
 					{
-						completed_t->arrival_time += 7 / 8 * system_config.getRefreshTime();
+						completed_t->arrival_time += 7 / 8 * systemConfig.getRefreshTime();
 						//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
 						channel[completed_t->addr.chan_id].enqueueRefresh(completed_t);
 					}

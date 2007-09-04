@@ -28,7 +28,7 @@ namespace DRAMSimII
 	{
 	private:
 		// members
-		dramSystemConfiguration system_config;
+		dramSystemConfiguration systemConfig;
 		std::vector<dramChannel> channel;	
 		simulationParameters sim_parameters;
 		dramStatistics statistics;	
@@ -54,7 +54,7 @@ namespace DRAMSimII
 		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); }
 		void enqueueTimeShift(transaction* trans);
 		input_status_t waitForTransactionToFinish(transaction *trans);
-		double Frequency() const { return system_config.Frequency(); }
+		double Frequency() const { return systemConfig.Frequency(); }
 		tick_t nextTick() const;
 		void doPowerCalculation();
 		void run_simulations();

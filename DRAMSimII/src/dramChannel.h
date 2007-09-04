@@ -21,21 +21,18 @@ namespace DRAMSimII
 	private:
 		tick_t time;						// channel time, allow for channel concurrency	
 		std::vector<rank_c> rank;			// vector of the array of ranks
-		unsigned refresh_row_index;			// the row index to be refreshed
-		tick_t last_refresh_time;			// tells me when last refresh was done
-		unsigned last_rank_id;				// id of the last accessed rank of this channel
+		unsigned refreshRowIndex;			// the row index to be refreshed
+		tick_t lastRefreshTime;			// tells me when last refresh was done
+		unsigned lastRankID;				// id of the last accessed rank of this channel
 		dramTimingSpecification timing_specification; // the timing specs for this channel
-		queue<transaction> transaction_q;	// transaction queue for the channel
+		queue<transaction> transactionQueue;	// transaction queue for the channel
 		queue<transaction> refreshQueue;	// queue of refresh transactions
-		queue<command> history_q;			// what were the last N commands to this channel?
-		queue<transaction> completion_q;	// completed_q, can send status back to memory controller
-		dramSystemConfiguration *system_config; // a pointer to common system config values
+		queue<command> historyQueue;			// what were the last N commands to this channel?
+		queue<transaction> completionQueue;	// completed_q, can send status back to memory controller
+		dramSystemConfiguration *systemConfig; // a pointer to common system config values
 		powerConfig powerModel;
 		dramAlgorithm algorithm;
 		unsigned channelID;					// the ordinal value of this channel (0..n)
-
-		// functions
-		command *chooseNextCommand() const;
 
 	public:
 		// functions
@@ -50,7 +47,7 @@ namespace DRAMSimII
 
 
 		// accessors and mutators
-		void setSystemConfig(dramSystemConfiguration *_system_config) { system_config = _system_config; } // TODO: remove this and have parameters stored locally
+		void setSystemConfig(dramSystemConfiguration *_system_config) { systemConfig = _system_config; } // TODO: remove this and have parameters stored locally
 		const dramTimingSpecification& getTimingSpecification() const { return timing_specification; }
 		rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }
 		const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }
@@ -58,20 +55,20 @@ namespace DRAMSimII
 		const std::vector<rank_c>& getRank() const { return rank; }
 		tick_t get_time() const { return time; }
 		void set_time(tick_t new_time) { time = new_time; }
-		unsigned get_last_rank_id() const { return last_rank_id; }
-		transaction *getTransaction() { return transaction_q.dequeue(); } // remove and return the oldest transaction
+		unsigned get_last_rank_id() const { return lastRankID; }
+		transaction *getTransaction() { return transactionQueue.dequeue(); } // remove and return the oldest transaction
 		transaction *read_transaction() const;  // read the oldest transaction without affecting the queue
-		transaction *read_transaction_simple() const { return transaction_q.read_back(); }
+		transaction *read_transaction_simple() const { return transactionQueue.read_back(); }
 		transaction *getRefresh() { return refreshQueue.dequeue(); }
 		transaction *readRefresh() { return refreshQueue.read_back(); }
 		bool enqueueRefresh(transaction *in) { return refreshQueue.enqueue(in); }
-		bool enqueue(transaction *in) { return transaction_q.enqueue(in); }
-		bool isFull() const { return transaction_q.freecount() == 0; }
-		bool complete(transaction *in) { return completion_q.enqueue(in); }
-		transaction *get_oldest_completed() { return completion_q.dequeue(); }
-		command *get_most_recent_command() const { return history_q.newest(); } // get the most recent command from the history queue
-		unsigned getTransactionQueueCount() const { return transaction_q.get_count(); }
-		unsigned getTransactionQueueDepth() const { return transaction_q.get_depth(); }
+		bool enqueue(transaction *in) { return transactionQueue.enqueue(in); }
+		bool isFull() const { return transactionQueue.freecount() == 0; }
+		bool complete(transaction *in) { return completionQueue.enqueue(in); }
+		transaction *get_oldest_completed() { return completionQueue.dequeue(); }
+		command *get_most_recent_command() const { return historyQueue.newest(); } // get the most recent command from the history queue
+		unsigned getTransactionQueueCount() const { return transactionQueue.get_count(); }
+		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }
 		void record_command(command *);
 		void initRefreshQueue(const unsigned, const unsigned, const unsigned); // init the RefreshQueue using selected algorithm
 		void setChannelID(const unsigned value) { channelID = value; }
@@ -86,7 +83,6 @@ namespace DRAMSimII
 
 
 		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
-		void init_controller(int, int, int, int, int, int, int);
 		enum transaction_type_t set_read_write_type(const int,const int) const;
 	};
 }
