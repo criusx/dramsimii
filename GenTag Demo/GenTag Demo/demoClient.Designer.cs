@@ -127,9 +127,9 @@ namespace GentagDemo
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.authPage.SuspendLayout();
             this.VarioSens.SuspendLayout();
@@ -959,7 +959,7 @@ namespace GentagDemo
             this.varioSensWPage.Controls.Add(this.label5);
             this.varioSensWPage.Location = new System.Drawing.Point(0, 0);
             this.varioSensWPage.Name = "varioSensWPage";
-            this.varioSensWPage.Size = new System.Drawing.Size(240, 217);
+            this.varioSensWPage.Size = new System.Drawing.Size(232, 214);
             this.varioSensWPage.Text = "VarioSens/W";
             // 
             // getSetStatusBox
@@ -1051,6 +1051,13 @@ namespace GentagDemo
             this.label6.Size = new System.Drawing.Size(100, 20);
             this.label6.Text = "High Limit";
             // 
+            // label21
+            // 
+            this.label21.Location = new System.Drawing.Point(0, 136);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(49, 20);
+            this.label21.Text = "Status";
+            // 
             // label9
             // 
             this.label9.Location = new System.Drawing.Point(7, 109);
@@ -1065,19 +1072,12 @@ namespace GentagDemo
             this.label5.Size = new System.Drawing.Size(100, 20);
             this.label5.Text = "Low Limit";
             // 
-            // label21
-            // 
-            this.label21.Location = new System.Drawing.Point(0, 136);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(49, 20);
-            this.label21.Text = "Status";
-            // 
             // demoClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(240, 320);
+            this.ClientSize = new System.Drawing.Size(240, 240);
             this.Controls.Add(this.tabControl1);
             this.KeyPreview = true;
             this.Location = new System.Drawing.Point(0, 0);
