@@ -5,7 +5,6 @@
 #include "globals.h"
 #include "addresses.h"
 #include "enumTypes.h"
-#include "transaction.h"
 #include "queue.h"
 
 namespace DRAMSimII

@@ -76,7 +76,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
 		this_command->setCompletionTime(max(this_bank.last_ras_time + timing_specification.t_rcd + timing_specification.t_cas + timing_specification.t_burst, this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cas + timing_specification.t_burst));
-		this_command->getHost()->completion_time = this_command->getCompletionTime();
+		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
@@ -92,7 +92,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		this_bank.last_casw_length = this_command->getLength();
 		this_rank.last_casw_length = this_command->getLength();
 		this_bank.CASWCount++;
-		this_command->getHost()->completion_time = time;
+		this_command->getHost()->setCompletionTime(time);
 		
 		// for the CAS write command
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr);
@@ -109,7 +109,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 		this_bank.last_refresh_all_time = time;
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rfc);
-		this_command->getHost()->completion_time = this_command->getCompletionTime();
+		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;
 
 	case RETIRE_COMMAND:

@@ -15,17 +15,39 @@ namespace DRAMSimII
 	private:
 		static queue<transaction> freeTransactionPool;	// transactions are stored here to avoid allocating memory after initialization
 
-	public:
-		int event_no;
+		unsigned event_no;
 		transaction_type_t type;	// transaction type
 		int status;
-		int length;					// how long?
-		tick_t arrival_time;		// time when first seen by memory controller in DRAM ticks
+		unsigned length;					// how long?
+		tick_t arrivalTime;		// time when first seen by memory controller in DRAM ticks
 		tick_t enqueueTime;			// time when the transaction enters the MC queue
-		tick_t completion_time;		// time when transaction has completed in DRAM ticks
+		tick_t completionTime;		// time when transaction has completed in DRAM ticks
 
 		addresses addr;
 		const void *originalTransaction;	// utility pointer in the event that this transaction represents another version of a transaction
+
+
+	public:
+		
+		// accessors		
+		addresses &getAddresses() { return addr; }
+		const addresses &getAddresses() const { return addr; }
+		tick_t getArrivalTime() const { return arrivalTime; }
+		tick_t getEnqueueTime() const { return enqueueTime; }
+		tick_t getCompletionTime() const { return completionTime; }
+		unsigned getLength() const { return length; }
+		transaction_type_t getType() const { return type; }
+		unsigned getEventNumber() const { return event_no; }
+		const void *getOriginalTransaction() const { return originalTransaction; }
+
+		// mutators
+		void setArrivalTime(const tick_t value) { arrivalTime = value; }
+		void setEnqueueTime(const tick_t value) { enqueueTime = value; }
+		void setCompletionTime(const tick_t value) { completionTime = value; }
+		void setType(const transaction_type_t value) { type = value; }
+		void setLength(const unsigned value) { length = value; }
+		void setEventNumber(const unsigned value) { event_no = value; }
+		void setOriginalTransaction(const unsigned *value) { originalTransaction = value; }
 
 		// constructors
 		explicit transaction();

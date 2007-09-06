@@ -13,9 +13,9 @@ event_no(0),
 type(CONTROL_TRANSACTION),
 status(0),
 length(0),
-arrival_time(0),
+arrivalTime(0),
 enqueueTime(0),
-completion_time(0),
+completionTime(0),
 addr(),
 originalTransaction(0)
 {}
@@ -25,9 +25,9 @@ event_no(rs->event_no),
 type(rs->type),
 status(rs->status),
 length(rs->length),
-arrival_time(rs->arrival_time),
+arrivalTime(rs->arrivalTime),
 enqueueTime(rs->enqueueTime),
-completion_time(rs->completion_time),
+completionTime(rs->completionTime),
 addr(rs->addr),
 originalTransaction(rs->originalTransaction)
 {}
@@ -36,9 +36,9 @@ transaction::transaction(const int attribute,const tick_t enqueueTime,const int 
 event_no(0),
 status(0),
 length(Size),
-arrival_time(0),
+arrivalTime(0),
 enqueueTime(enqueueTime),
-completion_time(0),
+completionTime(0),
 addr(address),
 originalTransaction(originalTrans)
 
@@ -67,11 +67,11 @@ void transaction::operator delete(void *mem)
 
 std::ostream &DRAMSimII::operator<<(std::ostream &os, const transaction *this_t)
 {
-	os << "S[" << std::setw(8) << std::dec << this_t->arrival_time << "] ";
-	os << "Q[" << std::setw(8) << std::dec << this_t->enqueueTime << "] ";
-	os << this_t->type << " ";
-	os << "E[" << std::setw(8) << std::dec << this_t->completion_time << "] ";
-	os << "PA[0x" << std::hex << this_t->addr.phys_addr << "]";
+	os << "S[" << std::setw(8) << std::dec << this_t->getArrivalTime() << "] ";
+	os << "Q[" << std::setw(8) << std::dec << this_t->getEnqueueTime() << "] ";
+	os << this_t->getType() << " ";
+	os << "E[" << std::setw(8) << std::dec << this_t->getCompletionTime() << "] ";
+	os << "PA[0x" << std::hex << this_t->getAddresses().phys_addr << "]";
 	return os;
 }
 

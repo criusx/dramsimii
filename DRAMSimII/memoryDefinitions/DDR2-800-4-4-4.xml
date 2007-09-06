@@ -15,6 +15,7 @@
 		<banks>8</banks>
 		<rows>16384</rows>
 		<rowSize>16</rowSize>
+		<!-- columns * columnSize = pageSize -->
 		<columns>1024</columns>
 		<columnSize>16</columnSize>
 		<tBufferDelay>6</tBufferDelay>

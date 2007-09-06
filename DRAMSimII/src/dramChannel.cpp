@@ -63,11 +63,11 @@ void dramChannel::initRefreshQueue(const unsigned rowCount,
 	for (int i = rowCount - 1; i >= 0; i--)
 		for (int j = rank.size() - 1; j >= 0; j--)
 		{
-			refreshQueue.read(count)->arrival_time = count * step;
-			refreshQueue.read(count)->type = AUTO_REFRESH_TRANSACTION;
-			refreshQueue.read(count)->addr.rank_id = j;
-			refreshQueue.read(count)->addr.row_id = i;
-			refreshQueue.read(count)->addr.chan_id = channel;
+			refreshQueue.read(count)->setArrivalTime(count * step);
+			refreshQueue.read(count)->setType(AUTO_REFRESH_TRANSACTION);
+			refreshQueue.read(count)->getAddresses().rank_id = j;
+			refreshQueue.read(count)->getAddresses().row_id = i;
+			refreshQueue.read(count)->getAddresses().chan_id = channel;
 			count++;
 		}
 
@@ -142,12 +142,12 @@ void dramChannel::doPowerCalculation()
 transaction *dramChannel::read_transaction() const
 {
 	transaction *temp_t = transactionQueue.read_back(); 
-	if ((temp_t) && (time - temp_t->enqueueTime < timing_specification.t_buffer_delay))
+	if ((temp_t) && (time - temp_t->getEnqueueTime() < timing_specification.t_buffer_delay))
 	{
 #ifdef M5DEBUG
 		outStream << "resetting: ";
 		outStream << time << " ";
-		outStream << temp_t->enqueueTime << " ";
+		outStream << temp_t->getEnqueueTime() << " ";
 		outStream << timing_specification.t_buffer_delay << endl;
 #endif
 		temp_t = NULL; // not enough time has passed		

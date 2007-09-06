@@ -6,21 +6,20 @@
 using namespace DRAMSimII;
 using namespace std;
 
-dramStatistics::dramStatistics()
-{
-	//fout.o    = std::cout;
-	start_no = 0;
-	end_no   = 0;
-	start_time = 0;
-	end_time = 0;
-	valid_transaction_count = 0;
-	bo8_count = 0;
-	bo4_count = 0;
-}
+dramStatistics::dramStatistics():
+end_time(0),
+valid_transaction_count(0),
+start_no(0),
+end_no(0),
+start_time(0),
+bo8_count(0),
+bo4_count(0),
+system_config_type(0)
+{}
 
-void dramStatistics::collect_transaction_stats(transaction *this_t)
+void dramStatistics::collectTransactionStats(const transaction *currentTransaction)
 {
-	if(this_t->length == 8)
+	if (currentTransaction->getLength() == 8)
 	{
 		++bo8_count;
 	}
@@ -28,6 +27,15 @@ void dramStatistics::collect_transaction_stats(transaction *this_t)
 	{
 		++bo4_count;
 	}
+	transactionDelay[currentTransaction->getEnqueueTime() - currentTransaction->getArrivalTime()]++;
+	transactionExecution[currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime()]++;
+}
+
+void dramStatistics::collectCommandStats(const command *currentCommand)
+{
+	commandDelay[currentCommand->getStartTime() - currentCommand->getEnqueueTime()]++;
+	commandExceution[currentCommand->getCompletionTime() - currentCommand->getStartTime()]++;
+	commandTurnaround[currentCommand->getCompletionTime() - currentCommand->getEnqueueTime()]++;
 }
 
 ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)

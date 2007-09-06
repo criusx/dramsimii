@@ -36,9 +36,9 @@ tick_t dramSystem::nextTick() const
 		if (transaction *nextTrans = currentChan->read_transaction_simple())
 		{
 			// make sure it can finish
-			int tempGap = max(1,(int)(nextTrans->enqueueTime - currentChan->get_time()) + currentChan->getTimingSpecification().t_buffer_delay); 
+			int tempGap = max(1,(int)(nextTrans->getEnqueueTime() - currentChan->get_time()) + currentChan->getTimingSpecification().t_buffer_delay); 
 
-			assert(nextTrans->enqueueTime <= currentChan->get_time());
+			assert(nextTrans->getEnqueueTime() <= currentChan->get_time());
 			assert(tempGap <= currentChan->getTimingSpecification().t_buffer_delay );
 			// whenever the next transaction is ready and there are available slots for the R/C/P commands
 			if ((tempGap + currentChan->get_time() < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
@@ -522,73 +522,73 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 		// check against last transaction to see what the chan_id was, and whether we need to change channels or not
 		if (input_stream.getChannelLocality() * UINT_MAX < j)
 		{
-			this_t->addr.chan_id = (this_t->addr.chan_id + (j % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
+			this_t->getAddresses().chan_id = (this_t->getAddresses().chan_id + (j % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
 		}
 
 		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
 		// or keep to this rank_id 
 
-		int rank_id = channel[this_t->addr.chan_id].get_last_rank_id();
+		int rank_id = channel[this_t->getAddresses().chan_id].get_last_rank_id();
 
 		rand_s(&j);
 		if ((input_stream.getRankLocality() * UINT_MAX < j) && (systemConfig.getRankCount() > 1))
 		{
-			rank_id = this_t->addr.rank_id = 
+			rank_id = this_t->getAddresses().rank_id = 
 				(rank_id + 1 + (j % (systemConfig.getRankCount() - 1))) % systemConfig.getRankCount();
 		}
 		else
 		{
-			this_t->addr.rank_id = rank_id;
+			this_t->getAddresses().rank_id = rank_id;
 		}
 
-		int bank_id = channel[this_t->addr.chan_id].getRank(rank_id).last_bank_id;
+		int bank_id = channel[this_t->getAddresses().chan_id].getRank(rank_id).last_bank_id;
 
 		rand_s(&j);
 
 		if ((input_stream.getBankLocality() * UINT_MAX < j) && (systemConfig.getBankCount() > 1))
 		{
-			bank_id = this_t->addr.bank_id =
+			bank_id = this_t->getAddresses().bank_id =
 				(bank_id + 1 + (j % (systemConfig.getBankCount() - 1))) % systemConfig.getBankCount();
 		}
 		else
 		{
-			this_t->addr.bank_id = bank_id;
+			this_t->getAddresses().bank_id = bank_id;
 		}
 
-		int row_id = channel[this_t->addr.chan_id].getRank(rank_id).bank[bank_id].row_id;
+		int row_id = channel[this_t->getAddresses().chan_id].getRank(rank_id).bank[bank_id].row_id;
 
 		rand_s(&j);
 
 		if (input_stream.getRowLocality() * UINT_MAX < j)
 		{
-			this_t->addr.row_id = (row_id + 1 + (j % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
-			row_id = this_t->addr.row_id;
+			this_t->getAddresses().row_id = (row_id + 1 + (j % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
+			row_id = this_t->getAddresses().row_id;
 		}
 		else
 		{
-			this_t->addr.row_id = row_id;
+			this_t->getAddresses().row_id = row_id;
 		}
 
 		rand_s(&j);
 
 		if (input_stream.getReadPercentage() * UINT_MAX > j)
 		{
-			this_t->type = READ_TRANSACTION;
+			this_t->setType(READ_TRANSACTION);
 		}
 		else
 		{
-			this_t->type = WRITE_TRANSACTION;
+			this_t->setType(WRITE_TRANSACTION);
 		}
 
 		rand_s(&j);
 
 		if (input_stream.getShortBurstRatio() * UINT_MAX > j)
 		{
-			this_t->length = 4;
+			this_t->setLength(4);
 		}
 		else
 		{
-			this_t->length = 8;
+			this_t->setLength(8);
 		}
 
 		//int time_gap = 0;
@@ -618,8 +618,8 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 			}
 		}
 
-		this_t->arrival_time = input_stream.getTime();
-		this_t->addr.col_id = 0;
+		this_t->setArrivalTime(input_stream.getTime());
+		this_t->getAddresses().col_id = 0;
 	}
 }
 
@@ -650,13 +650,13 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 				} 
 				else
 				{
-					temp_t->addr = this_e.address;
+					temp_t->getAddresses() = this_e.address;
 					// FIXME: ignores return type
-					convert_address(temp_t->addr);
-					++(temp_t->event_no);
-					temp_t->type = this_e.attributes;
-					temp_t->length = 8;			// assume burst length of 8
-					temp_t->arrival_time = this_e.timestamp;
+					convert_address(temp_t->getAddresses());
+					temp_t->setEventNumber(temp_t->getEventNumber() + 1);
+					temp_t->setType(this_e.attributes);
+					temp_t->setLength(8);			// assume burst length of 8
+					temp_t->setArrivalTime(this_e.timestamp);
 					// need to adjust arrival time for K6 traces to cycles
 
 				}
@@ -677,10 +677,10 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 	else
 	{
 		// read but do not remove
-		transaction *refresh_t = channel[temp_t->addr.chan_id].readRefresh();
+		transaction *refresh_t = channel[temp_t->getAddresses().chan_id].readRefresh();
 
-		if (refresh_t->arrival_time < temp_t->arrival_time)
-			this_t = channel[temp_t->addr.chan_id].getRefresh();
+		if (refresh_t->getArrivalTime() < temp_t->getArrivalTime())
+			this_t = channel[temp_t->getAddresses().chan_id].getRefresh();
 		else
 		{
 			this_t = temp_t;
