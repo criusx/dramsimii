@@ -834,6 +834,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &this_a)
 void dramSystem::printStatistics()
 {
 	cerr << statistics << endl;
+	statistics.clear();
 }
 
 

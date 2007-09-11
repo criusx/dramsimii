@@ -51,13 +51,23 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
 	{
 		os << currentValue->first << " " << currentValue->second << endl;
 	}
-	os << "----Execution Time----" << endl;
-	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionExecution.begin(); currentValue != this_a.transactionDelay.end(); currentValue++)
+	os << "----CMD Execution Time----" << endl;
+	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.commandExceution.begin(); currentValue != this_a.transactionDelay.end(); currentValue++)
 	{
 		os << currentValue->first << " " << currentValue->second << endl;
 	}
 	os << "----Working Set----" << endl;
 	os << this_a.workingSet.size() << endl;
+	
 	return os;
+}
 
+void dramStatistics::clear()
+{
+	commandTurnaround.clear();
+	commandDelay.clear();	
+	commandExceution.clear();
+	transactionExecution.clear();
+	transactionDelay.clear();
+	workingSet.clear();
 }

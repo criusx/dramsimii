@@ -35,6 +35,7 @@ namespace DRAMSimII
 		dramStatistics();
 
 		// functions
+		void clear();
 		void collectTransactionStats(const transaction *);	
 		void collectCommandStats(const command *);
 		inline void set_end_time(tick_t et) {end_time = et;}
