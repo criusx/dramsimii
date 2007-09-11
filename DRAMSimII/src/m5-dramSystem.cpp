@@ -203,6 +203,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	if (lastPowerCalculationTime-- == 0)
 	{
 		memory->ds->doPowerCalculation();
+		memory->ds->printStatistics();
 		lastPowerCalculationTime = 5000000;
 	}
 

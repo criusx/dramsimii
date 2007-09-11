@@ -831,6 +831,11 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &this_a)
 	return os;
 }
 
+void dramSystem::printStatistics()
+{
+	cerr << statistics << endl;
+}
+
 
 // do the power calculation on all the channels
 void dramSystem::doPowerCalculation()

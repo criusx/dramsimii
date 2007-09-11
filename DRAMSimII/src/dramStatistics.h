@@ -27,6 +27,7 @@ namespace DRAMSimII
 		std::map<unsigned,unsigned> commandTurnaround;
 		std::map<unsigned,unsigned> transactionDelay;
 		std::map<unsigned,unsigned> transactionExecution;
+		std::map<unsigned long long, tick_t> workingSet;
 
 	public:
 

@@ -57,6 +57,7 @@ namespace DRAMSimII
 		double Frequency() const { return systemConfig.Frequency(); }
 		tick_t nextTick() const;
 		void doPowerCalculation();
+		void printStatistics();
 		void run_simulations();
 		void run_simulations2();
 		void run_simulations3();
