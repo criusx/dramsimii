@@ -86,11 +86,7 @@ namespace WineEntryClient
         private void browseButton_Click(object sender, EventArgs e)
         {
             PictureBox pictureBox;
-            if (sender == petBrowseButton)
-            {
-                pictureBox = petPB;
-            }
-            else if (sender == wineBrowseButton)
+            if (sender == wineBrowseButton)
             {
                 pictureBox = winePB;
             }
@@ -186,22 +182,9 @@ namespace WineEntryClient
                         fls.Close();
 
                         bool status = false;
-                        if (sender == petSaveButton)
-                        {                            
-                            petWS.petInfo newPet = new petWS.petInfo();
-                            newPet.breed = breedTB.Text;
-                            newPet.owner = ownerTB.Text;
-                            newPet.contactInfo = addressTB.Text;
-                            newPet.phoneNumber = phoneTB.Text;
-                            newPet.image = blob;
-                            newPet.rfidNum = tagID;
-
-                            petWS.petWS ws = new petWS.petWS();
-                            status = ws.enterPetInformation(newPet);
-                        }
-                        else if (sender == wineSaveButton)
+                       if (sender == wineSaveButton)
                         {
-                            org.dyndns.crius.wineWS ws = new org.dyndns.crius.wineWS();
+                            org.dyndns.crius.WineWS ws = new org.dyndns.crius.WineWS();
                             status = ws.enterBottleInformation(new string[] { tagID }, wineTypeComboBox.Text, Convert.ToInt32(yearUpDown.Value), countryBox.Text, vineyardBox.Text, reviewBox.Text, blob);
                             ws.Dispose();
                         }
@@ -222,15 +205,7 @@ namespace WineEntryClient
         private void clearButton_Click(object sender, EventArgs e)
         {
             idBox.Clear();
-            if (sender == petClearButton)
-            {
-                ownerTB.Clear();
-                addressTB.Clear();
-                phoneTB.Clear();
-                breedTB.Clear();
-                petPB.Image = null;
-            }
-            else if (sender == wineClearButton)
+           if (sender == wineClearButton)
             {             
                 wineTypeComboBox.SelectedIndex = 0;
                 yearUpDown.Value = DateTime.Now.Year;
@@ -250,7 +225,7 @@ namespace WineEntryClient
                 try
                 {
                     org.dyndns.crius.wineBottle bottle =
-                        (new org.dyndns.crius.wineWS()).retrieveBottleInformation(tagID, DeviceUID, (float)0.0, (float)0.0);
+                        (new org.dyndns.crius.WineWS()).retrieveBottleInformation(tagID, DeviceUID, (float)0.0, (float)0.0);
 
                     if (bottle.exists)
                     {

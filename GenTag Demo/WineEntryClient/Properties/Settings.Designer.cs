@@ -26,20 +26,11 @@ namespace WineEntryClient.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://crius.dyndns.org:8888/GentagDemo/wineWSSoapHttpPort")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://crius.dyndns.org:8888/GentagWineDemo-WineDemo-context-root/WineWSSoapHttpP" +
+            "ort")]
         public string WineEntryClient_org_dyndns_crius_wineWS {
             get {
                 return ((string)(this["WineEntryClient_org_dyndns_crius_wineWS"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://crius.dyndns.org:8888/GentagDemo/petWSSoapHttpPort")]
-        public string WineEntryClient_petWS_petWS {
-            get {
-                return ((string)(this["WineEntryClient_petWS_petWS"]));
             }
         }
     }

@@ -118,66 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label13.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 82</value>
-  </data>
-  <data name="label13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>38, 13</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="label13.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="label13.Text" xml:space="preserve">
-    <value>Phone</value>
-  </data>
-  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 108</value>
-  </data>
-  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>35, 13</value>
-  </data>
-  <data name="label3.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>Breed</value>
-  </data>
-  <data name="label3.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>TopRight</value>
-  </data>
-  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 12</value>
-  </data>
-  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>38, 13</value>
-  </data>
-  <data name="label10.Text" xml:space="preserve">
-    <value>Owner</value>
-  </data>
-  <data name="label10.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>TopRight</value>
-  </data>
-  <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 36</value>
-  </data>
-  <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>45, 13</value>
-  </data>
-  <data name="label12.Text" xml:space="preserve">
-    <value>Address</value>
-  </data>
   <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
     <value>9, 46</value>
   </data>
   <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
     <value>42, 13</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="label11.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
   </data>
   <data name="label11.Text" xml:space="preserve">
     <value>base64</value>
+  </data>
+  <data name="usernameBox.Text" xml:space="preserve">
+    <value>Not</value>
+  </data>
+  <data name="passwordBox.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="passwordBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 20</value>
+  </data>
+  <data name="passwordBox.Text" xml:space="preserve">
+    <value>Used (Yet)</value>
   </data>
   <data name="reviewBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>51, 59</value>
@@ -263,93 +227,6 @@
   </data>
   <data name="wineTabPage.Text" xml:space="preserve">
     <value>Wine</value>
-  </data>
-  <data name="addressTB.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="addressTB.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
-    <value>Vertical</value>
-  </data>
-  <data name="addressTB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 40</value>
-  </data>
-  <data name="phoneTB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 20</value>
-  </data>
-  <data name="breedTB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 20</value>
-  </data>
-  <data name="ownerTB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 20</value>
-  </data>
-  <data name="petLoadButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Popup</value>
-  </data>
-  <data name="petLoadButton.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 6.75pt</value>
-  </data>
-  <data name="petLoadButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="petLoadButton.Text" xml:space="preserve">
-    <value>Load from DB</value>
-  </data>
-  <data name="petBrowseButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Popup</value>
-  </data>
-  <data name="petBrowseButton.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 6.75pt</value>
-  </data>
-  <data name="petBrowseButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="petBrowseButton.Text" xml:space="preserve">
-    <value>Browse</value>
-  </data>
-  <data name="petPB.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="petPB.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="petPB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>280, 250</value>
-  </data>
-  <data name="petPB.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
-  <data name="petSaveButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Popup</value>
-  </data>
-  <data name="petSaveButton.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 6.75pt</value>
-  </data>
-  <data name="petSaveButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="petSaveButton.Text" xml:space="preserve">
-    <value>Save to DB</value>
-  </data>
-  <data name="petClearButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Popup</value>
-  </data>
-  <data name="petClearButton.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 6.75pt</value>
-  </data>
-  <data name="petClearButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="petClearButton.Text" xml:space="preserve">
-    <value>Clear</value>
-  </data>
-  <data name="petTabPage.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="petTabPage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>372, 387</value>
-  </data>
-  <data name="petTabPage.Text" xml:space="preserve">
-    <value>Pet</value>
   </data>
   <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
     <value>380, 413</value>

@@ -30,10 +30,6 @@ namespace WineEntryClient
         {
             System.Windows.Forms.Label label5;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(wineEntry));
-            System.Windows.Forms.Label label13;
-            System.Windows.Forms.Label label3;
-            System.Windows.Forms.Label label10;
-            System.Windows.Forms.Label label12;
             System.Windows.Forms.Label label11;
             this.label1 = new System.Windows.Forms.Label();
             this.usernameBox = new System.Windows.Forms.TextBox();
@@ -50,16 +46,6 @@ namespace WineEntryClient
             this.wineLoadButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.petTabPage = new System.Windows.Forms.TabPage();
-            this.addressTB = new System.Windows.Forms.TextBox();
-            this.phoneTB = new System.Windows.Forms.TextBox();
-            this.breedTB = new System.Windows.Forms.TextBox();
-            this.ownerTB = new System.Windows.Forms.TextBox();
-            this.petLoadButton = new System.Windows.Forms.Button();
-            this.petBrowseButton = new System.Windows.Forms.Button();
-            this.petPB = new System.Windows.Forms.PictureBox();
-            this.petSaveButton = new System.Windows.Forms.Button();
-            this.petClearButton = new System.Windows.Forms.Button();
             this.wineTabPage = new System.Windows.Forms.TabPage();
             this.wineTypeComboBox = new System.Windows.Forms.ComboBox();
             this.yearUpDown = new System.Windows.Forms.NumericUpDown();
@@ -74,16 +60,10 @@ namespace WineEntryClient
             this.unneededTextBox = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             label5 = new System.Windows.Forms.Label();
-            label13 = new System.Windows.Forms.Label();
-            label3 = new System.Windows.Forms.Label();
-            label10 = new System.Windows.Forms.Label();
-            label12 = new System.Windows.Forms.Label();
             label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.winePB)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.petTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.petPB)).BeginInit();
             this.wineTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.yearUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -96,38 +76,6 @@ namespace WineEntryClient
             resources.ApplyResources(label5, "label5");
             label5.Font = null;
             label5.Name = "label5";
-            // 
-            // label13
-            // 
-            label13.AccessibleDescription = null;
-            label13.AccessibleName = null;
-            resources.ApplyResources(label13, "label13");
-            label13.Font = null;
-            label13.Name = "label13";
-            // 
-            // label3
-            // 
-            label3.AccessibleDescription = null;
-            label3.AccessibleName = null;
-            resources.ApplyResources(label3, "label3");
-            label3.Font = null;
-            label3.Name = "label3";
-            // 
-            // label10
-            // 
-            label10.AccessibleDescription = null;
-            label10.AccessibleName = null;
-            resources.ApplyResources(label10, "label10");
-            label10.Font = null;
-            label10.Name = "label10";
-            // 
-            // label12
-            // 
-            label12.AccessibleDescription = null;
-            label12.AccessibleName = null;
-            resources.ApplyResources(label12, "label12");
-            label12.Font = null;
-            label12.Name = "label12";
             // 
             // label11
             // 
@@ -198,6 +146,7 @@ namespace WineEntryClient
             this.label6.AccessibleDescription = null;
             this.label6.AccessibleName = null;
             resources.ApplyResources(this.label6, "label6");
+            this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label6.Font = null;
             this.label6.Name = "label6";
             // 
@@ -206,6 +155,7 @@ namespace WineEntryClient
             this.label7.AccessibleDescription = null;
             this.label7.AccessibleName = null;
             resources.ApplyResources(this.label7, "label7");
+            this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label7.Font = null;
             this.label7.Name = "label7";
             // 
@@ -265,7 +215,7 @@ namespace WineEntryClient
             this.groupBox1.AccessibleDescription = null;
             this.groupBox1.AccessibleName = null;
             resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.BackColor = System.Drawing.Color.LightGray;
+            this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.groupBox1.BackgroundImage = null;
             this.groupBox1.Controls.Add(this.tabControl1);
             this.groupBox1.Controls.Add(this.statusLabel);
@@ -286,128 +236,16 @@ namespace WineEntryClient
             resources.ApplyResources(this.tabControl1, "tabControl1");
             this.tabControl1.BackgroundImage = null;
             this.tabControl1.Controls.Add(this.wineTabPage);
-            this.tabControl1.Controls.Add(this.petTabPage);
             this.tabControl1.Font = null;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            // 
-            // petTabPage
-            // 
-            this.petTabPage.AccessibleDescription = null;
-            this.petTabPage.AccessibleName = null;
-            resources.ApplyResources(this.petTabPage, "petTabPage");
-            this.petTabPage.BackColor = System.Drawing.Color.LightGray;
-            this.petTabPage.BackgroundImage = null;
-            this.petTabPage.Controls.Add(this.addressTB);
-            this.petTabPage.Controls.Add(this.phoneTB);
-            this.petTabPage.Controls.Add(this.breedTB);
-            this.petTabPage.Controls.Add(this.ownerTB);
-            this.petTabPage.Controls.Add(label13);
-            this.petTabPage.Controls.Add(this.petLoadButton);
-            this.petTabPage.Controls.Add(label3);
-            this.petTabPage.Controls.Add(this.petBrowseButton);
-            this.petTabPage.Controls.Add(label10);
-            this.petTabPage.Controls.Add(this.petPB);
-            this.petTabPage.Controls.Add(label12);
-            this.petTabPage.Controls.Add(this.petSaveButton);
-            this.petTabPage.Controls.Add(this.petClearButton);
-            this.petTabPage.Font = null;
-            this.petTabPage.Name = "petTabPage";
-            this.petTabPage.UseVisualStyleBackColor = true;
-            // 
-            // addressTB
-            // 
-            this.addressTB.AccessibleDescription = null;
-            this.addressTB.AccessibleName = null;
-            resources.ApplyResources(this.addressTB, "addressTB");
-            this.addressTB.BackgroundImage = null;
-            this.addressTB.Font = null;
-            this.addressTB.Name = "addressTB";
-            // 
-            // phoneTB
-            // 
-            this.phoneTB.AccessibleDescription = null;
-            this.phoneTB.AccessibleName = null;
-            resources.ApplyResources(this.phoneTB, "phoneTB");
-            this.phoneTB.BackgroundImage = null;
-            this.phoneTB.Font = null;
-            this.phoneTB.Name = "phoneTB";
-            // 
-            // breedTB
-            // 
-            this.breedTB.AccessibleDescription = null;
-            this.breedTB.AccessibleName = null;
-            resources.ApplyResources(this.breedTB, "breedTB");
-            this.breedTB.BackgroundImage = null;
-            this.breedTB.Font = null;
-            this.breedTB.Name = "breedTB";
-            // 
-            // ownerTB
-            // 
-            this.ownerTB.AccessibleDescription = null;
-            this.ownerTB.AccessibleName = null;
-            resources.ApplyResources(this.ownerTB, "ownerTB");
-            this.ownerTB.BackgroundImage = null;
-            this.ownerTB.Font = null;
-            this.ownerTB.Name = "ownerTB";
-            // 
-            // petLoadButton
-            // 
-            this.petLoadButton.AccessibleDescription = null;
-            this.petLoadButton.AccessibleName = null;
-            resources.ApplyResources(this.petLoadButton, "petLoadButton");
-            this.petLoadButton.BackgroundImage = null;
-            this.petLoadButton.Name = "petLoadButton";
-            this.petLoadButton.UseVisualStyleBackColor = true;
-            this.petLoadButton.Click += new System.EventHandler(this.loadButton_Click);
-            // 
-            // petBrowseButton
-            // 
-            this.petBrowseButton.AccessibleDescription = null;
-            this.petBrowseButton.AccessibleName = null;
-            resources.ApplyResources(this.petBrowseButton, "petBrowseButton");
-            this.petBrowseButton.BackgroundImage = null;
-            this.petBrowseButton.Name = "petBrowseButton";
-            this.petBrowseButton.UseVisualStyleBackColor = true;
-            this.petBrowseButton.Click += new System.EventHandler(this.browseButton_Click);
-            // 
-            // petPB
-            // 
-            this.petPB.AccessibleDescription = null;
-            this.petPB.AccessibleName = null;
-            resources.ApplyResources(this.petPB, "petPB");
-            this.petPB.BackgroundImage = null;
-            this.petPB.Font = null;
-            this.petPB.ImageLocation = null;
-            this.petPB.Name = "petPB";
-            this.petPB.TabStop = false;
-            // 
-            // petSaveButton
-            // 
-            this.petSaveButton.AccessibleDescription = null;
-            this.petSaveButton.AccessibleName = null;
-            resources.ApplyResources(this.petSaveButton, "petSaveButton");
-            this.petSaveButton.BackgroundImage = null;
-            this.petSaveButton.Name = "petSaveButton";
-            this.petSaveButton.UseVisualStyleBackColor = true;
-            this.petSaveButton.Click += new System.EventHandler(this.saveButton_Click);
-            // 
-            // petClearButton
-            // 
-            this.petClearButton.AccessibleDescription = null;
-            this.petClearButton.AccessibleName = null;
-            resources.ApplyResources(this.petClearButton, "petClearButton");
-            this.petClearButton.BackgroundImage = null;
-            this.petClearButton.Name = "petClearButton";
-            this.petClearButton.UseVisualStyleBackColor = true;
-            this.petClearButton.Click += new System.EventHandler(this.clearButton_Click);
             // 
             // wineTabPage
             // 
             this.wineTabPage.AccessibleDescription = null;
             this.wineTabPage.AccessibleName = null;
             resources.ApplyResources(this.wineTabPage, "wineTabPage");
-            this.wineTabPage.BackColor = System.Drawing.Color.LightGray;
+            this.wineTabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.wineTabPage.BackgroundImage = null;
             this.wineTabPage.Controls.Add(this.wineTypeComboBox);
             this.wineTabPage.Controls.Add(this.reviewBox);
@@ -426,7 +264,6 @@ namespace WineEntryClient
             this.wineTabPage.Controls.Add(this.label9);
             this.wineTabPage.Font = null;
             this.wineTabPage.Name = "wineTabPage";
-            this.wineTabPage.UseVisualStyleBackColor = true;
             // 
             // wineTypeComboBox
             // 
@@ -520,6 +357,7 @@ namespace WineEntryClient
             this.label4.AccessibleDescription = null;
             this.label4.AccessibleName = null;
             resources.ApplyResources(this.label4, "label4");
+            this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label4.Font = null;
             this.label4.Name = "label4";
             // 
@@ -528,6 +366,7 @@ namespace WineEntryClient
             this.label8.AccessibleDescription = null;
             this.label8.AccessibleName = null;
             resources.ApplyResources(this.label8, "label8");
+            this.label8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label8.Font = null;
             this.label8.Name = "label8";
             // 
@@ -536,6 +375,7 @@ namespace WineEntryClient
             this.label9.AccessibleDescription = null;
             this.label9.AccessibleName = null;
             resources.ApplyResources(this.label9, "label9");
+            this.label9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label9.Font = null;
             this.label9.Name = "label9";
             // 
@@ -612,9 +452,6 @@ namespace WineEntryClient
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            this.petTabPage.ResumeLayout(false);
-            this.petTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.petPB)).EndInit();
             this.wineTabPage.ResumeLayout(false);
             this.wineTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.yearUpDown)).EndInit();
@@ -653,17 +490,7 @@ namespace WineEntryClient
         private System.Windows.Forms.TextBox unneededTextBox;
         private System.Windows.Forms.TextBox base64TextBox;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage petTabPage;
         private System.Windows.Forms.TabPage wineTabPage;
-        private System.Windows.Forms.TextBox addressTB;
-        private System.Windows.Forms.Button petLoadButton;
-        private System.Windows.Forms.Button petBrowseButton;
-        private System.Windows.Forms.PictureBox petPB;
-        private System.Windows.Forms.Button petSaveButton;
-        private System.Windows.Forms.Button petClearButton;
-        private System.Windows.Forms.TextBox breedTB;
-        private System.Windows.Forms.TextBox ownerTB;
-        private System.Windows.Forms.TextBox phoneTB;
     }
 }
 
