@@ -52,7 +52,7 @@
   <ItemGroup>
     <Reference Include="C1Lib_net_PPC, Version=1.0.2545.18356, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC\C1Lib_net_PPC.dll</HintPath>
+      <HintPath>..\C1Lib_net_PPC.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="Microsoft.WindowsMobile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />

@@ -146,7 +146,7 @@ namespace GentagDemo
             {
                 readerRunning = true;
                 setWaitCursor(true);
-                
+
                 if (sender == readLogButton)
                     new Thread(new ThreadStart(launchReadVSLog)).Start();
                 else if ((sender == readIDButton) || (sender == wineButton) || (sender == petButton))
@@ -225,7 +225,7 @@ namespace GentagDemo
             setButtonColor(button, backup);
         }
 
-       
+
 
 
         private Hashtable cachedWineLookups = new Hashtable();
@@ -298,14 +298,16 @@ namespace GentagDemo
                             org.dyndns.criusWine.wineWS ws = new org.dyndns.criusWine.wineWS();
                             ws.Timeout = 300000;
                             handle = ws.BeginretrieveBottleInformation(currentTag, DeviceUID, 0, 0, cb, ws);
-                            wineIDsCurrentlyBeingLookedUp[handle] = currentTag;                            
+                            lock (wineIDsCurrentlyBeingLookedUp.SyncRoot)
+                            { wineIDsCurrentlyBeingLookedUp[handle] = currentTag; }
                         }
                         else if (petLoop)
                         {
                             petWS.petWS ws = new petWS.petWS();
                             ws.Timeout = 300000;
                             handle = ws.BeginretrievePetInformation(currentTag, DeviceUID, 0, 0, cb, ws);
-                            petIDsCurrentlyBeingLookedUp[handle] = currentTag;
+                            lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
+                            { petIDsCurrentlyBeingLookedUp[handle] = currentTag; }
                         }
                         else
                         {
@@ -314,11 +316,15 @@ namespace GentagDemo
                             org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
                             ws.Timeout = 300000;
                             handle = ws.BegingetItem(currentTag, DeviceUID, 0, 0, cb, ws);
-                            IDsCurrentlyBeingLookedUp[handle] = currentTag;
+                            lock (IDsCurrentlyBeingLookedUp.SyncRoot)
+                            { IDsCurrentlyBeingLookedUp[handle] = currentTag; }
                         }
 
                         // reset the retry counter for this particular lookup
-                        retryCount[handle] = 0;
+                        lock (retryCount.SyncRoot)
+                        {
+                            retryCount[handle] = 0;
+                        }
 
                     }
                     catch (SoapException ex)
@@ -436,7 +442,7 @@ namespace GentagDemo
             else if (petLoop)
             {
                 petWS.petWS ws = new petWS.petWS();
-                ws.Timeout = 300000;                
+                ws.Timeout = 300000;
                 handle = ws.BeginretrievePetInformation(currentTag, DeviceUID, 0, 0, cb, ws);
             }
             else

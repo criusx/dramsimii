@@ -69,7 +69,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE"
 				AdditionalDependencies="C1Lib_PPC.lib"
-				OutputFile="../Gentag Demo/VarioSens Lib.dll"
+				OutputFile="../VarioSens Lib.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\Users\CriuS\Documents\Visual Studio 2005\Projects\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC"
 				ModuleDefinitionFile=".\VarioSens Lib.def"

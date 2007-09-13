@@ -8,10 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Threading;
-using Oracle.DataAccess.Client;
 using System.Security.Permissions;
 using System.Runtime.InteropServices;
 using System.IO;
+using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
 
 [assembly: SecurityPermission(

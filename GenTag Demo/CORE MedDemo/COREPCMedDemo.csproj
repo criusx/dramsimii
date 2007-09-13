@@ -31,7 +31,7 @@
   <ItemGroup>
     <Reference Include="C1Lib_net, Version=1.0.2326.20996, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\KSW Dev Kit\MS\C1 XP\C1Lib_net.dll</HintPath>
+      <HintPath>..\C1Lib_net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -88,17 +88,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="C1lib.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="C1RFcontrol.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FTD2XX.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
