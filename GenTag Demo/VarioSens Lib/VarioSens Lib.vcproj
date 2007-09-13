@@ -46,7 +46,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
-				AdditionalIncludeDirectories="&quot;C:\Users\CriuS\Documents\Visual Studio 2005\Projects\KSW Dev Kit\Sirit\SDIO SDK\cd\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\res&quot;"
 				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
@@ -71,7 +71,7 @@
 				AdditionalDependencies="C1Lib_PPC.lib"
 				OutputFile="../VarioSens Lib.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="C:\Users\CriuS\Documents\Visual Studio 2005\Projects\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)\res&quot;"
 				ModuleDefinitionFile=".\VarioSens Lib.def"
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
