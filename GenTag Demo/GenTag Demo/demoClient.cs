@@ -234,6 +234,8 @@ namespace GentagDemo
 
         private Hashtable cachedPetLookups = new Hashtable();
 
+        private Hashtable retryCount = new Hashtable();
+
         private Hashtable IDsCurrentlyBeingLookedUp = new Hashtable();
 
         private Hashtable wineIDsCurrentlyBeingLookedUp = new Hashtable();
@@ -296,7 +298,7 @@ namespace GentagDemo
                             org.dyndns.criusWine.wineWS ws = new org.dyndns.criusWine.wineWS();
                             ws.Timeout = 300000;
                             handle = ws.BeginretrieveBottleInformation(currentTag, DeviceUID, 0, 0, cb, ws);
-                            wineIDsCurrentlyBeingLookedUp[handle] = currentTag;
+                            wineIDsCurrentlyBeingLookedUp[handle] = currentTag;                            
                         }
                         else if (petLoop)
                         {
@@ -314,6 +316,9 @@ namespace GentagDemo
                             handle = ws.BegingetItem(currentTag, DeviceUID, 0, 0, cb, ws);
                             IDsCurrentlyBeingLookedUp[handle] = currentTag;
                         }
+
+                        // reset the retry counter for this particular lookup
+                        retryCount[handle] = 0;
 
                     }
                     catch (SoapException ex)
