@@ -12,7 +12,7 @@ namespace GentagDemo
         [MTAThread]
         static void Main()
         {
-            Application.Run(new demoClient());
+            Application.Run(new wineClient());
         }
     }
 }
