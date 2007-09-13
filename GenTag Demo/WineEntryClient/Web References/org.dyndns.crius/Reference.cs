@@ -26,12 +26,10 @@ namespace WineEntryClient.org.dyndns.crius {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Web.Services.WebServiceBindingAttribute(Name="WineWSSoapHttp", Namespace="http://winedemo/")]
-    public partial class WineWS : System.Web.Services.Protocols.SoapHttpClientProtocol {
+    [System.Web.Services.WebServiceBindingAttribute(Name="wineWSSoapHttp", Namespace="http://winePackage/")]
+    public partial class wineWS : System.Web.Services.Protocols.SoapHttpClientProtocol {
         
         private System.Threading.SendOrPostCallback enterBottleInformationOperationCompleted;
-        
-        private System.Threading.SendOrPostCallback getItemOperationCompleted;
         
         private System.Threading.SendOrPostCallback getWineAccessesSinceOperationCompleted;
         
@@ -40,7 +38,7 @@ namespace WineEntryClient.org.dyndns.crius {
         private bool useDefaultCredentialsSetExplicitly;
         
         /// <remarks/>
-        public WineWS() {
+        public wineWS() {
             this.Url = global::WineEntryClient.Properties.Settings.Default.WineEntryClient_org_dyndns_crius_wineWS;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
@@ -79,47 +77,44 @@ namespace WineEntryClient.org.dyndns.crius {
         public event enterBottleInformationCompletedEventHandler enterBottleInformationCompleted;
         
         /// <remarks/>
-        public event getItemCompletedEventHandler getItemCompleted;
-        
-        /// <remarks/>
         public event getWineAccessesSinceCompletedEventHandler getWineAccessesSinceCompleted;
         
         /// <remarks/>
         public event retrieveBottleInformationCompletedEventHandler retrieveBottleInformationCompleted;
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://winedemo//enterBottleInformation", RequestElementName="enterBottleInformationElement", RequestNamespace="http://winedemo/types/", ResponseElementName="enterBottleInformationResponseElement", ResponseNamespace="http://winedemo/types/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://winePackage//enterBottleInformation", RequestElementName="enterBottleInformationElement", RequestNamespace="http://winePackage/", ResponseElementName="enterBottleInformationResponseElement", ResponseNamespace="http://winePackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("result")]
-        public bool enterBottleInformation([System.Xml.Serialization.XmlElementAttribute("rfidNums", IsNullable=true)] string[] rfidNums, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string type, int year, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string country, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string vineyard, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string review, [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", IsNullable=true)] byte[] labelImage) {
+        public bool enterBottleInformation([System.Xml.Serialization.XmlElementAttribute("arrayOfString_1", IsNullable=true)] string[] arrayOfString_1, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_2, int int_3, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_4, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_5, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_6, [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", IsNullable=true)] byte[] arrayOfbyte_7) {
             object[] results = this.Invoke("enterBottleInformation", new object[] {
-                        rfidNums,
-                        type,
-                        year,
-                        country,
-                        vineyard,
-                        review,
-                        labelImage});
+                        arrayOfString_1,
+                        String_2,
+                        int_3,
+                        String_4,
+                        String_5,
+                        String_6,
+                        arrayOfbyte_7});
             return ((bool)(results[0]));
         }
         
         /// <remarks/>
-        public void enterBottleInformationAsync(string[] rfidNums, string type, int year, string country, string vineyard, string review, byte[] labelImage) {
-            this.enterBottleInformationAsync(rfidNums, type, year, country, vineyard, review, labelImage, null);
+        public void enterBottleInformationAsync(string[] arrayOfString_1, string String_2, int int_3, string String_4, string String_5, string String_6, byte[] arrayOfbyte_7) {
+            this.enterBottleInformationAsync(arrayOfString_1, String_2, int_3, String_4, String_5, String_6, arrayOfbyte_7, null);
         }
         
         /// <remarks/>
-        public void enterBottleInformationAsync(string[] rfidNums, string type, int year, string country, string vineyard, string review, byte[] labelImage, object userState) {
+        public void enterBottleInformationAsync(string[] arrayOfString_1, string String_2, int int_3, string String_4, string String_5, string String_6, byte[] arrayOfbyte_7, object userState) {
             if ((this.enterBottleInformationOperationCompleted == null)) {
                 this.enterBottleInformationOperationCompleted = new System.Threading.SendOrPostCallback(this.OnenterBottleInformationOperationCompleted);
             }
             this.InvokeAsync("enterBottleInformation", new object[] {
-                        rfidNums,
-                        type,
-                        year,
-                        country,
-                        vineyard,
-                        review,
-                        labelImage}, this.enterBottleInformationOperationCompleted, userState);
+                        arrayOfString_1,
+                        String_2,
+                        int_3,
+                        String_4,
+                        String_5,
+                        String_6,
+                        arrayOfbyte_7}, this.enterBottleInformationOperationCompleted, userState);
         }
         
         private void OnenterBottleInformationOperationCompleted(object arg) {
@@ -130,62 +125,26 @@ namespace WineEntryClient.org.dyndns.crius {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://winedemo//getItem", RequestElementName="getItemElement", RequestNamespace="http://winedemo/types/", ResponseElementName="getItemResponseElement", ResponseNamespace="http://winedemo/types/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://winePackage//getWineAccessesSince", RequestElementName="getWineAccessesSinceElement", RequestNamespace="http://winePackage/", ResponseElementName="getWineAccessesSinceResponseElement", ResponseNamespace="http://winePackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
-        public InfoPacket getItem([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_1, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_2, float float_3, float float_4) {
-            object[] results = this.Invoke("getItem", new object[] {
-                        String_1,
-                        String_2,
-                        float_3,
-                        float_4});
-            return ((InfoPacket)(results[0]));
-        }
-        
-        /// <remarks/>
-        public void getItemAsync(string String_1, string String_2, float float_3, float float_4) {
-            this.getItemAsync(String_1, String_2, float_3, float_4, null);
-        }
-        
-        /// <remarks/>
-        public void getItemAsync(string String_1, string String_2, float float_3, float float_4, object userState) {
-            if ((this.getItemOperationCompleted == null)) {
-                this.getItemOperationCompleted = new System.Threading.SendOrPostCallback(this.OngetItemOperationCompleted);
-            }
-            this.InvokeAsync("getItem", new object[] {
-                        String_1,
-                        String_2,
-                        float_3,
-                        float_4}, this.getItemOperationCompleted, userState);
-        }
-        
-        private void OngetItemOperationCompleted(object arg) {
-            if ((this.getItemCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.getItemCompleted(this, new getItemCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-        
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://winedemo//getWineAccessesSince", RequestElementName="getWineAccessesSinceElement", RequestNamespace="http://winedemo/types/", ResponseElementName="getWineAccessesSinceResponseElement", ResponseNamespace="http://winedemo/types/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
-        public string[] getWineAccessesSince(long timestamp) {
+        public string[] getWineAccessesSince(long long_1) {
             object[] results = this.Invoke("getWineAccessesSince", new object[] {
-                        timestamp});
+                        long_1});
             return ((string[])(results[0]));
         }
         
         /// <remarks/>
-        public void getWineAccessesSinceAsync(long timestamp) {
-            this.getWineAccessesSinceAsync(timestamp, null);
+        public void getWineAccessesSinceAsync(long long_1) {
+            this.getWineAccessesSinceAsync(long_1, null);
         }
         
         /// <remarks/>
-        public void getWineAccessesSinceAsync(long timestamp, object userState) {
+        public void getWineAccessesSinceAsync(long long_1, object userState) {
             if ((this.getWineAccessesSinceOperationCompleted == null)) {
                 this.getWineAccessesSinceOperationCompleted = new System.Threading.SendOrPostCallback(this.OngetWineAccessesSinceOperationCompleted);
             }
             this.InvokeAsync("getWineAccessesSince", new object[] {
-                        timestamp}, this.getWineAccessesSinceOperationCompleted, userState);
+                        long_1}, this.getWineAccessesSinceOperationCompleted, userState);
         }
         
         private void OngetWineAccessesSinceOperationCompleted(object arg) {
@@ -196,32 +155,32 @@ namespace WineEntryClient.org.dyndns.crius {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://winedemo//retrieveBottleInformation", RequestElementName="retrieveBottleInformationElement", RequestNamespace="http://winedemo/types/", ResponseElementName="retrieveBottleInformationResponseElement", ResponseNamespace="http://winedemo/types/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://winePackage//retrieveBottleInformation", RequestElementName="retrieveBottleInformationElement", RequestNamespace="http://winePackage/", ResponseElementName="retrieveBottleInformationResponseElement", ResponseNamespace="http://winePackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
-        public wineBottle retrieveBottleInformation([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string rfidNum, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string phoneID, float latitude, float longitude) {
+        public wineBottle retrieveBottleInformation([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_1, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_2, float float_3, float float_4) {
             object[] results = this.Invoke("retrieveBottleInformation", new object[] {
-                        rfidNum,
-                        phoneID,
-                        latitude,
-                        longitude});
+                        String_1,
+                        String_2,
+                        float_3,
+                        float_4});
             return ((wineBottle)(results[0]));
         }
         
         /// <remarks/>
-        public void retrieveBottleInformationAsync(string rfidNum, string phoneID, float latitude, float longitude) {
-            this.retrieveBottleInformationAsync(rfidNum, phoneID, latitude, longitude, null);
+        public void retrieveBottleInformationAsync(string String_1, string String_2, float float_3, float float_4) {
+            this.retrieveBottleInformationAsync(String_1, String_2, float_3, float_4, null);
         }
         
         /// <remarks/>
-        public void retrieveBottleInformationAsync(string rfidNum, string phoneID, float latitude, float longitude, object userState) {
+        public void retrieveBottleInformationAsync(string String_1, string String_2, float float_3, float float_4, object userState) {
             if ((this.retrieveBottleInformationOperationCompleted == null)) {
                 this.retrieveBottleInformationOperationCompleted = new System.Threading.SendOrPostCallback(this.OnretrieveBottleInformationOperationCompleted);
             }
             this.InvokeAsync("retrieveBottleInformation", new object[] {
-                        rfidNum,
-                        phoneID,
-                        latitude,
-                        longitude}, this.retrieveBottleInformationOperationCompleted, userState);
+                        String_1,
+                        String_2,
+                        float_3,
+                        float_4}, this.retrieveBottleInformationOperationCompleted, userState);
         }
         
         private void OnretrieveBottleInformationOperationCompleted(object arg) {
@@ -255,54 +214,7 @@ namespace WineEntryClient.org.dyndns.crius {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://winedemo/types/")]
-    public partial class InfoPacket {
-        
-        private bool authenticatedField;
-        
-        private string nameField;
-        
-        private string descField;
-        
-        /// <remarks/>
-        public bool authenticated {
-            get {
-                return this.authenticatedField;
-            }
-            set {
-                this.authenticatedField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string desc {
-            get {
-                return this.descField;
-            }
-            set {
-                this.descField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "2.0.50727.1318")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://winedemo/types/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://winePackage/")]
     public partial class wineBottle {
         
         private int yearField;
@@ -454,32 +366,6 @@ namespace WineEntryClient.org.dyndns.crius {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((bool)(this.results[0]));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
-    public delegate void getItemCompletedEventHandler(object sender, getItemCompletedEventArgs e);
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class getItemCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
-        
-        private object[] results;
-        
-        internal getItemCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
-                base(exception, cancelled, userState) {
-            this.results = results;
-        }
-        
-        /// <remarks/>
-        public InfoPacket Result {
-            get {
-                this.RaiseExceptionIfNecessary();
-                return ((InfoPacket)(this.results[0]));
             }
         }
     }

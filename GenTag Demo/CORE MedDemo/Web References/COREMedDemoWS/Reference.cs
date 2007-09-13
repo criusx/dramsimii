@@ -29,11 +29,21 @@ namespace CORE_MedDemo.COREMedDemoWS {
     [System.Web.Services.WebServiceBindingAttribute(Name="COREMedDemoWSSoapHttp", Namespace="http://COREMedDemo/")]
     public partial class COREMedDemoWS : System.Web.Services.Protocols.SoapHttpClientProtocol {
         
+        private System.Threading.SendOrPostCallback checkInteractionOperationCompleted;
+        
         private System.Threading.SendOrPostCallback enterDrugInfoOperationCompleted;
         
         private System.Threading.SendOrPostCallback enterPatientPhotoOperationCompleted;
         
         private System.Threading.SendOrPostCallback enterPatientRecordOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback getDrugInfoOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback getPatientRecordOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback logPatientVitalsOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback registerDoseGivenOperationCompleted;
         
         private bool useDefaultCredentialsSetExplicitly;
         
@@ -74,6 +84,9 @@ namespace CORE_MedDemo.COREMedDemoWS {
         }
         
         /// <remarks/>
+        public event checkInteractionCompletedEventHandler checkInteractionCompleted;
+        
+        /// <remarks/>
         public event enterDrugInfoCompletedEventHandler enterDrugInfoCompleted;
         
         /// <remarks/>
@@ -81,6 +94,50 @@ namespace CORE_MedDemo.COREMedDemoWS {
         
         /// <remarks/>
         public event enterPatientRecordCompletedEventHandler enterPatientRecordCompleted;
+        
+        /// <remarks/>
+        public event getDrugInfoCompletedEventHandler getDrugInfoCompleted;
+        
+        /// <remarks/>
+        public event getPatientRecordCompletedEventHandler getPatientRecordCompleted;
+        
+        /// <remarks/>
+        public event logPatientVitalsCompletedEventHandler logPatientVitalsCompleted;
+        
+        /// <remarks/>
+        public event registerDoseGivenCompletedEventHandler registerDoseGivenCompleted;
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return")]
+        public bool checkInteraction([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string ID, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string drugID) {
+            object[] results = this.Invoke("checkInteraction", new object[] {
+                        ID,
+                        drugID});
+            return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void checkInteractionAsync(string ID, string drugID) {
+            this.checkInteractionAsync(ID, drugID, null);
+        }
+        
+        /// <remarks/>
+        public void checkInteractionAsync(string ID, string drugID, object userState) {
+            if ((this.checkInteractionOperationCompleted == null)) {
+                this.checkInteractionOperationCompleted = new System.Threading.SendOrPostCallback(this.OncheckInteractionOperationCompleted);
+            }
+            this.InvokeAsync("checkInteraction", new object[] {
+                        ID,
+                        drugID}, this.checkInteractionOperationCompleted, userState);
+        }
+        
+        private void OncheckInteractionOperationCompleted(object arg) {
+            if ((this.checkInteractionCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.checkInteractionCompleted(this, new checkInteractionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
@@ -173,6 +230,136 @@ namespace CORE_MedDemo.COREMedDemoWS {
         }
         
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        public drugInfo getDrugInfo([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum) {
+            object[] results = this.Invoke("getDrugInfo", new object[] {
+                        RFIDNum});
+            return ((drugInfo)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void getDrugInfoAsync(string RFIDNum) {
+            this.getDrugInfoAsync(RFIDNum, null);
+        }
+        
+        /// <remarks/>
+        public void getDrugInfoAsync(string RFIDNum, object userState) {
+            if ((this.getDrugInfoOperationCompleted == null)) {
+                this.getDrugInfoOperationCompleted = new System.Threading.SendOrPostCallback(this.OngetDrugInfoOperationCompleted);
+            }
+            this.InvokeAsync("getDrugInfo", new object[] {
+                        RFIDNum}, this.getDrugInfoOperationCompleted, userState);
+        }
+        
+        private void OngetDrugInfoOperationCompleted(object arg) {
+            if ((this.getDrugInfoCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.getDrugInfoCompleted(this, new getDrugInfoCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        public patientRecord getPatientRecord([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum) {
+            object[] results = this.Invoke("getPatientRecord", new object[] {
+                        RFIDNum});
+            return ((patientRecord)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void getPatientRecordAsync(string RFIDNum) {
+            this.getPatientRecordAsync(RFIDNum, null);
+        }
+        
+        /// <remarks/>
+        public void getPatientRecordAsync(string RFIDNum, object userState) {
+            if ((this.getPatientRecordOperationCompleted == null)) {
+                this.getPatientRecordOperationCompleted = new System.Threading.SendOrPostCallback(this.OngetPatientRecordOperationCompleted);
+            }
+            this.InvokeAsync("getPatientRecord", new object[] {
+                        RFIDNum}, this.getPatientRecordOperationCompleted, userState);
+        }
+        
+        private void OngetPatientRecordOperationCompleted(object arg) {
+            if ((this.getPatientRecordCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.getPatientRecordCompleted(this, new getPatientRecordCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        public errorReport logPatientVitals([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum, [System.Xml.Serialization.XmlElementAttribute("temperatures")] float[] temperatures, int periodicity) {
+            object[] results = this.Invoke("logPatientVitals", new object[] {
+                        RFIDNum,
+                        temperatures,
+                        periodicity});
+            return ((errorReport)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void logPatientVitalsAsync(string RFIDNum, float[] temperatures, int periodicity) {
+            this.logPatientVitalsAsync(RFIDNum, temperatures, periodicity, null);
+        }
+        
+        /// <remarks/>
+        public void logPatientVitalsAsync(string RFIDNum, float[] temperatures, int periodicity, object userState) {
+            if ((this.logPatientVitalsOperationCompleted == null)) {
+                this.logPatientVitalsOperationCompleted = new System.Threading.SendOrPostCallback(this.OnlogPatientVitalsOperationCompleted);
+            }
+            this.InvokeAsync("logPatientVitals", new object[] {
+                        RFIDNum,
+                        temperatures,
+                        periodicity}, this.logPatientVitalsOperationCompleted, userState);
+        }
+        
+        private void OnlogPatientVitalsOperationCompleted(object arg) {
+            if ((this.logPatientVitalsCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.logPatientVitalsCompleted(this, new logPatientVitalsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return")]
+        public bool registerDoseGiven([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string patientRFIDNum, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string drugRFIDNum, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string nurseID, int dose) {
+            object[] results = this.Invoke("registerDoseGiven", new object[] {
+                        patientRFIDNum,
+                        drugRFIDNum,
+                        nurseID,
+                        dose});
+            return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void registerDoseGivenAsync(string patientRFIDNum, string drugRFIDNum, string nurseID, int dose) {
+            this.registerDoseGivenAsync(patientRFIDNum, drugRFIDNum, nurseID, dose, null);
+        }
+        
+        /// <remarks/>
+        public void registerDoseGivenAsync(string patientRFIDNum, string drugRFIDNum, string nurseID, int dose, object userState) {
+            if ((this.registerDoseGivenOperationCompleted == null)) {
+                this.registerDoseGivenOperationCompleted = new System.Threading.SendOrPostCallback(this.OnregisterDoseGivenOperationCompleted);
+            }
+            this.InvokeAsync("registerDoseGiven", new object[] {
+                        patientRFIDNum,
+                        drugRFIDNum,
+                        nurseID,
+                        dose}, this.registerDoseGivenOperationCompleted, userState);
+        }
+        
+        private void OnregisterDoseGivenOperationCompleted(object arg) {
+            if ((this.registerDoseGivenCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.registerDoseGivenCompleted(this, new registerDoseGivenCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
         public new void CancelAsync(object userState) {
             base.CancelAsync(userState);
         }
@@ -204,6 +391,8 @@ namespace CORE_MedDemo.COREMedDemoWS {
         private byte[] pictureField;
         
         private string descriptionField;
+        
+        private bool existsField;
         
         private string nameField;
         
@@ -241,6 +430,16 @@ namespace CORE_MedDemo.COREMedDemoWS {
         }
         
         /// <remarks/>
+        public bool exists {
+            get {
+                return this.existsField;
+            }
+            set {
+                this.existsField = value;
+            }
+        }
+        
+        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public string name {
             get {
@@ -261,6 +460,8 @@ namespace CORE_MedDemo.COREMedDemoWS {
     public partial class patientRecord {
         
         private byte[] imageField;
+        
+        private bool existsField;
         
         private string middleNameField;
         
@@ -284,6 +485,16 @@ namespace CORE_MedDemo.COREMedDemoWS {
             }
             set {
                 this.imageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool exists {
+            get {
+                return this.existsField;
+            }
+            set {
+                this.existsField = value;
             }
         }
         
@@ -400,6 +611,32 @@ namespace CORE_MedDemo.COREMedDemoWS {
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    public delegate void checkInteractionCompletedEventHandler(object sender, checkInteractionCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class checkInteractionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal checkInteractionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public bool Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((bool)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
     public delegate void enterDrugInfoCompletedEventHandler(object sender, enterDrugInfoCompletedEventArgs e);
     
     /// <remarks/>
@@ -472,6 +709,110 @@ namespace CORE_MedDemo.COREMedDemoWS {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((errorReport)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    public delegate void getDrugInfoCompletedEventHandler(object sender, getDrugInfoCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class getDrugInfoCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal getDrugInfoCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public drugInfo Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((drugInfo)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    public delegate void getPatientRecordCompletedEventHandler(object sender, getPatientRecordCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class getPatientRecordCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal getPatientRecordCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public patientRecord Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((patientRecord)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    public delegate void logPatientVitalsCompletedEventHandler(object sender, logPatientVitalsCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class logPatientVitalsCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal logPatientVitalsCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public errorReport Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((errorReport)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    public delegate void registerDoseGivenCompletedEventHandler(object sender, registerDoseGivenCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1318")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class registerDoseGivenCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal registerDoseGivenCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public bool Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((bool)(this.results[0]));
             }
         }
     }

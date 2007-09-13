@@ -73,7 +73,13 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Web References\COREMedDemoWS\COREMedDemoWS.wsdl" />
+    <None Include="Web References\COREMedDemoWS\drugInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\COREMedDemoWS\errorReport.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\COREMedDemoWS\patientRecord.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\COREMedDemoWS\Reference.map">
@@ -84,6 +90,9 @@
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\org.dyndns.crius\GetDatesWS.wsdl" />
+    <None Include="Web References\org.dyndns.crius\patientInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\org.dyndns.crius\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

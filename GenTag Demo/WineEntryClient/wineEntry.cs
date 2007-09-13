@@ -184,7 +184,7 @@ namespace WineEntryClient
                         bool status = false;
                        if (sender == wineSaveButton)
                         {
-                            org.dyndns.crius.WineWS ws = new org.dyndns.crius.WineWS();
+                            org.dyndns.crius.wineWS ws = new org.dyndns.crius.WineWS();
                             status = ws.enterBottleInformation(new string[] { tagID }, wineTypeComboBox.Text, Convert.ToInt32(yearUpDown.Value), countryBox.Text, vineyardBox.Text, reviewBox.Text, blob);
                             ws.Dispose();
                         }

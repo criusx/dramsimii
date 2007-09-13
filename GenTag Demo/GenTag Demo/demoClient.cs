@@ -294,7 +294,7 @@ namespace GentagDemo
                         {
                             // set the current bottle to be looked up
                             wineChanged = false;
-                            // get the bottle info and cache it
+                            // get the bottle info and cache it                            
                             org.dyndns.criusWine.wineWS ws = new org.dyndns.criusWine.wineWS();
                             ws.Timeout = 300000;
                             handle = ws.BeginretrieveBottleInformation(currentTag, DeviceUID, 0, 0, cb, ws);
