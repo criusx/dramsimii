@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:tns="http://winePackage/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="wineWS" targetNamespace="http://winePackage/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified" targetNamespace="http://winePackage/">
+      <xsd:element name="enterBottleInformationElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="arrayOfString_1" nillable="true" type="xsd:string" />
+            <xsd:element name="String_2" nillable="true" type="xsd:string" />
+            <xsd:element name="int_3" type="xsd:int" />
+            <xsd:element name="String_4" nillable="true" type="xsd:string" />
+            <xsd:element name="String_5" nillable="true" type="xsd:string" />
+            <xsd:element name="String_6" nillable="true" type="xsd:string" />
+            <xsd:element name="arrayOfbyte_7" nillable="true" type="xsd:base64Binary" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="enterBottleInformationResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getWineAccessesSinceElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="long_1" type="xsd:long" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getWineAccessesSinceResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="result" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="retrieveBottleInformationElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="String_1" nillable="true" type="xsd:string" />
+            <xsd:element name="String_2" nillable="true" type="xsd:string" />
+            <xsd:element name="float_3" type="xsd:float" />
+            <xsd:element name="float_4" type="xsd:float" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="retrieveBottleInformationResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:wineBottle" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="wineBottle">
+        <xsd:sequence>
+          <xsd:element name="year" type="xsd:int" />
+          <xsd:element name="type" nillable="true" type="xsd:string" />
+          <xsd:element name="authenticated" type="xsd:boolean" />
+          <xsd:element name="image" nillable="true" type="xsd:base64Binary" />
+          <xsd:element name="lookedUpTimes" type="xsd:int" />
+          <xsd:element name="exists" type="xsd:boolean" />
+          <xsd:element name="vineyard" nillable="true" type="xsd:string" />
+          <xsd:element name="origin" nillable="true" type="xsd:string" />
+          <xsd:element name="rfidNum" nillable="true" type="xsd:string" />
+          <xsd:element name="review" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <message name="WineWS_enterBottleInformation">
+    <part name="parameters" element="tns:enterBottleInformationElement" />
+  </message>
+  <message name="WineWS_enterBottleInformationResponse">
+    <part name="parameters" element="tns:enterBottleInformationResponseElement" />
+  </message>
+  <message name="WineWS_getWineAccessesSince">
+    <part name="parameters" element="tns:getWineAccessesSinceElement" />
+  </message>
+  <message name="WineWS_getWineAccessesSinceResponse">
+    <part name="parameters" element="tns:getWineAccessesSinceResponseElement" />
+  </message>
+  <message name="WineWS_retrieveBottleInformation">
+    <part name="parameters" element="tns:retrieveBottleInformationElement" />
+  </message>
+  <message name="WineWS_retrieveBottleInformationResponse">
+    <part name="parameters" element="tns:retrieveBottleInformationResponseElement" />
+  </message>
+  <portType name="wineWS">
+    <operation name="enterBottleInformation">
+      <input message="tns:WineWS_enterBottleInformation" />
+      <output message="tns:WineWS_enterBottleInformationResponse" />
+    </operation>
+    <operation name="getWineAccessesSince">
+      <input message="tns:WineWS_getWineAccessesSince" />
+      <output message="tns:WineWS_getWineAccessesSinceResponse" />
+    </operation>
+    <operation name="retrieveBottleInformation">
+      <input message="tns:WineWS_retrieveBottleInformation" />
+      <output message="tns:WineWS_retrieveBottleInformationResponse" />
+    </operation>
+  </portType>
+  <binding name="wineWSSoapHttp" type="tns:wineWS">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="enterBottleInformation">
+      <soap:operation soapAction="http://winePackage//enterBottleInformation" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getWineAccessesSince">
+      <soap:operation soapAction="http://winePackage//getWineAccessesSince" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="retrieveBottleInformation">
+      <soap:operation soapAction="http://winePackage//retrieveBottleInformation" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="wineWS">
+    <port name="wineWSSoapHttpPort" binding="tns:wineWSSoapHttp">
+      <soap:address location="http://crius.dyndns.org:8888/GentagDemo/wineWSSoapHttpPort" />
+    </port>
+  </service>
+</definitions>
