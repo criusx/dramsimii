@@ -184,7 +184,7 @@ namespace WineEntryClient
                         bool status = false;
                        if (sender == wineSaveButton)
                         {
-                            org.dyndns.crius.wineWS ws = new org.dyndns.crius.WineWS();
+                            org.dyndns.crius.wineWS ws = new org.dyndns.crius.wineWS();
                             status = ws.enterBottleInformation(new string[] { tagID }, wineTypeComboBox.Text, Convert.ToInt32(yearUpDown.Value), countryBox.Text, vineyardBox.Text, reviewBox.Text, blob);
                             ws.Dispose();
                         }
@@ -225,7 +225,7 @@ namespace WineEntryClient
                 try
                 {
                     org.dyndns.crius.wineBottle bottle =
-                        (new org.dyndns.crius.WineWS()).retrieveBottleInformation(tagID, DeviceUID, (float)0.0, (float)0.0);
+                        (new org.dyndns.crius.wineWS()).retrieveBottleInformation(tagID, DeviceUID, (float)0.0, (float)0.0);
 
                     if (bottle.exists)
                     {
