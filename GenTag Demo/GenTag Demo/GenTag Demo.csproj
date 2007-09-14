@@ -18,7 +18,7 @@
     <FormFactorID>
     </FormFactorID>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>Gentag Demo Key.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>GentagDemoKeyA.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -171,6 +171,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="GentagDemoKeyA.pfx" />
     <None Include="GentagKey.pfx" />
     <None Include="Resources\Gentag-logo.png" />
     <None Include="Web References\org.dyndns.criusWine\Reference.map">
