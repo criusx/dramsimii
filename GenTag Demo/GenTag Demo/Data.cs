@@ -60,8 +60,8 @@ namespace TestPocketGraphBar
                 //In the load event the the object was filled
                 //Here we only set its properties
 
-                graph.LeftMargin = 20;
-                graph.LegendFont = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular);
+                graph.LeftMargin = 10;
+                graph.LegendFont = new System.Drawing.Font(FontFamily.GenericSansSerif, 6F, FontStyle.Regular);
                 graph.AxisColor = Color.Black;
                 graph.MaxHeight = 200;
                 //The width of each bar
@@ -104,7 +104,7 @@ namespace TestPocketGraphBar
         public void Clear()
         {
             graph.Graphs[0].Clear();
-        }       
+        }
 
         private void Data_Click(object sender, EventArgs e)
         {

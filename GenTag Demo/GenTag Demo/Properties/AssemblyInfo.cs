@@ -10,7 +10,7 @@ using System.Resources;
 [assembly: AssemblyDescription("Demonstrates various sensor functions")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Gentag, Inc.")]
-[assembly: AssemblyProduct("GenTag_Demo")]
+[assembly: AssemblyProduct("Gentag_Demo")]
 [assembly: AssemblyCopyright("Copyright © Gentag, Inc. 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

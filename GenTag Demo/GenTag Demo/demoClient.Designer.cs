@@ -29,6 +29,7 @@ namespace GentagDemo
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(demoClient));
+            System.Windows.Forms.Label label23;
             this.readIDButton = new System.Windows.Forms.Button();
             this.readLogButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -130,6 +131,10 @@ namespace GentagDemo
             this.label21 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.radPage = new System.Windows.Forms.TabPage();
+            this.radScanButton = new System.Windows.Forms.Button();
+            this.radIDLabel = new System.Windows.Forms.Label();
+            label23 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.authPage.SuspendLayout();
             this.VarioSens.SuspendLayout();
@@ -139,6 +144,7 @@ namespace GentagDemo
             this.gpsPage.SuspendLayout();
             this.manualLookupPage.SuspendLayout();
             this.varioSensWPage.SuspendLayout();
+            this.radPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // readIDButton
@@ -170,6 +176,7 @@ namespace GentagDemo
             this.tabControl1.Controls.Add(this.gpsPage);
             this.tabControl1.Controls.Add(this.manualLookupPage);
             this.tabControl1.Controls.Add(this.varioSensWPage);
+            this.tabControl1.Controls.Add(this.radPage);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -1072,6 +1079,39 @@ namespace GentagDemo
             this.label5.Size = new System.Drawing.Size(100, 20);
             this.label5.Text = "Low Limit";
             // 
+            // radPage
+            // 
+            this.radPage.Controls.Add(label23);
+            this.radPage.Controls.Add(this.radIDLabel);
+            this.radPage.Controls.Add(this.radScanButton);
+            this.radPage.Location = new System.Drawing.Point(0, 0);
+            this.radPage.Name = "radPage";
+            this.radPage.Size = new System.Drawing.Size(240, 217);
+            this.radPage.Text = "CZT";
+            // 
+            // radScanButton
+            // 
+            this.radScanButton.Location = new System.Drawing.Point(4, 194);
+            this.radScanButton.Name = "radScanButton";
+            this.radScanButton.Size = new System.Drawing.Size(72, 20);
+            this.radScanButton.TabIndex = 0;
+            this.radScanButton.Text = "Scan";
+            this.radScanButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // radIDLabel
+            // 
+            this.radIDLabel.Location = new System.Drawing.Point(82, 101);
+            this.radIDLabel.Name = "radIDLabel";
+            this.radIDLabel.Size = new System.Drawing.Size(151, 20);
+            // 
+            // label23
+            // 
+            label23.Location = new System.Drawing.Point(7, 101);
+            label23.Name = "label23";
+            label23.Size = new System.Drawing.Size(69, 20);
+            label23.Text = "ID:";
+            label23.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // demoClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1094,6 +1134,7 @@ namespace GentagDemo
             this.gpsPage.ResumeLayout(false);
             this.manualLookupPage.ResumeLayout(false);
             this.varioSensWPage.ResumeLayout(false);
+            this.radPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1201,6 +1242,9 @@ namespace GentagDemo
         private System.Windows.Forms.Label petPhonenumberLabel;
         private System.Windows.Forms.PictureBox petPB;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TabPage radPage;
+        private System.Windows.Forms.Button radScanButton;
+        private System.Windows.Forms.Label radIDLabel;
         
     }
 }

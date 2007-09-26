@@ -18,7 +18,8 @@
     <FormFactorID>
     </FormFactorID>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>GentagDemoKeyA.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>GentagA.pfx</AssemblyOriginatorKeyFile>
+    <StartupObject>GentagDemo.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -102,6 +103,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="radSensor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VarioSens.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Web References\org.dyndns.criusWine\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -163,7 +170,6 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Gentag Demo Key.pfx" />
     <None Include="Web References\org.dyndns.crius\GetDatesWS.wsdl" />
     <None Include="Web References\org.dyndns.crius\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
@@ -171,7 +177,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GentagDemoKeyA.pfx" />
+    <None Include="GentagA.pfx" />
     <None Include="GentagKey.pfx" />
     <None Include="Resources\Gentag-logo.png" />
     <None Include="Web References\org.dyndns.criusWine\Reference.map">

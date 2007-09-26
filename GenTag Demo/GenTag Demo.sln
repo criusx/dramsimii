@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COREMobileMedDemo", "COREMo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gentag Demo", "Gentag Demo", "{3A06F99D-A469-49D6-9241-DE46AD9BD4F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenTag Demo", "GenTag Demo\GenTag Demo.csproj", "{2BB2FFF5-F1D5-4C0D-A1DB-CD507D7F9280}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gentag Demo", "GenTag Demo\Gentag Demo.csproj", "{2BB2FFF5-F1D5-4C0D-A1DB-CD507D7F9280}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7775ECF9-017E-489D-84B6-3BC6DF166494} = {7775ECF9-017E-489D-84B6-3BC6DF166494}
 	EndProjectSection
