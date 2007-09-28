@@ -36,7 +36,7 @@ transaction::transaction(const int attribute,const tick_t enqueueTime,const int 
 event_no(0),
 status(0),
 length(Size),
-arrivalTime(0),
+arrivalTime(enqueueTime),
 enqueueTime(enqueueTime),
 completionTime(0),
 addr(address),
