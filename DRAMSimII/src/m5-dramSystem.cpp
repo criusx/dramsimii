@@ -60,7 +60,6 @@ PhysicalMemory(p), tickEvent(this), needRetry(false)
 	dramSettings *settings = new dramSettings(2,settingsMap);
 	ds = new dramSystem(settings);
 	delete settings;
-	//ds = new dramSystem(parameter);
 
 	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency()));
 
