@@ -141,9 +141,10 @@ namespace GentagDemo
             //hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
+        private enum loopType { wine, counterfeit, pet, patient, none };
+
         // the variable that describes whether it's looping looking for wine bottles or general tags
-        private bool wineLoop;
-        private bool petLoop;
+        private loopType loop;
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void readerClick(object sender, EventArgs e)
@@ -155,32 +156,23 @@ namespace GentagDemo
 
                 if (sender == readLogButton)
                     new Thread(new ThreadStart(launchReadVSLog)).Start();
-                else if ((sender == readIDButton) || (sender == wineButton) || (sender == petButton))
+                else if ((sender == readIDButton) || (sender == wineButton) || (sender == petButton) || (sender == readPatientButton))
                 {
                     if (sender == wineButton)
-                    {
-                        wineLoop = true;
-                        petLoop = false;
-                    }
+                        loop = loopType.wine;
                     else if (sender == petButton)
-                    {
-                        wineLoop = false;
-                        petLoop = true;
-                    }
-                    else
-                    {
-                        petLoop = false;
-                        wineLoop = false;
-                    }
+                        loop = loopType.pet;
+                    else if (sender == readIDButton)
+                        loop = loopType.counterfeit;
+                    else if (sender == readPatientButton)
+                        loop = loopType.patient;
+
                     new Thread(new ThreadStart(tagReader.readTagID)).Start();
-                    new Thread(new ThreadStart(doLookup)).Start();
                 }
                 else if (sender == setValueButton)
                     new Thread(new ThreadStart(launchSetVSSettings)).Start();
                 else if (sender == readValueButton)
                     new Thread(new ThreadStart(launchGetVSSettings)).Start();
-                else if (sender == readPatientButton)
-                    new Thread(new ThreadStart(readPatientData)).Start();
                 else if (sender == medicationButton)
                     new Thread(new ThreadStart(readDrugData)).Start();
                 else if (sender == radScanButton)
@@ -191,6 +183,7 @@ namespace GentagDemo
                 Cursor.Current = Cursors.Default;
                 readerRunning = false;
                 tagReader.running = false;
+                loop = loopType.none;
             }
         }
 
@@ -199,195 +192,188 @@ namespace GentagDemo
         {
             setWaitCursor(false);
             readerRunning = false;
+            loop = loopType.none;
             MessageBox.Show(errorMessage);
         }
+
+        private Hashtable cachedWineLookups = new Hashtable();
+
+        private Hashtable cachedCounterfeitLookups = new Hashtable();
+
+        private Hashtable cachedPetLookups = new Hashtable();
+
+        private Hashtable cachedPatientLookups = new Hashtable();
+
+        private Hashtable counterfeitIDsCurrentlyBeingLookedUp = new Hashtable();
+
+        private Hashtable wineIDsCurrentlyBeingLookedUp = new Hashtable();
+
+        private Hashtable petIDsCurrentlyBeingLookedUp = new Hashtable();
+
+        private Hashtable patientsCurrentlyBeingLookedUp = new Hashtable();
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void tagReceived(string tagID)
         {
-            Button button = wineLoop ? wineButton : (petLoop ? petButton : readIDButton);
-            Hashtable cache = wineLoop ? cachedWineLookups : (petLoop ? cachedPetLookups : cachedIDLookups);
+            if (string.IsNullOrEmpty(tagID)) // if there was no string returned
+                return;
 
-            lock (tagQueue.SyncRoot)
+            AsyncCallback cb = new AsyncCallback(receiveNewItem);
+
+            Button button = loop == loopType.counterfeit ? readIDButton : loop == loopType.pet ? petButton : loop == loopType.wine ? wineButton : readPatientButton;
+
+            try
             {
-                if (wineLoop || petLoop)
+                switch (loop)
                 {
-                    if (!tagQueue.Contains(tagID))
-                        tagQueue.Enqueue(tagID);
-                }
-                // either it's in the queue waiting to be processed or it has been processed and is cached
-                else
-                {
-                    if (!tagQueue.Contains(tagID) && !cache.Contains(tagID))
-                    {
-                        tagQueue.Enqueue(tagID);
-                        updateTreeView1(tagID, @"No description yet", false, true);
-                    }
+                    case loopType.counterfeit:
+                        {
+                            // if it has already been added, do nothing
+                            if (cachedCounterfeitLookups.ContainsKey(tagID))
+                                return;
+
+                            // get the tag info and cache it
+                            authWS.GetDatesWS ws = new authWS.GetDatesWS();
+                            ws.Timeout = 300000;
+                            IAsyncResult handle = ws.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                            lock (counterfeitIDsCurrentlyBeingLookedUp.SyncRoot)
+                            { counterfeitIDsCurrentlyBeingLookedUp[handle] = tagID; }
+
+                            updateTreeView1(tagID, @"No description yet", false, true);
+
+                            break;
+                        }
+                    case loopType.pet:
+                        {
+                            if (cachedPetLookups.ContainsKey(tagID))
+                                displayPet((petWS.petInfo)cachedPetLookups[tagID]);
+                            else if (petIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
+                                return;
+                            else
+                            {
+                                petWS.petWS ws = new petWS.petWS();
+                                ws.Timeout = 300000;
+                                IAsyncResult handle = ws.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                                lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
+                                { petIDsCurrentlyBeingLookedUp[handle] = tagID; }
+                            }
+
+                            break;
+                        }
+                    case loopType.wine:
+                        {
+                            if (cachedWineLookups.ContainsKey(tagID))
+                                displayBottle((wineWS.wineBottle)cachedWineLookups[tagID]);
+                            else if (wineIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
+                                return;
+                            else
+                            {
+                                mostRecentWineID = tagID;
+                                wineWS.wineWS ws = new wineWS.wineWS();
+                                ws.Timeout = 300000;
+                                IAsyncResult handle = ws.BeginretrieveBottleInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                                lock (wineIDsCurrentlyBeingLookedUp.SyncRoot)
+                                { wineIDsCurrentlyBeingLookedUp[handle] = tagID; }
+                            }
+                            break;
+                        }
+                    case loopType.patient:
+                        {
+                            if (cachedPatientLookups.ContainsKey(tagID))
+                                displayPatient((medWS.patientRecord)cachedPatientLookups[tagID]);
+                            else if (wineIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
+                                return;
+                            else
+                            {
+                                mostRecentWineID = tagID;
+                                medWS.COREMedDemoWS ws = new medWS.COREMedDemoWS();
+                                ws.Timeout = 30000;
+                                IAsyncResult handle = ws.BegingetPatientRecord(tagID, cb, ws);
+                                lock (patientsCurrentlyBeingLookedUp.SyncRoot)
+                                { patientsCurrentlyBeingLookedUp[handle] = tagID; }
+                            }
+                            break;
+                        }
+                    default:
+                        return;
+                        break;
                 }
             }
+            catch (SoapException ex)
+            {
+                MessageBox.Show("Unexpected SOAP exception: " + ex.Message);
+            }
+            
 
             // flash the panel to signal the user that a tag was read
             Color backup = getButtonColor(button);
             setButtonColor(button, Color.Green);
             Thread.Sleep(150);
             setButtonColor(button, backup);
-        }
-
-
-
-
-        private Hashtable cachedWineLookups = new Hashtable();
-
-        private Hashtable cachedIDLookups = new Hashtable();
-
-        private Hashtable cachedPetLookups = new Hashtable();
+        }        
 
         private Hashtable retryCount = new Hashtable();
 
-        private Hashtable IDsCurrentlyBeingLookedUp = new Hashtable();
-
-        private Hashtable wineIDsCurrentlyBeingLookedUp = new Hashtable();
-
-        private Hashtable petIDsCurrentlyBeingLookedUp = new Hashtable();
-
-        private Queue tagQueue = new Queue();
-
-        private bool wineChanged;
-
-        private void doLookup()
-        {
-            Hashtable cache = wineLoop ? cachedWineLookups : (petLoop ? cachedPetLookups : cachedIDLookups);
-
-            while ((readerRunning) || (tagQueue.Count > 0))
-            {
-                string currentTag;
-
-                lock (tagQueue.SyncRoot)
-                {
-                    if (tagQueue.Count > 0)
-                        currentTag = (string)tagQueue.Dequeue();
-                    else
-                        currentTag = null;
-                }
-                if (string.IsNullOrEmpty(currentTag)) // if there was no string returned
-                {
-                    Thread.Sleep(250);
-                    continue;
-                }
-                else if (cache.ContainsKey(currentTag)) // else if the tag is already looked up
-                {
-                    wineChanged = true;
-                    if (wineLoop)
-                        displayBottle((org.dyndns.criusWine.wineBottle)cache[currentTag]);
-                    if (petLoop)
-                        displayPet((petWS.petInfo)cache[currentTag]);
-
-                }
-                else // hashtable does not contain info on this tag
-                {
-                    // if a request for this tag has already been made
-                    if (IDsCurrentlyBeingLookedUp.ContainsValue(currentTag) && !wineLoop && !petLoop)
-                        continue;
-                    if (wineIDsCurrentlyBeingLookedUp.ContainsValue(currentTag) && wineLoop)
-                        continue;
-                    if (petIDsCurrentlyBeingLookedUp.ContainsValue(currentTag) && petLoop)
-                        continue;
-                    // use the web service to retrieve a description  
-                    try
-                    {
-                        AsyncCallback cb = new AsyncCallback(receiveNewItem);
-                        IAsyncResult handle;
-
-                        if (wineLoop)
-                        {
-                            // set the current bottle to be looked up
-                            wineChanged = false;
-                            // get the bottle info and cache it                            
-                            org.dyndns.criusWine.wineWS ws = new org.dyndns.criusWine.wineWS();
-                            ws.Timeout = 300000;
-                            handle = ws.BeginretrieveBottleInformation(currentTag, DeviceUID, 0, 0, cb, ws);
-                            lock (wineIDsCurrentlyBeingLookedUp.SyncRoot)
-                            { wineIDsCurrentlyBeingLookedUp[handle] = currentTag; }
-                        }
-                        else if (petLoop)
-                        {
-                            petWS.petWS ws = new petWS.petWS();
-                            ws.Timeout = 300000;
-                            handle = ws.BeginretrievePetInformation(currentTag, DeviceUID, 0, 0, cb, ws);
-                            lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
-                            { petIDsCurrentlyBeingLookedUp[handle] = currentTag; }
-                        }
-                        else
-                        {
-
-                            // get the tag info and cache it
-                            org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-                            ws.Timeout = 300000;
-                            handle = ws.BegingetItem(currentTag, DeviceUID, 0, 0, cb, ws);
-                            lock (IDsCurrentlyBeingLookedUp.SyncRoot)
-                            { IDsCurrentlyBeingLookedUp[handle] = currentTag; }
-                        }
-
-                        // reset the retry counter for this particular lookup
-                        lock (retryCount.SyncRoot)
-                        {
-                            retryCount[handle] = 0;
-                        }
-
-                    }
-                    catch (SoapException ex)
-                    {
-                        MessageBox.Show("Unexpected SOAP exception: " + ex.Message);
-                    }
-                }
-                Thread.Sleep(250);
-            }
-        }
-
+        private string mostRecentWineID;
 
         private void receiveNewItem(IAsyncResult ar)
         {
-            Hashtable cache = wineLoop ? cachedWineLookups : (petLoop ? cachedPetLookups : cachedIDLookups);
-
             try
             {
-                if (wineLoop)
+                if (ar.AsyncState.GetType() == typeof(wineWS.wineWS))
                 {
-                    org.dyndns.criusWine.wineWS ws = (org.dyndns.criusWine.wineWS)ar.AsyncState;
-                    org.dyndns.criusWine.wineBottle bottle = ws.EndretrieveBottleInformation(ar);
-                    lock (cache.SyncRoot)
+                    // try to cast as wineBottle
+                    wineWS.wineWS ws = (wineWS.wineWS)ar.AsyncState;
+                    wineWS.wineBottle bottle = ws.EndretrieveBottleInformation(ar);
+                    lock (cachedWineLookups.SyncRoot)
                     {
-                        cache[bottle.rfidNum] = bottle;
+                        cachedWineLookups[bottle.rfidNum] = bottle;
                     }
-                    if (!wineChanged)
+                    if (bottle.rfidNum == mostRecentWineID)
                     {
                         displayBottle(bottle);
                     }
                 }
-                else if (petLoop)
+                else if (ar.AsyncState.GetType() == typeof(petWS.petWS))
                 {
+                    // try to cast as petInfo
                     petWS.petWS ws = (petWS.petWS)ar.AsyncState;
                     petWS.petInfo newPet = ws.EndretrievePetInformation(ar);
-                    lock (cache.SyncRoot)
+                    displayPet(newPet);
+                    lock (cachedPetLookups.SyncRoot)
                     {
-                        cache[newPet.rfidNum] = newPet;
+                        cachedPetLookups[newPet.rfidNum] = newPet;
                     }
-                    if (!wineChanged)
-                    {
-                        displayPet(newPet);
-                    }
+                    
                 }
-                else
+                else if (ar.AsyncState.GetType() == typeof(authWS.GetDatesWS))
                 {
-                    org.dyndns.crius.GetDatesWS ws = (org.dyndns.crius.GetDatesWS)ar.AsyncState;
-                    org.dyndns.crius.GetDates info = ws.EndgetItem(ar);
+                    // try to cast as a standard item lookup    
+                    authWS.GetDatesWS ws = (authWS.GetDatesWS)ar.AsyncState;
+                    authWS.GetDates info = ws.EndgetItem(ar);
 
                     // display the tag info
                     updateTreeView1(info.name, info.desc, info.authenticated, false);
-                    lock (cache.SyncRoot)
+                    string tagID = (string)counterfeitIDsCurrentlyBeingLookedUp[ar];
+                    lock (cachedCounterfeitLookups.SyncRoot)
                     {
-                        cache[info.name] = info;
+                        cachedCounterfeitLookups[tagID] = info;
                     }
+                }
+                else if (ar.AsyncState.GetType() == typeof(medWS.COREMedDemoWS))
+                {
+                    // try to cast as a standard item lookup    
+                    medWS.COREMedDemoWS ws = (medWS.COREMedDemoWS)ar.AsyncState;
+                    medWS.patientRecord info = ws.EndgetPatientRecord(ar);
+
+                    // display the tag info
+                    displayPatient(info);
+                    string tagID = (string)patientsCurrentlyBeingLookedUp[ar];
+                    lock (cachedPatientLookups.SyncRoot)
+                    {
+                        cachedPatientLookups[tagID] = info;
+                    }
+                    readerClick(readPatientButton, new EventArgs());
                 }
             }
             catch (WebException)
@@ -419,7 +405,6 @@ namespace GentagDemo
             {
                 MessageBox.Show("Possible timeout error");
             }
-
             catch (IndexOutOfRangeException e)
             {
                 MessageBox.Show(e.ToString());
@@ -428,43 +413,72 @@ namespace GentagDemo
             {
                 MessageBox.Show(e.ToString());
             }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
         private void rescheduleLookup(IAsyncResult ar)
         {
-            AsyncCallback cb = new AsyncCallback(receiveNewItem);
-            IAsyncResult handle;
+            AsyncCallback cb = new AsyncCallback(receiveNewItem);            
 
-            string currentTag = (string)IDsCurrentlyBeingLookedUp[ar];
-
-            if (wineLoop)
+            if (ar.AsyncState.GetType() == typeof(wineWS.wineWS))
             {
-                // set the current bottle to be looked up
-                //currentRfidNum = currentTag;
-                // get the bottle info and cache it
-                org.dyndns.criusWine.wineWS ws = new org.dyndns.criusWine.wineWS();
-                ws.Timeout = 300000;
-                handle = ws.BeginretrieveBottleInformation(currentTag, DeviceUID, 0, 0, cb, ws);
-
+                lock (wineIDsCurrentlyBeingLookedUp.SyncRoot)
+                {
+                    // get the bottle info and cache it
+                    string currentTag = (string)wineIDsCurrentlyBeingLookedUp[ar];
+                    wineIDsCurrentlyBeingLookedUp.Remove(ar);
+                    wineWS.wineWS ws = new wineWS.wineWS();
+                    ws.Timeout = 300000;
+                    IAsyncResult handle = ws.BeginretrieveBottleInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                    wineIDsCurrentlyBeingLookedUp[handle] = currentTag;
+                }
             }
-            else if (petLoop)
+            else if (ar.AsyncState.GetType() == typeof(petWS.petWS))
             {
-                petWS.petWS ws = new petWS.petWS();
-                ws.Timeout = 300000;
-                handle = ws.BeginretrievePetInformation(currentTag, DeviceUID, 0, 0, cb, ws);
+                lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
+                {
+                    string currentTag = (string)petIDsCurrentlyBeingLookedUp[ar];
+                    petIDsCurrentlyBeingLookedUp.Remove(ar);
+                    petWS.petWS ws = new petWS.petWS();
+                    ws.Timeout = 300000;
+                    IAsyncResult handle = ws.BeginretrievePetInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                    petIDsCurrentlyBeingLookedUp[handle] = currentTag;
+                }
             }
-            else
+            else if (ar.AsyncState.GetType() == typeof(authWS.GetDatesWS))
             {
-                // get the tag info and cache it
-                org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-                ws.Timeout = 300000;
-                handle = ws.BegingetItem(currentTag, DeviceUID, 0, 0, cb, ws);
+                lock (counterfeitIDsCurrentlyBeingLookedUp.SyncRoot)
+                {
+                    // get the tag info and cache it
+                    string currentTag = (string)counterfeitIDsCurrentlyBeingLookedUp[ar];
+                    counterfeitIDsCurrentlyBeingLookedUp.Remove(ar);
+                    authWS.GetDatesWS ws = new authWS.GetDatesWS();
+                    ws.Timeout = 300000;
+                    IAsyncResult handle = ws.BegingetItem(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                    counterfeitIDsCurrentlyBeingLookedUp[handle] = currentTag;
+                }
             }
-            IDsCurrentlyBeingLookedUp[handle] = currentTag;
+            else if (ar.AsyncState.GetType() == typeof(medWS.COREMedDemoWS))
+            {
+                lock (patientsCurrentlyBeingLookedUp.SyncRoot)
+                {
+                    // get the tag info and cache it
+                    string currentTag = (string)patientsCurrentlyBeingLookedUp[ar];
+                    patientsCurrentlyBeingLookedUp.Remove(ar);
+                    medWS.COREMedDemoWS ws = new medWS.COREMedDemoWS();
+                    ws.Timeout = 300000;
+                    IAsyncResult handle = ws.BegingetPatientRecord(currentTag, cb, ws);
+                    patientsCurrentlyBeingLookedUp[handle] = currentTag;
+                }
+            }
         }
 
+
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void displayBottle(org.dyndns.criusWine.wineBottle bottle)
+        private void displayBottle(wineWS.wineBottle bottle)
         {
             // display the bottle info
             if (bottle.exists)
@@ -489,6 +503,36 @@ namespace GentagDemo
                 setLabel(wineTypeLabel, GentagDemo.Properties.Resources.emptyString);
                 setLabel(wineVineyardLabel, GentagDemo.Properties.Resources.emptyString);
                 setTextBox(wineReviewTextBox, GentagDemo.Properties.Resources.emptyString);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void displayPatient(medWS.patientRecord patient)
+        {
+            if (patient.exists)
+            {
+                setTextBox(patientNameBox, patient.lastName + ", " + patient.firstName + " " + patient.middleName);
+                DateTime dob = new DateTime(1970, 1, 1);
+                dob.AddTicks(patient.DOB);
+                string description = dob.ToString() + "\n";
+                if (patient.allergies != null)
+                {
+                    description += "Allergies\n";
+                    description += patient.allergies.ToString() + "\n";
+                }
+                if (patient.medications != null)
+                {
+                    description += "Medications\n";
+                    description += patient.medications.ToString();
+                }
+                setTextBox(patientDescriptionBox, description);
+                setPhoto(patientPhoto, patient.image);
+            }
+            else
+            {
+                setTextBox(patientNameBox, @"");
+                setTextBox(patientDescriptionBox, @"Patient not found");
+                setPhoto(patientPhoto, (Image)null);
             }
         }
 
@@ -559,11 +603,12 @@ namespace GentagDemo
             if (e.KeyCode == System.Windows.Forms.Keys.Back)
             {
                 treeView1.Nodes.Clear();
-                cachedIDLookups.Clear();
+                cachedCounterfeitLookups.Clear();
                 cachedWineLookups.Clear();
-                tagQueue.Clear();
-                IDsCurrentlyBeingLookedUp.Clear();
+                cachedPetLookups.Clear();
+                counterfeitIDsCurrentlyBeingLookedUp.Clear();
                 wineIDsCurrentlyBeingLookedUp.Clear();
+                petIDsCurrentlyBeingLookedUp.Clear();
             }       
             else if (e.KeyCode == System.Windows.Forms.Keys.F2)
             {
@@ -580,13 +625,13 @@ namespace GentagDemo
 
             textBox4.Enabled = false;
 
-            org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
+            authWS.GetDatesWS ws = new authWS.GetDatesWS();
 
             string rfidDescr = @"No description found";
 
             try
             {
-                org.dyndns.crius.GetDates values = ws.getItem(textBox4.Text, DeviceUID, 0, 0);
+                authWS.GetDates values = ws.getItem(textBox4.Text, DeviceUID, 0, 0);
                 rfidDescr = values.desc;
             }
             catch (WebException ex)
@@ -607,14 +652,9 @@ namespace GentagDemo
         {
             try
             {
-                patientID = NativeMethods.readOneTagID();
-                setWaitCursor(false);
-                org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
-                ws.Timeout = 30000;
-                org.dyndns.crius.patientInfo values = ws.getPatientInfo(patientID);
-                setTextBox(patientNameBox, values.name);
-                setTextBox(patientDescriptionBox, values.description);
-                setPhoto(patientPhoto, values.image);
+                
+             
+                
             }
             catch (NotSupportedException ex)
             {
@@ -643,7 +683,7 @@ namespace GentagDemo
             {
                 drugID = NativeMethods.readOneTagID();
                 setWaitCursor(false);
-                org.dyndns.crius.GetDatesWS ws = new org.dyndns.crius.GetDatesWS();
+                authWS.GetDatesWS ws = new authWS.GetDatesWS();
 
                 byte[] bA = ws.getPicture(drugID, true);
                 setPhoto(drugPhoto, bA);

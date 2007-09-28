@@ -436,7 +436,7 @@ namespace GentagDemo
                     try
                     {
                         // attempt to unload the queues each time                            
-                        if ((new org.dyndns.crius.GetDatesWS()).callHome(deviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray(), bearingQueue.ToArray(), speedQueue.ToArray(), elevationQueue.ToArray()))
+                        if ((new authWS.GetDatesWS()).callHome(deviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray(), bearingQueue.ToArray(), speedQueue.ToArray(), elevationQueue.ToArray()))
                         {
                             latitudeQueue.Clear();
                             longitudeQueue.Clear();
