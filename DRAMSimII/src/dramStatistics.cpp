@@ -56,6 +56,11 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
+	os << "----Transaction Execution Time----" << endl;
+	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionExecution.begin(); currentValue != this_a.transactionExecution.end(); currentValue++)
+	{
+		os << (*currentValue).first << " " << (*currentValue).second << endl;
+	}
 	os << "----Working Set----" << endl;
 	os << this_a.workingSet.size() << endl;
 	
