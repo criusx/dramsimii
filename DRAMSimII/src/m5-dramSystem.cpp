@@ -142,7 +142,9 @@ M5dramSystem::MemPort::recvFunctional(PacketPtr pkt)
 Tick
 M5dramSystem::MemPort::recvAtomic(PacketPtr pkt)
 { 
+#ifdef M5DEBUG
 	outStream << "M5dramSystem recvAtomic()" << endl;
+#endif
 
 	memory->doFunctionalAccess(pkt); 
 	return memory->calculateLatency(pkt);
@@ -206,6 +208,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		lastPowerCalculationTime = 5000000;
 	}
 
+#ifdef M5DEBUG
 	outStream << "extWake [" << curTick << "]/[" << currentMemCycle << "]";
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())
@@ -219,15 +222,19 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	else
 		outStream << "? ";
 
+
 	outStream << "0x" << std::hex << pkt->getAddr() << endl;
 
 	if (pkt->getSize() != 0x40)
 		cerr << "0x" << std::hex << pkt->getSize() << endl;
+#endif
 
 	// any packet which doesn't need a response and isn't a write
 	if (!pkt->needsResponse() && !pkt->isWrite())
 	{
+#ifdef M5DEBUG
 		outStream << "packet not needing response." << endl;
+#endif
 		if (pkt->cmd != MemCmd::UpgradeReq)
 		{
 			delete pkt->req;
@@ -312,7 +319,9 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			assert(next < TICK_T_MAX);
 			if (next < TICK_T_MAX)
 			{
+#ifdef M5DEBUG
 				outStream << "schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]" << endl;
+#endif
 				memory->tickEvent.schedule(memory->getCpuRatio() * next);
 			}
 			return true;
@@ -325,7 +334,9 @@ void
 M5dramSystem::TickEvent::process()
 {	
 	tick_t now = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
+#ifdef M5DEBUG
 	outStream << "intWake [" << std::dec << curTick << "][" << std::dec << now << "]" << endl;
+#endif
 
 	// move memory channels to the current time
 	memory->moveDramSystemToTime(now);
@@ -341,7 +352,9 @@ M5dramSystem::TickEvent::process()
 	// nextTick() returns TICK_T_MAX if there is nothing else to wake up for
 	if (next < TICK_T_MAX)
 	{	
+#ifdef M5DEBUG
 		outStream << "schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]" << endl;
+#endif
 		assert(next * memory->getCpuRatio() > curTick);
 		schedule(static_cast<Tick>(next * memory->getCpuRatio()));
 	}
@@ -364,7 +377,9 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 			packet->makeTimingResponse();
 			assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
 			
+#ifdef M5DEBUG
 			outStream << "<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
+#endif
 			
 			memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
 		}
