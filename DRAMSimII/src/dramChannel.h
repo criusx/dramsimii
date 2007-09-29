@@ -7,6 +7,7 @@
 #include "powerConfig.h"
 #include "dramTimingSpecification.h"
 #include "dramSystemConfiguration.h"
+#include "dramStatistics.h"
 #include "queue.h"
 #include "powerConfig.h"
 #include "transaction.h"
