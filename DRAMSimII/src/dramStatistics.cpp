@@ -49,7 +49,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
 	os << "----Delay----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionDelay.begin(); currentValue != this_a.transactionDelay.end(); currentValue++)
 	{
-		os << currentValue->first << " " << currentValue->second << endl;
+		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----CMD Execution Time----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.commandExceution.begin(); currentValue != this_a.transactionDelay.end(); currentValue++)
