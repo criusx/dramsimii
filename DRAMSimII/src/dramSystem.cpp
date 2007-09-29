@@ -761,11 +761,12 @@ channel(systemConfig.getChannelCount(),
 	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
 		i->setSystemConfig(&systemConfig);
+		i->setStatistics(&statistics);
 	}
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings->channelCount; i++)
 	{
-		channel[i].setChannelID(i);
+		channel[i].setChannelID(i);		
 	}
 }
 

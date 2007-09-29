@@ -30,6 +30,7 @@ namespace DRAMSimII
 		queue<command> historyQueue;			// what were the last N commands to this channel?
 		queue<transaction> completionQueue;	// completed_q, can send status back to memory controller
 		dramSystemConfiguration *systemConfig; // a pointer to common system config values
+		dramStatistics *statistics;		// backward pointer to the stats engine
 		powerConfig powerModel;
 		dramAlgorithm algorithm;
 		unsigned channelID;					// the ordinal value of this channel (0..n)
@@ -48,6 +49,7 @@ namespace DRAMSimII
 
 		// accessors and mutators
 		void setSystemConfig(dramSystemConfiguration *_system_config) { systemConfig = _system_config; } // TODO: remove this and have parameters stored locally
+		void setStatistics(dramStatistics *value) { statistics = value; }
 		const dramTimingSpecification& getTimingSpecification() const { return timing_specification; }
 		rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }
 		const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }

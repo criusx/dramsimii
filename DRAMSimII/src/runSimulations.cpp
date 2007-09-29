@@ -228,6 +228,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 			else
 			{
 				int min_gap = minProtocolGap(temp_c);
+
 #ifdef M5DEBUG
 				outStream << "mg: " << min_gap << endl;
 #endif
@@ -240,6 +241,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 					executeCommand(temp_c, min_gap);
 
+				statistics->collectCommandStats(temp_c);	
 #ifdef DEBUG_COMMAND
 					outStream << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
@@ -250,6 +252,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 					if (completed_t != NULL)
 					{
+						statistics->collectTransactionStats(completed_t);
 #ifdef DEBUG_TRANSACTION
 						outStream << "CH[" << setw(2) << channelID << "] " << completed_t << endl;
 #endif
