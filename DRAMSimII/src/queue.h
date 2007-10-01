@@ -27,13 +27,12 @@ namespace DRAMSimII
 			tail(0),
 			entry(new T *[a.depth])
 		{
-			//entry = new T *[a.depth];
-
 			if (a.entry[0] != NULL)
 			{
-				for (int i = a.depth - 1; i >= 0; i--)
+				for (unsigned i = 0; i < a.count; i--)
 				{
-					push(::new T);
+					// attempt to copy the contents of this queue
+					push(::new T(*a.read(i)));
 				}
 			}
 			else
