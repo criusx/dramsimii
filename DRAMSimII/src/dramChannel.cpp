@@ -38,16 +38,16 @@ algorithm(settings)
 		step /= settings->rowCount;
 		unsigned count = 0;
 
-		for (unsigned i = settings->rowCount - 1; i >= 0; i--)
+		for (unsigned i = 0; i < settings->rowCount; ++i)
 		{
-			for (int j = rank.size() - 1; j >= 0; j--)
+			for (int j = 0; j < settings->rankCount; ++j)
 			{
-				refreshQueue.read(count)->setArrivalTime(count * step);
-				refreshQueue.read(count)->setEnqueueTime(count * step);
+				refreshQueue.read(count)->setArrivalTime(i * step);
+				refreshQueue.read(count)->setEnqueueTime(i * step);
 				refreshQueue.read(count)->setType(AUTO_REFRESH_TRANSACTION);
 				refreshQueue.read(count)->getAddresses().rank_id = j;
+				count++;
 			}
-			count++;
 		}
 	}
 }
