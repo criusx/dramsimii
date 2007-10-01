@@ -263,41 +263,94 @@ void dramChannel::doPowerCalculation()
 	powerModel.lastCalculation = time;
 }
 
+
+// read the next available transaction for this channel without actually removing it from the queue
 transaction *dramChannel::readTransaction() const
 {
-	transaction *temp_t = transactionQueue.front(); 
-	transaction *refresh_t = refreshQueue.front();
+	transaction *tempTrans = transactionQueue.front(); 
+	transaction *refreshTrans = refreshQueue.front();
 
-	if (temp_t->getArrivalTime() < refresh_t->getArrivalTime() || systemConfig->getRefreshPolicy() == NO_REFRESH)
+	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
 	{
-		if ((temp_t) && (time - temp_t->getEnqueueTime() < timing_specification.t_buffer_delay))
+		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay))
 		{
 #ifdef M5DEBUG
-			outStream << "resetting: ";
-			outStream << time << " ";
-			outStream << temp_t->getEnqueueTime() << " ";
-			outStream << timing_specification.t_buffer_delay << endl;
+			outStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
 #endif
-			temp_t = NULL; // not enough time has passed		
+			return NULL; // not enough time has passed		
 		}
-		return temp_t;
+		return tempTrans;
 	}
 	else
 	{
-		return refresh_t;
+		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime()))
+		{
+			if (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay)
+			{
+#ifdef M5DEBUG
+				outStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
+#endif
+				// if this refresh command has arrived
+				if (refreshTrans->getEnqueueTime() < time) 
+					return refreshTrans;
+				else
+					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
+			}
+			return tempTrans;
+		}
+		else if (refreshTrans->getEnqueueTime() < time)
+		{
+			return refreshTrans;
+		}
+		else
+		{
+			return NULL;
+		}
 	}
 }
 
 // get the next transaction, whether a refresh transaction or a normal R/W transaction
 transaction *dramChannel::getTransaction()
 {
-	if ((refreshQueue.front()->getEnqueueTime() < transactionQueue.front()->getEnqueueTime()) && (systemConfig->getRefreshPolicy() != NO_REFRESH))
+	transaction *tempTrans = transactionQueue.front(); 
+	transaction *refreshTrans = refreshQueue.front();
+
+	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
 	{
-		return refreshQueue.pop();
+		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay))
+		{
+#ifdef M5DEBUG
+			outStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
+#endif
+			return NULL; // not enough time has passed		
+		}
+		return transactionQueue.pop();
 	}
 	else
 	{
-		return transactionQueue.pop();
+		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime()))
+		{
+			if (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay)
+			{
+#ifdef M5DEBUG
+				outStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
+#endif
+				// if this refresh command has arrived
+				if (refreshTrans->getEnqueueTime() < time) 
+					return refreshQueue.pop();
+				else
+					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
+			}
+			return transactionQueue.pop();
+		}
+		else if (refreshTrans->getEnqueueTime() < time)
+		{
+			return refreshQueue.pop();
+		}
+		else
+		{
+			return NULL;
+		}
 	}
 }
 
