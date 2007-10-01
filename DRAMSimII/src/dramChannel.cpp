@@ -126,7 +126,8 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 						{
 							completed_t->setArrivalTime(completed_t->getArrivalTime() + systemConfig->getRefreshTime());
 
-							enqueueRefresh(completed_t);
+							assert(systemConfig->getRefreshPolicy() != NO_REFRESH);
+							refreshQueue.push(completed_t);
 						}
 						else // return what was pointed to
 						{
@@ -268,7 +269,7 @@ void dramChannel::doPowerCalculation()
 transaction *dramChannel::readTransaction() const
 {
 	transaction *tempTrans = transactionQueue.front(); 
-	transaction *refreshTrans = refreshQueue.front();
+	
 
 	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
 	{
@@ -283,6 +284,8 @@ transaction *dramChannel::readTransaction() const
 	}
 	else
 	{
+		transaction *refreshTrans = refreshQueue.front();
+
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime()))
 		{
 			if (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay)
@@ -312,8 +315,7 @@ transaction *dramChannel::readTransaction() const
 // get the next transaction, whether a refresh transaction or a normal R/W transaction
 transaction *dramChannel::getTransaction()
 {
-	transaction *tempTrans = transactionQueue.front(); 
-	transaction *refreshTrans = refreshQueue.front();
+	transaction *tempTrans = transactionQueue.front(); 	
 
 	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
 	{
@@ -328,6 +330,8 @@ transaction *dramChannel::getTransaction()
 	}
 	else
 	{
+		transaction *refreshTrans = refreshQueue.front();
+
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime()))
 		{
 			if (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay)
