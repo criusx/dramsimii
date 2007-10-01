@@ -113,8 +113,6 @@ bool dramChannel::transaction2commands(transaction *this_t)
 	// RAS, CAS+Precharge
 	if (systemConfig->getRowBufferManagementPolicy() == CLOSE_PAGE)
 	{
-		int empty_command_slot_count = bank_q->freecount();
-
 		// refresh transactions become only one command and are handled differently
 		if (this_t->getType() == AUTO_REFRESH_TRANSACTION)
 		{
@@ -136,12 +134,12 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			}
 		}
 		// every transaction translates into at least two commands
-		else if (empty_command_slot_count < 2)
+		else if (bank_q->freecount() < 2)
 		{
 			return false;
 		}
 		// or three commands if the CAS+Precharge command is not available
-		else if ((systemConfig->isAutoPrecharge() == false) && (empty_command_slot_count < 3))
+		else if ((systemConfig->isAutoPrecharge() == false) && (bank_q->freecount() < 3))
 		{
 			return false;
 		}
