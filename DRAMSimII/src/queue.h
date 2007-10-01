@@ -27,7 +27,8 @@ namespace DRAMSimII
 			head(0),
 			tail(0)
 		{
-			delete entry;
+			if (entry)
+				delete entry;
 			entry = new T *[a.depth];
 
 			if (a.read(0) != NULL)
