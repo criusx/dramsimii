@@ -25,12 +25,9 @@ namespace DRAMSimII
 			depth(a.depth),
 			count(0),
 			head(0),
-			tail(0)
+			tail(0),
+			entry(new T *[a.depth])
 		{
-			if (entry)
-				delete entry;
-			entry = new T *[a.depth];
-
 			if (a.read(0) != NULL)
 			{
 				for (unsigned i = 0; i < a.count; i--)
