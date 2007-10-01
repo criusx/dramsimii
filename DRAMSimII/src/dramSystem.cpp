@@ -760,16 +760,6 @@ channel(systemConfig.getChannelCount(),
 		}
 	}
 
-	// don't init the refresh queues if there's no need
-	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
-	{
-		// init the refresh queue for each channel and set the system_config pointers
-		unsigned cnt = 0;
-		for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
-		{
-			i->initRefreshQueue(settings->rowCount, settings->refreshTime, cnt++);			
-		}
-	}
 	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
 		i->setSystemConfig(&systemConfig);

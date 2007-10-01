@@ -126,13 +126,13 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			// are available
 			for (vector<bank_c>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				if ((*i).per_bank_q.freecount() < 1)
+				if (i->per_bank_q.freecount() < 1)
 					return false;
 			}
 			// then add the command to all queues
 			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				i->per_bank_q.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND,time,this_t,systemConfig->isPostedCAS()));
+				i->per_bank_q.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, systemConfig->isPostedCAS()));
 			}
 		}
 		// every transaction translates into at least two commands

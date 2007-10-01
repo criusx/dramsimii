@@ -73,7 +73,6 @@ namespace DRAMSimII
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }
 		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }
 		void record_command(command *);
-		void initRefreshQueue(const unsigned, const unsigned, const unsigned); // init the RefreshQueue using selected algorithm
 		void setChannelID(const unsigned value) { channelID = value; }
 
 		// constructors

@@ -31,6 +31,25 @@ algorithm(settings)
 	{
 		rank[i].setRankID(i);
 	}
+
+	if (settings->refreshPolicy != NO_REFRESH)
+	{
+		unsigned step = settings->refreshTime;
+		step /= settings->rowCount;
+		unsigned count = 0;
+
+		for (unsigned i = settings->rowCount - 1; i >= 0; i--)
+		{
+			for (int j = rank.size() - 1; j >= 0; j--)
+			{
+				refreshQueue.read(count)->setArrivalTime(count * step);
+				refreshQueue.read(count)->setEnqueueTime(count * step);
+				refreshQueue.read(count)->setType(AUTO_REFRESH_TRANSACTION);
+				refreshQueue.read(count)->getAddresses().rank_id = j;
+			}
+			count++;
+		}
+	}
 }
 
 dramChannel::dramChannel(const dramChannel &dc):
@@ -44,7 +63,7 @@ transactionQueue(dc.transactionQueue),
 refreshQueue(dc.refreshQueue),
 historyQueue(dc.historyQueue),
 completionQueue(dc.completionQueue),
-systemConfig(NULL),
+systemConfig(dc.systemConfig),
 powerModel(dc.powerModel),
 algorithm(dc.algorithm)
 {
@@ -140,7 +159,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 #endif
 							*transFinishTime = completed_t->getCompletionTime();
 
-							
+
 							delete completed_t;							
 
 							return origTrans;
@@ -172,30 +191,6 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 	outStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
 #endif
 	return NULL;
-}
-
-
-void dramChannel::initRefreshQueue(const unsigned rowCount,
-								   const unsigned refreshTime,
-								   const unsigned channel)
-{
-	unsigned step = refreshTime;
-	step /= rowCount;
-	step /= rank.size();
-	int count = 0;
-
-	for (int i = rowCount - 1; i >= 0; i--)
-		for (int j = rank.size() - 1; j >= 0; j--)
-		{
-			refreshQueue.read(count)->setArrivalTime(count * step);
-			refreshQueue.read(count)->setEnqueueTime(count * step);
-			refreshQueue.read(count)->setType(AUTO_REFRESH_TRANSACTION);
-			refreshQueue.read(count)->getAddresses().rank_id = j;
-			refreshQueue.read(count)->getAddresses().row_id = i;
-			refreshQueue.read(count)->getAddresses().chan_id = channel;
-			count++;
-		}
-
 }
 
 void dramChannel::record_command(command *latest_command)
@@ -269,7 +264,7 @@ void dramChannel::doPowerCalculation()
 transaction *dramChannel::readTransaction() const
 {
 	transaction *tempTrans = transactionQueue.front(); 
-	
+
 
 	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
 	{
