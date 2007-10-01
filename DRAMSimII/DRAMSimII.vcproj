@@ -343,10 +343,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\fbdSystem.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\fbdSystem.cpp"
 				>
 				<FileConfiguration

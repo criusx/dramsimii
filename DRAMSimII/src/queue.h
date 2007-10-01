@@ -3,6 +3,7 @@
 #pragma once
 
 #include <iostream>
+#include <cassert>
 
 namespace DRAMSimII
 {
@@ -27,7 +28,7 @@ namespace DRAMSimII
 			tail(0),
 			entry(new T *[a.depth])
 		{
-			if (a.entry[0] != NULL)
+			if (a.read(0) != NULL)
 			{
 				for (unsigned i = 0; i < a.count; i--)
 				{
@@ -106,6 +107,7 @@ namespace DRAMSimII
 		// I'm adding to the tail and removing from the head
 		bool push(T *item)
 		{
+			assert(item != NULL);
 			if (count == depth)
 				return false;
 			else if (item == NULL)

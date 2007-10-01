@@ -281,6 +281,7 @@ transaction *dramChannel::readTransaction() const
 	else
 	{
 		transaction *refreshTrans = refreshQueue.front();
+		assert(refreshTrans != NULL);
 
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime()))
 		{
