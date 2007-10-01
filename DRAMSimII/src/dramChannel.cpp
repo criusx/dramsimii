@@ -67,6 +67,7 @@ systemConfig(dc.systemConfig),
 powerModel(dc.powerModel),
 algorithm(dc.algorithm)
 {
+	cerr << "dramChannel is copied" << endl;
 }
 
 
@@ -371,5 +372,6 @@ dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
 	systemConfig = new dramSystemConfiguration(rs.systemConfig);
 	powerModel = rs.powerModel;
 	algorithm = rs.algorithm;
+	cerr << "dramChannel is copied=" << endl;
 	return *this;
 }
