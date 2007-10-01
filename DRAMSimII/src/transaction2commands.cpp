@@ -126,7 +126,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			// are available
 			for (vector<bank_c>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				if (i->per_bank_q.freecount() < 1)
+				if ((*i).per_bank_q.freecount() < 1)
 					return false;
 			}
 			// then add the command to all queues
