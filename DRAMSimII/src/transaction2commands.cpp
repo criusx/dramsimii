@@ -104,7 +104,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 		return false;
 	}
 	// ensure that this transaction belongs on this channel
-	assert (this_t->getAddresses().chan_id == channelID);
+	assert (this_t->getAddresses().chan_id == channelID || this_t->getType() == AUTO_REFRESH_TRANSACTION);
 
 	queue<command> *bank_q = &(rank[this_t->getAddresses().rank_id].bank[this_t->getAddresses().bank_id].per_bank_q);
 

@@ -45,7 +45,7 @@ algorithm(settings)
 				refreshQueue.read(count)->setArrivalTime(i * step);
 				refreshQueue.read(count)->setEnqueueTime(i * step);
 				refreshQueue.read(count)->setType(AUTO_REFRESH_TRANSACTION);
-				refreshQueue.read(count)->getAddresses().rank_id = j;
+				refreshQueue.read(count)->getAddresses().rank_id = j;				
 				count++;
 			}
 		}
