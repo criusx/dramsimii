@@ -44,6 +44,7 @@ algorithm(settings)
 				transaction *currentRefreshTrans = refreshQueue.pop();
 				currentRefreshTrans->setArrivalTime(i * step);
 				currentRefreshTrans->setEnqueueTime(i * step);
+				assert(currentRefreshTrans->getType() == CONTROL_TRANSACTION);
 				currentRefreshTrans->setType(AUTO_REFRESH_TRANSACTION);
 				currentRefreshTrans->getAddresses().rank_id = j;
 				refreshQueue.push(currentRefreshTrans);

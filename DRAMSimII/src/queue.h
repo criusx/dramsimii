@@ -25,7 +25,7 @@ namespace DRAMSimII
 			depth(a.depth),
 			count(0),
 			head(0),
-			tail(0),
+			tail(0)
 		{
 			delete entry;
 			entry = new T *[a.depth];
@@ -45,28 +45,23 @@ namespace DRAMSimII
 					entry[i] = NULL;
 				}
 			}
-
 		}	
 
-		explicit queue(int size, bool preallocate = false):
+		explicit queue(const int size, const bool preallocate = false):
 		depth(size),
 			count(0),
 			head(0),
 			tail(0),
 			entry(new T *[size])
 		{
-			//entry = new T *[size];
-
 			if (preallocate)
 			{      
-				while (push(::new T)) {}
-			}
-			else
-			{
-				for (int i=0 ; i<size ; i++)
+				T *newOne = ::new T();
+				while (push(newOne))
 				{
-					entry[i] = NULL;
+					newOne = ::new T();
 				}
+				::delete newOne;
 			}
 		}
 
