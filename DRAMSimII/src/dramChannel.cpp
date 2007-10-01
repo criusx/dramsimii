@@ -36,17 +36,17 @@ algorithm(settings)
 	{
 		unsigned step = settings->refreshTime;
 		step /= settings->rowCount;
-		unsigned count = 0;
 
 		for (unsigned i = 0; i < settings->rowCount; ++i)
 		{
 			for (int j = 0; j < settings->rankCount; ++j)
 			{
-				refreshQueue.read(count)->setArrivalTime(i * step);
-				refreshQueue.read(count)->setEnqueueTime(i * step);
-				refreshQueue.read(count)->setType(AUTO_REFRESH_TRANSACTION);
-				refreshQueue.read(count)->getAddresses().rank_id = j;				
-				count++;
+				transaction *currentRefreshTrans = refreshQueue.pop();
+				currentRefreshTrans->setArrivalTime(i * step);
+				currentRefreshTrans->setEnqueueTime(i * step);
+				currentRefreshTrans->setType(AUTO_REFRESH_TRANSACTION);
+				currentRefreshTrans->getAddresses().rank_id = j;
+				refreshQueue.push(currentRefreshTrans);
 			}
 		}
 	}
