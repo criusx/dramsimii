@@ -51,7 +51,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 			this_bank.row_id = this_command->getAddress().row_id;
 			this_bank.RASCount++;
 
-			this_rank.last_ras_times.enqueue(this_ras_time);
+			this_rank.last_ras_times.push(this_ras_time);
 
 			// specific for RAS command
 			this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_ras);

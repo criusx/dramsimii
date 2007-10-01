@@ -341,6 +341,7 @@ M5dramSystem::TickEvent::process()
 	// move memory channels to the current time
 	memory->moveDramSystemToTime(now);
 
+	// search for eligible refresh transactions
 
 	// deschedule yourself
 	if (memory->tickEvent.scheduled())

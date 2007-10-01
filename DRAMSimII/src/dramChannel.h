@@ -59,18 +59,18 @@ namespace DRAMSimII
 		tick_t get_time() const { return time; }
 		void set_time(tick_t new_time) { time = new_time; }
 		unsigned get_last_rank_id() const { return lastRankID; }
-		transaction *getTransaction() { return transactionQueue.dequeue(); } // remove and return the oldest transaction
-		transaction *read_transaction() const;  // read the oldest transaction without affecting the queue
-		transaction *read_transaction_simple() const { return transactionQueue.read_back(); }
-		transaction *getRefresh() { return refreshQueue.dequeue(); }
-		transaction *readRefresh() { return refreshQueue.read_back(); }
-		bool enqueueRefresh(transaction *in) { return refreshQueue.enqueue(in); }
-		bool enqueue(transaction *in) { return transactionQueue.enqueue(in); }
+		transaction *getTransaction();// { return transactionQueue.pop(); } // remove and return the oldest transaction
+		transaction *readTransaction() const;  // read the oldest transaction without affecting the queue
+		transaction *read_transaction_simple() const { return transactionQueue.front(); }
+		transaction *getRefresh() { return refreshQueue.pop(); }
+		transaction *readRefresh() const { return refreshQueue.front(); }
+		bool enqueueRefresh(transaction *in) { return refreshQueue.push(in); }
+		bool enqueue(transaction *in) { return transactionQueue.push(in); }
 		bool isFull() const { return transactionQueue.freecount() == 0; }
-		bool complete(transaction *in) { return completionQueue.enqueue(in); }
-		transaction *get_oldest_completed() { return completionQueue.dequeue(); }
+		bool complete(transaction *in) { return completionQueue.push(in); }
+		transaction *get_oldest_completed() { return completionQueue.pop(); }
 		command *get_most_recent_command() const { return historyQueue.newest(); } // get the most recent command from the history queue
-		unsigned getTransactionQueueCount() const { return transactionQueue.get_count(); }
+		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }
 		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }
 		void record_command(command *);
 		void initRefreshQueue(const unsigned, const unsigned, const unsigned); // init the RefreshQueue using selected algorithm

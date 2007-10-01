@@ -33,7 +33,7 @@ namespace DRAMSimII
 			{
 				for (int i = a.depth - 1; i >= 0; i--)
 				{
-					enqueue(::new T);
+					push(::new T);
 				}
 			}
 			else
@@ -57,7 +57,7 @@ namespace DRAMSimII
 
 			if (preallocate)
 			{      
-				while (enqueue(::new T)) {}
+				while (push(::new T)) {}
 			}
 			else
 			{
@@ -72,7 +72,7 @@ namespace DRAMSimII
 		{
 			while (count > 0)
 			{
-				::delete dequeue();			
+				::delete pop();			
 			}
 			if (entry != NULL)
 			{
@@ -92,7 +92,7 @@ namespace DRAMSimII
 			if (preallocate)
 			{      
 				for (unsigned i = 0; i < size; i++)
-					enqueue(::new T);
+					push(::new T);
 			}
 			else
 			{
@@ -103,9 +103,9 @@ namespace DRAMSimII
 			}
 		}	
 
-		// queue: When you add stuff, tail pointer increments, if full, return FAILURE flag
+		// queue: When you add stuff, tail pointer increments, if full, return false
 		// I'm adding to the tail and removing from the head
-		bool enqueue(T *item)
+		bool push(T *item)
 		{
 			if (count == depth)
 				return false;
@@ -113,13 +113,12 @@ namespace DRAMSimII
 			{
 				std::cerr << "Input pointer is NULL" << std::endl;
 				return false;
-				//_exit(2);
 			}
 			else
 			{
 				count++;
 				entry[tail] = item;
-				tail = (tail + 1) % depth; 	/*advance tail_ptr */
+				tail = (tail + 1) % depth; 	//advance tail_ptr
 				return true;
 			}
 		}
@@ -131,10 +130,10 @@ namespace DRAMSimII
 			if (count == 0)
 				return ::new T;
 			else
-				return dequeue();
+				return pop();
 		}
 
-		T *dequeue()
+		T *pop()
 		{
 			if (count == 0)
 				return NULL;
@@ -150,12 +149,12 @@ namespace DRAMSimII
 			}
 		}
 
-		T *read_back() const
+		T *front() const
 		{
 			return count ? entry[head] : NULL;
 		}
 
-		inline unsigned get_count() const
+		inline unsigned size() const
 		{
 			return count;
 		}
@@ -179,13 +178,13 @@ namespace DRAMSimII
 		// and one would like to store them when they are not in use
 		void release_item(T *item)
 		{
-			if(!enqueue(item))
+			if(!push(item))
 				::delete item;
 		}
 
 		// this function makes this queue a non-FIFO queue.  
 		// Allows insertion into the middle or at any end
-		bool insert(T *item,unsigned offset)
+		bool insert(T *item, const unsigned offset)
 		{
 			if (count == depth)
 				return false;
@@ -228,7 +227,7 @@ namespace DRAMSimII
 
 			while (count > 0)
 			{
-				delete dequeue();
+				delete pop();
 			}
 			delete entry;
 			entry = new T *[right.depth];
@@ -238,7 +237,7 @@ namespace DRAMSimII
 
 			for (unsigned i = 0; i < right.depth; i++)
 			{
-				enqueue(right.read(i));
+				push(right.read(i));
 			}
 			return *this;
 		}

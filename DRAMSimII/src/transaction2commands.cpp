@@ -47,7 +47,7 @@ bool dramSystem::checkForAvailableCommandSlots(const transaction *trans) const
 	// closing the row and precharging may be delayed
 	else if (systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE)
 	{
-		int queued_command_count = bank_q->get_count();
+		int queued_command_count = bank_q->size();
 		int empty_command_slot_count = bank_q->freecount();
 
 		// look in the bank_q and see if there's a precharge for this row
@@ -132,7 +132,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			// then add the command to all queues
 			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				i->per_bank_q.enqueue(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND,time,this_t,systemConfig->isPostedCAS()));
+				i->per_bank_q.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND,time,this_t,systemConfig->isPostedCAS()));
 			}
 		}
 		// every transaction translates into at least two commands
@@ -149,7 +149,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 		else
 		{
 			// command one, the RAS command to activate the row
-			bank_q->enqueue(new command(this_t->getAddresses(),RAS_COMMAND,time,NULL,systemConfig->isPostedCAS()));
+			bank_q->push(new command(this_t->getAddresses(),RAS_COMMAND,time,NULL,systemConfig->isPostedCAS()));
 
 			// command two, CAS or CAS+Precharge
 
@@ -159,11 +159,11 @@ bool dramChannel::transaction2commands(transaction *this_t)
 				switch (this_t->getType())
 				{
 				case WRITE_TRANSACTION:					
-					bank_q->enqueue(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS()));
+					bank_q->push(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS()));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					bank_q->enqueue(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS()));
+					bank_q->push(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS()));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << this_t->getType();
@@ -173,21 +173,21 @@ bool dramChannel::transaction2commands(transaction *this_t)
 
 				// command three, the Precharge command
 				// only one of these commands has a pointer to the original transaction, thus NULL
-				bank_q->enqueue(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig->isPostedCAS()));
+				bank_q->push(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig->isPostedCAS()));
 			}
 			else // precharge is implied, only need two commands
 			{
 				switch(this_t->getType())
 				{
 				case WRITE_TRANSACTION:
-					bank_q->enqueue(new command(this_t->getAddresses(),CAS_WRITE_AND_PRECHARGE_COMMAND,time,this_t,systemConfig->isPostedCAS()));
+					bank_q->push(new command(this_t->getAddresses(),CAS_WRITE_AND_PRECHARGE_COMMAND,time,this_t,systemConfig->isPostedCAS()));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					bank_q->enqueue(new command(this_t->getAddresses(),CAS_AND_PRECHARGE_COMMAND,time,this_t,systemConfig->isPostedCAS()));
+					bank_q->push(new command(this_t->getAddresses(),CAS_AND_PRECHARGE_COMMAND,time,this_t,systemConfig->isPostedCAS()));
 					break;
 				case PER_BANK_REFRESH_TRANSACTION:
-					bank_q->enqueue(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,this_t,systemConfig->isPostedCAS()));
+					bank_q->push(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,this_t,systemConfig->isPostedCAS()));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << this_t->getType();
@@ -202,7 +202,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 	// closing the row and precharging may be delayed
 	else if (systemConfig->getRowBufferManagementPolicy() == OPEN_PAGE)
 	{
-		int queued_command_count = bank_q->get_count();
+		int queued_command_count = bank_q->size();
 		int empty_command_slot_count = bank_q->freecount();
 		// look in the bank_q and see if there's a precharge for this row
 		bool bypass_allowed = true;
@@ -241,15 +241,15 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			return false;
 		}
 
-		bank_q->enqueue(new command(this_t->getAddresses(),RAS_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
+		bank_q->push(new command(this_t->getAddresses(),RAS_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
 
 		if (this_t->getType() == WRITE_TRANSACTION)
 		{
-			bank_q->enqueue(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
+			bank_q->push(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
 		}
 		else if ((this_t->getType() == READ_TRANSACTION) || (this_t->getType() == IFETCH_TRANSACTION))
 		{
-			bank_q->enqueue(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
+			bank_q->push(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
 		}
 		else
 		{
@@ -258,7 +258,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 		}
 
 		// last, the precharge command
-		bank_q->enqueue(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
+		bank_q->push(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
 	}
 	else
 	{

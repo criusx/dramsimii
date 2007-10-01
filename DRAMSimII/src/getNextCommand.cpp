@@ -22,14 +22,14 @@ command *dramChannel::getNextCommand()
 		rank_c &currentRank = rank[nextCommand->getAddress().rank_id];
 		bank_c &currentBank = currentRank.bank[nextCommand->getAddress().bank_id];
 		// if it was a refresh all command, then dequeue all n banks worth of commands
-		if (currentBank.per_bank_q.read_back()->getCommandType() == REFRESH_ALL_COMMAND)
+		if (currentBank.per_bank_q.front()->getCommandType() == REFRESH_ALL_COMMAND)
 		{
 			command *tempCommand = NULL;
 
 			for (vector<bank_c>::iterator cur_bank = currentRank.bank.begin(); cur_bank != currentRank.bank.end();cur_bank++)
 			{
 				delete tempCommand;
-				tempCommand = cur_bank->per_bank_q.dequeue();				
+				tempCommand = cur_bank->per_bank_q.pop();				
 			}
 
 			return tempCommand;
@@ -37,8 +37,8 @@ command *dramChannel::getNextCommand()
 		}
 		else
 		{
-			assert(rank[nextCommand->getAddress().rank_id].bank[nextCommand->getAddress().bank_id].per_bank_q.read_back() == nextCommand);
-			return rank[nextCommand->getAddress().rank_id].bank[nextCommand->getAddress().bank_id].per_bank_q.dequeue();
+			assert(rank[nextCommand->getAddress().rank_id].bank[nextCommand->getAddress().bank_id].per_bank_q.front() == nextCommand);
+			return rank[nextCommand->getAddress().rank_id].bank[nextCommand->getAddress().bank_id].per_bank_q.pop();
 		}
 	}
 	else
@@ -73,7 +73,7 @@ command *dramChannel::getNextCommand()
 
 				for (vector<bank_c>::iterator bank_id = rank_id->bank.begin(); bank_id != rank_id->bank.end(); bank_id++)
 				{
-					command *temp_c = bank_id->per_bank_q.read_back();
+					command *temp_c = bank_id->per_bank_q.front();
 
 					if (temp_c != NULL)
 					{
@@ -87,7 +87,7 @@ command *dramChannel::getNextCommand()
 								{
 									for (vector<bank_c>::iterator cur_bank = rank_id->bank.begin(); cur_bank != rank_id->bank.end(); cur_bank++)
 									{
-										if (cur_bank->per_bank_q.read_back()->getCommandType() != REFRESH_ALL_COMMAND)
+										if (cur_bank->per_bank_q.front()->getCommandType() != REFRESH_ALL_COMMAND)
 										{
 											notAllRefresh = true;
 											break;
@@ -116,11 +116,11 @@ command *dramChannel::getNextCommand()
 			if (oldest_command_time < ll.max())
 			{
 				// if it was a refresh all command, then dequeue all n banks worth of commands
-				if (oldest_bank_id->per_bank_q.read_back()->getCommandType() == REFRESH_ALL_COMMAND)
+				if (oldest_bank_id->per_bank_q.front()->getCommandType() == REFRESH_ALL_COMMAND)
 				{
 					for (vector<bank_c>::iterator cur_bank = oldest_rank_id->bank.begin(); cur_bank != oldest_rank_id->bank.end();)
 					{
-						command *temp_com = cur_bank->per_bank_q.dequeue();
+						command *temp_com = cur_bank->per_bank_q.pop();
 						cur_bank++;
 						if (cur_bank == oldest_rank_id->bank.end())
 							return temp_com;
@@ -131,7 +131,7 @@ command *dramChannel::getNextCommand()
 				}
 				else
 				{
-					return oldest_bank_id->per_bank_q.dequeue();
+					return oldest_bank_id->per_bank_q.pop();
 				}
 			}
 			else
@@ -146,12 +146,12 @@ command *dramChannel::getNextCommand()
 
 			if (lastCommandType == RAS_COMMAND)
 			{
-				command *temp_c =  rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+				command *temp_c =  rank[lastRankId].bank[lastBankId].per_bank_q.front();
 
 				if ((temp_c != NULL) &&
 					((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND)))
 				{
-					return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
+					return rank[lastRankId].bank[lastBankId].per_bank_q.pop();
 				}
 				else
 				{
@@ -189,13 +189,13 @@ command *dramChannel::getNextCommand()
 					}
 				}
 
-				command *temp_c =  rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+				command *temp_c =  rank[lastRankId].bank[lastBankId].per_bank_q.front();
 
 				if(temp_c != NULL)
 				{
 					if(systemConfig->isReadWriteGrouping() == false)
 					{
-						return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
+						return rank[lastRankId].bank[lastBankId].per_bank_q.pop();
 					}
 					else // have to follow read_write grouping considerations 
 					{
@@ -204,7 +204,7 @@ command *dramChannel::getNextCommand()
 						if (((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
 							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION)))
 						{
-							return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
+							return rank[lastRankId].bank[lastBankId].per_bank_q.pop();
 						}
 					}
 
@@ -231,11 +231,11 @@ command *dramChannel::getNextCommand()
 			transaction_type_t transaction_type;
 			if (lastCommandType == RAS_COMMAND)
 			{
-				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.front();
 
 				if((temp_c != NULL) &&
 					((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND))){
-						return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
+						return rank[lastRankId].bank[lastBankId].per_bank_q.pop();
 				}
 				else
 				{
@@ -277,7 +277,7 @@ command *dramChannel::getNextCommand()
 					}
 				}
 
-				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.front();
 
 				if(temp_c != NULL)
 				{	
@@ -291,7 +291,7 @@ command *dramChannel::getNextCommand()
 
 						if (((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
 							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION))){
-								return rank[lastRankId].bank[lastBankId].per_bank_q.dequeue();
+								return rank[lastRankId].bank[lastBankId].per_bank_q.pop();
 						}
 					}
 #ifdef DEBUG_FLAG_2
@@ -332,7 +332,7 @@ command *dramChannel::getNextCommand()
 		//							((algorithm.getTransactionType()[lastRankId] == WRITE_TRANSACTION) && (next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND)))
 		//						{
 		//							candidate_found = true;
-		//							return  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.dequeue();
+		//							return  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.pop();
 		//						}
 		//					}
 		//				}
@@ -341,7 +341,7 @@ command *dramChannel::getNextCommand()
 		//					if((ptr_c->getCommandType() == CAS_COMMAND) && (algorithm.getTransactionType()[lastRankId] == READ_TRANSACTION))
 		//					{
 		//						candidate_found = true;
-		//						return  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.dequeue();
+		//						return  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.pop();
 		//					}
 		//				}
 		//				else if ((candidate_c != NULL) && (candidate_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND))
@@ -349,7 +349,7 @@ command *dramChannel::getNextCommand()
 		//					if((ptr_c->getCommandType() == CAS_COMMAND) && (algorithm.getTransactionType()[lastRankId] == WRITE_TRANSACTION))
 		//					{
 		//						candidate_found = false;
-		//						return  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.dequeue();
+		//						return  channel.getRank(lastRankId).bank[lastBankId].per_bank_q.pop();
 		//					}
 		//				}
 		//				else
@@ -372,7 +372,7 @@ command *dramChannel::getNextCommand()
 			{
 				for (unsigned bank_id = 0; bank_id < rank[rank_id].bank.size() ; ++bank_id)
 				{
-					command *challenger_command = rank[rank_id].bank[bank_id].per_bank_q.read_back();
+					command *challenger_command = rank[rank_id].bank[bank_id].per_bank_q.front();
 
 					if (challenger_command != NULL)
 					{
@@ -386,7 +386,7 @@ command *dramChannel::getNextCommand()
 				}
 			}
 
-			command *temp_c = rank[candidate_command->getAddress().rank_id].bank[candidate_command->getAddress().bank_id].per_bank_q.dequeue();
+			command *temp_c = rank[candidate_command->getAddress().rank_id].bank[candidate_command->getAddress().bank_id].per_bank_q.pop();
 
 #ifdef DEBUG
 			outStream << "R[" << candidate_command->getAddress().rank_id << "] B[" << candidate_command->getAddress().bank_id << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << time << "]" << endl;
@@ -417,8 +417,6 @@ command *dramChannel::getNextCommand()
 /// </summary>
 command *dramChannel::readNextCommand() const
 {
-	//const dramChannel &channel= dramSystem::channel[chan_id];
-
 	// look at the most recently retired command in this channel's history
 
 	const command *lastCommand = get_most_recent_command();
@@ -443,7 +441,7 @@ command *dramChannel::readNextCommand() const
 
 				for (vector<bank_c>::const_iterator bank_id = rank_id->bank.begin(); bank_id != rank_id->bank.end(); bank_id++)
 				{
-					command *temp_c = bank_id->per_bank_q.read_back();
+					command *temp_c = bank_id->per_bank_q.front();
 
 					if (temp_c != NULL)
 					{
@@ -458,7 +456,7 @@ command *dramChannel::readNextCommand() const
 									for (vector<bank_c>::const_iterator currentBank = rank_id->bank.begin(); currentBank != rank_id->bank.end(); currentBank++)
 									{
 										// if all refresh commands have made it to the front of the queue, then issue this command
-										if ((currentBank->per_bank_q.read_back()) && (currentBank->per_bank_q.read_back()->getCommandType() != REFRESH_ALL_COMMAND))
+										if ((currentBank->per_bank_q.front()) && (currentBank->per_bank_q.front()->getCommandType() != REFRESH_ALL_COMMAND))
 										{
 											notAllRefresh = true;
 											break;
@@ -489,10 +487,10 @@ command *dramChannel::readNextCommand() const
 			// if there was a command found
 			if (oldest_command_time < ll.max())
 			{
-				command *temp_c = oldest_bank_id->per_bank_q.read_back();				
-				assert(rank[temp_c->getAddress().rank_id].bank[temp_c->getAddress().bank_id].per_bank_q.read_back() == oldest_bank_id->per_bank_q.read_back());
+				command *temp_c = oldest_bank_id->per_bank_q.front();				
+				assert(rank[temp_c->getAddress().rank_id].bank[temp_c->getAddress().bank_id].per_bank_q.front() == oldest_bank_id->per_bank_q.front());
 
-				return oldest_bank_id->per_bank_q.read_back();
+				return oldest_bank_id->per_bank_q.front();
 			}
 			else
 				return NULL;
@@ -506,12 +504,12 @@ command *dramChannel::readNextCommand() const
 
 			if (lastCommandType == RAS_COMMAND)
 			{
-				command *temp_c =  rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+				command *temp_c =  rank[lastRankId].bank[lastBankId].per_bank_q.front();
 
 				if ((temp_c != NULL) &&
 					((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND)))
 				{
-					return rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+					return rank[lastRankId].bank[lastBankId].per_bank_q.front();
 				}
 				else
 				{
@@ -549,13 +547,13 @@ command *dramChannel::readNextCommand() const
 					}
 				}
 
-				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.front();
 
 				if(temp_c != NULL)
 				{
 					if (systemConfig->isReadWriteGrouping() == false)
 					{
-						return rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+						return rank[lastRankId].bank[lastBankId].per_bank_q.front();
 					}
 					else // have to follow read_write grouping considerations 
 					{
@@ -564,7 +562,7 @@ command *dramChannel::readNextCommand() const
 						if (((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
 							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION)))
 						{
-							return rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+							return rank[lastRankId].bank[lastBankId].per_bank_q.front();
 						}
 					}
 
@@ -593,12 +591,12 @@ command *dramChannel::readNextCommand() const
 			{
 			case RAS_COMMAND:
 				{
-					command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+					command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.front();
 
 					if((temp_c != NULL) &&
 						((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND)))
 					{
-						return rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+						return rank[lastRankId].bank[lastBankId].per_bank_q.front();
 					}
 					else
 					{
@@ -632,7 +630,7 @@ command *dramChannel::readNextCommand() const
 					}
 				}
 
-				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+				command *temp_c = rank[lastRankId].bank[lastBankId].per_bank_q.front();
 
 				if (temp_c != NULL)
 				{	
@@ -647,9 +645,9 @@ command *dramChannel::readNextCommand() const
 						if (((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
 							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION)))
 						{
-							assert(rank[lastRankId].bank[lastBankId].per_bank_q.read_back()->getAddress().bank_id == lastBankId);
-							assert(rank[lastRankId].bank[lastBankId].per_bank_q.read_back()->getAddress().rank_id == lastRankId);
-							return rank[lastRankId].bank[lastBankId].per_bank_q.read_back();
+							assert(rank[lastRankId].bank[lastBankId].per_bank_q.front()->getAddress().bank_id == lastBankId);
+							assert(rank[lastRankId].bank[lastBankId].per_bank_q.front()->getAddress().rank_id == lastRankId);
+							return rank[lastRankId].bank[lastBankId].per_bank_q.front();
 						}
 					}
 #ifdef DEBUG_FLAG_2
@@ -673,7 +671,7 @@ command *dramChannel::readNextCommand() const
 			{
 				for (unsigned bank_id = 0; bank_id < systemConfig->getBankCount() ; ++bank_id)
 				{
-					command *challenger_command = rank[rank_id].bank[bank_id].per_bank_q.read_back();
+					command *challenger_command = rank[rank_id].bank[bank_id].per_bank_q.front();
 
 					if (challenger_command != NULL)
 					{
@@ -687,7 +685,7 @@ command *dramChannel::readNextCommand() const
 				}
 			}
 
-			command *temp_c = rank[candidate_command->getAddress().rank_id].bank[candidate_command->getAddress().bank_id].per_bank_q.read_back();
+			command *temp_c = rank[candidate_command->getAddress().rank_id].bank[candidate_command->getAddress().bank_id].per_bank_q.front();
 			assert(temp_c == candidate_command);
 
 #ifdef DEBUG

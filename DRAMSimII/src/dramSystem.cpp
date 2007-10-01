@@ -57,6 +57,18 @@ tick_t dramSystem::nextTick() const
 				nextWake = tempGap + currentChan->get_time();
 			}
 		}
+
+		// check the refresh queue
+		if (systemConfig.getRefreshPolicy() != NO_REFRESH)
+		{
+			const transaction *refresh_t = currentChan->readRefresh();
+
+			if (refresh_t->getArrivalTime() < nextWake)
+			{
+				// a refresh transaction may have been missed, so ensure that the correct time is chosen in the future
+				nextWake = max(currentChan->get_time() + 1,refresh_t->getArrivalTime());
+			}
+		}
 	}
 
 	return nextWake;

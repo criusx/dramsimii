@@ -35,7 +35,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			// respect t_rp of same bank
 			int t_rp_gap = (int)(this_b.last_prec_time - now) + timing_specification.t_rp;
 
-			int ras_q_count = this_r.last_ras_times.get_count();
+			int ras_q_count = this_r.last_ras_times.size();
 			
 			// respect tRRD and tRC of all other banks of same rank
 			int t_rrd_gap;

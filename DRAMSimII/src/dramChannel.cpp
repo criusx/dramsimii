@@ -51,6 +51,129 @@ algorithm(dc.algorithm)
 }
 
 
+
+/// Moves the specified channel to at least the time given
+const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFinishTime)
+{
+	while (time < endTime)
+	{
+		// attempt first to move transactions out of the transactions queue and
+		// convert them into commands after a fixed amount of time		
+		transaction *temp_t = readTransaction();
+
+
+		// if there were no transactions left in the queue or there was not
+		// enough room to split the transaction into commands
+		if (!transaction2commands(temp_t))
+		{
+#ifdef M5DEBUG
+			if (temp_t)
+				outStream << "t2c fails" << temp_t << endl;
+#endif
+			// move time up by executing commands
+			command *temp_c = readNextCommand();
+
+			if (temp_c == NULL)
+			{
+				// the transaction queue and all the per bank queues are empty,
+				// so just move time forward to the point where the transaction starts
+				// or move time forward until the transaction is ready to be decoded
+				if ((transactionQueue.size() > 0) && (time + timing_specification.t_buffer_delay <= endTime))
+				{
+					tick_t oldTime = time;
+					time = timing_specification.t_buffer_delay + transactionQueue.front()->getEnqueueTime();
+					assert(oldTime < time);
+				}
+				// no transactions to convert, no commands to issue, just go forward
+				else
+				{
+					time = endTime;
+				}
+			}
+			else
+			{
+				int min_gap = minProtocolGap(temp_c);
+
+#ifdef M5DEBUG
+				outStream << "mg: " << min_gap << endl;
+#endif
+
+				// allow system to overrun so that it may send a command
+				// FIXME: will this work?
+				if ((min_gap + time <= endTime) || (min_gap + time <= endTime + timing_specification.t_cmd))
+				{
+					temp_c = getNextCommand();
+
+					executeCommand(temp_c, min_gap);
+
+					statistics->collectCommandStats(temp_c);	
+#ifdef DEBUG_COMMAND
+					outStream << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+#endif
+
+
+					// only get completed commands if they have finished TODO:
+					transaction *completed_t = completionQueue.pop();
+
+					if (completed_t != NULL)
+					{
+						statistics->collectTransactionStats(completed_t);
+#ifdef DEBUG_TRANSACTION
+						outStream << "CH[" << setw(2) << channelID << "] " << completed_t << endl;
+#endif
+						// reuse the refresh transactions
+						if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
+						{
+							completed_t->setArrivalTime(completed_t->getArrivalTime() + systemConfig->getRefreshTime());
+
+							enqueueRefresh(completed_t);
+						}
+						else // return what was pointed to
+						{
+							const void *origTrans = completed_t->getOriginalTransaction();
+
+
+#ifdef M5
+							if (!completed_t->originalTransaction)
+								outStream << "transaction completed, not REFRESH, no orig trans" << endl;
+#endif
+							*transFinishTime = completed_t->getCompletionTime();
+
+							
+							delete completed_t;							
+
+							return origTrans;
+						}
+					}
+				}
+				else
+				{
+					time = endTime;
+				}
+			}
+		}
+		else // successfully converted to commands, dequeue
+		{
+			//channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
+			//update_system_time(); 
+
+			// actually remove it from the queue now
+			transaction *completedTransaction = getTransaction();
+			assert(temp_t == completedTransaction);
+#ifdef DEBUG_TRANSACTION
+			outStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << endl;
+#endif
+		}
+	}
+	assert(time <= endTime + timing_specification.t_cmd);
+	*transFinishTime = endTime;
+#ifdef M5DEBUG
+	outStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
+#endif
+	return NULL;
+}
+
+
 void dramChannel::initRefreshQueue(const unsigned rowCount,
 								   const unsigned refreshTime,
 								   const unsigned channel)
@@ -64,6 +187,7 @@ void dramChannel::initRefreshQueue(const unsigned rowCount,
 		for (int j = rank.size() - 1; j >= 0; j--)
 		{
 			refreshQueue.read(count)->setArrivalTime(count * step);
+			refreshQueue.read(count)->setEnqueueTime(count * step);
 			refreshQueue.read(count)->setType(AUTO_REFRESH_TRANSACTION);
 			refreshQueue.read(count)->getAddresses().rank_id = j;
 			refreshQueue.read(count)->getAddresses().row_id = i;
@@ -75,9 +199,9 @@ void dramChannel::initRefreshQueue(const unsigned rowCount,
 
 void dramChannel::record_command(command *latest_command)
 {
-	while (historyQueue.enqueue(latest_command) == FAILURE)
+	while (historyQueue.push(latest_command) == false)
 	{
-		delete historyQueue.dequeue();
+		delete historyQueue.pop();
 	}
 }
 
@@ -139,20 +263,42 @@ void dramChannel::doPowerCalculation()
 	powerModel.lastCalculation = time;
 }
 
-transaction *dramChannel::read_transaction() const
+transaction *dramChannel::readTransaction() const
 {
-	transaction *temp_t = transactionQueue.read_back(); 
-	if ((temp_t) && (time - temp_t->getEnqueueTime() < timing_specification.t_buffer_delay))
+	transaction *temp_t = transactionQueue.front(); 
+	transaction *refresh_t = refreshQueue.front();
+
+	if (temp_t->getArrivalTime() < refresh_t->getArrivalTime() || systemConfig->getRefreshPolicy() == NO_REFRESH)
 	{
+		if ((temp_t) && (time - temp_t->getEnqueueTime() < timing_specification.t_buffer_delay))
+		{
 #ifdef M5DEBUG
-		outStream << "resetting: ";
-		outStream << time << " ";
-		outStream << temp_t->getEnqueueTime() << " ";
-		outStream << timing_specification.t_buffer_delay << endl;
+			outStream << "resetting: ";
+			outStream << time << " ";
+			outStream << temp_t->getEnqueueTime() << " ";
+			outStream << timing_specification.t_buffer_delay << endl;
 #endif
-		temp_t = NULL; // not enough time has passed		
+			temp_t = NULL; // not enough time has passed		
+		}
+		return temp_t;
 	}
-	return temp_t;
+	else
+	{
+		return refresh_t;
+	}
+}
+
+// get the next transaction, whether a refresh transaction or a normal R/W transaction
+transaction *dramChannel::getTransaction()
+{
+	if ((refreshQueue.front()->getEnqueueTime() < transactionQueue.front()->getEnqueueTime()) && (systemConfig->getRefreshPolicy() != NO_REFRESH))
+	{
+		return refreshQueue.pop();
+	}
+	else
+	{
+		return transactionQueue.pop();
+	}
 }
 
 dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
