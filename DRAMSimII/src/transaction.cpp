@@ -72,8 +72,9 @@ std::ostream &DRAMSimII::operator<<(std::ostream &os, const transaction *this_t)
 	os << "E[" << std::setw(8) << std::dec << this_t->getCompletionTime() << "] ";
 	os << this_t->getType();
 	if (this_t->type == AUTO_REFRESH_TRANSACTION)
-		os << " R[" << this_t->addr.rank_id << "] ";	
-	os << "PA[0x" << std::hex << this_t->getAddresses().phys_addr << "]";
+		os << " R[" << this_t->addr.rank_id << "] ";
+	else
+		os << "PA[0x" << std::hex << this_t->getAddresses().phys_addr << "]";
 	return os;
 }
 
