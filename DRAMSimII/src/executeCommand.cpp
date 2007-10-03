@@ -61,7 +61,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	case CAS_AND_PRECHARGE_COMMAND:
 
 		this_bank.isActivated = false;
-		this_bank.last_prec_time = max(time + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_bank.last_ras_time + timing_specification.t_ras);
+		this_rank.last_prec_time = this_bank.last_prec_time = max(time + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_bank.last_ras_time + timing_specification.t_ras);
 		// lack of break is intentional
 
 	case CAS_COMMAND:
@@ -82,7 +82,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 
 		this_bank.isActivated = false;
-		this_bank.last_prec_time = max(time + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_bank.last_ras_time + timing_specification.t_ras);
+		this_rank.last_prec_time = this_bank.last_prec_time = max(time + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_bank.last_ras_time + timing_specification.t_ras);
 		// missing break is intentional
 
 	case CAS_WRITE_COMMAND:
@@ -101,13 +101,15 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	case PRECHARGE_COMMAND:
 
 		this_bank.isActivated = false;
-		this_bank.last_prec_time = time;
+		this_rank.last_prec_time = this_bank.last_prec_time = time;
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rp);
 		break;
 
 	case REFRESH_ALL_COMMAND:
 
-		this_bank.last_refresh_all_time = time;
+		// FIXME: should this not count as a RAS + PRE command to all banks?
+		for (vector<bank_c>::iterator currentBank = this_rank.bank.begin(); currentBank != this_rank.bank.end(); currentBank++)
+			currentBank->last_refresh_all_time = time;
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rfc);
 		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;

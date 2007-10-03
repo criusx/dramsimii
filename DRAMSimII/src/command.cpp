@@ -117,7 +117,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const command_type_t &command)
 		os << "CAS+D ";
 		break;
 	case REFRESH_ALL_COMMAND:
-		os << "REF_A ";
+		os << "REF   ";
 		break;
 	}
 	return os;

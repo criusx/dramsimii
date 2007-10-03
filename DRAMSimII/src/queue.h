@@ -11,8 +11,8 @@ namespace DRAMSimII
 	class queue
 	{
 	private:
-		unsigned depth;
-		unsigned count;
+		unsigned depth; // how big is this queue
+		unsigned count; // how many elements are in the queue now
 		unsigned head; // the point where items will be inserted
 		unsigned tail; // the point where items will be removed
 		T **entry; // the circular queue
@@ -27,25 +27,17 @@ namespace DRAMSimII
 			head(0),
 			tail(0),
 			entry(new T *[a.depth])
-		{
-			if (a.read(0) != NULL)
 			{
-				for (unsigned i = 0; i < a.count; i--)
+				for (unsigned i = 0; i < a.count; i++)
 				{
+					assert(a.read(i) != NULL);
 					// attempt to copy the contents of this queue
 					push(::new T(*a.read(i)));
-				}
-			}
-			else
-			{
-				for (int i = a.depth - 1; i >= 0; i--)
-				{
-					entry[i] = NULL;
-				}
-			}
-		}	
 
-		explicit queue(const int size, const bool preallocate = false):
+				}
+			}	
+
+		explicit queue(const unsigned size, const bool preallocate = false):
 		depth(size),
 			count(0),
 			head(0),

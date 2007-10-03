@@ -224,6 +224,8 @@ int dramChannel::minProtocolGap(const command *this_c) const
 		break;
 
 	case REFRESH_ALL_COMMAND:
+		// FIXME: respects the last refresh time w/ tRFC and last precharge time with tRP, but what else?
+		min_gap = max((int)((this_r.last_refresh_time - now) + timing_specification.t_rfc),(int)((this_r.last_prec_time - now) + timing_specification.t_rp));
 		break;
 	}
 

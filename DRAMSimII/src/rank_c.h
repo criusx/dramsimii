@@ -16,6 +16,7 @@ namespace DRAMSimII
 		unsigned bankCount;
 		unsigned last_bank_id; // id of the last accessed bank of this rank
 		tick_t last_refresh_time;
+		tick_t last_prec_time;
 		tick_t last_cas_time;
 		tick_t last_casw_time;
 		unsigned last_cas_length;

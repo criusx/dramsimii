@@ -34,16 +34,15 @@ algorithm(settings)
 
 	if (settings->refreshPolicy != NO_REFRESH)
 	{
-		unsigned step = settings->refreshTime;
-		step /= settings->rowCount;
+		float step = 1.0 * settings->refreshTime * settings->frequencySpec * 1.0E-6 / settings->rowCount; // in cycles
 
 		for (unsigned i = 0; i < settings->rowCount; ++i)
 		{
 			for (int j = 0; j < settings->rankCount; ++j)
 			{
 				transaction *currentRefreshTrans = refreshQueue.pop();
-				currentRefreshTrans->setArrivalTime(i * step);
-				currentRefreshTrans->setEnqueueTime(i * step);
+				currentRefreshTrans->setArrivalTime((i + 1) * step);
+				currentRefreshTrans->setEnqueueTime((i + 1) * step);
 				assert(currentRefreshTrans->getType() == CONTROL_TRANSACTION);
 				currentRefreshTrans->setType(AUTO_REFRESH_TRANSACTION);
 				currentRefreshTrans->getAddresses().rank_id = j;
@@ -89,7 +88,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 		{
 #ifdef M5DEBUG
 			if (temp_t)
-				outStream << "t2c fails" << temp_t << endl;
+				outStream << "!T2C " << temp_t << endl;
 #endif
 			// move time up by executing commands
 			command *temp_c = readNextCommand();
@@ -161,7 +160,6 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 #endif
 							*transFinishTime = completed_t->getCompletionTime();
 
-
 							delete completed_t;							
 
 							return origTrans;
@@ -183,7 +181,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 			transaction *completedTransaction = getTransaction();
 			assert(temp_t == completedTransaction);
 #ifdef DEBUG_TRANSACTION
-			outStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << endl;
+			outStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
 #endif
 		}
 	}
@@ -284,7 +282,8 @@ transaction *dramChannel::readTransaction() const
 		transaction *refreshTrans = refreshQueue.front();
 		assert(refreshTrans != NULL);
 
-		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime()))
+		// give an advantage to normal transactions, but prevent starvation for refresh operations
+		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig->getSeniorityAgeLimit()))
 		{
 			if (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay)
 			{
@@ -374,5 +373,6 @@ dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
 	systemConfig = new dramSystemConfiguration(rs.systemConfig);
 	powerModel = rs.powerModel;
 	algorithm = rs.algorithm;
+	cerr << "dramchannel is copied=" << endl; 
 	return *this;
 }
