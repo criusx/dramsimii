@@ -55,7 +55,7 @@ namespace DRAMSimII
 		void enqueueTimeShift(transaction* trans);
 		input_status_t waitForTransactionToFinish(transaction *trans);
 		double Frequency() const { return systemConfig.Frequency(); }
-		tick_t nextTick() const;
+		tick_t nextTick() const;		
 		void doPowerCalculation();
 		void printStatistics();
 		void run_simulations();

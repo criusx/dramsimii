@@ -201,6 +201,19 @@ void dramChannel::record_command(command *latest_command)
 	}
 }
 
+bool dramChannel::enqueue(transaction *in)
+{
+	if (systemConfig->getTransactionOrderingAlgorithm() == STRICT)
+		return transactionQueue.push(in);
+	else if (transactionQueue.freecount() < 1)
+		return false;
+	// try to insert reads and fetches before writes
+	else
+	{
+		assert(systemConfig->getTransactionOrderingAlgorithm() == RIFF);
+	}
+}
+
 
 enum transaction_type_t	dramChannel::set_read_write_type(const int rank_id,const int bank_count) const
 {
@@ -329,7 +342,7 @@ transaction *dramChannel::getTransaction()
 	{
 		transaction *refreshTrans = refreshQueue.front();
 
-		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime()))
+		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig->getSeniorityAgeLimit()))
 		{
 			if (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay)
 			{

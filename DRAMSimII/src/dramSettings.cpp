@@ -330,7 +330,7 @@ dramSettings::dramSettings(const int argc, const char **argv)
 					case transaction_ordering_policy_token:
 						if (nodeValue == "strict")
 							transactionOrderingAlgorithm = STRICT;
-						else if (nodeValue == "RIFF")
+						else if (nodeValue == "RIFF" || nodeValue == "riff")
 							transactionOrderingAlgorithm = RIFF;
 						else
 							transactionOrderingAlgorithm = STRICT;						

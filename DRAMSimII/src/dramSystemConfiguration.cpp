@@ -7,38 +7,41 @@ using namespace std;
 using namespace DRAMSimII;
 
 dramSystemConfiguration::dramSystemConfiguration(const dramSettings *settings):
-dram_type(settings->dramType),
-row_buffer_management_policy(settings->rowBufferManagementPolicy),
-auto_precharge(settings->autoPrecharge),
-addr_mapping_scheme(settings->addressMappingScheme),
-datarate(settings->dataRate),
+command_ordering_algorithm(settings->commandOrderingAlgorithm),
+transactionOrderingAlgorithm(settings->transactionOrderingAlgorithm),
+config_type(BASELINE_CONFIG), // FIXME: add FBD
 refresh_time(settings->dataRate * settings->refreshTime),
-read_write_grouping(settings->readWriteGrouping),
 refresh_policy(settings->refreshPolicy),
-seniority_age_limit(settings->seniorityAgeLimit),
-posted_cas(settings->postedCAS),
-clock_granularity(settings->clockGranularity),
-row_count(settings->rowCount),
-cachelines_per_row(settings->cachelinesPerRow),
-col_count(settings->columnCount),
 col_size(settings->columnSize),
 row_size(settings->rowSize),
 cacheline_size(settings->cacheLineSize),
+seniority_age_limit(settings->seniorityAgeLimit),
+dram_type(settings->dramType),
+row_buffer_management_policy(settings->rowBufferManagementPolicy),
+addr_mapping_scheme(settings->addressMappingScheme),
+datarate(settings->dataRate),
+posted_cas(settings->postedCAS),
+read_write_grouping(settings->readWriteGrouping),
+auto_precharge(settings->autoPrecharge),
+clock_granularity(settings->clockGranularity),
+cachelines_per_row(settings->cachelinesPerRow),
+channelCount(settings->channelCount),
+rankCount(settings->rankCount),
+bankCount(settings->bankCount),
+rowCount(settings->rowCount),
+columnCount(settings->columnCount),
+short_burst_ratio(settings->shortBurstRatio),
+read_percentage(settings->readPercentage)
 // any of these really needed?
-history_queue_depth(settings->historyQueueDepth),
-completion_queue_depth(settings->completionQueueDepth),
-transaction_queue_depth(settings->transactionQueueDepth),
-event_queue_depth(settings->eventQueueDepth),
-per_bank_queue_depth(settings->perBankQueueDepth),
-chan_count(settings->channelCount),
-rank_count(settings->rankCount),
-bank_count(settings->bankCount),
-refresh_queue_depth(settings->refreshQueueDepth),
-//
-command_ordering_algorithm(settings->commandOrderingAlgorithm),
-config_type(BASELINE_CONFIG),
-read_percentage(settings->readPercentage),
-short_burst_ratio(settings->shortBurstRatio)
+//history_queue_depth(settings->historyQueueDepth),
+//completion_queue_depth(settings->completionQueueDepth),
+//transaction_queue_depth(settings->transactionQueueDepth),
+//event_queue_depth(settings->eventQueueDepth),
+//per_bank_queue_depth(settings->perBankQueueDepth),
+//chan_count(settings->channelCount),
+//rank_count(settings->rankCount),
+//bank_count(settings->bankCount),
+//refresh_queue_depth(settings->refreshQueueDepth),
 {}
 
 
@@ -54,22 +57,22 @@ refresh_policy(rhs->refresh_policy),
 seniority_age_limit(rhs->seniority_age_limit),
 posted_cas(rhs->posted_cas),
 clock_granularity(rhs->clock_granularity),
-row_count(rhs->row_count),
 cachelines_per_row(rhs->cachelines_per_row),
-col_count(rhs->col_count),
 col_size(rhs->col_size),
 row_size(rhs->row_size),
 cacheline_size(rhs->cacheline_size),
 // any of these really needed?
-history_queue_depth(rhs->history_queue_depth),
-completion_queue_depth(rhs->completion_queue_depth),
-transaction_queue_depth(rhs->transaction_queue_depth),
-event_queue_depth(rhs->event_queue_depth),
-per_bank_queue_depth(rhs->per_bank_queue_depth),
-chan_count(rhs->chan_count),
-rank_count(rhs->rank_count),
-bank_count(rhs->bank_count),
-refresh_queue_depth(rhs->refresh_queue_depth),
+//history_queue_depth(rhs->history_queue_depth),
+//completion_queue_depth(rhs->completion_queue_depth),
+//transaction_queue_depth(rhs->transaction_queue_depth),
+//event_queue_depth(rhs->event_queue_depth),
+//per_bank_queue_depth(rhs->per_bank_queue_depth),
+channelCount(rhs->channelCount),
+rankCount(rhs->rankCount),
+bankCount(rhs->bankCount),
+rowCount(rhs->rowCount),
+columnCount(rhs->columnCount),
+//refresh_queue_depth(rhs->refresh_queue_depth),
 //
 command_ordering_algorithm(rhs->command_ordering_algorithm),
 config_type(rhs->config_type),
@@ -81,10 +84,10 @@ short_burst_ratio(rhs->short_burst_ratio)
 
 ostream &DRAMSimII::operator<<(ostream &os, const dramSystemConfiguration &this_a)
 {
-	os << "PerBankQ[" << this_a.per_bank_queue_depth << "] ";
-	os << "CH[" << this_a.chan_count << "] ";
-	os << "RK[" << this_a.rank_count << "] ";
-	os << "BK[" << this_a.bank_count << "] ";
+	os << "PerBankQ[" << this_a.perBankQueueDepth << "] ";
+	os << "CH[" << this_a.channelCount << "] ";
+	os << "RK[" << this_a.rankCount << "] ";
+	os << "BK[" << this_a.bankCount << "] ";
 
 	return os;
 }
@@ -96,20 +99,20 @@ dramSystemConfiguration& dramSystemConfiguration::operator =(const DRAMSimII::dr
 		return *this;
 	}
 	command_ordering_algorithm = rs.command_ordering_algorithm;
-	per_bank_queue_depth = rs.per_bank_queue_depth;
+	//per_bank_queue_depth = rs.per_bank_queue_depth;
 	config_type = rs.config_type;
 	refresh_time = rs.refresh_time;
 	refresh_policy = rs.refresh_policy;
 	col_size = rs.col_size;
 	row_size = rs.row_size;
-	row_count = rs.row_count;
-	col_count = rs.col_count;
+	rowCount = rs.rowCount;
+	columnCount = rs.columnCount;
 	cacheline_size = rs.cacheline_size;
-	history_queue_depth = rs.history_queue_depth;
-	completion_queue_depth = rs.completion_queue_depth;
-	transaction_queue_depth = rs.transaction_queue_depth;
-	event_queue_depth = rs.event_queue_depth;
-	refresh_queue_depth = rs.refresh_queue_depth;
+	//history_queue_depth = rs.history_queue_depth;
+	//completion_queue_depth = rs.completion_queue_depth;
+	//transaction_queue_depth = rs.transaction_queue_depth;
+	//event_queue_depth = rs.event_queue_depth;
+	//refresh_queue_depth = rs.refresh_queue_depth;
 	seniority_age_limit = rs.seniority_age_limit;
 	dram_type = rs.dram_type;
 	row_buffer_management_policy = rs.row_buffer_management_policy;
@@ -120,9 +123,9 @@ dramSystemConfiguration& dramSystemConfiguration::operator =(const DRAMSimII::dr
 	auto_precharge = rs.auto_precharge;
 	clock_granularity = rs.clock_granularity;
 	cachelines_per_row = rs.cachelines_per_row;
-	chan_count = rs.chan_count;
-	rank_count = rs.rank_count;
-	bank_count = rs.bank_count;
+	channelCount = rs.channelCount;
+	rankCount = rs.rankCount;
+	bankCount = rs.bankCount;
 	short_burst_ratio = rs.short_burst_ratio;
 	read_percentage = rs.read_percentage;
 
@@ -191,9 +194,9 @@ dramSystemConfiguration::dramSystemConfiguration(dramSystem::Params *parameter)
 
 	cachelines_per_row = parameter->cachelinesPerRow;
 
-	row_count = parameter->rowCount;
+	rowCount = parameter->rowCount;
 
-	col_count = parameter->colCount;
+	columnCount = parameter->colCount;
 
 	col_size = parameter->colSize;
 
@@ -201,7 +204,7 @@ dramSystemConfiguration::dramSystemConfiguration(dramSystem::Params *parameter)
 
 	cacheline_size = parameter->cachelineSize;
 
-	history_queue_depth = parameter->historyQueueDepth;
+	//history_queue_depth = parameter->historyQueueDepth;
 
 }
 #endif

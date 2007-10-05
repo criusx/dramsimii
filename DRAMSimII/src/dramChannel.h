@@ -65,7 +65,7 @@ namespace DRAMSimII
 		transaction *getRefresh() { return refreshQueue.pop(); }
 		transaction *readRefresh() const { return refreshQueue.front(); }
 		bool enqueueRefresh(transaction *in) { return refreshQueue.push(in); }
-		bool enqueue(transaction *in) { return transactionQueue.push(in); }
+		bool enqueue(transaction *in);
 		bool isFull() const { return transactionQueue.freecount() == 0; }
 		bool complete(transaction *in) { return completionQueue.push(in); }
 		transaction *get_oldest_completed() { return completionQueue.pop(); }

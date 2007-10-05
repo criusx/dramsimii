@@ -115,13 +115,13 @@ bool dramSystem::convert_address(addresses &this_a) const
 	//bank_count = config->bank_count;
 	//row_count  = config->row_count;
 	//col_count  = config->col_count;
-	unsigned chan_addr_depth = log2(systemConfig.getChannelCount());
-	unsigned rank_addr_depth = log2(systemConfig.getRankCount());
-	unsigned bank_addr_depth = log2(systemConfig.getBankCount());
-	unsigned row_addr_depth  = log2(systemConfig.getRowCount());
-	unsigned col_addr_depth  = log2(systemConfig.getColumnCount());
+	static unsigned chan_addr_depth = log2(systemConfig.getChannelCount());
+	static unsigned rank_addr_depth = log2(systemConfig.getRankCount());
+	static unsigned bank_addr_depth = log2(systemConfig.getBankCount());
+	static unsigned row_addr_depth  = log2(systemConfig.getRowCount());
+	static unsigned col_addr_depth  = log2(systemConfig.getColumnCount());
 	//FIXME: shouldn't this already be set appropriately?
-	unsigned col_size_depth	= log2(systemConfig.getDRAMType() == DRDRAM ? 16 : systemConfig.getColumnSize());
+	static unsigned col_size_depth	= log2(systemConfig.getDRAMType() == DRDRAM ? 16 : systemConfig.getColumnSize());
 
 	//input_a = this_a->phys_addr;
 	// strip away the byte address portion
@@ -507,19 +507,13 @@ bool dramSystem::convert_address(addresses &this_a) const
 /// </summary>
 void dramSystem::update_system_time()
 {
-	int oldest_chan_id = systemConfig.getChannelCount() - 1;
-	tick_t oldest_time = channel[oldest_chan_id].get_time();
+	time = TICK_T_MAX;
 
-	for (int chan_id = systemConfig.getChannelCount() - 2; chan_id >= 0; chan_id--)
+	for (vector<dramChannel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
-		if (channel[chan_id].get_time() < oldest_time)
-		{
-			oldest_chan_id = chan_id;
-			oldest_time = channel[chan_id].get_time();
-		}
+		if (currentChan->get_time() < time)
+			time = currentChan->get_time();
 	}
-
-	time = oldest_time;
 }
 
 
@@ -594,22 +588,13 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 
 		rand_s(&j);
 
-		if (input_stream.getShortBurstRatio() * UINT_MAX > j)
-		{
-			this_t->setLength(4);
-		}
-		else
-		{
-			this_t->setLength(8);
-		}
-
-		//int time_gap = 0;
+		this_t->setLength(input_stream.getShortBurstRatio() * UINT_MAX > j ? 4 : 8);
 
 		while (true)
 		{
 			rand_s(&j);
 
-			if (j > input_stream.getArrivalThreshhold() * UINT_MAX) /* interarrival probability function */
+			if (j > input_stream.getArrivalThreshhold() * UINT_MAX) // interarrival probability function
 			{
 
 				// Gaussian distribution function
