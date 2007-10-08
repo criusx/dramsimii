@@ -13,7 +13,6 @@ event_no(0),
 type(CONTROL_TRANSACTION),
 status(0),
 length(0),
-arrivalTime(0),
 enqueueTime(0),
 completionTime(0),
 addr(),
@@ -25,7 +24,6 @@ event_no(rs->event_no),
 type(rs->type),
 status(rs->status),
 length(rs->length),
-arrivalTime(rs->arrivalTime),
 enqueueTime(rs->enqueueTime),
 completionTime(rs->completionTime),
 addr(rs->addr),
@@ -36,7 +34,6 @@ transaction::transaction(const int attribute,const tick_t enqueueTime,const int 
 event_no(0),
 status(0),
 length(Size),
-arrivalTime(enqueueTime),
 enqueueTime(enqueueTime),
 completionTime(0),
 addr(address),
@@ -66,9 +63,9 @@ void transaction::operator delete(void *mem)
 
 
 std::ostream &DRAMSimII::operator<<(std::ostream &os, const transaction *this_t)
-{
-	os << "S[" << std::setw(8) << std::dec << this_t->getArrivalTime() << "] ";
+{	
 	os << "Q[" << std::setw(8) << std::dec << this_t->getEnqueueTime() << "] ";
+	os << "D[" << std::setw(8) << std::dec << this_t->getDecodeTime() << "] ";
 	os << "E[" << std::setw(8) << std::dec << this_t->getCompletionTime() << "] ";
 	os << this_t->getType();
 	if (this_t->type == AUTO_REFRESH_TRANSACTION)

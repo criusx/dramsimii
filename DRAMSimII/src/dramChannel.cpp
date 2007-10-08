@@ -41,7 +41,6 @@ algorithm(settings)
 			for (int j = 0; j < settings->rankCount; ++j)
 			{
 				transaction *currentRefreshTrans = refreshQueue.pop();
-				currentRefreshTrans->setArrivalTime((i + 1) * step);
 				currentRefreshTrans->setEnqueueTime((i + 1) * step);
 				assert(currentRefreshTrans->getType() == CONTROL_TRANSACTION);
 				currentRefreshTrans->setType(AUTO_REFRESH_TRANSACTION);
@@ -128,7 +127,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 					statistics->collectCommandStats(temp_c);	
 #ifdef DEBUG_COMMAND
-					outStream << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+					outStream << "C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
 
@@ -139,20 +138,21 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 					{
 						statistics->collectTransactionStats(completed_t);
 #ifdef DEBUG_TRANSACTION
-						outStream << "CH[" << setw(2) << channelID << "] " << completed_t << endl;
+						outStream << "T CH[" << setw(2) << channelID << "] " << completed_t << endl;
 #endif
 						// reuse the refresh transactions
 						if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
 						{
-							completed_t->setArrivalTime(completed_t->getArrivalTime() + systemConfig->getRefreshTime());
+							completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig->getRefreshTime());
 
 							assert(systemConfig->getRefreshPolicy() != NO_REFRESH);
 							refreshQueue.push(completed_t);
+
+							return NULL;
 						}
 						else // return what was pointed to
 						{
 							const void *origTrans = completed_t->getOriginalTransaction();
-
 
 #ifdef M5
 							if (!completed_t->originalTransaction)
@@ -179,6 +179,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 			// actually remove it from the queue now
 			transaction *completedTransaction = getTransaction();
+			// since reading vs dequeueing should yield the same result
 			assert(temp_t == completedTransaction);
 #ifdef DEBUG_TRANSACTION
 			outStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
@@ -204,12 +205,12 @@ void dramChannel::record_command(command *latest_command)
 bool dramChannel::enqueue(transaction *in)
 {
 	if (systemConfig->getTransactionOrderingAlgorithm() == STRICT)
-		return transactionQueue.push(in);
-	else if (transactionQueue.freecount() < 1)
-		return false;
+		return transactionQueue.push(in);	
 	// try to insert reads and fetches before writes
+	// TODO: finish this
 	else
 	{
+		exit(-1); // TODO
 		assert(systemConfig->getTransactionOrderingAlgorithm() == RIFF);
 	}
 }

@@ -28,7 +28,7 @@ void dramSystem::run_simulations2()
 			// first try to update the channel so that it is one command past this
 			// transaction's start time
 			tick_t finishTime;
-			while (channel[input_t->getAddresses().chan_id].moveChannelToTime(input_t->getArrivalTime(),&finishTime)) {;}
+			while (channel[input_t->getAddresses().chan_id].moveChannelToTime(input_t->getEnqueueTime(),&finishTime)) {;}
 
 			// attempt to enqueue, if there is no room, move time forward until there is
 			enqueueTimeShift(input_t);
@@ -55,7 +55,7 @@ void dramSystem::run_simulations3()
 				break;
 			// if the previous transaction was delayed, thus making this arrival be in the past
 			// prevent new arrivals from arriving in the past
-			input_t->setArrivalTime(max(input_t->getArrivalTime(),channel[input_t->getAddresses().chan_id].get_time()));
+			input_t->setEnqueueTime(max(input_t->getEnqueueTime(),channel[input_t->getAddresses().chan_id].get_time()));
 		}
 
 		// in case this transaction tried to arrive while the queue was full
@@ -64,14 +64,14 @@ void dramSystem::run_simulations3()
 		tick_t nearFinish = 0;
 		//const void *error;
 
-		nextArrival = min(input_t->getArrivalTime(),nextArrival);
+		nextArrival = min(input_t->getEnqueueTime(),nextArrival);
 		// as long as transactions keep happening prior to this time
 		if (moveAllChannelsToTime(nextArrival,&nearFinish))
 		{
 			cerr << "not right, no host transactions here" << endl;
 		}
 
-		if (nearFinish >= input_t->getArrivalTime()) 
+		if (nearFinish >= input_t->getEnqueueTime()) 
 		{
 			if (enqueue(input_t))
 			{
@@ -80,7 +80,7 @@ void dramSystem::run_simulations3()
 			}
 			else
 				// figure that the cpu <=> mch bus runs at the mostly the same speed
-				input_t->setArrivalTime(input_t->getArrivalTime() + channel[0].getTimingSpecification().t_cmd);
+				input_t->setEnqueueTime(input_t->getEnqueueTime() + channel[0].getTimingSpecification().t_cmd);
 		}
 		nextArrival = nextTick();
 	}
@@ -148,7 +148,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 				{
 					if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
 					{
-						completed_t->setArrivalTime(completed_t->getArrivalTime() + 7 / 8 * systemConfig.getRefreshTime());
+						completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
 						channel[chan].enqueueRefresh(completed_t);
 					}
 					else
@@ -164,7 +164,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 		else
 			break;
 
-		trans->setArrivalTime(channel[chan].get_time());
+		trans->setEnqueueTime(channel[chan].get_time());
 	}
 }
 
@@ -228,7 +228,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 					// reuse the refresh transactions
 					if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
 					{
-						completed_t->setArrivalTime(completed_t->getArrivalTime() + 7 / 8 * systemConfig.getRefreshTime());
+						completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
 						//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
 						channel[completed_t->getAddresses().chan_id].enqueueRefresh(completed_t);
 					}

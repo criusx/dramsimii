@@ -63,10 +63,10 @@ tick_t dramSystem::nextTick() const
 		{
 			const transaction *refresh_t = currentChan->readRefresh();
 
-			if (refresh_t->getArrivalTime() < nextWake)
+			if (refresh_t->getEnqueueTime() < nextWake)
 			{
 				// a refresh transaction may have been missed, so ensure that the correct time is chosen in the future
-				nextWake = max(currentChan->get_time() + 1,refresh_t->getArrivalTime());
+				nextWake = max(currentChan->get_time() + 1,refresh_t->getEnqueueTime());
 			}
 		}
 	}
@@ -615,7 +615,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 			}
 		}
 
-		this_t->setArrivalTime(input_stream.getTime());
+		this_t->setEnqueueTime(input_stream.getTime()); // FIXME: arrival time may be <= to enqueue time
 		this_t->getAddresses().col_id = 0;
 	}
 }
@@ -653,7 +653,7 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 					temp_t->setEventNumber(temp_t->getEventNumber() + 1);
 					temp_t->setType(this_e.attributes);
 					temp_t->setLength(8);			// assume burst length of 8
-					temp_t->setArrivalTime(this_e.timestamp);
+					temp_t->setEnqueueTime(this_e.timestamp);
 					// need to adjust arrival time for K6 traces to cycles
 
 				}
@@ -676,7 +676,7 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 		// read but do not remove
 		transaction *refresh_t = channel[temp_t->getAddresses().chan_id].readRefresh();
 
-		if (refresh_t->getArrivalTime() < temp_t->getArrivalTime())
+		if (refresh_t->getEnqueueTime() < temp_t->getEnqueueTime())
 			this_t = channel[temp_t->getAddresses().chan_id].getRefresh();
 		else
 		{

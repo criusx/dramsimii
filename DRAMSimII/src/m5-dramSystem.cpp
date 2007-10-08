@@ -303,8 +303,10 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			// http://m5.eecs.umich.edu/wiki/index.php/Memory_System
 			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
 			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
+			cerr << "needRetry set" << endl;
 			memory->needRetry = true;
 			memory->mostRecentChannel = trans->getAddresses().chan_id;
+
 #ifdef M5DEBUG
 			outStream << "Wait for retry before sending more to ch[" << trans->getAddresses().chan_id << "]" << endl;
 #endif
@@ -358,46 +360,52 @@ M5dramSystem::TickEvent::process()
 #endif
 		assert(next * memory->getCpuRatio() > curTick);
 		schedule(static_cast<Tick>(next * memory->getCpuRatio()));
-	}
-	
+	}	
 }
 
 void M5dramSystem::moveDramSystemToTime(tick_t now)
 {
 	tick_t finishTime;	
 
-	while (Packet *packet = (Packet *)ds->moveAllChannelsToTime(now, &finishTime))
+	Packet *packet;
+	// if transactions are returned, then send them back, else if time is not brought up to date, then a refresh transaction has finished
+	while ((packet = (Packet *)ds->moveAllChannelsToTime(now, &finishTime)) || finishTime < now)
 	{
-		// for debug purposes, remove this later
-		assert(packet->isRead() | packet->isWrite() || packet->isInvalidate());
-
-		doFunctionalAccess(packet);
-
-		if (packet->needsResponse())
-		{			
-			packet->makeTimingResponse();
-			assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
-			
-#ifdef M5DEBUG
-			outStream << "<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
-#endif
-			
-			memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
-		}
-		else
+		if (packet)
 		{
-			delete packet->req;
-			delete packet;
-		}
-		// if there is now room, allow a retry to happen
-		if (needRetry && !ds->isFull(mostRecentChannel))
-		{
+			// for debug purposes, remove this later
+			assert(packet->isRead() | packet->isWrite() || packet->isInvalidate());
+
+			doFunctionalAccess(packet);
+
+			if (packet->needsResponse())
+			{			
+				packet->makeTimingResponse();
+				assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
+
 #ifdef M5DEBUG
-			outStream << "Allow retrys" << endl;
+				outStream << "<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
 #endif
-			needRetry = false;
-			memoryPort->sendRetry();
-		}
+
+				memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
+			}
+			else
+			{
+				delete packet->req;
+				delete packet;
+			}			
+		}	
+	}
+
+	// if there is now room, allow a retry to happen
+	if (needRetry && !ds->isFull(mostRecentChannel))
+	{
+#ifdef M5DEBUG
+		outStream << "Allow retrys" << endl;
+#endif
+		needRetry = false;
+		memoryPort->sendRetry();
+		cerr << "needRetry cleared" << endl;
 	}
 }
 

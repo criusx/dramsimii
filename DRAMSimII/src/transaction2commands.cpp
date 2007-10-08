@@ -264,5 +264,8 @@ bool dramChannel::transaction2commands(transaction *this_t)
 		cerr << "Unhandled row buffer management policy" << endl;
 		return false;
 	}
+
+	this_t->setDecodeTime(time);
+
 	return true;
 }

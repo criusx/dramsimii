@@ -19,25 +19,31 @@ system_config_type(0)
 
 void dramStatistics::collectTransactionStats(const transaction *currentTransaction)
 {
-	if (currentTransaction->getLength() == 8)
+	if (currentTransaction->getType() != AUTO_REFRESH_TRANSACTION)
 	{
-		++bo8_count;
+		if (currentTransaction->getLength() == 8)
+		{
+			++bo8_count;
+		}
+		else
+		{
+			++bo4_count;
+		}
+		transactionExecution[currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime()]++;
+		transactionDecodeDelay[currentTransaction->getDecodeTime() - currentTransaction->getEnqueueTime()]++;
+		// gather working set information for this epoch
+		workingSet[currentTransaction->getAddresses().phys_addr]++;
 	}
-	else
-	{
-		++bo4_count;
-	}
-	transactionDelay[currentTransaction->getEnqueueTime() - currentTransaction->getArrivalTime()]++;
-	transactionExecution[currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime()]++;
-	// gather working set information for this epoch
-	workingSet[currentTransaction->getAddresses().phys_addr] = currentTransaction->getArrivalTime();
 }
 
 void dramStatistics::collectCommandStats(const command *currentCommand)
 {
-	commandDelay[currentCommand->getStartTime() - currentCommand->getEnqueueTime()]++;
-	commandExceution[currentCommand->getCompletionTime() - currentCommand->getStartTime()]++;
-	commandTurnaround[currentCommand->getCompletionTime() - currentCommand->getEnqueueTime()]++;
+	if (currentCommand->getCommandType() != AUTO_REFRESH_TRANSACTION)
+	{
+		commandDelay[currentCommand->getStartTime() - currentCommand->getEnqueueTime()]++;
+		commandExceution[currentCommand->getCompletionTime() - currentCommand->getStartTime()]++;
+		commandTurnaround[currentCommand->getCompletionTime() - currentCommand->getEnqueueTime()]++;
+	}
 }
 
 ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
@@ -47,7 +53,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
 	os << "]" << endl;
 
 	os << "----Delay----" << endl;
-	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionDelay.begin(); currentValue != this_a.transactionDelay.end(); currentValue++)
+	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionDecodeDelay.begin(); currentValue != this_a.transactionDecodeDelay.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
@@ -73,6 +79,6 @@ void dramStatistics::clear()
 	commandDelay.clear();	
 	commandExceution.clear();
 	transactionExecution.clear();
-	transactionDelay.clear();
+	transactionDecodeDelay.clear();
 	workingSet.clear();
 }

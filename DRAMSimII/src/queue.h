@@ -33,7 +33,6 @@ namespace DRAMSimII
 					assert(a.read(i) != NULL);
 					// attempt to copy the contents of this queue
 					push(::new T(*a.read(i)));
-
 				}
 			}	
 
