@@ -63,7 +63,7 @@ PhysicalMemory(p), tickEvent(this), needRetry(false)
 
 	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency()));
 
-	outStream << *ds << std::endl;
+	timingOutStream << *ds << std::endl;
 }
 
 M5dramSystem::MemPort::MemPort(const std::string &_name, M5dramSystem *_memory):
@@ -143,7 +143,7 @@ Tick
 M5dramSystem::MemPort::recvAtomic(PacketPtr pkt)
 { 
 #ifdef M5DEBUG
-	outStream << "M5dramSystem recvAtomic()" << endl;
+	timingOutStream << "M5dramSystem recvAtomic()" << endl;
 #endif
 
 	memory->doFunctionalAccess(pkt); 
@@ -212,15 +212,15 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	timingOutStream << "extWake [" << curTick << "]/[" << currentMemCycle << "]";
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())
-		outStream << "R ";
+		timingOutStream << "R ";
 	else if (pkt->isWrite())
-		outStream << "W ";
+		timingOutStream << "W ";
 	else if (pkt->isRequest())
-		outStream << "RQ ";
+		timingOutStream << "RQ ";
 	else if (pkt->isInvalidate())
-		outStream << "I  ";
+		timingOutStream << "I  ";
 	else
-		outStream << "? ";
+		timingOutStream << "? ";
 
 
 	timingOutStream << "0x" << std::hex << pkt->getAddr() << endl;
@@ -253,7 +253,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		if (!pkt->isWrite())
 		{
 			pkt->makeTimingResponse();
-			outStream << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
+			timingOutStream << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
 			sendTiming(pkt, rand() % 95996);
 		}
 #else		
