@@ -24,7 +24,7 @@ int main(int argc,const char **argv, char *envp[])
 	//ds.run_simulations2();
 	ds.run_simulations3();
 
-	outStream << ds << endl;
+	timingOutStream << ds << endl;
 	//cerr << ds.timing_specification;
 	//cerr << (dram_statistics) ds;
 	return 0;

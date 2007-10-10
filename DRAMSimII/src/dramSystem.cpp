@@ -701,50 +701,92 @@ channel(systemConfig.getChannelCount(),
 	switch (settings->outFileType)
 	{
 	case BZ:
-		outStream.push(boost::iostreams::bzip2_compressor());
+		timingOutStream.push(boost::iostreams::bzip2_compressor());
+		powerOutStream.push(boost::iostreams::bzip2_compressor());
+		statsOutStream.push(boost::iostreams::bzip2_compressor());
 		suffix = ".bz2";
 		break;
-	case GZ:		
-		outStream.push(boost::iostreams::gzip_compressor());
+	case GZ:
+		timingOutStream.push(boost::iostreams::gzip_compressor());
+		powerOutStream.push(boost::iostreams::gzip_compressor());
+		statsOutStream.push(boost::iostreams::gzip_compressor());
 		suffix = ".gz";
 		break;
 	case UNCOMPRESSED:
 		break;
 	case COUT:
-		outStream.push(std::cout);
+		timingOutStream.push(std::cout);
+		powerOutStream.push(std::cout);
+		statsOutStream.push(std::cout);
 		break;
 	}
 	if (settings->outFileType == GZ || settings->outFileType == BZ || settings->outFileType == UNCOMPRESSED)
 	{
-		string outFilename = settings->outFile;
+		string baseFilename = settings->outFile;
 
-		if (outFilename.find(suffix) > 0)
-			outFilename = outFilename.substr(0,outFilename.find(suffix));
+		if (baseFilename.find(suffix) > 0)
+			baseFilename = baseFilename.substr(0,baseFilename.find(suffix));
 
-		int counter = 0;
-		ifstream fin;
-		stringstream openFile;
-		openFile << outFilename << suffix;
-		fin.open(openFile.str().c_str(),ifstream::in);
-		fin.close();
-		while (!fin.fail())
+		int counter = 0;		
+		ifstream timingIn;
+		ifstream powerIn;
+		ifstream statsIn;		
+		stringstream timingFilename;
+		stringstream powerFilename;
+		stringstream statsFilename;		
+		timingFilename << baseFilename << "-timing" << suffix;
+		powerFilename << baseFilename << "-power" << suffix;
+		statsFilename << baseFilename << "-stats" << suffix;
+		timingIn.open(timingFilename.str().c_str(),ifstream::in);
+		powerIn.open(powerFilename.str().c_str(),ifstream::in);
+		statsIn.open(statsFilename.str().c_str(),ifstream::in);				
+		timingIn.close();
+		powerIn.close();
+		statsIn.close();
+		while (!timingIn.fail() || !powerIn.fail() || !statsIn.fail())
 		{
-			fin.clear(ios::failbit);
 			counter++;
-			openFile.str("");
-			openFile << outFilename << counter << suffix;			
-			fin.open(openFile.str().c_str(),ifstream::in);
-			fin.close();
+			timingIn.clear(ios::failbit);
+			powerIn.clear(ios::failbit);
+			statsIn.clear(ios::failbit);			
+			timingFilename.str("");
+			powerFilename.str("");
+			statsFilename.str("");
+			timingFilename << baseFilename << "-timing" << counter << suffix;
+			powerFilename << baseFilename << "-power" << counter << suffix;
+			statsFilename << baseFilename << "-stats" << counter << suffix;
+			timingIn.open(timingFilename.str().c_str(),ifstream::in);
+			powerIn.open(powerFilename.str().c_str(),ifstream::in);
+			statsIn.open(statsFilename.str().c_str(),ifstream::in);				
+			timingIn.close();
+			powerIn.close();
+			statsIn.close();
 		}
 
-		outStream.push(boost::iostreams::file_sink(openFile.str().c_str()));
-		if (!outStream.good())
+
+		timingOutStream.push(boost::iostreams::file_sink(timingFilename.str().c_str()));
+		powerOutStream.push(boost::iostreams::file_sink(powerFilename.str().c_str()));
+		statsOutStream.push(boost::iostreams::file_sink(statsFilename.str().c_str()));
+
+		if (!timingOutStream.good())
 		{
-			cerr << "Error opening file \"" << openFile << "\" for writing" << endl;
+			cerr << "Error opening file \"" << timingFilename << "\" for writing" << endl;
+			exit(-12);
+		}
+		else if (!powerOutStream.good())
+		{
+			cerr << "Error opening file \"" << powerFilename << "\" for writing" << endl;
+			exit(-12);
+		}
+		else if (!statsOutStream.good())
+		{
+			cerr << "Error opening file \"" << statsFilename << "\" for writing" << endl;
 			exit(-12);
 		}
 	}
+	// else printing to these streams goes nowhere
 
+	// set backward pointers to the system config and the statistics for each channel
 	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
 		i->setSystemConfig(&systemConfig);
@@ -821,7 +863,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &this_a)
 
 void dramSystem::printStatistics()
 {
-	cerr << statistics << endl;
+	statsOutStream << statistics << endl;
 	statistics.clear();
 }
 

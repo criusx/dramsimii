@@ -11,7 +11,7 @@ using namespace DRAMSimII;
 M5dramSystem::M5dramSystem(Params *p):
 PhysicalMemory(p), tickEvent(this), needRetry(false)
 {	
-	outStream << "M5dramSystem constructor" << std::endl;
+	timingOutStream << "M5dramSystem constructor" << std::endl;
 	std::map<file_io_token_t,std::string> parameter;
 
 	parameter[output_file_token] = p->outFilename;
@@ -89,7 +89,7 @@ Port *M5dramSystem::getPort(const string &if_name, int idx)
 	{
 		panic("M5dramSystem::getPort: unknown port %s requested", if_name);
 	}
-	outStream << "called M5dramSystem::getPort" << endl;
+	timingOutStream << "called M5dramSystem::getPort" << endl;
 }
 
 void M5dramSystem::init()
@@ -105,7 +105,7 @@ M5dramSystem::~M5dramSystem()
 	//if (pmemAddr)
 	//	munmap(pmemAddr, params()->addrRange.size());
 	
-	outStream << "M5dramSystem destructor" << std::endl;
+	timingOutStream << "M5dramSystem destructor" << std::endl;
 	delete ds;
 }
 
@@ -209,7 +209,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	}
 
 #ifdef M5DEBUG
-	outStream << "extWake [" << curTick << "]/[" << currentMemCycle << "]";
+	timingOutStream << "extWake [" << curTick << "]/[" << currentMemCycle << "]";
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())
 		outStream << "R ";
@@ -223,7 +223,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		outStream << "? ";
 
 
-	outStream << "0x" << std::hex << pkt->getAddr() << endl;
+	timingOutStream << "0x" << std::hex << pkt->getAddr() << endl;
 
 	if (pkt->getSize() != 0x40)
 		cerr << "0x" << std::hex << pkt->getSize() << endl;
@@ -233,7 +233,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	if (!pkt->needsResponse() && !pkt->isWrite())
 	{
 #ifdef M5DEBUG
-		outStream << "packet not needing response." << endl;
+		timingOutStream << "packet not needing response." << endl;
 #endif
 		if (pkt->cmd != MemCmd::UpgradeReq)
 		{
@@ -242,7 +242,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		}
 		else
 		{
-			outStream << "####################### not upgrade request" << endl;
+			timingOutStream << "####################### not upgrade request" << endl;
 		}
 		return true;
 	}
@@ -303,12 +303,11 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			// http://m5.eecs.umich.edu/wiki/index.php/Memory_System
 			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
 			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
-			cerr << "needRetry set" << endl;
 			memory->needRetry = true;
 			memory->mostRecentChannel = trans->getAddresses().chan_id;
 
 #ifdef M5DEBUG
-			outStream << "Wait for retry before sending more to ch[" << trans->getAddresses().chan_id << "]" << endl;
+			timingOutStream << "Wait for retry before sending more to ch[" << trans->getAddresses().chan_id << "]" << endl;
 #endif
 			return false;
 		}
@@ -322,7 +321,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			if (next < TICK_T_MAX)
 			{
 #ifdef M5DEBUG
-				outStream << "schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]" << endl;
+				timingOutStream << "schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]" << endl;
 #endif
 				memory->tickEvent.schedule(memory->getCpuRatio() * next);
 			}
@@ -337,7 +336,7 @@ M5dramSystem::TickEvent::process()
 {	
 	tick_t now = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
 #ifdef M5DEBUG
-	outStream << "intWake [" << std::dec << curTick << "][" << std::dec << now << "]" << endl;
+	timingOutStream << "intWake [" << std::dec << curTick << "][" << std::dec << now << "]" << endl;
 #endif
 
 	// move memory channels to the current time
@@ -356,7 +355,7 @@ M5dramSystem::TickEvent::process()
 	if (next < TICK_T_MAX)
 	{	
 #ifdef M5DEBUG
-		outStream << "schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]" << endl;
+		timingOutStream << "schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]" << endl;
 #endif
 		assert(next * memory->getCpuRatio() > curTick);
 		schedule(static_cast<Tick>(next * memory->getCpuRatio()));
@@ -384,7 +383,7 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 				assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
 
 #ifdef M5DEBUG
-				outStream << "<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
+				timingOutStream << "<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
 #endif
 
 				memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
@@ -401,11 +400,10 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 	if (needRetry && !ds->isFull(mostRecentChannel))
 	{
 #ifdef M5DEBUG
-		outStream << "Allow retrys" << endl;
+		timingOutStream << "Allow retrys" << endl;
 #endif
 		needRetry = false;
 		memoryPort->sendRetry();
-		cerr << "needRetry cleared" << endl;
 	}
 }
 

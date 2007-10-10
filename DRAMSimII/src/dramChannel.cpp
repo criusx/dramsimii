@@ -87,7 +87,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 		{
 #ifdef M5DEBUG
 			if (temp_t)
-				outStream << "!T2C " << temp_t << endl;
+				timingOutStream << "!T2C " << temp_t << endl;
 #endif
 			// move time up by executing commands
 			command *temp_c = readNextCommand();
@@ -114,7 +114,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				int min_gap = minProtocolGap(temp_c);
 
 #ifdef M5DEBUG
-				outStream << "mg: " << min_gap << endl;
+				timingOutStream << "mg: " << min_gap << endl;
 #endif
 
 				// allow system to overrun so that it may send a command
@@ -127,7 +127,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 					statistics->collectCommandStats(temp_c);	
 #ifdef DEBUG_COMMAND
-					outStream << "C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+					timingOutStream << "C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
 
@@ -138,7 +138,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 					{
 						statistics->collectTransactionStats(completed_t);
 #ifdef DEBUG_TRANSACTION
-						outStream << "T CH[" << setw(2) << channelID << "] " << completed_t << endl;
+						timingOutStream << "T CH[" << setw(2) << channelID << "] " << completed_t << endl;
 #endif
 						// reuse the refresh transactions
 						if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
@@ -182,14 +182,14 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 			// since reading vs dequeueing should yield the same result
 			assert(temp_t == completedTransaction);
 #ifdef DEBUG_TRANSACTION
-			outStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
+			timingOutStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
 #endif
 		}
 	}
 	assert(time <= endTime + timing_specification.t_cmd);
 	*transFinishTime = endTime;
 #ifdef M5DEBUG
-	outStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
+	timingOutStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
 #endif
 	return NULL;
 }
@@ -266,7 +266,7 @@ void dramChannel::doPowerCalculation()
 		}
 		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS;
-		cerr << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
+		powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
 			"(" << totalRAS << ") tRRDsch(" << tRRDsch / systemConfig->Frequency() / 1.0E-9 << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 			time << "]" << endl;		
 	}
@@ -285,7 +285,7 @@ transaction *dramChannel::readTransaction() const
 		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay))
 		{
 #ifdef M5DEBUG
-			outStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
+			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
 #endif
 			return NULL; // not enough time has passed		
 		}
@@ -302,7 +302,7 @@ transaction *dramChannel::readTransaction() const
 			if (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay)
 			{
 #ifdef M5DEBUG
-				outStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
+				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
 #endif
 				// if this refresh command has arrived
 				if (refreshTrans->getEnqueueTime() < time) 
@@ -333,7 +333,7 @@ transaction *dramChannel::getTransaction()
 		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay))
 		{
 #ifdef M5DEBUG
-			outStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
+			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
 #endif
 			return NULL; // not enough time has passed		
 		}
@@ -348,7 +348,7 @@ transaction *dramChannel::getTransaction()
 			if (time - tempTrans->getEnqueueTime() < timing_specification.t_buffer_delay)
 			{
 #ifdef M5DEBUG
-				outStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
+				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timing_specification.t_buffer_delay << endl;			
 #endif
 				// if this refresh command has arrived
 				if (refreshTrans->getEnqueueTime() < time) 

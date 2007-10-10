@@ -18,7 +18,10 @@ using namespace std;
 using namespace DRAMSimII;
 
 // modified, writes to cerr or a compressed output file
-boost::iostreams::filtering_ostream DRAMSimII::outStream;
+//boost::iostreams::filtering_ostream DRAMSimII::outStream;
+boost::iostreams::filtering_ostream DRAMSimII::timingOutStream;
+boost::iostreams::filtering_ostream DRAMSimII::powerOutStream;
+boost::iostreams::filtering_ostream DRAMSimII::statsOutStream;
 
 double DRAMSimII::ascii2multiplier(const string &input)
 {

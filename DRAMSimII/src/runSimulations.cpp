@@ -99,14 +99,14 @@ bool dramSystem::enqueue(transaction *trans)
 	if (!channel[trans->getAddresses().chan_id].enqueue(trans))
 	{
 #ifdef M5DEBUG
-		outStream << "!+T(" << channel[trans->getAddresses().chan_id].getTransactionQueueCount() << "/" << channel[trans->getAddresses().chan_id].getTransactionQueueDepth() << ")" << endl;
+		timingOutStream << "!+T(" << channel[trans->getAddresses().chan_id].getTransactionQueueCount() << "/" << channel[trans->getAddresses().chan_id].getTransactionQueueDepth() << ")" << endl;
 #endif
 		return false;
 	}
 	else
 	{
 #ifdef M5DEBUG
-		outStream << "+T(" << trans->getAddresses().chan_id << ")[" << channel[trans->getAddresses().chan_id].getTransactionQueueCount() << "]" << endl;
+		timingOutStream << "+T(" << trans->getAddresses().chan_id << ")[" << channel[trans->getAddresses().chan_id].getTransactionQueueCount() << "]" << endl;
 #endif
 		// if the transaction was successfully enqueued, set its enqueue time
 		trans->setEnqueueTime(channel[trans->getAddresses().chan_id].get_time());
@@ -135,9 +135,9 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 
 				channel[chan].executeCommand(temp_c, min_gap);
 
-#ifdef DEBUG_COMMAND
 				statistics.collectCommandStats(temp_c);
-				outStream << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+#ifdef DEBUG_COMMAND				
+				timingOutStream << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
 				update_system_time(); 
@@ -153,9 +153,10 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 					}
 					else
 						delete completed_t;
-#ifdef DEBUG_TRANSACTION
+
 					statistics.collectTransactionStats(temp_t);
-					outStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
+#ifdef DEBUG_TRANSACTION					
+					timingOutStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif
 				}
 
@@ -173,7 +174,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime)
 {
 #if M5DEBUG
-	outStream << "move forward until: " << endTime << endl;
+	timingOutStream << "move forward until: " << endTime << endl;
 #endif
 	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
@@ -236,11 +237,11 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 						delete completed_t;
 
 #ifdef DEBUG_TRANSACTION
-					outStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
+					timingOutStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
 #endif					
 				}
 #ifdef DEBUG_COMMAND
-				outStream << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+				timingOutStream << "F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 				// if the CAS command was just executed, then this command is effectively done
 				if (temp_c->getHost() == trans)
@@ -273,7 +274,7 @@ void dramSystem::run_simulations()
 				transaction *temp_t = channel[oldest_chan_id].getTransaction();
 
 #ifdef DEBUG_TRANSACTION
-				outStream << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
+				timingOutStream << "CH[" << setw(2) << oldest_chan_id << "] " << temp_t << endl;
 #endif
 
 				if(temp_t != NULL)
@@ -288,7 +289,7 @@ void dramSystem::run_simulations()
 						int min_gap = channel[input_t->getAddresses().chan_id].minProtocolGap(temp_c);
 
 #ifdef DEBUG_COMMAND
-						outStream << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+						timingOutStream << "[" << setbase(10) << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
 						channel[temp_c->getAddress().chan_id].executeCommand(temp_c, min_gap);

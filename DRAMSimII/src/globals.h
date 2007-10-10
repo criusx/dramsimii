@@ -88,7 +88,7 @@ namespace DRAMSimII
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)
 	{
-		int l2 = 0;
+		unsigned l2 = 0;
 		for (input >>= 1; input > 0; input >>= 1)
 		{
 			l2++;
@@ -105,7 +105,10 @@ namespace DRAMSimII
 	}	
 
 	// global var forward
-	extern boost::iostreams::filtering_ostream outStream;	
+	//extern boost::iostreams::filtering_ostream outStream;
+	extern boost::iostreams::filtering_ostream timingOutStream;
+	extern boost::iostreams::filtering_ostream powerOutStream;
+	extern boost::iostreams::filtering_ostream statsOutStream;
 
 	// converts a string to its corresponding magnitude representation
 	double ascii2multiplier(const std::string &);	

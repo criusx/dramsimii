@@ -326,7 +326,7 @@ command *dramChannel::readNextCommand() const
 			assert(temp_c == candidate_command);
 
 #ifdef DEBUG
-			outStream << "R[" << candidate_command->getAddress().rank_id << "] B[" << candidate_command->getAddress().bank_id << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << time << "]" << endl;
+			timingOutStream << "R[" << candidate_command->getAddress().rank_id << "] B[" << candidate_command->getAddress().bank_id << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << time << "]" << endl;
 #endif
 
 			return candidate_command;
