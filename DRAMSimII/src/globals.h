@@ -81,7 +81,7 @@ namespace DRAMSimII
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::command_type_t &);
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::command &);
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::addresses &);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::transaction *&);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::transaction *);
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::address_mapping_scheme_t &);
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::transaction_type_t );
 

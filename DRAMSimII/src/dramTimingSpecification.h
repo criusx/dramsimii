@@ -31,6 +31,7 @@ namespace DRAMSimII
 		int t_cmd;			// command bus duration...
 		int t_int_burst;	// internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3
 		int t_buffer_delay;	// the delay a transaction experiences before it can be converted to a series of commands
+		int t_refi;			// refresh interval, should send one refresh every n ticks to a rank
 
 	public:
 		// constructors

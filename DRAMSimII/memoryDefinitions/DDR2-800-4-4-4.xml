@@ -45,7 +45,7 @@
 		<autoRefreshPolicy>none</autoRefreshPolicy>
 		<!--given in us-->
 		<refreshTime>64000</refreshTime>
-		<!--average periodic refresh time-->
+		<!--average periodic refresh time, look at Micron app note TN-46-09 -->
 		<tREFI>6240</tREFI>
 		<commandOrderingAlgorithm>strict</commandOrderingAlgorithm>
 		<!--may be 'strict' or 'RIFF'-->

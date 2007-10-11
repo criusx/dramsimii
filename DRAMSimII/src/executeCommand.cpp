@@ -148,5 +148,5 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	// record command history.
 	// inserts into a queue which dequeues into the command pool
-	record_command(this_command);
+	recordCommand(this_command);
 }

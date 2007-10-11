@@ -19,7 +19,7 @@ namespace DRAMSimII
 		tick_t enqueue_time;			// when did it make it into the per bank command queue?
 		tick_t completion_time;
 		addresses	addr;
-		transaction *host_t;			// backward pointer to the original transaction
+		transaction *host_t;		// backward pointer to the original transaction
 
 		tick_t  link_comm_tran_comp_time;
 		tick_t  amb_proc_comp_time;

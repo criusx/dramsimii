@@ -15,51 +15,61 @@ using namespace DRAMSimII;
 dramChannel::dramChannel(const dramSettings *settings):
 time(0),
 rank(settings->rankCount, rank_c(settings)),
-refreshRowIndex(0),
+//refreshRowIndex(0),
 lastRefreshTime(0),
 lastRankID(0),
 timing_specification(settings),
 transactionQueue(settings->transactionQueueDepth),
-refreshQueue(settings->rowCount * settings->rankCount,true),
+//refreshQueue(settings->rowCount * settings->rankCount,true),
+refreshCounter(NULL),
 historyQueue(settings->historyQueueDepth),
 completionQueue(settings->completionQueueDepth),
 systemConfig(NULL),
 powerModel(settings),
 algorithm(settings)
 {
+	// assign an id to each channel (normally done with commands)
 	for (unsigned i = 0; i < settings->rankCount; i++)
 	{
 		rank[i].setRankID(i);
 	}
 
+	// initialize the refresh counters per rank
 	if (settings->refreshPolicy != NO_REFRESH)
 	{
-		float step = 1.0 * settings->refreshTime * settings->frequencySpec * 1.0E-6 / settings->rowCount; // in cycles
+		refreshCounter = new transaction *[settings->rankCount];
 
-		for (unsigned i = 0; i < settings->rowCount; ++i)
+		// stagger the times that each rank will be refreshed so they don't all arrive in a burst
+		unsigned step = settings->tREFI / settings->rankCount;
+
+		for (unsigned j = 0; j < settings->rankCount; ++j)
 		{
-			for (int j = 0; j < settings->rankCount; ++j)
-			{
-				transaction *currentRefreshTrans = refreshQueue.pop();
-				currentRefreshTrans->setEnqueueTime((i + 1) * step);
-				assert(currentRefreshTrans->getType() == CONTROL_TRANSACTION);
-				currentRefreshTrans->setType(AUTO_REFRESH_TRANSACTION);
-				currentRefreshTrans->getAddresses().rank_id = j;
-				refreshQueue.push(currentRefreshTrans);
-			}
-		}
+			transaction *newTrans = new transaction();
+			newTrans->setType(AUTO_REFRESH_TRANSACTION);
+			newTrans->getAddresses().rank_id = j;
+			newTrans->setEnqueueTime(j * step);
+			refreshCounter[j] = newTrans;
+
+			//transaction *currentRefreshTrans = refreshQueue.pop();
+			//currentRefreshTrans->setEnqueueTime((i + 1) * step);
+			//assert(currentRefreshTrans->getType() == CONTROL_TRANSACTION);
+			//currentRefreshTrans->setType(AUTO_REFRESH_TRANSACTION);
+			//currentRefreshTrans->getAddresses().rank_id = j;
+			//refreshQueue.push(currentRefreshTrans);
+		}		
 	}
 }
 
 dramChannel::dramChannel(const dramChannel &dc):
 time(dc.time),
 rank(dc.rank),
-refreshRowIndex(dc.refreshRowIndex),
+//refreshRowIndex(dc.refreshRowIndex),
 lastRefreshTime(dc.lastRefreshTime),
 lastRankID(dc.lastRankID),
 timing_specification(dc.timing_specification),
 transactionQueue(dc.transactionQueue),
-refreshQueue(dc.refreshQueue),
+//refreshQueue(dc.refreshQueue),
+refreshCounter(dc.refreshCounter),
 historyQueue(dc.historyQueue),
 completionQueue(dc.completionQueue),
 systemConfig(dc.systemConfig),
@@ -78,19 +88,19 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 	{
 		// attempt first to move transactions out of the transactions queue and
 		// convert them into commands after a fixed amount of time		
-		transaction *temp_t = readTransaction();
+		const transaction *temp_t = readTransaction();
 
 
 		// if there were no transactions left in the queue or there was not
 		// enough room to split the transaction into commands
-		if (!transaction2commands(temp_t))
+		if (!checkForAvailableCommandSlots(temp_t))
 		{
 #ifdef M5DEBUG
 			if (temp_t)
 				timingOutStream << "!T2C " << temp_t << endl;
 #endif
 			// move time up by executing commands
-			command *temp_c = readNextCommand();
+			const command *temp_c = readNextCommand();
 
 			if (temp_c == NULL)
 			{
@@ -121,13 +131,13 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				// FIXME: will this work?
 				if ((min_gap + time <= endTime) || (min_gap + time <= endTime + timing_specification.t_cmd))
 				{
-					temp_c = getNextCommand();
+					command *temp_com = getNextCommand();
 
-					executeCommand(temp_c, min_gap);
+					executeCommand(temp_com, min_gap);
 
-					statistics->collectCommandStats(temp_c);	
+					statistics->collectCommandStats(temp_com);	
 #ifdef DEBUG_COMMAND
-					timingOutStream << "C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_c << endl;
+					timingOutStream << "C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_com << endl;
 #endif
 
 
@@ -146,7 +156,8 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 							completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig->getRefreshTime());
 
 							assert(systemConfig->getRefreshPolicy() != NO_REFRESH);
-							refreshQueue.push(completed_t);
+							//refreshQueue.push(completed_t);
+							delete completed_t;
 
 							return NULL;
 						}
@@ -179,7 +190,11 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 			// actually remove it from the queue now
 			transaction *completedTransaction = getTransaction();
-			// since reading vs dequeueing should yield the same result
+			// then break into commands
+			assert(completedTransaction == temp_t);
+			bool t2cResult = transaction2commands(completedTransaction);
+			assert(t2cResult == true);
+			// since reading vs dequeuing should yield the same result
 			assert(temp_t == completedTransaction);
 #ifdef DEBUG_TRANSACTION
 			timingOutStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
@@ -194,7 +209,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 	return NULL;
 }
 
-void dramChannel::record_command(command *latest_command)
+void dramChannel::recordCommand(command *latest_command)
 {
 	while (historyQueue.push(latest_command) == false)
 	{
@@ -273,12 +288,53 @@ void dramChannel::doPowerCalculation()
 	powerModel.lastCalculation = time;
 }
 
+transaction *dramChannel::getRefresh()
+{
+	assert(rank.size() >= 1);
+
+	transaction *earliestTransaction = refreshCounter[0];
+
+	unsigned earliestRank = 0;
+
+	for (unsigned i = 1; i < rank.size(); ++i)
+	{
+		assert(refreshCounter[i]);
+		if (refreshCounter[i]->getEnqueueTime() < earliestTransaction->getEnqueueTime())
+		{
+			earliestTransaction = refreshCounter[i];
+			earliestRank = i;
+		}
+	}
+
+	refreshCounter[earliestRank] = new transaction();
+	refreshCounter[earliestRank]->setEnqueueTime(earliestTransaction->getEnqueueTime() + timing_specification.t_refi);
+	refreshCounter[earliestRank]->setType(AUTO_REFRESH_TRANSACTION);
+	refreshCounter[earliestRank]->getAddresses().rank_id = earliestRank;
+
+	return earliestTransaction;
+}
+
+
+const transaction *dramChannel::readRefresh() const
+{
+	assert(rank.size() >= 1);
+	transaction *earliestTransaction = refreshCounter[0];
+	for (unsigned i = 1; i < rank.size(); ++i)
+	{
+		assert(refreshCounter[i]);
+		if (refreshCounter[i]->getEnqueueTime() < earliestTransaction->getEnqueueTime())
+		{
+			earliestTransaction = refreshCounter[i];
+		}
+	}
+	return earliestTransaction;
+}
+
 
 // read the next available transaction for this channel without actually removing it from the queue
-transaction *dramChannel::readTransaction() const
+const transaction *dramChannel::readTransaction() const
 {
-	transaction *tempTrans = transactionQueue.front(); 
-
+	const transaction *tempTrans = transactionQueue.front(); 
 
 	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
 	{
@@ -293,7 +349,7 @@ transaction *dramChannel::readTransaction() const
 	}
 	else
 	{
-		transaction *refreshTrans = refreshQueue.front();
+		const transaction *refreshTrans = readRefresh();
 		assert(refreshTrans != NULL);
 
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
@@ -341,7 +397,7 @@ transaction *dramChannel::getTransaction()
 	}
 	else
 	{
-		transaction *refreshTrans = refreshQueue.front();
+		const transaction *refreshTrans = readRefresh();
 
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig->getSeniorityAgeLimit()))
 		{
@@ -352,7 +408,7 @@ transaction *dramChannel::getTransaction()
 #endif
 				// if this refresh command has arrived
 				if (refreshTrans->getEnqueueTime() < time) 
-					return refreshQueue.pop();
+					return getRefresh();
 				else
 					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
 			}
@@ -360,7 +416,7 @@ transaction *dramChannel::getTransaction()
 		}
 		else if (refreshTrans->getEnqueueTime() < time)
 		{
-			return refreshQueue.pop();
+			return getRefresh();
 		}
 		else
 		{
@@ -377,11 +433,12 @@ dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
 	}
 	time = rs.time;
 	rank = rs.rank;
-	refreshRowIndex = rs.refreshRowIndex;
+	//refreshRowIndex = rs.refreshRowIndex;
 	lastRankID = rs.lastRankID;
 	timing_specification = rs.timing_specification;
 	transactionQueue = rs.transactionQueue;
-	refreshQueue = rs.refreshQueue;
+	//refreshQueue = rs.refreshQueue;
+	refreshCounter = rs.refreshCounter;
 	historyQueue = rs.historyQueue;
 	completionQueue = rs.completionQueue;
 	systemConfig = new dramSystemConfiguration(rs.systemConfig);

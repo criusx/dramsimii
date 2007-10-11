@@ -146,12 +146,12 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 
 				if(completed_t != NULL)
 				{
-					if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
+					/*if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
 					{
 						completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
 						channel[chan].enqueueRefresh(completed_t);
 					}
-					else
+					else*/
 						delete completed_t;
 
 					statistics.collectTransactionStats(temp_t);
@@ -197,11 +197,11 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 		// attempt first to move transactions out of the transactions queue and
 		// convert them into commands
 		// FIXME: no longer returns transactions
-		transaction *temp_t = channel[chan].readTransaction();
+		const transaction *temp_t = channel[chan].readTransaction();
 
 		// if there were no transactions left in the queue or there was not
 		// enough room to split the transaction into commands
-		if (!channel[temp_t->getAddresses().chan_id].transaction2commands(temp_t))
+		if (!channel[temp_t->getAddresses().chan_id].checkForAvailableCommandSlots(temp_t))
 		{
 			// move time up by executing commands
 			command *temp_c = channel[chan].getNextCommand();
@@ -227,13 +227,13 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 				if (completed_t != NULL)
 				{
 					// reuse the refresh transactions
-					if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
-					{
-						completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
-						//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
-						channel[completed_t->getAddresses().chan_id].enqueueRefresh(completed_t);
-					}
-					else
+					//if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
+					//{
+					//	completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
+					//	//channel[completed_t->addr.chan_id].operator[](completed_t->addr.rank_id).enqueueRefresh(completed_t);
+					//	channel[completed_t->getAddresses().chan_id].enqueueRefresh(completed_t);
+					//}
+					//else
 						delete completed_t;
 
 #ifdef DEBUG_TRANSACTION
@@ -252,6 +252,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 		{
 			transaction *completedTrans = channel[chan].getTransaction();
 			assert(temp_t == completedTrans);
+			channel[chan].transaction2commands(completedTrans);
 		}
 	}
 }

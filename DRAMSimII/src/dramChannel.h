@@ -22,12 +22,13 @@ namespace DRAMSimII
 	private:
 		tick_t time;						// channel time, allow for channel concurrency	
 		std::vector<rank_c> rank;			// vector of the array of ranks
-		unsigned refreshRowIndex;			// the row index to be refreshed
+		//unsigned refreshRowIndex;			// the row index to be refreshed
 		tick_t lastRefreshTime;			// tells me when last refresh was done
 		unsigned lastRankID;				// id of the last accessed rank of this channel
 		dramTimingSpecification timing_specification; // the timing specs for this channel
 		queue<transaction> transactionQueue;	// transaction queue for the channel
-		queue<transaction> refreshQueue;	// queue of refresh transactions
+		//queue<transaction> refreshQueue;	// queue of refresh transactions
+		transaction **refreshCounter;
 		queue<command> historyQueue;			// what were the last N commands to this channel?
 		queue<transaction> completionQueue;	// completed_q, can send status back to memory controller
 		dramSystemConfiguration *systemConfig; // a pointer to common system config values
@@ -38,9 +39,10 @@ namespace DRAMSimII
 
 	public:
 		// functions
+		bool checkForAvailableCommandSlots(const transaction *trans) const;	
 		bool transaction2commands(transaction *);
 		command *getNextCommand();
-		command *readNextCommand() const;
+		const command *readNextCommand() const;
 		
 		const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
 		int minProtocolGap(const command *thisCommand) const;
@@ -59,12 +61,12 @@ namespace DRAMSimII
 		tick_t get_time() const { return time; }
 		void set_time(tick_t new_time) { time = new_time; }
 		unsigned get_last_rank_id() const { return lastRankID; }
-		transaction *getTransaction();// { return transactionQueue.pop(); } // remove and return the oldest transaction
-		transaction *readTransaction() const;  // read the oldest transaction without affecting the queue
+		transaction *getTransaction();			// remove and return the oldest transaction
+		const transaction *readTransaction() const;	// read the oldest transaction without affecting the queue
 		transaction *read_transaction_simple() const { return transactionQueue.front(); }
-		transaction *getRefresh() { return refreshQueue.pop(); }
-		transaction *readRefresh() const { return refreshQueue.front(); }
-		bool enqueueRefresh(transaction *in) { return refreshQueue.push(in); }
+		transaction *getRefresh();
+		const transaction *readRefresh() const;
+		//bool enqueueRefresh(transaction *in) { return refreshQueue.push(in); }
 		bool enqueue(transaction *in);
 		bool isFull() const { return transactionQueue.freecount() == 0; }
 		bool complete(transaction *in) { return completionQueue.push(in); }
@@ -72,7 +74,7 @@ namespace DRAMSimII
 		command *get_most_recent_command() const { return historyQueue.newest(); } // get the most recent command from the history queue
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }
 		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }
-		void record_command(command *);
+		void recordCommand(command *);
 		void setChannelID(const unsigned value) { channelID = value; }
 
 		// constructors

@@ -15,7 +15,7 @@ using namespace DRAMSimII;
 /// </summary>
 command *dramChannel::getNextCommand()
 {
-	command *nextCommand = readNextCommand();
+	const command *nextCommand = readNextCommand();
 
 	if (nextCommand)
 	{
@@ -57,7 +57,7 @@ command *dramChannel::getNextCommand()
 /// Command returned is not yet removed from the per_bank_command_queue
 /// from which it was selected
 /// </summary>
-command *dramChannel::readNextCommand() const
+const command *dramChannel::readNextCommand() const
 {
 	// look at the most recently retired command in this channel's history
 

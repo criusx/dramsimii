@@ -47,7 +47,7 @@ namespace DRAMSimII
 
 	public:
 
-		bool checkForAvailableCommandSlots(const transaction *trans) const;	
+		
 		bool convert_address(addresses &) const;
 		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
 		bool enqueue(transaction* trans); // enqueue this transaction into the proper per-channel queue

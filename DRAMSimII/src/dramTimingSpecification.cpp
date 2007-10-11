@@ -106,6 +106,7 @@ dramTimingSpecification::dramTimingSpecification(const dramSettings *settings)
 	}
 	t_rtrs = settings->tRTRS;
 	t_buffer_delay = settings->tBufferDelay;
+	t_refi = settings->tREFI;
 }
 
 dramTimingSpecification::dramTimingSpecification(map<file_io_token_t,string> &parameter)

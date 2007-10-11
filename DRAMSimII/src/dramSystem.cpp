@@ -41,14 +41,14 @@ tick_t dramSystem::nextTick() const
 			assert(nextTrans->getEnqueueTime() <= currentChan->get_time());
 			assert(tempGap <= currentChan->getTimingSpecification().t_buffer_delay );
 			// whenever the next transaction is ready and there are available slots for the R/C/P commands
-			if ((tempGap + currentChan->get_time() < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
+			if ((tempGap + currentChan->get_time() < nextWake) && (currentChan->checkForAvailableCommandSlots(nextTrans)))
 			{
 				nextWake = tempGap + currentChan->get_time();
 			}
 		}
 
 		// then check to see when the next command occurs
-		if (command *tempCommand = currentChan->readNextCommand())
+		if (const command *tempCommand = currentChan->readNextCommand())
 		{
 			int tempGap = currentChan->minProtocolGap(tempCommand);
 
@@ -61,7 +61,7 @@ tick_t dramSystem::nextTick() const
 		// check the refresh queue
 		if (systemConfig.getRefreshPolicy() != NO_REFRESH)
 		{
-			const transaction *refresh_t = currentChan->readRefresh();
+			const transaction *refresh_t = (*currentChan).readRefresh();
 
 			if (refresh_t->getEnqueueTime() < nextWake)
 			{
@@ -674,7 +674,7 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 	else
 	{
 		// read but do not remove
-		transaction *refresh_t = channel[temp_t->getAddresses().chan_id].readRefresh();
+		const transaction *refresh_t = channel[temp_t->getAddresses().chan_id].readRefresh();
 
 		if (refresh_t->getEnqueueTime() < temp_t->getEnqueueTime())
 			this_t = channel[temp_t->getAddresses().chan_id].getRefresh();
