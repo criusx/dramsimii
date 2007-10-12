@@ -16,7 +16,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 	assert (trans->getAddresses().chan_id == channelID || trans->getType() == AUTO_REFRESH_TRANSACTION);
 
 	const queue<command> *bank_q = &(rank[trans->getAddresses().rank_id].bank[trans->getAddresses().bank_id].per_bank_q);
-	int availableCommandSlots = bank_q->freecount();
+	int availableCommandSlots = (trans->getType() == AUTO_REFRESH_TRANSACTION) ? 0 : bank_q->freecount();
 
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
