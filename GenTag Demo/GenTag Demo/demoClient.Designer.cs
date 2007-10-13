@@ -29,7 +29,7 @@ namespace GentagDemo
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(demoClient));
-            System.Windows.Forms.Label label23;
+            this.label23 = new System.Windows.Forms.Label();
             this.readIDButton = new System.Windows.Forms.Button();
             this.readLogButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -132,9 +132,8 @@ namespace GentagDemo
             this.label9 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.radPage = new System.Windows.Forms.TabPage();
-            this.radScanButton = new System.Windows.Forms.Button();
             this.radIDLabel = new System.Windows.Forms.Label();
-            label23 = new System.Windows.Forms.Label();
+            this.radScanButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.authPage.SuspendLayout();
             this.VarioSens.SuspendLayout();
@@ -146,6 +145,14 @@ namespace GentagDemo
             this.varioSensWPage.SuspendLayout();
             this.radPage.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // label23
+            // 
+            this.label23.Location = new System.Drawing.Point(82, 194);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(23, 20);
+            this.label23.Text = "ID:";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // readIDButton
             // 
@@ -1081,13 +1088,19 @@ namespace GentagDemo
             // 
             // radPage
             // 
-            this.radPage.Controls.Add(label23);
+            this.radPage.Controls.Add(this.label23);
             this.radPage.Controls.Add(this.radIDLabel);
             this.radPage.Controls.Add(this.radScanButton);
             this.radPage.Location = new System.Drawing.Point(0, 0);
             this.radPage.Name = "radPage";
             this.radPage.Size = new System.Drawing.Size(240, 217);
             this.radPage.Text = "CZT";
+            // 
+            // radIDLabel
+            // 
+            this.radIDLabel.Location = new System.Drawing.Point(111, 194);
+            this.radIDLabel.Name = "radIDLabel";
+            this.radIDLabel.Size = new System.Drawing.Size(122, 20);
             // 
             // radScanButton
             // 
@@ -1097,20 +1110,6 @@ namespace GentagDemo
             this.radScanButton.TabIndex = 0;
             this.radScanButton.Text = "Scan";
             this.radScanButton.Click += new System.EventHandler(this.readerClick);
-            // 
-            // radIDLabel
-            // 
-            this.radIDLabel.Location = new System.Drawing.Point(82, 101);
-            this.radIDLabel.Name = "radIDLabel";
-            this.radIDLabel.Size = new System.Drawing.Size(151, 20);
-            // 
-            // label23
-            // 
-            label23.Location = new System.Drawing.Point(7, 101);
-            label23.Name = "label23";
-            label23.Size = new System.Drawing.Size(69, 20);
-            label23.Text = "ID:";
-            label23.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // demoClient
             // 
@@ -1245,6 +1244,7 @@ namespace GentagDemo
         private System.Windows.Forms.TabPage radPage;
         private System.Windows.Forms.Button radScanButton;
         private System.Windows.Forms.Label radIDLabel;
+        private System.Windows.Forms.Label label23;
         
     }
 }

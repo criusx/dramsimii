@@ -141,7 +141,7 @@ namespace GentagDemo
             //hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
-        private enum loopType { wine, counterfeit, pet, patient, none };
+        private enum loopType { wine, counterfeit, pet, patient, med, none };
 
         // the variable that describes whether it's looping looking for wine bottles or general tags
         private loopType loop;
@@ -156,7 +156,7 @@ namespace GentagDemo
 
                 if (sender == readLogButton)
                     new Thread(new ThreadStart(launchReadVSLog)).Start();
-                else if ((sender == readIDButton) || (sender == wineButton) || (sender == petButton) || (sender == readPatientButton))
+                else if ((sender == medicationButton) || (sender == readIDButton) || (sender == wineButton) || (sender == petButton) || (sender == readPatientButton))
                 {
                     if (sender == wineButton)
                         loop = loopType.wine;
@@ -166,6 +166,8 @@ namespace GentagDemo
                         loop = loopType.counterfeit;
                     else if (sender == readPatientButton)
                         loop = loopType.patient;
+                    else if (sender == medicationButton)
+                        loop = loopType.med;
 
                     new Thread(new ThreadStart(tagReader.readTagID)).Start();
                 }
@@ -173,18 +175,21 @@ namespace GentagDemo
                     new Thread(new ThreadStart(launchSetVSSettings)).Start();
                 else if (sender == readValueButton)
                     new Thread(new ThreadStart(launchGetVSSettings)).Start();
-                else if (sender == medicationButton)
-                    new Thread(new ThreadStart(readDrugData)).Start();
                 else if (sender == radScanButton)
                     new Thread(new ThreadStart(radScan)).Start();
             }
             else
             {
-                Cursor.Current = Cursors.Default;
-                readerRunning = false;
-                tagReader.running = false;
-                loop = loopType.none;
+                stopReading();
             }
+        }
+
+        private void stopReading()
+        {
+            setWaitCursor(false);
+            readerRunning = false;
+            tagReader.running = false;
+            loop = loopType.none;
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -212,6 +217,12 @@ namespace GentagDemo
 
         private Hashtable patientsCurrentlyBeingLookedUp = new Hashtable();
 
+        private Hashtable interactionsACurrentlyBeingLookedUp = new Hashtable();
+
+        private Hashtable interactionsBCurrentlyBeingLookedUp = new Hashtable();
+
+        private Hashtable drugsCurrentlyBeingLookedUp = new Hashtable();
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void tagReceived(string tagID)
         {
@@ -220,7 +231,10 @@ namespace GentagDemo
 
             AsyncCallback cb = new AsyncCallback(receiveNewItem);
 
-            Button button = loop == loopType.counterfeit ? readIDButton : loop == loopType.pet ? petButton : loop == loopType.wine ? wineButton : readPatientButton;
+            Button button = loop == loopType.counterfeit ? readIDButton : loop == loopType.pet ? petButton : loop == loopType.wine ? wineButton : loop == loopType.patient ? readPatientButton : medicationButton;
+
+            Color backup = getButtonColor(button);
+            setButtonColor(button, Color.Green);
 
             try
             {
@@ -230,7 +244,7 @@ namespace GentagDemo
                         {
                             // if it has already been added, do nothing
                             if (cachedCounterfeitLookups.ContainsKey(tagID))
-                                return;
+                                break;
 
                             // get the tag info and cache it
                             authWS.GetDatesWS ws = new authWS.GetDatesWS();
@@ -248,7 +262,7 @@ namespace GentagDemo
                             if (cachedPetLookups.ContainsKey(tagID))
                                 displayPet((petWS.petInfo)cachedPetLookups[tagID]);
                             else if (petIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                                return;
+                                break;
                             else
                             {
                                 petWS.petWS ws = new petWS.petWS();
@@ -265,7 +279,7 @@ namespace GentagDemo
                             if (cachedWineLookups.ContainsKey(tagID))
                                 displayBottle((wineWS.wineBottle)cachedWineLookups[tagID]);
                             else if (wineIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                                return;
+                                break;
                             else
                             {
                                 mostRecentWineID = tagID;
@@ -279,21 +293,47 @@ namespace GentagDemo
                         }
                     case loopType.patient:
                         {
+                            stopReading();
                             if (cachedPatientLookups.ContainsKey(tagID))
                                 displayPatient((medWS.patientRecord)cachedPatientLookups[tagID]);
-                            else if (wineIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                                return;
+                            else if (patientsCurrentlyBeingLookedUp.ContainsValue(tagID))
+                                break;
                             else
                             {
-                                mostRecentWineID = tagID;
                                 medWS.COREMedDemoWS ws = new medWS.COREMedDemoWS();
                                 ws.Timeout = 30000;
                                 IAsyncResult handle = ws.BegingetPatientRecord(tagID, cb, ws);
                                 lock (patientsCurrentlyBeingLookedUp.SyncRoot)
                                 { patientsCurrentlyBeingLookedUp[handle] = tagID; }
+                                currentPatientID = tagID;
                             }
                             break;
                         }
+                    case loopType.med:
+                        {
+                            stopReading();
+                            // do not cache med lookups, make sure this info is always current
+                            if (interactionsACurrentlyBeingLookedUp.ContainsValue(tagID))
+                                break;
+                            else
+                            {
+                                if (string.IsNullOrEmpty(currentPatientID))
+                                    return;
+                                medWS.COREMedDemoWS ws = new medWS.COREMedDemoWS();
+                                ws.Timeout = 30000;
+
+                                IAsyncResult handle = ws.BegingetDrugInfo(tagID, cb, ws);
+                                lock (drugsCurrentlyBeingLookedUp.SyncRoot)
+                                { drugsCurrentlyBeingLookedUp[handle] = tagID; }
+                                
+                                handle = ws.BegincheckInteraction(currentPatientID,tagID, cb, ws);
+                                lock (interactionsBCurrentlyBeingLookedUp.SyncRoot)
+                                { interactionsBCurrentlyBeingLookedUp[handle] = currentPatientID; }
+                                lock (interactionsACurrentlyBeingLookedUp.SyncRoot)
+                                { interactionsACurrentlyBeingLookedUp[handle] = tagID; }
+                            }
+                            break;
+                        }                       
                     default:
                         return;
                         break;
@@ -306,8 +346,7 @@ namespace GentagDemo
             
 
             // flash the panel to signal the user that a tag was read
-            Color backup = getButtonColor(button);
-            setButtonColor(button, Color.Green);
+            
             Thread.Sleep(150);
             setButtonColor(button, backup);
         }        
@@ -315,6 +354,8 @@ namespace GentagDemo
         private Hashtable retryCount = new Hashtable();
 
         private string mostRecentWineID;
+
+        private string currentPatientID;
 
         private void receiveNewItem(IAsyncResult ar)
         {
@@ -362,18 +403,43 @@ namespace GentagDemo
                 }
                 else if (ar.AsyncState.GetType() == typeof(medWS.COREMedDemoWS))
                 {
-                    // try to cast as a standard item lookup    
                     medWS.COREMedDemoWS ws = (medWS.COREMedDemoWS)ar.AsyncState;
-                    medWS.patientRecord info = ws.EndgetPatientRecord(ar);
-
-                    // display the tag info
-                    displayPatient(info);
-                    string tagID = (string)patientsCurrentlyBeingLookedUp[ar];
-                    lock (cachedPatientLookups.SyncRoot)
+                    // interaction check
+                    if (interactionsACurrentlyBeingLookedUp.ContainsKey(ar))
                     {
-                        cachedPatientLookups[tagID] = info;
+                        lock (interactionsBCurrentlyBeingLookedUp.SyncRoot)
+                        { interactionsBCurrentlyBeingLookedUp.Remove(ar); }
+                        lock (interactionsACurrentlyBeingLookedUp.SyncRoot)
+                        { interactionsACurrentlyBeingLookedUp.Remove(ar); }
+
+                        bool alert = ws.EndcheckInteraction(ar);
+                        if (alert)
+                            MessageBox.Show(Properties.Resources.DrugInteractionWarningMessage);                        
                     }
-                    readerClick(readPatientButton, new EventArgs());
+                    // patient lookup
+                    else if (patientsCurrentlyBeingLookedUp.ContainsKey(ar))
+                    {
+                        string tagID = (string)patientsCurrentlyBeingLookedUp[ar];
+                        lock (patientsCurrentlyBeingLookedUp.SyncRoot)
+                        { patientsCurrentlyBeingLookedUp.Remove(ar); }
+
+                        medWS.patientRecord info = ws.EndgetPatientRecord(ar);
+
+                        displayPatient(info);
+                        
+                        lock (cachedPatientLookups.SyncRoot)
+                        { cachedPatientLookups[tagID] = info; }
+                    }
+                    // drug lookup
+                    else
+                    {
+                        lock (drugsCurrentlyBeingLookedUp.SyncRoot)
+                        { drugsCurrentlyBeingLookedUp.Remove(ar); }
+
+                        medWS.drugInfo info = ws.EndgetDrugInfo(ar);
+
+                        displayDrug(info);
+                    }
                 }
             }
             catch (WebException)
@@ -409,10 +475,10 @@ namespace GentagDemo
             {
                 MessageBox.Show(e.ToString());
             }
-            catch (NullReferenceException e)
+                catch (NullReferenceException e)
             {
-                MessageBox.Show(e.ToString());
-            }
+                rescheduleLookup(ar);
+                }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
@@ -507,13 +573,19 @@ namespace GentagDemo
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
+        private void displayDrug(medWS.drugInfo drug)
+        {
+            setPhoto(drugPhoto, drug.picture);
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayPatient(medWS.patientRecord patient)
         {
             if (patient.exists)
             {
                 setTextBox(patientNameBox, patient.lastName + ", " + patient.firstName + " " + patient.middleName);
                 DateTime dob = new DateTime(1970, 1, 1);
-                dob.AddTicks(patient.DOB);
+                dob = dob.AddTicks(patient.DOB * 1000);
                 string description = dob.ToString() + "\n";
                 if (patient.allergies != null)
                 {
@@ -646,66 +718,39 @@ namespace GentagDemo
             Cursor.Current = Cursors.Default;
         }
 
-        private string patientID;
+        //private string patientID;
 
-        private void readPatientData()
-        {
-            try
-            {
+        //private void readPatientData()
+        //{
+        //    try
+        //    {
                 
              
                 
-            }
-            catch (NotSupportedException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            catch (IOException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            catch (WebException ex)
-            {
-                MessageBox.Show("Problem connecting to web service: " + ex.Message);
-            }
-            finally
-            {
-                setWaitCursor(false);
-                readerRunning = false;
-            }
-        }
+        //    }
+        //    catch (NotSupportedException ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //    catch (IOException ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //    catch (WebException ex)
+        //    {
+        //        MessageBox.Show("Problem connecting to web service: " + ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        setWaitCursor(false);
+        //        readerRunning = false;
+        //    }
+        //}
 
         private string drugID;
 
-        private void readDrugData()
-        {
-            try
-            {
-                drugID = NativeMethods.readOneTagID();
-                setWaitCursor(false);
-                authWS.GetDatesWS ws = new authWS.GetDatesWS();
-
-                byte[] bA = ws.getPicture(drugID, true);
-                setPhoto(drugPhoto, bA);
-                bool drugInteraction = ws.checkInteraction(patientID, drugID);
-
-                if (drugInteraction == true)
-                    MessageBox.Show(Properties.Resources.DrugInteractionWarningMessage);
-            }
-            catch (WebException ex)
-            {
-                MessageBox.Show("Problem connecting to web service: " + ex.Message);
-            }
-            catch (NotSupportedException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                readerRunning = false;
-                setWaitCursor(false);
-            }
-        }
+        
+     
 
         private void trackingCheckBox_CheckStateChanged(object sender, EventArgs e)
         {

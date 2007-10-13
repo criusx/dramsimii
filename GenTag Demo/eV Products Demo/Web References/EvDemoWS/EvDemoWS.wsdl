@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:tns="http://evDemo/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="EvDemoWS" targetNamespace="http://evDemo/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified" targetNamespace="http://evDemo/">
+      <xsd:complexType name="spectrumInfo">
+        <xsd:sequence>
+          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="dataArray" type="xsd:int" />
+          <xsd:element name="exists" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="addSpectrumElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="newSample" nillable="true" type="tns:spectrumInfo" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="addSpectrumResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getSpectrumElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="String_1" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getSpectrumResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:spectrumInfo" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+  <message name="EvDemoWS_addSpectrum">
+    <part name="parameters" element="tns:addSpectrumElement" />
+  </message>
+  <message name="EvDemoWS_addSpectrumResponse">
+    <part name="parameters" element="tns:addSpectrumResponseElement" />
+  </message>
+  <message name="EvDemoWS_getSpectrum">
+    <part name="parameters" element="tns:getSpectrumElement" />
+  </message>
+  <message name="EvDemoWS_getSpectrumResponse">
+    <part name="parameters" element="tns:getSpectrumResponseElement" />
+  </message>
+  <portType name="EvDemoWS">
+    <operation name="addSpectrum">
+      <input message="tns:EvDemoWS_addSpectrum" />
+      <output message="tns:EvDemoWS_addSpectrumResponse" />
+    </operation>
+    <operation name="getSpectrum">
+      <input message="tns:EvDemoWS_getSpectrum" />
+      <output message="tns:EvDemoWS_getSpectrumResponse" />
+    </operation>
+  </portType>
+  <binding name="EvDemoWSSoapHttp" type="tns:EvDemoWS">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="addSpectrum">
+      <soap:operation soapAction="http://evDemo//addSpectrum" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getSpectrum">
+      <soap:operation soapAction="http://evDemo//getSpectrum" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="EvDemoWS">
+    <port name="EvDemoWSSoapHttpPort" binding="tns:EvDemoWSSoapHttp">
+      <soap:address location="http://crius.dyndns.org:8888/GentagDemo/EvDemoWSSoapHttpPort" />
+    </port>
+  </service>
+</definitions>
