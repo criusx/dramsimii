@@ -586,16 +586,18 @@ namespace GentagDemo
                 setTextBox(patientNameBox, patient.lastName + ", " + patient.firstName + " " + patient.middleName);
                 DateTime dob = new DateTime(1970, 1, 1);
                 dob = dob.AddTicks(patient.DOB * 1000);
-                string description = dob.ToString() + "\n";
+                string description = dob.ToString() + System.Console.Out.NewLine;
                 if (patient.allergies != null)
                 {
-                    description += "Allergies\n";
-                    description += patient.allergies.ToString() + "\n";
+                    description += "Allergies" + System.Console.Out.NewLine;
+                    foreach (string s in patient.allergies)
+                        description += s + System.Console.Out.NewLine;
                 }
                 if (patient.medications != null)
                 {
-                    description += "Medications\n";
-                    description += patient.medications.ToString();
+                    description += "Medications" + System.Console.Out.NewLine;
+                    foreach (string s in patient.medications)
+                        description += s + System.Console.Out.NewLine;
                 }
                 setTextBox(patientDescriptionBox, description);
                 setPhoto(patientPhoto, patient.image);
