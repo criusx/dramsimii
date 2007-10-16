@@ -32,16 +32,6 @@ rowCount(settings->rowCount),
 columnCount(settings->columnCount),
 short_burst_ratio(settings->shortBurstRatio),
 read_percentage(settings->readPercentage)
-// any of these really needed?
-//history_queue_depth(settings->historyQueueDepth),
-//completion_queue_depth(settings->completionQueueDepth),
-//transaction_queue_depth(settings->transactionQueueDepth),
-//event_queue_depth(settings->eventQueueDepth),
-//per_bank_queue_depth(settings->perBankQueueDepth),
-//chan_count(settings->channelCount),
-//rank_count(settings->rankCount),
-//bank_count(settings->bankCount),
-//refresh_queue_depth(settings->refreshQueueDepth),
 {}
 
 
@@ -61,19 +51,11 @@ cachelines_per_row(rhs->cachelines_per_row),
 col_size(rhs->col_size),
 row_size(rhs->row_size),
 cacheline_size(rhs->cacheline_size),
-// any of these really needed?
-//history_queue_depth(rhs->history_queue_depth),
-//completion_queue_depth(rhs->completion_queue_depth),
-//transaction_queue_depth(rhs->transaction_queue_depth),
-//event_queue_depth(rhs->event_queue_depth),
-//per_bank_queue_depth(rhs->per_bank_queue_depth),
 channelCount(rhs->channelCount),
 rankCount(rhs->rankCount),
 bankCount(rhs->bankCount),
 rowCount(rhs->rowCount),
 columnCount(rhs->columnCount),
-//refresh_queue_depth(rhs->refresh_queue_depth),
-//
 command_ordering_algorithm(rhs->command_ordering_algorithm),
 config_type(rhs->config_type),
 read_percentage(rhs->read_percentage),
@@ -99,7 +81,6 @@ dramSystemConfiguration& dramSystemConfiguration::operator =(const DRAMSimII::dr
 		return *this;
 	}
 	command_ordering_algorithm = rs.command_ordering_algorithm;
-	//per_bank_queue_depth = rs.per_bank_queue_depth;
 	config_type = rs.config_type;
 	refresh_time = rs.refresh_time;
 	refresh_policy = rs.refresh_policy;
@@ -108,11 +89,6 @@ dramSystemConfiguration& dramSystemConfiguration::operator =(const DRAMSimII::dr
 	rowCount = rs.rowCount;
 	columnCount = rs.columnCount;
 	cacheline_size = rs.cacheline_size;
-	//history_queue_depth = rs.history_queue_depth;
-	//completion_queue_depth = rs.completion_queue_depth;
-	//transaction_queue_depth = rs.transaction_queue_depth;
-	//event_queue_depth = rs.event_queue_depth;
-	//refresh_queue_depth = rs.refresh_queue_depth;
 	seniority_age_limit = rs.seniority_age_limit;
 	dram_type = rs.dram_type;
 	row_buffer_management_policy = rs.row_buffer_management_policy;
@@ -203,8 +179,5 @@ dramSystemConfiguration::dramSystemConfiguration(dramSystem::Params *parameter)
 	row_size = parameter->rowSize;
 
 	cacheline_size = parameter->cachelineSize;
-
-	//history_queue_depth = parameter->historyQueueDepth;
-
 }
 #endif

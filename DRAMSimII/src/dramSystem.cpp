@@ -93,28 +93,13 @@ dramSystem& dramSystem::operator =(const DRAMSimII::dramSystem &rs)
 
 bool dramSystem::convert_address(addresses &this_a) const
 {
-	unsigned input_a;
 	unsigned temp_a, temp_b;
 	unsigned bit_15,bit_27,bits_26_to_16;
 
 	// if there's a test involving specific ranks/banks and the mapping is predetermined
 	if (input_stream.getType() == MAPPED)
 		return true;
-	//int	mapping_scheme;
-	//int	chan_count, rank_count, bank_count, col_count, row_count;
-	//int	chan_addr_depth, rank_addr_depth, bank_addr_depth, row_addr_depth, col_addr_depth;
 	
-	//, col_size_depth;
-
-	//mapping_scheme = config->addr_mapping_scheme;
-
-	
-
-	//chan_count = config->chan_count;
-	//rank_count = config->rank_count;
-	//bank_count = config->bank_count;
-	//row_count  = config->row_count;
-	//col_count  = config->col_count;
 	static unsigned chan_addr_depth = log2(systemConfig.getChannelCount());
 	static unsigned rank_addr_depth = log2(systemConfig.getRankCount());
 	static unsigned bank_addr_depth = log2(systemConfig.getBankCount());
@@ -123,12 +108,10 @@ bool dramSystem::convert_address(addresses &this_a) const
 	//FIXME: shouldn't this already be set appropriately?
 	static unsigned col_size_depth	= log2(systemConfig.getDRAMType() == DRDRAM ? 16 : systemConfig.getColumnSize());
 
-	//input_a = this_a->phys_addr;
 	// strip away the byte address portion
-	input_a = this_a.phys_addr >> col_size_depth;
+	unsigned input_a = this_a.phys_addr >> col_size_depth;
 
-	//unsigned int address = static_cast<unsigned>(this_a.phys_addr);
-
+	
 	unsigned cacheline_size;
 	unsigned cacheline_size_depth;	/* address bit depth */
 	unsigned col_id_lo;
@@ -180,7 +163,7 @@ bool dramSystem::convert_address(addresses &this_a) const
 		input_a = input_a >> row_addr_depth;
 		temp_a  = input_a << row_addr_depth;
 		this_a.row_id = temp_a ^ temp_b;		/* this should strip out the row address */
-		if(input_a != 0)				/* If there is still "stuff" left, the input address is out of range */
+		if (input_a != 0)				/* If there is still "stuff" left, the input address is out of range */
 		{
 			cerr << "Address out of range[" << std::hex << this_a.phys_addr << "] of available physical memory" << endl;
 		}
@@ -752,9 +735,9 @@ channel(systemConfig.getChannelCount(),
 			timingFilename.str("");
 			powerFilename.str("");
 			statsFilename.str("");
-			timingFilename << baseFilename << "-timing" << counter << suffix;
-			powerFilename << baseFilename << "-power" << counter << suffix;
-			statsFilename << baseFilename << "-stats" << counter << suffix;
+			timingFilename << baseFilename << counter << "-timing" << suffix;
+			powerFilename << baseFilename << counter << "-power" << suffix;
+			statsFilename << baseFilename << counter << "-stats" << suffix;
 			timingIn.open(timingFilename.str().c_str(),ifstream::in);
 			powerIn.open(powerFilename.str().c_str(),ifstream::in);
 			statsIn.open(statsFilename.str().c_str(),ifstream::in);				
@@ -762,7 +745,6 @@ channel(systemConfig.getChannelCount(),
 			powerIn.close();
 			statsIn.close();
 		}
-
 
 		timingOutStream.push(boost::iostreams::file_sink(timingFilename.str().c_str()));
 		powerOutStream.push(boost::iostreams::file_sink(powerFilename.str().c_str()));

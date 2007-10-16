@@ -34,8 +34,7 @@ namespace DRAMSimII
 		int t_refi;			// refresh interval, should send one refresh every n ticks to a rank
 
 	public:
-		// constructors
-		explicit dramTimingSpecification(std::map<file_io_token_t, std::string> &);
+		// constructors		
 		explicit dramTimingSpecification(const dramSettings *settings);
 
 		// friends
