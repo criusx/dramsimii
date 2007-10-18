@@ -52,6 +52,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 			this_bank.RASCount++;
 
 			this_rank.last_ras_times.push(this_ras_time);
+			this_rank.last_bank_id = this_command->getAddress().bank_id;
 
 			// specific for RAS command
 			this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_ras);
@@ -70,6 +71,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		this_rank.last_cas_time = time;
 		this_bank.last_cas_length = this_command->getLength();
 		this_rank.last_cas_length = this_command->getLength();
+		this_rank.last_bank_id = this_command->getAddress().bank_id;
 		this_bank.CASCount++;
 		//this_command->getHost()->completion_time = time + timing_specification.t_cas;
 		
@@ -91,6 +93,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		this_rank.last_casw_time = time;
 		this_bank.last_casw_length = this_command->getLength();
 		this_rank.last_casw_length = this_command->getLength();
+		this_rank.last_bank_id = this_command->getAddress().bank_id;
 		this_bank.CASWCount++;
 		this_command->getHost()->setCompletionTime(time);
 		

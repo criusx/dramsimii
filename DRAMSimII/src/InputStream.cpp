@@ -159,8 +159,8 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 		int burst_count;
 		bool bursting = true;
 		//double multiplier;
-		tick_t timestamp;
-		unsigned address;
+		tick_t timestamp = TICK_T_MAX;
+		unsigned address = UINT_MAX;
 
 		while((bursting == true) && trace_file.good())
 		{

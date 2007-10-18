@@ -7,14 +7,13 @@ using namespace DRAMSimII;
 using namespace std;
 
 dramStatistics::dramStatistics():
-end_time(0),
 valid_transaction_count(0),
 start_no(0),
 end_no(0),
-start_time(0),
 bo8_count(0),
 bo4_count(0),
-system_config_type(0)
+commandDelay(),
+commandExceution()
 {}
 
 void dramStatistics::collectTransactionStats(const transaction *currentTransaction)
@@ -38,7 +37,7 @@ void dramStatistics::collectTransactionStats(const transaction *currentTransacti
 
 void dramStatistics::collectCommandStats(const command *currentCommand)
 {
-	if (currentCommand->getCommandType() != AUTO_REFRESH_TRANSACTION)
+	if (currentCommand->getCommandType() != REFRESH_ALL_COMMAND)
 	{
 		commandDelay[currentCommand->getStartTime() - currentCommand->getEnqueueTime()]++;
 		commandExceution[currentCommand->getCompletionTime() - currentCommand->getStartTime()]++;
@@ -48,10 +47,9 @@ void dramStatistics::collectCommandStats(const command *currentCommand)
 
 ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
 {
-	os << "RR[" << setw(6) << setprecision(6) << (double)this_a.end_time/max(1,this_a.bo4_count + this_a.bo8_count);
-	os << "] BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick_t)1);
-	os << "]" << endl;
-
+	//os << "RR[" << setw(6) << setprecision(6) << (double)this_a.end_time/max(1,this_a.bo4_count + this_a.bo8_count) << "] ";
+	//os << "BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick_t)1) << "]" << endl;
+	
 	os << "----Delay----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionDecodeDelay.begin(); currentValue != this_a.transactionDecodeDelay.end(); currentValue++)
 	{

@@ -84,7 +84,6 @@ dramTimingSpecification::dramTimingSpecification(const dramSettings *settings)
 
 	case SDRAM:
 
-		// @ 100 MHz 
 		t_al = 0;					// no such thing as posted CAS in SDRAM 
 		t_burst = settings->tBurst;	// depending on system config, can be 1, 2, 4, or 8 
 		t_cas = settings->tCAS;

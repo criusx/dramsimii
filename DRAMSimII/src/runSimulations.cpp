@@ -37,9 +37,6 @@ void dramSystem::run_simulations2()
 			// EOF reached, quit the loop
 			break;
 	}
-
-	statistics.set_end_time(time);
-	statistics.set_valid_trans_count(sim_parameters.get_request_count());
 }
 
 void dramSystem::run_simulations3()
@@ -84,8 +81,6 @@ void dramSystem::run_simulations3()
 		}
 		nextArrival = nextTick();
 	}
-	statistics.set_end_time(time);
-	statistics.set_valid_trans_count(sim_parameters.get_request_count());
 }
 
 /// Attempt to enqueue the command
@@ -318,7 +313,4 @@ void dramSystem::run_simulations()
 		else
 			break;
 	}
-
-	statistics.set_end_time(time);
-	statistics.set_valid_trans_count(sim_parameters.get_request_count());
 }

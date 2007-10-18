@@ -9,13 +9,13 @@ using namespace DRAMSimII;
 using namespace std;
 
 addresses::addresses():
-virt_addr(-1),
-phys_addr(-1),
-chan_id(-1),
-rank_id(-1),
-bank_id(-1),
-row_id(-1),
-col_id(-1)
+virt_addr(UINT_MAX),
+phys_addr(ULLONG_MAX),
+chan_id(UINT_MAX),
+rank_id(UINT_MAX),
+bank_id(UINT_MAX),
+row_id(UINT_MAX),
+col_id(UINT_MAX)
 {}
 
 std::ostream &DRAMSimII::operator <<(std::ostream &os, const addresses &this_a)

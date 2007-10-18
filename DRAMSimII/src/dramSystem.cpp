@@ -642,6 +642,7 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 				}
 			}
 			break;
+		case NONE:
 		default:
 			cerr << "Unknown input trace format" << endl;
 			exit(-20);
@@ -833,7 +834,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &this_a)
 		os << "UNKN] ";
 		break;
 	}
-	os << "BQD[" << this_a.systemConfig.getPerBankQueueDepth() << "] ";
+	//os << "BQD[" << this_a.systemConfig.getPerBankQueueDepth() << "] ";
 	os << "BLR[" << setprecision(0) << floor(100*(this_a.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] ";
 	os << "RP[" << (int)(100*this_a.systemConfig.getReadPercentage()) << "] ";
 

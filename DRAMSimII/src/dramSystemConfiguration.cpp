@@ -66,7 +66,7 @@ short_burst_ratio(rhs->short_burst_ratio)
 
 ostream &DRAMSimII::operator<<(ostream &os, const dramSystemConfiguration &this_a)
 {
-	os << "PerBankQ[" << this_a.perBankQueueDepth << "] ";
+	//os << "PerBankQ[" << this_a.perBankQueueDepth << "] ";
 	os << "CH[" << this_a.channelCount << "] ";
 	os << "RK[" << this_a.rankCount << "] ";
 	os << "BK[" << this_a.bankCount << "] ";

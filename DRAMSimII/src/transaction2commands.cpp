@@ -79,7 +79,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 				// insert CAS COMMAND in front of PRECHARGE COMMAND
 
 				if ((systemConfig->getCommandOrderingAlgorithm() == STRICT_ORDER) 
-					|| ((int)(time - temp_c->getEnqueueTime()) > systemConfig->getSeniorityAgeLimit()))
+					|| ((unsigned)(time - temp_c->getEnqueueTime()) > systemConfig->getSeniorityAgeLimit()))
 				{
 					bypass_allowed = false;
 				}

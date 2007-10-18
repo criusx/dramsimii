@@ -15,6 +15,7 @@ status(0),
 length(0),
 enqueueTime(0),
 completionTime(0),
+decodeTime(0),
 addr(),
 originalTransaction(0)
 {}
@@ -26,6 +27,7 @@ status(rs->status),
 length(rs->length),
 enqueueTime(rs->enqueueTime),
 completionTime(rs->completionTime),
+decodeTime(rs->decodeTime),
 addr(rs->addr),
 originalTransaction(rs->originalTransaction)
 {}
@@ -36,6 +38,7 @@ status(0),
 length(Size),
 enqueueTime(enqueueTime),
 completionTime(0),
+decodeTime(0),
 addr(address),
 originalTransaction(originalTrans)
 

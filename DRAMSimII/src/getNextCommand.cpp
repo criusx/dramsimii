@@ -1,6 +1,4 @@
 #include <iostream>
-#include <climits>
-#include <limits>
 
 #include "dramChannel.h"
 
@@ -39,9 +37,9 @@ command *dramChannel::getNextCommand()
 		}
 		else
 		{
-			bank_c &currentBank = currentRank.bank[nextCommand->getAddress().bank_id];
-			assert(rank[nextCommand->getAddress().rank_id].bank[nextCommand->getAddress().bank_id].per_bank_q.front() == nextCommand);
-			return rank[nextCommand->getAddress().rank_id].bank[nextCommand->getAddress().bank_id].per_bank_q.pop();
+			//bank_c &currentBank = currentRank.bank[nextCommand->getAddress().bank_id];
+			assert(currentRank.bank[nextCommand->getAddress().bank_id].per_bank_q.front() == nextCommand);
+			return currentRank.bank[nextCommand->getAddress().bank_id].per_bank_q.pop();
 		}
 	}
 	else
@@ -71,8 +69,7 @@ const command *dramChannel::readNextCommand() const
 	{
 	case STRICT_ORDER: // look for oldest command, execute that
 		{
-			numeric_limits<tick_t> ll;
-			tick_t oldestCommandTime = ll.max();	
+			tick_t oldestCommandTime = TICK_T_MAX;	
 			vector<bank_c>::const_iterator oldestBank;
 			vector<rank_c>::const_iterator oldestRank;
 
@@ -123,7 +120,7 @@ const command *dramChannel::readNextCommand() const
 			}
 
 			// if there was a command found
-			if (oldestCommandTime < ll.max())
+			if (oldestCommandTime < TICK_T_MAX)
 			{
 				assert(oldestBank->per_bank_q.front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestBank->per_bank_q.front()->getAddress().rank_id].bank[oldestBank->per_bank_q.front()->getAddress().bank_id].per_bank_q.front() == oldestBank->per_bank_q.front());
 

@@ -15,7 +15,7 @@ namespace DRAMSimII
 	private:
 		command_ordering_algorithm_t command_ordering_algorithm;	// strict or round robin 
 		transaction_ordering_algorithm_t transactionOrderingAlgorithm;
-		unsigned perBankQueueDepth;						// command queue size
+		//unsigned perBankQueueDepth;						// command queue size
 		system_configuration_type_t config_type;
 		unsigned refresh_time;								// loop time of refresh 
 		refresh_policy_t refresh_policy;					// 
@@ -57,7 +57,7 @@ namespace DRAMSimII
 		command_ordering_algorithm_t getCommandOrderingAlgorithm() const { return command_ordering_algorithm; }
 		transaction_ordering_algorithm_t getTransactionOrderingAlgorithm() const { return transactionOrderingAlgorithm; }
 		system_configuration_type_t getConfigType() const { return config_type; }
-		unsigned getPerBankQueueDepth() const { return perBankQueueDepth; }
+		//unsigned getPerBankQueueDepth() const { return perBankQueueDepth; }
 		unsigned getRankCount() const { return rankCount; }
 		unsigned getBankCount() const { return bankCount; }
 		unsigned getChannelCount() const { return channelCount; }
