@@ -36,30 +36,31 @@ read_percentage(settings->readPercentage)
 
 
 dramSystemConfiguration::dramSystemConfiguration(const dramSystemConfiguration *rhs):
-dram_type(rhs->dram_type),
-row_buffer_management_policy(rhs->row_buffer_management_policy),
-auto_precharge(rhs->auto_precharge),
-addr_mapping_scheme(rhs->addr_mapping_scheme),
-datarate(rhs->datarate),
+command_ordering_algorithm(rhs->command_ordering_algorithm),
+transactionOrderingAlgorithm(rhs->transactionOrderingAlgorithm),
+config_type(rhs->config_type),
 refresh_time(rhs->refresh_time),
-read_write_grouping(rhs->read_write_grouping),
 refresh_policy(rhs->refresh_policy),
-seniority_age_limit(rhs->seniority_age_limit),
-posted_cas(rhs->posted_cas),
-clock_granularity(rhs->clock_granularity),
-cachelines_per_row(rhs->cachelines_per_row),
 col_size(rhs->col_size),
 row_size(rhs->row_size),
 cacheline_size(rhs->cacheline_size),
+seniority_age_limit(rhs->seniority_age_limit),
+dram_type(rhs->dram_type),
+row_buffer_management_policy(rhs->row_buffer_management_policy),
+addr_mapping_scheme(rhs->addr_mapping_scheme),
+datarate(rhs->datarate),
+posted_cas(rhs->posted_cas),
+read_write_grouping(rhs->read_write_grouping),
+auto_precharge(rhs->auto_precharge),
+clock_granularity(rhs->clock_granularity),
+cachelines_per_row(rhs->cachelines_per_row),
 channelCount(rhs->channelCount),
 rankCount(rhs->rankCount),
 bankCount(rhs->bankCount),
 rowCount(rhs->rowCount),
 columnCount(rhs->columnCount),
-command_ordering_algorithm(rhs->command_ordering_algorithm),
-config_type(rhs->config_type),
-read_percentage(rhs->read_percentage),
-short_burst_ratio(rhs->short_burst_ratio)
+short_burst_ratio(rhs->short_burst_ratio),
+read_percentage(rhs->read_percentage)
 {}
 
 

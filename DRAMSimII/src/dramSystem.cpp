@@ -703,6 +703,8 @@ channel(systemConfig.getChannelCount(),
 		powerOutStream.push(std::cout);
 		statsOutStream.push(std::cout);
 		break;
+	case NONE:
+		break;
 	}
 	if (settings->outFileType == GZ || settings->outFileType == BZ || settings->outFileType == UNCOMPRESSED)
 	{
