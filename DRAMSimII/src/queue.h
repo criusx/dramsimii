@@ -173,6 +173,7 @@ namespace DRAMSimII
 		// Allows insertion into the middle or at any end
 		bool insert(T *item, const unsigned offset)
 		{
+			assert(offset <= count - 1);
 			if (count == depth)
 				return false;
 			else if (item == NULL)
