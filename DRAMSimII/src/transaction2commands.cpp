@@ -59,7 +59,21 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 	// or CAS
 	case OPEN_PAGE:
 		{		
-			// FIXME: handle REFRESH transactions
+			// refresh transactions become only one command and are handled differently
+			if (trans->getType() == AUTO_REFRESH_TRANSACTION)
+			{
+				// make sure that there is room in all the queues for one command
+				// refresh commands refresh a row, but kill everything currently in the sense amps
+				// therefore, we need to make sure that the refresh commands happen when all banks
+				// are available
+				for (vector<bank_c>::const_iterator i = rank[trans->getAddresses().rank_id].bank.begin();
+					i != rank[trans->getAddresses().rank_id].bank.end();
+					i++)
+				{					
+					if (i->perBankQueue.freecount() < 1)
+						return false;
+				}
+			}
 			// look in the bank_q and see if there's a precharge for this row
 			bool bypass_allowed = true;
 			// go from tail to head
@@ -214,63 +228,89 @@ bool dramChannel::transaction2commands(transaction *this_t)
 	// closing the row and precharging may be delayed
 	else if (systemConfig->getRowBufferManagementPolicy() == OPEN_PAGE)
 	{
-		int queued_command_count = bank_q->size();
-		int empty_command_slot_count = bank_q->freecount();
-		// look in the bank_q and see if there's a precharge for this row
-		bool bypass_allowed = true;
-		// go from tail to head
-		for(int tail_offset = queued_command_count -1 ;(tail_offset >= 0) && (bypass_allowed == true); --tail_offset)
-		{	
-			command *temp_c = bank_q->read(tail_offset);
-
-			if (temp_c->getCommandType() == PRECHARGE_COMMAND) // found a precharge command
+		// refresh transactions become only one command and are handled differently
+		if (this_t->getType() == AUTO_REFRESH_TRANSACTION)
+		{
+			// check to see if every per bank command queue has room for one command
+			rank_c &currentRank = rank[this_t->getAddresses().rank_id];
+			// make sure that there is room in all the queues for one command
+			// refresh commands refresh a row, but kill everything currently in the sense amps
+			// therefore, we need to make sure that the refresh commands happen when all banks
+			// are available
+			for (vector<bank_c>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				if (temp_c->getAddress().row_id == this_t->getAddresses().row_id) // same row, insert here 
+				if (i->perBankQueue.freecount() < 1)
+					return false;
+			}
+			// then add the command to all queues
+			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			{
+				bool result = i->perBankQueue.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, systemConfig->isPostedCAS()));
+				assert (result);
+			}
+		}
+		else 
+		{
+			int queued_command_count = bank_q->size();
+			int empty_command_slot_count = bank_q->freecount();
+			// look in the bank_q and see if there's a precharge for this row
+			bool bypass_allowed = true;
+			// go from tail to head
+			for(int tail_offset = queued_command_count -1 ;(tail_offset >= 0) && (bypass_allowed == true); --tail_offset)
+			{	
+				command *temp_c = bank_q->read(tail_offset);
+
+				if (temp_c->getCommandType() == PRECHARGE_COMMAND) // found a precharge command
 				{
-					if (empty_command_slot_count < 1)
-						return false;
+					if (temp_c->getAddress().row_id == this_t->getAddresses().row_id) // same row, insert here 
+					{
+						if (empty_command_slot_count < 1)
+							return false;
 
-					if (this_t->getType() == WRITE_TRANSACTION)
-						bank_q->insert(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()), tail_offset);	/* insert at this location */						
-					else if (this_t->getType() == READ_TRANSACTION)
-						bank_q->insert(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()), tail_offset);	/* insert at this location */
+						if (this_t->getType() == WRITE_TRANSACTION)
+							bank_q->insert(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()), tail_offset);	/* insert at this location */						
+						else if (this_t->getType() == READ_TRANSACTION)
+							bank_q->insert(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()), tail_offset);	/* insert at this location */
 
-					return true;
+						this_t->setDecodeTime(time);
+
+						return true;
+					}
+				}
+
+				// even STRICT ORDER allows you to look at the tail of the queue to see if that's the precharge
+				// command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
+
+				if ((systemConfig->getCommandOrderingAlgorithm() == STRICT_ORDER) 
+					|| ((time - temp_c->getEnqueueTime()) > (int)systemConfig->getSeniorityAgeLimit()))
+				{
+					bypass_allowed = false;
 				}
 			}
-
-			// even STRICT ORDER allows you to look at the tail of the queue to see if that's the precharge
-			// command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
-
-			if ((systemConfig->getCommandOrderingAlgorithm() == STRICT_ORDER) 
-				|| ((time - temp_c->getEnqueueTime()) > (int)systemConfig->getSeniorityAgeLimit()))
+			if (empty_command_slot_count < 3)
 			{
-				bypass_allowed = false;
+				return false;
 			}
-		}
-		if (empty_command_slot_count < 3)
-		{
-			return false;
-		}
 
-		bank_q->push(new command(this_t->getAddresses(),RAS_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
+			bank_q->push(new command(this_t->getAddresses(),RAS_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
 
-		if (this_t->getType() == WRITE_TRANSACTION)
-		{
-			bank_q->push(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
-		}
-		else if ((this_t->getType() == READ_TRANSACTION) || (this_t->getType() == IFETCH_TRANSACTION))
-		{
-			bank_q->push(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
-		}
-		else
-		{
-			cerr << "Unhandled transaction type: " << this_t->getType();
-			exit(-8);
-		}
+			if (this_t->getType() == WRITE_TRANSACTION)
+			{
+				bank_q->push(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
+			}
+			else if ((this_t->getType() == READ_TRANSACTION) || (this_t->getType() == IFETCH_TRANSACTION))
+			{
+				bank_q->push(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
+			}
+			else
+			{
+				cerr << "Unhandled transaction type: " << this_t->getType();
+				exit(-8);
+			}
 
-		// last, the precharge command
-		bank_q->push(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
+			// last, the precharge command
+			bank_q->push(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
+		}
 	}
 	else
 	{
