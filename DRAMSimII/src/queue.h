@@ -184,8 +184,8 @@ namespace DRAMSimII
 			else
 			{
 				// move everything back by one unit
-				for (unsigned i = count - 1 ; i >= offset ; ++i)
-					entry[(head+i+1) % depth] = entry[(head+i) % depth];
+				for (unsigned i = count - 1 ; i >= offset ; --i)
+					entry[(head + i + 1) % depth] = entry[(head + i) % depth];
 
 				count++;
 
