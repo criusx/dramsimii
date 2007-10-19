@@ -73,6 +73,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 					if (i->perBankQueue.freecount() < 1)
 						return false;
 				}
+				return true;
 			}
 			// look in the bank_q and see if there's a precharge for this row
 			bool bypass_allowed = true;
