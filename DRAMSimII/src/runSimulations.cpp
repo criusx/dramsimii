@@ -7,7 +7,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
-void dramSystem::run_simulations2()
+void dramSystem::runSimulations2()
 {
 	for (int i = sim_parameters.get_request_count(); i > 0; --i)
 	{
@@ -39,7 +39,7 @@ void dramSystem::run_simulations2()
 	}
 }
 
-void dramSystem::run_simulations3()
+void dramSystem::runSimulations3()
 {
 	transaction *input_t = NULL;
 	tick_t nextArrival = 0;
@@ -88,7 +88,7 @@ void dramSystem::run_simulations3()
 bool dramSystem::enqueue(transaction *trans)
 {
 	// map the PA of this transaction to this system
-	convert_address(trans->getAddresses());
+	convertAddress(trans->getAddresses());
 
 	// attempt to insert the transaction into the per-channel transaction queue
 	if (!channel[trans->getAddresses().chan_id].enqueue(trans))
@@ -135,7 +135,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 				timingOutStream << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
 #endif
 
-				update_system_time(); 
+				updateSystemTime(); 
 
 				transaction *completed_t = channel[chan].get_oldest_completed();
 
@@ -179,7 +179,7 @@ const void *dramSystem::moveAllChannelsToTime(const tick_t endTime, tick_t *tran
 			return finishedTrans;
 		}
 	}
-	update_system_time();
+	updateSystemTime();
 	return NULL;
 }
 
@@ -215,7 +215,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 
 				channel[chan].executeCommand(temp_c, min_gap);
 
-				update_system_time(); 
+				updateSystemTime(); 
 
 				transaction *completed_t = channel[chan].get_oldest_completed();
 
@@ -252,7 +252,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 	}
 }
 
-void dramSystem::run_simulations()
+void dramSystem::runSimulations()
 {
 	for (int i = sim_parameters.get_request_count(); i > 0; --i)
 	{
@@ -289,7 +289,7 @@ void dramSystem::run_simulations()
 #endif
 
 						channel[temp_c->getAddress().chan_id].executeCommand(temp_c, min_gap);
-						update_system_time(); 
+						updateSystemTime(); 
 						transaction *completed_t = channel[oldest_chan_id].get_oldest_completed();
 						if(completed_t != NULL)
 							delete completed_t;

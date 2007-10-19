@@ -33,7 +33,7 @@ tick_t dramSystem::nextTick() const
 	for (vector<dramChannel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
 		// first look for transactions
-		if (transaction *nextTrans = currentChan->read_transaction_simple())
+		if (transaction *nextTrans = currentChan->readTransactionSimple())
 		{
 			// make sure it can finish
 			int tempGap = max(1,(int)(nextTrans->getEnqueueTime() - currentChan->get_time()) + currentChan->getTimingSpecification().t_buffer_delay); 
@@ -91,7 +91,7 @@ dramSystem& dramSystem::operator =(const DRAMSimII::dramSystem &rs)
 	return *this;
 }
 
-bool dramSystem::convert_address(addresses &this_a) const
+bool dramSystem::convertAddress(addresses &this_a) const
 {
 	unsigned temp_a, temp_b;
 	unsigned bit_15,bit_27,bits_26_to_16;
@@ -488,7 +488,7 @@ bool dramSystem::convert_address(addresses &this_a) const
 /// Although some channels may be farther along, selecting the oldest channel
 /// when doing updates ensures that all channels stay reasonably close to one another
 /// </summary>
-void dramSystem::update_system_time()
+void dramSystem::updateSystemTime()
 {
 	time = TICK_T_MAX;
 
@@ -530,7 +530,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 			this_t->getAddresses().rank_id = rank_id;
 		}
 
-		int bank_id = channel[this_t->getAddresses().chan_id].getRank(rank_id).last_bank_id;
+		int bank_id = channel[this_t->getAddresses().chan_id].getRank(rank_id).lastBankID;
 
 		rand_s(&j);
 
@@ -544,7 +544,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 			this_t->getAddresses().bank_id = bank_id;
 		}
 
-		int row_id = channel[this_t->getAddresses().chan_id].getRank(rank_id).bank[bank_id].row_id;
+		int row_id = channel[this_t->getAddresses().chan_id].getRank(rank_id).bank[bank_id].openRowID;
 
 		rand_s(&j);
 
@@ -632,7 +632,7 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 				{
 					temp_t->getAddresses() = this_e.address;
 					// FIXME: ignores return type
-					convert_address(temp_t->getAddresses());
+					convertAddress(temp_t->getAddresses());
 					temp_t->setEventNumber(temp_t->getEventNumber() + 1);
 					temp_t->setType(this_e.attributes);
 					temp_t->setLength(8);			// assume burst length of 8

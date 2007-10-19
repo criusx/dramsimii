@@ -22,7 +22,7 @@ int main(int argc,const char **argv, char *envp[])
 	dramSystem ds(settings); // combines read_command line and other inits
 	delete settings;
 	//ds.run_simulations2();
-	ds.run_simulations3();
+	ds.runSimulations3();
 
 	timingOutStream << ds << endl;
 	//cerr << ds.timing_specification;

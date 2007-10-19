@@ -9,19 +9,20 @@
 
 namespace DRAMSimII
 {
+	/// this class logically represents a bank
 	class bank_c
 	{
 	public:	
 		// members
-		queue<command> per_bank_q;		// per bank queue
-		tick_t last_ras_time;			// when did last RAS command start?
-		tick_t last_cas_time;			// when did last CAS command start?
-		tick_t last_casw_time;			// when did last CASW command start?
-		tick_t last_prec_time;			// when did last Precharge command start?
-		tick_t last_refresh_all_time;	// must respect t_rfc. concurrent refresh takes time
-		unsigned last_cas_length;		// the length of the last CAS command issued
-		unsigned last_casw_length;		// the length of the last CASW command issued
-		unsigned row_id;				// if the bank is open, what is the row id?
+		queue<command> perBankQueue;		// per bank queue
+		tick_t lastRASTime;			// when did last RAS command start?
+		tick_t lastCASTime;			// when did last CAS command start?
+		tick_t lastCASWTime;			// when did last CASW command start?
+		tick_t lastPrechargeTime;			// when did last Precharge command start?
+		tick_t lastRefreshAllTime;	// must respect t_rfc. concurrent refresh takes time
+		unsigned lastCASLength;		// the length of the last CAS command issued
+		unsigned lastCASWLength;		// the length of the last CASW command issued
+		unsigned openRowID;				// if the bank is open, what is the row id?
 		bool isActivated;				// if the bank is activated, else precharged
 
 		// stats

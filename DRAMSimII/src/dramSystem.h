@@ -39,16 +39,15 @@ namespace DRAMSimII
 		queue<event> event_q;	// pending event queue	
 
 		//functions
-		void read_dram_config_from_file();		
 		int findOldestChannel() const;	
-		void update_system_time();
+		void updateSystemTime();
 		enum input_status_t getNextIncomingTransaction(transaction *&);
 		void getNextRandomRequest(transaction *);
 
 	public:
 
 		
-		bool convert_address(addresses &) const;
+		bool convertAddress(addresses &) const;
 		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
 		bool enqueue(transaction* trans); // enqueue this transaction into the proper per-channel queue
 		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); }
@@ -58,9 +57,9 @@ namespace DRAMSimII
 		tick_t nextTick() const;		
 		void doPowerCalculation();
 		void printStatistics();
-		void run_simulations();
-		void run_simulations2();
-		void run_simulations3();
+		void runSimulations();
+		void runSimulations2();
+		void runSimulations3();
 
 		// constructors	
 		explicit dramSystem(const dramSettings *settings);

@@ -35,7 +35,7 @@ namespace DRAMSimII
 		void clear();
 		void collectTransactionStats(const transaction *);	
 		void collectCommandStats(const command *);
-		inline void set_valid_trans_count(int vtc) {valid_transaction_count = vtc;}
+		inline void setValidTransactionCount(int vtc) {valid_transaction_count = vtc;}
 		friend std::ostream &operator<<(std::ostream &, const dramStatistics &);
 	};
 }

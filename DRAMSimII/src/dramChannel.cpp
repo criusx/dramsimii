@@ -231,7 +231,7 @@ bool dramChannel::enqueue(transaction *in)
 }
 
 
-enum transaction_type_t	dramChannel::set_read_write_type(const int rank_id,const int bank_count) const
+enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const int bank_count) const
 {
 	int read_count = 0;
 	int write_count = 0;
@@ -239,7 +239,7 @@ enum transaction_type_t	dramChannel::set_read_write_type(const int rank_id,const
 
 	for(int i = 0; i < bank_count; ++i)
 	{
-		command *temp_c = rank[rank_id].bank[i].per_bank_q.read(1);
+		command *temp_c = rank[rank_id].bank[i].perBankQueue.read(1);
 
 		if(temp_c != NULL)
 		{

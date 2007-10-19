@@ -6,6 +6,8 @@
 using namespace std;
 using namespace DRAMSimII;
 
+/// this will ensure that a given transaction can be broken into and inserted as commands in this channel
+/// if there is not room under a given scheme, then it will return false
 bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 {
 	if (trans == NULL)
@@ -15,7 +17,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 	// ensure that this transaction belongs on this channel
 	assert (trans->getAddresses().chan_id == channelID || trans->getType() == AUTO_REFRESH_TRANSACTION);
 
-	const queue<command> *bank_q = &(rank[trans->getAddresses().rank_id].bank[trans->getAddresses().bank_id].per_bank_q);
+	const queue<command> *bank_q = &(rank[trans->getAddresses().rank_id].bank[trans->getAddresses().bank_id].perBankQueue);
 	int availableCommandSlots = (trans->getType() == AUTO_REFRESH_TRANSACTION) ? 0 : bank_q->freecount();
 
 	// with closed page, all transactions convert into one of the following:
@@ -35,7 +37,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 					i != rank[trans->getAddresses().rank_id].bank.end();
 					i++)
 				{
-					if (i->per_bank_q.freecount() < 1)
+					if (i->perBankQueue.freecount() < 1)
 						return false;
 				}
 			}
@@ -53,6 +55,8 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 		// open page systems may, in the best case, add a CAS command to an already open row
 		// closing the row and precharging may be delayed
 
+	// all break down into PRE,RAS,CAS
+	// or CAS
 	case OPEN_PAGE:
 		{		
 			// FIXME: handle REFRESH transactions
@@ -115,7 +119,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 	// ensure that this transaction belongs on this channel
 	assert (this_t->getAddresses().chan_id == channelID || this_t->getType() == AUTO_REFRESH_TRANSACTION);
 
-	queue<command> *bank_q = &(rank[this_t->getAddresses().rank_id].bank[this_t->getAddresses().bank_id].per_bank_q);
+	queue<command> *bank_q = &(rank[this_t->getAddresses().rank_id].bank[this_t->getAddresses().bank_id].perBankQueue);
 
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
@@ -133,13 +137,13 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			// are available
 			for (vector<bank_c>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				if (i->per_bank_q.freecount() < 1)
+				if (i->perBankQueue.freecount() < 1)
 					return false;
 			}
 			// then add the command to all queues
 			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				bool result = i->per_bank_q.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, systemConfig->isPostedCAS()));
+				bool result = i->perBankQueue.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, systemConfig->isPostedCAS()));
 				assert (result);
 			}
 		}

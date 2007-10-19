@@ -192,7 +192,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	// FIXME: shouldn't need to turn away packets, the requester should hold off once NACK'd
 	if (memory->needRetry)
 	{
-		static unsigned numCallsWhileBlocked = 0;
+		static unsigned numCallsWhileBlocked = 1;
 		if (numCallsWhileBlocked++ % 100000 == 0)
 			cerr << numCallsWhileBlocked << "\r";
 		return false;
@@ -200,12 +200,12 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
 
-	static tick_t lastPowerCalculationTime = 5000000;
+	static tick_t lastPowerCalculationTime = 1000000;
 	if (lastPowerCalculationTime-- == 0)
 	{
 		memory->ds->doPowerCalculation();
 		memory->ds->printStatistics();
-		lastPowerCalculationTime = 5000000;
+		lastPowerCalculationTime = 1000000;
 	}
 
 #ifdef M5DEBUG
@@ -267,7 +267,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		transaction *trans = new transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 		// convert the physical address to chan, rank, bank, etc.
-		memory->ds->convert_address(trans->getAddresses());
+		memory->ds->convertAddress(trans->getAddresses());
 
 		// move channels to current time so that calculations based on current channel times work
 		// should also not start/finish any commands, since this would happen at a scheduled time

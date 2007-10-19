@@ -13,22 +13,20 @@ namespace DRAMSimII
 	class rank_c
 	{
 	public:		
-		tick_t last_refresh_time;
-		tick_t last_prec_time;
-		tick_t last_cas_time;
-		tick_t last_casw_time;
-		unsigned last_cas_length;
-		unsigned last_casw_length;
+		tick_t lastRefreshTime;
+		tick_t lastPrechargeTime;
+		tick_t lastCASTime;
+		tick_t lastCASWTime;
+		unsigned lastCASLength;
+		unsigned lastCASWLength;
 		unsigned rankID;		// the ordinal number of this rank
-		unsigned last_bank_id; // id of the last accessed bank of this rank
-		queue<tick_t> last_ras_times; // ras time queue. useful to determine if t_faw is met
+		unsigned lastBankID; // id of the last accessed bank of this rank
+		queue<tick_t> lastRASTimes; // ras time queue. useful to determine if t_faw is met
 		std::vector<bank_c> bank;
 		
 
 		// constructors
-		//explicit rank_c();
 		rank_c(const rank_c &);
-		//explicit rank_c(const unsigned,const unsigned);	
 		explicit rank_c(const dramSettings *settings);
 
 		// accessors

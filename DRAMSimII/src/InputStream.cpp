@@ -285,7 +285,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 	return SUCCESS;
 }
 
-enum input_type_t inputStream::input_token(const string &input) const
+enum input_type_t inputStream::toInputToken(const string &input) const
 {
 	if (input == "k6" || input == "K6")
 		return K6_TRACE;

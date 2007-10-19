@@ -15,7 +15,7 @@ namespace DRAMSimII
 	class inputStream
 	{
 	private:
-		input_type_t input_token(const std::string&) const;
+		
 		input_type_t type; // trace type or random number generator
 		float chan_locality;
 		float rank_locality;
@@ -37,6 +37,7 @@ namespace DRAMSimII
 		
 
 		// functions
+		input_type_t toInputToken(const std::string&) const;
 		float box_muller(float, float) const;
 		float poisson_rng (float) const;
 		float gammaln(float) const;

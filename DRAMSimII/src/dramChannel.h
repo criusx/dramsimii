@@ -59,11 +59,11 @@ namespace DRAMSimII
 		std::vector<rank_c>& getRank() { return rank; }
 		const std::vector<rank_c>& getRank() const { return rank; }
 		tick_t get_time() const { return time; }
-		void set_time(tick_t new_time) { time = new_time; }
+		void setTime(tick_t new_time) { time = new_time; }
 		unsigned get_last_rank_id() const { return lastRankID; }
 		transaction *getTransaction();			// remove and return the oldest transaction
 		const transaction *readTransaction() const;	// read the oldest transaction without affecting the queue
-		transaction *read_transaction_simple() const { return transactionQueue.front(); }
+		transaction *readTransactionSimple() const { return transactionQueue.front(); }
 		transaction *getRefresh();
 		const transaction *readRefresh() const;
 		//bool enqueueRefresh(transaction *in) { return refreshQueue.push(in); }
@@ -87,7 +87,7 @@ namespace DRAMSimII
 
 
 		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
-		enum transaction_type_t set_read_write_type(const int,const int) const;
+		enum transaction_type_t setReadWriteType(const int,const int) const;
 	};
 }
 

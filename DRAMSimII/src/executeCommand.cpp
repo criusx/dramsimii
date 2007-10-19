@@ -25,7 +25,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	bank_c &this_bank = this_rank.bank[this_command->getAddress().bank_id];
 
-	this_rank.last_bank_id = this_command->getAddress().bank_id;
+	this_rank.lastBankID = this_command->getAddress().bank_id;
 
 	int t_al = this_command->isPostedCAS() ? timing_specification.t_al : 0;
 
@@ -45,14 +45,14 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 			this_bank.isActivated = true;
 
 			// RAS time history queue, per rank
-			tick_t *this_ras_time = this_rank.last_ras_times.acquire_item();
+			tick_t *this_ras_time = this_rank.lastRASTimes.acquire_item();
 
-			*this_ras_time = this_bank.last_ras_time = time;
-			this_bank.row_id = this_command->getAddress().row_id;
+			*this_ras_time = this_bank.lastRASTime = time;
+			this_bank.openRowID = this_command->getAddress().row_id;
 			this_bank.RASCount++;
 
-			this_rank.last_ras_times.push(this_ras_time);
-			this_rank.last_bank_id = this_command->getAddress().bank_id;
+			this_rank.lastRASTimes.push(this_ras_time);
+			this_rank.lastBankID = this_command->getAddress().bank_id;
 
 			// specific for RAS command
 			this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_ras);
@@ -62,38 +62,38 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	case CAS_AND_PRECHARGE_COMMAND:
 
 		this_bank.isActivated = false;
-		this_rank.last_prec_time = this_bank.last_prec_time = max(time + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_bank.last_ras_time + timing_specification.t_ras);
+		this_rank.lastPrechargeTime = this_bank.lastPrechargeTime = max(time + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, this_bank.lastRASTime + timing_specification.t_ras);
 		// lack of break is intentional
 
 	case CAS_COMMAND:
 
-		this_bank.last_cas_time = time;
-		this_rank.last_cas_time = time;
-		this_bank.last_cas_length = this_command->getLength();
-		this_rank.last_cas_length = this_command->getLength();
-		this_rank.last_bank_id = this_command->getAddress().bank_id;
+		this_bank.lastCASTime = time;
+		this_rank.lastCASTime = time;
+		this_bank.lastCASLength = this_command->getLength();
+		this_rank.lastCASLength = this_command->getLength();
+		this_rank.lastBankID = this_command->getAddress().bank_id;
 		this_bank.CASCount++;
 		//this_command->getHost()->completion_time = time + timing_specification.t_cas;
 		
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
-		this_command->setCompletionTime(max(this_bank.last_ras_time + timing_specification.t_rcd + timing_specification.t_cas + timing_specification.t_burst, this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cas + timing_specification.t_burst));
+		this_command->setCompletionTime(max(this_bank.lastRASTime + timing_specification.t_rcd + timing_specification.t_cas + timing_specification.t_burst, this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cas + timing_specification.t_burst));
 		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 
 		this_bank.isActivated = false;
-		this_rank.last_prec_time = this_bank.last_prec_time = max(time + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_bank.last_ras_time + timing_specification.t_ras);
+		this_rank.lastPrechargeTime = this_bank.lastPrechargeTime = max(time + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, this_bank.lastRASTime + timing_specification.t_ras);
 		// missing break is intentional
 
 	case CAS_WRITE_COMMAND:
 
-		this_bank.last_casw_time = time;
-		this_rank.last_casw_time = time;
-		this_bank.last_casw_length = this_command->getLength();
-		this_rank.last_casw_length = this_command->getLength();
-		this_rank.last_bank_id = this_command->getAddress().bank_id;
+		this_bank.lastCASWTime = time;
+		this_rank.lastCASWTime = time;
+		this_bank.lastCASWLength = this_command->getLength();
+		this_rank.lastCASWLength = this_command->getLength();
+		this_rank.lastBankID = this_command->getAddress().bank_id;
 		this_bank.CASWCount++;
 		this_command->getHost()->setCompletionTime(time);
 		
@@ -104,7 +104,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	case PRECHARGE_COMMAND:
 
 		this_bank.isActivated = false;
-		this_rank.last_prec_time = this_bank.last_prec_time = time;
+		this_rank.lastPrechargeTime = this_bank.lastPrechargeTime = time;
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rp);
 		break;
 
@@ -112,7 +112,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 		// FIXME: should this not count as a RAS + PRE command to all banks?
 		for (vector<bank_c>::iterator currentBank = this_rank.bank.begin(); currentBank != this_rank.bank.end(); currentBank++)
-			currentBank->last_refresh_all_time = time;
+			currentBank->lastRefreshAllTime = time;
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rfc);
 		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;

@@ -53,7 +53,6 @@ dramSettings::dramSettings(const int argc, const char **argv)
 	xmlTextReader *reader = xmlReaderForFile(
 		settingsFile.c_str(),
 		NULL,
-		//NULL);
 		XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);
 	if (reader == NULL)
 	{
