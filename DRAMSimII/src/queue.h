@@ -171,7 +171,7 @@ namespace DRAMSimII
 
 		// this function makes this queue a non-FIFO queue.  
 		// Allows insertion into the middle or at any end
-		bool insert(T *item, const unsigned offset)
+		bool insert(T *item, const int offset)
 		{
 			assert(offset <= count - 1);
 			if (count == depth)
