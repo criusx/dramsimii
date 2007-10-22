@@ -75,9 +75,7 @@ completionQueue(dc.completionQueue),
 systemConfig(dc.systemConfig),
 powerModel(dc.powerModel),
 algorithm(dc.algorithm)
-{
-	cerr << "dramChannel is copied" << endl;
-}
+{}
 
 
 
@@ -433,11 +431,9 @@ dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
 	}
 	time = rs.time;
 	rank = rs.rank;
-	//refreshRowIndex = rs.refreshRowIndex;
 	lastRankID = rs.lastRankID;
 	timing_specification = rs.timing_specification;
 	transactionQueue = rs.transactionQueue;
-	//refreshQueue = rs.refreshQueue;
 	refreshCounter = rs.refreshCounter;
 	historyQueue = rs.historyQueue;
 	completionQueue = rs.completionQueue;
