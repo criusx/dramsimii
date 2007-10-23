@@ -26,37 +26,37 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 	switch (systemConfig->getRowBufferManagementPolicy())
 	{
 	case CLOSE_PAGE:	
-			// refresh transactions become only one command and are handled differently
-			if (trans->getType() == AUTO_REFRESH_TRANSACTION)
+		// refresh transactions become only one command and are handled differently
+		if (trans->getType() == AUTO_REFRESH_TRANSACTION)
+		{
+			// make sure that there is room in all the queues for one command
+			// refresh commands refresh a row, but kill everything currently in the sense amps
+			// therefore, we need to make sure that the refresh commands happen when all banks
+			// are available
+			for (vector<bank_c>::const_iterator i = rank[trans->getAddresses().rank_id].bank.begin();
+				i != rank[trans->getAddresses().rank_id].bank.end();
+				i++)
 			{
-				// make sure that there is room in all the queues for one command
-				// refresh commands refresh a row, but kill everything currently in the sense amps
-				// therefore, we need to make sure that the refresh commands happen when all banks
-				// are available
-				for (vector<bank_c>::const_iterator i = rank[trans->getAddresses().rank_id].bank.begin();
-					i != rank[trans->getAddresses().rank_id].bank.end();
-					i++)
-				{
-					if (i->perBankQueue.freecount() < 1)
-						return false;
-				}
+				if (i->perBankQueue.freecount() < 1)
+					return false;
 			}
-			// every transaction translates into at least two commands
-			else if (availableCommandSlots < 2)
-			{
-				return false;
-			}
-			// or three commands if the CAS+Precharge command is not available
-			else if (!systemConfig->isAutoPrecharge() && (availableCommandSlots < 3))
-			{
-				return false;
-			}
+		}
+		// every transaction translates into at least two commands
+		else if (availableCommandSlots < 2)
+		{
+			return false;
+		}
+		// or three commands if the CAS+Precharge command is not available
+		else if (!systemConfig->isAutoPrecharge() && (availableCommandSlots < 3))
+		{
+			return false;
+		}
 		break;
 		// open page systems may, in the best case, add a CAS command to an already open row
 		// closing the row and precharging may be delayed
 
-	// all break down into PRE,RAS,CAS
-	// or CAS
+		// all break down into PRE,RAS,CAS
+		// or CAS
 	case OPEN_PAGE:
 		{		
 			// refresh transactions become only one command and are handled differently
@@ -139,8 +139,10 @@ bool dramChannel::transaction2commands(transaction *this_t)
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
 	// RAS, CAS+Precharge
-	if (systemConfig->getRowBufferManagementPolicy() == CLOSE_PAGE)
+	switch (systemConfig->getRowBufferManagementPolicy())
 	{
+	case CLOSE_PAGE:	
+
 		// refresh transactions become only one command and are handled differently
 		if (this_t->getType() == AUTO_REFRESH_TRANSACTION)
 		{
@@ -168,7 +170,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			return false;
 		}
 		// or three commands if the CAS+Precharge command is not available
-		else if ((systemConfig->isAutoPrecharge() == false) && (bank_q->freecount() < 3))
+		else if (!systemConfig->isAutoPrecharge() && (bank_q->freecount() < 3))
 		{
 			return false;
 		}
@@ -219,16 +221,16 @@ bool dramChannel::transaction2commands(transaction *this_t)
 				default:
 					cerr << "Unhandled transaction type: " << this_t->getType();
 					exit(-8);
-					break;
+					
 				}
 			}
 		}
-	}
+		break;
 
-	// open page systems may, in the best case, add a CAS command to an already open row
-	// closing the row and precharging may be delayed
-	else if (systemConfig->getRowBufferManagementPolicy() == OPEN_PAGE)
-	{
+		// open page systems may, in the best case, add a CAS command to an already open row
+		// closing the row and precharging may be delayed
+	case OPEN_PAGE:
+
 		// refresh transactions become only one command and are handled differently
 		if (this_t->getType() == AUTO_REFRESH_TRANSACTION)
 		{
@@ -252,8 +254,8 @@ bool dramChannel::transaction2commands(transaction *this_t)
 		}
 		else 
 		{
-			int queued_command_count = bank_q->size();
-			int empty_command_slot_count = bank_q->freecount();
+			unsigned queued_command_count = bank_q->size();
+			unsigned empty_command_slot_count = bank_q->freecount();
 			// look in the bank_q and see if there's a precharge for this row
 			bool bypass_allowed = true;
 			// go from tail to head
@@ -312,11 +314,14 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			// last, the precharge command
 			bank_q->push(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
 		}
-	}
-	else
-	{
+		break;
+
+
+	default:
+
 		cerr << "Unhandled row buffer management policy" << endl;
 		return false;
+
 	}
 
 	this_t->setDecodeTime(time);

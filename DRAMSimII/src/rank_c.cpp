@@ -5,11 +5,11 @@ using namespace DRAMSimII;
 rank_c::rank_c(const dramSettings *settings):
 lastRefreshTime(0),
 lastPrechargeTime(0),
-lastCASTime(-100),
-lastCASWTime(-100),
+lastCASTime(0),
+lastCASWTime(0),
 lastCASLength(0),
 lastCASWLength(0),
-rankID(-1),
+rankID(UINT_MAX),
 lastBankID(settings->bankCount - 1),
 lastRASTimes(4),
 bank(settings->bankCount,bank_c(settings))
