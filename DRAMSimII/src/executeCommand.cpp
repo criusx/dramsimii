@@ -21,11 +21,11 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	// do power calculations
 	//powerModel.recordCommand(this_command, channel, timing_specification);
 
-	rank_c &this_rank = rank[this_command->getAddress().rank_id];
+	rank_c &this_rank = rank[this_command->getAddress().rank];
 
-	bank_c &this_bank = this_rank.bank[this_command->getAddress().bank_id];
+	bank_c &this_bank = this_rank.bank[this_command->getAddress().bank];
 
-	this_rank.lastBankID = this_command->getAddress().bank_id;
+	this_rank.lastBankID = this_command->getAddress().bank;
 
 	int t_al = this_command->isPostedCAS() ? timing_specification.t_al : 0;
 
@@ -48,11 +48,11 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 			tick_t *this_ras_time = this_rank.lastRASTimes.acquire_item();
 
 			*this_ras_time = this_bank.lastRASTime = time;
-			this_bank.openRowID = this_command->getAddress().row_id;
+			this_bank.openRowID = this_command->getAddress().row;
 			this_bank.RASCount++;
 
 			this_rank.lastRASTimes.push(this_ras_time);
-			this_rank.lastBankID = this_command->getAddress().bank_id;
+			this_rank.lastBankID = this_command->getAddress().bank;
 
 			// specific for RAS command
 			this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_ras);
@@ -71,7 +71,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		this_rank.lastCASTime = time;
 		this_bank.lastCASLength = this_command->getLength();
 		this_rank.lastCASLength = this_command->getLength();
-		this_rank.lastBankID = this_command->getAddress().bank_id;
+		this_rank.lastBankID = this_command->getAddress().bank;
 		this_bank.CASCount++;
 		//this_command->getHost()->completion_time = time + timing_specification.t_cas;
 		
@@ -93,7 +93,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		this_rank.lastCASWTime = time;
 		this_bank.lastCASWLength = this_command->getLength();
 		this_rank.lastCASWLength = this_command->getLength();
-		this_rank.lastBankID = this_command->getAddress().bank_id;
+		this_rank.lastBankID = this_command->getAddress().bank;
 		this_bank.CASWCount++;
 		this_command->getHost()->setCompletionTime(time);
 		

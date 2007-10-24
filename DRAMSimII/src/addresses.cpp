@@ -9,22 +9,32 @@ using namespace DRAMSimII;
 using namespace std;
 
 addresses::addresses():
-virt_addr(UINT_MAX),
-phys_addr(ULLONG_MAX),
-chan_id(UINT_MAX),
-rank_id(UINT_MAX),
-bank_id(UINT_MAX),
-row_id(UINT_MAX),
-col_id(UINT_MAX)
+virtualAddress(UINT_MAX),
+physicalAddress(ULLONG_MAX),
+channel(UINT_MAX),
+rank(UINT_MAX),
+bank(UINT_MAX),
+row(UINT_MAX),
+column(UINT_MAX)
+{}
+
+addresses::addresses(unsigned long long pA):
+virtualAddress(0),
+physicalAddress(pA),
+channel(0),
+rank(0),
+bank(0),
+row(0),
+column(0)
 {}
 
 std::ostream &DRAMSimII::operator <<(std::ostream &os, const addresses &this_a)
 {
-	os << "addr[0x" << setbase(16) << this_a.phys_addr <<
-		"] chan[" << setbase(16) << this_a.chan_id << "] rank[" <<
-		this_a.rank_id << "] bank[" << setw(2) << setbase(16) << this_a.bank_id <<
-		"] row[" << setw(4) << setbase(16) << this_a.row_id << "] col[" <<
-		setbase(16) << this_a.col_id << "]";
+	os << "addr[0x" << setbase(16) << this_a.physicalAddress <<
+		"] chan[" << setbase(16) << this_a.channel << "] rank[" <<
+		this_a.rank << "] bank[" << setw(2) << setbase(16) << this_a.bank <<
+		"] row[" << setw(4) << setbase(16) << this_a.row << "] col[" <<
+		setbase(16) << this_a.column << "]";
 	return os;
 }
 

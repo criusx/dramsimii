@@ -8,6 +8,8 @@
 using namespace std;
 using namespace DRAMSimII;
 
+#define STATS_INTERVAL 1000000
+
 M5dramSystem::M5dramSystem(Params *p):
 PhysicalMemory(p), tickEvent(this), needRetry(false)
 {	
@@ -60,6 +62,8 @@ PhysicalMemory(p), tickEvent(this), needRetry(false)
 	dramSettings *settings = new dramSettings(2,settingsMap);
 	ds = new dramSystem(settings);
 	delete settings;
+
+	nextStats = STATS_INTERVAL;
 
 	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency()));
 
@@ -200,12 +204,11 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
 
-	static tick_t lastPowerCalculationTime = 1000000;
-	if (lastPowerCalculationTime-- == 0)
+	if (currentMemCycle > nextStats)
 	{
+		nextStats += STATS_INTERVAL;
 		memory->ds->doPowerCalculation();
 		memory->ds->printStatistics();
-		lastPowerCalculationTime = 1000000;
 	}
 
 #ifdef M5DEBUG
@@ -304,10 +307,10 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
 			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
 			memory->needRetry = true;
-			memory->mostRecentChannel = trans->getAddresses().chan_id;
+			memory->mostRecentChannel = trans->getAddresses().channel;
 
 #ifdef M5DEBUG
-			timingOutStream << "Wait for retry before sending more to ch[" << trans->getAddresses().chan_id << "]" << endl;
+			timingOutStream << "Wait for retry before sending more to ch[" << trans->getAddresses().channel << "]" << endl;
 #endif
 			return false;
 		}
@@ -316,7 +319,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			if (memory->tickEvent.scheduled())
 				memory->tickEvent.deschedule();
 
-			tick_t next = memory->ds->nextTick();
+			tick_t next = min(nextStats,memory->ds->nextTick());
 			assert(next < TICK_T_MAX);
 			if (next < TICK_T_MAX)
 			{
@@ -334,13 +337,20 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 void
 M5dramSystem::TickEvent::process()
 {	
-	tick_t now = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
+	tick_t currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
+
+	if (currentMemCycle > nextStats)
+	{
+		nextStats += STATS_INTERVAL;
+		memory->ds->doPowerCalculation();
+		memory->ds->printStatistics();
+	}
 #ifdef M5DEBUG
-	timingOutStream << "intWake [" << std::dec << curTick << "][" << std::dec << now << "]" << endl;
+	timingOutStream << "intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]" << endl;
 #endif
 
 	// move memory channels to the current time
-	memory->moveDramSystemToTime(now);
+	memory->moveDramSystemToTime(currentMemCycle);
 
 	// search for eligible refresh transactions
 
@@ -349,7 +359,7 @@ M5dramSystem::TickEvent::process()
 		memory->tickEvent.deschedule();
 
 	// determine the next time to wake up
-	tick_t next = memory->ds->nextTick();	
+	tick_t next = min(nextStats,memory->ds->nextTick());	
 
 	// nextTick() returns TICK_T_MAX if there is nothing else to wake up for
 	if (next < TICK_T_MAX)

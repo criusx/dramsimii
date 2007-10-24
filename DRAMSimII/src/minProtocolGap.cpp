@@ -15,9 +15,9 @@ int dramChannel::minProtocolGap(const command *this_c) const
 
 	//const dramChannel &channel = dramSystem::channel[channel_id];
 
-	const unsigned this_rank = this_c->getAddress().rank_id;
+	const unsigned this_rank = this_c->getAddress().rank;
 	const rank_c &currentRank = rank[this_rank];
-	const bank_c &currentBank = currentRank.bank[this_c->getAddress().bank_id];
+	const bank_c &currentBank = currentRank.bank[this_c->getAddress().bank];
 	//const tick_t now = time;
 	//int t_ras_gap = 0;
 	tick_t other_r_last_cas_time;
@@ -233,7 +233,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 	}
 
 #ifdef DEBUG_MIN_PROTOCOL_GAP
-	outStream << this_c->this_command;
+	outStream << this_c->commandType;
 	outStream << " ras[" << setw(2) << t_ras_gap << "] rrd[" << setw(2) << t_rrd_gap << "] faw[" << setw(2) << t_faw_gap << "] cas[" << setw(2) << t_cas_gap << "] rrd[" << setw(2) << t_rrd_gap << "] rp[" << setw(2) << t_rp_gap << "] min[" << setw(2) << min_gap << "]" << endl;
 #endif
 

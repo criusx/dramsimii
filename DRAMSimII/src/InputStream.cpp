@@ -196,11 +196,11 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 				return FAILURE;
 			}
 			if((this_e.attributes != control) || 
-				(((this_e.address.phys_addr ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
+				(((this_e.address.physicalAddress ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
 			{
 				bursting = false;
 				timestamp = static_cast<tick_t>(static_cast<double>(timestamp) * ascii2multiplier(input));
-				this_e.address.phys_addr = 0x3FFFFFFF & address; // mask out top addr bit
+				this_e.address.physicalAddress = 0x3FFFFFFF & address; // mask out top addr bit
 				this_e.attributes = CONTROL_TRANSACTION;
 				this_e.timestamp = timestamp;
 				burst_count = 1;
@@ -210,12 +210,12 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 				burst_count++;
 			}
 		}
-		this_e.address.phys_addr = address;
+		this_e.address.physicalAddress = address;
 		this_e.timestamp = timestamp;
 	} 
 	else if (type == MASE_TRACE)
 	{
-		trace_file >> std::hex >> this_e.address.phys_addr >> input >> std::dec >> this_e.timestamp;
+		trace_file >> std::hex >> this_e.address.physicalAddress >> input >> std::dec >> this_e.timestamp;
 
 		if(!trace_file.good()) /// found starting Hex address 
 		{
@@ -248,7 +248,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 	}
 	else if (type == MAPPED)
 	{
-		trace_file >> std::dec >> this_e.timestamp >> input >> std::dec >> this_e.address.chan_id >> this_e.address.rank_id >> this_e.address.bank_id >> this_e.address.row_id >> this_e.address.col_id;
+		trace_file >> std::dec >> this_e.timestamp >> input >> std::dec >> this_e.address.channel >> this_e.address.rank >> this_e.address.bank >> this_e.address.row >> this_e.address.column;
 
 		if(!trace_file.good()) /// found starting Hex address 
 		{
@@ -295,6 +295,5 @@ enum input_type_t inputStream::toInputToken(const string &input) const
 		return RANDOM;
 	else if (input == "mapped" || input == "Mapped" || input == "MAPPED")
 		return MAPPED;
-	else
-		return UNKNOWN;
+	return MAPPED;
 }

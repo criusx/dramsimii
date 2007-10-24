@@ -8,12 +8,12 @@ using namespace DRAMSimII;
 queue<command> command::freeCommandPool(4*COMMAND_QUEUE_SIZE,true);
 
 command::command():
-this_command(RETIRE_COMMAND),
-start_time(0),
-enqueue_time(0),
-completion_time(0),
+commandType(RETIRE_COMMAND),
+startTime(0),
+enqueueTime(0),
+completionTime(0),
 addr(),
-host_t(NULL),
+hostTransaction(NULL),
 link_comm_tran_comp_time(0),
 amb_proc_comp_time(0),
 dimm_comm_tran_comp_time(0),
@@ -26,17 +26,17 @@ tran_id(0),
 data_word(0),
 data_word_position(0),
 refresh(0),
-posted_cas(false),
+postedCAS(false),
 length(0)
 {}
 
 command::command(const addresses address, const command_type_t commandType, const tick_t enqueueTime, transaction *hostTransaction, const bool postedCAS):
-this_command(commandType),
-start_time(-1),
-enqueue_time(enqueueTime),
-completion_time(-1),
+commandType(commandType),
+startTime(-1),
+enqueueTime(enqueueTime),
+completionTime(-1),
 addr(address),
-host_t(hostTransaction),
+hostTransaction(hostTransaction),
 link_comm_tran_comp_time(0),
 amb_proc_comp_time(0),
 dimm_comm_tran_comp_time(0),
@@ -49,17 +49,17 @@ tran_id(0),
 data_word(0),
 data_word_position(0),
 refresh(0),
-posted_cas(postedCAS),
+postedCAS(postedCAS),
 length(0)
 {}
 
 command::command(const addresses address, const command_type_t commandType, const tick_t enqueueTime, transaction *hostTransaction, const bool postedCAS, const int _length):
-this_command(commandType),
-start_time(-1),
-enqueue_time(enqueueTime),
-completion_time(-1),
+commandType(commandType),
+startTime(-1),
+enqueueTime(enqueueTime),
+completionTime(-1),
 addr(address),
-host_t(hostTransaction),
+hostTransaction(hostTransaction),
 link_comm_tran_comp_time(0),
 amb_proc_comp_time(0),
 dimm_comm_tran_comp_time(0),
@@ -72,7 +72,7 @@ tran_id(0),
 data_word(0),
 data_word_position(0),
 refresh(0),
-posted_cas(postedCAS),
+postedCAS(postedCAS),
 length(_length)
 {}
 
@@ -125,17 +125,17 @@ ostream &DRAMSimII::operator<<(ostream &os, const command_type_t &command)
 
 ostream &DRAMSimII::operator<<(ostream &os, const command &this_c)
 {
-	os << this_c.this_command << this_c.addr << " S[" << std::dec << this_c.start_time << "] Q[" << std::dec << this_c.enqueue_time << "] E[" << std::dec << this_c.completion_time << std::dec << "] T[" << this_c.completion_time - this_c.start_time << "] DLY[" << std::dec << this_c.start_time - this_c.enqueue_time << "]";
+	os << this_c.commandType << this_c.addr << " S[" << std::dec << this_c.startTime << "] Q[" << std::dec << this_c.enqueueTime << "] E[" << std::dec << this_c.completionTime << std::dec << "] T[" << this_c.completionTime - this_c.startTime << "] DLY[" << std::dec << this_c.startTime - this_c.enqueueTime << "]";
 	return os;
 }
 
 command::command(const command &rhs):
-this_command(rhs.this_command),
-start_time(rhs.start_time),
-enqueue_time(rhs.enqueue_time),
-completion_time(rhs.completion_time),
+commandType(rhs.commandType),
+startTime(rhs.startTime),
+enqueueTime(rhs.enqueueTime),
+completionTime(rhs.completionTime),
 addr(rhs.addr),
-host_t(rhs.host_t),
+hostTransaction(rhs.hostTransaction),
 link_comm_tran_comp_time(rhs.link_comm_tran_comp_time),
 amb_proc_comp_time(rhs.amb_down_proc_comp_time),
 dimm_comm_tran_comp_time(rhs.dimm_comm_tran_comp_time),
@@ -148,17 +148,17 @@ tran_id(rhs.tran_id),
 data_word(rhs.data_word),
 data_word_position(rhs.data_word_position),
 refresh(rhs.refresh),
-posted_cas(rhs.posted_cas),
+postedCAS(rhs.postedCAS),
 length(rhs.length)
 {}
 
 command::command(const command *rhs):
-this_command(rhs->this_command),
-start_time(rhs->start_time),
-enqueue_time(rhs->enqueue_time),
-completion_time(rhs->completion_time),
+commandType(rhs->commandType),
+startTime(rhs->startTime),
+enqueueTime(rhs->enqueueTime),
+completionTime(rhs->completionTime),
 addr(rhs->addr),
-host_t(rhs->host_t),
+hostTransaction(rhs->hostTransaction),
 link_comm_tran_comp_time(rhs->link_comm_tran_comp_time),
 amb_proc_comp_time(rhs->amb_down_proc_comp_time),
 dimm_comm_tran_comp_time(rhs->dimm_comm_tran_comp_time),
@@ -171,7 +171,7 @@ tran_id(rhs->tran_id),
 data_word(rhs->data_word),
 data_word_position(rhs->data_word_position),
 refresh(rhs->refresh),
-posted_cas(rhs->posted_cas),
+postedCAS(rhs->postedCAS),
 length(rhs->length)
 {}
 

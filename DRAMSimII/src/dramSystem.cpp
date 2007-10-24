@@ -109,7 +109,7 @@ bool dramSystem::convertAddress(addresses &this_a) const
 	static unsigned col_size_depth	= log2(systemConfig.getDRAMType() == DRDRAM ? 16 : systemConfig.getColumnSize());
 
 	// strip away the byte address portion
-	unsigned input_a = this_a.phys_addr >> col_size_depth;
+	unsigned input_a = this_a.physicalAddress >> col_size_depth;
 
 	
 	unsigned cacheline_size;
@@ -142,30 +142,30 @@ bool dramSystem::convertAddress(addresses &this_a) const
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> chan_addr_depth;
 		temp_a  = input_a << chan_addr_depth;
-		this_a.chan_id = temp_a ^ temp_b;     		/* strip out the channel address */
+		this_a.channel = temp_a ^ temp_b;     		/* strip out the channel address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> col_addr_depth;
 		temp_a  = input_a << col_addr_depth;
-		this_a.col_id = temp_a ^ temp_b;     		/* strip out the column address */
+		this_a.column = temp_a ^ temp_b;     		/* strip out the column address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> rank_addr_depth;
 		temp_a  = input_a << rank_addr_depth;
-		this_a.rank_id = temp_a ^ temp_b;		/* this should strip out the rank address */
+		this_a.rank = temp_a ^ temp_b;		/* this should strip out the rank address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> bank_addr_depth;
 		temp_a  = input_a << bank_addr_depth;
-		this_a.bank_id = temp_a ^ temp_b;		/* this should strip out the bank address */
+		this_a.bank = temp_a ^ temp_b;		/* this should strip out the bank address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> row_addr_depth;
 		temp_a  = input_a << row_addr_depth;
-		this_a.row_id = temp_a ^ temp_b;		/* this should strip out the row address */
+		this_a.row = temp_a ^ temp_b;		/* this should strip out the row address */
 		if (input_a != 0)				/* If there is still "stuff" left, the input address is out of range */
 		{
-			cerr << "Address out of range[" << std::hex << this_a.phys_addr << "] of available physical memory" << endl;
+			cerr << "Address out of range[" << std::hex << this_a.physicalAddress << "] of available physical memory" << endl;
 		}
 		break;
 
@@ -232,32 +232,32 @@ bool dramSystem::convertAddress(addresses &this_a) const
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> chan_addr_depth;
 		temp_a  = input_a << chan_addr_depth;
-		this_a.chan_id = temp_a ^ temp_b;     		/* strip out the channel address */
+		this_a.channel = temp_a ^ temp_b;     		/* strip out the channel address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> col_id_hi_depth;
 		temp_a  = input_a << col_id_hi_depth;
 		col_id_hi = temp_a ^ temp_b;     		/* strip out the column hi address */
 
-		this_a.col_id = (col_id_hi << col_id_lo_depth) | col_id_lo;
+		this_a.column = (col_id_hi << col_id_lo_depth) | col_id_lo;
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> bank_addr_depth;
 		temp_a  = input_a << bank_addr_depth;
-		this_a.bank_id = temp_a ^ temp_b;     		/* strip out the bank address */
+		this_a.bank = temp_a ^ temp_b;     		/* strip out the bank address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> rank_addr_depth;
 		temp_a  = input_a << rank_addr_depth;
-		this_a.rank_id = temp_a ^ temp_b;     		/* strip out the rank address */
+		this_a.rank = temp_a ^ temp_b;     		/* strip out the rank address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> row_addr_depth;
 		temp_a  = input_a << row_addr_depth;
-		this_a.row_id = temp_a ^ temp_b;		/* this should strip out the row address */
+		this_a.row = temp_a ^ temp_b;		/* this should strip out the row address */
 		if (input_a != 0) // If there is still "stuff" left, the input address is out of range
 		{
-			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl << this_a << endl;
+			cerr << "address out of range[" << this_a.physicalAddress << "] of available physical memory" << endl << this_a << endl;
 			//print_addresses(this_a);
 		}
 		break;
@@ -312,32 +312,32 @@ bool dramSystem::convertAddress(addresses &this_a) const
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> chan_addr_depth;
 		temp_a  = input_a << chan_addr_depth;
-		this_a.chan_id = temp_a ^ temp_b;     		/* strip out the channel address */
+		this_a.channel = temp_a ^ temp_b;     		/* strip out the channel address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> col_id_hi_depth;
 		temp_a  = input_a << col_id_hi_depth;
 		col_id_hi = temp_a ^ temp_b;     		/* strip out the column hi address */
 
-		this_a.col_id = (col_id_hi << col_id_lo_depth) | col_id_lo;
+		this_a.column = (col_id_hi << col_id_lo_depth) | col_id_lo;
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> bank_addr_depth;
 		temp_a  = input_a << bank_addr_depth;
-		this_a.bank_id = temp_a ^ temp_b;     		/* strip out the bank address */
+		this_a.bank = temp_a ^ temp_b;     		/* strip out the bank address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> row_addr_depth;
 		temp_a  = input_a << row_addr_depth;
-		this_a.row_id = temp_a ^ temp_b;		/* this should strip out the row address */
+		this_a.row = temp_a ^ temp_b;		/* this should strip out the row address */
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> rank_addr_depth;
 		temp_a  = input_a << rank_addr_depth;
-		this_a.rank_id = temp_a ^ temp_b;     		/* strip out the rank address */
+		this_a.rank = temp_a ^ temp_b;     		/* strip out the rank address */
 
 		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
-			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
+			cerr << "address out of range[" << this_a.physicalAddress << "] of available physical memory" << endl;
 		}
 		break;
 
@@ -355,43 +355,43 @@ bool dramSystem::convertAddress(addresses &this_a) const
 		*     No need to remap address with variable number of ranks.  Address just goes up to rank id, if there is more than XXX MB of memory.
 		*     Draw back to this scheme is that we're not effectively using banks.
 		*/
-		input_a = this_a.phys_addr >> 3;	/* strip away byte address */
+		input_a = this_a.physicalAddress >> 3;	/* strip away byte address */
 
 		temp_b = input_a;				/* save away what is left of original address */
 		input_a = input_a >> 10;
 		temp_a  = input_a << 10;				/* 11-3 */
-		this_a.col_id = temp_a ^ temp_b;     		/* strip out the column address */
+		this_a.column = temp_a ^ temp_b;     		/* strip out the column address */
 
 		temp_b = input_a;				/* save away what is left of original address */
 		input_a = input_a >> 2;
 		temp_a  = input_a << 2;				/* 14:13 */
-		this_a.bank_id = temp_a ^ temp_b;		/* strip out the bank address */
+		this_a.bank = temp_a ^ temp_b;		/* strip out the bank address */
 
-		temp_b = this_a.phys_addr >> 15;
+		temp_b = this_a.physicalAddress >> 15;
 		input_a =  temp_b >> 1;
 		temp_a  = input_a << 1;				/* 15 */
 		bit_15 = temp_a ^ temp_b;			/* strip out bit 15, save for later  */
 
-		temp_b = this_a.phys_addr >> 16;
+		temp_b = this_a.physicalAddress >> 16;
 		input_a =  temp_b >> 11;
 		temp_a  = input_a << 11;			/* 26:16 */
 		bits_26_to_16 = temp_a ^ temp_b;		/* strip out bits 26:16, save for later  */
 
-		temp_b = this_a.phys_addr >> 27;
+		temp_b = this_a.physicalAddress >> 27;
 		input_a =  temp_b >> 1;
 		temp_a  = input_a << 1;				/* 27 */
 		bit_27 = temp_a ^ temp_b;			/* strip out bit 27 */
 
-		this_a.row_id = (bit_27 << 13) | (bit_15 << 12) | bits_26_to_16 ;
+		this_a.row = (bit_27 << 13) | (bit_15 << 12) | bits_26_to_16 ;
 
-		temp_b = this_a.phys_addr >> 28;
+		temp_b = this_a.physicalAddress >> 28;
 		input_a = temp_b >> 2;
 		temp_a  = input_a << 2;				/* 29:28 */
-		this_a.rank_id = temp_a ^ temp_b;		/* strip out the rank id */
+		this_a.rank = temp_a ^ temp_b;		/* strip out the rank id */
 
-		this_a.chan_id = 0;				/* Intel 845G has only a single channel dram controller */
+		this_a.channel = 0;				/* Intel 845G has only a single channel dram controller */
 		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
-			cerr << "address out of range[" << this_a.phys_addr << "] of available physical memory" << endl;
+			cerr << "address out of range[" << this_a.physicalAddress << "] of available physical memory" << endl;
 		}
 		break;
 
@@ -439,44 +439,44 @@ bool dramSystem::convertAddress(addresses &this_a) const
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> chan_addr_depth;
 		// strip out the channel address 
-		this_a.chan_id = temp_b ^ (input_a << chan_addr_depth); 
+		this_a.channel = temp_b ^ (input_a << chan_addr_depth); 
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= bank_addr_depth;
 		// strip out the bank address 
-		this_a.bank_id = temp_b ^ (input_a << bank_addr_depth);
+		this_a.bank = temp_b ^ (input_a << bank_addr_depth);
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= rank_addr_depth;
 		// strip out the rank address 
-		this_a.rank_id = temp_b ^ (input_a << rank_addr_depth);		
+		this_a.rank = temp_b ^ (input_a << rank_addr_depth);		
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= col_id_hi_depth;
 		// strip out the column hi address
 		col_id_hi = temp_b ^ (input_a << col_id_hi_depth);
 
-		this_a.col_id = (col_id_hi << col_id_lo_depth) | col_id_lo;
+		this_a.column = (col_id_hi << col_id_lo_depth) | col_id_lo;
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= row_addr_depth;
 		// strip out the row address
-		this_a.row_id = temp_b ^ (input_a << row_addr_depth);
+		this_a.row = temp_b ^ (input_a << row_addr_depth);
 
 		// If there is still "stuff" left, the input address is out of range
 		if(input_a != 0)
 		{
-			cerr << "Mem address out of range[" << std::hex << this_a.phys_addr << "] of available physical memory." << endl;
+			cerr << "Mem address out of range[" << std::hex << this_a.physicalAddress << "] of available physical memory." << endl;
 		}
 		break;
 
 	default:
 		cerr << "Unknown address mapping scheme, mapping chan, rank, bank to zero: " << systemConfig.getAddressMappingScheme() << endl;
-		this_a.chan_id = 0;				/* don't know what this policy is.. Map everything to 0 */
-		this_a.rank_id = 0;
-		this_a.bank_id = 0;
-		this_a.row_id  = 0;
-		this_a.col_id  = 0;
+		this_a.channel = 0;				/* don't know what this policy is.. Map everything to 0 */
+		this_a.rank = 0;
+		this_a.bank = 0;
+		this_a.row  = 0;
+		this_a.column  = 0;
 		break;
 	}
 
@@ -511,51 +511,51 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 		// check against last transaction to see what the chan_id was, and whether we need to change channels or not
 		if (input_stream.getChannelLocality() * UINT_MAX < j)
 		{
-			this_t->getAddresses().chan_id = (this_t->getAddresses().chan_id + (j % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
+			this_t->getAddresses().channel = (this_t->getAddresses().channel + (j % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
 		}
 
 		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
 		// or keep to this rank_id 
 
-		int rank_id = channel[this_t->getAddresses().chan_id].get_last_rank_id();
+		int rank_id = channel[this_t->getAddresses().channel].get_last_rank_id();
 
 		rand_s(&j);
 		if ((input_stream.getRankLocality() * UINT_MAX < j) && (systemConfig.getRankCount() > 1))
 		{
-			rank_id = this_t->getAddresses().rank_id = 
+			rank_id = this_t->getAddresses().rank = 
 				(rank_id + 1 + (j % (systemConfig.getRankCount() - 1))) % systemConfig.getRankCount();
 		}
 		else
 		{
-			this_t->getAddresses().rank_id = rank_id;
+			this_t->getAddresses().rank = rank_id;
 		}
 
-		int bank_id = channel[this_t->getAddresses().chan_id].getRank(rank_id).lastBankID;
+		int bank_id = channel[this_t->getAddresses().channel].getRank(rank_id).lastBankID;
 
 		rand_s(&j);
 
 		if ((input_stream.getBankLocality() * UINT_MAX < j) && (systemConfig.getBankCount() > 1))
 		{
-			bank_id = this_t->getAddresses().bank_id =
+			bank_id = this_t->getAddresses().bank =
 				(bank_id + 1 + (j % (systemConfig.getBankCount() - 1))) % systemConfig.getBankCount();
 		}
 		else
 		{
-			this_t->getAddresses().bank_id = bank_id;
+			this_t->getAddresses().bank = bank_id;
 		}
 
-		int row_id = channel[this_t->getAddresses().chan_id].getRank(rank_id).bank[bank_id].openRowID;
+		int row_id = channel[this_t->getAddresses().channel].getRank(rank_id).bank[bank_id].openRowID;
 
 		rand_s(&j);
 
 		if (input_stream.getRowLocality() * UINT_MAX < j)
 		{
-			this_t->getAddresses().row_id = (row_id + 1 + (j % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
-			row_id = this_t->getAddresses().row_id;
+			this_t->getAddresses().row = (row_id + 1 + (j % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
+			row_id = this_t->getAddresses().row;
 		}
 		else
 		{
-			this_t->getAddresses().row_id = row_id;
+			this_t->getAddresses().row = row_id;
 		}
 
 		rand_s(&j);
@@ -599,7 +599,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 		}
 
 		this_t->setEnqueueTime(input_stream.getTime()); // FIXME: arrival time may be <= to enqueue time
-		this_t->getAddresses().col_id = 0;
+		this_t->getAddresses().column = 0;
 	}
 }
 
@@ -658,10 +658,10 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 	else
 	{
 		// read but do not remove
-		const transaction *refresh_t = channel[temp_t->getAddresses().chan_id].readRefresh();
+		const transaction *refresh_t = channel[temp_t->getAddresses().channel].readRefresh();
 
 		if (refresh_t->getEnqueueTime() < temp_t->getEnqueueTime())
-			this_t = channel[temp_t->getAddresses().chan_id].getRefresh();
+			this_t = channel[temp_t->getAddresses().channel].getRefresh();
 		else
 		{
 			this_t = temp_t;

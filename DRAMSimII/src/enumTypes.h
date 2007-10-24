@@ -71,8 +71,7 @@ namespace DRAMSimII
 		RANDOM,
 		MAPPED,
 		ALPHASIM,
-		GEMS,
-		UNKNOWN
+		GEMS
 	};
 
 	enum input_status_t

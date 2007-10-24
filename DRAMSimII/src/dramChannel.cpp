@@ -46,7 +46,7 @@ algorithm(settings)
 		{
 			transaction *newTrans = new transaction();
 			newTrans->setType(AUTO_REFRESH_TRANSACTION);
-			newTrans->getAddresses().rank_id = j;
+			newTrans->getAddresses().rank = j;
 			newTrans->setEnqueueTime(j * step);
 			refreshCounter[j] = newTrans;
 
@@ -307,7 +307,7 @@ transaction *dramChannel::getRefresh()
 	refreshCounter[earliestRank] = new transaction();
 	refreshCounter[earliestRank]->setEnqueueTime(earliestTransaction->getEnqueueTime() + timing_specification.t_refi);
 	refreshCounter[earliestRank]->setType(AUTO_REFRESH_TRANSACTION);
-	refreshCounter[earliestRank]->getAddresses().rank_id = earliestRank;
+	refreshCounter[earliestRank]->getAddresses().rank = earliestRank;
 
 	return earliestTransaction;
 }

@@ -7,60 +7,60 @@ using namespace std;
 using namespace DRAMSimII;
 
 dramSystemConfiguration::dramSystemConfiguration(const dramSettings *settings):
-command_ordering_algorithm(settings->commandOrderingAlgorithm),
+commandOrderingAlgorithm(settings->commandOrderingAlgorithm),
 transactionOrderingAlgorithm(settings->transactionOrderingAlgorithm),
-config_type(BASELINE_CONFIG), // FIXME: add FBD
-refresh_time(settings->dataRate * settings->refreshTime),
-refresh_policy(settings->refreshPolicy),
-col_size(settings->columnSize),
-row_size(settings->rowSize),
-cacheline_size(settings->cacheLineSize),
-seniority_age_limit(settings->seniorityAgeLimit),
+configType(BASELINE_CONFIG), // FIXME: add FBD
+refreshTime(settings->dataRate * settings->refreshTime),
+refreshPolicy(settings->refreshPolicy),
+columnSize(settings->columnSize),
+rowSize(settings->rowSize),
+cachelineSize(settings->cacheLineSize),
+seniorityAgeLimit(settings->seniorityAgeLimit),
 dram_type(settings->dramType),
-row_buffer_management_policy(settings->rowBufferManagementPolicy),
-addr_mapping_scheme(settings->addressMappingScheme),
+rowBufferManagementPolicy(settings->rowBufferManagementPolicy),
+addressMappingScheme(settings->addressMappingScheme),
 datarate(settings->dataRate),
-posted_cas(settings->postedCAS),
-read_write_grouping(settings->readWriteGrouping),
-auto_precharge(settings->autoPrecharge),
-clock_granularity(settings->clockGranularity),
-cachelines_per_row(settings->cachelinesPerRow),
+postedCAS(settings->postedCAS),
+readWriteGrouping(settings->readWriteGrouping),
+autoPrecharge(settings->autoPrecharge),
+clockGranularity(settings->clockGranularity),
+cachelinesPerRow(settings->cachelinesPerRow),
 channelCount(settings->channelCount),
 rankCount(settings->rankCount),
 bankCount(settings->bankCount),
 rowCount(settings->rowCount),
 columnCount(settings->columnCount),
-short_burst_ratio(settings->shortBurstRatio),
-read_percentage(settings->readPercentage)
+shortBurstRatio(settings->shortBurstRatio),
+readPercentage(settings->readPercentage)
 {}
 
 
 dramSystemConfiguration::dramSystemConfiguration(const dramSystemConfiguration *rhs):
-command_ordering_algorithm(rhs->command_ordering_algorithm),
+commandOrderingAlgorithm(rhs->commandOrderingAlgorithm),
 transactionOrderingAlgorithm(rhs->transactionOrderingAlgorithm),
-config_type(rhs->config_type),
-refresh_time(rhs->refresh_time),
-refresh_policy(rhs->refresh_policy),
-col_size(rhs->col_size),
-row_size(rhs->row_size),
-cacheline_size(rhs->cacheline_size),
-seniority_age_limit(rhs->seniority_age_limit),
+configType(rhs->configType),
+refreshTime(rhs->refreshTime),
+refreshPolicy(rhs->refreshPolicy),
+columnSize(rhs->columnSize),
+rowSize(rhs->rowSize),
+cachelineSize(rhs->cachelineSize),
+seniorityAgeLimit(rhs->seniorityAgeLimit),
 dram_type(rhs->dram_type),
-row_buffer_management_policy(rhs->row_buffer_management_policy),
-addr_mapping_scheme(rhs->addr_mapping_scheme),
+rowBufferManagementPolicy(rhs->rowBufferManagementPolicy),
+addressMappingScheme(rhs->addressMappingScheme),
 datarate(rhs->datarate),
-posted_cas(rhs->posted_cas),
-read_write_grouping(rhs->read_write_grouping),
-auto_precharge(rhs->auto_precharge),
-clock_granularity(rhs->clock_granularity),
-cachelines_per_row(rhs->cachelines_per_row),
+postedCAS(rhs->postedCAS),
+readWriteGrouping(rhs->readWriteGrouping),
+autoPrecharge(rhs->autoPrecharge),
+clockGranularity(rhs->clockGranularity),
+cachelinesPerRow(rhs->cachelinesPerRow),
 channelCount(rhs->channelCount),
 rankCount(rhs->rankCount),
 bankCount(rhs->bankCount),
 rowCount(rhs->rowCount),
 columnCount(rhs->columnCount),
-short_burst_ratio(rhs->short_burst_ratio),
-read_percentage(rhs->read_percentage)
+shortBurstRatio(rhs->shortBurstRatio),
+readPercentage(rhs->readPercentage)
 {}
 
 
@@ -81,30 +81,30 @@ dramSystemConfiguration& dramSystemConfiguration::operator =(const DRAMSimII::dr
 	{
 		return *this;
 	}
-	command_ordering_algorithm = rs.command_ordering_algorithm;
-	config_type = rs.config_type;
-	refresh_time = rs.refresh_time;
-	refresh_policy = rs.refresh_policy;
-	col_size = rs.col_size;
-	row_size = rs.row_size;
+	commandOrderingAlgorithm = rs.commandOrderingAlgorithm;
+	configType = rs.configType;
+	refreshTime = rs.refreshTime;
+	refreshPolicy = rs.refreshPolicy;
+	columnSize = rs.columnSize;
+	rowSize = rs.rowSize;
 	rowCount = rs.rowCount;
 	columnCount = rs.columnCount;
-	cacheline_size = rs.cacheline_size;
-	seniority_age_limit = rs.seniority_age_limit;
+	cachelineSize = rs.cachelineSize;
+	seniorityAgeLimit = rs.seniorityAgeLimit;
 	dram_type = rs.dram_type;
-	row_buffer_management_policy = rs.row_buffer_management_policy;
-	addr_mapping_scheme = rs.addr_mapping_scheme;
+	rowBufferManagementPolicy = rs.rowBufferManagementPolicy;
+	addressMappingScheme = rs.addressMappingScheme;
 	datarate = rs.datarate;
-	posted_cas = rs.posted_cas;
-	read_write_grouping = rs.read_write_grouping;
-	auto_precharge = rs.auto_precharge;
-	clock_granularity = rs.clock_granularity;
-	cachelines_per_row = rs.cachelines_per_row;
+	postedCAS = rs.postedCAS;
+	readWriteGrouping = rs.readWriteGrouping;
+	autoPrecharge = rs.autoPrecharge;
+	clockGranularity = rs.clockGranularity;
+	cachelinesPerRow = rs.cachelinesPerRow;
 	channelCount = rs.channelCount;
 	rankCount = rs.rankCount;
 	bankCount = rs.bankCount;
-	short_burst_ratio = rs.short_burst_ratio;
-	read_percentage = rs.read_percentage;
+	shortBurstRatio = rs.shortBurstRatio;
+	readPercentage = rs.readPercentage;
 
 	return *this;
 }
@@ -129,56 +129,56 @@ dramSystemConfiguration::dramSystemConfiguration(dramSystem::Params *parameter)
 	noRefresh = parameter->refresh;
 
 	if (parameter->rowBufferManagmentPolicy == "open_page")
-		row_buffer_management_policy = OPEN_PAGE;
+		rowBufferManagementPolicy = OPEN_PAGE;
 	else if (parameter->rowBufferManagmentPolicy == "close_page")
-		row_buffer_management_policy = CLOSE_PAGE;
+		rowBufferManagementPolicy = CLOSE_PAGE;
 	else
-		row_buffer_management_policy = AUTO_PAGE;
+		rowBufferManagementPolicy = AUTO_PAGE;
 
-	auto_precharge = parameter->autoPrecharge;
+	autoPrecharge = parameter->autoPrecharge;
 
 	if (parameter->addrMappingScheme == "burger_base_map")
-		addr_mapping_scheme = BURGER_BASE_MAP;
+		addressMappingScheme = BURGER_BASE_MAP;
 	else if (parameter->addrMappingScheme == "close_page_baseline")
-		addr_mapping_scheme = CLOSE_PAGE_BASELINE;
+		addressMappingScheme = CLOSE_PAGE_BASELINE;
 	else if (parameter->addrMappingScheme == "INTEL845G_MAP")
-		addr_mapping_scheme = INTEL845G_MAP;
+		addressMappingScheme = INTEL845G_MAP;
 	else if (parameter->addrMappingScheme == "sdram_base_map")
-		addr_mapping_scheme = SDRAM_BASE_MAP;
+		addressMappingScheme = SDRAM_BASE_MAP;
 	else if (parameter->addrMappingScheme == "sdram_close_page_map")
-		addr_mapping_scheme = SDRAM_CLOSE_PAGE_MAP;
+		addressMappingScheme = SDRAM_CLOSE_PAGE_MAP;
 	else
-		addr_mapping_scheme = SDRAM_HIPERF_MAP;
+		addressMappingScheme = SDRAM_HIPERF_MAP;
 
 	datarate = parameter->datarate;
 
-	refresh_time = parameter->refreshTime * datarate;
+	refreshTime = parameter->refreshTime * datarate;
 
-	read_write_grouping = parameter->readWriteGrouping;
+	readWriteGrouping = parameter->readWriteGrouping;
 
 	if (parameter->refreshPolicy == "none" || parameter->refreshPolicy == "no refresh")
-		refresh_policy = NO_REFRESH;
+		refreshPolicy = NO_REFRESH;
 	else if (parameter->refreshPolicy == "bank_concurrent" || parameter->refreshPolicy == "bank concurrent")
-		refresh_policy = BANK_CONCURRENT;
+		refreshPolicy = BANK_CONCURRENT;
 	else
-		refresh_policy = BANK_STAGGERED_HIDDEN;
+		refreshPolicy = BANK_STAGGERED_HIDDEN;
 
-	seniority_age_limit = parameter->seniorityAgeLimit;
+	seniorityAgeLimit = parameter->seniorityAgeLimit;
 
-	posted_cas = parameter->postedCas;
+	postedCAS = parameter->postedCas;
 
-	clock_granularity = parameter->clockGranularity;
+	clockGranularity = parameter->clockGranularity;
 
-	cachelines_per_row = parameter->cachelinesPerRow;
+	cachelinesPerRow = parameter->cachelinesPerRow;
 
 	rowCount = parameter->rowCount;
 
 	columnCount = parameter->colCount;
 
-	col_size = parameter->colSize;
+	columnSize = parameter->colSize;
 
-	row_size = parameter->rowSize;
+	rowSize = parameter->rowSize;
 
-	cacheline_size = parameter->cachelineSize;
+	cachelineSize = parameter->cachelineSize;
 }
 #endif

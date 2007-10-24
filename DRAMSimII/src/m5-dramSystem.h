@@ -80,6 +80,7 @@ protected:
 	bool needRetry; // if the memory system needs to issue a retry statement before any more requests will come in
 	unsigned mostRecentChannel; // the most recent channel that a request was sent to
 	int cpuRatio;
+	tick_t nextStats;
 	void getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop);
 	//virtual Tick calculateLatency(Packet *);
 	//virtual Tick recvTiming(PacketPtr pkt);

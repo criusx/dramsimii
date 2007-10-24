@@ -31,7 +31,7 @@ void dramStatistics::collectTransactionStats(const transaction *currentTransacti
 		transactionExecution[currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime()]++;
 		transactionDecodeDelay[currentTransaction->getDecodeTime() - currentTransaction->getEnqueueTime()]++;
 		// gather working set information for this epoch
-		workingSet[currentTransaction->getAddresses().phys_addr]++;
+		workingSet[currentTransaction->getAddresses().physicalAddress]++;
 	}
 }
 

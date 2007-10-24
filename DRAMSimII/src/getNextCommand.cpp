@@ -17,7 +17,7 @@ command *dramChannel::getNextCommand()
 
 	if (nextCommand)
 	{
-		rank_c &currentRank = rank[nextCommand->getAddress().rank_id];
+		rank_c &currentRank = rank[nextCommand->getAddress().rank];
 		
 		// if it was a refresh all command, then dequeue all n banks worth of commands
 		if (nextCommand->getCommandType() == REFRESH_ALL_COMMAND)
@@ -38,8 +38,8 @@ command *dramChannel::getNextCommand()
 		else
 		{
 			//bank_c &currentBank = currentRank.bank[nextCommand->getAddress().bank_id];
-			assert(currentRank.bank[nextCommand->getAddress().bank_id].perBankQueue.front() == nextCommand);
-			return currentRank.bank[nextCommand->getAddress().bank_id].perBankQueue.pop();
+			assert(currentRank.bank[nextCommand->getAddress().bank].perBankQueue.front() == nextCommand);
+			return currentRank.bank[nextCommand->getAddress().bank].perBankQueue.pop();
 		}
 	}
 	else
@@ -61,8 +61,8 @@ const command *dramChannel::readNextCommand() const
 
 	const command *lastCommand = get_most_recent_command();
 
-	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank_id : systemConfig->getBankCount() - 1;
-	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank_id : systemConfig->getRankCount() - 1;
+	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank : systemConfig->getBankCount() - 1;
+	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank : systemConfig->getRankCount() - 1;
 	const command_type_t lastCommandType = lastCommand ? lastCommand->getCommandType() : CAS_WRITE_AND_PRECHARGE_COMMAND;
 
 	switch (systemConfig->getCommandOrderingAlgorithm())
@@ -122,7 +122,7 @@ const command *dramChannel::readNextCommand() const
 			// if there was a command found
 			if (oldestCommandTime < TICK_T_MAX)
 			{
-				assert(oldestBank->perBankQueue.front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestBank->perBankQueue.front()->getAddress().rank_id].bank[oldestBank->perBankQueue.front()->getAddress().bank_id].perBankQueue.front() == oldestBank->perBankQueue.front());
+				assert(oldestBank->perBankQueue.front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestBank->perBankQueue.front()->getAddress().rank].bank[oldestBank->perBankQueue.front()->getAddress().bank].perBankQueue.front() == oldestBank->perBankQueue.front());
 
 				return oldestBank->perBankQueue.front();
 			}
@@ -201,7 +201,7 @@ const command *dramChannel::readNextCommand() const
 					}
 
 #ifdef DEBUG_FLAG_2
-					cerr << "Looked in ["<< temp_c->getAddress().rank_id << "] [" << temp_c->getAddress().bank_id << "] but wrong type, We want [" << transaction_type << "]. Candidate command type ";
+					cerr << "Looked in ["<< temp_c->getAddress().rank << "] [" << temp_c->getAddress().bank << "] but wrong type, We want [" << transaction_type << "]. Candidate command type ";
 					cerr << temp_c->getCommandType();
 					cerr << " followed by ";
 					cerr << rank[lastRankId].bank[lastBankId].perBankQueue.read(1)->getCommandType();
@@ -279,13 +279,13 @@ const command *dramChannel::readNextCommand() const
 						if (((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) && (transaction_type == READ_TRANSACTION)) ||
 							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transaction_type == WRITE_TRANSACTION)))
 						{
-							assert(rank[lastRankId].bank[lastBankId].perBankQueue.front()->getAddress().bank_id == lastBankId);
-							assert(rank[lastRankId].bank[lastBankId].perBankQueue.front()->getAddress().rank_id == lastRankId);
+							assert(rank[lastRankId].bank[lastBankId].perBankQueue.front()->getAddress().bank == lastBankId);
+							assert(rank[lastRankId].bank[lastBankId].perBankQueue.front()->getAddress().rank == lastRankId);
 							return rank[lastRankId].bank[lastBankId].perBankQueue.front();
 						}
 					}
 #ifdef DEBUG_FLAG_2
-					cerr << "Looked in [" << temp_c->getAddress().rank_id << "] [" << temp_c->getAddress().bank_id << "] but wrong type, We want [" << transaction_type << "] Candidate command type [" << rank[lastRankId].bank[lastBankId].perBankQueue.read(1)->getCommandType() << "]" << endl;
+					cerr << "Looked in [" << temp_c->getAddress().rank << "] [" << temp_c->getAddress().bank << "] but wrong type, We want [" << transaction_type << "] Candidate command type [" << rank[lastRankId].bank[lastBankId].perBankQueue.read(1)->getCommandType() << "]" << endl;
 #endif
 				}
 #ifdef DEBUG_FLAG_2
@@ -319,11 +319,10 @@ const command *dramChannel::readNextCommand() const
 				}
 			}
 
-			command *temp_c = rank[candidate_command->getAddress().rank_id].bank[candidate_command->getAddress().bank_id].perBankQueue.front();
-			assert(temp_c == candidate_command);
+			assert(rank[candidate_command->getAddress().rank].bank[candidate_command->getAddress().bank].perBankQueue.front() == candidate_command);
 
 #ifdef DEBUG
-			timingOutStream << "R[" << candidate_command->getAddress().rank_id << "] B[" << candidate_command->getAddress().bank_id << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << time << "]" << endl;
+			timingOutStream << "R[" << candidate_command->getAddress().rank << "] B[" << candidate_command->getAddress().bank << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << time << "]" << endl;
 #endif
 
 			return candidate_command;

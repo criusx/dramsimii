@@ -7,25 +7,17 @@ namespace DRAMSimII
 	class addresses
 	{
 	public:
-		unsigned virt_addr;	// virtual address
-		unsigned long long phys_addr; // physical address
-		unsigned chan_id; // logical channel id
-		unsigned rank_id; // device id
-		unsigned bank_id;
-		unsigned row_id;
-		unsigned col_id; // column address
+		unsigned virtualAddress;	// virtual address
+		unsigned long long physicalAddress; // physical address
+		unsigned channel; // logical channel id
+		unsigned rank; // device id
+		unsigned bank;
+		unsigned row;
+		unsigned column; // column address
 
 		// constructor
 		addresses();
-		explicit addresses(unsigned long long pA):
-		virt_addr(0),
-			phys_addr(pA),
-			chan_id(0),
-			rank_id(0),
-			bank_id(0),
-			row_id(0),
-			col_id(0)
-		{ }
+		explicit addresses(unsigned long long pA);
 	};
 }
 #endif
