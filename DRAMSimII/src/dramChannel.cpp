@@ -287,7 +287,8 @@ void dramChannel::doPowerCalculation()
 		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS;
 		powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
 			"(" << totalRAS << ") tRRDsch(" << tRRDsch / systemConfig->Frequency() / 1.0E-9 << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
-			time << "]" << endl;		
+			time << "]" << endl;
+		boost::iostreams::flush(powerOutStream);
 	}
 	powerModel.lastCalculation = time;
 }
