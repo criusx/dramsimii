@@ -205,11 +205,12 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
 
 	if (currentMemCycle > memory->nextStats)
-	{
-		memory->nextStats += STATS_INTERVAL;
+	{		
 		memory->ds->doPowerCalculation();
 		memory->ds->printStatistics();
 	}
+	while (currentMemCycle > memory->nextStats)
+		memory->nextStats += STATS_INTERVAL;
 
 #ifdef M5DEBUG
 	timingOutStream << "extWake [" << curTick << "]/[" << currentMemCycle << "]";
@@ -340,11 +341,12 @@ M5dramSystem::TickEvent::process()
 	tick_t currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
 
 	if (currentMemCycle > memory->nextStats)
-	{
-		memory->nextStats += STATS_INTERVAL;
+	{		
 		memory->ds->doPowerCalculation();
 		memory->ds->printStatistics();
 	}
+	while (currentMemCycle > memory->nextStats)
+		memory->nextStats += STATS_INTERVAL;
 #ifdef M5DEBUG
 	timingOutStream << "intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]" << endl;
 #endif
