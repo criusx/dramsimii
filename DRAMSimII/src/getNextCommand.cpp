@@ -322,7 +322,7 @@ const command *dramChannel::readNextCommand() const
 			assert(rank[candidate_command->getAddress().rank].bank[candidate_command->getAddress().bank].perBankQueue.front() == candidate_command);
 
 #ifdef DEBUG
-			timingOutStream << "R[" << candidate_command->getAddress().rank << "] B[" << candidate_command->getAddress().bank << "]\tWinner: " << *temp_c << "gap[" << candidate_gap << "] now[" << time << "]" << endl;
+			timingOutStream << "R[" << candidate_command->getAddress().rank << "] B[" << candidate_command->getAddress().bank << "]\tWinner: " << *candidate_command << "gap[" << candidate_gap << "] now[" << time << "]" << endl;
 #endif
 
 			return candidate_command;

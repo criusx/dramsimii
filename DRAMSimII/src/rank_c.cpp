@@ -11,6 +11,7 @@ lastCASLength(0),
 lastCASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings->bankCount - 1),
+banksPrecharged(0),
 lastRASTimes(4),
 bank(settings->bankCount,bank_c(settings))
 {}
@@ -25,5 +26,6 @@ lastCASWLength(r.lastCASWLength),
 rankID(r.rankID),
 lastBankID(r.lastBankID),
 lastRASTimes(r.lastRASTimes),
+banksPrecharged(r.banksPrecharged),
 bank(r.bank)
 {}

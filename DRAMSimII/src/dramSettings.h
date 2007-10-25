@@ -323,6 +323,7 @@ namespace DRAMSimII
 		}
 
 
+		// create a dramSettings from command line arguments
 		explicit dramSettings(const int, const char **);
 	};
 }
