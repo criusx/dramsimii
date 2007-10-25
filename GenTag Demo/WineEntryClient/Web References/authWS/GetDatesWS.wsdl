@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:tns="http://datespackage/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GetDatesWS" targetNamespace="http://datespackage/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified" targetNamespace="http://datespackage/">
+      <xsd:element name="callHomeElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="UID" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="lat" type="xsd:float" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="longit" type="xsd:float" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="timeSinceLastReading" type="xsd:long" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="reportedTime" type="xsd:long" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="bearing" type="xsd:float" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="speed" type="xsd:float" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="elevation" type="xsd:int" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="callHomeResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="checkInteractionElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ID" nillable="true" type="xsd:string" />
+            <xsd:element name="drugID" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="checkInteractionResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getItemElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+            <xsd:element name="UID" nillable="true" type="xsd:string" />
+            <xsd:element name="lat" type="xsd:float" />
+            <xsd:element name="longit" type="xsd:float" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getItemResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:GetDates" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetDates">
+        <xsd:sequence>
+          <xsd:element name="authenticated" type="xsd:boolean" />
+          <xsd:element name="name" nillable="true" type="xsd:string" />
+          <xsd:element name="desc" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getPatientInfoElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="String_1" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPatientInfoResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:patientInfo" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="patientInfo">
+        <xsd:sequence>
+          <xsd:element name="description" nillable="true" type="xsd:string" />
+          <xsd:element name="image" nillable="true" type="xsd:base64Binary" />
+          <xsd:element name="rfidNum" nillable="true" type="xsd:string" />
+          <xsd:element name="name" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getPictureElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ID" nillable="true" type="xsd:string" />
+            <xsd:element name="isDrug" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPictureResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="xsd:base64Binary" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getRouteElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+            <xsd:element name="sinceWhen" type="xsd:long" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getRouteResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="result" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getSinceElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="timestamp" type="xsd:long" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getSinceResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="result" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getUniqueUIDsElement">
+        <xsd:complexType>
+          <xsd:sequence />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getUniqueUIDsResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="result" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="setItemElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="String_1" nillable="true" type="xsd:string" />
+            <xsd:element name="String_2" nillable="true" type="xsd:string" />
+            <xsd:element name="String_3" nillable="true" type="xsd:string" />
+            <xsd:element name="boolean_4" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="setItemResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+  <message name="GetDatesWS_callHome">
+    <part name="parameters" element="tns:callHomeElement" />
+  </message>
+  <message name="GetDatesWS_callHomeResponse">
+    <part name="parameters" element="tns:callHomeResponseElement" />
+  </message>
+  <message name="GetDatesWS_checkInteraction">
+    <part name="parameters" element="tns:checkInteractionElement" />
+  </message>
+  <message name="GetDatesWS_checkInteractionResponse">
+    <part name="parameters" element="tns:checkInteractionResponseElement" />
+  </message>
+  <message name="GetDatesWS_getItem">
+    <part name="parameters" element="tns:getItemElement" />
+  </message>
+  <message name="GetDatesWS_getItemResponse">
+    <part name="parameters" element="tns:getItemResponseElement" />
+  </message>
+  <message name="GetDatesWS_getPatientInfo">
+    <part name="parameters" element="tns:getPatientInfoElement" />
+  </message>
+  <message name="GetDatesWS_getPatientInfoResponse">
+    <part name="parameters" element="tns:getPatientInfoResponseElement" />
+  </message>
+  <message name="GetDatesWS_getPicture">
+    <part name="parameters" element="tns:getPictureElement" />
+  </message>
+  <message name="GetDatesWS_getPictureResponse">
+    <part name="parameters" element="tns:getPictureResponseElement" />
+  </message>
+  <message name="GetDatesWS_getRoute">
+    <part name="parameters" element="tns:getRouteElement" />
+  </message>
+  <message name="GetDatesWS_getRouteResponse">
+    <part name="parameters" element="tns:getRouteResponseElement" />
+  </message>
+  <message name="GetDatesWS_getSince">
+    <part name="parameters" element="tns:getSinceElement" />
+  </message>
+  <message name="GetDatesWS_getSinceResponse">
+    <part name="parameters" element="tns:getSinceResponseElement" />
+  </message>
+  <message name="GetDatesWS_getUniqueUIDs">
+    <part name="parameters" element="tns:getUniqueUIDsElement" />
+  </message>
+  <message name="GetDatesWS_getUniqueUIDsResponse">
+    <part name="parameters" element="tns:getUniqueUIDsResponseElement" />
+  </message>
+  <message name="GetDatesWS_setItem">
+    <part name="parameters" element="tns:setItemElement" />
+  </message>
+  <message name="GetDatesWS_setItemResponse">
+    <part name="parameters" element="tns:setItemResponseElement" />
+  </message>
+  <portType name="GetDatesWS">
+    <operation name="callHome">
+      <input message="tns:GetDatesWS_callHome" />
+      <output message="tns:GetDatesWS_callHomeResponse" />
+    </operation>
+    <operation name="checkInteraction">
+      <input message="tns:GetDatesWS_checkInteraction" />
+      <output message="tns:GetDatesWS_checkInteractionResponse" />
+    </operation>
+    <operation name="getItem">
+      <input message="tns:GetDatesWS_getItem" />
+      <output message="tns:GetDatesWS_getItemResponse" />
+    </operation>
+    <operation name="getPatientInfo">
+      <input message="tns:GetDatesWS_getPatientInfo" />
+      <output message="tns:GetDatesWS_getPatientInfoResponse" />
+    </operation>
+    <operation name="getPicture">
+      <input message="tns:GetDatesWS_getPicture" />
+      <output message="tns:GetDatesWS_getPictureResponse" />
+    </operation>
+    <operation name="getRoute">
+      <input message="tns:GetDatesWS_getRoute" />
+      <output message="tns:GetDatesWS_getRouteResponse" />
+    </operation>
+    <operation name="getSince">
+      <input message="tns:GetDatesWS_getSince" />
+      <output message="tns:GetDatesWS_getSinceResponse" />
+    </operation>
+    <operation name="getUniqueUIDs">
+      <input message="tns:GetDatesWS_getUniqueUIDs" />
+      <output message="tns:GetDatesWS_getUniqueUIDsResponse" />
+    </operation>
+    <operation name="setItem">
+      <input message="tns:GetDatesWS_setItem" />
+      <output message="tns:GetDatesWS_setItemResponse" />
+    </operation>
+  </portType>
+  <binding name="GetDatesWSSoapHttp" type="tns:GetDatesWS">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="callHome">
+      <soap:operation soapAction="http://datespackage//callHome" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="checkInteraction">
+      <soap:operation soapAction="http://datespackage//checkInteraction" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getItem">
+      <soap:operation soapAction="http://datespackage//getItem" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getPatientInfo">
+      <soap:operation soapAction="http://datespackage//getPatientInfo" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getPicture">
+      <soap:operation soapAction="http://datespackage//getPicture" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getRoute">
+      <soap:operation soapAction="http://datespackage//getRoute" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getSince">
+      <soap:operation soapAction="http://datespackage//getSince" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getUniqueUIDs">
+      <soap:operation soapAction="http://datespackage//getUniqueUIDs" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="setItem">
+      <soap:operation soapAction="http://datespackage//setItem" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="GetDatesWS">
+    <port name="GetDatesWSSoapHttpPort" binding="tns:GetDatesWSSoapHttp">
+      <soap:address location="http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort" />
+    </port>
+  </service>
+</definitions>
