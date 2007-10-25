@@ -204,9 +204,9 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 
 	tick_t currentMemCycle = curTick/memory->getCpuRatio();
 
-	if (currentMemCycle > nextStats)
+	if (currentMemCycle > memory->nextStats)
 	{
-		nextStats += STATS_INTERVAL;
+		memory->nextStats += STATS_INTERVAL;
 		memory->ds->doPowerCalculation();
 		memory->ds->printStatistics();
 	}
@@ -319,7 +319,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			if (memory->tickEvent.scheduled())
 				memory->tickEvent.deschedule();
 
-			tick_t next = min(nextStats,memory->ds->nextTick());
+			tick_t next = min(memory->nextStats,memory->ds->nextTick());
 			assert(next < TICK_T_MAX);
 			if (next < TICK_T_MAX)
 			{
@@ -339,9 +339,9 @@ M5dramSystem::TickEvent::process()
 {	
 	tick_t currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
 
-	if (currentMemCycle > nextStats)
+	if (currentMemCycle > memory->nextStats)
 	{
-		nextStats += STATS_INTERVAL;
+		memory->nextStats += STATS_INTERVAL;
 		memory->ds->doPowerCalculation();
 		memory->ds->printStatistics();
 	}
@@ -359,7 +359,7 @@ M5dramSystem::TickEvent::process()
 		memory->tickEvent.deschedule();
 
 	// determine the next time to wake up
-	tick_t next = min(nextStats,memory->ds->nextTick());	
+	tick_t next = min(memory->nextStats,memory->ds->nextTick());	
 
 	// nextTick() returns TICK_T_MAX if there is nothing else to wake up for
 	if (next < TICK_T_MAX)
