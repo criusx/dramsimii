@@ -42,5 +42,15 @@ namespace WineEntryClient.Properties {
                 return ((string)(this["WineEntryClient_org_dyndns_crius_wineWS"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort")]
+        public string WineEntryClient_authWS_GetDatesWS {
+            get {
+                return ((string)(this["WineEntryClient_authWS_GetDatesWS"]));
+            }
+        }
     }
 }

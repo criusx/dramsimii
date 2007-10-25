@@ -64,7 +64,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Web References\org.dyndns.crius\Reference.cs">
+    <Compile Include="Web References\authWS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\wineWS\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -74,21 +79,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-    <Compile Include="wineEntry.cs">
+    <Compile Include="entry.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wineEntry.Designer.cs">
-      <DependentUpon>wineEntry.cs</DependentUpon>
+    <Compile Include="entry.Designer.cs">
+      <DependentUpon>entry.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="wineEntry.en-US.resx">
+    <EmbeddedResource Include="entry.en-US.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>wineEntry.cs</DependentUpon>
+      <DependentUpon>entry.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wineEntry.resx">
+    <EmbeddedResource Include="entry.nl-BE.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>wineEntry.cs</DependentUpon>
+      <DependentUpon>entry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="entry.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>entry.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -105,11 +114,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Web References\org.dyndns.crius\Reference.map">
+    <None Include="Web References\wineWS\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Web References\org.dyndns.crius\wineWS.wsdl" />
+    <None Include="Web References\wineWS\wineWS.wsdl" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -120,6 +129,17 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort%3fWSDL">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\authWS\</RelPath>
+      <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>WineEntryClient_authWS_GetDatesWS</CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/petWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\petWS\</RelPath>
@@ -133,7 +153,7 @@
     </WebReferenceUrl>
     <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/wineWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\org.dyndns.crius\</RelPath>
+      <RelPath>Web References\wineWS\</RelPath>
       <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/wineWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
@@ -146,7 +166,18 @@
   <ItemGroup>
     <BaseApplicationManifest Include="Properties\app.manifest" />
     <None Include="Resources\Gentag-logo.png" />
-    <None Include="Web References\org.dyndns.crius\wineBottle.datasource">
+    <None Include="Web References\authWS\GetDates.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\authWS\GetDatesWS.wsdl" />
+    <None Include="Web References\authWS\patientInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\authWS\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\wineWS\wineBottle.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\petWS\petInfo.datasource">

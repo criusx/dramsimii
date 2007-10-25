@@ -14,7 +14,7 @@ namespace WineEntryClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new wineEntry());
+            Application.Run(new entry());
         }
     }
 }

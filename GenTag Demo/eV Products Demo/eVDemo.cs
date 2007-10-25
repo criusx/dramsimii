@@ -4185,7 +4185,7 @@ namespace eV_Products_Demo
         // for digital input examination
         public bool nonNumberEntered;
 
-        private int[] countArray;
+       // private int[] countArray;
 
         private void eVDemo_Load(object sender, EventArgs e)
         {
@@ -4403,7 +4403,7 @@ namespace eV_Products_Demo
                 }
             }
             //////////////////////////////////////////////////////////////////////////
-            countArray = new int[Activedata.dCounts.Length];
+            //countArray = new int[Activedata.dCounts.Length];
 
 
             antialiasCheck.Checked = zedGraphControl1.IsAntiAlias;
@@ -4486,10 +4486,10 @@ namespace eV_Products_Demo
         {
             //this.Check_SpectrumS.Checked = false;
             //this.gsNetWinChart1.Chart.SetGridBottomTitle("ADC Channel");
-            for (uint i = 0; i < countArray.Length; i++)
-            {
-                countArray[i] = 0;
-            }
+            //for (uint i = 0; i < countArray.Length; i++)
+            //{
+            //    countArray[i] = 0;
+            //}
             Label_FWHM.Text = "";
             startTime = DateTime.Now;
             startTime = startTime - elapsedTime;
@@ -4610,14 +4610,14 @@ namespace eV_Products_Demo
             for (int i = 1; i < channelNo; i++)
             {
                 total += (ulong)Activedata.dCounts[i];
-                if (Activedata.dCounts[i] > 0)
-                {
-                    countArray[i] = Activedata.dCounts[i];
+                //if (Activedata.dCounts[i] > 0)
+                //{
+                //    countArray[i] = Activedata.dCounts[i];
 
-                }
+                //}
                 if ((i % 4) == 0)
                 {
-                    float val = 0.25F * (countArray[i - 3] + countArray[i - 2] + countArray[i - 1] + countArray[i]);
+                    float val = 0.25F * (Activedata.dCounts[i - 3] + Activedata.dCounts[i - 2] + Activedata.dCounts[i - 1] + Activedata.dCounts[i]);
                     if (val > zedGraphControl1.GraphPane.YAxis.Scale.Max)
                     {
                         zedGraphControl1.GraphPane.YAxis.Scale.Max = val;
@@ -5468,7 +5468,7 @@ namespace eV_Products_Demo
         private void storeSpectrumClick(object sender, EventArgs args)
         {
             EvDemoWS.spectrumInfo spec = new EvDemoWS.spectrumInfo();
-            spec.dataArray = countArray;
+            spec.dataArray = Activedata.dCounts;
             
             spec.exists = true;
             spec.RFIDNum = RFID;

@@ -134,6 +134,7 @@ namespace GentagDemo
             this.radPage = new System.Windows.Forms.TabPage();
             this.radIDLabel = new System.Windows.Forms.Label();
             this.radScanButton = new System.Windows.Forms.Button();
+            this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel();
             this.tabControl1.SuspendLayout();
             this.authPage.SuspendLayout();
             this.VarioSens.SuspendLayout();
@@ -926,7 +927,7 @@ namespace GentagDemo
             this.manualLookupPage.Controls.Add(this.textBox4);
             this.manualLookupPage.Location = new System.Drawing.Point(0, 0);
             this.manualLookupPage.Name = "manualLookupPage";
-            this.manualLookupPage.Size = new System.Drawing.Size(232, 214);
+            this.manualLookupPage.Size = new System.Drawing.Size(240, 217);
             this.manualLookupPage.Text = "Manual";
             // 
             // treeView2
@@ -953,6 +954,8 @@ namespace GentagDemo
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(224, 21);
             this.textBox4.TabIndex = 0;
+            this.textBox4.GotFocus += new System.EventHandler(this.textBox4_GotFocus);
+            this.textBox4.LostFocus += new System.EventHandler(this.textBox4_LostFocus);
             // 
             // varioSensWPage
             // 
@@ -1093,7 +1096,7 @@ namespace GentagDemo
             this.radPage.Controls.Add(this.radScanButton);
             this.radPage.Location = new System.Drawing.Point(0, 0);
             this.radPage.Name = "radPage";
-            this.radPage.Size = new System.Drawing.Size(240, 217);
+            this.radPage.Size = new System.Drawing.Size(232, 214);
             this.radPage.Text = "CZT";
             // 
             // radIDLabel
@@ -1245,6 +1248,7 @@ namespace GentagDemo
         private System.Windows.Forms.Button radScanButton;
         private System.Windows.Forms.Label radIDLabel;
         private System.Windows.Forms.Label label23;
+        private Microsoft.WindowsCE.Forms.InputPanel inputPanel1;
         
     }
 }

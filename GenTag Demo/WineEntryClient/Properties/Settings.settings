@@ -8,5 +8,8 @@
     <Setting Name="WineEntryClient_org_dyndns_crius_wineWS" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">http://crius.dyndns.org:8888/GentagDemo/wineWSSoapHttpPort</Value>
     </Setting>
+    <Setting Name="WineEntryClient_authWS_GetDatesWS" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

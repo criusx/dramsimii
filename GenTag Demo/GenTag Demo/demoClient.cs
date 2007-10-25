@@ -769,6 +769,19 @@ namespace GentagDemo
             Cursor.Current = Cursors.Default;
             readerRunning = false;
             tagReader.running = false;
+        }       
+
+        private void textBox4_GotFocus(object sender, EventArgs e)
+        {
+            textBox4.Location = new Point(8, 0);
+            textBox4.BringToFront();
+            inputPanel1.Enabled = true;
+        }
+
+        private void textBox4_LostFocus(object sender, EventArgs e)
+        {
+            textBox4.Location = new Point(8, 193);
+            inputPanel1.Enabled = false;
         }
 
     }
