@@ -16,11 +16,6 @@ using namespace DRAMSimII;
 /// <param name="gap">The minimum amount of time to delay before executing the command</param>
 void dramChannel::executeCommand(command *this_command,const int gap)
 {
-	//dramChannel &channel= dramSystem::channel[this_command->getAddress().chan_id];
-
-	// do power calculations
-	//powerModel.recordCommand(this_command, channel, timing_specification);
-
 	rank_c &currentRank = rank[this_command->getAddress().rank];
 
 	bank_c &currentBank = currentRank.bank[this_command->getAddress().bank];
@@ -42,6 +37,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	{
 	case RAS_COMMAND:
 		{
+			assert(currentBank.isActivated == false);
 			currentBank.isActivated = true;
 
 			// RAS time history queue, per rank
@@ -57,7 +53,8 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 			// for power modeling, if all banks were precharged and now one is being activated, record the interval that one was precharged
 			if (currentRank.banksPrecharged > currentRank.bank.size())
 				cerr << "counted too high" << endl;
-			if (currentRank.banksPrecharged == currentRank.bank.size())
+
+			if (currentRank.banksPrecharged >= currentRank.bank.size())
 				currentRank.prechargeTime += time - currentRank.lastPrechargeTime;
 			currentRank.banksPrecharged--;
 
@@ -68,6 +65,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	case CAS_AND_PRECHARGE_COMMAND:
 
+		assert(currentBank.isActivated == true);
 		currentBank.isActivated = false;
 		currentRank.lastPrechargeTime = currentBank.lastPrechargeTime = max(time + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, currentBank.lastRASTime + timing_specification.t_ras);
 		currentRank.banksPrecharged++;
@@ -81,16 +79,16 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		currentRank.lastCASLength = this_command->getLength();
 		currentRank.lastBankID = this_command->getAddress().bank;
 		currentBank.CASCount++;
-		//this_command->getHost()->completion_time = time + timing_specification.t_cas;
-		
+
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
-		this_command->setCompletionTime(max(currentBank.lastRASTime + timing_specification.t_rcd + timing_specification.t_cas + timing_specification.t_burst, this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cas + timing_specification.t_burst));
+		this_command->setCompletionTime(max(currentBank.lastRASTime + timing_specification.t_rcd + timing_specification.t_cas + timing_specification.t_burst, time + timing_specification.t_cmd + timing_specification.t_cas + timing_specification.t_burst));
 		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 
+		assert(currentBank.isActivated == true);
 		currentBank.isActivated = false;
 		currentRank.lastPrechargeTime = currentBank.lastPrechargeTime = max(time + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, currentBank.lastRASTime + timing_specification.t_ras);
 		currentRank.banksPrecharged++;
@@ -107,11 +105,12 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		this_command->getHost()->setCompletionTime(time);
 		
 		// for the CAS write command
-		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr);
+		this_command->setCompletionTime(time + timing_specification.t_cmd + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr);
 		break;
 
 	case PRECHARGE_COMMAND:
 
+		assert(currentBank.isActivated == true);
 		currentBank.isActivated = false;
 		currentRank.lastPrechargeTime = currentBank.lastPrechargeTime = time;
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rp);
@@ -124,7 +123,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		// FIXME: should this not count as a RAS + PRE command to all banks?
 		for (vector<bank_c>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			currentBank->lastRefreshAllTime = time;
-		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rfc);
+		this_command->setCompletionTime(time + timing_specification.t_cmd + timing_specification.t_rfc);
 		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;
 

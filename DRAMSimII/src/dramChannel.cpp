@@ -15,12 +15,10 @@ using namespace DRAMSimII;
 dramChannel::dramChannel(const dramSettings *settings):
 time(0),
 rank(settings->rankCount, rank_c(settings)),
-//refreshRowIndex(0),
 lastRefreshTime(0),
 lastRankID(0),
 timing_specification(settings),
 transactionQueue(settings->transactionQueueDepth),
-//refreshQueue(settings->rowCount * settings->rankCount,true),
 refreshCounter(NULL),
 historyQueue(settings->historyQueueDepth),
 completionQueue(settings->completionQueueDepth),
@@ -48,14 +46,7 @@ algorithm(settings)
 			newTrans->setType(AUTO_REFRESH_TRANSACTION);
 			newTrans->getAddresses().rank = j;
 			newTrans->setEnqueueTime(j * step);
-			refreshCounter[j] = newTrans;
-
-			//transaction *currentRefreshTrans = refreshQueue.pop();
-			//currentRefreshTrans->setEnqueueTime((i + 1) * step);
-			//assert(currentRefreshTrans->getType() == CONTROL_TRANSACTION);
-			//currentRefreshTrans->setType(AUTO_REFRESH_TRANSACTION);
-			//currentRefreshTrans->getAddresses().rank_id = j;
-			//refreshQueue.push(currentRefreshTrans);
+			refreshCounter[j] = newTrans;			
 		}		
 	}
 }
@@ -63,12 +54,10 @@ algorithm(settings)
 dramChannel::dramChannel(const dramChannel &dc):
 time(dc.time),
 rank(dc.rank),
-//refreshRowIndex(dc.refreshRowIndex),
 lastRefreshTime(dc.lastRefreshTime),
 lastRankID(dc.lastRankID),
 timing_specification(dc.timing_specification),
 transactionQueue(dc.transactionQueue),
-//refreshQueue(dc.refreshQueue),
 refreshCounter(dc.refreshCounter),
 historyQueue(dc.historyQueue),
 completionQueue(dc.completionQueue),

@@ -7,6 +7,7 @@
 #include <map>
 #include "transaction.h"
 #include "command.h"
+#include "dramSettings.h"
 
 namespace DRAMSimII
 {
@@ -15,10 +16,11 @@ namespace DRAMSimII
 
 	private:
 		unsigned valid_transaction_count;
-		int start_no;
-		int end_no;
-		int bo8_count;
-		int bo4_count;
+		unsigned start_no;
+		unsigned end_no;
+		unsigned bo8_count;
+		unsigned bo4_count;
+		unsigned columnDepth;
 		std::map<unsigned,unsigned> commandDelay;
 		std::map<unsigned,unsigned> commandExceution;
 		std::map<unsigned,unsigned> commandTurnaround;
@@ -29,7 +31,7 @@ namespace DRAMSimII
 	public:
 
 		// constructors
-		dramStatistics();
+		explicit dramStatistics(const dramSettings *settings);
 
 		// functions
 		void clear();

@@ -676,7 +676,7 @@ systemConfig(settings),
 channel(systemConfig.getChannelCount(),
 		dramChannel(settings)),
 		sim_parameters(settings),
-		statistics(),
+		statistics(settings),
 		input_stream(settings),
 		time(0),
 		event_q(COMMAND_QUEUE_SIZE)
@@ -710,8 +710,12 @@ channel(systemConfig.getChannelCount(),
 	{
 		string baseFilename = settings->outFile;
 
-		if (baseFilename.find(suffix) > 0)
-			baseFilename = baseFilename.substr(0,baseFilename.find(suffix));
+		// strip off the file suffix
+		if (baseFilename.find("gz") > 0)
+			baseFilename = baseFilename.substr(0,baseFilename.find("gz"));
+		if (baseFilename.find("bz2") > 0)
+			baseFilename = baseFilename.substr(0,baseFilename.find("bz2"));
+		
 
 		int counter = 0;		
 		ifstream timingIn;
@@ -720,9 +724,9 @@ channel(systemConfig.getChannelCount(),
 		stringstream timingFilename;
 		stringstream powerFilename;
 		stringstream statsFilename;		
-		timingFilename << baseFilename << "-timing" << suffix;
-		powerFilename << baseFilename << "-power" << suffix;
-		statsFilename << baseFilename << "-stats" << suffix;
+		timingFilename << baseFilename << counter << "-timing" << suffix;
+		powerFilename << baseFilename << counter << "-power" << suffix;
+		statsFilename << baseFilename << counter << "-stats" << suffix;
 		timingIn.open(timingFilename.str().c_str(),ifstream::in);
 		powerIn.open(powerFilename.str().c_str(),ifstream::in);
 		statsIn.open(statsFilename.str().c_str(),ifstream::in);				
