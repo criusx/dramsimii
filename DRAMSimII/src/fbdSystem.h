@@ -6,6 +6,8 @@ namespace DRAMSimII
 
 	class fbdSystem
 	{
+	private:
+		std::vector<fbdChannel> channels;
 	public:
 		fbdSystem(void);
 		~fbdSystem(void);

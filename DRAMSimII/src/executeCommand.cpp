@@ -57,6 +57,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 			if (currentRank.banksPrecharged >= currentRank.bank.size())
 				currentRank.prechargeTime += time - currentRank.lastPrechargeTime;
 			currentRank.banksPrecharged--;
+			assert(currentRank.banksPrecharged > 0);
 
 			// specific for RAS command
 			this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_ras);

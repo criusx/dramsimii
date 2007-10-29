@@ -76,6 +76,7 @@ namespace DRAMSimII
 	class transaction;
 	class dramSystem;
 	class dramChannel;
+	class fbdFrame;
 
 	// overloaded insertion operator functions for printing various aspects of the dram system
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::command_type_t &);
@@ -84,6 +85,7 @@ namespace DRAMSimII
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::transaction *);
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::address_mapping_scheme_t &);
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::transaction_type_t );
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::fbdFrame &);	
 
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)
