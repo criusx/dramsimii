@@ -266,7 +266,7 @@ void dramChannel::doPowerCalculation()
 			totalRAS += (l->RASCount - l->previousRASCount);
 			l->previousRASCount = l->RASCount;
 		}
-		cerr << "ch[" << channelID << "] %pre[" << k->prechargeTime / (time - powerModel.lastCalculation) * 100 << "]" << endl;
+		cerr << "ch[" << channelID << "] %pre[" << k->prechargeTime / (time - powerModel.lastCalculation) * 100 << "] " << k->precharteTime << endl;
 		k->prechargeTime = 0;
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
 		powerOutStream << "Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << 

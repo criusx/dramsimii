@@ -33,6 +33,14 @@ namespace DRAMSimII
 		unsigned CASWCount;
 		unsigned previousCASWCount;		// the number of CASW commands since the last power calculation
 
+
+		// functions
+		void issueRAS(const tick_t currentTime, const command *currentCommand);
+		void issuePRE(const tick_t currentTime, const command *currentCommand);
+		void issueCAS(const tick_t currentTime, const command *currentCommand);
+		void issueCASW(const tick_t currentTime, const command *currentCommand);
+
+
 		// constructors
 		explicit bank_c(const dramSettings *settings);
 		explicit bank_c(unsigned);

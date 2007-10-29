@@ -37,28 +37,8 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	{
 	case RAS_COMMAND:
 		{
-			assert(currentBank.isActivated == false);
-			currentBank.isActivated = true;
-
-			// RAS time history queue, per rank
-			tick_t *this_ras_time = currentRank.lastRASTimes.acquire_item();
-
-			*this_ras_time = currentBank.lastRASTime = time;
-			currentBank.openRowID = this_command->getAddress().row;
-			currentBank.RASCount++;
-
-			currentRank.lastRASTimes.push(this_ras_time);
-			currentRank.lastBankID = this_command->getAddress().bank;
-
-			// for power modeling, if all banks were precharged and now one is being activated, record the interval that one was precharged
-			if (currentRank.banksPrecharged > currentRank.bank.size())
-				cerr << "counted too high" << endl;
-
-			if (currentRank.banksPrecharged >= currentRank.bank.size())
-				currentRank.prechargeTime += time - currentRank.lastPrechargeTime;
-			currentRank.banksPrecharged--;
-			assert(currentRank.banksPrecharged > 0);
-
+			currentRank.issueRAS(time, this_command);
+			
 			// specific for RAS command
 			this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_ras);
 		}
@@ -66,20 +46,14 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	case CAS_AND_PRECHARGE_COMMAND:
 
-		assert(currentBank.isActivated == true);
-		currentBank.isActivated = false;
-		currentRank.lastPrechargeTime = currentBank.lastPrechargeTime = max(time + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, currentBank.lastRASTime + timing_specification.t_ras);
-		currentRank.banksPrecharged++;
+		currentRank.issuePRE(time, this_command);
+		currentBank.issuePRE(time, this_command);		
 		// lack of break is intentional
 
 	case CAS_COMMAND:
 
-		currentBank.lastCASTime = time;
-		currentRank.lastCASTime = time;
-		currentBank.lastCASLength = this_command->getLength();
-		currentRank.lastCASLength = this_command->getLength();
-		currentRank.lastBankID = this_command->getAddress().bank;
-		currentBank.CASCount++;
+		currentRank.issueCAS(time, this_command);
+		currentBank.issueCAS(time, this_command);
 
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
@@ -89,34 +63,27 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 
-		assert(currentBank.isActivated == true);
-		currentBank.isActivated = false;
-		currentRank.lastPrechargeTime = currentBank.lastPrechargeTime = max(time + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, currentBank.lastRASTime + timing_specification.t_ras);
-		currentRank.banksPrecharged++;
+		currentBank.issuePRE(time, this_command);
+		currentRank.issuePRE(time, this_command);		
 		// missing break is intentional
 
 	case CAS_WRITE_COMMAND:
-
-		currentBank.lastCASWTime = time;
-		currentRank.lastCASWTime = time;
-		currentBank.lastCASWLength = this_command->getLength();
-		currentRank.lastCASWLength = this_command->getLength();
-		currentRank.lastBankID = this_command->getAddress().bank;
-		currentBank.CASWCount++;
-		this_command->getHost()->setCompletionTime(time);
 		
+		currentRank.issueCASW(time, this_command);
+		currentBank.issueCASW(time, this_command);
+
 		// for the CAS write command
+		this_command->getHost()->setCompletionTime(time);
 		this_command->setCompletionTime(time + timing_specification.t_cmd + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr);
 		break;
 
 	case PRECHARGE_COMMAND:
 
-		assert(currentBank.isActivated == true);
-		currentBank.isActivated = false;
-		currentRank.lastPrechargeTime = currentBank.lastPrechargeTime = time;
+		currentBank.issuePRE(time, this_command);
+		currentRank.issuePRE(time, this_command);
+
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rp);
 
-		currentRank.banksPrecharged++;
 		break;
 
 	case REFRESH_ALL_COMMAND:

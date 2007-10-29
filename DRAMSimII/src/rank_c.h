@@ -22,9 +22,17 @@ namespace DRAMSimII
 		unsigned lastCASWLength;	// the length of the last CASW
 		unsigned rankID;			// the ordinal number of this rank
 		unsigned lastBankID;		// id of the last accessed bank of this rank
+	private:
 		unsigned banksPrecharged;	// the number of banks in the precharge state
+	public:
 		queue<tick_t> lastRASTimes; // ras time queue. useful to determine if t_faw is met
 		std::vector<bank_c> bank;
+
+		// functions
+		void issueRAS(const tick_t currentTime, const command *currentCommand);
+		void issuePRE(const tick_t currentTime, const command *currentCommand);
+		void issueCAS(const tick_t currentTime, const command *currentCommand);
+		void issueCASW(const tick_t currentTime, const command *currentCommand);
 		
 
 		// constructors

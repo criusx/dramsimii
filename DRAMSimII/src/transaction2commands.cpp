@@ -248,7 +248,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			// then add the command to all queues
 			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				bool result = i->perBankQueue.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, systemConfig->isPostedCAS()));
+				bool result = i->perBankQueue.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, false));
 				assert (result);
 			}
 		}
@@ -271,10 +271,10 @@ bool dramChannel::transaction2commands(transaction *this_t)
 						switch (this_t->getType())
 						{
 						case WRITE_TRANSACTION:
-							bank_q.insert(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()), tail_offset);	/* insert at this location */						
+							bank_q.insert(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,false,this_t->getLength()), tail_offset);	/* insert at this location */						
 							break;
 						case READ_TRANSACTION:
-							bank_q.insert(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()), tail_offset);	/* insert at this location */
+							bank_q.insert(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,false,this_t->getLength()), tail_offset);	/* insert at this location */
 							break;
 						default:
 							cerr << "Unrecognized transaction type." << endl;
@@ -303,16 +303,16 @@ bool dramChannel::transaction2commands(transaction *this_t)
 				return false;
 			}
 
-			bank_q.push(new command(this_t->getAddresses(),RAS_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
+			bank_q.push(new command(this_t->getAddresses(),RAS_COMMAND,time,NULL,false,this_t->getLength()));
 
 			switch (this_t->getType())
 			{
 			case WRITE_TRANSACTION:
-				bank_q.push(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
+				bank_q.push(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,false,this_t->getLength()));
 				break;
 			case READ_TRANSACTION:
 			case IFETCH_TRANSACTION:
-				bank_q.push(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,systemConfig->isPostedCAS(),this_t->getLength()));
+				bank_q.push(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,false,this_t->getLength()));
 				break;
 			default:
 				cerr << "Unhandled transaction type: " << this_t->getType();
@@ -321,7 +321,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			}
 
 			// last, the precharge command
-			bank_q.push(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig->isPostedCAS(),this_t->getLength()));
+			bank_q.push(new command(this_t->getAddresses(),PRECHARGE_COMMAND,time,NULL,false,this_t->getLength()));
 		}
 		break;
 

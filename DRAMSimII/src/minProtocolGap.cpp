@@ -145,7 +145,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 	case CAS_WRITE_COMMAND:
 		{
 			//respect last ras of same rank
-			int t_ras_gap = (int)(currentBank.lastRASTime + timing_specification.t_rcd - t_al - time);
+			int t_ras_gap = (int)((currentBank.lastRASTime - time) + timing_specification.t_rcd - t_al);
 
 			other_r_last_cas_time = time - 1000;
 			other_r_last_cas_length = timing_specification.t_burst;
