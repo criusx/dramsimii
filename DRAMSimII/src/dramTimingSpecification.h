@@ -40,6 +40,17 @@ namespace DRAMSimII
 		// constructors		
 		explicit dramTimingSpecification(const dramSettings *settings);
 
+		// accessors
+		int tAL() const { return t_al; }
+		int tCAS() const { return t_cas; }
+		int tBurst() const { return t_burst; }
+		int tRTP() const { return t_rtp; }
+		int tRAS() const { return t_ras; }
+		int tCWD() const { return t_cwd; }
+		int tWR() const { return t_wr; }
+
+
+
 		// friends
 		friend std::ostream &operator<<( std::ostream&, const dramTimingSpecification &);
 		friend class dramChannel; // TODO: change how this works, no need for friends when there's accessors

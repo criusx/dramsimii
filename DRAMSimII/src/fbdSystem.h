@@ -1,6 +1,9 @@
 #ifndef FBDSYSTEM_H
 #define FBDSYSTEM_H
 #pragma once
+
+#include <vector>
+
 namespace DRAMSimII
 {
 

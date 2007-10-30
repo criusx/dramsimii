@@ -20,22 +20,20 @@ namespace DRAMSimII
 	{
 		// members
 	private:
-		tick_t time;						// channel time, allow for channel concurrency	
-		std::vector<rank_c> rank;			// vector of the array of ranks
-		//unsigned refreshRowIndex;			// the row index to be refreshed
-		tick_t lastRefreshTime;			// tells me when last refresh was done
-		unsigned lastRankID;				// id of the last accessed rank of this channel
+		tick_t time;							// channel time, allow for channel concurrency	
+		std::vector<rank_c> rank;				// vector of the array of ranks
+		tick_t lastRefreshTime;					// tells me when last refresh was done
+		unsigned lastRankID;					// id of the last accessed rank of this channel
 		dramTimingSpecification timing_specification; // the timing specs for this channel
 		queue<transaction> transactionQueue;	// transaction queue for the channel
-		//queue<transaction> refreshQueue;	// queue of refresh transactions
 		transaction **refreshCounter;
 		queue<command> historyQueue;			// what were the last N commands to this channel?
-		queue<transaction> completionQueue;	// completed_q, can send status back to memory controller
-		dramSystemConfiguration *systemConfig; // a pointer to common system config values
-		dramStatistics *statistics;		// backward pointer to the stats engine
+		queue<transaction> completionQueue;		// completed_q, can send status back to memory controller
+		dramSystemConfiguration *systemConfig;	// a pointer to common system config values
+		dramStatistics *statistics;				// backward pointer to the stats engine
 		powerConfig powerModel;
 		dramAlgorithm algorithm;
-		unsigned channelID;					// the ordinal value of this channel (0..n)
+		unsigned channelID;						// the ordinal value of this channel (0..n)
 
 	public:
 		// functions

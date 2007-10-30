@@ -7,11 +7,14 @@
 #include "globals.h"
 #include "queue.h"
 #include "dramSettings.h"
+#include "dramTimingSpecification.h"
 
 namespace DRAMSimII
 {
 	class rank_c
 	{
+	private:
+		const static dramTimingSpecification* timing;
 	public:		
 		tick_t lastRefreshTime;		// the time of the last refresh
 		tick_t lastPrechargeTime;	// the time of the last precharge
@@ -33,6 +36,7 @@ namespace DRAMSimII
 		void issuePRE(const tick_t currentTime, const command *currentCommand);
 		void issueCAS(const tick_t currentTime, const command *currentCommand);
 		void issueCASW(const tick_t currentTime, const command *currentCommand);
+		void issueREF(const tick_t currentTime, const command *currentCommand);
 		
 
 		// constructors
@@ -43,6 +47,7 @@ namespace DRAMSimII
 		unsigned getRankID() const { return rankID; }
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
+		void setTiming(const dramTimingSpecification* value) { timing = value; bank[0].setTiming(value); }
 	};
 }
 #endif

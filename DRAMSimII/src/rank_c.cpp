@@ -2,6 +2,9 @@
 #include "rank_c.h"
 
 using namespace DRAMSimII;
+using namespace std;
+
+const dramTimingSpecification *rank_c::timing;
 
 rank_c::rank_c(const dramSettings *settings):
 lastRefreshTime(0),
@@ -33,7 +36,7 @@ banksPrecharged(r.banksPrecharged),
 bank(r.bank)
 {}
 
-rank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
+void rank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
 {
 	// update the bank to reflect this change also
 	bank_c &currentBank = bank[currentCommand->getAddress().bank];
@@ -51,26 +54,30 @@ rank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
 		cerr << "counted too high " << banksPrecharged << "/" << bank.size() << endl;
 
 	if (banksPrecharged >= bank.size())
-		prechargeTime += time - lastPrechargeTime;
+		prechargeTime += currentTime - lastPrechargeTime;
 	banksPrecharged--;
 	assert(banksPrecharged > 0);
 }
 
 void rank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 {
+	// update the bank to reflect this change also
+	bank_c &currentBank = bank[currentCommand->getAddress().bank];
+	currentBank.issuePRE(currentTime, currentCommand);
+
 	switch (currentCommand->getCommandType())
 	{
 	case CAS_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, currentBank.lastRASTime + timing_specification.t_ras);
+		lastPrechargeTime = max(currentTime + timing->tAL() + timing->tCAS() + timing->tBurst() + timing->tRTP(), currentBank.lastRASTime + timing->tRAS());
 		break;
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, currentBank.lastRASTime + timing_specification.t_ras);
+		lastPrechargeTime = max(currentTime + timing->tAL() + timing->tCWD() + timing->tBurst() + timing->tWR(), currentBank.lastRASTime + timing->tRAS());
 		break;
 	case PRECHARGE_COMMAND:
-		lastPrechargeTime = time;
+		lastPrechargeTime = currentTime;
 		break;
 	default:
-		cerr << "Unhandled precharge variant" << endl;
+		cerr << "Unhandled CAS variant" << endl;
 		break;
 	}
 	
@@ -79,15 +86,30 @@ void rank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 
 void rank_c::issueCAS(const tick_t currentTime, const command *currentCommand)
 {
-	lastCASTime = time;
+	// update the bank to reflect this change also
+	bank_c &currentBank = bank[currentCommand->getAddress().bank];
+	currentBank.issueCAS(currentTime, currentCommand);
+
+	lastCASTime = currentTime;
 	lastCASLength = currentCommand->getLength();
 	lastBankID = currentCommand->getAddress().bank;
 }
 
 void rank_c::issueCASW(const tick_t currentTime, const command *currentCommand)
 {
-	lastCASWTime = time;
+	// update the bank to reflect this change also
+	bank_c &currentBank = bank[currentCommand->getAddress().bank];
+	currentBank.issueCASW(currentTime, currentCommand);
+
+	lastCASWTime = currentTime;
 
 	lastCASWLength = currentCommand->getLength();
 	lastBankID = currentCommand->getAddress().bank;
+}
+
+void rank_c::issueREF(const tick_t currentTime, const command *currentCommand)
+{
+	// FIXME: should this not count as a RAS + PRE command to all banks?
+	for (vector<bank_c>::iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
+		currentBank->issueREF(currentTime, currentCommand);
 }

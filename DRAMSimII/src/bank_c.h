@@ -6,12 +6,15 @@
 #include "globals.h"
 #include "command.h"
 #include "dramSettings.h"
+#include "dramTimingSpecification.h"
 
 namespace DRAMSimII
 {
 	/// this class logically represents a bank
 	class bank_c
 	{
+	private:
+		const static dramTimingSpecification *timing;
 	public:	
 		// members
 		queue<command> perBankQueue;		// per bank queue
@@ -33,12 +36,16 @@ namespace DRAMSimII
 		unsigned CASWCount;
 		unsigned previousCASWCount;		// the number of CASW commands since the last power calculation
 
+		// mutators
+		void setTiming(const dramTimingSpecification *value) { timing = value; }
+
 
 		// functions
 		void issueRAS(const tick_t currentTime, const command *currentCommand);
 		void issuePRE(const tick_t currentTime, const command *currentCommand);
 		void issueCAS(const tick_t currentTime, const command *currentCommand);
 		void issueCASW(const tick_t currentTime, const command *currentCommand);
+		void issueREF(const tick_t currentTime, const command *currentCommand);
 
 
 		// constructors

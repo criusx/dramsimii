@@ -1,6 +1,9 @@
 #include "bank_c.h"
 
 using namespace DRAMSimII;
+using namespace std;
+
+const dramTimingSpecification* bank_c::timing;
 
 bank_c::bank_c(const dramSettings *settings):
 perBankQueue(settings->perBankQueueDepth),
@@ -59,11 +62,11 @@ CASWCount(b.CASWCount),
 previousCASWCount(b.previousCASWCount)
 {}
 
-bank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
+void bank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
 {
 	assert(isActivated == false);
 	isActivated = true;
-	lastRASTime = time;
+	lastRASTime = currentTime;
 	openRowID = currentCommand->getAddress().row;
 	RASCount++;
 }
@@ -73,16 +76,16 @@ void bank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 	switch (currentCommand->getCommandType())
 	{
 	case CAS_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(time + t_al + timing_specification.t_cas + timing_specification.t_burst + timing_specification.t_rtp, currentBank.lastRASTime + timing_specification.t_ras);
+		lastPrechargeTime = max(currentTime + timing->tAL() + timing->tCAS() + timing->tBurst() + timing->tRTP(), lastRASTime + timing->tRAS());
 		break;
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(time + t_al + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr, currentBank.lastRASTime + timing_specification.t_ras);
+		lastPrechargeTime = max(currentTime + timing->tAL() + timing->tCWD() + timing->tBurst() + timing->tWR(), lastRASTime + timing->tRAS());
 		break;
 	case PRECHARGE_COMMAND:
-		lastPrechargeTime = time;
+		lastPrechargeTime = currentTime;
 		break;
 	default:
-		cerr << "Unhandled precharge variant" << endl;
+		cerr << "Unhandled CAS variant" << endl;
 		break;
 	}
 	assert(isActivated == true);
@@ -91,14 +94,19 @@ void bank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 
 void bank_c::issueCAS(const tick_t currentTime, const command *currentCommand)
 {
-	lastCASTime = time;
+	lastCASTime = currentTime;
 	lastCASLength = currentCommand->getLength();
 	CASCount++;
 }
 
-void rank_c::issueCASW(const tick_t currentTime, const command *currentCommand)
+void bank_c::issueCASW(const tick_t currentTime, const command *currentCommand)
 {
-	lastCASWTime = time;
+	lastCASWTime = currentTime;
 	lastCASWLength = currentCommand->getLength();
 	CASWCount++;
+}
+
+void bank_c::issueREF(const tick_t currentTime, const command *currentCommand)
+{
+
 }

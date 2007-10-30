@@ -47,14 +47,12 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	case CAS_AND_PRECHARGE_COMMAND:
 
 		currentRank.issuePRE(time, this_command);
-		currentBank.issuePRE(time, this_command);		
 		// lack of break is intentional
 
 	case CAS_COMMAND:
 
 		currentRank.issueCAS(time, this_command);
-		currentBank.issueCAS(time, this_command);
-
+		
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
 		this_command->setCompletionTime(max(currentBank.lastRASTime + timing_specification.t_rcd + timing_specification.t_cas + timing_specification.t_burst, time + timing_specification.t_cmd + timing_specification.t_cas + timing_specification.t_burst));
@@ -63,15 +61,13 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 
-		currentBank.issuePRE(time, this_command);
 		currentRank.issuePRE(time, this_command);		
 		// missing break is intentional
 
 	case CAS_WRITE_COMMAND:
 		
 		currentRank.issueCASW(time, this_command);
-		currentBank.issueCASW(time, this_command);
-
+		
 		// for the CAS write command
 		this_command->getHost()->setCompletionTime(time);
 		this_command->setCompletionTime(time + timing_specification.t_cmd + timing_specification.t_cwd + timing_specification.t_burst + timing_specification.t_wr);
@@ -79,7 +75,6 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	case PRECHARGE_COMMAND:
 
-		currentBank.issuePRE(time, this_command);
 		currentRank.issuePRE(time, this_command);
 
 		this_command->setCompletionTime(this_command->getStartTime() + timing_specification.t_cmd + timing_specification.t_rp);
@@ -88,9 +83,8 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	case REFRESH_ALL_COMMAND:
 
-		// FIXME: should this not count as a RAS + PRE command to all banks?
-		for (vector<bank_c>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
-			currentBank->lastRefreshAllTime = time;
+		currentRank.issueREF(time, this_command);
+
 		this_command->setCompletionTime(time + timing_specification.t_cmd + timing_specification.t_rfc);
 		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;
