@@ -20,8 +20,7 @@ namespace DRAMSimII
 	{
 		// members
 	private:
-		tick_t time;							// channel time, allow for channel concurrency	
-		std::vector<rank_c> rank;				// vector of the array of ranks
+		tick_t time;							// channel time, allow for channel concurrency			
 		tick_t lastRefreshTime;					// tells me when last refresh was done
 		unsigned lastRankID;					// id of the last accessed rank of this channel
 		dramTimingSpecification timing_specification; // the timing specs for this channel
@@ -34,6 +33,7 @@ namespace DRAMSimII
 		powerConfig powerModel;
 		dramAlgorithm algorithm;
 		unsigned channelID;						// the ordinal value of this channel (0..n)
+		std::vector<rank_c> rank;				// vector of the array of ranks
 
 	public:
 		// functions
@@ -79,10 +79,6 @@ namespace DRAMSimII
 		explicit dramChannel();	
 		explicit dramChannel(const dramSettings *settings);
 		dramChannel(const dramChannel &);
-
-		// operator overloads
-		dramChannel& operator =(const dramChannel &rs);
-
 
 		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
 		enum transaction_type_t setReadWriteType(const int,const int) const;

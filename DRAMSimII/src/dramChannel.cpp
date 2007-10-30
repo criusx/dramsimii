@@ -14,7 +14,6 @@ using namespace DRAMSimII;
 
 dramChannel::dramChannel(const dramSettings *settings):
 time(0),
-rank(settings->rankCount, rank_c(settings)),
 lastRefreshTime(0),
 lastRankID(0),
 timing_specification(settings),
@@ -24,7 +23,8 @@ historyQueue(settings->historyQueueDepth),
 completionQueue(settings->completionQueueDepth),
 systemConfig(NULL),
 powerModel(settings),
-algorithm(settings)
+algorithm(settings),
+rank(settings->rankCount, rank_c(settings, timing_specification))
 {
 	// assign an id to each channel (normally done with commands)
 	for (unsigned i = 0; i < settings->rankCount; i++)
@@ -53,7 +53,6 @@ algorithm(settings)
 
 dramChannel::dramChannel(const dramChannel &dc):
 time(dc.time),
-rank(dc.rank),
 lastRefreshTime(dc.lastRefreshTime),
 lastRankID(dc.lastRankID),
 timing_specification(dc.timing_specification),
@@ -63,7 +62,8 @@ historyQueue(dc.historyQueue),
 completionQueue(dc.completionQueue),
 systemConfig(dc.systemConfig),
 powerModel(dc.powerModel),
-algorithm(dc.algorithm)
+algorithm(dc.algorithm),
+rank(dc.rank)
 {}
 
 
@@ -417,25 +417,4 @@ transaction *dramChannel::getTransaction()
 			return NULL;
 		}
 	}
-}
-
-dramChannel& dramChannel::operator =(const DRAMSimII::dramChannel &rs)
-{
-	if (this == &rs)
-	{
-		return *this;
-	}
-	time = rs.time;
-	rank = rs.rank;
-	lastRankID = rs.lastRankID;
-	timing_specification = rs.timing_specification;
-	transactionQueue = rs.transactionQueue;
-	refreshCounter = rs.refreshCounter;
-	historyQueue = rs.historyQueue;
-	completionQueue = rs.completionQueue;
-	systemConfig = new dramSystemConfiguration(rs.systemConfig);
-	powerModel = rs.powerModel;
-	algorithm = rs.algorithm;
-	cerr << "dramchannel is copied=" << endl; 
-	return *this;
 }

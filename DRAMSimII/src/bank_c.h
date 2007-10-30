@@ -14,7 +14,7 @@ namespace DRAMSimII
 	class bank_c
 	{
 	private:
-		const static dramTimingSpecification *timing;
+		const dramTimingSpecification& timing;
 	public:	
 		// members
 		queue<command> perBankQueue;		// per bank queue
@@ -36,10 +36,6 @@ namespace DRAMSimII
 		unsigned CASWCount;
 		unsigned previousCASWCount;		// the number of CASW commands since the last power calculation
 
-		// mutators
-		void setTiming(const dramTimingSpecification *value) { timing = value; }
-
-
 		// functions
 		void issueRAS(const tick_t currentTime, const command *currentCommand);
 		void issuePRE(const tick_t currentTime, const command *currentCommand);
@@ -49,8 +45,7 @@ namespace DRAMSimII
 
 
 		// constructors
-		explicit bank_c(const dramSettings *settings);
-		explicit bank_c(unsigned);
+		explicit bank_c(const dramSettings *settings, const dramTimingSpecification &timingVal);
 		bank_c(const bank_c &);	
 	};
 }

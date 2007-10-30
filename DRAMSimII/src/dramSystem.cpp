@@ -74,23 +74,6 @@ tick_t dramSystem::nextTick() const
 	return nextWake;
 }
 
-dramSystem& dramSystem::operator =(const DRAMSimII::dramSystem &rs)
-{
-	if (this == &rs)
-	{
-		return *this;
-	}
-	systemConfig = rs.systemConfig;
-	channel = rs.channel;
-	sim_parameters = rs.sim_parameters;
-	statistics = rs.statistics;
-	//input_stream = rs.input_stream;
-	time = rs.time;
-	event_q = rs.event_q;
-
-	return *this;
-}
-
 bool dramSystem::convertAddress(addresses &this_a) const
 {
 	unsigned temp_a, temp_b;

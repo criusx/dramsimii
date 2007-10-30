@@ -14,7 +14,7 @@ namespace DRAMSimII
 	class rank_c
 	{
 	private:
-		const static dramTimingSpecification* timing;
+		const dramTimingSpecification& timing;
 	public:		
 		tick_t lastRefreshTime;		// the time of the last refresh
 		tick_t lastPrechargeTime;	// the time of the last precharge
@@ -41,13 +41,12 @@ namespace DRAMSimII
 
 		// constructors
 		rank_c(const rank_c &);
-		explicit rank_c(const dramSettings *settings);
+		explicit rank_c(const dramSettings *settings, const dramTimingSpecification &timingVal);
 
 		// accessors
 		unsigned getRankID() const { return rankID; }
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
-		void setTiming(const dramTimingSpecification* value) { timing = value; bank[0].setTiming(value); }
 	};
 }
 #endif

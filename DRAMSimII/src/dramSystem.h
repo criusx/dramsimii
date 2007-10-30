@@ -63,10 +63,7 @@ namespace DRAMSimII
 
 		// constructors	
 		explicit dramSystem(const dramSettings *settings);
-
-		// operator overloads
-		dramSystem& operator =(const dramSystem &rs);
-
+		
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
 	};

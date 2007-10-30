@@ -4,9 +4,8 @@
 using namespace DRAMSimII;
 using namespace std;
 
-const dramTimingSpecification *rank_c::timing;
-
-rank_c::rank_c(const dramSettings *settings):
+rank_c::rank_c(const dramSettings *settings, const dramTimingSpecification &timingVal):
+timing(timingVal),
 lastRefreshTime(0),
 lastPrechargeTime(0),
 lastCASTime(0),
@@ -18,10 +17,11 @@ rankID(UINT_MAX),
 lastBankID(settings->bankCount - 1),
 banksPrecharged(0),
 lastRASTimes(4),
-bank(settings->bankCount,bank_c(settings))
+bank(settings->bankCount,bank_c(settings, timingVal))
 {}
 
-rank_c::rank_c(const rank_c &r): 
+rank_c::rank_c(const rank_c &r):
+timing(r.timing),
 lastRefreshTime(r.lastRefreshTime),
 lastPrechargeTime(0),
 lastCASTime(r.lastCASTime),
@@ -68,10 +68,10 @@ void rank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 	switch (currentCommand->getCommandType())
 	{
 	case CAS_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + timing->tAL() + timing->tCAS() + timing->tBurst() + timing->tRTP(), currentBank.lastRASTime + timing->tRAS());
+		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), currentBank.lastRASTime + timing.tRAS());
 		break;
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + timing->tAL() + timing->tCWD() + timing->tBurst() + timing->tWR(), currentBank.lastRASTime + timing->tRAS());
+		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR(), currentBank.lastRASTime + timing.tRAS());
 		break;
 	case PRECHARGE_COMMAND:
 		lastPrechargeTime = currentTime;
