@@ -232,5 +232,12 @@ namespace DRAMSimII
 		DRAM_COMMAND_ENQUEUE,	// put DRAM command into per-bank queue
 		DRAM_COMMAND_EXECUTE	// schedule DRAM command for execution
 	};
+
+	enum frame_type_t
+	{
+		COMMAND,				// contains only commands, A, B, C
+		COMMAND_AND_DATA,		// contains a command in the A slot and data in the B, C slots
+		SYNC					// a sync command
+	}
 }
 #endif

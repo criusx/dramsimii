@@ -1,16 +1,17 @@
-#ifndef FBDCHANNEL_H
-#define FBDCHANNEL_H
+#ifndef FBDAMB_H
+#define FBDAMB_H
 #pragma once
 
-#include <vector>
+#include "globals.h"
+#include "queue.h"
 
 namespace DRAMSimII
 {
 
-	class fbdChannel
+	class fbdAMB
 	{
 	private:
-		std::vector<fbdAMB> ambs;
+		queue<
 	public:
 		fbdChannel(void);
 		~fbdChannel(void);

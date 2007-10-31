@@ -4,6 +4,7 @@
 
 #include "globals.h"
 #include "command.h"
+#include "enumTypes.h"
 
 
 namespace DRAMSimII
@@ -13,6 +14,7 @@ namespace DRAMSimII
 	private:
 		static queue<fbdFrame> freeFramePool; // frame objects are stored here to avoid allocating memory after initialization
 
+		enum frame_type_t frameType;
 		command slots[3];
 		tick_t arrivalTime;
 
