@@ -3,6 +3,7 @@
 #pragma once
 
 #include <vector>
+#include "fbdAMB.h"
 
 namespace DRAMSimII
 {

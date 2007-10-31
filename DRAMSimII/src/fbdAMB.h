@@ -11,10 +11,10 @@ namespace DRAMSimII
 	class fbdAMB
 	{
 	private:
-		queue<
+		//queue<
 	public:
-		fbdChannel(void);
-		~fbdChannel(void);
+		fbdAMB(void);
+		~fbdAMB(void);
 	};
 }
 

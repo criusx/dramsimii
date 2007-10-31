@@ -238,6 +238,6 @@ namespace DRAMSimII
 		COMMAND,				// contains only commands, A, B, C
 		COMMAND_AND_DATA,		// contains a command in the A slot and data in the B, C slots
 		SYNC					// a sync command
-	}
+	};
 }
 #endif

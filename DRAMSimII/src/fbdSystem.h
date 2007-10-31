@@ -13,7 +13,7 @@ namespace DRAMSimII
 	private:
 		std::vector<fbdChannel> fbdChannels;	// the serial channels
 		std::vector<dramChannel> dramChannels;	// used to keep track of the channels hanging off the AMBs
-		std::multiset<
+		//std::multiset<
 	public:
 		fbdSystem(void);
 		~fbdSystem(void);
