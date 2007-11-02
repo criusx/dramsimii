@@ -4,17 +4,17 @@
 
 #include <vector>
 #include "fbdAMB.h"
+#include "dramChannel.h"
 
 namespace DRAMSimII
 {
 
-	class fbdChannel
+	class fbdChannel: dramChannel
 	{
 	private:
 		std::vector<fbdAMB> ambs;
 	public:
-		fbdChannel(void);
-		~fbdChannel(void);
+		explicit fbdChannel(const dramSettings *settings);
 	};
 }
 

@@ -59,7 +59,7 @@ const command *dramChannel::readNextCommand() const
 {
 	// look at the most recently retired command in this channel's history
 
-	const command *lastCommand = get_most_recent_command();
+	const command *lastCommand = readMostRecentCommand();
 
 	unsigned lastBankId = lastCommand ? lastCommand->getAddress().bank : systemConfig->getBankCount() - 1;
 	unsigned lastRankId = lastCommand ? lastCommand->getAddress().rank : systemConfig->getRankCount() - 1;

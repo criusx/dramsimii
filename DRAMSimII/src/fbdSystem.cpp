@@ -2,10 +2,7 @@
 
 using namespace DRAMSimII;
 
-fbdSystem::fbdSystem(void)
-{
-}
-
-fbdSystem::~fbdSystem(void)
+fbdSystem::fbdSystem(const dramSettings *settings):
+dramSystem(settings)
 {
 }

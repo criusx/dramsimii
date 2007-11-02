@@ -36,14 +36,14 @@ tick_t dramSystem::nextTick() const
 		if (transaction *nextTrans = currentChan->readTransactionSimple())
 		{
 			// make sure it can finish
-			int tempGap = max(1,(int)(nextTrans->getEnqueueTime() - currentChan->get_time()) + currentChan->getTimingSpecification().t_buffer_delay); 
+			int tempGap = max(1,(int)(nextTrans->getEnqueueTime() - currentChan->getTime()) + currentChan->getTimingSpecification().t_buffer_delay); 
 
-			assert(nextTrans->getEnqueueTime() <= currentChan->get_time());
+			assert(nextTrans->getEnqueueTime() <= currentChan->getTime());
 			assert(tempGap <= currentChan->getTimingSpecification().t_buffer_delay );
 			// whenever the next transaction is ready and there are available slots for the R/C/P commands
-			if ((tempGap + currentChan->get_time() < nextWake) && (currentChan->checkForAvailableCommandSlots(nextTrans)))
+			if ((tempGap + currentChan->getTime() < nextWake) && (currentChan->checkForAvailableCommandSlots(nextTrans)))
 			{
-				nextWake = tempGap + currentChan->get_time();
+				nextWake = tempGap + currentChan->getTime();
 			}
 		}
 
@@ -52,9 +52,9 @@ tick_t dramSystem::nextTick() const
 		{
 			int tempGap = currentChan->minProtocolGap(tempCommand);
 
-			if (tempGap + currentChan->get_time() < nextWake)
+			if (tempGap + currentChan->getTime() < nextWake)
 			{
-				nextWake = tempGap + currentChan->get_time();
+				nextWake = tempGap + currentChan->getTime();
 			}
 		}
 
@@ -66,7 +66,7 @@ tick_t dramSystem::nextTick() const
 			if (refresh_t->getEnqueueTime() < nextWake)
 			{
 				// a refresh transaction may have been missed, so ensure that the correct time is chosen in the future
-				nextWake = max(currentChan->get_time() + 1,refresh_t->getEnqueueTime());
+				nextWake = max(currentChan->getTime() + 1,refresh_t->getEnqueueTime());
 			}
 		}
 	}
@@ -477,8 +477,8 @@ void dramSystem::updateSystemTime()
 
 	for (vector<dramChannel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
-		if (currentChan->get_time() < time)
-			time = currentChan->get_time();
+		if (currentChan->getTime() < time)
+			time = currentChan->getTime();
 	}
 }
 
@@ -500,7 +500,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
 		// or keep to this rank_id 
 
-		int rank_id = channel[this_t->getAddresses().channel].get_last_rank_id();
+		int rank_id = channel[this_t->getAddresses().channel].getLastRankID();
 
 		rand_s(&j);
 		if ((input_stream.getRankLocality() * UINT_MAX < j) && (systemConfig.getRankCount() > 1))
@@ -658,11 +658,11 @@ dramSystem::dramSystem(const dramSettings *settings):
 systemConfig(settings),
 channel(systemConfig.getChannelCount(),
 		dramChannel(settings)),
-		sim_parameters(settings),
+		simParameters(settings),
 		statistics(settings),
 		input_stream(settings),
-		time(0),
-		event_q(COMMAND_QUEUE_SIZE)
+		time(0)
+		//event_q(COMMAND_QUEUE_SIZE)
 {
 	string suffix;
 	switch (settings->outFileType)
@@ -771,20 +771,22 @@ channel(systemConfig.getChannelCount(),
 	}
 }
 
-int dramSystem::findOldestChannel() const
+unsigned dramSystem::findOldestChannel() const
 {
-	int oldest_chan_id = 0;
-	tick_t oldest_time = channel[0].get_time();
 
-	for (unsigned chan_id = 1; chan_id < channel.size() ; ++chan_id)
+	vector<dramChannel>::const_iterator currentChan = channel.begin();
+	tick_t oldestTime = currentChan->getTime();
+	unsigned oldestChanID = currentChan->getChannelID();
+	for (; currentChan != channel.end(); currentChan++)
 	{
-		if (channel[chan_id].get_time() < oldest_time)
+		if (currentChan->getTime() < oldestTime)
 		{
-			oldest_chan_id = chan_id;
-			oldest_time = channel[chan_id].get_time();
+			oldestChanID = currentChan->getChannelID();
+			oldestTime = currentChan->getTime();
 		}
 	}
-	return oldest_chan_id;
+
+	return oldestChanID;
 }
 
 ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &this_a)

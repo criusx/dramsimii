@@ -26,37 +26,34 @@ namespace DRAMSimII
 {
 	class dramSystem
 	{
-	private:
+	protected:
 		// members
 		dramSystemConfiguration systemConfig;
 		std::vector<dramChannel> channel;	
-		simulationParameters sim_parameters;
+		simulationParameters simParameters;
 		dramStatistics statistics;	
 		inputStream input_stream;
 
 		tick_t time;	// master clock	
 
-		queue<event> event_q;	// pending event queue	
-
 		//functions
-		int findOldestChannel() const;	
+		unsigned findOldestChannel() const;	
 		void updateSystemTime();
 		enum input_status_t getNextIncomingTransaction(transaction *&);
 		void getNextRandomRequest(transaction *);
-
-	public:
-
-		
 		bool convertAddress(addresses &) const;
+
+	public:		
+		
 		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
 		bool enqueue(transaction* trans); // enqueue this transaction into the proper per-channel queue
 		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); }
 		void enqueueTimeShift(transaction* trans);
 		input_status_t waitForTransactionToFinish(transaction *trans);
 		double Frequency() const { return systemConfig.Frequency(); }
-		tick_t nextTick() const;		
-		void doPowerCalculation();
-		void printStatistics();
+		virtual tick_t nextTick() const;		
+		virtual void doPowerCalculation();
+		virtual void printStatistics();
 		void runSimulations();
 		void runSimulations2();
 		void runSimulations3();

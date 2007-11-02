@@ -9,7 +9,7 @@ using namespace DRAMSimII;
 
 void dramSystem::runSimulations2()
 {
-	for (int i = sim_parameters.get_request_count(); i > 0; --i)
+	for (int i = simParameters.get_request_count(); i > 0; --i)
 	{
 		transaction *input_t;
 
@@ -44,7 +44,7 @@ void dramSystem::runSimulations3()
 	transaction *input_t = NULL;
 	tick_t nextArrival = 0;
 
-	for (int i = sim_parameters.get_request_count(); i > 0; )
+	for (int i = simParameters.get_request_count(); i > 0; )
 	{
 		if (!input_t)
 		{
@@ -52,7 +52,7 @@ void dramSystem::runSimulations3()
 				break;
 			// if the previous transaction was delayed, thus making this arrival be in the past
 			// prevent new arrivals from arriving in the past
-			input_t->setEnqueueTime(max(input_t->getEnqueueTime(),channel[input_t->getAddresses().channel].get_time()));
+			input_t->setEnqueueTime(max(input_t->getEnqueueTime(),channel[input_t->getAddresses().channel].getTime()));
 		}
 
 		// in case this transaction tried to arrive while the queue was full
@@ -104,7 +104,7 @@ bool dramSystem::enqueue(transaction *trans)
 		timingOutStream << "+T(" << trans->getAddresses().channel << ")[" << channel[trans->getAddresses().channel].getTransactionQueueCount() << "]" << endl;
 #endif
 		// if the transaction was successfully enqueued, set its enqueue time
-		trans->setEnqueueTime(channel[trans->getAddresses().channel].get_time());
+		trans->setEnqueueTime(channel[trans->getAddresses().channel].getTime());
 		return true;
 	}
 }
@@ -137,7 +137,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 
 				updateSystemTime(); 
 
-				transaction *completed_t = channel[chan].get_oldest_completed();
+				transaction *completed_t = channel[chan].getOldestCompletedTransaction();
 
 				if(completed_t != NULL)
 				{
@@ -160,7 +160,7 @@ void dramSystem::enqueueTimeShift(transaction* trans)
 		else
 			break;
 
-		trans->setEnqueueTime(channel[chan].get_time());
+		trans->setEnqueueTime(channel[chan].getTime());
 	}
 }
 
@@ -217,7 +217,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 
 				updateSystemTime(); 
 
-				transaction *completed_t = channel[chan].get_oldest_completed();
+				transaction *completed_t = channel[chan].getOldestCompletedTransaction();
 
 				if (completed_t != NULL)
 				{
@@ -254,7 +254,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 
 void dramSystem::runSimulations()
 {
-	for (int i = sim_parameters.get_request_count(); i > 0; --i)
+	for (int i = simParameters.get_request_count(); i > 0; --i)
 	{
 		transaction* input_t;
 		if (getNextIncomingTransaction(input_t) == SUCCESS)
@@ -290,7 +290,7 @@ void dramSystem::runSimulations()
 
 						channel[temp_c->getAddress().channel].executeCommand(temp_c, min_gap);
 						updateSystemTime(); 
-						transaction *completed_t = channel[oldest_chan_id].get_oldest_completed();
+						transaction *completed_t = channel[oldest_chan_id].getOldestCompletedTransaction();
 						if(completed_t != NULL)
 							delete completed_t;
 					}
