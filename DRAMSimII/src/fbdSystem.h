@@ -33,24 +33,12 @@ namespace DRAMSimII
 	{
 	private:
 		// members
-		std::vector<fbdChannel> fbdChannels;	// the serial channels
-		std::vector<dramChannel> dramChannels;	// used to keep track of the channels hanging off the AMBs
-		//std::multimap<tick_t,fbdFrame> eventQueue;
-	public:
-
-		// functions
-		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
-		bool enqueue(transaction* trans); // enqueue this transaction into the proper per-channel queue
-		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); }
-		void enqueueTimeShift(transaction* trans);
-		input_status_t waitForTransactionToFinish(transaction *trans);
-		double Frequency() const { return systemConfig.Frequency(); }
-		tick_t nextTick() const;		
-		void doPowerCalculation();
-		void printStatistics();
+		std::vector<fbdChannel> channels;	// the serial channels
+		
+	public:		
 
 		// constructors
-		explicit fbdSystem(const dramSettings *settings);		
+		explicit fbdSystem(const dramSettings& settings);		
 	};
 }
 

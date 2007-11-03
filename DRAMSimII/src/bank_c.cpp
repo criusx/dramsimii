@@ -3,9 +3,9 @@
 using namespace DRAMSimII;
 using namespace std;
 
-bank_c::bank_c(const dramSettings *settings, const dramTimingSpecification &timingVal):
+bank_c::bank_c(const dramSettings& settings, const dramTimingSpecification &timingVal):
 timing(timingVal),
-perBankQueue(settings->perBankQueueDepth),
+perBankQueue(settings.perBankQueueDepth),
 lastRASTime(-100),
 lastCASTime(-100),
 lastCASWTime(-100),

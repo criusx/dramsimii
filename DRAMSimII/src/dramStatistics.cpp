@@ -6,13 +6,13 @@
 using namespace DRAMSimII;
 using namespace std;
 
-dramStatistics::dramStatistics(const dramSettings *settings):
+dramStatistics::dramStatistics(const dramSettings& settings):
 valid_transaction_count(0),
 start_no(0),
 end_no(0),
 bo8_count(0),
 bo4_count(0),
-columnDepth(log2(settings->columnSize)),
+columnDepth(log2(settings.columnSize)),
 commandDelay(),
 commandExceution()
 {}

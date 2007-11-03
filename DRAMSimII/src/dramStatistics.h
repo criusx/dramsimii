@@ -31,7 +31,7 @@ namespace DRAMSimII
 	public:
 
 		// constructors
-		explicit dramStatistics(const dramSettings *settings);
+		explicit dramStatistics(const dramSettings& settings);
 
 		// functions
 		void clear();

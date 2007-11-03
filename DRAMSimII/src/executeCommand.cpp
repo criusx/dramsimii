@@ -22,7 +22,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	currentRank.lastBankID = this_command->getAddress().bank;
 
-	int t_al = this_command->isPostedCAS() ? timingSpecification.t_al : 0;
+	int t_al = this_command->isPostedCAS() ? timingSpecification.tAL() : 0;
 
 	// update the channel's idea of what time it is and set the start time for the command
 	// ensure that the command is never started before it is enqueued
@@ -40,7 +40,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 			currentRank.issueRAS(time, this_command);
 			
 			// specific for RAS command
-			this_command->setCompletionTime(this_command->getStartTime() + timingSpecification.t_cmd + timingSpecification.t_ras);
+			this_command->setCompletionTime(this_command->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRAS());
 		}
 		break;
 
@@ -55,7 +55,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
-		this_command->setCompletionTime(max(currentBank.lastRASTime + timingSpecification.t_rcd + timingSpecification.t_cas + timingSpecification.t_burst, time + timingSpecification.t_cmd + timingSpecification.t_cas + timingSpecification.t_burst));
+		this_command->setCompletionTime(max(currentBank.lastRASTime + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;
 
@@ -70,14 +70,14 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		
 		// for the CAS write command
 		this_command->getHost()->setCompletionTime(time);
-		this_command->setCompletionTime(time + timingSpecification.t_cmd + timingSpecification.t_cwd + timingSpecification.t_burst + timingSpecification.t_wr);
+		this_command->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 		break;
 
 	case PRECHARGE_COMMAND:
 
 		currentRank.issuePRE(time, this_command);
 
-		this_command->setCompletionTime(this_command->getStartTime() + timingSpecification.t_cmd + timingSpecification.t_rp);
+		this_command->setCompletionTime(this_command->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRP());
 
 		break;
 
@@ -85,7 +85,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 		currentRank.issueREF(time, this_command);
 
-		this_command->setCompletionTime(time + timingSpecification.t_cmd + timingSpecification.t_rfc);
+		this_command->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tRFC());
 		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;
 

@@ -27,7 +27,7 @@ namespace DRAMSimII
 		// constructors
 		dramAlgorithm(int, int, int);
 		dramAlgorithm(const dramAlgorithm &);
-		dramAlgorithm(const dramSettings *settings);
+		dramAlgorithm(const dramSettings& settings);
 
 		// functions
 		void init(int, int, int); 

@@ -12,9 +12,9 @@ namespace DRAMSimII
 	class fbdChannel: dramChannel
 	{
 	private:
-		std::vector<fbdAMB> ambs;
+		//std::vector<fbdChannel> ranks;
 	public:
-		explicit fbdChannel(const dramSettings *settings);
+		explicit fbdChannel(const dramSettings& settings);
 	};
 }
 

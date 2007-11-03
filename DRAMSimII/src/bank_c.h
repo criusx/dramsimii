@@ -45,7 +45,7 @@ namespace DRAMSimII
 
 
 		// constructors
-		explicit bank_c(const dramSettings *settings, const dramTimingSpecification &timingVal);
+		explicit bank_c(const dramSettings& settings, const dramTimingSpecification &timingVal);
 		bank_c(const bank_c &);	
 	};
 }

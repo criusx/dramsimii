@@ -19,7 +19,7 @@ namespace DRAMSimII
 	class dramChannel
 	{
 		// members
-	private:
+	protected:
 		tick_t time;							// channel time, allow for channel concurrency			
 		tick_t lastRefreshTime;					// tells me when last refresh was done
 		unsigned lastRankID;					// id of the last accessed rank of this channel
@@ -43,7 +43,7 @@ namespace DRAMSimII
 		const command *readNextCommand() const;
 		
 		const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
-		int minProtocolGap(const command *thisCommand) const;
+		virtual int minProtocolGap(const command *thisCommand) const;
 		void executeCommand(command *, const int);
 		void doPowerCalculation();
 
@@ -83,7 +83,7 @@ namespace DRAMSimII
 
 		// constructors
 		explicit dramChannel();	
-		explicit dramChannel(const dramSettings *settings);
+		explicit dramChannel(const dramSettings& settings);
 		dramChannel(const dramChannel &);
 
 		

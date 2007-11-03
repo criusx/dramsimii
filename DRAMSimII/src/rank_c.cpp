@@ -4,7 +4,7 @@
 using namespace DRAMSimII;
 using namespace std;
 
-rank_c::rank_c(const dramSettings *settings, const dramTimingSpecification &timingVal):
+rank_c::rank_c(const dramSettings& settings, const dramTimingSpecification &timingVal):
 timing(timingVal),
 lastRefreshTime(0),
 lastPrechargeTime(0),
@@ -14,10 +14,10 @@ prechargeTime(0),
 lastCASLength(0),
 lastCASWLength(0),
 rankID(UINT_MAX),
-lastBankID(settings->bankCount - 1),
+lastBankID(settings.bankCount - 1),
 banksPrecharged(0),
 lastRASTimes(4),
-bank(settings->bankCount,bank_c(settings, timingVal))
+bank(settings.bankCount,bank_c(settings, timingVal))
 {}
 
 rank_c::rank_c(const rank_c &r):

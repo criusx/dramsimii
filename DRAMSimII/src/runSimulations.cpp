@@ -77,7 +77,7 @@ void dramSystem::runSimulations3()
 			}
 			else
 				// figure that the cpu <=> mch bus runs at the mostly the same speed
-				input_t->setEnqueueTime(input_t->getEnqueueTime() + channel[0].getTimingSpecification().t_cmd);
+				input_t->setEnqueueTime(input_t->getEnqueueTime() + channel[0].getTimingSpecification().tCMD());
 		}
 		nextArrival = nextTick();
 	}

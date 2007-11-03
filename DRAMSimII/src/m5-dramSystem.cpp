@@ -59,8 +59,13 @@ PhysicalMemory(p), tickEvent(this), needRetry(false)
 	const char **settingsMap = new const char*[2];
 	settingsMap[0] = "--settings";
 	settingsMap[1] = p->settingsFile.c_str();
-	dramSettings *settings = new dramSettings(2,settingsMap);
-	ds = new dramSystem(settings);
+	dramSettings settings(2,settingsMap);
+
+	// if this is a normal system or a fbd system
+	if (settings->systemType == BASELINE_CONFIG)
+		ds = new dramSystem(settings);
+	else
+		ds = new fbdSystem(settings);
 	delete settings;
 
 	nextStats = STATS_INTERVAL;

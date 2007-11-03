@@ -36,10 +36,10 @@ tick_t dramSystem::nextTick() const
 		if (transaction *nextTrans = currentChan->readTransactionSimple())
 		{
 			// make sure it can finish
-			int tempGap = max(1,(int)(nextTrans->getEnqueueTime() - currentChan->getTime()) + currentChan->getTimingSpecification().t_buffer_delay); 
+			int tempGap = max(1,(int)(nextTrans->getEnqueueTime() - currentChan->getTime()) + currentChan->getTimingSpecification().tBufferDelay()); 
 
 			assert(nextTrans->getEnqueueTime() <= currentChan->getTime());
-			assert(tempGap <= currentChan->getTimingSpecification().t_buffer_delay );
+			assert(tempGap <= currentChan->getTimingSpecification().tBufferDelay() );
 			// whenever the next transaction is ready and there are available slots for the R/C/P commands
 			if ((tempGap + currentChan->getTime() < nextWake) && (currentChan->checkForAvailableCommandSlots(nextTrans)))
 			{
@@ -654,7 +654,7 @@ enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
 	return SUCCESS;
 }
 
-dramSystem::dramSystem(const dramSettings *settings): 
+dramSystem::dramSystem(const dramSettings &settings): 
 systemConfig(settings),
 channel(systemConfig.getChannelCount(),
 		dramChannel(settings)),
@@ -662,10 +662,9 @@ channel(systemConfig.getChannelCount(),
 		statistics(settings),
 		input_stream(settings),
 		time(0)
-		//event_q(COMMAND_QUEUE_SIZE)
 {
 	string suffix;
-	switch (settings->outFileType)
+	switch (settings.outFileType)
 	{
 	case BZ:
 		timingOutStream.push(boost::iostreams::bzip2_compressor());
@@ -689,9 +688,9 @@ channel(systemConfig.getChannelCount(),
 	case NONE:
 		break;
 	}
-	if (settings->outFileType == GZ || settings->outFileType == BZ || settings->outFileType == UNCOMPRESSED)
+	if (settings.outFileType == GZ || settings.outFileType == BZ || settings.outFileType == UNCOMPRESSED)
 	{
-		string baseFilename = settings->outFile;
+		string baseFilename = settings.outFile;
 
 		// strip off the file suffix
 		if (baseFilename.find("gz") > 0)
@@ -765,7 +764,7 @@ channel(systemConfig.getChannelCount(),
 		i->setStatistics(&statistics);
 	}
 	// set the channelID so that each channel may know its ordinal value
-	for (unsigned i = 0; i < settings->channelCount; i++)
+	for (unsigned i = 0; i < settings.channelCount; i++)
 	{
 		channel[i].setChannelID(i);		
 	}

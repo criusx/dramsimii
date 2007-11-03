@@ -59,7 +59,7 @@ namespace DRAMSimII
 		void runSimulations3();
 
 		// constructors	
-		explicit dramSystem(const dramSettings *settings);
+		explicit dramSystem(const dramSettings& settings);
 		
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const dramSystem &);	

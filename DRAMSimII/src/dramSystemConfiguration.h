@@ -41,7 +41,7 @@ namespace DRAMSimII
 
 	public:
 		// constructors
-		explicit dramSystemConfiguration(const dramSettings *settings);
+		explicit dramSystemConfiguration(const dramSettings& settings);
 		explicit dramSystemConfiguration(const dramSystemConfiguration *rhs);
 
 		// accessors

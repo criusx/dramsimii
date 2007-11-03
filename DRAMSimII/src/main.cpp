@@ -14,13 +14,12 @@ int main(int argc,const char **argv, char *envp[])
 {
 	map<enum file_io_token_t,string> parameters;
 
-	const dramSettings *settings = new dramSettings(argc, argv);
+	const dramSettings settings(argc, argv);
 	//create_input_map(argc, argv, parameters);
 	//simulation_parameters_t	*simulation_parameters;
 	//dram_statistics_t	*dram_stats;
 
 	dramSystem ds(settings); // combines read_command line and other inits
-	delete settings;
 	//ds.run_simulations2();
 	ds.runSimulations3();
 

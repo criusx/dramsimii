@@ -17,7 +17,7 @@ namespace DRAMSimII
 	public:
 		// constructors
 		simulationParameters(std::map<file_io_token_t,std::string> &);
-		simulationParameters(const dramSettings *settings);
+		simulationParameters(const dramSettings& settings);
 
 		// functions
 		int get_request_count() {return request_count;}

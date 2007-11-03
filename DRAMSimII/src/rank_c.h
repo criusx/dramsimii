@@ -41,7 +41,7 @@ namespace DRAMSimII
 
 		// constructors
 		rank_c(const rank_c &);
-		explicit rank_c(const dramSettings *settings, const dramTimingSpecification &timingVal);
+		explicit rank_c(const dramSettings& settings, const dramTimingSpecification &timingVal);
 
 		// accessors
 		unsigned getRankID() const { return rankID; }

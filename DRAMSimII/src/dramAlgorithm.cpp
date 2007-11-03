@@ -2,7 +2,8 @@
 
 using namespace DRAMSimII;
 
-dramAlgorithm::dramAlgorithm(const dramSettings *settings){
+dramAlgorithm::dramAlgorithm(const dramSettings& settings)
+{
 	rank_id[0] = 0;
 	rank_id[1] = 3;
 	ras_bank_id[0] = 0;
@@ -21,13 +22,13 @@ dramAlgorithm::dramAlgorithm(const dramSettings *settings){
 	transaction_type[3] = READ_TRANSACTION;
 
 
-	WHCC.init(settings->rankCount * settings->bankCount * 2);
+	WHCC.init(settings.rankCount * settings.bankCount * 2);
 
 	command *temp_c;
 
-	if (settings->rankCount == 2)
+	if (settings.rankCount == 2)
 	{
-		if(settings->bankCount == 8)
+		if(settings.bankCount == 8)
 		{
 			temp_c = new command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
 			temp_c = new command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 1; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
@@ -62,7 +63,7 @@ dramAlgorithm::dramAlgorithm(const dramSettings *settings){
 			temp_c = new command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 1; temp_c->getAddress().bank =  3; WHCC.push(temp_c);
 			temp_c = new command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  7; WHCC.push(temp_c);
 		}
-		else if (settings->bankCount == 16)
+		else if (settings.bankCount == 16)
 		{
 			temp_c = new command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
 			temp_c = new command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 1; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
@@ -130,7 +131,7 @@ dramAlgorithm::dramAlgorithm(const dramSettings *settings){
 			temp_c = new command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank = 15; WHCC.push(temp_c);
 		}
 	}
-	else if (settings->rankCount == 4)
+	else if (settings.rankCount == 4)
 	{
 		temp_c = new command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
 		temp_c = new command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 1; temp_c->getAddress().bank =  0; WHCC.push(temp_c);

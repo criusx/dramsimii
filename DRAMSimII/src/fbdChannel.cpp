@@ -3,7 +3,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
-fbdChannel::fbdChannel(const dramSettings *settings):
+fbdChannel::fbdChannel(const dramSettings& settings):
 dramChannel(settings)
 {
 

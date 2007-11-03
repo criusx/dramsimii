@@ -6,32 +6,32 @@
 using namespace std;
 using namespace DRAMSimII;
 
-dramSystemConfiguration::dramSystemConfiguration(const dramSettings *settings):
-commandOrderingAlgorithm(settings->commandOrderingAlgorithm),
-transactionOrderingAlgorithm(settings->transactionOrderingAlgorithm),
-configType(BASELINE_CONFIG), // FIXME: add FBD
-refreshTime(settings->dataRate * settings->refreshTime),
-refreshPolicy(settings->refreshPolicy),
-columnSize(settings->columnSize),
-rowSize(settings->rowSize),
-cachelineSize(settings->cacheLineSize),
-seniorityAgeLimit(settings->seniorityAgeLimit),
-dram_type(settings->dramType),
-rowBufferManagementPolicy(settings->rowBufferManagementPolicy),
-addressMappingScheme(settings->addressMappingScheme),
-datarate(settings->dataRate),
-postedCAS(settings->postedCAS),
-readWriteGrouping(settings->readWriteGrouping),
-autoPrecharge(settings->autoPrecharge),
-clockGranularity(settings->clockGranularity),
-cachelinesPerRow(settings->cachelinesPerRow),
-channelCount(settings->channelCount),
-rankCount(settings->rankCount),
-bankCount(settings->bankCount),
-rowCount(settings->rowCount),
-columnCount(settings->columnCount),
-shortBurstRatio(settings->shortBurstRatio),
-readPercentage(settings->readPercentage)
+dramSystemConfiguration::dramSystemConfiguration(const dramSettings& settings):
+commandOrderingAlgorithm(settings.commandOrderingAlgorithm),
+transactionOrderingAlgorithm(settings.transactionOrderingAlgorithm),
+configType(settings.systemType),
+refreshTime(settings.dataRate * settings.refreshTime),
+refreshPolicy(settings.refreshPolicy),
+columnSize(settings.columnSize),
+rowSize(settings.rowSize),
+cachelineSize(settings.cacheLineSize),
+seniorityAgeLimit(settings.seniorityAgeLimit),
+dram_type(settings.dramType),
+rowBufferManagementPolicy(settings.rowBufferManagementPolicy),
+addressMappingScheme(settings.addressMappingScheme),
+datarate(settings.dataRate),
+postedCAS(settings.postedCAS),
+readWriteGrouping(settings.readWriteGrouping),
+autoPrecharge(settings.autoPrecharge),
+clockGranularity(settings.clockGranularity),
+cachelinesPerRow(settings.cachelinesPerRow),
+channelCount(settings.channelCount),
+rankCount(settings.rankCount),
+bankCount(settings.bankCount),
+rowCount(settings.rowCount),
+columnCount(settings.columnCount),
+shortBurstRatio(settings.shortBurstRatio),
+readPercentage(settings.readPercentage)
 {}
 
 

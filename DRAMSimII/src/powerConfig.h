@@ -57,7 +57,7 @@ namespace DRAMSimII
 
 	public:
 		powerConfig();
-		powerConfig(const dramSettings *settings);
+		powerConfig(const dramSettings& settings);
 		//void recordCommand(const command *, const dramChannel &channel, const dramTimingSpecification &timing);
 		//void doPowerCalculation(dramChannel * const chan);
 

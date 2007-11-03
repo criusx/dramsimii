@@ -12,35 +12,35 @@
 using namespace std;
 using namespace DRAMSimII;
 
-dramChannel::dramChannel(const dramSettings *settings):
+dramChannel::dramChannel(const dramSettings& settings):
 time(0),
 lastRefreshTime(0),
 lastRankID(0),
 timingSpecification(settings),
-transactionQueue(settings->transactionQueueDepth),
+transactionQueue(settings.transactionQueueDepth),
 refreshCounter(NULL),
-historyQueue(settings->historyQueueDepth),
-completionQueue(settings->completionQueueDepth),
+historyQueue(settings.historyQueueDepth),
+completionQueue(settings.completionQueueDepth),
 systemConfig(NULL),
 powerModel(settings),
 algorithm(settings),
-rank(settings->rankCount, rank_c(settings, timingSpecification))
+rank(settings.rankCount, rank_c(settings, timingSpecification))
 {
 	// assign an id to each channel (normally done with commands)
-	for (unsigned i = 0; i < settings->rankCount; i++)
+	for (unsigned i = 0; i < settings.rankCount; i++)
 	{
 		rank[i].setRankID(i);
 	}
 
 	// initialize the refresh counters per rank
-	if (settings->refreshPolicy != NO_REFRESH)
+	if (settings.refreshPolicy != NO_REFRESH)
 	{
-		refreshCounter = new transaction *[settings->rankCount];
+		refreshCounter = new transaction *[settings.rankCount];
 
 		// stagger the times that each rank will be refreshed so they don't all arrive in a burst
-		unsigned step = settings->tREFI / settings->rankCount;
+		unsigned step = settings.tREFI / settings.rankCount;
 
-		for (unsigned j = 0; j < settings->rankCount; ++j)
+		for (unsigned j = 0; j < settings.rankCount; ++j)
 		{
 			transaction *newTrans = new transaction();
 			newTrans->setType(AUTO_REFRESH_TRANSACTION);
@@ -94,10 +94,10 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				// the transaction queue and all the per bank queues are empty,
 				// so just move time forward to the point where the transaction starts
 				// or move time forward until the transaction is ready to be decoded
-				if ((transactionQueue.size() > 0) && (time + timingSpecification.t_buffer_delay <= endTime))
+				if ((transactionQueue.size() > 0) && (time + timingSpecification.tBufferDelay() <= endTime))
 				{
 					tick_t oldTime = time;
-					time = timingSpecification.t_buffer_delay + transactionQueue.front()->getEnqueueTime();
+					time = timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime();
 					assert(oldTime < time);
 				}
 				// no transactions to convert, no commands to issue, just go forward
@@ -116,7 +116,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 				// allow system to overrun so that it may send a command
 				// FIXME: will this work?
-				if ((min_gap + time <= endTime) || (min_gap + time <= endTime + timingSpecification.t_cmd))
+				if ((min_gap + time <= endTime) || (min_gap + time <= endTime + timingSpecification.tCMD()))
 				{
 					command *temp_com = getNextCommand();
 
@@ -188,7 +188,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 #endif
 		}
 	}
-	assert(time <= endTime + timingSpecification.t_cmd);
+	assert(time <= endTime + timingSpecification.tCMD());
 	*transFinishTime = endTime;
 #ifdef M5DEBUG
 	timingOutStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
@@ -301,7 +301,7 @@ transaction *dramChannel::getRefresh()
 	}
 
 	refreshCounter[earliestRank] = new transaction();
-	refreshCounter[earliestRank]->setEnqueueTime(earliestTransaction->getEnqueueTime() + timingSpecification.t_refi);
+	refreshCounter[earliestRank]->setEnqueueTime(earliestTransaction->getEnqueueTime() + timingSpecification.tREFI());
 	refreshCounter[earliestRank]->setType(AUTO_REFRESH_TRANSACTION);
 	refreshCounter[earliestRank]->getAddresses().rank = earliestRank;
 
@@ -332,10 +332,10 @@ const transaction *dramChannel::readTransaction() const
 
 	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
 	{
-		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.t_buffer_delay))
+		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
 		{
 #ifdef M5DEBUG
-			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.t_buffer_delay << endl;			
+			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;			
 #endif
 			return NULL; // not enough time has passed		
 		}
@@ -349,10 +349,10 @@ const transaction *dramChannel::readTransaction() const
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig->getSeniorityAgeLimit()))
 		{
-			if (time - tempTrans->getEnqueueTime() < timingSpecification.t_buffer_delay)
+			if (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay())
 			{
 #ifdef M5DEBUG
-				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.t_buffer_delay << endl;			
+				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;			
 #endif
 				// if this refresh command has arrived
 				if (refreshTrans->getEnqueueTime() < time) 
@@ -380,10 +380,10 @@ transaction *dramChannel::getTransaction()
 
 	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
 	{
-		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.t_buffer_delay))
+		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
 		{
 #ifdef M5DEBUG
-			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.t_buffer_delay << endl;			
+			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;			
 #endif
 			return NULL; // not enough time has passed		
 		}
@@ -395,10 +395,10 @@ transaction *dramChannel::getTransaction()
 
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig->getSeniorityAgeLimit()))
 		{
-			if (time - tempTrans->getEnqueueTime() < timingSpecification.t_buffer_delay)
+			if (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay())
 			{
 #ifdef M5DEBUG
-				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.t_buffer_delay << endl;			
+				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;			
 #endif
 				// if this refresh command has arrived
 				if (refreshTrans->getEnqueueTime() < time) 

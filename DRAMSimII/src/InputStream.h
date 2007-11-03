@@ -33,7 +33,7 @@ namespace DRAMSimII
 
 	public: 
 		// constructors	
-		inputStream(const dramSettings *settings);
+		inputStream(const dramSettings& settings);
 		
 
 		// functions

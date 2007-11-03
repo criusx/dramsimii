@@ -24,6 +24,7 @@ namespace DRAMSimII
 		unsigned dataRate; // frequency
 		command_ordering_algorithm_t commandOrderingAlgorithm;
 		transaction_ordering_algorithm_t transactionOrderingAlgorithm;
+		system_configuration_type_t systemType;
 		unsigned perBankQueueDepth;
 		unsigned columnSize;
 		unsigned rowSize;
