@@ -24,4 +24,7 @@ Source('runSimulations.cpp')
 Source('simulationParameters.cpp')
 Source('transaction.cpp')
 Source('transaction2commands.cpp')
+Source('fbdFrame.cpp')
+Source('fbdChannel.cpp')
+Source('fbdAMb.cpp')
 

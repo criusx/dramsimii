@@ -276,7 +276,7 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 		transaction *trans = new transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 		// convert the physical address to chan, rank, bank, etc.
-		memory->ds->convertAddress(trans->getAddresses());
+		//memory->ds->convertAddress(trans->getAddresses());
 
 		// move channels to current time so that calculations based on current channel times work
 		// should also not start/finish any commands, since this would happen at a scheduled time
@@ -308,12 +308,13 @@ M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
 			//pkt->setSrc(memID);
 			//doSendTiming(pkt,0);
 
-			delete trans;
+			
 			// http://m5.eecs.umich.edu/wiki/index.php/Memory_System
 			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
 			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
 			memory->needRetry = true;
 			memory->mostRecentChannel = trans->getAddresses().channel;
+			delete trans;
 
 #ifdef M5DEBUG
 			timingOutStream << "Wait for retry before sending more to ch[" << trans->getAddresses().channel << "]" << endl;

@@ -13,9 +13,10 @@
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/device/file.hpp>
+#ifndef WIN32
 #include <boost/iostreams/filter/bzip2.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
-
+#endif
 #include "dramSystem.h"
 
 using namespace std;
@@ -665,19 +666,23 @@ channel(systemConfig.getChannelCount(),
 {
 	string suffix;
 	switch (settings.outFileType)
-	{
+	{	
 	case BZ:
+#ifndef WIN32
 		timingOutStream.push(boost::iostreams::bzip2_compressor());
 		powerOutStream.push(boost::iostreams::bzip2_compressor());
 		statsOutStream.push(boost::iostreams::bzip2_compressor());
 		suffix = ".bz2";
 		break;
+#endif
 	case GZ:
+#ifndef WIN32
 		timingOutStream.push(boost::iostreams::gzip_compressor());
 		powerOutStream.push(boost::iostreams::gzip_compressor());
 		statsOutStream.push(boost::iostreams::gzip_compressor());
 		suffix = ".gz";
 		break;
+#endif
 	case UNCOMPRESSED:
 		break;
 	case COUT:

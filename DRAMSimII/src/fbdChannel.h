@@ -15,6 +15,9 @@ namespace DRAMSimII
 		//std::vector<fbdChannel> ranks;
 	public:
 		explicit fbdChannel(const dramSettings& settings);
+
+		// functions
+		int minProtocolGap(const command *this_c) const;
 	};
 }
 

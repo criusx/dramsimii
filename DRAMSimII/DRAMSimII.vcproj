@@ -41,11 +41,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				FavorSizeOrSpeed="0"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.27.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;M5DEBUG;MEMCHECK"
 				MinimalRebuild="true"
-				ExceptionHandling="0"
+				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
@@ -349,13 +350,6 @@
 			<File
 				RelativePath=".\src\fbdChannel.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\fbdFrame.cpp"

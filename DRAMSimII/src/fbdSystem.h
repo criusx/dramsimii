@@ -35,10 +35,11 @@ namespace DRAMSimII
 		// members
 		std::vector<fbdChannel> channels;	// the serial channels
 		
-	public:		
-
+	public:
 		// constructors
 		explicit fbdSystem(const dramSettings& settings);		
+
+		
 	};
 }
 

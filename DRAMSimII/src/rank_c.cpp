@@ -87,23 +87,22 @@ void rank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 void rank_c::issueCAS(const tick_t currentTime, const command *currentCommand)
 {
 	// update the bank to reflect this change also
-	bank_c &currentBank = bank[currentCommand->getAddress().bank];
-	currentBank.issueCAS(currentTime, currentCommand);
-
+	bank[currentCommand->getAddress().bank].issueCAS(currentTime, currentCommand);
+	
 	lastCASTime = currentTime;
 	lastCASLength = currentCommand->getLength();
+
 	lastBankID = currentCommand->getAddress().bank;
 }
 
 void rank_c::issueCASW(const tick_t currentTime, const command *currentCommand)
 {
 	// update the bank to reflect this change also
-	bank_c &currentBank = bank[currentCommand->getAddress().bank];
-	currentBank.issueCASW(currentTime, currentCommand);
+	bank[currentCommand->getAddress().bank].issueCASW(currentTime, currentCommand);
 
 	lastCASWTime = currentTime;
-
 	lastCASWLength = currentCommand->getLength();
+
 	lastBankID = currentCommand->getAddress().bank;
 }
 
