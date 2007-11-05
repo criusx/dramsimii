@@ -20,8 +20,24 @@ lastRASTimes(4),
 bank(settings.bankCount,bank_c(settings, timingVal))
 {}
 
-rank_c::rank_c(const rank_c &r):
-timing(r.timing),
+//rank_c::rank_c(const rank_c &r):
+//timing(r.timing),
+//lastRefreshTime(r.lastRefreshTime),
+//lastPrechargeTime(0),
+//lastCASTime(r.lastCASTime),
+//lastCASWTime(r.lastCASWTime),
+//prechargeTime(r.prechargeTime),
+//lastCASLength(r.lastCASLength),
+//lastCASWLength(r.lastCASWLength),
+//rankID(r.rankID),
+//lastBankID(r.lastBankID),
+//lastRASTimes(r.lastRASTimes),
+//banksPrecharged(r.banksPrecharged),
+//bank(r.bank)
+//{}
+
+rank_c::rank_c(const rank_c &r, const dramTimingSpecification &timingVal):
+timing(timingVal),
 lastRefreshTime(r.lastRefreshTime),
 lastPrechargeTime(0),
 lastCASTime(r.lastCASTime),
@@ -33,7 +49,7 @@ rankID(r.rankID),
 lastBankID(r.lastBankID),
 lastRASTimes(r.lastRASTimes),
 banksPrecharged(r.banksPrecharged),
-bank(r.bank)
+bank((unsigned)r.bank.size(), bank_c(r.bank[0], timingVal))
 {}
 
 void rank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
@@ -68,10 +84,10 @@ void rank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 	switch (currentCommand->getCommandType())
 	{
 	case CAS_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), currentBank.lastRASTime + timing.tRAS());
+		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), currentBank.getLastRASTime() + timing.tRAS());
 		break;
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR(), currentBank.lastRASTime + timing.tRAS());
+		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR(), currentBank.getLastRASTime() + timing.tRAS());
 		break;
 	case PRECHARGE_COMMAND:
 		lastPrechargeTime = currentTime;

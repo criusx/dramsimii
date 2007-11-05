@@ -33,7 +33,7 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 	case RAS_COMMAND:
 		{
 			// respect t_rp of same bank
-			int tRPGap = (int)(currentBank.lastPrechargeTime - time) + timingSpecification.tRP();
+			int tRPGap = (int)(currentBank.getLastPrechargeTime() - time) + timingSpecification.tRP();
 
 			int ras_q_count = currentRank.lastRASTimes.size();
 
@@ -53,7 +53,7 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 			}
 
 			// respect the row cycle time limitation
-			int tRCGap = (int)(currentBank.lastRASTime - time) + timingSpecification.tRC();
+			int tRCGap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRC();
 
 			// respect the t_faw value for DDR2 and beyond
 			int tFAWGap;
@@ -84,14 +84,14 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 	case CAS_COMMAND:
 		{
 			//respect last ras of same rank
-			int t_ras_gap = (int)((currentBank.lastRASTime - time) + timingSpecification.tRCD() - t_al);
+			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - t_al);
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
-			tick_t other_r_last_cas_time = time - 1000;
-			int other_r_last_cas_length = timingSpecification.tBurst();
-			tick_t other_r_last_casw_time = time - 1000;
-			int other_r_last_casw_length = timingSpecification.tBurst();
+			//tick_t other_r_last_cas_time = time - 1000;
+			//int other_r_last_cas_length = timingSpecification.tBurst();
+			//tick_t other_r_last_casw_time = time - 1000;
+			//int other_r_last_casw_length = timingSpecification.tBurst();
 
 			// find the most recent cas(w) time and length
 			//for (unsigned rank_id = 0; rank_id < rank.size() ; rank_id++)
@@ -146,7 +146,7 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 	case CAS_WRITE_COMMAND:
 		{
 			//respect last ras of same rank
-			int t_ras_gap = (int)((currentBank.lastRASTime - time) + timingSpecification.tRCD() - t_al);
+			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - t_al);
 
 			tick_t other_r_last_cas_time = time - 1000;
 			int other_r_last_cas_length = timingSpecification.tBurst();
@@ -201,13 +201,13 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 	case PRECHARGE_COMMAND:
 		{
 			// respect t_ras of same bank
-			int t_ras_gap = (int)(currentBank.lastRASTime - time) + timingSpecification.tRAS();
+			int t_ras_gap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			int t_cas_gap = max(0,(int)((currentBank.lastCASTime - time) + t_al + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
+			int t_cas_gap = max(0,(int)((currentBank.getLastCASTime() - time) + t_al + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
 
 			// respect t_casw of same bank
-			t_cas_gap = max(t_cas_gap,(int)((currentBank.lastCASWTime - time) + t_al + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
+			t_cas_gap = max(t_cas_gap,(int)((currentBank.getLastCASWTime() - time) + t_al + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
 
 			min_gap = max(t_ras_gap,t_cas_gap);
 		}

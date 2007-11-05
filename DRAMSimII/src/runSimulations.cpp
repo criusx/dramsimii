@@ -11,8 +11,6 @@ void dramSystem::runSimulations2()
 {
 	for (int i = simParameters.get_request_count(); i > 0; --i)
 	{
-		transaction *input_t;
-
 		// see if it is time for the channel to arrive, if so, put in the channel
 		// queue
 		// if not, either make the channels wait and move time to the point where
@@ -20,7 +18,7 @@ void dramSystem::runSimulations2()
 		// make sure not to overshoot the time by looking at when a transaction would end
 		// so that executing one more command doesn't go too far forward
 		// this only happens when there is the option to move time or execute commands
-		if (getNextIncomingTransaction(input_t) == SUCCESS)
+		if (transaction *input_t = getNextIncomingTransaction())
 		{
 			// record stats
 			statistics.collectTransactionStats(input_t);
@@ -39,16 +37,29 @@ void dramSystem::runSimulations2()
 	}
 }
 
+#define STATSINTERVAL 1000000
+
 void dramSystem::runSimulations3()
 {
 	transaction *input_t = NULL;
 	tick_t nextArrival = 0;
+	tick_t nextStats = STATSINTERVAL;
 
-	for (int i = simParameters.get_request_count(); i > 0; )
+	for (unsigned i = simParameters.get_request_count(); i > 0; )
 	{
+		// print stats periodically
+		if (time >= nextStats)
+		{		
+			doPowerCalculation();
+			printStatistics();
+		}
+		while (time >= nextStats)
+			nextStats += STATSINTERVAL;
+
 		if (!input_t)
 		{
-			if (getNextIncomingTransaction(input_t) != SUCCESS)
+			input_t = getNextIncomingTransaction();
+			if (!input_t)
 				break;
 			// if the previous transaction was delayed, thus making this arrival be in the past
 			// prevent new arrivals from arriving in the past
@@ -256,8 +267,7 @@ void dramSystem::runSimulations()
 {
 	for (int i = simParameters.get_request_count(); i > 0; --i)
 	{
-		transaction* input_t;
-		if (getNextIncomingTransaction(input_t) == SUCCESS)
+		if (transaction *input_t = getNextIncomingTransaction())
 		{
 			statistics.collectTransactionStats(input_t);
 

@@ -15,7 +15,7 @@ namespace DRAMSimII
 	{
 	private:
 		const dramTimingSpecification& timing;
-	public:	
+	protected:	
 		// members
 		queue<command> perBankQueue;		// per bank queue
 		tick_t lastRASTime;			// when did last RAS command start?
@@ -26,7 +26,7 @@ namespace DRAMSimII
 		unsigned lastCASLength;		// the length of the last CAS command issued
 		unsigned lastCASWLength;		// the length of the last CASW command issued
 		unsigned openRowID;				// if the bank is open, what is the row id?
-		bool isActivated;				// if the bank is activated, else precharged
+		bool activated;				// if the bank is activated, else precharged
 
 		// stats
 		unsigned RASCount;
@@ -36,17 +36,53 @@ namespace DRAMSimII
 		unsigned CASWCount;
 		unsigned previousCASWCount;		// the number of CASW commands since the last power calculation
 
+	public:
 		// functions
 		void issueRAS(const tick_t currentTime, const command *currentCommand);
 		void issuePRE(const tick_t currentTime, const command *currentCommand);
 		void issueCAS(const tick_t currentTime, const command *currentCommand);
 		void issueCASW(const tick_t currentTime, const command *currentCommand);
 		void issueREF(const tick_t currentTime, const command *currentCommand);
+		void makeCurrentCountsPrevious() { previousRASCount = RASCount; previousCASCount = CASCount; previousCASWCount = CASWCount; }
 
+		// accessors
+		tick_t getLastRASTime() const { return lastRASTime; }
+		tick_t getLastCASTime() const { return lastCASTime; }
+		tick_t getLastCASWTime() const {return lastCASWTime; }
+		tick_t getLastPrechargeTime() const { return lastPrechargeTime; }
+		tick_t getLastRefreshAllTime() const { return lastRefreshAllTime; }
+		unsigned getLastCASLength() const { return lastCASLength; }
+		unsigned getLastCASWLength() const { return lastCASWLength; }
+		unsigned getOpenRowID() const { return openRowID; }
+		bool isActivated() const { return activated; }
+		unsigned getRASCount() const { return RASCount; }
+		unsigned getPreviousRASCount() const { return previousRASCount; }
+		unsigned getCASCount() const { return CASCount; }
+		unsigned getPreviousCASCount() const { return previousCASCount; }
+		unsigned getCASWCount() const { return CASWCount; }
+		unsigned getPreviousCASWCount() const { return previousCASWCount; }
+		queue<command> &getPerBankQueue() { return perBankQueue; }
+		const queue<command> &getPerBankQueue() const { return perBankQueue; }
+
+		// mutators
+		void setLastRASTime(const tick_t value) { lastRASTime = value; }
+		void setLastCASTime(const tick_t value) { lastCASTime = value; }
+		void setLastCASWTime(const tick_t value) { lastCASWTime = value; }
+		void setLastPrechargeTime(const tick_t value) { lastPrechargeTime = value; }
+		void setLastRefreshAllTime(const tick_t value) { lastRefreshAllTime = value; }
+		void setLastCASLength(const unsigned value) { lastCASLength = value; }
+		void setLastCASWLength(const unsigned value) { lastCASWLength = value; }
+		void setActivated(const bool value) { activated = value; }
+		void incRASCount() { RASCount++; }
+		void clrRASCount() { RASCount = 0; }
+		void incCASCount() { CASCount++; }
+		void clrCASCount() { CASCount = 0; }
+		void incCASWCount() { CASWCount++; }
+		void clrCASWCount() { CASWCount = 0; }
 
 		// constructors
 		explicit bank_c(const dramSettings& settings, const dramTimingSpecification &timingVal);
-		bank_c(const bank_c &);	
+		bank_c(const bank_c &, const dramTimingSpecification &timingVal);	
 	};
 }
 #endif

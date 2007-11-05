@@ -42,7 +42,7 @@ dramTimingSpecification::dramTimingSpecification(const dramSettings& settings)
 
 	case DDR2:
 
-		t_al = settings.tAL;
+		t_al = settings.postedCAS ? settings.tAL : 0; // if posted CAS is disabled, tAL should be zero
 		t_burst = settings.tBurst;
 		t_cas = settings.tCAS;
 		t_cmd = 2;					// protocol specific, cannot be changed
@@ -63,7 +63,7 @@ dramTimingSpecification::dramTimingSpecification(const dramSettings& settings)
 
 	case DDR3:
 
-		t_al = settings.tAL;
+		t_al = settings.postedCAS ? settings.tAL : 0; // if posted CAS is disabled, tAL should be zero
 		t_burst = 8;				// protocol specific, cannot be changed 
 		t_cas = settings.tCAS;
 		t_cmd = 2;					// protocol specific, cannot be changed

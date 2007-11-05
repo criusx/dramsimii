@@ -21,7 +21,7 @@
 		<tBufferDelay>6</tBufferDelay>
 		<tBurst>8</tBurst>
 		<tCAS>5</tCAS>
-		<tCMD>2</tCMD>
+		<tCMD>1</tCMD>
 		<tCWD>8</tCWD>
 		<tFAW>28</tFAW>
 		<!--time between a row access and data restoration in the data array-->
@@ -102,6 +102,6 @@
 		<outFile type="gz">standardOutFile.gz</outFile>
 		<requestCount>990000000</requestCount>
 		<!--may be "mase","k6","mapped","random"-->
-		<inputFile type="mase" />
+		<inputFile type="mase">equake.trc</inputFile>
 	</simulationParameters>
 </dramspec>

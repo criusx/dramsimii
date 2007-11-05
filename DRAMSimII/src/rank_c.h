@@ -40,7 +40,7 @@ namespace DRAMSimII
 		
 
 		// constructors
-		rank_c(const rank_c &);
+		rank_c(const rank_c &, const dramTimingSpecification &timingVal);
 		explicit rank_c(const dramSettings& settings, const dramTimingSpecification &timingVal);
 
 		// accessors

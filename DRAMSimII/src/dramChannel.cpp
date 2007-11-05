@@ -63,7 +63,7 @@ completionQueue(dc.completionQueue),
 systemConfig(dc.systemConfig),
 powerModel(dc.powerModel),
 algorithm(dc.algorithm),
-rank(dc.rank)
+rank((unsigned)dc.rank.size(), rank_c(dc.rank[0],timingSpecification))
 {}
 
 
@@ -226,7 +226,7 @@ enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const in
 
 	for(int i = 0; i < bank_count; ++i)
 	{
-		command *temp_c = rank[rank_id].bank[i].perBankQueue.read(1);
+		command *temp_c = rank[rank_id].bank[i].getPerBankQueue().read(1);
 
 		if(temp_c != NULL)
 		{
@@ -263,8 +263,9 @@ void dramChannel::doPowerCalculation()
 		for (std::vector<bank_c>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
 			// Psys(ACT)
-			totalRAS += (l->RASCount - l->previousRASCount);
-			l->previousRASCount = l->RASCount;
+			totalRAS += (l->getRASCount() - l->getPreviousRASCount());
+			//l->previousRASCount = l->RASCount;
+			l->makeCurrentCountsPrevious();
 		}
 		cerr << "ch[" << channelID << "] %pre[" << k->prechargeTime / (time - powerModel.lastCalculation) * 100 << "] " << k->prechargeTime << endl;
 		k->prechargeTime = 0;

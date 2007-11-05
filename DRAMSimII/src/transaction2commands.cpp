@@ -17,7 +17,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 	// ensure that this transaction belongs on this channel
 	assert (trans->getAddresses().channel == channelID || trans->getType() == AUTO_REFRESH_TRANSACTION);
 
-	const queue<command> &bank_q = rank[trans->getAddresses().rank].bank[trans->getAddresses().bank].perBankQueue;
+	const queue<command> &bank_q = rank[trans->getAddresses().rank].bank[trans->getAddresses().bank].getPerBankQueue();
 	int availableCommandSlots = (trans->getType() == AUTO_REFRESH_TRANSACTION) ? 0 : bank_q.freecount();
 
 	// with closed page, all transactions convert into one of the following:
@@ -37,7 +37,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 				i != rank[trans->getAddresses().rank].bank.end();
 				i++)
 			{
-				if (i->perBankQueue.freecount() < 1)
+				if (i->getPerBankQueue().freecount() < 1)
 					return false;
 			}
 		}
@@ -70,7 +70,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 					i != rank[trans->getAddresses().rank].bank.end();
 					i++)
 				{					
-					if (i->perBankQueue.freecount() < 1)
+					if (i->getPerBankQueue().freecount() < 1)
 						return false;
 				}
 				return true;
@@ -134,7 +134,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 	// ensure that this transaction belongs on this channel
 	assert (this_t->getAddresses().channel == channelID || this_t->getType() == AUTO_REFRESH_TRANSACTION);
 
-	queue<command> &bank_q = rank[this_t->getAddresses().rank].bank[this_t->getAddresses().bank].perBankQueue;
+	queue<command> &bank_q = rank[this_t->getAddresses().rank].bank[this_t->getAddresses().bank].getPerBankQueue();
 
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
@@ -154,13 +154,13 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			// are available
 			for (vector<bank_c>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				if (i->perBankQueue.freecount() < 1)
+				if (i->getPerBankQueue().freecount() < 1)
 					return false;
 			}
 			// then add the command to all queues
 			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				bool result = i->perBankQueue.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, systemConfig->isPostedCAS()));
+				bool result = i->getPerBankQueue().push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, systemConfig->isPostedCAS()));
 				assert (result);
 			}
 		}
@@ -242,13 +242,13 @@ bool dramChannel::transaction2commands(transaction *this_t)
 			// are available
 			for (vector<bank_c>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				if (i->perBankQueue.freecount() < 1)
+				if (i->getPerBankQueue().freecount() < 1)
 					return false;
 			}
 			// then add the command to all queues
 			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				bool result = i->perBankQueue.push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, false));
+				bool result = i->getPerBankQueue().push(new command(this_t->getAddresses(), REFRESH_ALL_COMMAND, time, this_t, false));
 				assert (result);
 			}
 		}

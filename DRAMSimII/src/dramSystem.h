@@ -39,24 +39,28 @@ namespace DRAMSimII
 		//functions
 		unsigned findOldestChannel() const;	
 		void updateSystemTime();
-		enum input_status_t getNextIncomingTransaction(transaction *&);
+		transaction *getNextIncomingTransaction();
 		void getNextRandomRequest(transaction *);
 		bool convertAddress(addresses &) const;
 
 	public:		
 		
+		// functions
 		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
-		bool enqueue(transaction* trans); // enqueue this transaction into the proper per-channel queue
-		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); }
+		bool enqueue(transaction* trans); // enqueue this transaction into the proper per-channel queue		
 		void enqueueTimeShift(transaction* trans);
-		input_status_t waitForTransactionToFinish(transaction *trans);
-		double Frequency() const { return systemConfig.Frequency(); }
+		input_status_t waitForTransactionToFinish(transaction *trans);		
 		virtual tick_t nextTick() const;		
 		virtual void doPowerCalculation();
 		virtual void printStatistics();
 		void runSimulations();
 		void runSimulations2();
 		void runSimulations3();
+		void runSimulations4();
+
+		// accessors
+		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); }
+		double Frequency() const { return systemConfig.Frequency(); }
 
 		// constructors	
 		explicit dramSystem(const dramSettings& settings);

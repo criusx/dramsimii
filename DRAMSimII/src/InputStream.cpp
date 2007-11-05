@@ -146,7 +146,7 @@ float inputStream::box_muller(const float m, const float s) const
 }
 
 
-enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
+bool inputStream::getNextBusEvent(busEvent &this_e)
 {	
 	enum file_io_token_t control;	
 	string input;	
@@ -169,7 +169,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 			if(trace_file.good())
 			{
 				cout << "Unexpected EOF, Please fix input trace file" << endl;
-				return FAILURE;
+				return false;
 			}
 
 			control = dramSettings::dramTokenizer(input);
@@ -177,7 +177,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 			if(control == unknown_token)
 			{
 				cout << "Unknown Token Found" << input << endl;
-				return FAILURE;
+				return false;
 			}
 
 			if(control == MEM_WR)
@@ -193,7 +193,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 			if(trace_file.eof())
 			{
 				cout << "Unexpected EOF, Please fix input trace file" << endl;
-				return FAILURE;
+				return false;
 			}
 			if((this_e.attributes != control) || 
 				(((this_e.address.physicalAddress ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
@@ -220,7 +220,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 		if(!trace_file.good()) /// found starting Hex address 
 		{
 			cerr << "Unexpected EOF, Please fix input trace file" << endl;
-			return FAILURE;
+			return false;
 		}
 
 		control = dramSettings::dramTokenizer(input);
@@ -229,7 +229,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 		{
 		case unknown_token:
 			cerr << "Unknown Token Found " << input << endl;
-			return FAILURE;
+			return false;
 			break;
 		case FETCH:
 			this_e.attributes = IFETCH_TRANSACTION;
@@ -253,7 +253,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 		if(!trace_file.good()) /// found starting Hex address 
 		{
 			cerr << "Unexpected EOF, Please fix input trace file" << endl;
-			return FAILURE;
+			return false;
 		}
 
 		control = dramSettings::dramTokenizer(input);
@@ -262,7 +262,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 		{
 		case unknown_token:
 			cerr << "Unknown Token Found " << input << endl;
-			return FAILURE;
+			return false;
 			break;
 		case FETCH:
 			this_e.attributes = IFETCH_TRANSACTION;
@@ -282,7 +282,7 @@ enum input_status_t inputStream::getNextBusEvent(busEvent &this_e)
 
 	//this_e.attributes = CONTROL_TRANSACTION;
 
-	return SUCCESS;
+	return true;
 }
 
 enum input_type_t inputStream::toInputToken(const string &input) const

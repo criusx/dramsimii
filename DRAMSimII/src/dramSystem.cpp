@@ -528,7 +528,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 			this_t->getAddresses().bank = bank_id;
 		}
 
-		int row_id = channel[this_t->getAddresses().channel].getRank(rank_id).bank[bank_id].openRowID;
+		int row_id = channel[this_t->getAddresses().channel].getRank(rank_id).bank[bank_id].getOpenRowID();
 
 		rand_s(&j);
 
@@ -587,72 +587,48 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 	}
 }
 
-enum input_status_t dramSystem::getNextIncomingTransaction(transaction *&this_t)
+transaction *dramSystem::getNextIncomingTransaction()
 {
-	static transaction *temp_t;
+	transaction *temp_t = new transaction;
 
-	if (temp_t == NULL)
+	switch (input_stream.getType())
 	{
-		temp_t = new transaction;
-
-		switch (input_stream.getType())
+	case RANDOM:
+		getNextRandomRequest(temp_t);
+		break;
+	case K6_TRACE:
+	case MASE_TRACE:
+	case MAPPED:
 		{
-		case RANDOM:
-			getNextRandomRequest(temp_t);
-			break;
-		case K6_TRACE:
-		case MASE_TRACE:
-		case MAPPED:
+			static busEvent this_e;
+
+			if (!input_stream.getNextBusEvent(this_e))
 			{
-				static busEvent this_e;
-
-				if(input_stream.getNextBusEvent(this_e) == FAILURE)
-				{
-					/* EOF reached */
-					delete temp_t;
-					return FAILURE;
-				} 
-				else
-				{
-					temp_t->getAddresses() = this_e.address;
-					// FIXME: ignores return type
-					convertAddress(temp_t->getAddresses());
-					temp_t->setEventNumber(temp_t->getEventNumber() + 1);
-					temp_t->setType(this_e.attributes);
-					temp_t->setLength(8);			// assume burst length of 8
-					temp_t->setEnqueueTime(this_e.timestamp);
-					// need to adjust arrival time for K6 traces to cycles
-
-				}
+				/* EOF reached */
+				delete temp_t;
+				return NULL;
+			} 
+			else
+			{
+				temp_t->getAddresses() = this_e.address;
+				// FIXME: ignores return type
+				convertAddress(temp_t->getAddresses());
+				temp_t->setEventNumber(temp_t->getEventNumber() + 1);
+				temp_t->setType(this_e.attributes);
+				temp_t->setLength(8);			// assume burst length of 8
+				temp_t->setEnqueueTime(this_e.timestamp);
+				// need to adjust arrival time for K6 traces to cycles
 			}
-			break;
-		case NONE:
-		default:
-			cerr << "Unknown input trace format" << endl;
-			exit(-20);
-			break;
 		}
+		break;
+	case NONE:
+	default:
+		cerr << "Unknown input trace format" << endl;
+		exit(-20);
+		break;
 	}
 
-	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
-	{
-		this_t = temp_t;
-		temp_t = NULL;
-	}
-	else
-	{
-		// read but do not remove
-		const transaction *refresh_t = channel[temp_t->getAddresses().channel].readRefresh();
-
-		if (refresh_t->getEnqueueTime() < temp_t->getEnqueueTime())
-			this_t = channel[temp_t->getAddresses().channel].getRefresh();
-		else
-		{
-			this_t = temp_t;
-			temp_t = NULL;
-		}
-	}
-	return SUCCESS;
+	return temp_t;
 }
 
 dramSystem::dramSystem(const dramSettings &settings): 
@@ -699,9 +675,9 @@ channel(systemConfig.getChannelCount(),
 
 		// strip off the file suffix
 		if (baseFilename.find("gz") > 0)
-			baseFilename = baseFilename.substr(0,baseFilename.find("gz"));
+			baseFilename = baseFilename.substr(0,baseFilename.find(".gz"));
 		if (baseFilename.find("bz2") > 0)
-			baseFilename = baseFilename.substr(0,baseFilename.find("bz2"));
+			baseFilename = baseFilename.substr(0,baseFilename.find(".bz2"));
 		
 
 		int counter = 0;		
@@ -717,11 +693,12 @@ channel(systemConfig.getChannelCount(),
 		timingIn.open(timingFilename.str().c_str(),ifstream::in);
 		powerIn.open(powerFilename.str().c_str(),ifstream::in);
 		statsIn.open(statsFilename.str().c_str(),ifstream::in);				
-		timingIn.close();
-		powerIn.close();
-		statsIn.close();
-		while (!timingIn.fail() || !powerIn.fail() || !statsIn.fail())
+		
+		while (timingIn.is_open() || powerIn.is_open() || statsIn.is_open())
 		{
+			timingIn.close();
+			powerIn.close();
+			statsIn.close();
 			counter++;
 			timingIn.clear(ios::failbit);
 			powerIn.clear(ios::failbit);
@@ -734,11 +711,12 @@ channel(systemConfig.getChannelCount(),
 			statsFilename << baseFilename << counter << "-stats" << suffix;
 			timingIn.open(timingFilename.str().c_str(),ifstream::in);
 			powerIn.open(powerFilename.str().c_str(),ifstream::in);
-			statsIn.open(statsFilename.str().c_str(),ifstream::in);				
-			timingIn.close();
-			powerIn.close();
-			statsIn.close();
+			statsIn.open(statsFilename.str().c_str(),ifstream::in);							
 		}
+
+		timingIn.close();
+		powerIn.close();
+		statsIn.close();
 
 		timingOutStream.push(boost::iostreams::file_sink(timingFilename.str().c_str()));
 		powerOutStream.push(boost::iostreams::file_sink(powerFilename.str().c_str()));

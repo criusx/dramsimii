@@ -41,7 +41,7 @@ namespace DRAMSimII
 		float box_muller(float, float) const;
 		float poisson_rng (float) const;
 		float gammaln(float) const;
-		input_status_t getNextBusEvent(busEvent &);
+		bool getNextBusEvent(busEvent &);
 
 		// accessors
 		input_type_t getType() const { return type; }

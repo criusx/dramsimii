@@ -22,7 +22,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	currentRank.lastBankID = this_command->getAddress().bank;
 
-	int t_al = this_command->isPostedCAS() ? timingSpecification.tAL() : 0;
+	//int t_al = this_command->isPostedCAS() ? timingSpecification.tAL() : 0;
 
 	// update the channel's idea of what time it is and set the start time for the command
 	// ensure that the command is never started before it is enqueued
@@ -55,7 +55,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 		
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
-		this_command->setCompletionTime(max(currentBank.lastRASTime + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
+		this_command->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
 		break;
 

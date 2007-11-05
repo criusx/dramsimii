@@ -33,7 +33,7 @@ namespace DRAMSimII
 	{
 	private:
 		// members
-		std::vector<fbdChannel> channels;	// the serial channels
+		std::vector<fbdChannel> channel;	// the serial channels
 		
 	public:
 		// constructors
