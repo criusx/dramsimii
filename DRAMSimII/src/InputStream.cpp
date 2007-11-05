@@ -151,133 +151,142 @@ bool inputStream::getNextBusEvent(busEvent &this_e)
 	enum file_io_token_t control;	
 	string input;	
 
-	if(type == K6_TRACE)
+	switch (type)
 	{
-		//int base_control;
-		enum transaction_type_t attributes;
-		int burst_length = 4; // Socket 7 cachelines are 32 byte long, burst of 4
-		int burst_count;
-		bool bursting = true;
-		//double multiplier;
-		tick_t timestamp = TICK_T_MAX;
-		unsigned address = UINT_MAX;
-
-		while((bursting == true) && trace_file.good())
+	case K6_TRACE:	
 		{
-			trace_file >> std::hex >> address >> input >> timestamp;
+			//int base_control;
+			enum transaction_type_t attributes;
+			int burst_length = 4; // Socket 7 cachelines are 32 byte long, burst of 4
+			int burst_count;
+			bool bursting = true;
+			//double multiplier;
+			tick_t timestamp = TICK_T_MAX;
+			unsigned address = UINT_MAX;
 
-			if(trace_file.good())
+			while((bursting == true) && trace_file.good())
 			{
-				cout << "Unexpected EOF, Please fix input trace file" << endl;
+				trace_file >> std::hex >> address >> input >> timestamp;
+
+				if(trace_file.good())
+				{
+					cout << "Unexpected EOF, Please fix input trace file" << endl;
+					return false;
+				}
+
+				control = dramSettings::dramTokenizer(input);
+
+				if(control == unknown_token)
+				{
+					cout << "Unknown Token Found" << input << endl;
+					return false;
+				}
+
+				if(control == MEM_WR)
+				{
+					attributes = WRITE_TRANSACTION;
+				}
+				else
+				{
+					attributes = READ_TRANSACTION;
+				}
+
+				trace_file >> input;
+				if(trace_file.eof())
+				{
+					cout << "Unexpected EOF, Please fix input trace file" << endl;
+					return false;
+				}
+				if((this_e.attributes != control) || 
+					(((this_e.address.physicalAddress ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
+				{
+					bursting = false;
+					timestamp = static_cast<tick_t>(static_cast<double>(timestamp) * ascii2multiplier(input));
+					this_e.address.physicalAddress = 0x3FFFFFFF & address; // mask out top addr bit
+					this_e.attributes = CONTROL_TRANSACTION;
+					this_e.timestamp = timestamp;
+					burst_count = 1;
+				}
+				else
+				{
+					burst_count++;
+				}
+			}
+			this_e.address.physicalAddress = address;
+			this_e.timestamp = timestamp;
+		} 
+		break;
+	case MASE_TRACE:
+		{
+			trace_file >> std::hex >> this_e.address.physicalAddress >> input >> std::dec >> this_e.timestamp;
+
+			//this_e.timestamp /= 2000;
+			if(!trace_file.good()) /// found starting Hex address 
+			{
+				cerr << "Unexpected EOF, Please fix input trace file" << endl;
 				return false;
 			}
 
 			control = dramSettings::dramTokenizer(input);
 
-			if(control == unknown_token)
+			switch (control)
 			{
-				cout << "Unknown Token Found" << input << endl;
+			case unknown_token:
+				cerr << "Unknown Token Found " << input << endl;
+				return false;
+				break;
+			case FETCH:
+				this_e.attributes = IFETCH_TRANSACTION;
+				break;
+			case MEM_RD:
+				this_e.attributes = READ_TRANSACTION;
+				break;
+			case MEM_WR:
+				this_e.attributes = WRITE_TRANSACTION;
+				break;
+			default:
+				cerr << "Unexpected transaction type: " << input;
+				exit(-7);
+				break;
+			}
+		}
+		break;
+	case MAPPED:
+		{
+			trace_file >> std::dec >> this_e.timestamp >> input >> std::dec >> this_e.address.channel >> this_e.address.rank >> this_e.address.bank >> this_e.address.row >> this_e.address.column;
+
+			if(!trace_file.good()) /// found starting Hex address 
+			{
+				cerr << "Unexpected EOF, Please fix input trace file" << endl;
 				return false;
 			}
 
-			if(control == MEM_WR)
-			{
-				attributes = WRITE_TRANSACTION;
-			}
-			else
-			{
-				attributes = READ_TRANSACTION;
-			}
+			control = dramSettings::dramTokenizer(input);
 
-			trace_file >> input;
-			if(trace_file.eof())
+			switch (control)
 			{
-				cout << "Unexpected EOF, Please fix input trace file" << endl;
+			case unknown_token:
+				cerr << "Unknown Token Found " << input << endl;
 				return false;
+				break;
+			case FETCH:
+				this_e.attributes = IFETCH_TRANSACTION;
+				break;
+			case MEM_RD:
+				this_e.attributes = READ_TRANSACTION;
+				break;
+			case MEM_WR:
+				this_e.attributes = WRITE_TRANSACTION;
+				break;
+			default:
+				cerr << "Unexpected transaction type: " << input;
+				exit(-7);
+				break;
 			}
-			if((this_e.attributes != control) || 
-				(((this_e.address.physicalAddress ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
-			{
-				bursting = false;
-				timestamp = static_cast<tick_t>(static_cast<double>(timestamp) * ascii2multiplier(input));
-				this_e.address.physicalAddress = 0x3FFFFFFF & address; // mask out top addr bit
-				this_e.attributes = CONTROL_TRANSACTION;
-				this_e.timestamp = timestamp;
-				burst_count = 1;
-			}
-			else
-			{
-				burst_count++;
-			}
 		}
-		this_e.address.physicalAddress = address;
-		this_e.timestamp = timestamp;
-	} 
-	else if (type == MASE_TRACE)
-	{
-		trace_file >> std::hex >> this_e.address.physicalAddress >> input >> std::dec >> this_e.timestamp;
-
-		if(!trace_file.good()) /// found starting Hex address 
-		{
-			cerr << "Unexpected EOF, Please fix input trace file" << endl;
-			return false;
-		}
-
-		control = dramSettings::dramTokenizer(input);
-
-		switch (control)
-		{
-		case unknown_token:
-			cerr << "Unknown Token Found " << input << endl;
-			return false;
-			break;
-		case FETCH:
-			this_e.attributes = IFETCH_TRANSACTION;
-			break;
-		case MEM_RD:
-			this_e.attributes = READ_TRANSACTION;
-			break;
-		case MEM_WR:
-			this_e.attributes = WRITE_TRANSACTION;
-			break;
-		default:
-			cerr << "Unexpected transaction type: " << input;
-			exit(-7);
-			break;
-		}
-	}
-	else if (type == MAPPED)
-	{
-		trace_file >> std::dec >> this_e.timestamp >> input >> std::dec >> this_e.address.channel >> this_e.address.rank >> this_e.address.bank >> this_e.address.row >> this_e.address.column;
-
-		if(!trace_file.good()) /// found starting Hex address 
-		{
-			cerr << "Unexpected EOF, Please fix input trace file" << endl;
-			return false;
-		}
-
-		control = dramSettings::dramTokenizer(input);
-
-		switch (control)
-		{
-		case unknown_token:
-			cerr << "Unknown Token Found " << input << endl;
-			return false;
-			break;
-		case FETCH:
-			this_e.attributes = IFETCH_TRANSACTION;
-			break;
-		case MEM_RD:
-			this_e.attributes = READ_TRANSACTION;
-			break;
-		case MEM_WR:
-			this_e.attributes = WRITE_TRANSACTION;
-			break;
-		default:
-			cerr << "Unexpected transaction type: " << input;
-			exit(-7);
-			break;
-		}
+		break;
+	default:
+		break;
 	}
 
 	//this_e.attributes = CONTROL_TRANSACTION;
