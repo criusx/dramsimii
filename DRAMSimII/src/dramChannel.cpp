@@ -282,14 +282,19 @@ void dramChannel::doPowerCalculation()
 		
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
 		float percentActive = 1 - (k->prechargeTime / (time - powerModel.lastCalculation));
+
 		powerOutStream << "Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
 			factorA * factorB * powerModel.IDD3N * powerModel.VDDmax * percentActive << " mW" << endl;
+
 		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
-		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS;
-		powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * factorA <<
-			"(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / systemConfig->Frequency() / 1.0E-9 << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
+
+		tick_t tRRDsch = (time - powerModel.lastCalculation) / (totalRAS + 1);
+
+		powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << powerModel.PdsACT * powerModel.tRC / tRRDsch * factorA <<
+			" A(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / systemConfig->Frequency() / 1.0E-9 << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 			time << "]" << endl;
-		k->prechargeTime = 0;
+
+		k->prechargeTime = 1;
 	}
 	powerModel.lastCalculation = time;
 }
