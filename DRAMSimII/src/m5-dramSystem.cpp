@@ -60,6 +60,7 @@ PhysicalMemory(p), tickEvent(this), needRetry(false)
 	settingsMap[0] = "--settings";
 	settingsMap[1] = p->settingsFile.c_str();
 	dramSettings settings(2,settingsMap);
+	settings.inFile = "";
 
 	// if this is a normal system or a fbd system
 	if (settings.systemType == BASELINE_CONFIG)
