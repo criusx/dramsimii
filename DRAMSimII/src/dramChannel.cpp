@@ -273,8 +273,6 @@ void dramChannel::doPowerCalculation()
 		{
 			// Psys(ACT)
 			totalRAS += l->getRASCount();
-			cerr << l->getRASCount() << endl;
-			//l->previousRASCount = l->RASCount;
 			l->accumulateAndResetCounts();
 		}
 		unsigned i = k->prechargeTime;
