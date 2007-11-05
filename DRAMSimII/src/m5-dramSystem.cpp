@@ -62,11 +62,11 @@ PhysicalMemory(p), tickEvent(this), needRetry(false)
 	dramSettings settings(2,settingsMap);
 
 	// if this is a normal system or a fbd system
-	if (settings->systemType == BASELINE_CONFIG)
+	if (settings.systemType == BASELINE_CONFIG)
 		ds = new dramSystem(settings);
 	else
 		ds = new fbdSystem(settings);
-	delete settings;
+	//delete settings;
 
 	nextStats = STATS_INTERVAL;
 

@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "dramSystem.h"
+#include "fbdSystem.h"
 #include "rank_c.h"
 #include "globals.h"
 #include "dramSettings.h"
@@ -19,11 +20,20 @@ int main(int argc,const char **argv, char *envp[])
 	//simulation_parameters_t	*simulation_parameters;
 	//dram_statistics_t	*dram_stats;
 
-	dramSystem ds(settings); // combines read_command line and other inits
-	//ds.run_simulations2();
-	ds.runSimulations3();
+	if (settings.systemType == FBD_CONFIG)
+	{
+		fbdSystem fbds(settings);
+		fbds.runSimulations3();
+	}
+	else
+	{
+		dramSystem ds(settings); // combines read_command line and other inits
+		//ds.run_simulations2();
+		ds.runSimulations3();
+		timingOutStream << ds << endl;
+	}
 
-	timingOutStream << ds << endl;
+	
 	//cerr << ds.timing_specification;
 	//cerr << (dram_statistics) ds;
 	return 0;

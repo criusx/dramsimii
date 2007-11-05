@@ -16,6 +16,9 @@ sources = Split("""
 			dramTimingSpecification.cpp
 			event.cpp
 			executeCommand.cpp
+			fbdAMB.cpp
+			fbdChannel.cpp
+			fbdFrame.cpp
 			getNextCommand.cpp
 			globals.cpp
 			InputStream.cpp
