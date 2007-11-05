@@ -5,6 +5,7 @@
 #include "mem/physical.hh"
 #include "mem/tport.hh"
 #include "dramSystem.h"
+#include "fbdSystem.h"
 #include "dramSettings.h"
 #include "globals.h"
 
