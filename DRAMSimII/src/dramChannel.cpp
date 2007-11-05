@@ -64,7 +64,13 @@ systemConfig(dc.systemConfig),
 powerModel(dc.powerModel),
 algorithm(dc.algorithm),
 rank((unsigned)dc.rank.size(), rank_c(dc.rank[0],timingSpecification))
-{}
+{
+	// assign an id to each channel (normally done with commands)
+	for (unsigned i = 0; i < rank.size(); i++)
+	{
+		rank[i].setRankID(i);
+	}
+}
 
 
 
@@ -257,6 +263,9 @@ enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const in
 // calculate the power consumed by all channels during the last epoch
 void dramChannel::doPowerCalculation()
 {	
+	float factorA = (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax);
+	float factorB = powerModel.frequency / powerModel.frequencySpec;
+
 	for (std::vector<rank_c>::iterator k = rank.begin(); k != rank.end(); k++)
 	{
 		tick_t totalRAS = 1;
@@ -264,21 +273,23 @@ void dramChannel::doPowerCalculation()
 		{
 			// Psys(ACT)
 			totalRAS += (l->getRASCount() - l->getPreviousRASCount());
+			cerr << l->getRASCount() << endl;
 			//l->previousRASCount = l->RASCount;
 			l->makeCurrentCountsPrevious();
 		}
-		cerr << "ch[" << channelID << "] %pre[" << k->prechargeTime / (time - powerModel.lastCalculation) * 100 << "] " << k->prechargeTime << endl;
-		k->prechargeTime = 0;
+		unsigned i = k->prechargeTime;
+		//cerr << "ch[" << channelID << "] %pre[" << k->prechargeTime / (time - powerModel.lastCalculation) * 100 << "] " << k->prechargeTime << endl;
+		
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
-		powerOutStream << "Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << 
-			(powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) * powerModel.frequency / 
-			powerModel.frequencySpec * powerModel.IDD3N * powerModel.VDDmax * (1 - (k->prechargeTime / (time - powerModel.lastCalculation))) << endl; 
+		float percentActive = 1 - (k->prechargeTime / (time - powerModel.lastCalculation));
+		powerOutStream << "Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
+			factorA * factorB * powerModel.IDD3N * powerModel.VDDmax * percentActive << " mW" << endl;
 		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 		tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS;
-		powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax) <<
-			"(" << totalRAS << ") tRRDsch(" << tRRDsch / systemConfig->Frequency() / 1.0E-9 << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
+		powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(3) << powerModel.PdsACT * powerModel.tRC / tRRDsch * factorA <<
+			"(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / systemConfig->Frequency() / 1.0E-9 << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 			time << "]" << endl;
-		boost::iostreams::flush(powerOutStream);
+		k->prechargeTime = 0;
 	}
 	powerModel.lastCalculation = time;
 }

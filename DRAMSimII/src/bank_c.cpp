@@ -23,26 +23,6 @@ CASWCount(0),
 previousCASWCount(0)
 {}
 
-//bank_c::bank_c(const bank_c &b):
-//timing(b.timing),
-//perBankQueue(b.perBankQueue),
-//lastRASTime(b.lastRASTime),
-//lastCASTime(b.lastCASTime),
-//lastCASWTime(b.lastCASWTime),
-//lastPrechargeTime(b.lastPrechargeTime),
-//lastRefreshAllTime(b.lastRefreshAllTime),
-//lastCASLength(b.lastCASLength),
-//lastCASWLength(b.lastCASWLength),
-//openRowID(b.openRowID),
-//activated(b.activated),
-//RASCount(b.RASCount),
-//previousRASCount(b.previousRASCount),
-//CASCount(b.CASCount),
-//previousCASCount(b.previousCASCount),
-//CASWCount(b.CASWCount),
-//previousCASWCount(b.previousCASWCount)
-//{}
-
 bank_c::bank_c(const bank_c &b, const dramTimingSpecification &timingVal):
 timing(timingVal),
 perBankQueue(b.perBankQueue),
@@ -54,7 +34,7 @@ lastRefreshAllTime(b.lastRefreshAllTime),
 lastCASLength(b.lastCASLength),
 lastCASWLength(b.lastCASWLength),
 openRowID(b.openRowID),
-activated(b.activated),
+activated(false),
 RASCount(b.RASCount),
 previousRASCount(b.previousRASCount),
 CASCount(b.CASCount),

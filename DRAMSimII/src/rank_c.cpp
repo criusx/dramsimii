@@ -15,26 +15,10 @@ lastCASLength(0),
 lastCASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
-banksPrecharged(0),
-lastRASTimes(4),
+banksPrecharged(settings.bankCount),
+lastRASTimes(4), // make the queue hold four (tFAW)
 bank(settings.bankCount,bank_c(settings, timingVal))
 {}
-
-//rank_c::rank_c(const rank_c &r):
-//timing(r.timing),
-//lastRefreshTime(r.lastRefreshTime),
-//lastPrechargeTime(0),
-//lastCASTime(r.lastCASTime),
-//lastCASWTime(r.lastCASWTime),
-//prechargeTime(r.prechargeTime),
-//lastCASLength(r.lastCASLength),
-//lastCASWLength(r.lastCASWLength),
-//rankID(r.rankID),
-//lastBankID(r.lastBankID),
-//lastRASTimes(r.lastRASTimes),
-//banksPrecharged(r.banksPrecharged),
-//bank(r.bank)
-//{}
 
 rank_c::rank_c(const rank_c &r, const dramTimingSpecification &timingVal):
 timing(timingVal),
@@ -54,9 +38,7 @@ bank((unsigned)r.bank.size(), bank_c(r.bank[0], timingVal))
 
 void rank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
 {
-	// update the bank to reflect this change also
-	bank_c &currentBank = bank[currentCommand->getAddress().bank];
-	currentBank.issueRAS(currentTime, currentCommand);
+	
 
 	// RAS time history queue, per rank
 	tick_t *this_ras_time = lastRASTimes.acquire_item();
@@ -65,14 +47,19 @@ void rank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
 
 	lastRASTimes.push(this_ras_time);
 	lastBankID = currentCommand->getAddress().bank;
-	// for power modeling, if all banks were precharged and now one is being activated, record the interval that one was precharged
-	if (banksPrecharged > bank.size())
-		cerr << "counted too high " << banksPrecharged << "/" << bank.size() << endl;
 
-	if (banksPrecharged >= bank.size())
+	// for power modeling, if all banks were precharged and now one is being activated, record the interval that one was precharged	
+	if (banksPrecharged == bank.size())
 		prechargeTime += currentTime - lastPrechargeTime;
+	if (banksPrecharged == bank.size())
+		for (vector<bank_c>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
+		assert(!curBnk->isActivated());
 	banksPrecharged--;
 	assert(banksPrecharged > 0);
+	assert(banksPrecharged < bank.size());
+	// update the bank to reflect this change also
+	bank_c &currentBank = bank[currentCommand->getAddress().bank];
+	currentBank.issueRAS(currentTime, currentCommand);
 }
 
 void rank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
@@ -98,6 +85,8 @@ void rank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 	}
 	
 	banksPrecharged++;
+	assert(banksPrecharged > 0);
+	assert(banksPrecharged <= bank.size());
 }
 
 void rank_c::issueCAS(const tick_t currentTime, const command *currentCommand)

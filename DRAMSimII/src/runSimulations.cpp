@@ -98,8 +98,9 @@ void dramSystem::runSimulations3()
 /// Return true if there was room, else false
 bool dramSystem::enqueue(transaction *trans)
 {
-	// map the PA of this transaction to this system
-	convertAddress(trans->getAddresses());
+	// map the PA of this transaction to this system, assuming the transaction is withing range
+	if (trans->getAddresses().physicalAddress != ULLONG_MAX)
+		convertAddress(trans->getAddresses());
 
 	// attempt to insert the transaction into the per-channel transaction queue
 	if (!channel[trans->getAddresses().channel].enqueue(trans))

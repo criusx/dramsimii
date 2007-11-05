@@ -497,6 +497,10 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 		{
 			this_t->getAddresses().channel = (this_t->getAddresses().channel + (j % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
 		}
+		else
+		{
+			this_t->getAddresses().channel = j % systemConfig.getChannelCount();
+		}
 
 		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
 		// or keep to this rank_id 
@@ -504,6 +508,7 @@ void dramSystem::getNextRandomRequest(transaction *this_t)
 		int rank_id = channel[this_t->getAddresses().channel].getLastRankID();
 
 		rand_s(&j);
+
 		if ((input_stream.getRankLocality() * UINT_MAX < j) && (systemConfig.getRankCount() > 1))
 		{
 			rank_id = this_t->getAddresses().rank = 
@@ -667,6 +672,9 @@ channel(systemConfig.getChannelCount(),
 		statsOutStream.push(std::cout);
 		break;
 	case NONE:
+		timingOutStream.push(boost::iostreams::null_sink());
+		powerOutStream.push(boost::iostreams::null_sink());
+		statsOutStream.push(boost::iostreams::null_sink());
 		break;
 	}
 	if (settings.outFileType == GZ || settings.outFileType == BZ || settings.outFileType == UNCOMPRESSED)

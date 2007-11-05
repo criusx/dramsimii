@@ -43,7 +43,7 @@ namespace DRAMSimII
 		void issueCAS(const tick_t currentTime, const command *currentCommand);
 		void issueCASW(const tick_t currentTime, const command *currentCommand);
 		void issueREF(const tick_t currentTime, const command *currentCommand);
-		void makeCurrentCountsPrevious() { previousRASCount = RASCount; previousCASCount = CASCount; previousCASWCount = CASWCount; }
+		void makeCurrentCountsPrevious() { previousRASCount = RASCount; previousCASCount = CASCount; previousCASWCount = CASWCount; RASCount = CASWCount = CASCount = 0; }
 
 		// accessors
 		tick_t getLastRASTime() const { return lastRASTime; }

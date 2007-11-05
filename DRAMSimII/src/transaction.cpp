@@ -55,7 +55,9 @@ originalTransaction(originalTrans)
 void * transaction::operator new(size_t size)
 {
 	assert(size == sizeof(transaction));
-	return freeTransactionPool.acquire_item();
+	transaction *newTrans = freeTransactionPool.acquire_item();
+	newTrans->getAddresses().physicalAddress = ULLONG_MAX;
+	return newTrans;
 }
 
 void transaction::operator delete(void *mem)
