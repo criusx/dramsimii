@@ -16,11 +16,11 @@ lastCASWLength(8),
 openRowID(0),
 activated(false),
 RASCount(0),
-previousRASCount(0),
+totalRASCount(0),
 CASCount(0),
-previousCASCount(0),
+totalCASCount(0),
 CASWCount(0),
-previousCASWCount(0)
+totalCASWCount(0)
 {}
 
 bank_c::bank_c(const bank_c &b, const dramTimingSpecification &timingVal):
@@ -36,11 +36,11 @@ lastCASWLength(b.lastCASWLength),
 openRowID(b.openRowID),
 activated(false),
 RASCount(b.RASCount),
-previousRASCount(b.previousRASCount),
+totalRASCount(b.totalRASCount),
 CASCount(b.CASCount),
-previousCASCount(b.previousCASCount),
+totalCASCount(b.totalCASCount),
 CASWCount(b.CASWCount),
-previousCASWCount(b.previousCASWCount)
+totalCASWCount(b.totalCASWCount)
 {}
 
 void bank_c::issueRAS(const tick_t currentTime, const command *currentCommand)

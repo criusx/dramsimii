@@ -30,11 +30,11 @@ namespace DRAMSimII
 
 		// stats
 		unsigned RASCount;
-		unsigned previousRASCount;		// the number of RAS commands since the last power calculation
+		unsigned totalRASCount;		// the number of RAS commands since the last power calculation
 		unsigned CASCount;
-		unsigned previousCASCount;		// the number of CAS commands since the last power calculation
+		unsigned totalCASCount;		// the number of CAS commands since the last power calculation
 		unsigned CASWCount;
-		unsigned previousCASWCount;		// the number of CASW commands since the last power calculation
+		unsigned totalCASWCount;		// the number of CASW commands since the last power calculation
 
 	public:
 		// functions
@@ -43,7 +43,7 @@ namespace DRAMSimII
 		void issueCAS(const tick_t currentTime, const command *currentCommand);
 		void issueCASW(const tick_t currentTime, const command *currentCommand);
 		void issueREF(const tick_t currentTime, const command *currentCommand);
-		void makeCurrentCountsPrevious() { previousRASCount = RASCount; previousCASCount = CASCount; previousCASWCount = CASWCount; RASCount = CASWCount = CASCount = 0; }
+		void accumulateAndResetCounts() { totalRASCount += RASCount; totalCASCount += CASCount; totalCASWCount += CASWCount; RASCount = CASWCount = CASCount = 0; }
 
 		// accessors
 		tick_t getLastRASTime() const { return lastRASTime; }
@@ -56,11 +56,8 @@ namespace DRAMSimII
 		unsigned getOpenRowID() const { return openRowID; }
 		bool isActivated() const { return activated; }
 		unsigned getRASCount() const { return RASCount; }
-		unsigned getPreviousRASCount() const { return previousRASCount; }
 		unsigned getCASCount() const { return CASCount; }
-		unsigned getPreviousCASCount() const { return previousCASCount; }
 		unsigned getCASWCount() const { return CASWCount; }
-		unsigned getPreviousCASWCount() const { return previousCASWCount; }
 		queue<command> &getPerBankQueue() { return perBankQueue; }
 		const queue<command> &getPerBankQueue() const { return perBankQueue; }
 

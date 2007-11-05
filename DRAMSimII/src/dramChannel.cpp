@@ -272,26 +272,26 @@ void dramChannel::doPowerCalculation()
 		for (std::vector<bank_c>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
 			// Psys(ACT)
-			totalRAS += (l->getRASCount() - l->getPreviousRASCount());
+			totalRAS += l->getRASCount();
 			cerr << l->getRASCount() << endl;
 			//l->previousRASCount = l->RASCount;
-			l->makeCurrentCountsPrevious();
+			l->accumulateAndResetCounts();
 		}
 		unsigned i = k->prechargeTime;
 		//cerr << "ch[" << channelID << "] %pre[" << k->prechargeTime / (time - powerModel.lastCalculation) * 100 << "] " << k->prechargeTime << endl;
 		
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
-		float percentActive = 1 - (k->prechargeTime / (time - powerModel.lastCalculation));
+		float percentActive = max(0.0F,1 - (k->prechargeTime / (float)(time - powerModel.lastCalculation)));
 
 		powerOutStream << "Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
-			factorA * factorB * powerModel.IDD3N * powerModel.VDDmax * percentActive << " mW" << endl;
+			factorA * factorB * powerModel.IDD3N * powerModel.VDDmax * percentActive << " mW P(" << k->prechargeTime << "/" << time - powerModel.lastCalculation << ")" << endl;
 
 		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 
-		tick_t tRRDsch = (time - powerModel.lastCalculation) / (totalRAS + 1);
+		float tRRDsch = (time - powerModel.lastCalculation) / (totalRAS + 1);
 
-		powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << powerModel.PdsACT * powerModel.tRC / tRRDsch * factorA <<
-			" A(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / systemConfig->Frequency() / 1.0E-9 << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
+		powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << powerModel.PdsACT * powerModel.tRC / (float)tRRDsch * factorA * 100 << "mW " <<
+			" A(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / ((float)systemConfig->Frequency() * 1.0E-9F) << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 			time << "]" << endl;
 
 		k->prechargeTime = 1;
