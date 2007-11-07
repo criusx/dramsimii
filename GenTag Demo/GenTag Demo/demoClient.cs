@@ -783,6 +783,5 @@ namespace GentagDemo
             textBox4.Location = new Point(8, 193);
             inputPanel1.Enabled = false;
         }
-
     }
 }

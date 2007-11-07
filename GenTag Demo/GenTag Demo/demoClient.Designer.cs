@@ -159,9 +159,9 @@ namespace GentagDemo
             // 
             this.readIDButton.Location = new System.Drawing.Point(2, 184);
             this.readIDButton.Name = "readIDButton";
-            this.readIDButton.Size = new System.Drawing.Size(71, 30);
+            this.readIDButton.Size = new System.Drawing.Size(97, 30);
             this.readIDButton.TabIndex = 0;
-            this.readIDButton.Text = "Read Tag";
+            this.readIDButton.Text = "Begin Reading";
             this.readIDButton.Click += new System.EventHandler(this.readerClick);
             // 
             // readLogButton
@@ -206,17 +206,16 @@ namespace GentagDemo
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(79, 125);
+            this.pictureBox1.Location = new System.Drawing.Point(130, 155);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(154, 90);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.Size = new System.Drawing.Size(103, 60);
             // 
             // treeView1
             // 
             this.treeView1.Location = new System.Drawing.Point(3, 3);
             this.treeView1.Name = "treeView1";
             this.treeView1.PathSeparator = "\\";
-            this.treeView1.Size = new System.Drawing.Size(234, 118);
+            this.treeView1.Size = new System.Drawing.Size(234, 149);
             this.treeView1.TabIndex = 2;
             // 
             // VarioSens
@@ -927,7 +926,7 @@ namespace GentagDemo
             this.manualLookupPage.Controls.Add(this.textBox4);
             this.manualLookupPage.Location = new System.Drawing.Point(0, 0);
             this.manualLookupPage.Name = "manualLookupPage";
-            this.manualLookupPage.Size = new System.Drawing.Size(240, 217);
+            this.manualLookupPage.Size = new System.Drawing.Size(232, 214);
             this.manualLookupPage.Text = "Manual";
             // 
             // treeView2
@@ -976,7 +975,7 @@ namespace GentagDemo
             this.varioSensWPage.Controls.Add(this.label5);
             this.varioSensWPage.Location = new System.Drawing.Point(0, 0);
             this.varioSensWPage.Name = "varioSensWPage";
-            this.varioSensWPage.Size = new System.Drawing.Size(232, 214);
+            this.varioSensWPage.Size = new System.Drawing.Size(240, 217);
             this.varioSensWPage.Text = "VarioSens/W";
             // 
             // getSetStatusBox
@@ -995,6 +994,7 @@ namespace GentagDemo
             this.logModeComboBox.Name = "logModeComboBox";
             this.logModeComboBox.Size = new System.Drawing.Size(60, 22);
             this.logModeComboBox.TabIndex = 8;
+            this.logModeComboBox.SelectedIndexChanged += new System.EventHandler(this.logModeComboBox_SelectedIndexChanged);
             // 
             // readValueButton
             // 
