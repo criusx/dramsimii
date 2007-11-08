@@ -311,10 +311,14 @@ dramSettings::dramSettings(const int argc, const char **argv)
 					case refresh_policy_token:
 						if (nodeValue == "none" || nodeValue == "no refresh")
 							refreshPolicy = NO_REFRESH;
-						else if (nodeValue == "bank_concurrent" || nodeValue == "bank concurrent")
+						else if (nodeValue == "bankConcurrent")
 							refreshPolicy = BANK_CONCURRENT;
-						else
+						else if (nodeValue == "bankStaggeredHidden")
 							refreshPolicy = BANK_STAGGERED_HIDDEN;
+						else if (nodeValue == "refreshOneChanAllRankAllBank")
+							refreshPolicy = ONE_CHANNEL_ALL_RANK_ALL_BANK;
+						else
+							refreshPolicy = NO_REFRESH;
 						break;
 					case read_write_grouping_token:
 						readWriteGrouping = (nodeValue == "true") ? true : false;

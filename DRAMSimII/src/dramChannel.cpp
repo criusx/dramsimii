@@ -12,7 +12,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
-dramChannel::dramChannel(const dramSettings& settings):
+dramChannel::dramChannel(const dramSettings& settings, const dramSystemConfiguration &sysConfig):
 time(0),
 lastRefreshTime(0),
 lastRankID(0),
@@ -21,7 +21,7 @@ transactionQueue(settings.transactionQueueDepth),
 refreshCounter(NULL),
 historyQueue(settings.historyQueueDepth),
 completionQueue(settings.completionQueueDepth),
-systemConfig(NULL),
+systemConfig(sysConfig),
 powerModel(settings),
 algorithm(settings),
 rank(settings.rankCount, rank_c(settings, timingSpecification))
@@ -45,6 +45,7 @@ rank(settings.rankCount, rank_c(settings, timingSpecification))
 			transaction *newTrans = new transaction();
 			newTrans->setType(AUTO_REFRESH_TRANSACTION);
 			newTrans->getAddresses().rank = j;
+			newTrans->getAddresses().bank = 0;
 			newTrans->setEnqueueTime(j * step);
 			refreshCounter[j] = newTrans;			
 		}		
@@ -70,9 +71,18 @@ rank((unsigned)dc.rank.size(), rank_c(dc.rank[0],timingSpecification))
 	{
 		rank[i].setRankID(i);
 	}
+
+	// initialize the refresh counters per rank
+	if (dc.systemConfig.getRefreshPolicy() != NO_REFRESH)
+	{
+		refreshCounter = dc.refreshCounter;
+
+		for (unsigned j = 0; j < rank.size(); ++j)
+		{			
+			refreshCounter[j] = dc.refreshCounter[j];
+		}		
+	}
 }
-
-
 
 /// Moves the specified channel to at least the time given
 const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFinishTime)
@@ -172,9 +182,9 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 						// reuse the refresh transactions
 						if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
 						{
-							completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig->getRefreshTime());
+							completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
 
-							assert(systemConfig->getRefreshPolicy() != NO_REFRESH);
+							assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
 
 							delete completed_t;
 
@@ -184,7 +194,9 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 						{
 							const void *origTrans = completed_t->getOriginalTransaction();
 
+#ifdef M5DEBUG
 							assert(completed_t->getOriginalTransaction());
+#endif
 
 							*transFinishTime = completed_t->getCompletionTime();
 
@@ -223,14 +235,14 @@ void dramChannel::recordCommand(command *latest_command)
 
 bool dramChannel::enqueue(transaction *in)
 {
-	if (systemConfig->getTransactionOrderingAlgorithm() == STRICT)
+	if (systemConfig.getTransactionOrderingAlgorithm() == STRICT)
 		return transactionQueue.push(in);	
 	// try to insert reads and fetches before writes
 	// TODO: finish this
 	else
 	{
 		exit(-1); // TODO
-		assert(systemConfig->getTransactionOrderingAlgorithm() == RIFF);
+		assert(systemConfig.getTransactionOrderingAlgorithm() == RIFF);
 	}
 }
 
@@ -314,7 +326,7 @@ void dramChannel::doPowerCalculation()
 
 		PsysACT += ((float)powerModel.tRC / (float)tRRDsch) * factorA * powerModel.PdsACT;
 		//powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << powerModel.PdsACT * powerModel.tRC / (float)tRRDsch * factorA * 100 << "mW " <<
-		//	" A(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / ((float)systemConfig->Frequency() * 1.0E-9F) << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
+		//	" A(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / ((float)systemConfig.Frequency() * 1.0E-9F) << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 		//	time << "]" << endl;
 
 		k->prechargeTime = 1;
@@ -360,6 +372,7 @@ transaction *dramChannel::getRefresh()
 	refreshCounter[earliestRank]->setEnqueueTime(earliestTransaction->getEnqueueTime() + timingSpecification.tREFI());
 	refreshCounter[earliestRank]->setType(AUTO_REFRESH_TRANSACTION);
 	refreshCounter[earliestRank]->getAddresses().rank = earliestRank;
+	refreshCounter[earliestRank]->getAddresses().bank = 0;
 
 	return earliestTransaction;
 }
@@ -386,7 +399,7 @@ const transaction *dramChannel::readTransaction() const
 {
 	const transaction *tempTrans = transactionQueue.front(); 
 
-	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
+	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{
 		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
 		{
@@ -403,7 +416,7 @@ const transaction *dramChannel::readTransaction() const
 		assert(refreshTrans != NULL);
 
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
-		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig->getSeniorityAgeLimit()))
+		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig.getSeniorityAgeLimit()))
 		{
 			if (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay())
 			{
@@ -434,7 +447,7 @@ transaction *dramChannel::getTransaction()
 {
 	transaction *tempTrans = transactionQueue.front(); 	
 
-	if (systemConfig->getRefreshPolicy() == NO_REFRESH)
+	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{
 		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
 		{
@@ -449,7 +462,7 @@ transaction *dramChannel::getTransaction()
 	{
 		const transaction *refreshTrans = readRefresh();
 
-		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig->getSeniorityAgeLimit()))
+		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig.getSeniorityAgeLimit()))
 		{
 			if (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay())
 			{

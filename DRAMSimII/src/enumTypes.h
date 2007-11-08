@@ -9,7 +9,8 @@ namespace DRAMSimII
 	{
 		NO_REFRESH, 
 		BANK_CONCURRENT, 
-		BANK_STAGGERED_HIDDEN 
+		BANK_STAGGERED_HIDDEN,
+		ONE_CHANNEL_ALL_RANK_ALL_BANK
 	};
 
 	enum row_buffer_policy_t

@@ -639,7 +639,7 @@ transaction *dramSystem::getNextIncomingTransaction()
 dramSystem::dramSystem(const dramSettings &settings): 
 systemConfig(settings),
 channel(systemConfig.getChannelCount(),
-		dramChannel(settings)),
+		dramChannel(settings, systemConfig)),
 		simParameters(settings),
 		statistics(settings),
 		input_stream(settings),
@@ -751,7 +751,7 @@ channel(systemConfig.getChannelCount(),
 	// set backward pointers to the system config and the statistics for each channel
 	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
-		i->setSystemConfig(&systemConfig);
+		//i->setSystemConfig(&systemConfig);
 		i->setStatistics(&statistics);
 	}
 	// set the channelID so that each channel may know its ordinal value

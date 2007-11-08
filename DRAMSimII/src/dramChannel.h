@@ -28,7 +28,7 @@ namespace DRAMSimII
 		transaction **refreshCounter;			// holds the next refresh commands
 		queue<command> historyQueue;			// what were the last N commands to this channel?
 		queue<transaction> completionQueue;		// completed_q, can send status back to memory controller
-		dramSystemConfiguration *systemConfig;	// a pointer to common system config values
+		const dramSystemConfiguration& systemConfig;	// a pointer to common system config values
 		dramStatistics *statistics;				// backward pointer to the stats engine
 		powerConfig powerModel;
 		dramAlgorithm algorithm;
@@ -62,13 +62,13 @@ namespace DRAMSimII
 		transaction *getRefresh();
 		const transaction *readRefresh() const;
 		transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }
-		command *readMostRecentCommand() const { return historyQueue.newest(); } // get the most recent command from the history queue
+		//command *readMostRecentCommand() const { return historyQueue.newest(); } // get the most recent command from the history queue
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }
 		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }
 		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
 
 		// mutators
-		void setSystemConfig(dramSystemConfiguration *_system_config) { systemConfig = _system_config; } // TODO: remove this and have parameters stored locally
+		//void setSystemConfig(dramSystemConfiguration *_system_config) { systemConfig = _system_config; } // TODO: remove this and have parameters stored locally
 		void setStatistics(dramStatistics *value) { statistics = value; }
 		void setTime(tick_t new_time) { time = new_time; }
 		void setChannelID(const unsigned value) { channelID = value; }
@@ -82,10 +82,8 @@ namespace DRAMSimII
 
 		// constructors
 		explicit dramChannel();	
-		explicit dramChannel(const dramSettings& settings);
+		explicit dramChannel(const dramSettings& settings, const dramSystemConfiguration &sysConfig);
 		dramChannel(const dramChannel &);
-
-		
 	};
 }
 

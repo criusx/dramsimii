@@ -141,6 +141,11 @@ namespace DRAMSimII
 			return count ? entry[head] : NULL;
 		}
 
+		const T* back() const
+		{
+			return count ? entry[(head + count - 1) % depth] : NULL;
+		}
+
 		inline unsigned size() const
 		{
 			return count;
@@ -203,10 +208,7 @@ namespace DRAMSimII
 			return depth - count;
 		}
 
-		T* newest() const
-		{
-			return read(count - 1);
-		}
+		
 
 		queue<T> &operator=(const queue<T> &right)
 		{

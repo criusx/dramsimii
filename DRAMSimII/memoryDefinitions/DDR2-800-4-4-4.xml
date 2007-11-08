@@ -10,7 +10,7 @@
 		<channelWidth>8</channelWidth>
 		<!--burgerBase, closePageBaseline, intel845g, sdramBase, sdramClosePage, sdramHiperf-->
 		<physicalAddressMappingPolicy>closePageBaseline</physicalAddressMappingPolicy>
-		<rowBufferPolicy>closePage</rowBufferPolicy>
+		<rowBufferPolicy>openPage</rowBufferPolicy>
 		<ranks>4</ranks>
 		<banks>8</banks>
 		<rows>16384</rows>
@@ -42,12 +42,13 @@
 		<!--additive latency, the dram device may buffer a command for up to this length of time to allow it to be transferred and help until timing parameters are met, see Micron doc TN4710-->
 		<tAL>10</tAL>
 		<!--may be none, refreshOneChanAllRankAllBank, etc.-->
-		<autoRefreshPolicy>none</autoRefreshPolicy>
+		<autoRefreshPolicy>refreshOneChanAllRankAllBank</autoRefreshPolicy>
 		<!--given in us-->
 		<refreshTime>64000</refreshTime>
 		<!--average periodic refresh time, look at Micron app note TN-46-09 -->
 		<tREFI>6240</tREFI>
-		<commandOrderingAlgorithm>strict</commandOrderingAlgorithm>
+		<!--strict, bankRoundRobin, rankRoundRobin, wangHop, greedy-->
+		<commandOrderingAlgorithm>rankRoundRobin</commandOrderingAlgorithm>
 		<!--may be 'strict' or 'RIFF'-->
 		<transactionOrderingAlgorithm>strict</transactionOrderingAlgorithm>
 		<perBankQueueDepth>8</perBankQueueDepth>
