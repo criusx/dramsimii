@@ -125,6 +125,8 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				if ((transactionQueue.size() > 0) && (time + timingSpecification.tBufferDelay() <= endTime))
 				{
 					tick_t oldTime = time;
+					assert(timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime() <= endTime);
+
 					time = timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime();
 					assert(oldTime < time);
 				}
@@ -182,11 +184,11 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 						{
 							const void *origTrans = completed_t->getOriginalTransaction();
 
-							assert(completed_t->originalTransaction);
+							assert(completed_t->getOriginalTransaction());
 
 							*transFinishTime = completed_t->getCompletionTime();
 
-							delete completed_t;							
+							delete completed_t;
 
 							return origTrans;
 						}
