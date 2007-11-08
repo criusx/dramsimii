@@ -113,7 +113,7 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	// since this is when a transaction is done from the standpoint of the requester
 	if (this_command->getHost()) 
 	{
-		if (!complete(this_command->getHost()))
+		if (!completionQueue.push(this_command->getHost()))
 		{
 			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
 			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;

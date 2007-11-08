@@ -77,7 +77,6 @@ namespace DRAMSimII
 		// functions
 		bool enqueue(transaction *in);
 		bool isFull() const { return transactionQueue.freecount() == 0; }
-		bool complete(transaction *in) { return completionQueue.push(in); }
 		void recordCommand(command *);
 		unsigned getChannelID() const { return channelID; }
 

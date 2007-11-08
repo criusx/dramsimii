@@ -215,7 +215,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 void dramChannel::recordCommand(command *latest_command)
 {
-	while (historyQueue.push(latest_command) == false)
+	while (!historyQueue.push(latest_command))
 	{
 		delete historyQueue.pop();
 	}
