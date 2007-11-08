@@ -44,7 +44,7 @@
 				FavorSizeOrSpeed="0"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;M5DEBUG;MEMCHECK"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
@@ -470,13 +470,6 @@
 			<File
 				RelativePath=".\src\powerConfig.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\rank_c.cpp"

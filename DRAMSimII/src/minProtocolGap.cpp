@@ -17,20 +17,20 @@ int dramChannel::minProtocolGap(const command *this_c) const
 	const rank_c &currentRank = rank[this_rank];
 	
 	const bank_c &currentBank = currentRank.bank[this_c->getAddress().bank];
-	
-	int t_al = this_c->isPostedCAS() ? timingSpecification.tAL() : 0;
 
 	switch(this_c->getCommandType())
 	{
 	case RAS_COMMAND:
 		{
-			// respect t_rp of same bank
-			int tRPGap = (int)(currentBank.getLastPrechargeTime() - time) + timingSpecification.tRP();
+			// refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk
 
-			int ras_q_count = currentRank.lastRASTimes.size();
-			
+			// respect the row cycle time limitation
+			int tRCGap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRC();
+
 			// respect tRRD and tRC of all other banks of same rank
 			int tRRDGap;
+
+			int ras_q_count = currentRank.lastRASTimes.size();
 
 			if (ras_q_count == 0)
 			{
@@ -39,14 +39,14 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			else 
 			{
 				// read tail end of ras history
-				tick_t *last_ras_time = currentRank.lastRASTimes.read(ras_q_count - 1); 
+				tick_t *lastRASTime = currentRank.lastRASTimes.read(ras_q_count - 1); 
 				// respect the row-to-row activation delay
-				tRRDGap = (int)(*last_ras_time - time) + timingSpecification.tRRD();				
+				tRRDGap = (int)(*lastRASTime - time) + timingSpecification.tRRD();				
 			}
 
-			// respect the row cycle time limitation
-			int tRCGap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRC();
-
+			// respect tRP of same bank
+			int tRPGap = (int)(currentBank.getLastPrechargeTime() - time) + timingSpecification.tRP();
+			
 			// respect the t_faw value for DDR2 and beyond
 			int tFAWGap;
 
@@ -57,8 +57,8 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			else
 			{
 				// read head of ras history
-				tick_t *fourth_ras_time = currentRank.lastRASTimes.front(); 
-				tFAWGap = (int)(*fourth_ras_time - time) + timingSpecification.tFAW();
+				tick_t *fourthRASTime = currentRank.lastRASTimes.front(); 
+				tFAWGap = (int)(*fourthRASTime - time) + timingSpecification.tFAW();
 			}
 
 			// respect tRFC
@@ -76,7 +76,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 	case CAS_COMMAND:
 		{
 			//respect last ras of same rank
-			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - t_al);
+			int tRCDGap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
@@ -120,10 +120,10 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			{
 				//respect most recent cas of different rank
 				t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASTime + otherRankLastCASLength + timingSpecification.tRTRS() - time));
-				//respect timing of READ follow WRITE, different ranks.*/
+				//respect timing of READ follow WRITE, different ranks
 				t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASWTime + timingSpecification.tCWD() + otherRankLastCASWLength + timingSpecification.tRTRS() - timingSpecification.tCAS() - time));
 			}
-			min_gap = max(t_ras_gap,t_cas_gap);
+			min_gap = max(tRCDGap,t_cas_gap);
 			
 			//fprintf(stderr," [%8d] [%8d] [%8d] [%8d] [%8d] [%2d]\n",(int)now,(int)this_r_last_cas_time,(int)this_r_last_casw_time,(int)other_r_last_cas_time,(int)other_r_last_casw_time,min_gap);
 		}
@@ -138,7 +138,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 	case CAS_WRITE_COMMAND:
 		{
 			//respect last ras of same rank
-			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - t_al);
+			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
 
 			tick_t otherRankLastCASTime = time - 1000;
 			int otherRankLastCASLength = timingSpecification.tBurst();
@@ -196,10 +196,10 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			int t_ras_gap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			int t_cas_gap = max(0,(int)((currentBank.getLastCASTime() - time) + t_al + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
+			int t_cas_gap = max(0,(int)((currentBank.getLastCASTime() - time) + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
 
 			// respect t_casw of same bank
-			t_cas_gap = max(t_cas_gap,(int)((currentBank.getLastCASWTime() - time) + t_al + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
+			t_cas_gap = max(t_cas_gap,(int)((currentBank.getLastCASWTime() - time) + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
 
 			min_gap = max(t_ras_gap,t_cas_gap);
 		}

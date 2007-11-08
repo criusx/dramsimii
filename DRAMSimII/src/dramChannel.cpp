@@ -86,7 +86,29 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 		// if there were no transactions left in the queue or there was not
 		// enough room to split the transaction into commands
-		if (!checkForAvailableCommandSlots(temp_t))
+		if (checkForAvailableCommandSlots(temp_t))
+		{
+			// has room to decode this transaction
+		
+			//channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
+			//update_system_time(); 
+
+			// actually remove it from the queue now
+			transaction *completedTransaction = getTransaction();
+			assert(completedTransaction == temp_t);
+			
+			// then break into commands and insert into per bank command queues
+			bool t2cResult = transaction2commands(completedTransaction);
+			assert(t2cResult == true);
+
+			// since reading vs dequeuing should yield the same result
+			assert(temp_t == completedTransaction);
+
+#ifdef DEBUG_TRANSACTION
+			timingOutStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
+#endif
+		}
+		else
 		{
 #ifdef M5DEBUG
 			if (temp_t)
@@ -122,34 +144,36 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 				// allow system to overrun so that it may send a command
 				// FIXME: will this work?
-				if ((min_gap + time <= endTime) || (min_gap + time <= endTime + timingSpecification.tCMD()))
+				if (min_gap + time <= endTime + timingSpecification.tCMD())
 				{
 					command *temp_com = getNextCommand();
 
 					executeCommand(temp_com, min_gap);
 
 					statistics->collectCommandStats(temp_com);	
+
 #ifdef DEBUG_COMMAND
 					timingOutStream << "C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_com << endl;
 #endif
 
-
 					// only get completed commands if they have finished TODO:
 					transaction *completed_t = completionQueue.pop();
 
-					if (completed_t != NULL)
+					if (completed_t)
 					{
 						statistics->collectTransactionStats(completed_t);
+
 #ifdef DEBUG_TRANSACTION
 						timingOutStream << "T CH[" << setw(2) << channelID << "] " << completed_t << endl;
 #endif
+
 						// reuse the refresh transactions
 						if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
 						{
 							completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig->getRefreshTime());
 
 							assert(systemConfig->getRefreshPolicy() != NO_REFRESH);
-							//refreshQueue.push(completed_t);
+
 							delete completed_t;
 
 							return NULL;
@@ -158,10 +182,8 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 						{
 							const void *origTrans = completed_t->getOriginalTransaction();
 
-#ifdef M5
-							if (!completed_t->originalTransaction)
-								outStream << "transaction completed, not REFRESH, no orig trans" << endl;
-#endif
+							assert(completed_t->originalTransaction);
+
 							*transFinishTime = completed_t->getCompletionTime();
 
 							delete completed_t;							
@@ -175,30 +197,17 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 					time = endTime;
 				}
 			}
-		}
-		else // successfully converted to commands, dequeue
-		{
-			//channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
-			//update_system_time(); 
-
-			// actually remove it from the queue now
-			transaction *completedTransaction = getTransaction();
-			// then break into commands
-			assert(completedTransaction == temp_t);
-			bool t2cResult = transaction2commands(completedTransaction);
-			assert(t2cResult == true);
-			// since reading vs dequeuing should yield the same result
-			assert(temp_t == completedTransaction);
-#ifdef DEBUG_TRANSACTION
-			timingOutStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
-#endif
-		}
+		}		
 	}
+
 	assert(time <= endTime + timingSpecification.tCMD());
+
 	*transFinishTime = endTime;
+
 #ifdef M5DEBUG
 	timingOutStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
 #endif
+
 	return NULL;
 }
 
@@ -323,6 +332,8 @@ void dramChannel::doPowerCalculation()
 	powerOutStream << "Psys(WR) ch[" << channelID << "] " << setprecision(5) << 
 		factorA * factorB * (powerModel.IDD4W - powerModel.IDD3N) * WRschPct << " mW" << endl;
 	powerModel.lastCalculation = time;
+
+	powerOutStream.flush();
 }
 
 transaction *dramChannel::getRefresh()

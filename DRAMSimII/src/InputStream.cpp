@@ -220,7 +220,7 @@ bool inputStream::getNextBusEvent(busEvent &this_e)
 		{
 			trace_file >> std::hex >> this_e.address.physicalAddress >> input >> std::dec >> this_e.timestamp;
 
-			//this_e.timestamp /= 2000;
+			this_e.timestamp /= 40000;
 			if(!trace_file.good()) /// found starting Hex address 
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;
