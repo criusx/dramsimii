@@ -136,7 +136,7 @@ namespace DRAMSimII
 			}
 		}
 
-		T *front() const
+		const T *front() const
 		{
 			return count ? entry[head] : NULL;
 		}

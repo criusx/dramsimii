@@ -57,7 +57,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			else
 			{
 				// read head of ras history
-				tick_t *fourthRASTime = currentRank.lastRASTimes.front(); 
+				const tick_t *fourthRASTime = currentRank.lastRASTimes.front(); 
 				tFAWGap = (int)(*fourthRASTime - time) + timingSpecification.tFAW();
 			}
 

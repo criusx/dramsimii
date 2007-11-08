@@ -58,7 +58,7 @@ namespace DRAMSimII
 		unsigned getLastRankID() const { return lastRankID; }
 		transaction *getTransaction();			// remove and return the oldest transaction
 		const transaction *readTransaction() const;	// read the oldest transaction without affecting the queue
-		transaction *readTransactionSimple() const { return transactionQueue.front(); }
+		const transaction *readTransactionSimple() const { return transactionQueue.front(); }
 		transaction *getRefresh();
 		const transaction *readRefresh() const;
 		transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }

@@ -273,6 +273,7 @@ bool dramChannel::transaction2commands(transaction *this_t)
 						case WRITE_TRANSACTION:
 							bank_q.insert(new command(this_t->getAddresses(),CAS_WRITE_COMMAND,time,this_t,false,this_t->getLength()), tail_offset);	/* insert at this location */						
 							break;
+						case IFETCH_TRANSACTION:
 						case READ_TRANSACTION:
 							bank_q.insert(new command(this_t->getAddresses(),CAS_COMMAND,time,this_t,false,this_t->getLength()), tail_offset);	/* insert at this location */
 							break;

@@ -34,7 +34,7 @@ tick_t dramSystem::nextTick() const
 	for (vector<dramChannel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
 		// first look for transactions
-		if (transaction *nextTrans = currentChan->readTransactionSimple())
+		if (const transaction *nextTrans = currentChan->readTransactionSimple())
 		{
 			// make sure it can finish
 			int tempGap = max(1,(int)(nextTrans->getEnqueueTime() - currentChan->getTime()) + currentChan->getTimingSpecification().tBufferDelay()); 

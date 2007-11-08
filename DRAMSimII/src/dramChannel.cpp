@@ -46,7 +46,7 @@ rank(settings.rankCount, rank_c(settings, timingSpecification))
 			newTrans->setType(AUTO_REFRESH_TRANSACTION);
 			newTrans->getAddresses().rank = j;
 			newTrans->getAddresses().bank = 0;
-			newTrans->setEnqueueTime(j * step);
+			newTrans->setEnqueueTime(j * (step +1));
 			refreshCounter[j] = newTrans;			
 		}		
 	}
@@ -445,7 +445,7 @@ const transaction *dramChannel::readTransaction() const
 // get the next transaction, whether a refresh transaction or a normal R/W transaction
 transaction *dramChannel::getTransaction()
 {
-	transaction *tempTrans = transactionQueue.front(); 	
+	const transaction *tempTrans = transactionQueue.front(); 	
 
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{

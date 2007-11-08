@@ -65,7 +65,7 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 			else
 			{
 				// read head of ras history
-				tick_t *fourth_ras_time = currentRank.lastRASTimes.front(); 
+				const tick_t *fourth_ras_time = currentRank.lastRASTimes.front(); 
 				tFAWGap = (int)(*fourth_ras_time - time) + timingSpecification.tFAW();
 			}
 
