@@ -83,31 +83,43 @@ memory(_memory)
 
 Port *M5dramSystem::getPort(const string &if_name, int idx)
 {
-	if (if_name == "port" && idx == -1) 
-	{
-		if (port != NULL)
-			panic("M5dramSystem::getPort: additional port requested to memory!"); 
-		memoryPort = new MemPort(name() + "-port", this);
-		return memoryPort; 
+	// Accept request for "functional" port for backwards compatibility
+	// with places where this function is called from C++.  I'd prefer
+	// to move all these into Python someday.
+	if (if_name == "functional") {
+		return new MemoryPort(csprintf("%s-functional", name()), this);
 	}
-	else if (if_name == "functional") 
-	{
-		/* special port for functional writes at startup. And for memtester */
-		return new MemPort(name() + "-funcport", this);
+
+	if (if_name != "port") {
+		panic("PhysicalMemory::getPort: unknown port %s requested", if_name);
 	}
-	else 
-	{
-		panic("M5dramSystem::getPort: unknown port %s requested", if_name);
+
+	if (idx >= ports.size()) {
+		ports.resize(idx+1);
 	}
+
+	if (ports[idx] != NULL) {
+		panic("PhysicalMemory::getPort: port %d already assigned", idx);
+	}
+
+	MemoryPort *port =
+		new MemoryPort(csprintf("%s-port%d", name(), idx), this);
+
+	ports[idx] = port;
 	timingOutStream << "called M5dramSystem::getPort" << endl;
+	return port;
 }
 
 void M5dramSystem::init()
 {
-	if (!memoryPort)
-		panic("M5dramSystem not connected to anything!");
-	memoryPort->sendStatusChange(Port::RangeChange); 
+	if (ports.size() == 0) {
+		fatal("PhysicalMemory object %s is unconnected!", name());
+	}
 
+	for (PortIterator pi = ports.begin(); pi != ports.end(); ++pi) {
+		if (*pi)
+			(*pi)->sendStatusChange(Port::RangeChange);
+	}
 }
 
 M5dramSystem::~M5dramSystem()
