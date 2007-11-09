@@ -174,13 +174,13 @@ M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp,
 	memory->getAddressRanges(resp, snoop);
 }
 
-//void
-//M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
-//{
-//	snoop = false;
-//	resp.clear();
-//	resp.push_back(RangeSize(start(), params()->range.size()));
-//}
+void
+M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
+{
+	snoop = false;
+	resp.clear();
+	resp.push_back(RangeSize(start(), params()->range.size()));
+}
 
 M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 : Event(&mainEventQueue, CPU_Tick_Pri), memory(c)
