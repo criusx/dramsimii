@@ -84,7 +84,7 @@ protected:
 	unsigned mostRecentChannel; // the most recent channel that a request was sent to
 	int cpuRatio;
 	tick_t nextStats;
-	void getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop);
+	void getAddressRanges(AddrRangeList &resp, bool &snoop);
 	//virtual Tick calculateLatency(Packet *);
 	//virtual Tick recvTiming(PacketPtr pkt);
 	void virtual init();
