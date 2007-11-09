@@ -76,7 +76,7 @@ PhysicalMemory(p), tickEvent(this), needRetry(false)
 	timingOutStream << *ds << std::endl;
 }
 
-M5dramSystem::MemPort::MemPort(const std::string &_name, M5dramSystem *_memory):
+M5dramSystem::MemoryPort::MemoryPort(const std::string &_name, M5dramSystem *_memory):
 SimpleTimingPort(_name),
 memory(_memory)
 { }
@@ -132,13 +132,13 @@ M5dramSystem::~M5dramSystem()
 }
 
 int 
-M5dramSystem::MemPort::deviceBlockSize()
+M5dramSystem::MemoryPort::deviceBlockSize()
 {
 	return memory->deviceBlockSize();
 }
 
 void
-M5dramSystem::MemPort::recvFunctional(PacketPtr pkt)
+M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
 {
 	if (!checkFunctional(pkt)) {
 		// Default implementation of SimpleTimingPort::recvFunctional()
@@ -150,7 +150,7 @@ M5dramSystem::MemPort::recvFunctional(PacketPtr pkt)
 }
 
 Tick
-M5dramSystem::MemPort::recvAtomic(PacketPtr pkt)
+M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
 { 
 #ifdef M5DEBUG
 	timingOutStream << "M5dramSystem recvAtomic()" << endl;
@@ -161,10 +161,8 @@ M5dramSystem::MemPort::recvAtomic(PacketPtr pkt)
 }
 
 void
-M5dramSystem::MemPort::recvStatusChange(Port::Status status)
-{ 
-	memory->recvStatusChange(status); 
-}
+M5dramSystem::MemoryPort::recvStatusChange(Port::Status status)
+{}
 
 void
 M5dramSystem::MemPort::getDeviceAddressRanges(AddrRangeList &resp,
@@ -176,10 +174,7 @@ M5dramSystem::MemPort::getDeviceAddressRanges(AddrRangeList &resp,
 void
 M5dramSystem::getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop)
 {
-	snoop.clear();
-	resp.clear();
-	resp.push_back(RangeSize(params()->addrRange.start,
-		params()->addrRange.size()));
+	memory->getAddressRanges(resp, snoop);
 }
 
 M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
@@ -197,7 +192,7 @@ M5dramSystem::TickEvent::description()
 //#define TESTNORMAL
 
 bool
-M5dramSystem::MemPort::recvTiming(PacketPtr pkt)
+M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 { 
 	// FIXME: shouldn't need to turn away packets, the requester should hold off once NACK'd
 	if (memory->needRetry)

@@ -41,19 +41,19 @@ private:
 	TickEvent tickEvent;
 
 
-	class MemPort : public SimpleTimingPort
+	class MemoryPort : public SimpleTimingPort
 	{
 		// backward pointer to the memory system
 		M5dramSystem *memory;
 
 	public:	
 
-		MemPort(const std::string &_name, M5dramSystem *_memory);
+		MemoryPort(const std::string &_name, M5dramSystem *_memory);
 
 		// accessor that was needed to allow the memory system to handle incoming transactions
 		void doSendTiming(PacketPtr pkt, Tick t)
 		{
-			sendTiming(pkt,t);
+			schedSendTiming(pkt,t);
 		}	
 
 	protected:
@@ -75,7 +75,7 @@ private:
 	
 
 protected:
-	MemPort *memoryPort;
+	MemoryPort *memoryPort;
 	// the whole point of the wrapper class
 	DRAMSimII::dramSystem *ds;
 	bool needRetry; // if the memory system needs to issue a retry statement before any more requests will come in
