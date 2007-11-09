@@ -128,25 +128,13 @@ M5dramSystem::MemPort::deviceBlockSize()
 void
 M5dramSystem::MemPort::recvFunctional(PacketPtr pkt)
 {
-	//Since we are overriding the function, make sure to have the impl of the
-	//check or functional accesses here.
-	std::list<std::pair<Tick,PacketPtr> >::iterator i = transmitList.begin();
-	std::list<std::pair<Tick,PacketPtr> >::iterator end = transmitList.end();
-	bool notDone = true;
-
-	while (i != end && notDone) {
-		PacketPtr target = i->second;
-		// If the target contains data, and it overlaps the
-		// probed request, need to update data
-		if (target->intersect(pkt))
-			notDone = fixPacket(pkt, target);
-		i++;
+	if (!checkFunctional(pkt)) {
+		// Default implementation of SimpleTimingPort::recvFunctional()
+		// calls recvAtomic() and throws away the latency; we can save a
+		// little here by just not calculating the latency.
+		memory->doFunctionalAccess(pkt);
 	}
 
-	// Default implementation of SimpleTimingPort::recvFunctional()
-	// calls recvAtomic() and throws away the latency; we can save a
-	// little here by just not calculating the latency.
-	memory->doFunctionalAccess(pkt); 
 }
 
 Tick
