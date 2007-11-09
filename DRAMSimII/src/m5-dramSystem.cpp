@@ -175,7 +175,7 @@ M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp,
 }
 
 void
-M5dramSystem::getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop)
+M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
 {
 	snoop = false;
 	resp.clear();
