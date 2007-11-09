@@ -165,7 +165,7 @@ M5dramSystem::MemoryPort::recvStatusChange(Port::Status status)
 {}
 
 void
-M5dramSystem::MemPort::getDeviceAddressRanges(AddrRangeList &resp,
+M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp,
 												   AddrRangeList &snoop)
 {
 	memory->getAddressRanges(resp, snoop);
@@ -283,7 +283,7 @@ M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		// wake the channel and do everything it was going to do up to this point
 		//assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
 
-		assert(pkt->result != Packet::Nacked);
+		assert(!pkt->wasNacked());
 		// turn packet around to go back to requester if response expected
 
 		// attempt to add the transaction to the memory system
