@@ -6,5 +6,3 @@ fbdSystem::fbdSystem(const dramSettings& settings):
 dramSystem(settings), // inherited class
 channel(systemConfig.getChannelCount(),fbdChannel(settings, systemConfig))
 {}
-
-

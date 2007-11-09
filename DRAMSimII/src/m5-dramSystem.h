@@ -75,7 +75,7 @@ private:
 	
 
 protected:
-	MemoryPort *memoryPort;
+	std::vector<MemoryPort*> ports;
 	// the whole point of the wrapper class
 	DRAMSimII::dramSystem *ds;
 	bool needRetry; // if the memory system needs to issue a retry statement before any more requests will come in

@@ -174,7 +174,9 @@ M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp,
 void
 M5dramSystem::getAddressRanges(AddrRangeList &resp, AddrRangeList &snoop)
 {
-	memory->getAddressRanges(resp, snoop);
+	snoop = false;
+	resp.clear();
+	resp.push_back(RangeSize(start(), params()->range.size()));
 }
 
 M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
