@@ -20,6 +20,7 @@ dramTimingSpecification::dramTimingSpecification(const dramSettings& settings)
 	{
 	case DDR:
 		
+		t_ccd = 2;					// internal fetch is 1 cycle, 2 beats for DDR
 		t_al = 0;					// no such thing in DDR 
 		t_burst = settings.tBurst;	// depending on system config! can be 2, 4, or 8
 		t_cas = settings.tCAS;
@@ -42,6 +43,7 @@ dramTimingSpecification::dramTimingSpecification(const dramSettings& settings)
 
 	case DDR2:
 
+		t_ccd = 4;					// two cycles, 4 beats in DDR2
 		t_al = settings.postedCAS ? settings.tAL : 0; // if posted CAS is disabled, tAL should be zero
 		t_burst = settings.tBurst;
 		t_cas = settings.tCAS;
@@ -63,6 +65,7 @@ dramTimingSpecification::dramTimingSpecification(const dramSettings& settings)
 
 	case DDR3:
 
+		t_ccd = 8;					// four cycles, eight beats in DDR3
 		t_al = settings.postedCAS ? settings.tAL : 0; // if posted CAS is disabled, tAL should be zero
 		t_burst = 8;				// protocol specific, cannot be changed 
 		t_cas = settings.tCAS;
@@ -84,6 +87,7 @@ dramTimingSpecification::dramTimingSpecification(const dramSettings& settings)
 
 	case SDRAM:
 
+		t_ccd = 1;					// one cycle, one beat in SDR
 		t_al = 0;					// no such thing as posted CAS in SDRAM 
 		t_burst = settings.tBurst;	// depending on system config, can be 1, 2, 4, or 8 
 		t_cas = settings.tCAS;

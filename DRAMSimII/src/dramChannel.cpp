@@ -322,7 +322,7 @@ void dramChannel::doPowerCalculation()
 
 		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 
-		float tRRDsch = (time - powerModel.lastCalculation) / perRankRASCount;
+		float tRRDsch = ((float)time - powerModel.lastCalculation) / perRankRASCount;
 
 		PsysACT += ((float)powerModel.tRC / (float)tRRDsch) * factorA * powerModel.PdsACT;
 		//powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << powerModel.PdsACT * powerModel.tRC / (float)tRRDsch * factorA * 100 << "mW " <<

@@ -231,7 +231,7 @@ const command *dramChannel::readNextCommand() const
 				{
 					if (!systemConfig.isReadWriteGrouping())
 					{
-						return rank[lastRankID].bank[lastBankID].getPerBankQueue().front();
+						return temp_c;
 					}
 					else // have to follow read_write grouping considerations 
 					{
@@ -239,9 +239,11 @@ const command *dramChannel::readNextCommand() const
 						command *next_c = rank[lastRankID].bank[lastBankID].getPerBankQueue().read(1);	
 
 						if (next_c &&
-							((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) && (transactionType == READ_TRANSACTION)) ||
-							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
+							((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_COMMAND) && (transactionType == READ_TRANSACTION)) ||
+							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_WRITE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
 						{
+							assert(rank[lastRankID].bank[lastBankID].getPerBankQueue().front()->getAddress().bank == lastBankID);
+							assert(rank[lastRankID].bank[lastBankID].getPerBankQueue().front()->getAddress().rank == lastRankID);
 							return rank[lastRankID].bank[lastBankID].getPerBankQueue().front();
 						}
 					}
@@ -275,8 +277,11 @@ const command *dramChannel::readNextCommand() const
 				{
 					const command *temp_c = rank[lastRankID].bank[lastBankID].getPerBankQueue().front();
 
-					if((temp_c != NULL) &&
-						((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) || (temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND)))
+					if ((temp_c) &&
+						((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) ||
+						(temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) ||
+						(temp_c->getCommandType() == CAS_COMMAND) ||
+						(temp_c->getCommandType() == CAS_WRITE_COMMAND)))
 					{
 						return rank[lastRankID].bank[lastBankID].getPerBankQueue().front();
 					}
@@ -288,33 +293,70 @@ const command *dramChannel::readNextCommand() const
 				}
 				break;
 			case CAS_AND_PRECHARGE_COMMAND:
+			case CAS_COMMAND:
+			case PRECHARGE_COMMAND:
 				transactionType = READ_TRANSACTION;
 				break;
+
+			case REFRESH_ALL_COMMAND:
+			case CAS_WRITE_COMMAND:
 			case CAS_WRITE_AND_PRECHARGE_COMMAND:
 				transactionType = WRITE_TRANSACTION;
 				break;
 			default:
 				transactionType = WRITE_TRANSACTION; // FIXME: added this to ensure no uninit vars
+				cerr << "Did not find a CAS or RAS command when it was expected" << endl;
 				break;
 			}
 
-			bool candidate_found = false;
+			unsigned originalLastRankID = lastRankID;
+			unsigned originalLastBankID = lastBankID;
+			transaction_type_t originalTransactionType = transactionType;
+			bool noPendingRefreshes = false;
 
-			while (candidate_found == false)
+			while (true)
 			{
+				// select the next bank
 				lastBankID = (lastBankID + 1) % systemConfig.getBankCount();
-				if (lastBankID == 0)
+
+				if (lastBankID == originalLastBankID)
 				{
+					if (!noPendingRefreshes)
+					{
+						// before switching to the next bank, see if all the queues are refreshes in any rank
+						for (vector<rank_c>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
+						{
+							bool notAllRefresh = false;
+							for (vector<bank_c>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+							{
+								// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
+								if ((currentBank->getPerBankQueue().size() == 0) || ((currentBank->getPerBankQueue().front()) && (currentBank->getPerBankQueue().front()->getCommandType() != REFRESH_ALL_COMMAND)))
+								{
+									notAllRefresh = true;
+									break;
+								}
+							}
+							// are all the commands refreshes? if so then return this
+							if (!notAllRefresh)
+								return currentRank->bank[lastBankID].getPerBankQueue().front(); // which bank doesn't really matter
+						}
+						noPendingRefreshes = true;
+					}
+
 					lastRankID = (lastRankID + 1) % systemConfig.getRankCount();
-					if (lastRankID == 0)
+
+					if (lastRankID == originalLastRankID)
 					{
 						transactionType = (transactionType == WRITE_TRANSACTION) ? READ_TRANSACTION : WRITE_TRANSACTION;
+						// however, if this type has already been searched for, then there are no commands, so quit
+						if (transactionType == originalTransactionType)
+							break;
 					}
 				}
 
 				const command *temp_c = rank[lastRankID].bank[lastBankID].getPerBankQueue().front();
 
-				if (temp_c != NULL)
+				if (temp_c && temp_c->getCommandType() != REFRESH_ALL_COMMAND)
 				{	
 					if(systemConfig.isReadWriteGrouping() == false)
 					{
@@ -322,23 +364,33 @@ const command *dramChannel::readNextCommand() const
 					}
 					else // have to follow read_write grouping considerations
 					{
-						command *next_c =  rank[lastRankID].bank[lastBankID].getPerBankQueue().read(1);	/* look at the second command */
+						// look at the second command
+						command *next_c =  rank[lastRankID].bank[lastBankID].getPerBankQueue().read(1);
 
-						if (((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) && (transactionType == READ_TRANSACTION)) ||
-							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
+						if (next_c &&
+							((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_COMMAND) && (transactionType == READ_TRANSACTION)) ||
+							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_WRITE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
 						{
 							assert(rank[lastRankID].bank[lastBankID].getPerBankQueue().front()->getAddress().bank == lastBankID);
 							assert(rank[lastRankID].bank[lastBankID].getPerBankQueue().front()->getAddress().rank == lastRankID);
 							return rank[lastRankID].bank[lastBankID].getPerBankQueue().front();
 						}
 					}
+
 #ifdef DEBUG_FLAG_2
-					cerr << "Looked in [" << temp_c->getAddress().rank << "] [" << temp_c->getAddress().bank << "] but wrong type, We want [" << transactionType << "] Candidate command type [" << rank[lastRankID].bank[lastBankID].getPerBankQueue().read(1)->getCommandType() << "]" << endl;
+					cerr << "Looked in ["<< temp_c->getAddress().rank << "] [" << temp_c->getAddress().bank << "] but wrong type, We want [" << transactionType << "]. Candidate command type ";
+					cerr << temp_c->getCommandType();
+					cerr << " followed by ";
+					cerr << rank[lastRankID].bank[lastBankID].getPerBankQueue().read(1)->getCommandType();
+					cerr << "count [" << rank[lastRankID].bank[lastBankID].getPerBankQueue().get_count() << "]" << endl;
 #endif
+
 				}
+
 #ifdef DEBUG_FLAG_2
 				cerr << "Looked in rank=[" << lastRankID << "] bank=[" << lastBankID << "] but Q empty" << endl;
 #endif
+
 			}
 		}
 		break;
