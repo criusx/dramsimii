@@ -75,6 +75,7 @@ private:
 	
 
 protected:
+	int lastPortIndex;
 	std::vector<MemoryPort*> ports;
 	// the whole point of the wrapper class
 	DRAMSimII::dramSystem *ds;

@@ -105,6 +105,7 @@ Port *M5dramSystem::getPort(const string &if_name, int idx)
 	MemoryPort *port =
 		new MemoryPort(csprintf("%s-port%d", name(), idx), this);
 
+	lastPortIndex = idx;
 	ports[idx] = port;
 	timingOutStream << "called M5dramSystem::getPort" << endl;
 	return port;
@@ -112,11 +113,13 @@ Port *M5dramSystem::getPort(const string &if_name, int idx)
 
 void M5dramSystem::init()
 {
-	if (ports.size() == 0) {
-		fatal("PhysicalMemory object %s is unconnected!", name());
+	if (ports.size() == 0)
+	{
+		fatal("M5dramSystem object %s is unconnected!", name());
 	}
 
-	for (PortIterator pi = ports.begin(); pi != ports.end(); ++pi) {
+	for (PortIterator pi = ports.begin(); pi != ports.end(); ++pi) 
+	{
 		if (*pi)
 			(*pi)->sendStatusChange(Port::RangeChange);
 	}
@@ -402,7 +405,7 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 				timingOutStream << "<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
 #endif
 
-				memoryPort->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
+				ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio() - curTick));
 			}
 			else
 			{
@@ -419,7 +422,7 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 		timingOutStream << "Allow retrys" << endl;
 #endif
 		needRetry = false;
-		memoryPort->sendRetry();
+		ports[lastPortIndex]->sendRetry();
 	}
 }
 
