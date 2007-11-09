@@ -428,7 +428,7 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 	}
 }
 
-M5dramSystem *M5DRAMSystemParams::create()
+M5dramSystem *M5dramSystemParams::create()
 {
 	return new M5dramSystem(this);
 }
