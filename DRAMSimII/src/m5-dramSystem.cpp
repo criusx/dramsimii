@@ -418,13 +418,22 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 	// if there is now room, allow a retry to happen
 	if (needRetry && !ds->isFull(mostRecentChannel))
 	{
+
 #ifdef M5DEBUG
 		timingOutStream << "Allow retrys" << endl;
 #endif
+
 		needRetry = false;
 		ports[lastPortIndex]->sendRetry();
 	}
 }
+
+M5dramSystem *M5DRAMSystemParams::create()
+{
+	return new M5dramSystem(this);
+}
+
+
 
 #if 0
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
