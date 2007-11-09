@@ -426,7 +426,7 @@ void M5dramSystem::moveDramSystemToTime(tick_t now)
 	}
 }
 
-
+#if 0
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 //////////////////////////////////////////////////////////////////////////
@@ -597,3 +597,4 @@ CREATE_SIM_OBJECT(M5dramSystem)
 REGISTER_SIM_OBJECT("M5dramSystem", M5dramSystem)
 
 #endif // DOXYGEN_SHOULD_SKIP_THIS
+#endif
