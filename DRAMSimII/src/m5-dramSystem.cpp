@@ -169,7 +169,7 @@ M5dramSystem::MemoryPort::recvStatusChange(Port::Status status)
 
 void
 M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp,
-												   AddrRangeList &snoop)
+												   bool &snoop)
 {
 	memory->getAddressRanges(resp, snoop);
 }

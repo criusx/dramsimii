@@ -65,7 +65,7 @@ private:
 		virtual void recvStatusChange(Status status);
 
 		virtual void getDeviceAddressRanges(AddrRangeList &resp,
-			AddrRangeList &snoop);
+			bool &snoop);
 
 		virtual int deviceBlockSize();
 
