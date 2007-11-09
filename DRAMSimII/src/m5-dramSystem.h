@@ -84,7 +84,7 @@ protected:
 	unsigned mostRecentChannel; // the most recent channel that a request was sent to
 	int cpuRatio;
 	tick_t nextStats;
-	void getAddressRanges(AddrRangeList &resp, bool &snoop);
+	
 	//virtual Tick calculateLatency(Packet *);
 	//virtual Tick recvTiming(PacketPtr pkt);
 	void virtual init();
@@ -93,6 +93,8 @@ protected:
 public:
 	// allows other components to get a port which they can send packets to
 	virtual Port *getPort(const std::string &if_name, int idx = -1);
+
+	void getAddressRanges(AddrRangeList &resp, bool &snoop);
 
 	int getCpuRatio() const { return cpuRatio; }
 
