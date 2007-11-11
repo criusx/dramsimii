@@ -47,8 +47,8 @@ rank(settings.rankCount, rank_c(settings, timingSpecification))
 			newTrans->getAddresses().rank = j;
 			newTrans->getAddresses().bank = 0;
 			newTrans->setEnqueueTime(j * (step +1));
-			refreshCounter[j] = newTrans;			
-		}		
+			refreshCounter[j] = newTrans;
+		}
 	}
 }
 
@@ -78,9 +78,9 @@ rank((unsigned)dc.rank.size(), rank_c(dc.rank[0],timingSpecification))
 		refreshCounter = dc.refreshCounter;
 
 		for (unsigned j = 0; j < rank.size(); ++j)
-		{			
+		{
 			refreshCounter[j] = dc.refreshCounter[j];
-		}		
+		}
 	}
 }
 
@@ -90,7 +90,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 	while (time < endTime)
 	{
 		// attempt first to move transactions out of the transactions queue and
-		// convert them into commands after a fixed amount of time		
+		// convert them into commands after a fixed amount of time
 		const transaction *temp_t = readTransaction();
 
 
@@ -144,7 +144,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 
 					executeCommand(temp_com, min_gap);
 
-					statistics->collectCommandStats(temp_com);	
+					statistics->collectCommandStats(temp_com);
 
 #ifdef DEBUG_COMMAND
 					timingOutStream << "C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_com << endl;
@@ -191,7 +191,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				else
 				{
 					time = endTime;
-				}			
+				}
 			}
 			else
 			{
@@ -211,8 +211,8 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				{
 					time = endTime;
 				}
-			}	
-		}		
+			}
+		}
 	}
 
 	assert(time <= endTime + timingSpecification.tCMD());
@@ -237,7 +237,7 @@ void dramChannel::recordCommand(command *latest_command)
 bool dramChannel::enqueue(transaction *in)
 {
 	if (systemConfig.getTransactionOrderingAlgorithm() == STRICT)
-		return transactionQueue.push(in);	
+		return transactionQueue.push(in);
 	// try to insert reads and fetches before writes
 	// TODO: finish this
 	else
@@ -286,7 +286,7 @@ enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const in
 
 // calculate the power consumed by all channels during the last epoch
 void dramChannel::doPowerCalculation()
-{	
+{
 	float factorA = (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax);
 	float factorB = powerModel.frequency / powerModel.frequencySpec;
 
@@ -331,7 +331,7 @@ void dramChannel::doPowerCalculation()
 		//	time << "]" << endl;
 
 		k->prechargeTime = 1;
-	}			
+	}
 
 	float RDschPct = totalCAS * timingSpecification.tBurst() / (float)(time - powerModel.lastCalculation);
 	float WRschPct = totalCASW * timingSpecification.tBurst() / (float)(time - powerModel.lastCalculation);
@@ -405,9 +405,9 @@ const transaction *dramChannel::readTransaction() const
 		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
 		{
 #ifdef M5DEBUG
-			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;			
+			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;
 #endif
-			return NULL; // not enough time has passed		
+			return NULL; // not enough time has passed
 		}
 		return tempTrans;
 	}
@@ -423,7 +423,7 @@ const transaction *dramChannel::readTransaction() const
 			if (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay())
 			{
 #ifdef M5DEBUG
-				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;			
+				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;
 #endif
 				// if this refresh command has arrived
 				if (refreshTrans->getEnqueueTime() < time) 
@@ -447,16 +447,16 @@ const transaction *dramChannel::readTransaction() const
 // get the next transaction, whether a refresh transaction or a normal R/W transaction
 transaction *dramChannel::getTransaction()
 {
-	const transaction *tempTrans = transactionQueue.front(); 	
+	const transaction *tempTrans = transactionQueue.front(); 
 
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{
 		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
 		{
 #ifdef M5DEBUG
-			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;			
+			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;
 #endif
-			return NULL; // not enough time has passed		
+			return NULL; // not enough time has passed
 		}
 		return transactionQueue.pop();
 	}
@@ -469,7 +469,7 @@ transaction *dramChannel::getTransaction()
 			if (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay())
 			{
 #ifdef M5DEBUG
-				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;			
+				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;
 #endif
 				// if this refresh command has arrived
 				if (refreshTrans->getEnqueueTime() < time) 
