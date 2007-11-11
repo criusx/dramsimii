@@ -42,7 +42,7 @@ namespace DRAMSimII
 		command *getNextCommand();
 		const command *readNextCommand() const;
 		
-		const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
+		virtual const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
 		virtual int minProtocolGap(const command *thisCommand) const;
 		void executeCommand(command *, const int);
 		void doPowerCalculation();

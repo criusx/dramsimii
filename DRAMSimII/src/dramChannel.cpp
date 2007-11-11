@@ -94,25 +94,24 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 		const transaction *temp_t = readTransaction();
 
 
-		// if there were no transactions left in the queue or there was not
-		// enough room to split the transaction into commands
+		// first divide the transactions which have been around long enough to be decoded into commands
 		if (checkForAvailableCommandSlots(temp_t))
 		{
 			// has room to decode this transaction
-		
+
 			//channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
 			//update_system_time(); 
 
 			// actually remove it from the queue now
-			transaction *completedTransaction = getTransaction();
-			assert(completedTransaction == temp_t);
-			
+			transaction *decodedTransaction = getTransaction();
+			assert(decodedTransaction == temp_t);
+
 			// then break into commands and insert into per bank command queues
-			bool t2cResult = transaction2commands(completedTransaction);
+			bool t2cResult = transaction2commands(decodedTransaction);
 			assert(t2cResult == true);
 
 			// since reading vs dequeuing should yield the same result
-			assert(temp_t == completedTransaction);
+			assert(temp_t == decodedTransaction);
 
 #ifdef DEBUG_TRANSACTION
 			timingOutStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
@@ -120,33 +119,16 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 		}
 		else
 		{
+
 #ifdef M5DEBUG
 			if (temp_t)
 				timingOutStream << "!T2C " << temp_t << endl;
 #endif
+
 			// move time up by executing commands
 			const command *temp_c = readNextCommand();
 
-			if (temp_c == NULL)
-			{
-				// the transaction queue and all the per bank queues are empty,
-				// so just move time forward to the point where the transaction starts
-				// or move time forward until the transaction is ready to be decoded
-				if ((transactionQueue.size() > 0) && (time + timingSpecification.tBufferDelay() <= endTime))
-				{
-					tick_t oldTime = time;
-					assert(timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime() <= endTime);
-
-					time = timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime();
-					assert(oldTime < time);
-				}
-				// no transactions to convert, no commands to issue, just go forward
-				else
-				{
-					time = endTime;
-				}
-			}
-			else
+			if (temp_c)
 			{
 				int min_gap = minProtocolGap(temp_c);
 
@@ -209,8 +191,27 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				else
 				{
 					time = endTime;
-				}
+				}			
 			}
+			else
+			{
+				// the transaction queue and all the per bank queues are empty,
+				// so just move time forward to the point where the transaction starts
+				// or move time forward until the transaction is ready to be decoded
+				if ((transactionQueue.size() > 0) && (time + timingSpecification.tBufferDelay() <= endTime))
+				{
+					tick_t oldTime = time;
+					assert(timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime() <= endTime);
+
+					time = timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime();
+					assert(oldTime < time);
+				}
+				// no transactions to convert, no commands to issue, just go forward
+				else
+				{
+					time = endTime;
+				}
+			}	
 		}		
 	}
 
@@ -309,13 +310,13 @@ void dramChannel::doPowerCalculation()
 		}
 		//unsigned i = k->prechargeTime;
 		//cerr << "ch[" << channelID << "] %pre[" << k->prechargeTime / (time - powerModel.lastCalculation) * 100 << "] " << k->prechargeTime << endl;
-		
+
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
 		float percentActive = max(0.0F,1.0F - (k->prechargeTime / (float)(time - powerModel.lastCalculation)));
 
-		
+
 		//assert(RDschPct + WRschPct < 1.0F);
-		
+
 
 		powerOutStream << "Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
 			factorA * factorB * powerModel.IDD3N * powerModel.VDDmax * percentActive << " mW P(" << k->prechargeTime << "/" << time - powerModel.lastCalculation << ")" << endl;
@@ -418,6 +419,7 @@ const transaction *dramChannel::readTransaction() const
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig.getSeniorityAgeLimit()))
 		{
+			// if this transaction has not yet been decoded, then look to see if the refresh trans has arrived
 			if (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay())
 			{
 #ifdef M5DEBUG

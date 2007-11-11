@@ -451,7 +451,7 @@ const command *dramChannel::readNextCommand() const
 			{
 				assert(candidateCommand->getCommandType() == REFRESH_ALL_COMMAND || rank[candidateCommand->getAddress().rank].bank[candidateCommand->getAddress().bank].getPerBankQueue().front() == candidateCommand);
 
-#ifdef DEBUG
+#ifdef DEBUG_GREEDY
 			timingOutStream << "R[" << candidateCommand->getAddress().rank << "] B[" << candidateCommand->getAddress().bank << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]" << endl;
 #endif
 			}

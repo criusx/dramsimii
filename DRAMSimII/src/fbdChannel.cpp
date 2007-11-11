@@ -11,6 +11,7 @@ dramChannel(settings, sysConfig)
 
 /// <summary>
 /// find the protocol gap between a command and current system state
+/// 
 /// </summary>
 int fbdChannel::minProtocolGap(const command *this_c) const
 { 
@@ -240,4 +241,10 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 #endif
 
 	return max(min_gap,timingSpecification.tCMD());
+}
+
+
+const void *fbdChannel::moveChannelToTime(const tick_t endTime, tick_t *transFinishTime)
+{
+	return NULL;
 }

@@ -16,8 +16,9 @@ namespace DRAMSimII
 	public:
 		explicit fbdChannel(const dramSettings& settings, const dramSystemConfiguration &sysConfig);
 
-		// functions
+		// virtual functions
 		int minProtocolGap(const command *this_c) const;
+		const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
 	};
 }
 

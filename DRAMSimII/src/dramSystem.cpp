@@ -695,9 +695,9 @@ channel(systemConfig.getChannelCount(),
 		stringstream timingFilename;
 		stringstream powerFilename;
 		stringstream statsFilename;		
-		timingFilename << baseFilename << counter << "-timing" << suffix;
-		powerFilename << baseFilename << counter << "-power" << suffix;
-		statsFilename << baseFilename << counter << "-stats" << suffix;
+		timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
+		powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
+		statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
 		timingIn.open(timingFilename.str().c_str(),ifstream::in);
 		powerIn.open(powerFilename.str().c_str(),ifstream::in);
 		statsIn.open(statsFilename.str().c_str(),ifstream::in);				
@@ -714,9 +714,9 @@ channel(systemConfig.getChannelCount(),
 			timingFilename.str("");
 			powerFilename.str("");
 			statsFilename.str("");
-			timingFilename << baseFilename << counter << "-timing" << suffix;
-			powerFilename << baseFilename << counter << "-power" << suffix;
-			statsFilename << baseFilename << counter << "-stats" << suffix;
+			timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
+			powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
+			statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
 			timingIn.open(timingFilename.str().c_str(),ifstream::in);
 			powerIn.open(powerFilename.str().c_str(),ifstream::in);
 			statsIn.open(statsFilename.str().c_str(),ifstream::in);							
