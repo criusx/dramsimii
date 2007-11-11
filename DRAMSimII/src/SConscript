@@ -1,5 +1,7 @@
 Import('*')
 
+SimObject('M5dramSystem.py')
+
 Source('addresses.cpp')
 Source('bank_c.cpp')
 Source('busEvent.cpp')

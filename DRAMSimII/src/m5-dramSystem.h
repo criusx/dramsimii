@@ -111,8 +111,6 @@ public:
 	float getInvCPURatio() const { return invCpuRatio; }
 
 	void moveToTime(tick_t now);
-
-	
 	
 	virtual ~M5dramSystem();
 };
