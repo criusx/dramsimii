@@ -18,22 +18,24 @@ class M5dramSystem: public PhysicalMemory
 {
 	// taken from m5 interface
 private:
+
+	// allows event-based simulation, scheduling wake ups for the simulator
 	class TickEvent : public Event
 	{
 
 	private:
 
-		// The associated memory system
+		// backward pointer to the memory system
 		M5dramSystem *memory;
 
 	public:
-	
+
 		// constructor
 		TickEvent(M5dramSystem *c);
 
 		// process to call when a tick event happens
 		void process();
-		
+
 
 		/**
 		* Return a string description of this event.
@@ -41,10 +43,7 @@ private:
 		const char *description();
 	};
 
-	TickEvent tickEvent;
-
-
-
+	// allows this to receive packets and attach to a bus
 	class MemoryPort : public SimpleTimingPort
 	{
 		// backward pointer to the memory system
@@ -77,9 +76,11 @@ private:
 		virtual bool recvTiming(PacketPtr pkt);		
 	};
 
-	
+
 
 protected:
+	TickEvent tickEvent;
+
 	int lastPortIndex;
 	std::vector<MemoryPort*> ports;
 	typedef std::vector<MemoryPort*>::iterator PortIterator;
@@ -90,11 +91,11 @@ protected:
 	int cpuRatio;
 	float invCpuRatio;
 	tick_t nextStats;
-	
+
 	//virtual Tick calculateLatency(Packet *);
 	//virtual Tick recvTiming(PacketPtr pkt);
 	void virtual init();
-	
+
 
 public:
 	typedef M5dramSystemParams Params;
@@ -111,7 +112,7 @@ public:
 	float getInvCPURatio() const { return invCpuRatio; }
 
 	void moveToTime(tick_t now);
-	
+
 	virtual ~M5dramSystem();
 };
 

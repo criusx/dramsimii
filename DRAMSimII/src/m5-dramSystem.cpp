@@ -9,157 +9,15 @@ using namespace DRAMSimII;
 
 #define STATS_INTERVAL 1000000
 
-M5dramSystem::M5dramSystem(const Params *p):
-PhysicalMemory(p), 
-tickEvent(this), 
-needRetry(false)
-{	
-	timingOutStream << "M5dramSystem constructor" << std::endl;
-	
-	const char **settingsMap = new const char*[2];
-
-	settingsMap[0] = "--settings";
-	settingsMap[1] = p->settingsFile.c_str();
-
-	dramSettings settings(2,settingsMap);
-
-	settings.inFile = "";
-
-	// if this is a normal system or a fbd system
-	if (settings.systemType == BASELINE_CONFIG)
-		ds = new dramSystem(settings);
-	else
-		ds = new fbdSystem(settings);	
-
-	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency()));
-	invCpuRatio = (int)((double)ds->Frequency()/(Clock::Frequency));
-
-	nextStats = STATS_INTERVAL;
-
-	timingOutStream << *ds << std::endl;
-}
-
-M5dramSystem::MemoryPort::MemoryPort(const std::string &_name, M5dramSystem *_memory):
-SimpleTimingPort(_name),
-memory(_memory)
-{ }
-
-Port *M5dramSystem::getPort(const string &if_name, int idx)
-{
-	// Accept request for "functional" port for backwards compatibility
-	// with places where this function is called from C++.  I'd prefer
-	// to move all these into Python someday.
-	if (if_name == "functional")
-	{
-		return new MemoryPort(csprintf("%s-functional", name()), this);
-	}
-
-	if (if_name != "port") 
-	{
-		panic("PhysicalMemory::getPort: unknown port %s requested", if_name);
-	}
-
-	if (idx >= ports.size()) 
-	{
-		ports.resize(idx+1);
-	}
-
-	if (ports[idx] != NULL)
-	{
-		panic("PhysicalMemory::getPort: port %d already assigned", idx);
-	}
-
-	MemoryPort *port =
-		new MemoryPort(csprintf("%s-port%d", name(), idx), this);
-
-	lastPortIndex = idx;
-	ports[idx] = port;
-	timingOutStream << "called M5dramSystem::getPort" << endl;
-	return port;
-}
-
-void M5dramSystem::init()
-{
-	if (ports.size() == 0)
-	{
-		fatal("M5dramSystem object %s is unconnected!", name());
-	}
-
-	for (PortIterator pi = ports.begin(); pi != ports.end(); ++pi) 
-	{
-		if (*pi)
-			(*pi)->sendStatusChange(Port::RangeChange);
-	}
-}
-
-M5dramSystem::~M5dramSystem()
-{
-	//if (pmemAddr)
-	//	munmap(pmemAddr, params()->addrRange.size());
-	
-	timingOutStream << "M5dramSystem destructor" << std::endl;
-	delete ds;
-}
-
-int M5dramSystem::MemoryPort::deviceBlockSize()
-{
-	return memory->deviceBlockSize();
-}
-
-void M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
-{
-	if (!checkFunctional(pkt))
-	{
-		// Default implementation of SimpleTimingPort::recvFunctional()
-		// calls recvAtomic() and throws away the latency; we can save a
-		// little here by just not calculating the latency.
-		memory->doFunctionalAccess(pkt);
-	}
-}
-
-Tick M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
-{ 
-#ifdef M5DEBUG
-	timingOutStream << "M5dramSystem recvAtomic()" << endl;
-#endif
-
-	memory->doFunctionalAccess(pkt); 
-	return memory->calculateLatency(pkt);
-}
-
-void M5dramSystem::MemoryPort::recvStatusChange(Port::Status status)
-{}
-
-void M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp,
-												   bool &snoop)
-{
-	memory->getAddressRanges(resp, snoop);
-}
-
-void M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
-{
-	snoop = false;
-	resp.clear();
-	resp.push_back(RangeSize(start(), params()->range.size()));
-}
-
-M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
-: Event(&mainEventQueue, CPU_Tick_Pri), memory(c)
-{}
-
-const char *M5dramSystem::TickEvent::description()
-{
-	return "m5dramSystem tick event";	
-}
-
-
-
 //#define TESTNORMAL
-#define TESTNEW
 
+//#define TESTNEW
+
+//////////////////////////////////////////////////////////////////////////
+// recvTiming, override from MemoryPort
+//////////////////////////////////////////////////////////////////////////
 bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
-{ 
-	//////////////////////////////////////////////////////////////////////////
+{ 	
 #ifdef TESTNEW
 	bool nr = pkt->needsResponse();
 	memory->doAtomicAccess(pkt);
@@ -177,7 +35,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	}
 	return true;
 #endif
-	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
 	// FIXME: shouldn't need to turn away packets, the requester should hold off once NACK'd
@@ -277,17 +134,13 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 		assert((pkt->isRead() && pkt->needsResponse()) || (!pkt->isRead() && !pkt->needsResponse()));
 
-		//memory->doAtomicAccess(pkt);
+		//memory->doAtomicAccess(pkt); // maybe try to do the access prior to simulating timing?
 
 		// move channels to current time so that calculations based on current channel times work
 		// should also not start/finish any commands, since this would happen at a scheduled time
 		// instead of now
 		memory->moveToTime(currentMemCycle);
-
-		//tick_t finishTime;
-		// wake the channel and do everything it was going to do up to this point
-		//assert(!ds->moveChannelToTime(trans->arrival_time,trans->addr.chan_id, &finishTime));
-
+		
 		assert(!pkt->wasNacked());
 		// turn packet around to go back to requester if response expected
 
@@ -342,6 +195,11 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+// process()
+// runs whenever a tick event happens, essentially allows the system to be
+// woken at certain times to process commands, retrieve results, etc.
+//////////////////////////////////////////////////////////////////////////
 void M5dramSystem::TickEvent::process()
 {	
 	tick_t currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
@@ -377,12 +235,22 @@ void M5dramSystem::TickEvent::process()
 		schedule(static_cast<Tick>(next * memory->getCpuRatio()));
 }
 
+//////////////////////////////////////////////////////////////////////////
+// moveToTime()
+// tells the channels that nothing has arrived since the last wakeup and
+// now, so go ahead and do whatever would have been done if running in real 
+// time
+// note that this should be called and should process about one event each 
+// time it is called per channel, else things start getting sent back in
+// the past
+//////////////////////////////////////////////////////////////////////////
 void M5dramSystem::moveToTime(const tick_t now)
 {
 	tick_t finishTime;	
 
 	Packet *packet;
-	// if transactions are returned, then send them back, else if time is not brought up to date, then a refresh transaction has finished
+	// if transactions are returned, then send them back,
+	// else if time is not brought up to date, then a refresh transaction has finished
 	while ((packet = (Packet *)ds->moveAllChannelsToTime(now, &finishTime)) || finishTime < now)
 	{
 		if (packet)
@@ -396,9 +264,7 @@ void M5dramSystem::moveToTime(const tick_t now)
 			doAtomicAccess(packet);		
 
 			if (needsResponse)
-			//if (packet->isRead())
 			{			
-				//packet->makeTimingResponse();
 				assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
 
 #ifdef M5DEBUG
@@ -429,7 +295,160 @@ void M5dramSystem::moveToTime(const tick_t now)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+// the constructor
+//////////////////////////////////////////////////////////////////////////
+M5dramSystem::M5dramSystem(const Params *p):
+PhysicalMemory(p), 
+tickEvent(this), 
+needRetry(false)
+{	
+	timingOutStream << "M5dramSystem constructor" << std::endl;
+
+	const char **settingsMap = new const char*[2];
+
+	settingsMap[0] = "--settings";
+	settingsMap[1] = p->settingsFile.c_str();
+
+	dramSettings settings(2,settingsMap);
+
+	settings.inFile = "";
+
+	// if this is a normal system or a fbd system
+	if (settings.systemType == BASELINE_CONFIG)
+		ds = new dramSystem(settings);
+	else
+		ds = new fbdSystem(settings);	
+
+	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency()));
+	invCpuRatio = (int)((double)ds->Frequency()/(Clock::Frequency));
+
+	nextStats = STATS_INTERVAL;
+
+	timingOutStream << *ds << std::endl;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+// stuff taken from PhysicalMemory.cc
+//////////////////////////////////////////////////////////////////////////
+
 M5dramSystem *M5dramSystemParams::create()
 {
 	return new M5dramSystem(this);
+}
+
+
+M5dramSystem::MemoryPort::MemoryPort(const std::string &_name, M5dramSystem *_memory):
+SimpleTimingPort(_name),
+memory(_memory)
+{ }
+
+Port *M5dramSystem::getPort(const string &if_name, int idx)
+{
+	// Accept request for "functional" port for backwards compatibility
+	// with places where this function is called from C++.  I'd prefer
+	// to move all these into Python someday.
+	if (if_name == "functional")
+	{
+		return new MemoryPort(csprintf("%s-functional", name()), this);
+	}
+
+	if (if_name != "port") 
+	{
+		panic("PhysicalMemory::getPort: unknown port %s requested", if_name);
+	}
+
+	if (idx >= ports.size()) 
+	{
+		ports.resize(idx+1);
+	}
+
+	if (ports[idx] != NULL)
+	{
+		panic("PhysicalMemory::getPort: port %d already assigned", idx);
+	}
+
+	MemoryPort *port =
+		new MemoryPort(csprintf("%s-port%d", name(), idx), this);
+
+	lastPortIndex = idx;
+	ports[idx] = port;
+	timingOutStream << "called M5dramSystem::getPort" << endl;
+	return port;
+}
+
+void M5dramSystem::init()
+{
+	if (ports.size() == 0)
+	{
+		fatal("M5dramSystem object %s is unconnected!", name());
+	}
+
+	for (PortIterator pi = ports.begin(); pi != ports.end(); ++pi) 
+	{
+		if (*pi)
+			(*pi)->sendStatusChange(Port::RangeChange);
+	}
+}
+
+M5dramSystem::~M5dramSystem()
+{
+	//if (pmemAddr)
+	//	munmap(pmemAddr, params()->addrRange.size());
+
+	timingOutStream << "M5dramSystem destructor" << std::endl;
+	delete ds;
+}
+
+int M5dramSystem::MemoryPort::deviceBlockSize()
+{
+	return memory->deviceBlockSize();
+}
+
+void M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
+{
+	if (!checkFunctional(pkt))
+	{
+		// Default implementation of SimpleTimingPort::recvFunctional()
+		// calls recvAtomic() and throws away the latency; we can save a
+		// little here by just not calculating the latency.
+		memory->doFunctionalAccess(pkt);
+	}
+}
+
+Tick M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
+{ 
+#ifdef M5DEBUG
+	timingOutStream << "M5dramSystem recvAtomic()" << endl;
+#endif
+
+	return memory->doAtomicAccess(pkt);
+}
+
+void M5dramSystem::MemoryPort::recvStatusChange(Port::Status status)
+{
+	memory->recvStatusChange(status);
+}
+
+void M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp,
+													  bool &snoop)
+{
+	memory->getAddressRanges(resp, snoop);
+}
+
+void M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
+{
+	snoop = false;
+	resp.clear();
+	resp.push_back(RangeSize(start(), params()->range.size()));
+}
+
+M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
+: Event(&mainEventQueue, CPU_Tick_Pri), memory(c)
+{}
+
+const char *M5dramSystem::TickEvent::description()
+{
+	return "m5dramSystem tick event";	
 }
