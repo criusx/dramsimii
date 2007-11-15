@@ -157,19 +157,19 @@
     <value>Popup</value>
   </data>
   <data name="wineBrowseButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 269</value>
+    <value>6, 239</value>
   </data>
   <data name="wineBrowseButton.Text" xml:space="preserve">
-    <value>Browse</value>
+    <value>Image</value>
   </data>
   <data name="wineSaveButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Popup</value>
   </data>
   <data name="wineSaveButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 327</value>
+    <value>6, 299</value>
   </data>
   <data name="wineSaveButton.Text" xml:space="preserve">
-    <value>Save to DB</value>
+    <value>Save</value>
   </data>
   <data name="winePB.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Center</value>
@@ -184,7 +184,7 @@
     <value>Popup</value>
   </data>
   <data name="wineClearButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 298</value>
+    <value>6, 268</value>
   </data>
   <data name="wineClearButton.Text" xml:space="preserve">
     <value>Clear</value>
@@ -193,10 +193,10 @@
     <value>Popup</value>
   </data>
   <data name="wineLoadButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 356</value>
+    <value>6, 328</value>
   </data>
   <data name="wineLoadButton.Text" xml:space="preserve">
-    <value>Load from DB</value>
+    <value>Load</value>
   </data>
   <data name="wineTypeComboBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>51, 9</value>
@@ -224,24 +224,6 @@
   </data>
   <data name="wineTabPage.Size" type="System.Drawing.Size, System.Drawing">
     <value>372, 387</value>
-  </data>
-  <data name="button2.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Popup</value>
-  </data>
-  <data name="button2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="button2.Text" xml:space="preserve">
-    <value>Save to DB</value>
-  </data>
-  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 66</value>
-  </data>
-  <data name="label10.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="label3.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
   </data>
   <data name="authTabPage.Size" type="System.Drawing.Size, System.Drawing">
     <value>372, 387</value>
@@ -272,6 +254,24 @@
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
     <value>393, 490</value>
+  </data>
+  <data name="button2.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Popup</value>
+  </data>
+  <data name="button2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="button2.Text" xml:space="preserve">
+    <value>Save to DB</value>
+  </data>
+  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 66</value>
+  </data>
+  <data name="label10.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
   </data>
   <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>118, 527</value>

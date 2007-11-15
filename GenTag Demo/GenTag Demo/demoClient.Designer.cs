@@ -333,7 +333,7 @@ namespace GentagDemo
             this.patientPage.Controls.Add(this.patientNameBox);
             this.patientPage.Location = new System.Drawing.Point(0, 0);
             this.patientPage.Name = "patientPage";
-            this.patientPage.Size = new System.Drawing.Size(232, 214);
+            this.patientPage.Size = new System.Drawing.Size(240, 217);
             this.patientPage.Text = "Patient";
             // 
             // medicationButton
@@ -377,7 +377,7 @@ namespace GentagDemo
             this.drugPhoto.Location = new System.Drawing.Point(121, 54);
             this.drugPhoto.Name = "drugPhoto";
             this.drugPhoto.Size = new System.Drawing.Size(112, 54);
-            this.drugPhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.drugPhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             // 
             // patientPhoto
             // 
@@ -975,7 +975,7 @@ namespace GentagDemo
             this.varioSensWPage.Controls.Add(this.label5);
             this.varioSensWPage.Location = new System.Drawing.Point(0, 0);
             this.varioSensWPage.Name = "varioSensWPage";
-            this.varioSensWPage.Size = new System.Drawing.Size(240, 217);
+            this.varioSensWPage.Size = new System.Drawing.Size(232, 214);
             this.varioSensWPage.Text = "VarioSens/W";
             // 
             // getSetStatusBox
@@ -994,7 +994,6 @@ namespace GentagDemo
             this.logModeComboBox.Name = "logModeComboBox";
             this.logModeComboBox.Size = new System.Drawing.Size(60, 22);
             this.logModeComboBox.TabIndex = 8;
-            this.logModeComboBox.SelectedIndexChanged += new System.EventHandler(this.logModeComboBox_SelectedIndexChanged);
             // 
             // readValueButton
             // 
