@@ -10,7 +10,7 @@ using namespace DRAMSimII;
 /// </summary>
 int dramChannel::minProtocolGap(const command *this_c) const
 { 
-	int min_gap;
+	int min_gap = 0;
 
 	const unsigned this_rank = this_c->getAddress().rank;
 	
@@ -119,9 +119,9 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			if (rank.size() > 1) 
 			{
 				//respect most recent cas of different rank
-				t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASTime + otherRankLastCASLength + timingSpecification.tRTRS() - time));
+				t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASTime - time) + otherRankLastCASLength + timingSpecification.tRTRS());
 				//respect timing of READ follow WRITE, different ranks
-				t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASWTime + timingSpecification.tCWD() + otherRankLastCASWLength + timingSpecification.tRTRS() - timingSpecification.tCAS() - time));
+				t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASWTime - time) + timingSpecification.tCWD() + otherRankLastCASWLength + timingSpecification.tRTRS() - timingSpecification.tCAS());
 			}
 			min_gap = max(tRCDGap,t_cas_gap);
 			
@@ -170,18 +170,18 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-			int t_cas_gap = max(0,(int)(currentRank.lastCASTime + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD() - time));
+			int t_cas_gap = max(0,(int)(currentRank.lastCASTime - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
 			
 			// respect last cas to different ranks
-			t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASTime + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD() - time));
+			t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASTime - time) + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD());
 			
 			// respect last cas write to same rank
 			// DW 3/9/2006 replace the line after next with the next line			
 			// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
-			t_cas_gap = max(t_cas_gap,(int)(currentRank.lastCASWTime + timingSpecification.tBurst() - time));
+			t_cas_gap = max(t_cas_gap,(int)(currentRank.lastCASWTime - time) + timingSpecification.tBurst());
 			
 			// respect last cas write to different ranks
-			t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASWTime + otherRankLastCASWLength - time));
+			t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASWTime - time) + otherRankLastCASWLength);
 
 			min_gap = max(t_ras_gap,t_cas_gap);
 		}

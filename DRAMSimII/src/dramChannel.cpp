@@ -92,26 +92,19 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 		// attempt first to move transactions out of the transactions queue and
 		// convert them into commands after a fixed amount of time
 		const transaction *temp_t = readTransaction();
-
-
-		// first divide the transactions which have been around long enough to be decoded into commands
+		
+		// has room to decode this transaction
 		if (checkForAvailableCommandSlots(temp_t))
 		{
-			// has room to decode this transaction
-
-			//channel[chan].set_time(min(endTime,channel[chan].get_time() + timing_specification.t_buffer_delay));
-			//update_system_time(); 
-
 			// actually remove it from the queue now
 			transaction *decodedTransaction = getTransaction();
+			// since reading vs dequeuing should yield the same result
 			assert(decodedTransaction == temp_t);
 
-			// then break into commands and insert into per bank command queues
+			// then break into commands and insert into per bank command queues			
 			bool t2cResult = transaction2commands(decodedTransaction);
+			// checkForAvailablecommandSlots() should not have returned true if there was not enough space
 			assert(t2cResult == true);
-
-			// since reading vs dequeuing should yield the same result
-			assert(temp_t == decodedTransaction);
 
 #ifdef DEBUG_TRANSACTION
 			timingOutStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
@@ -351,6 +344,9 @@ void dramChannel::doPowerCalculation()
 	powerOutStream.flush();
 }
 
+//////////////////////////////////////////////////////////////////////////
+// get the next refresh command and remove it from the queue
+//////////////////////////////////////////////////////////////////////////
 transaction *dramChannel::getRefresh()
 {
 	assert(rank.size() >= 1);
@@ -378,7 +374,9 @@ transaction *dramChannel::getRefresh()
 	return earliestTransaction;
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+// read the next occurring refresh transaction without removing it
+//////////////////////////////////////////////////////////////////////////
 const transaction *dramChannel::readRefresh() const
 {
 	assert(rank.size() >= 1);
@@ -394,8 +392,9 @@ const transaction *dramChannel::readRefresh() const
 	return earliestTransaction;
 }
 
-
+//////////////////////////////////////////////////////////////////////////
 // read the next available transaction for this channel without actually removing it from the queue
+//////////////////////////////////////////////////////////////////////////
 const transaction *dramChannel::readTransaction() const
 {
 	const transaction *tempTrans = transactionQueue.front(); 

@@ -14,13 +14,13 @@ using namespace DRAMSimII;
 /// </summary>
 /// <param name="this_command">The command to execute against the current state</param>
 /// <param name="gap">The minimum amount of time to delay before executing the command</param>
-void dramChannel::executeCommand(command *this_command,const int gap)
+void dramChannel::executeCommand(command *thisCommand,const int gap)
 {
-	rank_c &currentRank = rank[this_command->getAddress().rank];
+	rank_c &currentRank = rank[thisCommand->getAddress().rank];
 
-	bank_c &currentBank = currentRank.bank[this_command->getAddress().bank];
+	bank_c &currentBank = currentRank.bank[thisCommand->getAddress().bank];
 
-	currentRank.lastBankID = this_command->getAddress().bank;
+	currentRank.lastBankID = thisCommand->getAddress().bank;
 
 	//int t_al = this_command->isPostedCAS() ? timingSpecification.tAL() : 0;
 
@@ -28,65 +28,65 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	// ensure that the command is never started before it is enqueued
 	// this implies that if there was an idle period for the memory system, commands
 	// will not be seen as executing during this time	
-	this_command->setStartTime(max(time + gap, this_command->getEnqueueTime()));
+	thisCommand->setStartTime(max(time + gap, thisCommand->getEnqueueTime()));
 	
 	// set this channel's time to the start time of this command
-	time = this_command->getStartTime();
+	time = thisCommand->getStartTime();
 
-	switch(this_command->getCommandType())
+	switch(thisCommand->getCommandType())
 	{
 	case RAS_COMMAND:
 		{
-			currentRank.issueRAS(time, this_command);
+			currentRank.issueRAS(time, thisCommand);
 			
 			// specific for RAS command
-			this_command->setCompletionTime(this_command->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRAS());
+			thisCommand->setCompletionTime(thisCommand->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRAS());
 		}
 		break;
 
 	case CAS_AND_PRECHARGE_COMMAND:
 
-		currentRank.issuePRE(time, this_command);
+		currentRank.issuePRE(time, thisCommand);
 		// lack of break is intentional
 
 	case CAS_COMMAND:
 
-		currentRank.issueCAS(time, this_command);
+		currentRank.issueCAS(time, thisCommand);
 		
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
-		this_command->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
-		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
+		thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
+		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 		break;
 
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 
-		currentRank.issuePRE(time, this_command);		
+		currentRank.issuePRE(time, thisCommand);		
 		// missing break is intentional
 
 	case CAS_WRITE_COMMAND:
 		
-		currentRank.issueCASW(time, this_command);
+		currentRank.issueCASW(time, thisCommand);
 		
 		// for the CAS write command
-		this_command->getHost()->setCompletionTime(time);
-		this_command->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
+		thisCommand->getHost()->setCompletionTime(time);
+		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 		break;
 
 	case PRECHARGE_COMMAND:
 
-		currentRank.issuePRE(time, this_command);
+		currentRank.issuePRE(time, thisCommand);
 
-		this_command->setCompletionTime(this_command->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRP());
+		thisCommand->setCompletionTime(thisCommand->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRP());
 
 		break;
 
 	case REFRESH_ALL_COMMAND:
 
-		currentRank.issueREF(time, this_command);
+		currentRank.issueREF(time, thisCommand);
 
-		this_command->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tRFC());
-		this_command->getHost()->setCompletionTime(this_command->getCompletionTime());
+		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tRFC());
+		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 		break;
 
 	case RETIRE_COMMAND:
@@ -111,9 +111,9 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 	// transaction complete? if so, put in completion queue
 	// note that the host transaction should only be pointed to by a CAS command
 	// since this is when a transaction is done from the standpoint of the requester
-	if (this_command->getHost()) 
+	if (thisCommand->getHost()) 
 	{
-		if (!completionQueue.push(this_command->getHost()))
+		if (!completionQueue.push(thisCommand->getHost()))
 		{
 			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
 			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;
@@ -123,5 +123,5 @@ void dramChannel::executeCommand(command *this_command,const int gap)
 
 	// record command history.
 	// inserts into a queue which dequeues into the command pool
-	recordCommand(this_command);
+	recordCommand(thisCommand);
 }

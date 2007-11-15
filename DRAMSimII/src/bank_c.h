@@ -17,24 +17,24 @@ namespace DRAMSimII
 		const dramTimingSpecification& timing;
 	protected:	
 		// members
-		queue<command> perBankQueue;		// per bank queue
-		tick_t lastRASTime;			// when did last RAS command start?
-		tick_t lastCASTime;			// when did last CAS command start?
-		tick_t lastCASWTime;			// when did last CASW command start?
-		tick_t lastPrechargeTime;			// when did last Precharge command start?
-		tick_t lastRefreshAllTime;	// must respect t_rfc. concurrent refresh takes time
-		unsigned lastCASLength;		// the length of the last CAS command issued
-		unsigned lastCASWLength;		// the length of the last CASW command issued
-		unsigned openRowID;				// if the bank is open, what is the row id?
-		bool activated;				// if the bank is activated, else precharged
+		queue<command> perBankQueue;	///< the command priority queue, stores the commands to be executed
+		tick_t lastRASTime;				///< when did last RAS command start?
+		tick_t lastCASTime;				///< when did last CAS command start?
+		tick_t lastCASWTime;			///< when did last CASW command start?
+		tick_t lastPrechargeTime;		///< when did last Precharge command start?
+		tick_t lastRefreshAllTime;		///< must respect t_rfc. concurrent refresh takes time
+		unsigned lastCASLength;			///< the length of the last CAS command issued
+		unsigned lastCASWLength;		///< the length of the last CASW command issued
+		unsigned openRowID;				///< if the bank is open, what is the row id?
+		bool activated;					///< if the bank is activated, else precharged
 
 		// stats
-		unsigned RASCount;
-		unsigned totalRASCount;		// the number of RAS commands since the last power calculation
-		unsigned CASCount;
-		unsigned totalCASCount;		// the number of CAS commands since the last power calculation
-		unsigned CASWCount;
-		unsigned totalCASWCount;		// the number of CASW commands since the last power calculation
+		unsigned RASCount;				///< the total number of RAS commands in this epoch
+		unsigned totalRASCount;			///< the number of RAS commands 
+		unsigned CASCount;				///< the total number of CAS commands in this epoch
+		unsigned totalCASCount;			///< the number of CAS commands
+		unsigned CASWCount;				///< the total number of CAS+W commands in this epoch
+		unsigned totalCASWCount;		///< the number of CASW commands
 
 	public:
 		// functions

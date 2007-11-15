@@ -39,14 +39,15 @@ namespace DRAMSimII
 		// functions
 		bool checkForAvailableCommandSlots(const transaction *trans) const;	
 		bool transaction2commands(transaction *);
-		command *getNextCommand();
-		const command *readNextCommand() const;
+		command *getNextCommand();		
+		void doPowerCalculation();
+		void executeCommand(command *thisCommand,const int gap);
+
+		// functions that may differ for architectures that inher it this
 		
+		virtual const command *readNextCommand() const;
 		virtual const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
 		virtual int minProtocolGap(const command *thisCommand) const;
-		void executeCommand(command *, const int);
-		void doPowerCalculation();
-
 
 		// accessors
 		const dramTimingSpecification& getTimingSpecification() const { return timingSpecification; }
@@ -62,18 +63,16 @@ namespace DRAMSimII
 		transaction *getRefresh();
 		const transaction *readRefresh() const;
 		transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }
-		//command *readMostRecentCommand() const { return historyQueue.newest(); } // get the most recent command from the history queue
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }
 		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }
 		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
 
 		// mutators
-		//void setSystemConfig(dramSystemConfiguration *_system_config) { systemConfig = _system_config; } // TODO: remove this and have parameters stored locally
 		void setStatistics(dramStatistics *value) { statistics = value; }
 		void setTime(tick_t new_time) { time = new_time; }
 		void setChannelID(const unsigned value) { channelID = value; }
 		enum transaction_type_t setReadWriteType(const int,const int) const;
-		
+
 		// functions
 		bool enqueue(transaction *in);
 		bool isFull() const { return transactionQueue.freecount() == 0; }

@@ -43,6 +43,7 @@ CASWCount(b.CASWCount),
 totalCASWCount(b.totalCASWCount)
 {}
 
+/// this logically issues a RAS command and updates all variables to reflect this
 void bank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
 {
 	assert(activated == false);

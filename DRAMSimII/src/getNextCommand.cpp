@@ -67,11 +67,15 @@ const command *dramChannel::readNextCommand() const
 
 	switch (systemConfig.getCommandOrderingAlgorithm())
 	{
-	case STRICT_ORDER: // look for oldest command, execute that
+		// this strategy attempts to find the oldest command and returns that to be executed
+		// however, if the oldest command cannot be issued, the oldest command that can be executed immediately
+		// will be returned instead
+	case STRICT_ORDER:
 		{
-			tick_t oldestCommandTime = TICK_T_MAX;	
+			tick_t oldestCommandTime = TICK_T_MAX;
+			tick_t oldestExecutableCommandTime = TICK_T_MAX;
 			vector<bank_c>::const_iterator oldestBank;
-			vector<rank_c>::const_iterator oldestRank;
+			vector<bank_c>::const_iterator oldestExecutableBank;
 
 			for (vector<rank_c>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 			{
@@ -79,48 +83,89 @@ const command *dramChannel::readNextCommand() const
 
 				for (vector<bank_c>::const_iterator bank_id = currentRank->bank.begin(); bank_id != currentRank->bank.end(); bank_id++)
 				{
-					const command *temp_c = bank_id->getPerBankQueue().front();
-
-					if (temp_c && (oldestCommandTime > temp_c->getEnqueueTime()))
+					if (const command *temp_c = bank_id->getPerBankQueue().front())
 					{
-						// if it's a refresh_all command and
-						// we haven't proved that all the queues aren't refresh_all commands, search
-						if (temp_c->getCommandType() == REFRESH_ALL_COMMAND)
+						if ((temp_c->getEnqueueTime() < oldestExecutableCommandTime) && (minProtocolGap(temp_c) <= timingSpecification.tCMD()))
 						{
-							if (!notAllRefresh)
+							// if it's a refresh_all command and
+							// we haven't proved that all the queues aren't refresh_all commands, search
+							if (temp_c->getCommandType() == REFRESH_ALL_COMMAND)
 							{
-								// try to show that at the head of each queue isn't a refresh command
-								for (vector<bank_c>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
-								{
-									// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-									if ((currentBank->getPerBankQueue().size() == 0) || ((currentBank->getPerBankQueue().front()) && (currentBank->getPerBankQueue().front()->getCommandType() != REFRESH_ALL_COMMAND)))
-									{
-										notAllRefresh = true;
-										break;
-									}
-
-								}
-								// if all are known now to be refresh commands
 								if (!notAllRefresh)
 								{
-									oldestCommandTime = temp_c->getEnqueueTime();
-									oldestBank = bank_id;
-									oldestRank = currentRank;
+									// try to show that at the head of each queue isn't a refresh command
+									for (vector<bank_c>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+									{
+										// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
+										if ((currentBank->getPerBankQueue().size() == 0) || ((currentBank->getPerBankQueue().front()) && (currentBank->getPerBankQueue().front()->getCommandType() != REFRESH_ALL_COMMAND)))
+										{
+											notAllRefresh = true;
+											break;
+										}
+
+									}
+									// if all are known now to be refresh commands
+									if (!notAllRefresh)
+									{
+										oldestExecutableCommandTime = temp_c->getEnqueueTime();
+										oldestExecutableBank = bank_id;
+									}
 								}
 							}
-						}
-						else
+						else if (temp_c->getEnqueueTime() < oldestCommandTime)
 						{
-							oldestCommandTime = temp_c->getEnqueueTime();
-							oldestBank = bank_id;
-						}
+							// if it's a refresh_all command and
+							// we haven't proved that all the queues aren't refresh_all commands, search
+							if (temp_c->getCommandType() == REFRESH_ALL_COMMAND)
+							{
+								if (!notAllRefresh)
+								{
+									// try to show that at the head of each queue isn't a refresh command
+									for (vector<bank_c>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+									{
+										// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
+										if ((currentBank->getPerBankQueue().size() == 0) || ((currentBank->getPerBankQueue().front()) && (currentBank->getPerBankQueue().front()->getCommandType() != REFRESH_ALL_COMMAND)))
+										{
+											notAllRefresh = true;
+											break;
+										}
 
+									}
+									// if all are known now to be refresh commands
+									if (!notAllRefresh)
+									{
+										oldestCommandTime = temp_c->getEnqueueTime();
+										oldestBank = bank_id;
+									}
+								}
+							}
+							else
+							{
+								oldestCommandTime = temp_c->getEnqueueTime();
+								oldestBank = bank_id;
+							}
+
+						}
+						
+							else
+							{
+								oldestExecutableCommandTime = temp_c->getEnqueueTime();
+								oldestExecutableBank = bank_id;
+							}
+						}
 					}
 				}
 			}
 
+			// if any executable command was found, prioritize it over those which must wait
+			if (oldestExecutableCommandTime < TICK_T_MAX)
+			{
+				assert(oldestExecutableBank->getPerBankQueue().front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestExecutableBank->getPerBankQueue().front()->getAddress().rank].bank[oldestExecutableBank->getPerBankQueue().front()->getAddress().bank].getPerBankQueue().front() == oldestExecutableBank->getPerBankQueue().front());
+
+				return oldestExecutableBank->getPerBankQueue().front();
+			}
 			// if there was a command found
-			if (oldestCommandTime < TICK_T_MAX)
+			else if (oldestCommandTime < TICK_T_MAX)
 			{
 				assert(oldestBank->getPerBankQueue().front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestBank->getPerBankQueue().front()->getAddress().rank].bank[oldestBank->getPerBankQueue().front()->getAddress().bank].getPerBankQueue().front() == oldestBank->getPerBankQueue().front());
 

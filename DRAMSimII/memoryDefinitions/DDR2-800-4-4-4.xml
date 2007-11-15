@@ -48,7 +48,7 @@
 		<!--average periodic refresh time, look at Micron app note TN-46-09 -->
 		<tREFI>6240</tREFI>
 		<!--strict, bankRoundRobin, rankRoundRobin, wangHop, greedy-->
-		<commandOrderingAlgorithm>greedy</commandOrderingAlgorithm>
+		<commandOrderingAlgorithm>strict</commandOrderingAlgorithm>
 		<!--may be 'strict' or 'RIFF'-->
 		<transactionOrderingAlgorithm>strict</transactionOrderingAlgorithm>
 		<perBankQueueDepth>8</perBankQueueDepth>

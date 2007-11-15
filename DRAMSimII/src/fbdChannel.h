@@ -2,8 +2,9 @@
 #define FBDCHANNEL_H
 #pragma once
 
-#include <vector>
+#include "queue.h"
 #include "fbdAMB.h"
+#include "fbdFrame.h"
 #include "dramChannel.h"
 
 namespace DRAMSimII
@@ -13,12 +14,19 @@ namespace DRAMSimII
 	{
 	private:
 		//std::vector<fbdChannel> ranks;
+		queue<fbdFrame> frameQueue;
 	public:
 		explicit fbdChannel(const dramSettings& settings, const dramSystemConfiguration &sysConfig);
 
-		// virtual functions
+	protected:
+		// overridden virtual functions
 		int minProtocolGap(const command *this_c) const;
 		const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
+		//const command *readNextCommand() const;
+
+		// functions
+		bool makeFrame(const tick_t currentTime);
+		bool executeFrame(const tick_t currentTime);
 	};
 }
 
