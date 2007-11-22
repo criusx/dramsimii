@@ -51,8 +51,8 @@ namespace GentagPet
 
             // setup callbacks
             // setup event callbacks for tag reading events
-            tagReader.TagReceived += new RFIDReader.TagReceivedEventHandler(tagReceived);
-            tagReader.ReaderError += new RFIDReader.ReaderErrorHandler(receiveReaderError);
+            tagReader.TagReceived += new Reader.TagReceivedEventHandler(tagReceived);
+            tagReader.ReaderError += new Reader.ReaderErrorHandler(receiveReaderError);
 
         }
 
