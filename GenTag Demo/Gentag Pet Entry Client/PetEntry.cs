@@ -430,7 +430,7 @@ namespace Gentag_Pet_Entry_Client
                 }
                 catch (Exception ex)
                 {
-                    statusLabel.Text = Properties.Resources.failedWithReason + ex.Message;
+                    setLabel(statusLabel,Properties.Resources.failedWithReason + ex.Message);
                 }
             }
         }
