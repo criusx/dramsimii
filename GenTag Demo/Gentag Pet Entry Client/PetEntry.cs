@@ -30,6 +30,12 @@ namespace Gentag_Pet_Entry_Client
             tagReader = new Reader();
 
             tagReader.TagReceived += new Reader.TagReceivedEventHandler(tagReader_TagReceived);
+            tagReader.ReaderError += new Reader.ReaderErrorHandler(tagReader_ReaderError);
+        }
+
+        void tagReader_ReaderError(string errorMessage)
+        {
+            MessageBox.Show(errorMessage);
         }
 
         void tagReader_TagReceived(string tagID)
