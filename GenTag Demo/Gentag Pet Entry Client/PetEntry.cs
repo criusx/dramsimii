@@ -26,6 +26,16 @@ namespace Gentag_Pet_Entry_Client
         public PetEntry()
         {
             InitializeComponent();
+
+            tagReader = new Reader();
+
+            tagReader.TagReceived += new Reader.TagReceivedEventHandler(tagReader_TagReceived);
+        }
+
+        void tagReader_TagReceived(string tagID)
+        {
+            setTextBox(idBox, tagID);
+            readButton_Click(this, new EventArgs());
         }
 
         bool readerRunning = false;
@@ -45,7 +55,7 @@ namespace Gentag_Pet_Entry_Client
             }
         }
 
-        Reader tagReader = new Reader();
+        Reader tagReader;
 
         string tagID;
 
