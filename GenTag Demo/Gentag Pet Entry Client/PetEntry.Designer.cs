@@ -305,7 +305,7 @@ namespace Gentag_Pet_Entry_Client
             this.wineLoadButton.Location = new System.Drawing.Point(248, 472);
             this.wineLoadButton.Name = "wineLoadButton";
             this.wineLoadButton.Size = new System.Drawing.Size(75, 23);
-            this.wineLoadButton.TabIndex = 15;
+            this.wineLoadButton.TabIndex = 24;
             this.wineLoadButton.Text = "Load";
             this.wineLoadButton.UseVisualStyleBackColor = false;
             // 
@@ -317,7 +317,7 @@ namespace Gentag_Pet_Entry_Client
             this.wineBrowseButton.Location = new System.Drawing.Point(8, 243);
             this.wineBrowseButton.Name = "wineBrowseButton";
             this.wineBrowseButton.Size = new System.Drawing.Size(75, 23);
-            this.wineBrowseButton.TabIndex = 11;
+            this.wineBrowseButton.TabIndex = 1;
             this.wineBrowseButton.Text = "Image";
             this.wineBrowseButton.UseVisualStyleBackColor = false;
             this.wineBrowseButton.Click += new System.EventHandler(this.wineBrowseButton_Click);
@@ -341,7 +341,7 @@ namespace Gentag_Pet_Entry_Client
             this.clearButton.Location = new System.Drawing.Point(329, 472);
             this.clearButton.Name = "clearButton";
             this.clearButton.Size = new System.Drawing.Size(66, 23);
-            this.clearButton.TabIndex = 12;
+            this.clearButton.TabIndex = 25;
             this.clearButton.Text = "Clear";
             this.clearButton.UseVisualStyleBackColor = false;
             this.clearButton.Click += new System.EventHandler(this.wineClearButton_Click);
@@ -353,7 +353,7 @@ namespace Gentag_Pet_Entry_Client
             this.button1.Location = new System.Drawing.Point(340, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(36, 20);
-            this.button1.TabIndex = 25;
+            this.button1.TabIndex = 0;
             this.button1.Text = "Get";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.readButton_Click);
@@ -364,7 +364,7 @@ namespace Gentag_Pet_Entry_Client
             this.base64TextBox.Location = new System.Drawing.Point(88, 35);
             this.base64TextBox.Name = "base64TextBox";
             this.base64TextBox.Size = new System.Drawing.Size(88, 20);
-            this.base64TextBox.TabIndex = 21;
+            this.base64TextBox.TabIndex = 99;
             // 
             // unneededTextBox
             // 
@@ -372,7 +372,7 @@ namespace Gentag_Pet_Entry_Client
             this.unneededTextBox.Location = new System.Drawing.Point(52, 35);
             this.unneededTextBox.Name = "unneededTextBox";
             this.unneededTextBox.Size = new System.Drawing.Size(32, 20);
-            this.unneededTextBox.TabIndex = 22;
+            this.unneededTextBox.TabIndex = 99;
             // 
             // idBox
             // 
@@ -380,7 +380,7 @@ namespace Gentag_Pet_Entry_Client
             this.idBox.Location = new System.Drawing.Point(52, 12);
             this.idBox.Name = "idBox";
             this.idBox.Size = new System.Drawing.Size(282, 20);
-            this.idBox.TabIndex = 23;
+            this.idBox.TabIndex = 0;
             this.idBox.TextChanged += new System.EventHandler(this.idBox_TextChanged_1);
             this.idBox.Click += new System.EventHandler(this.idBox_Click);
             // 
@@ -391,7 +391,7 @@ namespace Gentag_Pet_Entry_Client
             this.groupBox1.Location = new System.Drawing.Point(10, 61);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(379, 277);
-            this.groupBox1.TabIndex = 27;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Picture";
             // 
@@ -400,133 +400,133 @@ namespace Gentag_Pet_Entry_Client
             this.ownerTB.Location = new System.Drawing.Point(442, 15);
             this.ownerTB.Name = "ownerTB";
             this.ownerTB.Size = new System.Drawing.Size(289, 20);
-            this.ownerTB.TabIndex = 23;
+            this.ownerTB.TabIndex = 4;
             // 
             // ownerAddress1TB
             // 
             this.ownerAddress1TB.Location = new System.Drawing.Point(486, 41);
             this.ownerAddress1TB.Name = "ownerAddress1TB";
             this.ownerAddress1TB.Size = new System.Drawing.Size(245, 20);
-            this.ownerAddress1TB.TabIndex = 23;
+            this.ownerAddress1TB.TabIndex = 5;
             // 
             // breedTB
             // 
             this.breedTB.Location = new System.Drawing.Point(442, 119);
             this.breedTB.Name = "breedTB";
             this.breedTB.Size = new System.Drawing.Size(289, 20);
-            this.breedTB.TabIndex = 23;
+            this.breedTB.TabIndex = 8;
             // 
             // nameTB
             // 
             this.nameTB.Location = new System.Drawing.Point(442, 145);
             this.nameTB.Name = "nameTB";
             this.nameTB.Size = new System.Drawing.Size(289, 20);
-            this.nameTB.TabIndex = 23;
+            this.nameTB.TabIndex = 9;
             // 
             // homePhoneTB
             // 
             this.homePhoneTB.Location = new System.Drawing.Point(476, 171);
             this.homePhoneTB.Name = "homePhoneTB";
             this.homePhoneTB.Size = new System.Drawing.Size(255, 20);
-            this.homePhoneTB.TabIndex = 23;
+            this.homePhoneTB.TabIndex = 10;
             // 
             // cellPhoneTB
             // 
             this.cellPhoneTB.Location = new System.Drawing.Point(465, 197);
             this.cellPhoneTB.Name = "cellPhoneTB";
             this.cellPhoneTB.Size = new System.Drawing.Size(266, 20);
-            this.cellPhoneTB.TabIndex = 23;
+            this.cellPhoneTB.TabIndex = 11;
             // 
             // workPhoneTB
             // 
             this.workPhoneTB.Location = new System.Drawing.Point(474, 223);
             this.workPhoneTB.Name = "workPhoneTB";
             this.workPhoneTB.Size = new System.Drawing.Size(257, 20);
-            this.workPhoneTB.TabIndex = 23;
+            this.workPhoneTB.TabIndex = 12;
             // 
             // emailTB
             // 
             this.emailTB.Location = new System.Drawing.Point(439, 249);
             this.emailTB.Name = "emailTB";
             this.emailTB.Size = new System.Drawing.Size(292, 20);
-            this.emailTB.TabIndex = 23;
+            this.emailTB.TabIndex = 13;
             // 
             // dietTB
             // 
             this.dietTB.Location = new System.Drawing.Point(433, 275);
             this.dietTB.Name = "dietTB";
             this.dietTB.Size = new System.Drawing.Size(298, 20);
-            this.dietTB.TabIndex = 23;
+            this.dietTB.TabIndex = 14;
             // 
             // medicalNeedsTB
             // 
             this.medicalNeedsTB.Location = new System.Drawing.Point(485, 301);
             this.medicalNeedsTB.Name = "medicalNeedsTB";
             this.medicalNeedsTB.Size = new System.Drawing.Size(246, 20);
-            this.medicalNeedsTB.TabIndex = 23;
+            this.medicalNeedsTB.TabIndex = 15;
             // 
             // medicationsTB
             // 
             this.medicationsTB.Location = new System.Drawing.Point(471, 327);
             this.medicationsTB.Name = "medicationsTB";
             this.medicationsTB.Size = new System.Drawing.Size(260, 20);
-            this.medicationsTB.TabIndex = 23;
+            this.medicationsTB.TabIndex = 16;
             // 
             // ownerAddress2TB
             // 
             this.ownerAddress2TB.Location = new System.Drawing.Point(486, 67);
             this.ownerAddress2TB.Name = "ownerAddress2TB";
             this.ownerAddress2TB.Size = new System.Drawing.Size(245, 20);
-            this.ownerAddress2TB.TabIndex = 23;
+            this.ownerAddress2TB.TabIndex = 6;
             // 
             // ownerAddress3TB
             // 
             this.ownerAddress3TB.Location = new System.Drawing.Point(486, 93);
             this.ownerAddress3TB.Name = "ownerAddress3TB";
             this.ownerAddress3TB.Size = new System.Drawing.Size(245, 20);
-            this.ownerAddress3TB.TabIndex = 23;
+            this.ownerAddress3TB.TabIndex = 7;
             // 
             // vetNameTB
             // 
             this.vetNameTB.Location = new System.Drawing.Point(461, 353);
             this.vetNameTB.Name = "vetNameTB";
             this.vetNameTB.Size = new System.Drawing.Size(270, 20);
-            this.vetNameTB.TabIndex = 23;
+            this.vetNameTB.TabIndex = 17;
             // 
             // vetPhoneTB
             // 
             this.vetPhoneTB.Location = new System.Drawing.Point(464, 379);
             this.vetPhoneTB.Name = "vetPhoneTB";
             this.vetPhoneTB.Size = new System.Drawing.Size(267, 20);
-            this.vetPhoneTB.TabIndex = 23;
+            this.vetPhoneTB.TabIndex = 18;
             // 
             // rewardTB
             // 
             this.rewardTB.Location = new System.Drawing.Point(449, 483);
             this.rewardTB.Name = "rewardTB";
             this.rewardTB.Size = new System.Drawing.Size(282, 20);
-            this.rewardTB.TabIndex = 23;
+            this.rewardTB.TabIndex = 22;
             // 
             // vetAddress1TB
             // 
             this.vetAddress1TB.Location = new System.Drawing.Point(465, 405);
             this.vetAddress1TB.Name = "vetAddress1TB";
             this.vetAddress1TB.Size = new System.Drawing.Size(266, 20);
-            this.vetAddress1TB.TabIndex = 23;
+            this.vetAddress1TB.TabIndex = 19;
             // 
             // vetAddress2TB
             // 
             this.vetAddress2TB.Location = new System.Drawing.Point(465, 431);
             this.vetAddress2TB.Name = "vetAddress2TB";
             this.vetAddress2TB.Size = new System.Drawing.Size(266, 20);
-            this.vetAddress2TB.TabIndex = 23;
+            this.vetAddress2TB.TabIndex = 20;
             // 
             // vetAddress3TB
             // 
             this.vetAddress3TB.Location = new System.Drawing.Point(465, 457);
             this.vetAddress3TB.Name = "vetAddress3TB";
             this.vetAddress3TB.Size = new System.Drawing.Size(266, 20);
-            this.vetAddress3TB.TabIndex = 23;
+            this.vetAddress3TB.TabIndex = 21;
             // 
             // authCodeTB
             // 
@@ -534,7 +534,7 @@ namespace Gentag_Pet_Entry_Client
             this.authCodeTB.Location = new System.Drawing.Point(70, 353);
             this.authCodeTB.Name = "authCodeTB";
             this.authCodeTB.Size = new System.Drawing.Size(264, 20);
-            this.authCodeTB.TabIndex = 23;
+            this.authCodeTB.TabIndex = 2;
             // 
             // pictureBox1
             // 
@@ -553,7 +553,7 @@ namespace Gentag_Pet_Entry_Client
             this.button2.Location = new System.Drawing.Point(167, 472);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 15;
+            this.button2.TabIndex = 23;
             this.button2.Text = "Submit";
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click_2);
@@ -564,7 +564,7 @@ namespace Gentag_Pet_Entry_Client
             this.passwordTB.Name = "passwordTB";
             this.passwordTB.PasswordChar = '*';
             this.passwordTB.Size = new System.Drawing.Size(172, 20);
-            this.passwordTB.TabIndex = 23;
+            this.passwordTB.TabIndex = 3;
             // 
             // checkBox1
             // 
