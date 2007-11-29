@@ -109,49 +109,6 @@ namespace Gentag_Pet_Entry_Client
         }
 
 
-        private void saveButton_Click(object sender, EventArgs e)
-        {
-            statusLabel.Text = Properties.Resources.emptyString;
-
-            for (int triesLeft = 5; triesLeft > 0; triesLeft--)
-            {
-                try
-                {
-                    //proceed only when the image has a valid path
-
-                    if (!string.IsNullOrEmpty(imagename))
-                    {
-                        FileStream fls = new FileStream(@imagename, FileMode.Open, FileAccess.Read);
-
-                        byte[] blob = new byte[fls.Length];
-
-                        fls.Read(blob, 0, System.Convert.ToInt32(fls.Length));
-
-                        fls.Close();
-
-                        bool status = false;
-
-                        // TODO:
-                        //if (sender == wineSaveButton)
-                        //{
-                        //    wineWS.wineWS ws = new wineWS.wineWS();
-                        //    status = ws.enterBottleInformation(new string[] { tagID }, wineTypeComboBox.Text, Convert.ToInt32(yearUpDown.Value), countryBox.Text, vineyardBox.Text, reviewBox.Text, blob);
-                        //    ws.Dispose();
-                        //}
-                        if (status)
-                            statusLabel.Text = Properties.Resources.Success;
-                        else
-                            statusLabel.Text = Properties.Resources.failedWithReason;
-                        return;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    statusLabel.Text = Properties.Resources.failedWithReason + ex.Message;
-                }
-            }
-        }
-
         private void clearButton_Click(object sender, EventArgs e)
         {
             idBox.Clear();
@@ -363,12 +320,12 @@ namespace Gentag_Pet_Entry_Client
 
         private void uploadData()
         {
-            statusLabel.Text = Properties.Resources.emptyString;
+            setLabel(statusLabel,Properties.Resources.emptyString);
 
             // do some error checking on the input data
             if (idBox.Text.Length < 16)
             {
-                statusLabel.Text = Properties.Resources.InvalidRFID;
+                setLabel(statusLabel,Properties.Resources.InvalidRFID);
                 return;
             }
 
@@ -428,9 +385,9 @@ namespace Gentag_Pet_Entry_Client
 
                     gentagPetWS.Dispose();
                     if (status)
-                        statusLabel.Text = Properties.Resources.Success;
+                        setLabel(statusLabel,Properties.Resources.Success);
                     else
-                        statusLabel.Text = Properties.Resources.failedWithReason;
+                        setLabel(statusLabel,Properties.Resources.failedWithReason);
                     return;
 
                 }
