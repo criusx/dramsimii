@@ -177,19 +177,38 @@ namespace RFIDReader
             readerRunning = false;
         }
 
+        static private int retryCount = 5;
+
         public void readTagID()
         {
-            if (C1Lib.C1.NET_C1_open_comm() != 1)
+            string errorMessage = "";
+            int n = retryCount;
+
+            for (; n > 0; --n)
             {
-                ReaderError("Please ensure that the Sirit reader is completely inserted");
+                if (C1Lib.C1.NET_C1_open_comm() != 1)
+                {
+                    errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    continue;
+                }
+                else if (C1Lib.C1.NET_C1_enable() != 1)
+                {
+                    C1Lib.C1.NET_C1_disable();
+                    errorMessage = "Unable to communicate with Sirit reader";
+                    continue;
+                } 
+                else // connection was successful
+                {
+                    break;
+                }
+            }
+
+            if (n == 0)
+            {
+                ReaderError(errorMessage);
                 return;
             }
-            else if (C1Lib.C1.NET_C1_enable() != 1)
-            {
-                C1Lib.C1.NET_C1_disable();
-                ReaderError("Unable to communicate with Sirit reader");
-                return;
-            }
+
             string oldTag = "";
 
             readerRunning = true;

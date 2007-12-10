@@ -47,11 +47,11 @@ namespace Gentag_Pet_Entry_Client
             System.Windows.Forms.Label label17;
             System.Windows.Forms.Label label18;
             System.Windows.Forms.Label label19;
-            this.wineLoadButton = new System.Windows.Forms.Button();
-            this.wineBrowseButton = new System.Windows.Forms.Button();
+            this.retrieveDataButton = new System.Windows.Forms.Button();
+            this.BrowseForImageButton = new System.Windows.Forms.Button();
             this.imagePB = new System.Windows.Forms.PictureBox();
             this.clearButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.retrieveTagButton = new System.Windows.Forms.Button();
             this.base64TextBox = new System.Windows.Forms.TextBox();
             this.unneededTextBox = new System.Windows.Forms.TextBox();
             this.idBox = new System.Windows.Forms.TextBox();
@@ -77,10 +77,12 @@ namespace Gentag_Pet_Entry_Client
             this.vetAddress3TB = new System.Windows.Forms.TextBox();
             this.authCodeTB = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.createUpdateButton = new System.Windows.Forms.Button();
             this.passwordTB = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.statusLabel = new System.Windows.Forms.Label();
+            this.changePasswordButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             label11 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -109,7 +111,7 @@ namespace Gentag_Pet_Entry_Client
             // 
             label11.AutoSize = true;
             label11.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            label11.Location = new System.Drawing.Point(7, 39);
+            label11.Location = new System.Drawing.Point(8, 45);
             label11.Name = "label11";
             label11.Size = new System.Drawing.Size(42, 13);
             label11.TabIndex = 26;
@@ -119,7 +121,7 @@ namespace Gentag_Pet_Entry_Client
             // 
             label5.AutoSize = true;
             label5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            label5.Location = new System.Drawing.Point(4, 15);
+            label5.Location = new System.Drawing.Point(9, 18);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(42, 13);
             label5.TabIndex = 24;
@@ -281,7 +283,7 @@ namespace Gentag_Pet_Entry_Client
             // 
             label18.AutoSize = true;
             label18.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            label18.Location = new System.Drawing.Point(4, 356);
+            label18.Location = new System.Drawing.Point(4, 378);
             label18.Name = "label18";
             label18.Size = new System.Drawing.Size(60, 13);
             label18.TabIndex = 24;
@@ -290,37 +292,39 @@ namespace Gentag_Pet_Entry_Client
             // label19
             // 
             label19.AutoSize = true;
+            label19.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
             label19.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            label19.Location = new System.Drawing.Point(4, 382);
+            label19.Location = new System.Drawing.Point(8, 69);
             label19.Name = "label19";
             label19.Size = new System.Drawing.Size(53, 13);
             label19.TabIndex = 24;
             label19.Text = "Password";
             // 
-            // wineLoadButton
+            // retrieveDataButton
             // 
-            this.wineLoadButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.wineLoadButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.wineLoadButton.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.wineLoadButton.Location = new System.Drawing.Point(248, 472);
-            this.wineLoadButton.Name = "wineLoadButton";
-            this.wineLoadButton.Size = new System.Drawing.Size(75, 23);
-            this.wineLoadButton.TabIndex = 24;
-            this.wineLoadButton.Text = "Load";
-            this.wineLoadButton.UseVisualStyleBackColor = false;
+            this.retrieveDataButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.retrieveDataButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.retrieveDataButton.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.retrieveDataButton.Location = new System.Drawing.Point(273, 40);
+            this.retrieveDataButton.Name = "retrieveDataButton";
+            this.retrieveDataButton.Size = new System.Drawing.Size(61, 23);
+            this.retrieveDataButton.TabIndex = 24;
+            this.retrieveDataButton.Text = "Retrieve";
+            this.retrieveDataButton.UseVisualStyleBackColor = false;
+            this.retrieveDataButton.Click += new System.EventHandler(this.wineLoadButton_Click_1);
             // 
-            // wineBrowseButton
+            // BrowseForImageButton
             // 
-            this.wineBrowseButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.wineBrowseButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.wineBrowseButton.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.wineBrowseButton.Location = new System.Drawing.Point(8, 243);
-            this.wineBrowseButton.Name = "wineBrowseButton";
-            this.wineBrowseButton.Size = new System.Drawing.Size(75, 23);
-            this.wineBrowseButton.TabIndex = 1;
-            this.wineBrowseButton.Text = "Image";
-            this.wineBrowseButton.UseVisualStyleBackColor = false;
-            this.wineBrowseButton.Click += new System.EventHandler(this.wineBrowseButton_Click);
+            this.BrowseForImageButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.BrowseForImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.BrowseForImageButton.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.BrowseForImageButton.Location = new System.Drawing.Point(8, 243);
+            this.BrowseForImageButton.Name = "BrowseForImageButton";
+            this.BrowseForImageButton.Size = new System.Drawing.Size(75, 23);
+            this.BrowseForImageButton.TabIndex = 1;
+            this.BrowseForImageButton.Text = "Image";
+            this.BrowseForImageButton.UseVisualStyleBackColor = false;
+            this.BrowseForImageButton.Click += new System.EventHandler(this.wineBrowseButton_Click);
             // 
             // imagePB
             // 
@@ -338,7 +342,7 @@ namespace Gentag_Pet_Entry_Client
             this.clearButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.clearButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.clearButton.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.clearButton.Location = new System.Drawing.Point(329, 472);
+            this.clearButton.Location = new System.Drawing.Point(171, 408);
             this.clearButton.Name = "clearButton";
             this.clearButton.Size = new System.Drawing.Size(66, 23);
             this.clearButton.TabIndex = 25;
@@ -346,22 +350,22 @@ namespace Gentag_Pet_Entry_Client
             this.clearButton.UseVisualStyleBackColor = false;
             this.clearButton.Click += new System.EventHandler(this.wineClearButton_Click);
             // 
-            // button1
+            // retrieveTagButton
             // 
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.button1.Location = new System.Drawing.Point(340, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(36, 20);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Get";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.readButton_Click);
+            this.retrieveTagButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.retrieveTagButton.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.retrieveTagButton.Location = new System.Drawing.Point(341, 15);
+            this.retrieveTagButton.Name = "retrieveTagButton";
+            this.retrieveTagButton.Size = new System.Drawing.Size(48, 20);
+            this.retrieveTagButton.TabIndex = 0;
+            this.retrieveTagButton.Text = "Get";
+            this.retrieveTagButton.UseVisualStyleBackColor = true;
+            this.retrieveTagButton.Click += new System.EventHandler(this.readButton_Click);
             // 
             // base64TextBox
             // 
             this.base64TextBox.Enabled = false;
-            this.base64TextBox.Location = new System.Drawing.Point(88, 35);
+            this.base64TextBox.Location = new System.Drawing.Point(89, 41);
             this.base64TextBox.Name = "base64TextBox";
             this.base64TextBox.Size = new System.Drawing.Size(88, 20);
             this.base64TextBox.TabIndex = 99;
@@ -369,7 +373,7 @@ namespace Gentag_Pet_Entry_Client
             // unneededTextBox
             // 
             this.unneededTextBox.Enabled = false;
-            this.unneededTextBox.Location = new System.Drawing.Point(52, 35);
+            this.unneededTextBox.Location = new System.Drawing.Point(53, 41);
             this.unneededTextBox.Name = "unneededTextBox";
             this.unneededTextBox.Size = new System.Drawing.Size(32, 20);
             this.unneededTextBox.TabIndex = 99;
@@ -377,7 +381,7 @@ namespace Gentag_Pet_Entry_Client
             // idBox
             // 
             this.idBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.idBox.Location = new System.Drawing.Point(52, 12);
+            this.idBox.Location = new System.Drawing.Point(53, 15);
             this.idBox.Name = "idBox";
             this.idBox.Size = new System.Drawing.Size(282, 20);
             this.idBox.TabIndex = 0;
@@ -387,8 +391,8 @@ namespace Gentag_Pet_Entry_Client
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.imagePB);
-            this.groupBox1.Controls.Add(this.wineBrowseButton);
-            this.groupBox1.Location = new System.Drawing.Point(10, 61);
+            this.groupBox1.Controls.Add(this.BrowseForImageButton);
+            this.groupBox1.Location = new System.Drawing.Point(10, 92);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(379, 277);
             this.groupBox1.TabIndex = 0;
@@ -531,7 +535,7 @@ namespace Gentag_Pet_Entry_Client
             // authCodeTB
             // 
             this.authCodeTB.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.authCodeTB.Location = new System.Drawing.Point(70, 353);
+            this.authCodeTB.Location = new System.Drawing.Point(70, 375);
             this.authCodeTB.Name = "authCodeTB";
             this.authCodeTB.Size = new System.Drawing.Size(264, 20);
             this.authCodeTB.TabIndex = 2;
@@ -545,61 +549,88 @@ namespace Gentag_Pet_Entry_Client
             this.pictureBox1.TabIndex = 28;
             this.pictureBox1.TabStop = false;
             // 
-            // button2
+            // createUpdateButton
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.button2.Location = new System.Drawing.Point(167, 472);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 23;
-            this.button2.Text = "Submit";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click_2);
+            this.createUpdateButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.createUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.createUpdateButton.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.createUpdateButton.Location = new System.Drawing.Point(183, 39);
+            this.createUpdateButton.Name = "createUpdateButton";
+            this.createUpdateButton.Size = new System.Drawing.Size(84, 23);
+            this.createUpdateButton.TabIndex = 23;
+            this.createUpdateButton.Text = "Create/Update";
+            this.createUpdateButton.UseVisualStyleBackColor = false;
+            this.createUpdateButton.Click += new System.EventHandler(this.button2_Click_2);
             // 
             // passwordTB
             // 
-            this.passwordTB.Location = new System.Drawing.Point(70, 379);
+            this.passwordTB.Location = new System.Drawing.Point(67, 67);
             this.passwordTB.Name = "passwordTB";
             this.passwordTB.PasswordChar = '*';
-            this.passwordTB.Size = new System.Drawing.Size(172, 20);
+            this.passwordTB.Size = new System.Drawing.Size(175, 20);
             this.passwordTB.TabIndex = 3;
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(248, 381);
+            this.checkBox1.Location = new System.Drawing.Point(248, 69);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(60, 17);
+            this.checkBox1.Size = new System.Drawing.Size(53, 17);
             this.checkBox1.TabIndex = 29;
-            this.checkBox1.Text = "Reveal";
+            this.checkBox1.Text = "Show";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // statusLabel
             // 
             this.statusLabel.AutoSize = true;
-            this.statusLabel.Location = new System.Drawing.Point(168, 453);
+            this.statusLabel.Location = new System.Drawing.Point(12, 510);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(0, 13);
             this.statusLabel.TabIndex = 30;
+            // 
+            // changePasswordButton
+            // 
+            this.changePasswordButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.changePasswordButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.changePasswordButton.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.changePasswordButton.Location = new System.Drawing.Point(302, 65);
+            this.changePasswordButton.Name = "changePasswordButton";
+            this.changePasswordButton.Size = new System.Drawing.Size(87, 23);
+            this.changePasswordButton.TabIndex = 24;
+            this.changePasswordButton.Text = "Change PW";
+            this.changePasswordButton.UseVisualStyleBackColor = false;
+            this.changePasswordButton.Click += new System.EventHandler(this.changePasswordButton_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.button1.Location = new System.Drawing.Point(340, 39);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(49, 23);
+            this.button1.TabIndex = 24;
+            this.button1.Text = "Auth";
+            this.button1.UseVisualStyleBackColor = false;
             // 
             // PetEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.ClientSize = new System.Drawing.Size(747, 512);
+            this.ClientSize = new System.Drawing.Size(747, 528);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.retrieveTagButton);
             this.Controls.Add(label11);
-            this.Controls.Add(this.wineLoadButton);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.changePasswordButton);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.retrieveDataButton);
+            this.Controls.Add(this.createUpdateButton);
             this.Controls.Add(label19);
             this.Controls.Add(label18);
             this.Controls.Add(label16);
@@ -656,11 +687,11 @@ namespace Gentag_Pet_Entry_Client
 
         #endregion
 
-        private System.Windows.Forms.Button wineLoadButton;
-        private System.Windows.Forms.Button wineBrowseButton;
+        private System.Windows.Forms.Button retrieveDataButton;
+        private System.Windows.Forms.Button BrowseForImageButton;
         private System.Windows.Forms.PictureBox imagePB;
         private System.Windows.Forms.Button clearButton;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button retrieveTagButton;
         private System.Windows.Forms.TextBox base64TextBox;
         private System.Windows.Forms.TextBox unneededTextBox;
         private System.Windows.Forms.TextBox idBox;
@@ -686,10 +717,12 @@ namespace Gentag_Pet_Entry_Client
         private System.Windows.Forms.TextBox vetAddress3TB;
         private System.Windows.Forms.TextBox authCodeTB;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button createUpdateButton;
         private System.Windows.Forms.TextBox passwordTB;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label statusLabel;
+        private System.Windows.Forms.Button changePasswordButton;
+        private System.Windows.Forms.Button button1;
 
 
     }

@@ -51,10 +51,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="C1Lib_net_PPC, Version=1.0.2545.18356, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\C1Lib_net_PPC.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="Microsoft.WindowsMobile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.WindowsMobile.Status, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
@@ -81,7 +77,6 @@
     <Compile Include="demoClient.Designer.cs">
       <DependentUpon>demoClient.cs</DependentUpon>
     </Compile>
-    <Compile Include="NativeMethods.cs" />
     <Compile Include="nmeaInterpreter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -267,6 +262,12 @@
     <Content Include="VarioSens Lib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\Reader.csproj">
+      <Project>{C69C8781-21A8-44CA-8AE3-04521DF1A1B3}</Project>
+      <Name>Reader</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
   <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

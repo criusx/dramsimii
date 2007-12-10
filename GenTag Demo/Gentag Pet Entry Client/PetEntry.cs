@@ -23,11 +23,15 @@ namespace Gentag_Pet_Entry_Client
     {
         private string DeviceUID = "FFFFFFFFFFFFFFFFFFFF";
 
+        private ChangePasswordForm passwordDialog;
+
         public PetEntry()
         {
             InitializeComponent();
 
             tagReader = new Reader();
+
+            passwordDialog = new ChangePasswordForm();
 
             tagReader.TagReceived += new Reader.TagReceivedEventHandler(tagReader_TagReceived);
             tagReader.ReaderError += new Reader.ReaderErrorHandler(tagReader_ReaderError);
@@ -50,13 +54,13 @@ namespace Gentag_Pet_Entry_Client
         {
             if (readerRunning)
             {
-                setButton(button1, "Get");
+                setButton(retrieveTagButton, "Get");
                 readerRunning = false;
             }
             else
             {
                 readerRunning = true;
-                setButton(button1, "Stop");
+                setButton(retrieveTagButton, "Stop");
                 new Thread(new ThreadStart(tagReader.readTagID)).Start();
             }
         }
@@ -69,15 +73,6 @@ namespace Gentag_Pet_Entry_Client
 
         private void browseButton_Click(object sender, EventArgs e)
         {
-            PictureBox pictureBox;
-            if (sender == wineBrowseButton)
-            {
-                pictureBox = imagePB;
-            }
-            else
-            {
-                return;
-            }
             try
             {
                 FileDialog fldlg = new OpenFileDialog();
@@ -90,9 +85,9 @@ namespace Gentag_Pet_Entry_Client
 
                     Bitmap newimg = new Bitmap(imagename);
 
-                    pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+                    setPhoto(imagePB, newimg);
 
-                    pictureBox.Image = (Image)newimg;
+                    //pictureBox.Image = (Image)newimg;
                 }
 
                 fldlg = null;
@@ -118,39 +113,75 @@ namespace Gentag_Pet_Entry_Client
             }
         }
 
-        private void loadButton_Click(object sender, EventArgs e)
+        private void downloadData()
         {
-            statusLabel.Text = null;
-            int triesLeft = 5;
-            while (triesLeft > 0)
+            setLabel(statusLabel, "");
+
+            // do some error checking on the input data
+            if (idBox.Text.Length < 16)
+            {
+                setLabel(statusLabel, Properties.Resources.InvalidRFID);
+                return;
+            }
+
+            petWS.petWS ws = new petWS.petWS();
+            ws.Timeout = 45000;
+
+            for (int triesLeft = 5; triesLeft > 0; triesLeft--)
             {
                 try
                 {
-                    //wineWS.wineBottle bottle =
-                    //    (new wineWS.wineWS()).retrieveBottleInformation(tagID, DeviceUID, (float)0.0, (float)0.0);
+                    petWS.petInfo pI = ws.retrievePetInformation(getTextBox(idBox), DeviceUID, 0.0F, 0.0F, getTextBox(passwordTB));
 
-                    //if (bottle.exists)
-                    //{
-                    //    wineTypeComboBox.SelectedItem = bottle.type;
-                    //    yearUpDown.Value = Convert.ToDecimal(bottle.year);
-                    //    countryBox.SelectedItem = bottle.origin;
-                    //    vineyardBox.Text = bottle.vineyard;
-                    //    reviewBox.Text = bottle.review;
-                    //    imagePB.Image = new Bitmap(new MemoryStream(bottle.image));
-                    //    statusLabel.Text = Properties.Resources.Success;
-                    //}
-                    //else
-                    //{
-                    //    statusLabel.Text = Properties.Resources.InvalidRFID;
-                    //}
-                    return;
+                    if (pI.exists)
+                    {
+                        setLabel(statusLabel, Properties.Resources.Success);
+                        // fill in the text boxes with extra info
+                        setTextBox(ownerTB, pI.owner);
+                        string[] addresses = pI.contactInfo.Split('\n');
+                        if (addresses.Length > 0)
+                            setTextBox(ownerAddress1TB, addresses[0]);
+                        if (addresses.Length > 1)
+                            setTextBox(ownerAddress2TB, addresses[1]);
+                        if (addresses.Length > 2)
+                            setTextBox(ownerAddress3TB, addresses[2]);
+                        setTextBox(breedTB, pI.breed);
+                        setTextBox(nameTB, pI.name);
+                        setTextBox(homePhoneTB, pI.homePhone);
+                        setTextBox(cellPhoneTB, pI.cellPhone);
+                        setTextBox(workPhoneTB, pI.workPhone);
+                        setTextBox(emailTB, pI.email);
+                        setTextBox(dietTB, pI.preferredFood);
+                        setTextBox(medicalNeedsTB, pI.medicalNeeds);
+                        setTextBox(medicationsTB, pI.medications);
+                        setTextBox(vetNameTB, pI.vetName);
+                        setTextBox(vetPhoneTB, pI.vetPhone);
+                        addresses = pI.vetAddress.Split('\n');
+                        if (addresses.Length > 0)
+                            setTextBox(vetAddress1TB, addresses[0]);
+                        if (addresses.Length > 1)
+                            setTextBox(vetAddress2TB, addresses[1]);
+                        if (addresses.Length > 2)
+                            setTextBox(vetAddress3TB, addresses[2]);
+                        setTextBox(rewardTB, pI.reward.ToString());
+                        if (pI.image != null && pI.image.Length > 0)
+                            setPhoto(imagePB, pI.image);
+
+                    }
+                    else
+                    {
+                        setLabel(statusLabel, Properties.Resources.FailedNoReason);
+                    }
+
+                    break;
                 }
                 catch (Exception ex)
                 {
-                    statusLabel.Text = Properties.Resources.failedWithReason + ex.Message;
+                    setLabel(statusLabel, Properties.Resources.failedWithReason + ex.Message);
                     triesLeft--;
                 }
             }
+            enableButtons();
         }
 
         private void idBox_TextChanged(object sender, EventArgs e)
@@ -208,49 +239,10 @@ namespace Gentag_Pet_Entry_Client
             ((TextBox)sender).SelectionLength = ((TextBox)sender).Text.Length;
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (idBox.Text.Length < 16)
-            {
-                MessageBox.Show(Properties.Resources.rfidTagLengthError);
-                return;
-            }
-            //if (descriptionTextBox.Text.Length < 1)
-            //{
-            //    MessageBox.Show(Properties.Resources.emptyDescriptionError);
-            //    return;
-            //}
-            int retryCount = 5;
-            while (retryCount > 0)
-            {
-                try
-                {
-                    //Cursor.Current = Cursors.WaitCursor;
-                    //authWS.GetDatesWS ws = new authWS.GetDatesWS();
-                    //if (!ws.setItem(idBox.Text, DeviceUID, descriptionTextBox.Text, authCheckBox.Checked))
-                    //    MessageBox.Show(Properties.Resources.unableToSendAuth);
-                    //Cursor.Current = Cursors.Default;
-                    break;
-                }
-                catch (WebException ex)
-                {
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message.ToString());
-                }
-                finally
-                {
-                    retryCount--;
-                }
-            }
-        }
-
         private void wineBrowseButton_Click(object sender, EventArgs e)
         {
             PictureBox pictureBox;
-            if (sender == wineBrowseButton)
+            if (sender == BrowseForImageButton)
             {
                 pictureBox = imagePB;
             }
@@ -374,21 +366,22 @@ namespace Gentag_Pet_Entry_Client
                 fls.Close();
             }
 
+            petWS.petWS gentagPetWS = new petWS.petWS();
+            gentagPetWS.Timeout = 45000;
+
             // then try several times to send it off to the web service
             for (int triesLeft = 5; triesLeft > 0; triesLeft--)
             {
                 try
                 {
-                    petWS.petWS gentagPetWS = new petWS.petWS();
-
-                    bool status = gentagPetWS.enterPetInformation(info);
+                    petWS.errorMessage errorMessage = gentagPetWS.insertOrUpdatePetInformation(info);
 
                     gentagPetWS.Dispose();
-                    if (status)
+                    if (errorMessage.success)
                         setLabel(statusLabel,Properties.Resources.Success);
                     else
-                        setLabel(statusLabel,Properties.Resources.failedWithReason);
-                    return;
+                        setLabel(statusLabel,Properties.Resources.failedWithReason + errorMessage.errorMessage1);
+                    break;
 
                 }
                 catch (Exception ex)
@@ -396,9 +389,10 @@ namespace Gentag_Pet_Entry_Client
                     setLabel(statusLabel,Properties.Resources.failedWithReason + ex.Message);
                 }
             }
+            enableButtons();
         }
 
-     
+
 
         private void idBox_TextChanged_1(object sender, EventArgs e)
         {
@@ -487,6 +481,36 @@ namespace Gentag_Pet_Entry_Client
         private void button2_Click_2(object sender, EventArgs e)
         {
             new Thread(new ThreadStart(uploadData)).Start();
+            disableButtons();
+        }
+
+
+
+        private void wineLoadButton_Click_1(object sender, EventArgs e)
+        {
+            new Thread(new ThreadStart(downloadData)).Start();
+            disableButtons();
+        }
+
+        private void disableButtons()
+        {
+
+            setButtonState(createUpdateButton, false);
+            setButtonState(retrieveDataButton, false);
+            setButtonState(retrieveTagButton, false);
+            setButtonState(clearButton, false);
+            setButtonState(BrowseForImageButton, false);
+            setButtonState(retrieveTagButton, false);
+        }
+
+        private void enableButtons()
+        {
+            setButtonState(createUpdateButton, true);
+            setButtonState(retrieveDataButton, true);
+            setButtonState(retrieveTagButton, true);
+            setButtonState(clearButton, true);
+            setButtonState(BrowseForImageButton, true);
+            setButtonState(retrieveTagButton, true);
         }
 
         #region Safe Accessors and Mutators
@@ -560,7 +584,7 @@ namespace Gentag_Pet_Entry_Client
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new setButtonDelegate(setButton), new object[] { p, s});
+                this.Invoke(new setButtonDelegate(setButton), new object[] { p, s });
                 return;
             }
             p.Text = s;
@@ -724,7 +748,31 @@ namespace Gentag_Pet_Entry_Client
 
             }
         }
+
+        private delegate void setButtonStateDelegate(Button b, bool enabled);
+
+        private void setButtonState(Button b, bool enabled)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setButtonStateDelegate(setButtonState), new object[] { b, enabled });
+                return;
+            }
+            b.Enabled = enabled;
+        }
         #endregion
-        
+
+        private void changePasswordButton_Click(object sender, EventArgs e)
+        {
+            passwordDialog.setRFIDNum(getTextBox(idBox));
+            if (getTextBox(idBox).Length < 16)
+            {
+                MessageBox.Show("Please enter a valid RFID number first");
+                return;
+            }
+
+            DialogResult result = passwordDialog.ShowDialog();
+        }
+
     }
 }

@@ -56,6 +56,9 @@ namespace GentagDemo
             this.patientPhoto = new System.Windows.Forms.PictureBox();
             this.patientDescriptionBox = new System.Windows.Forms.TextBox();
             this.patientNameBox = new System.Windows.Forms.TextBox();
+            this.testsPage = new System.Windows.Forms.TabPage();
+            this.testDescriptionPictureBox = new System.Windows.Forms.PictureBox();
+            this.readTestButton = new System.Windows.Forms.Button();
             this.winePage = new System.Windows.Forms.TabPage();
             this.wineButton = new System.Windows.Forms.Button();
             this.wineCountryLabel = new System.Windows.Forms.Label();
@@ -139,6 +142,7 @@ namespace GentagDemo
             this.authPage.SuspendLayout();
             this.VarioSens.SuspendLayout();
             this.patientPage.SuspendLayout();
+            this.testsPage.SuspendLayout();
             this.winePage.SuspendLayout();
             this.petPage.SuspendLayout();
             this.gpsPage.SuspendLayout();
@@ -179,6 +183,7 @@ namespace GentagDemo
             this.tabControl1.Controls.Add(this.authPage);
             this.tabControl1.Controls.Add(this.VarioSens);
             this.tabControl1.Controls.Add(this.patientPage);
+            this.tabControl1.Controls.Add(this.testsPage);
             this.tabControl1.Controls.Add(this.winePage);
             this.tabControl1.Controls.Add(this.petPage);
             this.tabControl1.Controls.Add(this.gpsPage);
@@ -333,7 +338,7 @@ namespace GentagDemo
             this.patientPage.Controls.Add(this.patientNameBox);
             this.patientPage.Location = new System.Drawing.Point(0, 0);
             this.patientPage.Name = "patientPage";
-            this.patientPage.Size = new System.Drawing.Size(240, 217);
+            this.patientPage.Size = new System.Drawing.Size(232, 214);
             this.patientPage.Text = "Patient";
             // 
             // medicationButton
@@ -403,6 +408,31 @@ namespace GentagDemo
             this.patientNameBox.Name = "patientNameBox";
             this.patientNameBox.Size = new System.Drawing.Size(100, 19);
             this.patientNameBox.TabIndex = 0;
+            // 
+            // testsPage
+            // 
+            this.testsPage.Controls.Add(this.testDescriptionPictureBox);
+            this.testsPage.Controls.Add(this.readTestButton);
+            this.testsPage.Location = new System.Drawing.Point(0, 0);
+            this.testsPage.Name = "testsPage";
+            this.testsPage.Size = new System.Drawing.Size(240, 217);
+            this.testsPage.Text = "Tests";
+            // 
+            // testDescriptionPictureBox
+            // 
+            this.testDescriptionPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.testDescriptionPictureBox.Name = "testDescriptionPictureBox";
+            this.testDescriptionPictureBox.Size = new System.Drawing.Size(240, 194);
+            // 
+            // readTestButton
+            // 
+            this.readTestButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.readTestButton.Location = new System.Drawing.Point(0, 196);
+            this.readTestButton.Name = "readTestButton";
+            this.readTestButton.Size = new System.Drawing.Size(36, 20);
+            this.readTestButton.TabIndex = 0;
+            this.readTestButton.Text = "Read";
+            this.readTestButton.Click += new System.EventHandler(this.readerClick);
             // 
             // winePage
             // 
@@ -1130,6 +1160,7 @@ namespace GentagDemo
             this.authPage.ResumeLayout(false);
             this.VarioSens.ResumeLayout(false);
             this.patientPage.ResumeLayout(false);
+            this.testsPage.ResumeLayout(false);
             this.winePage.ResumeLayout(false);
             this.petPage.ResumeLayout(false);
             this.gpsPage.ResumeLayout(false);
@@ -1248,6 +1279,9 @@ namespace GentagDemo
         private System.Windows.Forms.Label radIDLabel;
         private System.Windows.Forms.Label label23;
         private Microsoft.WindowsCE.Forms.InputPanel inputPanel1;
+        private System.Windows.Forms.TabPage testsPage;
+        private System.Windows.Forms.Button readTestButton;
+        private System.Windows.Forms.PictureBox testDescriptionPictureBox;
         
     }
 }

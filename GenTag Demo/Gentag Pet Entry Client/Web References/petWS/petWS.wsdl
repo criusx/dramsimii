@@ -26,20 +26,42 @@
           <xsd:element name="tagCode" nillable="true" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
-      <xsd:element name="enterPetInformationElement">
+      <xsd:element name="changePasswordElement">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="rfidNums" nillable="true" type="tns:petInfo" />
+            <xsd:element name="String_1" nillable="true" type="xsd:string" />
+            <xsd:element name="String_2" nillable="true" type="xsd:string" />
+            <xsd:element name="String_3" nillable="true" type="xsd:string" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
-      <xsd:element name="enterPetInformationResponseElement">
+      <xsd:element name="changePasswordResponseElement">
         <xsd:complexType>
           <xsd:sequence>
             <xsd:element name="result" type="xsd:boolean" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:element name="insertOrUpdatePetInformationElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="petInfo_1" nillable="true" type="tns:petInfo" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="insertOrUpdatePetInformationResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:errorMessage" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="errorMessage">
+        <xsd:sequence>
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="success" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:element name="retrievePetInformationElement">
         <xsd:complexType>
           <xsd:sequence>
@@ -47,6 +69,7 @@
             <xsd:element name="String_2" nillable="true" type="xsd:string" />
             <xsd:element name="float_3" type="xsd:float" />
             <xsd:element name="float_4" type="xsd:float" />
+            <xsd:element name="String_5" nillable="true" type="xsd:string" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -59,11 +82,17 @@
       </xsd:element>
     </xsd:schema>
   </types>
-  <message name="PetWS_enterPetInformation">
-    <part name="parameters" element="tns0:enterPetInformationElement" />
+  <message name="PetWS_changePassword">
+    <part name="parameters" element="tns0:changePasswordElement" />
   </message>
-  <message name="PetWS_enterPetInformationResponse">
-    <part name="parameters" element="tns0:enterPetInformationResponseElement" />
+  <message name="PetWS_changePasswordResponse">
+    <part name="parameters" element="tns0:changePasswordResponseElement" />
+  </message>
+  <message name="PetWS_insertOrUpdatePetInformation">
+    <part name="parameters" element="tns0:insertOrUpdatePetInformationElement" />
+  </message>
+  <message name="PetWS_insertOrUpdatePetInformationResponse">
+    <part name="parameters" element="tns0:insertOrUpdatePetInformationResponseElement" />
   </message>
   <message name="PetWS_retrievePetInformation">
     <part name="parameters" element="tns0:retrievePetInformationElement" />
@@ -72,9 +101,13 @@
     <part name="parameters" element="tns0:retrievePetInformationResponseElement" />
   </message>
   <portType name="petWS">
-    <operation name="enterPetInformation">
-      <input message="tns:PetWS_enterPetInformation" />
-      <output message="tns:PetWS_enterPetInformationResponse" />
+    <operation name="changePassword">
+      <input message="tns:PetWS_changePassword" />
+      <output message="tns:PetWS_changePasswordResponse" />
+    </operation>
+    <operation name="insertOrUpdatePetInformation">
+      <input message="tns:PetWS_insertOrUpdatePetInformation" />
+      <output message="tns:PetWS_insertOrUpdatePetInformationResponse" />
     </operation>
     <operation name="retrievePetInformation">
       <input message="tns:PetWS_retrievePetInformation" />
@@ -83,8 +116,17 @@
   </portType>
   <binding name="petWSSoapHttp" type="tns:petWS">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <operation name="enterPetInformation">
-      <soap:operation soapAction="http://petPackage//enterPetInformation" />
+    <operation name="changePassword">
+      <soap:operation soapAction="http://petPackage//changePassword" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="insertOrUpdatePetInformation">
+      <soap:operation soapAction="http://petPackage//insertOrUpdatePetInformation" />
       <input>
         <soap:body use="literal" />
       </input>

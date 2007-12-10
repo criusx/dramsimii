@@ -38,6 +38,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangePasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangePasswordForm.Designer.cs">
+      <DependentUpon>ChangePasswordForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PetEntry.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -46,6 +52,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ChangePasswordForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ChangePasswordForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PetEntry.resx">
       <SubType>Designer</SubType>
       <DependentUpon>PetEntry.cs</DependentUpon>
@@ -78,6 +88,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Resources\Gentag-logo.png" />
+    <None Include="Web References\petWS\errorMessage.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\petWS\petInfo.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>

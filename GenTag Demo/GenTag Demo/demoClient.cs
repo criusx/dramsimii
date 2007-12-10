@@ -6,7 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using C1Lib;
+using RFIDReader;
 using System.Net;
 using System.IO;
 using System.IO.Ports;
@@ -21,7 +21,7 @@ using TestPocketGraphBar;
 using Microsoft.WindowsMobile.Status;
 using GentagDemo;
 using System.Web.Services.Protocols;
-using SiritReader;
+using RFIDReader;
 
 
 [assembly: CLSCompliant(true)]
@@ -42,7 +42,7 @@ namespace GentagDemo
 
         string DeviceUID;
 
-        NativeMethods tagReader = new NativeMethods();
+        Reader tagReader = new Reader();
 
         public demoClient()
         {
@@ -63,7 +63,7 @@ namespace GentagDemo
 
             uint SizeOut = 20;
 
-            NativeMethods.GetDeviceUniqueID(AppData, appDataSize, 1, dUID, out SizeOut);
+            RFIDReader.Reader.GetDeviceUniqueID(AppData, appDataSize, 1, dUID, out SizeOut);
 
             for (int i = 0; i < 20; i++)
                 DeviceUID += dUID[i].ToString("X", CultureInfo.CurrentUICulture);
@@ -87,10 +87,10 @@ namespace GentagDemo
             gpsInterpreter.QueueUpdated += new nmeaInterpreter.SetQueuedRequestsEventHandler(pendingQueueUpdate);
 
             // setup event callbacks for tag reading events
-            tagReader.TagReceived += new NativeMethods.TagReceivedEventHandler(tagReceived);
-            tagReader.VarioSensSettingsReceived += new NativeMethods.VarioSensSettingsReceivedEventHandler(receiveVarioSensSettings);
-            tagReader.ReaderError += new NativeMethods.ReaderErrorHandler(receiveReaderError);
-            tagReader.VarioSensLogReceived += new NativeMethods.VarioSensReadLogHandler(writeViolations);
+            tagReader.TagReceived += new RFIDReader.Reader.TagReceivedEventHandler(tagReceived);
+            tagReader.VarioSensSettingsReceived += new RFIDReader.Reader.VarioSensSettingsReceivedEventHandler(receiveVarioSensSettings);
+            tagReader.ReaderError += new RFIDReader.Reader.ReaderErrorHandler(receiveReaderError);
+            tagReader.VarioSensLogReceived += new RFIDReader.Reader.VarioSensReadLogHandler(writeViolations);
 
             ImageList myImageList = new ImageList();
             myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.blank.GetHbitmap()));
@@ -141,7 +141,7 @@ namespace GentagDemo
             //hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
-        private enum loopType { wine, counterfeit, pet, patient, med, none };
+        private enum loopType { wine, counterfeit, pet, patient, med, test, none };
 
         // the variable that describes whether it's looping looking for wine bottles or general tags
         private loopType loop;
@@ -156,7 +156,7 @@ namespace GentagDemo
 
                 if (sender == readLogButton)
                     new Thread(new ThreadStart(launchReadVSLog)).Start();
-                else if ((sender == medicationButton) || (sender == readIDButton) || (sender == wineButton) || (sender == petButton) || (sender == readPatientButton))
+                else if ((sender == medicationButton) || (sender == readIDButton) || (sender == wineButton) || (sender == petButton) || (sender == readPatientButton) || (sender == readTestButton))
                 {
                     if (sender == wineButton)
                         loop = loopType.wine;
@@ -168,6 +168,8 @@ namespace GentagDemo
                         loop = loopType.patient;
                     else if (sender == medicationButton)
                         loop = loopType.med;
+                    else if (sender == readTestButton)
+                        loop = loopType.test;
 
                     new Thread(new ThreadStart(tagReader.readTagID)).Start();
                 }
@@ -309,6 +311,24 @@ namespace GentagDemo
                             }
                             break;
                         }
+                    case loopType.test:
+                        {
+                            stopReading();
+                            if (cachedPetLookups.ContainsKey(tagID))
+                                displayTest((petWS.petInfo)cachedPetLookups[tagID]);
+                            else if (petIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
+                                break;
+                            else
+                            {
+                                petWS.petWS ws = new petWS.petWS();
+                                ws.Timeout = 300000;
+                                IAsyncResult handle = ws.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                                lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
+                                { petIDsCurrentlyBeingLookedUp[handle] = tagID; }
+                            }
+
+                            break;
+                        }
                     case loopType.med:
                         {
                             stopReading();
@@ -380,7 +400,11 @@ namespace GentagDemo
                     // try to cast as petInfo
                     petWS.petWS ws = (petWS.petWS)ar.AsyncState;
                     petWS.petInfo newPet = ws.EndretrievePetInformation(ar);
-                    displayPet(newPet);
+                    // may be the test result
+                    if (newPet.owner == "anthrax")
+                        displayTest(newPet);
+                    else
+                        displayPet(newPet);
                     lock (cachedPetLookups.SyncRoot)
                     {
                         cachedPetLookups[newPet.rfidNum] = newPet;
@@ -632,6 +656,13 @@ namespace GentagDemo
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void displayTest(petWS.petInfo newPet)
+        {
+            if (newPet.image.Length > 16)
+                setPhoto(testDescriptionPictureBox, newPet.image);
+        }
+
         private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated, bool isNew);
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -750,9 +781,6 @@ namespace GentagDemo
         //}
 
         private string drugID;
-
-        
-     
 
         private void trackingCheckBox_CheckStateChanged(object sender, EventArgs e)
         {

@@ -29,7 +29,9 @@ namespace Gentag_Pet_Entry_Client.petWS {
     [System.Web.Services.WebServiceBindingAttribute(Name="petWSSoapHttp", Namespace="http://petPackage/")]
     public partial class petWS : System.Web.Services.Protocols.SoapHttpClientProtocol {
         
-        private System.Threading.SendOrPostCallback enterPetInformationOperationCompleted;
+        private System.Threading.SendOrPostCallback changePasswordOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback insertOrUpdatePetInformationOperationCompleted;
         
         private System.Threading.SendOrPostCallback retrievePetInformationOperationCompleted;
         
@@ -72,60 +74,98 @@ namespace Gentag_Pet_Entry_Client.petWS {
         }
         
         /// <remarks/>
-        public event enterPetInformationCompletedEventHandler enterPetInformationCompleted;
+        public event changePasswordCompletedEventHandler changePasswordCompleted;
+        
+        /// <remarks/>
+        public event insertOrUpdatePetInformationCompletedEventHandler insertOrUpdatePetInformationCompleted;
         
         /// <remarks/>
         public event retrievePetInformationCompletedEventHandler retrievePetInformationCompleted;
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://petPackage//enterPetInformation", RequestElementName="enterPetInformationElement", RequestNamespace="http://petPackage/types/", ResponseElementName="enterPetInformationResponseElement", ResponseNamespace="http://petPackage/types/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://petPackage//changePassword", RequestElementName="changePasswordElement", RequestNamespace="http://petPackage/types/", ResponseElementName="changePasswordResponseElement", ResponseNamespace="http://petPackage/types/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("result")]
-        public bool enterPetInformation([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] petInfo rfidNums) {
-            object[] results = this.Invoke("enterPetInformation", new object[] {
-                        rfidNums});
+        public bool changePassword([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_1, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_2, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_3) {
+            object[] results = this.Invoke("changePassword", new object[] {
+                        String_1,
+                        String_2,
+                        String_3});
             return ((bool)(results[0]));
         }
         
         /// <remarks/>
-        public void enterPetInformationAsync(petInfo rfidNums) {
-            this.enterPetInformationAsync(rfidNums, null);
+        public void changePasswordAsync(string String_1, string String_2, string String_3) {
+            this.changePasswordAsync(String_1, String_2, String_3, null);
         }
         
         /// <remarks/>
-        public void enterPetInformationAsync(petInfo rfidNums, object userState) {
-            if ((this.enterPetInformationOperationCompleted == null)) {
-                this.enterPetInformationOperationCompleted = new System.Threading.SendOrPostCallback(this.OnenterPetInformationOperationCompleted);
+        public void changePasswordAsync(string String_1, string String_2, string String_3, object userState) {
+            if ((this.changePasswordOperationCompleted == null)) {
+                this.changePasswordOperationCompleted = new System.Threading.SendOrPostCallback(this.OnchangePasswordOperationCompleted);
             }
-            this.InvokeAsync("enterPetInformation", new object[] {
-                        rfidNums}, this.enterPetInformationOperationCompleted, userState);
+            this.InvokeAsync("changePassword", new object[] {
+                        String_1,
+                        String_2,
+                        String_3}, this.changePasswordOperationCompleted, userState);
         }
         
-        private void OnenterPetInformationOperationCompleted(object arg) {
-            if ((this.enterPetInformationCompleted != null)) {
+        private void OnchangePasswordOperationCompleted(object arg) {
+            if ((this.changePasswordCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.enterPetInformationCompleted(this, new enterPetInformationCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+                this.changePasswordCompleted(this, new changePasswordCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://petPackage//insertOrUpdatePetInformation", RequestElementName="insertOrUpdatePetInformationElement", RequestNamespace="http://petPackage/types/", ResponseElementName="insertOrUpdatePetInformationResponseElement", ResponseNamespace="http://petPackage/types/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
+        public errorMessage insertOrUpdatePetInformation([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] petInfo petInfo_1) {
+            object[] results = this.Invoke("insertOrUpdatePetInformation", new object[] {
+                        petInfo_1});
+            return ((errorMessage)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void insertOrUpdatePetInformationAsync(petInfo petInfo_1) {
+            this.insertOrUpdatePetInformationAsync(petInfo_1, null);
+        }
+        
+        /// <remarks/>
+        public void insertOrUpdatePetInformationAsync(petInfo petInfo_1, object userState) {
+            if ((this.insertOrUpdatePetInformationOperationCompleted == null)) {
+                this.insertOrUpdatePetInformationOperationCompleted = new System.Threading.SendOrPostCallback(this.OninsertOrUpdatePetInformationOperationCompleted);
+            }
+            this.InvokeAsync("insertOrUpdatePetInformation", new object[] {
+                        petInfo_1}, this.insertOrUpdatePetInformationOperationCompleted, userState);
+        }
+        
+        private void OninsertOrUpdatePetInformationOperationCompleted(object arg) {
+            if ((this.insertOrUpdatePetInformationCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.insertOrUpdatePetInformationCompleted(this, new insertOrUpdatePetInformationCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://petPackage//retrievePetInformation", RequestElementName="retrievePetInformationElement", RequestNamespace="http://petPackage/types/", ResponseElementName="retrievePetInformationResponseElement", ResponseNamespace="http://petPackage/types/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
-        public petInfo retrievePetInformation([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_1, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_2, float float_3, float float_4) {
+        public petInfo retrievePetInformation([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_1, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_2, float float_3, float float_4, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string String_5) {
             object[] results = this.Invoke("retrievePetInformation", new object[] {
                         String_1,
                         String_2,
                         float_3,
-                        float_4});
+                        float_4,
+                        String_5});
             return ((petInfo)(results[0]));
         }
         
         /// <remarks/>
-        public void retrievePetInformationAsync(string String_1, string String_2, float float_3, float float_4) {
-            this.retrievePetInformationAsync(String_1, String_2, float_3, float_4, null);
+        public void retrievePetInformationAsync(string String_1, string String_2, float float_3, float float_4, string String_5) {
+            this.retrievePetInformationAsync(String_1, String_2, float_3, float_4, String_5, null);
         }
         
         /// <remarks/>
-        public void retrievePetInformationAsync(string String_1, string String_2, float float_3, float float_4, object userState) {
+        public void retrievePetInformationAsync(string String_1, string String_2, float float_3, float float_4, string String_5, object userState) {
             if ((this.retrievePetInformationOperationCompleted == null)) {
                 this.retrievePetInformationOperationCompleted = new System.Threading.SendOrPostCallback(this.OnretrievePetInformationOperationCompleted);
             }
@@ -133,7 +173,8 @@ namespace Gentag_Pet_Entry_Client.petWS {
                         String_1,
                         String_2,
                         float_3,
-                        float_4}, this.retrievePetInformationOperationCompleted, userState);
+                        float_4,
+                        String_5}, this.retrievePetInformationOperationCompleted, userState);
         }
         
         private void OnretrievePetInformationOperationCompleted(object arg) {
@@ -430,18 +471,52 @@ namespace Gentag_Pet_Entry_Client.petWS {
     }
     
     /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "2.0.50727.1378")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://petPackage/types/")]
+    public partial class errorMessage {
+        
+        private string errorMessage1Field;
+        
+        private bool successField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("errorMessage", IsNullable=true)]
+        public string errorMessage1 {
+            get {
+                return this.errorMessage1Field;
+            }
+            set {
+                this.errorMessage1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool success {
+            get {
+                return this.successField;
+            }
+            set {
+                this.successField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1378")]
-    public delegate void enterPetInformationCompletedEventHandler(object sender, enterPetInformationCompletedEventArgs e);
+    public delegate void changePasswordCompletedEventHandler(object sender, changePasswordCompletedEventArgs e);
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1378")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class enterPetInformationCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class changePasswordCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
         
         private object[] results;
         
-        internal enterPetInformationCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+        internal changePasswordCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
                 base(exception, cancelled, userState) {
             this.results = results;
         }
@@ -451,6 +526,32 @@ namespace Gentag_Pet_Entry_Client.petWS {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((bool)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1378")]
+    public delegate void insertOrUpdatePetInformationCompletedEventHandler(object sender, insertOrUpdatePetInformationCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "2.0.50727.1378")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class insertOrUpdatePetInformationCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal insertOrUpdatePetInformationCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public errorMessage Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((errorMessage)(this.results[0]));
             }
         }
     }
