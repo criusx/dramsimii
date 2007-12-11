@@ -225,18 +225,52 @@ namespace GentagDemo
 
         private Hashtable drugsCurrentlyBeingLookedUp = new Hashtable();
 
+        private Queue<string> lookupQueue = new Queue<string>();
+
+        private int availableLookupThreads = 8;
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void tagReceived(string tagID)
         {
             if (string.IsNullOrEmpty(tagID)) // if there was no string returned
                 return;
 
-            AsyncCallback cb = new AsyncCallback(receiveNewItem);
+            
 
+            // flash the correct button
             Button button = loop == loopType.counterfeit ? readIDButton : loop == loopType.pet ? petButton : loop == loopType.wine ? wineButton : loop == loopType.patient ? readPatientButton : medicationButton;
 
             Color backup = getButtonColor(button);
-            setButtonColor(button, Color.Green);
+            setButtonColor(button, Color.Green); 
+
+            lock (lookupQueue)
+            {
+                if (availableLookupThreads > 0)
+                {
+                    availableLookupThreads--;
+                    sendLookup(tagID);
+                }
+                else
+                {
+                    if (loop == loopType.counterfeit)
+                        updateTreeView1(tagID, @"No description yet", false, true, false);
+                    // queue it up for later and return
+                    lookupQueue.Enqueue(tagID);
+                    Thread.Sleep(150);
+                    setButtonColor(button, backup);
+                    return;
+                }
+            }
+
+            // flash the panel to signal the user that a tag was read
+            
+            Thread.Sleep(150);
+            setButtonColor(button, backup);
+        }
+
+        private void sendLookup(string tagID)
+        {
+            AsyncCallback cb = new AsyncCallback(receiveResult);
 
             try
             {
@@ -255,7 +289,7 @@ namespace GentagDemo
                             lock (counterfeitIDsCurrentlyBeingLookedUp.SyncRoot)
                             { counterfeitIDsCurrentlyBeingLookedUp[handle] = tagID; }
 
-                            updateTreeView1(tagID, @"No description yet", false, true);
+                            updateTreeView1(tagID, @"No description yet", false, true, true);
 
                             break;
                         }
@@ -338,24 +372,24 @@ namespace GentagDemo
                             else
                             {
                                 if (string.IsNullOrEmpty(currentPatientID))
-                                    return;
+                                    break;
                                 medWS.COREMedDemoWS ws = new medWS.COREMedDemoWS();
                                 ws.Timeout = 30000;
 
                                 IAsyncResult handle = ws.BegingetDrugInfo(tagID, cb, ws);
                                 lock (drugsCurrentlyBeingLookedUp.SyncRoot)
                                 { drugsCurrentlyBeingLookedUp[handle] = tagID; }
-                                
-                                handle = ws.BegincheckInteraction(currentPatientID,tagID, cb, ws);
+
+                                handle = ws.BegincheckInteraction(currentPatientID, tagID, cb, ws);
                                 lock (interactionsBCurrentlyBeingLookedUp.SyncRoot)
                                 { interactionsBCurrentlyBeingLookedUp[handle] = currentPatientID; }
                                 lock (interactionsACurrentlyBeingLookedUp.SyncRoot)
                                 { interactionsACurrentlyBeingLookedUp[handle] = tagID; }
                             }
                             break;
-                        }                       
+                        }
                     default:
-                        return;
+
                         break;
                 }
             }
@@ -363,12 +397,6 @@ namespace GentagDemo
             {
                 MessageBox.Show("Unexpected SOAP exception: " + ex.Message);
             }
-            
-
-            // flash the panel to signal the user that a tag was read
-            
-            Thread.Sleep(150);
-            setButtonColor(button, backup);
         }        
 
         private Hashtable retryCount = new Hashtable();
@@ -377,7 +405,7 @@ namespace GentagDemo
 
         private string currentPatientID;
 
-        private void receiveNewItem(IAsyncResult ar)
+        private void receiveResult(IAsyncResult ar)
         {
             try
             {
@@ -418,7 +446,7 @@ namespace GentagDemo
                     authWS.GetDates info = ws.EndgetItem(ar);
 
                     // display the tag info
-                    updateTreeView1(info.name, info.desc, info.authenticated, false);
+                    updateTreeView1(info.name, info.desc, info.authenticated, false, true);
                     string tagID = (string)counterfeitIDsCurrentlyBeingLookedUp[ar];
                     lock (cachedCounterfeitLookups.SyncRoot)
                     {
@@ -464,6 +492,19 @@ namespace GentagDemo
 
                         displayDrug(info);
                     }
+                }
+                // free up some space in the available lookups and schedule a waiting lookup
+                lock (lookupQueue)
+                {
+                    availableLookupThreads++;
+                    try
+                    {
+                        sendLookup(lookupQueue.Dequeue());
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                    }
+                    
                 }
             }
             catch (WebException)
@@ -511,7 +552,7 @@ namespace GentagDemo
 
         private void rescheduleLookup(IAsyncResult ar)
         {
-            AsyncCallback cb = new AsyncCallback(receiveNewItem);            
+            AsyncCallback cb = new AsyncCallback(receiveResult);            
 
             if (ar.AsyncState.GetType() == typeof(wineWS.wineWS))
             {
@@ -664,15 +705,15 @@ namespace GentagDemo
                 setPhoto(testDescriptionPictureBox, newPet.image);
         }
 
-        private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated, bool isNew);
+        private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated, bool isNew, bool shouldUpdateIfExists);
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void updateTreeView1(string currentTag, string rfidDescr, bool isAuthenticated, bool isNew)
+        private void updateTreeView1(string currentTag, string rfidDescr, bool isAuthenticated, bool isNew, bool shouldUpdateIfExists)
         {
             if (this.InvokeRequired)
             {
                 Invoke(new updateTreeView1Delegate(updateTreeView1),
-                    new object[] { currentTag, rfidDescr, isAuthenticated, isNew });
+                    new object[] { currentTag, rfidDescr, isAuthenticated, isNew, shouldUpdateIfExists });
                 return;
             }
             treeView1.BeginUpdate();
@@ -683,11 +724,14 @@ namespace GentagDemo
             {
                 if (tn.Text == currentTag)
                 {
-                    tn.Nodes.Clear();
-                    TreeNode tN = new TreeNode(rfidDescr);
-                    tn.SelectedImageIndex = tn.ImageIndex = isNew ? 3 : (isAuthenticated ? 2 : 1);
-                    tn.Nodes.Add(tN);
                     exists = true;
+                    if (shouldUpdateIfExists)
+                    {
+                        tn.Nodes.Clear();
+                        TreeNode tN = new TreeNode(rfidDescr);
+                        tn.SelectedImageIndex = tn.ImageIndex = isNew ? 3 : (isAuthenticated ? 2 : 1);
+                        tn.Nodes.Add(tN);
+                    }
                 }
             }
             if (!exists)
@@ -745,7 +789,7 @@ namespace GentagDemo
                 MessageBox.Show(@"Problem connecting to web service: " + ex.Message);
             }
 
-            updateTreeView1(textBox4.Text, rfidDescr, false, false);
+            updateTreeView1(textBox4.Text, rfidDescr, false, false, true);
 
             textBox4.Enabled = true;
 
