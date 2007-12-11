@@ -659,7 +659,8 @@ namespace GentagDemo
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayTest(petWS.petInfo newPet)
         {
-            if (newPet.image.Length > 16)
+            
+            if (newPet.image != null && newPet.image.Length > 16)
                 setPhoto(testDescriptionPictureBox, newPet.image);
         }
 
