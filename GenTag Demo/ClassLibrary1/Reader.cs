@@ -177,7 +177,7 @@ namespace RFIDReader
             readerRunning = false;
         }
 
-        static private int retryCount = 5;
+        static private int retryCount = 25;
 
         public void readTagID()
         {
@@ -201,6 +201,7 @@ namespace RFIDReader
                 {
                     break;
                 }
+                Thread.Sleep(15);
             }
 
             if (n == 0)

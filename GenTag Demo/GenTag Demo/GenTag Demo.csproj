@@ -231,6 +231,9 @@
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Web References\petWS\errorMessage.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\radWS\EvDemoWS.wsdl" />
     <None Include="Web References\radWS\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>

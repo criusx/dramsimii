@@ -44,6 +44,8 @@ namespace GentagDemo
 
         Reader tagReader = new Reader();
 
+        
+
         public demoClient()
         {
             // run initializations provided by the designer
@@ -87,7 +89,7 @@ namespace GentagDemo
             gpsInterpreter.QueueUpdated += new nmeaInterpreter.SetQueuedRequestsEventHandler(pendingQueueUpdate);
 
             // setup event callbacks for tag reading events
-            tagReader.TagReceived += new RFIDReader.Reader.TagReceivedEventHandler(tagReceived);
+            tagReader.TagReceived += new RFIDReader.Reader.TagReceivedEventHandler(receiveTag);
             tagReader.VarioSensSettingsReceived += new RFIDReader.Reader.VarioSensSettingsReceivedEventHandler(receiveVarioSensSettings);
             tagReader.ReaderError += new RFIDReader.Reader.ReaderErrorHandler(receiveReaderError);
             tagReader.VarioSensLogReceived += new RFIDReader.Reader.VarioSensReadLogHandler(writeViolations);
@@ -98,6 +100,16 @@ namespace GentagDemo
             myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.ok.GetHbitmap()));
             myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.question.GetHbitmap()));
             treeView1.ImageList = myImageList;
+
+            // web service inits
+            authorizationWebService = new authWS.GetDatesWS();
+            petWebService = new petWS.petWS();
+            wineWebService = new wineWS.wineWS();
+            COREMedDemoWebService = new medWS.COREMedDemoWS();
+            petWebService.Timeout = 300000;
+            authorizationWebService.Timeout = 300000;
+            wineWebService.Timeout = 300000;
+            COREMedDemoWebService.Timeout = 30000;
 
             graph.Visible = false;
             radGraph.Visible = false;
@@ -227,50 +239,73 @@ namespace GentagDemo
 
         private Queue<string> lookupQueue = new Queue<string>();
 
-        private int availableLookupThreads = 8;
+        private const int maxLookupThreads = 5;
 
+        // the number of lookups sent off already
+        private int pendingLookups = 0;
+                
+        private int queuedLookups = 0;
+
+        /// <summary>
+        /// The callback for when a tag is received by the reader thread
+        /// </summary>
+        /// <param name="tagID"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void tagReceived(string tagID)
+        private void receiveTag(string tagID)
         {
             if (string.IsNullOrEmpty(tagID)) // if there was no string returned
                 return;
-
-            
 
             // flash the correct button
             Button button = loop == loopType.counterfeit ? readIDButton : loop == loopType.pet ? petButton : loop == loopType.wine ? wineButton : loop == loopType.patient ? readPatientButton : medicationButton;
 
             Color backup = getButtonColor(button);
-            setButtonColor(button, Color.Green); 
+            setButtonColor(button, Color.Green);
 
             lock (lookupQueue)
             {
-                if (availableLookupThreads > 0)
+                if (pendingLookups < maxLookupThreads)
                 {
-                    availableLookupThreads--;
-                    sendLookup(tagID);
+                    if (sendLookup(tagID))
+                        pendingLookups++;
+
+                    setLabel(pendingLookupsLabel, pendingLookups.ToString());
                 }
                 else
                 {
+                    queuedLookups++;
+                    setLabel(queuedLookupsLabel, lookupQueue.Count.ToString());
+
                     if (loop == loopType.counterfeit)
                         updateTreeView1(tagID, @"No description yet", false, true, false);
                     // queue it up for later and return
                     lookupQueue.Enqueue(tagID);
-                    Thread.Sleep(150);
-                    setButtonColor(button, backup);
-                    return;
                 }
             }
 
             // flash the panel to signal the user that a tag was read
-            
             Thread.Sleep(150);
             setButtonColor(button, backup);
         }
 
-        private void sendLookup(string tagID)
+        /// <summary>
+        /// The web service endpoints
+        /// </summary>
+        authWS.GetDatesWS authorizationWebService;
+        petWS.petWS petWebService;
+        wineWS.wineWS wineWebService;
+        medWS.COREMedDemoWS COREMedDemoWebService;
+                                
+
+        /// <summary>
+        /// Creates the appropriate web service and does the lookup
+        /// </summary>
+        /// <param name="tagID">the RFID tag string to lookup</param>
+        /// <returns>true if the request was sent, false if it wasn't for some reason</returns>
+        private bool sendLookup(string tagID)
         {
             AsyncCallback cb = new AsyncCallback(receiveResult);
+            bool result = true;
 
             try
             {
@@ -280,30 +315,35 @@ namespace GentagDemo
                         {
                             // if it has already been added, do nothing
                             if (cachedCounterfeitLookups.ContainsKey(tagID))
-                                break;
+                            {
+                                result = false;
+                            }
+                            else
+                            {
+                                // get the tag info and cache it
+                                IAsyncResult handle = authorizationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authorizationWebService);
+                                lock (counterfeitIDsCurrentlyBeingLookedUp.SyncRoot)
+                                { counterfeitIDsCurrentlyBeingLookedUp[handle] = tagID; }
 
-                            // get the tag info and cache it
-                            authWS.GetDatesWS ws = new authWS.GetDatesWS();
-                            ws.Timeout = 300000;
-                            IAsyncResult handle = ws.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
-                            lock (counterfeitIDsCurrentlyBeingLookedUp.SyncRoot)
-                            { counterfeitIDsCurrentlyBeingLookedUp[handle] = tagID; }
-
-                            updateTreeView1(tagID, @"No description yet", false, true, true);
-
+                                updateTreeView1(tagID, @"No description yet", false, true, true);
+                            }
                             break;
                         }
                     case loopType.pet:
                         {
                             if (cachedPetLookups.ContainsKey(tagID))
-                                displayPet((petWS.petInfo)cachedPetLookups[tagID]);
-                            else if (petIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                                break;
-                            else
                             {
-                                petWS.petWS ws = new petWS.petWS();
-                                ws.Timeout = 300000;
-                                IAsyncResult handle = ws.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                                result = false;
+                                displayPet((petWS.petInfo)cachedPetLookups[tagID]);
+                            }
+                            else if (petIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
+                            {
+                                result = false;
+                                break;
+                            }
+                            else
+                            {                                
+                                IAsyncResult handle = petWebService.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, petWebService);
                                 lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
                                 { petIDsCurrentlyBeingLookedUp[handle] = tagID; }
                             }
@@ -313,15 +353,19 @@ namespace GentagDemo
                     case loopType.wine:
                         {
                             if (cachedWineLookups.ContainsKey(tagID))
+                            {
+                                result = false;
                                 displayBottle((wineWS.wineBottle)cachedWineLookups[tagID]);
+                            }
                             else if (wineIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                                break;
+                            {
+                                result = false;
+                            }
                             else
                             {
                                 mostRecentWineID = tagID;
-                                wineWS.wineWS ws = new wineWS.wineWS();
-                                ws.Timeout = 300000;
-                                IAsyncResult handle = ws.BeginretrieveBottleInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                                
+                                IAsyncResult handle = wineWebService.BeginretrieveBottleInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, wineWebService);
                                 lock (wineIDsCurrentlyBeingLookedUp.SyncRoot)
                                 { wineIDsCurrentlyBeingLookedUp[handle] = tagID; }
                             }
@@ -330,15 +374,19 @@ namespace GentagDemo
                     case loopType.patient:
                         {
                             stopReading();
+
                             if (cachedPatientLookups.ContainsKey(tagID))
-                                displayPatient((medWS.patientRecord)cachedPatientLookups[tagID]);
-                            else if (patientsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                                break;
-                            else
                             {
-                                medWS.COREMedDemoWS ws = new medWS.COREMedDemoWS();
-                                ws.Timeout = 30000;
-                                IAsyncResult handle = ws.BegingetPatientRecord(tagID, cb, ws);
+                                result = false;
+                                displayPatient((medWS.patientRecord)cachedPatientLookups[tagID]);
+                            }
+                            else if (patientsCurrentlyBeingLookedUp.ContainsValue(tagID))
+                            {
+                                result = false;
+                            }
+                            else
+                            {                                
+                                IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(tagID, cb, COREMedDemoWebService);
                                 lock (patientsCurrentlyBeingLookedUp.SyncRoot)
                                 { patientsCurrentlyBeingLookedUp[handle] = tagID; }
                                 currentPatientID = tagID;
@@ -349,18 +397,20 @@ namespace GentagDemo
                         {
                             stopReading();
                             if (cachedPetLookups.ContainsKey(tagID))
-                                displayTest((petWS.petInfo)cachedPetLookups[tagID]);
-                            else if (petIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                                break;
-                            else
                             {
-                                petWS.petWS ws = new petWS.petWS();
-                                ws.Timeout = 300000;
-                                IAsyncResult handle = ws.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                                result = false;
+                                displayTest((petWS.petInfo)cachedPetLookups[tagID]);
+                            }
+                            else if (petIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
+                            {
+                                result = false;
+                            }
+                            else
+                            {                                
+                                IAsyncResult handle = petWebService.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, petWebService);
                                 lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
                                 { petIDsCurrentlyBeingLookedUp[handle] = tagID; }
                             }
-
                             break;
                         }
                     case loopType.med:
@@ -368,19 +418,19 @@ namespace GentagDemo
                             stopReading();
                             // do not cache med lookups, make sure this info is always current
                             if (interactionsACurrentlyBeingLookedUp.ContainsValue(tagID))
-                                break;
+                            {
+                                result = false;
+                            }
                             else
                             {
                                 if (string.IsNullOrEmpty(currentPatientID))
-                                    break;
-                                medWS.COREMedDemoWS ws = new medWS.COREMedDemoWS();
-                                ws.Timeout = 30000;
+                                    break;                                
 
-                                IAsyncResult handle = ws.BegingetDrugInfo(tagID, cb, ws);
+                                IAsyncResult handle = COREMedDemoWebService.BegingetDrugInfo(tagID, cb, COREMedDemoWebService);
                                 lock (drugsCurrentlyBeingLookedUp.SyncRoot)
                                 { drugsCurrentlyBeingLookedUp[handle] = tagID; }
 
-                                handle = ws.BegincheckInteraction(currentPatientID, tagID, cb, ws);
+                                handle = COREMedDemoWebService.BegincheckInteraction(currentPatientID, tagID, cb, COREMedDemoWebService);
                                 lock (interactionsBCurrentlyBeingLookedUp.SyncRoot)
                                 { interactionsBCurrentlyBeingLookedUp[handle] = currentPatientID; }
                                 lock (interactionsACurrentlyBeingLookedUp.SyncRoot)
@@ -397,7 +447,8 @@ namespace GentagDemo
             {
                 MessageBox.Show("Unexpected SOAP exception: " + ex.Message);
             }
-        }        
+            return result;
+        }
 
         private Hashtable retryCount = new Hashtable();
 
@@ -437,7 +488,7 @@ namespace GentagDemo
                     {
                         cachedPetLookups[newPet.rfidNum] = newPet;
                     }
-                    
+
                 }
                 else if (ar.AsyncState.GetType() == typeof(authWS.GetDatesWS))
                 {
@@ -466,7 +517,7 @@ namespace GentagDemo
 
                         bool alert = ws.EndcheckInteraction(ar);
                         if (alert)
-                            MessageBox.Show(Properties.Resources.DrugInteractionWarningMessage);                        
+                            MessageBox.Show(Properties.Resources.DrugInteractionWarningMessage);
                     }
                     // patient lookup
                     else if (patientsCurrentlyBeingLookedUp.ContainsKey(ar))
@@ -478,7 +529,7 @@ namespace GentagDemo
                         medWS.patientRecord info = ws.EndgetPatientRecord(ar);
 
                         displayPatient(info);
-                        
+
                         lock (cachedPatientLookups.SyncRoot)
                         { cachedPatientLookups[tagID] = info; }
                     }
@@ -493,19 +544,33 @@ namespace GentagDemo
                         displayDrug(info);
                     }
                 }
+
                 // free up some space in the available lookups and schedule a waiting lookup
                 lock (lookupQueue)
                 {
-                    availableLookupThreads++;
+                    pendingLookups--;
                     try
                     {
-                        sendLookup(lookupQueue.Dequeue());
+                        if (lookupQueue.Count > 0)
+                        {
+                            bool lastResult = false;
+                            while ((lookupQueue.Count > 0) && (lastResult = sendLookup(lookupQueue.Dequeue())) == false)
+                            { }
+                            if (lastResult)
+                                pendingLookups++;
+                        }
+
+                        setLabel(pendingLookupsLabel, pendingLookups.ToString());
+
+                        setLabel(queuedLookupsLabel, lookupQueue.Count.ToString());
                     }
                     catch (InvalidOperationException e)
                     {
+                        MessageBox.Show(e.ToString());
                     }
-                    
+
                 }
+
             }
             catch (WebException)
             {
@@ -519,13 +584,14 @@ namespace GentagDemo
             {
                 MessageBox.Show("unexpected: ");
             }
-            catch (SocketException)
+            catch (SocketException e)
             {
                 Thread.Sleep(2000);
+                MessageBox.Show(e.ToString());
             }
-            catch (IOException)
+            catch (IOException e)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(e.Message);
                 return;
             }
             catch (InvalidCastException e)
@@ -540,19 +606,28 @@ namespace GentagDemo
             {
                 MessageBox.Show(e.ToString());
             }
-                catch (NullReferenceException e)
+            catch (NullReferenceException e)
             {
+                MessageBox.Show(e.ToString() + "@" + e.StackTrace);
                 rescheduleLookup(ar);
-                }
+            }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
+            finally
+            {
+
+            }
         }
 
+        /// <summary>
+        /// Performs a lookup again if the previous lookup has failed
+        /// </summary>
+        /// <param name="ar"></param>
         private void rescheduleLookup(IAsyncResult ar)
         {
-            AsyncCallback cb = new AsyncCallback(receiveResult);            
+            AsyncCallback cb = new AsyncCallback(receiveResult);
 
             if (ar.AsyncState.GetType() == typeof(wineWS.wineWS))
             {
@@ -561,9 +636,7 @@ namespace GentagDemo
                     // get the bottle info and cache it
                     string currentTag = (string)wineIDsCurrentlyBeingLookedUp[ar];
                     wineIDsCurrentlyBeingLookedUp.Remove(ar);
-                    wineWS.wineWS ws = new wineWS.wineWS();
-                    ws.Timeout = 300000;
-                    IAsyncResult handle = ws.BeginretrieveBottleInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                    IAsyncResult handle = wineWebService.BeginretrieveBottleInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, wineWebService);
                     wineIDsCurrentlyBeingLookedUp[handle] = currentTag;
                 }
             }
@@ -573,9 +646,7 @@ namespace GentagDemo
                 {
                     string currentTag = (string)petIDsCurrentlyBeingLookedUp[ar];
                     petIDsCurrentlyBeingLookedUp.Remove(ar);
-                    petWS.petWS ws = new petWS.petWS();
-                    ws.Timeout = 300000;
-                    IAsyncResult handle = ws.BeginretrievePetInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                    IAsyncResult handle = petWebService.BeginretrievePetInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, petWebService);
                     petIDsCurrentlyBeingLookedUp[handle] = currentTag;
                 }
             }
@@ -586,9 +657,7 @@ namespace GentagDemo
                     // get the tag info and cache it
                     string currentTag = (string)counterfeitIDsCurrentlyBeingLookedUp[ar];
                     counterfeitIDsCurrentlyBeingLookedUp.Remove(ar);
-                    authWS.GetDatesWS ws = new authWS.GetDatesWS();
-                    ws.Timeout = 300000;
-                    IAsyncResult handle = ws.BegingetItem(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, ws);
+                    IAsyncResult handle = authorizationWebService.BegingetItem(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authorizationWebService);
                     counterfeitIDsCurrentlyBeingLookedUp[handle] = currentTag;
                 }
             }
@@ -599,9 +668,7 @@ namespace GentagDemo
                     // get the tag info and cache it
                     string currentTag = (string)patientsCurrentlyBeingLookedUp[ar];
                     patientsCurrentlyBeingLookedUp.Remove(ar);
-                    medWS.COREMedDemoWS ws = new medWS.COREMedDemoWS();
-                    ws.Timeout = 300000;
-                    IAsyncResult handle = ws.BegingetPatientRecord(currentTag, cb, ws);
+                    IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(currentTag, cb, COREMedDemoWebService);
                     patientsCurrentlyBeingLookedUp[handle] = currentTag;
                 }
             }
@@ -683,7 +750,7 @@ namespace GentagDemo
             {
                 setLabel(petOwnerLabel, newPet.owner);
                 setLabel(petContactInfoLabel, newPet.contactInfo);
-                setLabel(petPhonenumberLabel, newPet.phoneNumber);
+                setLabel(petPhonenumberLabel, newPet.homePhone);
                 setLabel(petBreedLabel, newPet.breed);
                 setPhoto(petPB, newPet.image);
             }
@@ -700,7 +767,7 @@ namespace GentagDemo
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayTest(petWS.petInfo newPet)
         {
-            
+
             if (newPet.image != null && newPet.image.Length > 16)
                 setPhoto(testDescriptionPictureBox, newPet.image);
         }
@@ -759,7 +826,7 @@ namespace GentagDemo
                 counterfeitIDsCurrentlyBeingLookedUp.Clear();
                 wineIDsCurrentlyBeingLookedUp.Clear();
                 petIDsCurrentlyBeingLookedUp.Clear();
-            }       
+            }
             else if (e.KeyCode == System.Windows.Forms.Keys.F2)
             {
                 if (tabControl1.TabPages[tabControl1.SelectedIndex].Name == "authPage")
@@ -802,9 +869,9 @@ namespace GentagDemo
         //{
         //    try
         //    {
-                
-             
-                
+
+
+
         //    }
         //    catch (NotSupportedException ex)
         //    {
@@ -842,7 +909,7 @@ namespace GentagDemo
             Cursor.Current = Cursors.Default;
             readerRunning = false;
             tagReader.running = false;
-        }       
+        }
 
         private void textBox4_GotFocus(object sender, EventArgs e)
         {

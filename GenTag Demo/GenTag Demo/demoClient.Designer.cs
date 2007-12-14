@@ -34,6 +34,10 @@ namespace GentagDemo
             this.readLogButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.authPage = new System.Windows.Forms.TabPage();
+            this.pendingLookupsLabel = new System.Windows.Forms.Label();
+            this.queuedLookupsLabel = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.VarioSens = new System.Windows.Forms.TabPage();
@@ -161,11 +165,12 @@ namespace GentagDemo
             // 
             // readIDButton
             // 
-            this.readIDButton.Location = new System.Drawing.Point(2, 184);
+            this.readIDButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.readIDButton.Location = new System.Drawing.Point(0, 196);
             this.readIDButton.Name = "readIDButton";
-            this.readIDButton.Size = new System.Drawing.Size(97, 30);
+            this.readIDButton.Size = new System.Drawing.Size(36, 20);
             this.readIDButton.TabIndex = 0;
-            this.readIDButton.Text = "Begin Reading";
+            this.readIDButton.Text = "Read";
             this.readIDButton.Click += new System.EventHandler(this.readerClick);
             // 
             // readLogButton
@@ -200,6 +205,10 @@ namespace GentagDemo
             // authPage
             // 
             this.authPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.authPage.Controls.Add(this.pendingLookupsLabel);
+            this.authPage.Controls.Add(this.queuedLookupsLabel);
+            this.authPage.Controls.Add(this.label24);
+            this.authPage.Controls.Add(this.label22);
             this.authPage.Controls.Add(this.pictureBox1);
             this.authPage.Controls.Add(this.readIDButton);
             this.authPage.Controls.Add(this.treeView1);
@@ -207,6 +216,36 @@ namespace GentagDemo
             this.authPage.Name = "authPage";
             this.authPage.Size = new System.Drawing.Size(240, 217);
             this.authPage.Text = "Auth";
+            // 
+            // pendingLookupsLabel
+            // 
+            this.pendingLookupsLabel.Location = new System.Drawing.Point(81, 173);
+            this.pendingLookupsLabel.Name = "pendingLookupsLabel";
+            this.pendingLookupsLabel.Size = new System.Drawing.Size(43, 20);
+            this.pendingLookupsLabel.Text = "0";
+            // 
+            // queuedLookupsLabel
+            // 
+            this.queuedLookupsLabel.Location = new System.Drawing.Point(81, 155);
+            this.queuedLookupsLabel.Name = "queuedLookupsLabel";
+            this.queuedLookupsLabel.Size = new System.Drawing.Size(43, 20);
+            this.queuedLookupsLabel.Text = "0";
+            // 
+            // label24
+            // 
+            this.label24.Location = new System.Drawing.Point(4, 173);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(71, 20);
+            this.label24.Text = "Pending";
+            this.label24.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label22
+            // 
+            this.label22.Location = new System.Drawing.Point(4, 155);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(71, 20);
+            this.label22.Text = "Queued";
+            this.label22.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // pictureBox1
             // 
@@ -415,7 +454,7 @@ namespace GentagDemo
             this.testsPage.Controls.Add(this.readTestButton);
             this.testsPage.Location = new System.Drawing.Point(0, 0);
             this.testsPage.Name = "testsPage";
-            this.testsPage.Size = new System.Drawing.Size(240, 217);
+            this.testsPage.Size = new System.Drawing.Size(232, 214);
             this.testsPage.Text = "Tests";
             // 
             // testDescriptionPictureBox
@@ -1282,6 +1321,10 @@ namespace GentagDemo
         private System.Windows.Forms.TabPage testsPage;
         private System.Windows.Forms.Button readTestButton;
         private System.Windows.Forms.PictureBox testDescriptionPictureBox;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label pendingLookupsLabel;
+        private System.Windows.Forms.Label queuedLookupsLabel;
+        private System.Windows.Forms.Label label24;
         
     }
 }
