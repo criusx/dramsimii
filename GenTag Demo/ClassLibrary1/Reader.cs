@@ -22,6 +22,8 @@ namespace RFIDReader
            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] dateTime,
            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Byte[] logMode,
            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Single[] temperatures);
+        public delegate void ReturnTagContentsHandler(string contents);
+        public delegate void DoneWritingTagContentsHandler(string status);
         #endregion
 
         #region Events
@@ -29,6 +31,8 @@ namespace RFIDReader
         public event VarioSensSettingsReceivedEventHandler VarioSensSettingsReceived;
         public event VarioSensReadLogHandler VarioSensLogReceived;
         public event ReaderErrorHandler ReaderError;
+        public event ReturnTagContentsHandler ReturnTagContents;
+        public event DoneWritingTagContentsHandler DoneWriting;
         #endregion
 
         public Reader()
@@ -177,6 +181,16 @@ namespace RFIDReader
             readerRunning = false;
         }
 
+        public void initialize()
+        {
+            if (C1Lib.C1.NET_C1_open_comm() == 1)
+            {
+                C1Lib.C1.NET_C1_close_comm();
+            }
+        }
+
+        StringBuilder newTagBuilder = new StringBuilder(16);
+
         static private int retryCount = 25;
 
         public void readTagID()
@@ -196,7 +210,7 @@ namespace RFIDReader
                     C1Lib.C1.NET_C1_disable();
                     errorMessage = "Unable to communicate with Sirit reader";
                     continue;
-                } 
+                }
                 else // connection was successful
                 {
                     break;
@@ -216,8 +230,26 @@ namespace RFIDReader
 
             while (readerRunning)
             {
+                Random rnd = new Random();
                 // wait while a tag is read
-                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0)) { Thread.Sleep(20); }
+                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0))
+                {
+                    Thread.Sleep(20);
+                    //////////////////////////////////////////////////////////////////////////                    
+                    //string basic = "";
+                    //byte[] newTag0 = new byte[8];
+                    //rnd.NextBytes(newTag0);
+
+                    //for (int i = 0; i < 8; i++)
+                    //{                        
+                    //    newTagBuilder.Append(newTag0[i].ToString("X").PadLeft(2,'0'));
+                    //}
+
+                    //TagReceived(newTagBuilder.ToString());
+                    //newTagBuilder.Remove(0, newTagBuilder.Length);
+                    //////////////////////////////////////////////////////////////////////////
+
+                }
 
                 if (readerRunning == false)
                     break;
@@ -229,17 +261,134 @@ namespace RFIDReader
                 //string rfidDescr = C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
                 //rfidDescr += "\n";
 
-                StringBuilder newTagBuilder = new StringBuilder(C1Lib.ISO_15693.tag.id_length);
-
                 for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-                    newTagBuilder.Append(C1Lib.util.hex_value(C1Lib.ISO_15693.tag.tag_id[i]));
+                    newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
 
                 string newTag = newTagBuilder.ToString();
+
+                newTagBuilder.Remove(0, newTagBuilder.Length);
 
                 if ((string.Compare(newTag, oldTag) != 0) && (newTag.Length == 16))
                 {
                     TagReceived(newTag.ToString());
                     oldTag = newTag;
+                }
+
+            }
+            C1Lib.C1.NET_C1_disable();
+            C1Lib.C1.NET_C1_close_comm();
+        }
+
+        public void writeTag(byte[] outputBuffer)
+        {
+            if (outputBuffer.Length < 2)
+                return;
+
+            string errorMessage = "";
+            int n = retryCount;
+
+            for (; n > 0; --n)
+            {
+                if (C1Lib.C1.NET_C1_open_comm() != 1)
+                {
+                    errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    continue;
+                }
+                else if (C1Lib.C1.NET_C1_enable() != 1)
+                {
+                    C1Lib.C1.NET_C1_disable();
+                    errorMessage = "Unable to communicate with Sirit reader";
+                    continue;
+                }
+                else // connection was successful
+                {
+                    break;
+                }
+                Thread.Sleep(15);
+            }
+
+            if (n == 0)
+            {
+                ReaderError(errorMessage);
+                return;
+            }
+
+            readerRunning = true;
+
+            while (readerRunning)
+            {
+                // acquire the tag
+                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0))
+                {
+                    Thread.Sleep(20);
+                }
+                // if it left the look due to the user canceling, quit
+                if (readerRunning == false)
+                    break;
+                // when the tag is successfully written, quit
+                if (C1Lib.ISO_15693.NET_write_multi_15693(0, outputBuffer.Length, outputBuffer) == 1)
+                {
+                    readerRunning = false;
+                    DoneWriting("Success");
+                }
+
+            }
+            C1Lib.C1.NET_C1_disable();
+            C1Lib.C1.NET_C1_close_comm();
+        }
+
+        System.Text.Encoding enc = System.Text.Encoding.Unicode;
+
+        public void readTag()
+        {
+            string errorMessage = "";
+            int n = retryCount;
+
+            for (; n > 0; --n)
+            {
+                if (C1Lib.C1.NET_C1_open_comm() != 1)
+                {
+                    errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    continue;
+                }
+                else if (C1Lib.C1.NET_C1_enable() != 1)
+                {
+                    C1Lib.C1.NET_C1_disable();
+                    errorMessage = "Unable to communicate with Sirit reader";
+                    continue;
+                }
+                else // connection was successful
+                {
+                    break;
+                }
+                Thread.Sleep(15);
+            }
+
+            if (n == 0)
+            {
+                ReaderError(errorMessage);
+                return;
+            }
+
+            readerRunning = true;
+
+            while (readerRunning)
+            {
+                // acquire the tag
+                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0))
+                {
+                    Thread.Sleep(20);
+                }
+                // if it left the look due to the user canceling, quit
+                if (readerRunning == false)
+                    break;
+                // when the tag is successfully written, quit
+                if (C1Lib.ISO_15693.NET_read_multi_15693(0, C1Lib.ISO_15693.tag.blocks) == 1)
+                {
+                    readerRunning = false;
+                    string input = System.Text.Encoding.Unicode.GetString(C1Lib.ISO_15693.tag.read_buff, 0, C1Lib.ISO_15693.tag.read_buff.Length);
+                    ReturnTagContents(input);
+
                 }
 
             }

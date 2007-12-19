@@ -408,6 +408,8 @@ namespace GentagDemo
         private Queue<float> speedQueue = new Queue<float>();
         private Queue<int> elevationQueue = new Queue<int>();
 
+        private authenticationWS.AuthenticationWebService ws = new authenticationWS.AuthenticationWebService();
+
         private void reportGPSPosition(Object stateInfo)
         {
             // if tracking is disabled and there are no pending transfers
@@ -436,7 +438,7 @@ namespace GentagDemo
                     try
                     {
                         // attempt to unload the queues each time                            
-                        if ((new authWS.GetDatesWS()).callHome(deviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray(), bearingQueue.ToArray(), speedQueue.ToArray(), elevationQueue.ToArray()))
+                        if (ws.callHome(deviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray(), bearingQueue.ToArray(), speedQueue.ToArray(), elevationQueue.ToArray()))
                         {
                             latitudeQueue.Clear();
                             longitudeQueue.Clear();

@@ -64,6 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Web References\authenticationWebService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="Web References\authWS\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -129,6 +134,17 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\authenticationWebService\</RelPath>
+      <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>WineEntryClient_authenticationWebService_AuthenticationWebService</CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\authWS\</RelPath>
@@ -166,6 +182,14 @@
   <ItemGroup>
     <BaseApplicationManifest Include="Properties\app.manifest" />
     <None Include="Resources\Gentag-logo.png" />
+    <None Include="Web References\authenticationWebService\AuthenticationWebService.wsdl" />
+    <None Include="Web References\authenticationWebService\itemInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\authenticationWebService\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <None Include="Web References\authWS\GetDates.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>

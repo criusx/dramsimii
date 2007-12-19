@@ -104,6 +104,11 @@
     <Compile Include="VarioSens.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Web References\authenticationWS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="Web References\medWS\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -119,11 +124,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-    <Compile Include="Web References\authWS\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
     <Compile Include="Web References\petWS\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -134,6 +134,19 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\authenticationWS\</RelPath>
+      <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>
+      </CachedAppSettingsObjectName>
+      <CachedSettingsPropName>
+      </CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/COREMedDemoWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\medWS\</RelPath>
@@ -151,19 +164,6 @@
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\radWS\</RelPath>
       <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/EvDemoWSSoapHttpPort%3fWSDL</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>
-      </CachedAppSettingsObjectName>
-      <CachedSettingsPropName>
-      </CachedSettingsPropName>
-    </WebReferenceUrl>
-    <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort%3fWSDL">
-      <UrlBehavior>Static</UrlBehavior>
-      <RelPath>Web References\authWS\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -201,21 +201,16 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Web References\authWS\GetDatesWS.wsdl" />
-    <None Include="Web References\authWS\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="GentagA.pfx" />
     <None Include="GentagKey.pfx" />
     <None Include="Resources\Gentag-logo.png" />
-    <None Include="Web References\authWS\GetDates.datasource">
+    <None Include="Web References\authenticationWS\AuthenticationWebService.wsdl" />
+    <None Include="Web References\authenticationWS\itemInfo.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\authWS\patientInfo.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
+    <None Include="Web References\authenticationWS\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Web References\medWS\COREMedDemoWS.wsdl" />
     <None Include="Web References\medWS\drugInfo.datasource">

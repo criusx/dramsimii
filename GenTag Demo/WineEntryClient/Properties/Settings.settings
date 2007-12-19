@@ -11,5 +11,8 @@
     <Setting Name="WineEntryClient_authWS_GetDatesWS" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort</Value>
     </Setting>
+    <Setting Name="WineEntryClient_authenticationWebService_AuthenticationWebService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://crius.dyndns.org:8888/GentagDemo/AuthenticationWebServiceSoapHttpPort</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

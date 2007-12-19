@@ -40,6 +40,12 @@ namespace GentagDemo
             this.label22 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.readWritePage = new System.Windows.Forms.TabPage();
+            this.readWriteTB = new System.Windows.Forms.TextBox();
+            this.readWriteStatusLabel = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.writeButton = new System.Windows.Forms.Button();
+            this.readButton = new System.Windows.Forms.Button();
             this.VarioSens = new System.Windows.Forms.TabPage();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -144,6 +150,7 @@ namespace GentagDemo
             this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel();
             this.tabControl1.SuspendLayout();
             this.authPage.SuspendLayout();
+            this.readWritePage.SuspendLayout();
             this.VarioSens.SuspendLayout();
             this.patientPage.SuspendLayout();
             this.testsPage.SuspendLayout();
@@ -186,6 +193,7 @@ namespace GentagDemo
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.authPage);
+            this.tabControl1.Controls.Add(this.readWritePage);
             this.tabControl1.Controls.Add(this.VarioSens);
             this.tabControl1.Controls.Add(this.patientPage);
             this.tabControl1.Controls.Add(this.testsPage);
@@ -261,6 +269,62 @@ namespace GentagDemo
             this.treeView1.PathSeparator = "\\";
             this.treeView1.Size = new System.Drawing.Size(234, 149);
             this.treeView1.TabIndex = 2;
+            // 
+            // readWritePage
+            // 
+            this.readWritePage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.readWritePage.Controls.Add(this.readWriteTB);
+            this.readWritePage.Controls.Add(this.readWriteStatusLabel);
+            this.readWritePage.Controls.Add(this.label25);
+            this.readWritePage.Controls.Add(this.writeButton);
+            this.readWritePage.Controls.Add(this.readButton);
+            this.readWritePage.Location = new System.Drawing.Point(0, 0);
+            this.readWritePage.Name = "readWritePage";
+            this.readWritePage.Size = new System.Drawing.Size(240, 217);
+            this.readWritePage.Text = "R/W";
+            // 
+            // readWriteTB
+            // 
+            this.readWriteTB.Location = new System.Drawing.Point(3, 31);
+            this.readWriteTB.Multiline = true;
+            this.readWriteTB.Name = "readWriteTB";
+            this.readWriteTB.Size = new System.Drawing.Size(234, 138);
+            this.readWriteTB.TabIndex = 3;
+            // 
+            // readWriteStatusLabel
+            // 
+            this.readWriteStatusLabel.Location = new System.Drawing.Point(3, 172);
+            this.readWriteStatusLabel.Name = "readWriteStatusLabel";
+            this.readWriteStatusLabel.Size = new System.Drawing.Size(100, 20);
+            this.readWriteStatusLabel.Text = "Status:";
+            // 
+            // label25
+            // 
+            this.label25.Location = new System.Drawing.Point(72, 8);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(100, 20);
+            this.label25.Text = "Tag Contents";
+            this.label25.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // writeButton
+            // 
+            this.writeButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.writeButton.Location = new System.Drawing.Point(201, 197);
+            this.writeButton.Name = "writeButton";
+            this.writeButton.Size = new System.Drawing.Size(36, 20);
+            this.writeButton.TabIndex = 1;
+            this.writeButton.Text = "Write";
+            this.writeButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // readButton
+            // 
+            this.readButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.readButton.Location = new System.Drawing.Point(0, 197);
+            this.readButton.Name = "readButton";
+            this.readButton.Size = new System.Drawing.Size(36, 20);
+            this.readButton.TabIndex = 1;
+            this.readButton.Text = "Read";
+            this.readButton.Click += new System.EventHandler(this.readerClick);
             // 
             // VarioSens
             // 
@@ -1197,6 +1261,7 @@ namespace GentagDemo
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainForm_KeyDown);
             this.tabControl1.ResumeLayout(false);
             this.authPage.ResumeLayout(false);
+            this.readWritePage.ResumeLayout(false);
             this.VarioSens.ResumeLayout(false);
             this.patientPage.ResumeLayout(false);
             this.testsPage.ResumeLayout(false);
@@ -1325,6 +1390,12 @@ namespace GentagDemo
         private System.Windows.Forms.Label pendingLookupsLabel;
         private System.Windows.Forms.Label queuedLookupsLabel;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TabPage readWritePage;
+        private System.Windows.Forms.TextBox readWriteTB;
+        private System.Windows.Forms.Label readWriteStatusLabel;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Button writeButton;
+        private System.Windows.Forms.Button readButton;
         
     }
 }
