@@ -246,6 +246,7 @@
     </None>
     <None Include="Web References\wineWS\wineWS.wsdl" />
     <None Include="Resources\blank.png" />
+    <Content Include="Reading.cur" />
     <Content Include="Resources\cancel.png" />
     <Content Include="Resources\ok.png" />
     <None Include="Resources\question.png" />
@@ -257,6 +258,7 @@
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Resources\Reading.cur" />
     <Content Include="VarioSens Lib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

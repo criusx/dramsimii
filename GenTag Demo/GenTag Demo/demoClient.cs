@@ -133,9 +133,7 @@ namespace GentagDemo
             //tabControl1.TabPages.RemoveAt(2);
             //////////////////////////////////////////////////////////////////////////
 
-
-
-
+            
             // Init the Registry
             //RegistryKey regKey = Registry.LocalMachine;
 
@@ -227,7 +225,6 @@ namespace GentagDemo
         {
             setWaitCursor(false);
             tagReader.running = false;
-            //loop = loopType.none;
         }
 
         private void receiveReaderError(string errorMessage)
@@ -236,25 +233,15 @@ namespace GentagDemo
             MessageBox.Show(errorMessage);
         }
 
-        private Hashtable cachedWineLookups = new Hashtable();
+        private Hashtable wineBottleCache = new Hashtable();
 
-        private Hashtable cachedCounterfeitLookups = new Hashtable();
+        private Hashtable counterfeitCache = new Hashtable();
 
-        private Hashtable cachedPetLookups = new Hashtable();
+        private Hashtable petCache = new Hashtable();
 
-        private Hashtable cachedPatientLookups = new Hashtable();
-
-        private Hashtable counterfeitIDsCurrentlyBeingLookedUp = new Hashtable();
-
-        private Hashtable wineIDsCurrentlyBeingLookedUp = new Hashtable();
-
-        private Hashtable petIDsCurrentlyBeingLookedUp = new Hashtable();
-
-        private Hashtable patientsCurrentlyBeingLookedUp = new Hashtable();
-
-        private Hashtable interactionsCurrentlyBeingLookedUp = new Hashtable();
-
-        private Hashtable drugsCurrentlyBeingLookedUp = new Hashtable();
+        private Hashtable patientCache = new Hashtable();
+        
+        private Hashtable itemsCurrentlyBeingLookedUp = new Hashtable();
 
         private Queue<string> lookupQueue = new Queue<string>();
 
@@ -285,7 +272,7 @@ namespace GentagDemo
                 if (pendingLookups < maxLookupThreads)
                 {
                     int result;
-                    if ((result = sendLookup(tagID)) > 0)
+                    if ((result = scheduleLookup(tagID)) > 0)
                         pendingLookups += result;
 
                     setLabel(pendingLookupsLabel, pendingLookups.ToString());
@@ -325,148 +312,133 @@ namespace GentagDemo
         /// </summary>
         /// <param name="tagID">the RFID tag string to lookup</param>
         /// <returns>true if the request was sent, false if it wasn't for some reason</returns>
-        private int sendLookup(string tagID)
+        private int scheduleLookup(string tagID)
         {
             AsyncCallback cb = new AsyncCallback(receiveResult);
             int result = 1;
 
             try
             {
-                switch (loop)
+                if (itemsCurrentlyBeingLookedUp.ContainsValue(tagID))
                 {
-                    case loopType.counterfeit:
-                        {
-                            // if it has already been added, do nothing
-                            if (cachedCounterfeitLookups.ContainsKey(tagID))
+                    result = 0;
+                }
+                else
+                {
+                    switch (loop)
+                    {
+                        case loopType.counterfeit:
                             {
-                                result = 0;
-                            }
-                            else
-                            {
-                                // get the tag info and cache it
-                                //IAsyncResult handle = authorizationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authorizationWebService);                                
-                                IAsyncResult handle = authenticationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authenticationWebService);
-                                if (handle == null)
-                                    MessageBox.Show("Null handle");
-                                lock (counterfeitIDsCurrentlyBeingLookedUp.SyncRoot)
-                                { counterfeitIDsCurrentlyBeingLookedUp[handle] = tagID; }
+                                // if it has already been added, do nothing
+                                if (counterfeitCache.ContainsKey(tagID))
+                                {
+                                    result = 0;
+                                }
+                                else
+                                {
+                                    // get the tag info and cache it
+                                    //IAsyncResult handle = authorizationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authorizationWebService);                                
+                                    IAsyncResult handle = authenticationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authenticationWebService);
+                                    if (handle == null)
+                                        MessageBox.Show("Null handle");
+                                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                    { itemsCurrentlyBeingLookedUp[handle] = tagID; }
 
-                                updateTreeView1(tagID, @"No description yet", false, true, true);
-                            }
-                            break;
-                        }
-                    case loopType.pet:
-                        {
-                            if (cachedPetLookups.ContainsKey(tagID))
-                            {
-                                result = 0;
-                                displayPet((petWS.petInfo)cachedPetLookups[tagID]);
-                            }
-                            else if (petIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                            {
-                                result = 0;
+                                    updateTreeView1(tagID, @"No description yet", false, true, true);
+                                }
                                 break;
                             }
-                            else
-                            {                                
-                                IAsyncResult handle = petWebService.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, petWebService);
-                                lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
-                                { petIDsCurrentlyBeingLookedUp[handle] = tagID; }
-                            }
+                        case loopType.pet:
+                            {
+                                if (petCache.ContainsKey(tagID))
+                                {
+                                    result = 0;
+                                    displayPet((petWS.petInfo)petCache[tagID]);
+                                }
+                                else
+                                {
+                                    IAsyncResult handle = petWebService.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, petWebService);
+                                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                    { itemsCurrentlyBeingLookedUp[handle] = tagID; }
+                                }
 
-                            break;
-                        }
-                    case loopType.wine:
-                        {
-                            if (cachedWineLookups.ContainsKey(tagID))
-                            {
-                                result = 0;
-                                displayBottle((wineWS.wineBottle)cachedWineLookups[tagID]);
+                                break;
                             }
-                            else if (wineIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
+                        case loopType.wine:
                             {
-                                result = 0;
+                                if (wineBottleCache.ContainsKey(tagID))
+                                {
+                                    result = 0;
+                                    displayBottle((wineWS.wineBottle)wineBottleCache[tagID]);
+                                }
+                                else
+                                {
+                                    mostRecentWineID = tagID;
+
+                                    IAsyncResult handle = wineWebService.BeginretrieveBottleInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, wineWebService);
+                                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                    { itemsCurrentlyBeingLookedUp[handle] = tagID; }
+                                }
+                                break;
                             }
-                            else
+                        case loopType.test:
                             {
-                                mostRecentWineID = tagID;
+                                stopReading();
+                                if (petCache.ContainsKey(tagID))
+                                {
+                                    result = 0;
+                                    displayTest((petWS.petInfo)petCache[tagID]);
+                                }
+                                else
+                                {
+                                    IAsyncResult handle = petWebService.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, petWebService);
+                                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                    { itemsCurrentlyBeingLookedUp[handle] = tagID; }
+                                }
+                                break;
+                            }
+                        case loopType.patient:
+                            {
+                                stopReading();
+
+                                if (patientCache.ContainsKey(tagID))
+                                {
+                                    result = 0;
+                                    displayPatient((medWS.patientRecord)patientCache[tagID]);
+                                }                                
+                                else
+                                {
+                                    IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(tagID, cb, COREMedDemoWebService);
+                                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                    { itemsCurrentlyBeingLookedUp[handle] = tagID; }
+                                    currentPatientID = tagID;
+                                }
+                                break;
+                            }
+                        case loopType.med:
+                            {
+                                stopReading();
                                 
-                                IAsyncResult handle = wineWebService.BeginretrieveBottleInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, wineWebService);
-                                lock (wineIDsCurrentlyBeingLookedUp.SyncRoot)
-                                { wineIDsCurrentlyBeingLookedUp[handle] = tagID; }
-                            }
-                            break;
-                        }                    
-                    case loopType.test:
-                        {
-                            stopReading();
-                            if (cachedPetLookups.ContainsKey(tagID))
-                            {
-                                result = 0;
-                                displayTest((petWS.petInfo)cachedPetLookups[tagID]);
-                            }
-                            else if (petIDsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                            {
-                                result = 0;
-                            }
-                            else
-                            {                                
-                                IAsyncResult handle = petWebService.BeginretrievePetInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, petWebService);
-                                lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
-                                { petIDsCurrentlyBeingLookedUp[handle] = tagID; }
-                            }
-                            break;
-                        }
-                    case loopType.patient:
-                        {
-                            stopReading();
-
-                            if (cachedPatientLookups.ContainsKey(tagID))
-                            {
-                                result = 0;
-                                displayPatient((medWS.patientRecord)cachedPatientLookups[tagID]);
-                            }
-                            else if (patientsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                            {
-                                result = 0;
-                            }
-                            else
-                            {
-                                IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(tagID, cb, COREMedDemoWebService);
-                                lock (patientsCurrentlyBeingLookedUp.SyncRoot)
-                                { patientsCurrentlyBeingLookedUp[handle] = tagID; }
-                                currentPatientID = tagID;
-                            }
-                            break;
-                        }
-                    case loopType.med:
-                        {
-                            stopReading();
-                            // do not cache med lookups, make sure this info is always current
-                            if (interactionsCurrentlyBeingLookedUp.ContainsValue(tagID))
-                            {
-                                result = 0;
-                            }
-                            else
-                            {
-                                result = 2;
                                 if (string.IsNullOrEmpty(currentPatientID))
-                                    break;                                
+                                    break;
+
+                                result = 2;
 
                                 IAsyncResult handle = COREMedDemoWebService.BegingetDrugInfo(tagID, cb, COREMedDemoWebService);
-                                lock (drugsCurrentlyBeingLookedUp.SyncRoot)
-                                { drugsCurrentlyBeingLookedUp[handle] = tagID; }
+                                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                { itemsCurrentlyBeingLookedUp[handle] = tagID; }
 
                                 handle = COREMedDemoWebService.BegincheckInteraction(currentPatientID, tagID, cb, COREMedDemoWebService);
 
-                                lock (interactionsCurrentlyBeingLookedUp.SyncRoot)
-                                { interactionsCurrentlyBeingLookedUp[handle] = currentPatientID; }
+                                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                { itemsCurrentlyBeingLookedUp[handle] = currentPatientID; }
+
+                                break;
                             }
+                        default:
+                            MessageBox.Show("error");
                             break;
-                        }
-                    default:
-                        MessageBox.Show("error");
-                        break;
+                    }
                 }
             }
             catch (SoapException ex)
@@ -486,116 +458,126 @@ namespace GentagDemo
         {
             try
             {
-                if (ar.AsyncState.GetType() == typeof(authenticationWS.AuthenticationWebService))
+                if (itemsCurrentlyBeingLookedUp.ContainsKey(ar) == true)
                 {
-                    // try to cast as a standard item lookup    
-                    authenticationWS.AuthenticationWebService ws = (authenticationWS.AuthenticationWebService)ar.AsyncState;
-                    authenticationWS.itemInfo info = ws.EndgetItem(ar);
-
-                    // display the tag info
-                    updateTreeView1(info.RFIDNum, info.description, info.authenticated, false, true);
-                    string tagID = (string)counterfeitIDsCurrentlyBeingLookedUp[ar];
-                    lock (cachedCounterfeitLookups.SyncRoot)
+                    // unmark this item as being looked up
+                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                     {
-                        cachedCounterfeitLookups[tagID] = info;
-                    }
-                }
-                else if (ar.AsyncState.GetType() == typeof(wineWS.wineWS))
-                {
-                    // try to cast as wineBottle
-                    wineWS.wineWS ws = (wineWS.wineWS)ar.AsyncState;
-                    wineWS.wineBottle bottle = ws.EndretrieveBottleInformation(ar);
-                    lock (cachedWineLookups.SyncRoot)
-                    {
-                        cachedWineLookups[bottle.rfidNum] = bottle;
-                    }
-                    if (bottle.rfidNum == mostRecentWineID)
-                    {
-                        displayBottle(bottle);
-                    }
-                }
-                else if (ar.AsyncState.GetType() == typeof(petWS.petWS))
-                {
-                    // try to cast as petInfo
-                    petWS.petWS ws = (petWS.petWS)ar.AsyncState;
-                    petWS.petInfo newPet = ws.EndretrievePetInformation(ar);
-                    // may be the test result
-                    if (newPet.owner == "anthrax")
-                        displayTest(newPet);
-                    else
-                        displayPet(newPet);
-                    lock (cachedPetLookups.SyncRoot)
-                    {
-                        cachedPetLookups[newPet.rfidNum] = newPet;
+                        itemsCurrentlyBeingLookedUp.Remove(ar);
                     }
 
-                }
-                else if (ar.AsyncState.GetType() == typeof(medWS.COREMedDemoWS))
-                {
-                    medWS.COREMedDemoWS ws = (medWS.COREMedDemoWS)ar.AsyncState;
-                    // interaction check
-                    if (interactionsCurrentlyBeingLookedUp.ContainsKey(ar))
+                    if (ar.AsyncState.GetType() == typeof(authenticationWS.AuthenticationWebService))
                     {
-                        lock (interactionsCurrentlyBeingLookedUp.SyncRoot)
-                        { interactionsCurrentlyBeingLookedUp.Remove(ar); }
-                        
-                        bool alert = ws.EndcheckInteraction(ar);
-                        if (alert)
-                            MessageBox.Show(Properties.Resources.DrugInteractionWarningMessage);
-                    }
-                    // patient lookup
-                    else if (patientsCurrentlyBeingLookedUp.ContainsKey(ar))
-                    {
-                        string tagID = (string)patientsCurrentlyBeingLookedUp[ar];
-                        lock (patientsCurrentlyBeingLookedUp.SyncRoot)
-                        { patientsCurrentlyBeingLookedUp.Remove(ar); }
+                        // try to cast as a standard item lookup    
+                        authenticationWS.AuthenticationWebService ws = (authenticationWS.AuthenticationWebService)ar.AsyncState;
+                        authenticationWS.itemInfo info = ws.EndgetItem(ar);
 
-                        medWS.patientRecord info = ws.EndgetPatientRecord(ar);
-
-                        if (info != null && info.RFIDnum == currentPatientID)
-                            displayPatient(info);
-
-                        lock (cachedPatientLookups.SyncRoot)
-                        { cachedPatientLookups[tagID] = info; }
-                    }
-                    // drug lookup
-                    else
-                    {
-                        lock (drugsCurrentlyBeingLookedUp.SyncRoot)
-                        { drugsCurrentlyBeingLookedUp.Remove(ar); }
-
-                        medWS.drugInfo info = ws.EndgetDrugInfo(ar);
-
-                        displayDrug(info);
-                    }
-                }
-
-                // free up some space in the available lookups and schedule a waiting lookup
-                lock (lookupQueue)
-                {
-                    pendingLookups--;
-                    try
-                    {
-                        if (lookupQueue.Count > 0)
+                        // display the tag info
+                        if (info != null)
                         {
-                            int lastResult = 0;
-                            while ((lookupQueue.Count > 0) && (lastResult = sendLookup(lookupQueue.Dequeue())) == 0)
-                            { }
-                            if (lastResult > 0)
-                                pendingLookups += lastResult;
+                            updateTreeView1(info.RFIDNum, info.description, info.authenticated, false, true);
+
+                            lock (counterfeitCache.SyncRoot)
+                            {
+                                counterfeitCache[info.RFIDNum] = info;
+                            }
+                        }
+                    }
+                    else if (ar.AsyncState.GetType() == typeof(wineWS.wineWS))
+                    {
+                        // try to cast as wineBottle
+                        wineWS.wineWS ws = (wineWS.wineWS)ar.AsyncState;
+                        wineWS.wineBottle bottle = ws.EndretrieveBottleInformation(ar);
+                        lock (wineBottleCache.SyncRoot)
+                        {
+                            wineBottleCache[bottle.rfidNum] = bottle;
+                        }
+                        if (bottle.rfidNum == mostRecentWineID)
+                        {
+                            displayBottle(bottle);
+                        }
+                    }
+                    else if (ar.AsyncState.GetType() == typeof(petWS.petWS))
+                    {
+                        // try to cast as petInfo
+                        petWS.petWS ws = (petWS.petWS)ar.AsyncState;
+                        petWS.petInfo newPet = ws.EndretrievePetInformation(ar);
+
+                        if (newPet != null && newPet.exists == true && newPet.rfidNum != null)
+                        {
+                            // may be the test result
+                            if (newPet.owner == "anthrax")
+                                displayTest(newPet);
+                            else
+                                displayPet(newPet);
+                            lock (petCache.SyncRoot)
+                            {
+                                petCache[newPet.rfidNum] = newPet;
+                            }
                         }
 
-                        setLabel(pendingLookupsLabel, pendingLookups.ToString());
-
-                        setLabel(queuedLookupsLabel, lookupQueue.Count.ToString());
                     }
-                    catch (InvalidOperationException e)
+                    else if (ar.AsyncState.GetType() == typeof(medWS.COREMedDemoWS))
                     {
-                        MessageBox.Show(e.ToString());
+                        medWS.COREMedDemoWS ws = (medWS.COREMedDemoWS)ar.AsyncState;
+                        // interaction check
+                        try
+                        {
+                            medWS.drugInfo drugInf = ws.EndgetDrugInfo(ar);
+
+                            if (drugInf != null && drugInf.exists)
+                                displayDrug(drugInf);
+                        }
+                        catch (InvalidCastException e)
+                        {
+                            try
+                            {
+                                bool alert = ws.EndcheckInteraction(ar);
+                                if (alert)
+                                    MessageBox.Show(Properties.Resources.DrugInteractionWarningMessage);
+                            }
+                            catch (InvalidCastException ex)
+                            {
+                                medWS.patientRecord info = ws.EndgetPatientRecord(ar);
+
+                                if (info != null && info.exists == true)
+                                {
+                                    lock (patientCache.SyncRoot)
+                                    { patientCache[info.RFIDnum] = info; }
+
+                                    if (info.RFIDnum == currentPatientID)
+                                        displayPatient(info);
+                                }
+                            }
+                        }
+                    }                    
+
+                    // free up some space in the available lookups and schedule a waiting lookup
+                    lock (lookupQueue)
+                    {
+                        pendingLookups--;
+                        try
+                        {
+                            if (lookupQueue.Count > 0)
+                            {
+                                int lastResult = 0;
+                                while ((lookupQueue.Count > 0) && (lastResult = scheduleLookup(lookupQueue.Dequeue())) == 0)
+                                { }
+                                if (lastResult > 0)
+                                    pendingLookups += lastResult;
+                            }
+
+                            setLabel(pendingLookupsLabel, pendingLookups.ToString());
+
+                            setLabel(queuedLookupsLabel, lookupQueue.Count.ToString());
+                        }
+                        catch (InvalidOperationException e)
+                        {
+                            MessageBox.Show(e.ToString());
+                        }
+
                     }
-
                 }
-
             }
             catch (WebException e)
             {
@@ -655,46 +637,45 @@ namespace GentagDemo
 
             if (ar.AsyncState.GetType() == typeof(wineWS.wineWS))
             {
-                lock (wineIDsCurrentlyBeingLookedUp.SyncRoot)
+                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                 {
                     // get the bottle info and cache it
-                    string currentTag = (string)wineIDsCurrentlyBeingLookedUp[ar];
-                    wineIDsCurrentlyBeingLookedUp.Remove(ar);
+                    string currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
+                    itemsCurrentlyBeingLookedUp.Remove(ar);
                     IAsyncResult handle = wineWebService.BeginretrieveBottleInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, wineWebService);
-                    wineIDsCurrentlyBeingLookedUp[handle] = currentTag;
+                    itemsCurrentlyBeingLookedUp[handle] = currentTag;
                 }
             }
             else if (ar.AsyncState.GetType() == typeof(petWS.petWS))
             {
-                lock (petIDsCurrentlyBeingLookedUp.SyncRoot)
+                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                 {
-                    string currentTag = (string)petIDsCurrentlyBeingLookedUp[ar];
-                    petIDsCurrentlyBeingLookedUp.Remove(ar);
+                    string currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
+                    itemsCurrentlyBeingLookedUp.Remove(ar);
                     IAsyncResult handle = petWebService.BeginretrievePetInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, petWebService);
-                    petIDsCurrentlyBeingLookedUp[handle] = currentTag;
+                    itemsCurrentlyBeingLookedUp[handle] = currentTag;
                 }
             }
             else if (ar.AsyncState.GetType() == typeof(authenticationWS.AuthenticationWebService))
             {
-                lock (counterfeitIDsCurrentlyBeingLookedUp.SyncRoot)
+                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                 {
                     // get the tag info and cache it
-                    string currentTag = (string)counterfeitIDsCurrentlyBeingLookedUp[ar];
-                    counterfeitIDsCurrentlyBeingLookedUp.Remove(ar);
-                    //IAsyncResult handle = authorizationWebService.BegingetItem(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authorizationWebService);
+                    string currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
+                    itemsCurrentlyBeingLookedUp.Remove(ar);
                     IAsyncResult handle = authenticationWebService.BegingetItem(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authenticationWebService);
-                    counterfeitIDsCurrentlyBeingLookedUp[handle] = currentTag;
+                    itemsCurrentlyBeingLookedUp[handle] = currentTag;
                 }
             }
             else if (ar.AsyncState.GetType() == typeof(medWS.COREMedDemoWS))
             {
-                lock (patientsCurrentlyBeingLookedUp.SyncRoot)
+                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                 {
                     // get the tag info and cache it
-                    string currentTag = (string)patientsCurrentlyBeingLookedUp[ar];
-                    patientsCurrentlyBeingLookedUp.Remove(ar);
+                    string currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
+                    itemsCurrentlyBeingLookedUp.Remove(ar);
                     IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(currentTag, cb, COREMedDemoWebService);
-                    patientsCurrentlyBeingLookedUp[handle] = currentTag;
+                    itemsCurrentlyBeingLookedUp[handle] = currentTag;
                 }
             }
         }
@@ -730,7 +711,20 @@ namespace GentagDemo
 
         private void displayDrug(medWS.drugInfo drug)
         {
-            setPhoto(drugPhoto, drug.picture);
+            try
+            {
+                if (drug != null && drug.exists && drug.picture != null)
+                    setPhoto(drugPhoto, drug.picture);
+            }
+            catch (Exception e)
+            {
+                setPhoto(drugPhoto, (System.Drawing.Image)null);
+            }
+        }
+
+        private void clearDrug()
+        {
+            setPhoto(drugPhoto, (System.Drawing.Image)null);
         }
 
         private void displayPatient(medWS.patientRecord patient)
@@ -775,6 +769,13 @@ namespace GentagDemo
             }
         }
 
+        private void clearPatient()
+        {
+            setTextBox(patientNameBox, @"");
+            setTextBox(patientDescriptionBox, @"Patient not found");
+            setPhoto(patientPhoto, (Image)null);
+        }
+
         private void displayPet(petWS.petInfo newPet)
         {
             // display the bottle info
@@ -799,8 +800,7 @@ namespace GentagDemo
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayTest(petWS.petInfo newPet)
         {
-
-            if (newPet.image != null && newPet.image.Length > 16)
+            if (newPet != null &&newPet.image != null && newPet.image.Length > 16)
                 setPhoto(testDescriptionPictureBox, newPet.image);
         }
         
@@ -856,12 +856,16 @@ namespace GentagDemo
                 treeView1.BeginUpdate();
                 treeView1.Nodes.Clear();
                 treeView1.EndUpdate();
-                cachedCounterfeitLookups.Clear();
-                cachedWineLookups.Clear();
-                cachedPetLookups.Clear();
-                counterfeitIDsCurrentlyBeingLookedUp.Clear();
-                wineIDsCurrentlyBeingLookedUp.Clear();
-                petIDsCurrentlyBeingLookedUp.Clear();
+                
+                counterfeitCache.Clear();
+                wineBottleCache.Clear();
+                petCache.Clear();
+                patientCache.Clear();
+
+                itemsCurrentlyBeingLookedUp.Clear();
+
+                clearDrug();
+                clearPatient();
             }
             else if (e.KeyCode == System.Windows.Forms.Keys.F2)
             {
