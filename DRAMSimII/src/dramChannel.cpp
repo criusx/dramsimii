@@ -157,7 +157,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 						// reuse the refresh transactions
 						if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
 						{
-							completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
+							//completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
 
 							assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
 
