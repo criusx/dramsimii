@@ -4,7 +4,6 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace RFIDReader
 {
@@ -116,10 +115,10 @@ namespace RFIDReader
             switch (errorCode)
             {
                 case -1:
-                    MessageBox.Show("Please ensure that the Sirit reader is completely inserted");
+                    ReaderError("Please ensure that the Sirit reader is completely inserted");
                     break;
                 case -2:
-                    MessageBox.Show("Unable to communicate with Sirit reader");
+                    ReaderError("Unable to communicate with Sirit reader");
                     break;
                 default:
                     break;
@@ -142,15 +141,15 @@ namespace RFIDReader
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show("Error parsing: " + ex.ToString());
+                ReaderError("Error parsing: " + ex.ToString());
             }
             catch (FormatException ex)
             {
-                MessageBox.Show("A setting is not in a valid format: " + ex.ToString());
+                ReaderError("A setting is not in a valid format: " + ex.ToString());
             }
             catch (OverflowException ex)
             {
-                MessageBox.Show("A value is too large or small: " + ex.ToString());
+                ReaderError("A value is too large or small: " + ex.ToString());
             }
 
             readerRunning = false;

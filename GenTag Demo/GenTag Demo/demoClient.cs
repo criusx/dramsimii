@@ -112,7 +112,7 @@ namespace GentagDemo
             wineWebService.Timeout = 30000;
             COREMedDemoWebService.Timeout = 30000;            
             authenticationWebService.Timeout = 30000;
-            authenticationWebService.SoapVersion = SoapProtocolVersion.Soap11;
+            authenticationWebService.EnableDecompression = true;
 
             graph.Visible = false;
             radGraph.Visible = false;
@@ -608,9 +608,10 @@ namespace GentagDemo
             {
                 MessageBox.Show(e.ToString());
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException e)
             {
-                MessageBox.Show("Possible timeout error");
+                
+                MessageBox.Show("Possible timeout error" + e.StackTrace);
             }
             catch (IndexOutOfRangeException e)
             {

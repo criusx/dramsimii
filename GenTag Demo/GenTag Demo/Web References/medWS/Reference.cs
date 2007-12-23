@@ -32,8 +32,8 @@ namespace GentagDemo.medWS {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return")]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://COREMedDemo//checkInteraction", RequestElementName="checkInteractionElement", RequestNamespace="http://COREMedDemo/", ResponseElementName="checkInteractionResponseElement", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result")]
         public bool checkInteraction([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string ID, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string drugID) {
             object[] results = this.Invoke("checkInteraction", new object[] {
                         ID,
@@ -55,8 +55,8 @@ namespace GentagDemo.medWS {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://COREMedDemo//enterDrugInfo", RequestElementName="enterDrugInfoElement", RequestNamespace="http://COREMedDemo/", ResponseElementName="enterDrugInfoResponseElement", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
         public errorReport enterDrugInfo([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] drugInfo newDrug) {
             object[] results = this.Invoke("enterDrugInfo", new object[] {
                         newDrug});
@@ -76,8 +76,8 @@ namespace GentagDemo.medWS {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://COREMedDemo//enterPatientPhoto", RequestElementName="enterPatientPhotoElement", RequestNamespace="http://COREMedDemo/", ResponseElementName="enterPatientPhotoResponseElement", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
         public errorReport enterPatientPhoto([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] patientRecord newPatient) {
             object[] results = this.Invoke("enterPatientPhoto", new object[] {
                         newPatient});
@@ -97,8 +97,8 @@ namespace GentagDemo.medWS {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://COREMedDemo//enterPatientRecord", RequestElementName="enterPatientRecordElement", RequestNamespace="http://COREMedDemo/", ResponseElementName="enterPatientRecordResponseElement", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
         public errorReport enterPatientRecord([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] patientRecord newPatient) {
             object[] results = this.Invoke("enterPatientRecord", new object[] {
                         newPatient});
@@ -118,8 +118,8 @@ namespace GentagDemo.medWS {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://COREMedDemo//getDrugInfo", RequestElementName="getDrugInfoElement", RequestNamespace="http://COREMedDemo/", ResponseElementName="getDrugInfoResponseElement", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
         public drugInfo getDrugInfo([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum) {
             object[] results = this.Invoke("getDrugInfo", new object[] {
                         RFIDNum});
@@ -139,8 +139,8 @@ namespace GentagDemo.medWS {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://COREMedDemo//getPatientRecord", RequestElementName="getPatientRecordElement", RequestNamespace="http://COREMedDemo/", ResponseElementName="getPatientRecordResponseElement", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
         public patientRecord getPatientRecord([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum) {
             object[] results = this.Invoke("getPatientRecord", new object[] {
                         RFIDNum});
@@ -160,8 +160,8 @@ namespace GentagDemo.medWS {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", IsNullable=true)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://COREMedDemo//logPatientVitals", RequestElementName="logPatientVitalsElement", RequestNamespace="http://COREMedDemo/", ResponseElementName="logPatientVitalsResponseElement", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result", IsNullable=true)]
         public errorReport logPatientVitals([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string RFIDNum, [System.Xml.Serialization.XmlElementAttribute("temperatures")] float[] temperatures, int periodicity) {
             object[] results = this.Invoke("logPatientVitals", new object[] {
                         RFIDNum,
@@ -185,8 +185,8 @@ namespace GentagDemo.medWS {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://COREMedDemo/", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return")]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://COREMedDemo//registerDoseGiven", RequestElementName="registerDoseGivenElement", RequestNamespace="http://COREMedDemo/", ResponseElementName="registerDoseGivenResponseElement", ResponseNamespace="http://COREMedDemo/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("result")]
         public bool registerDoseGiven([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string patientRFIDNum, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string drugRFIDNum, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string nurseID, int dose) {
             object[] results = this.Invoke("registerDoseGiven", new object[] {
                         patientRFIDNum,

@@ -205,9 +205,24 @@ namespace GentagDemo.petWS {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://petPackage/types/")]
     public partial class errorMessage {
         
+        private string attribute1Field;
+        
         private string errorMessage1Field;
         
+        private string attribute2Field;
+        
         private bool successField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public string attribute1 {
+            get {
+                return this.attribute1Field;
+            }
+            set {
+                this.attribute1Field = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("errorMessage", IsNullable=true)]
@@ -217,6 +232,17 @@ namespace GentagDemo.petWS {
             }
             set {
                 this.errorMessage1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public string attribute2 {
+            get {
+                return this.attribute2Field;
+            }
+            set {
+                this.attribute2Field = value;
             }
         }
         

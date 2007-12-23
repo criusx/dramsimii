@@ -42,7 +42,9 @@
       </xsd:element>
       <xsd:complexType name="errorMessage">
         <xsd:sequence>
+          <xsd:element name="attribute1" nillable="true" type="xsd:string" />
           <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="attribute2" nillable="true" type="xsd:string" />
           <xsd:element name="success" type="xsd:boolean" />
         </xsd:sequence>
       </xsd:complexType>
