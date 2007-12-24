@@ -1,0 +1,207 @@
+/*
+  project: CSS - table design
+  type: stylesheet
+  description: golden style
+  edited: 14.09.2005, Michael Horn
+ */
+table {
+    border-collapse: collapse;
+    border: 2px solid #996;
+    font: normal 80%/140% verdana, arial, helvetica, sans-serif;
+    font-size:small;
+    color: #333;
+    background: #fffff0;
+}
+caption {
+    padding: 0 .4em .4em;
+    text-align: left;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color:white;
+    color: #333;
+    background: transparent;
+}
+td, th {
+    display:table-cell;
+    border: 1px solid #cc9;
+    padding: .3em;
+    vertical-align: top;
+}
+thead th, tfoot th {
+    border: 1px solid #cc9;
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+    color: #444;
+    background: #dbd9c0;
+}
+#map {
+    width:auto;
+    height:450px;
+    text-align:center;
+}
+tbody td a {
+    background: transparent;
+    background-color:white;
+    color: #72724c;
+    text-decoration: none;
+    border-bottom: 1px dotted #cc9;
+}
+tbody td a:hover {
+    background: transparent;
+    background-color:white;
+    color: #666;
+    border-bottom: 1px dotted #72724c;
+}
+tbody th a {
+    background: transparent;
+    background-color:white;
+    color: #72724c;
+    text-decoration: none;
+    font-weight:bold;
+    border-bottom: 1px dotted #cc9;
+}
+tbody th a:hover {
+    background: transparent;
+    background-color:white;
+    color: #666;
+    border-bottom: 1px dotted #72724c;
+}
+tfoot td {
+    border: 1px solid #996;
+}
+.odd {
+    color: #333;
+    background: #f7f5dc;
+}
+tbody tr:hover {
+    color: #333;
+    background: #fff;
+}
+tbody tr:hover th,
+tbody tr.odd:hover th {
+    color: #333;
+    background: #ddd59b;
+}
+body {
+/* text-align:center; */
+/* white-space:normal; */
+}
+div#logo {
+    text-align:center;
+}
+div#content-container {
+    margin-left:auto;
+    margin-right:auto;
+}
+.wineLookup {
+    width:450px;
+}
+.wineLookup2 {
+    width:850px;
+}
+.realtimeTracking {
+    width:auto;
+}
+.roundcont {
+    width: 450px;
+    background-color: #f90;
+    color: #fff;
+}
+div#report {
+    text-align:center;
+}
+div#report {
+    font-size:larger;
+}
+.roundcont form {
+    margin: 0 10px;
+}
+.roundtop {
+    background: url(../tr.png) no-repeat top right;
+}
+.roundbottom {
+    background: url(../br.png) no-repeat top right;
+}
+img.corner {
+    width: 15px;
+    height: 15px;
+    border: none;
+    display: block !important;
+}
+/* ----------------Form stuff---------------------- */
+form.cmxform fieldset {
+    margin-bottom: 10px;
+    border-left:0px;
+    border-right:0px;
+    border-bottom:0px;
+    border-top: 1px solid #C9DCA6;
+}
+form.cmxform legend {
+    padding: 0 2px;
+    font-weight: bold;
+}
+form.cmxform label {
+    /*display: inline-block;*/
+    line-height: 1.8;
+    vertical-align: top;
+    width: 120px;
+}
+form.cmxform label {
+    display:inline-block;
+}
+form.cmxform label {
+    display:-moz-inline-box;
+}
+form.cmxform ol {
+    margin: 0;
+    padding: 0;
+}
+form.cmxform li {
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+}
+form.cmxform fieldset ol {
+    margin: 0;
+    padding: 0;
+}
+form.cmxform fieldset li {
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+}
+form.cmxform fieldset fieldset {
+    border: none;
+    margin: 3px 0 0;
+}
+form.cmxform fieldset fieldset legend {
+    padding: 0 0 5px;
+    font-weight: normal;
+}
+form.cmxform fieldset fieldset label {
+    display: block;
+    width: auto;
+}
+form.cmxform em {
+    font-weight: bold;
+    font-style: normal;
+    color: #f00;
+}
+form.cmxform fieldset fieldset label {
+    margin-left: 123px;
+/* Width plus 3 (html space) */
+}
+/* End Form Stuff */
+
+table.GentagPet tbody tr {
+    color: #333;
+    background: #ddd59b;
+}
+.statusLine {
+    vertical-align:bottom;
+}
+.hidden {
+    display:none;
+}

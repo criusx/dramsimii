@@ -1,0 +1,381 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<jdevws:WebService xmlns:jdevws="http://xmlns.oracle.com/jdeveloper/10130/webservice">
+   <list n="CHILD_NODES">
+      <url path="petService.java"/>
+      <url path="PetWS.java"/>
+      <url path="../../public_html/WEB-INF/wsdl/petWS.wsdl"/>
+      <url path="../../public_html/WEB-INF/petWS-java-wsdl-mapping.xml"/>
+   </list>
+   <hash n="DATA_MODEL">
+      <value n="ATTACHMENT_ENCODING" v="ATTACHMENT_MIME"/>
+      <list n="BD_">
+         <hash>
+            <value n="BOUND_PORT_TYPE" v="{USE_OWNER_TNS}petWS"/>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPBinding"/>
+            <value n="NAME" v="{USE_OWNER_TNS}petWSSoapHttp"/>
+            <list n="OP_BINDINGS">
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="boolean.changePassword.java.lang.String.java.lang.String.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="petPackage.petInfo.retrievePetInformation.java.lang.String.java.lang.String.float.float"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="boolean.changePasswordTagCode.java.lang.String.java.lang.String.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="petPackage.petInfo.retrievePetInformationTagCode.java.lang.String.java.lang.String.float.float"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="petPackage.errorMessage.updatePetInformationTagCode.petPackage.petInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="petPackage.errorMessage.updatePetInformation.petPackage.petInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="petPackage.errorMessage.authorize.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+         </hash>
+      </list>
+      <value n="GUID" v="84b2eba2-0113-1000-8001-c0a80a044737"/>
+      <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaWebService"/>
+      <list n="PO_">
+         <hash>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPPort"/>
+            <value n="NAME" v="petWSSoapHttpPort"/>
+            <value n="PORT_BINDING_NAME" v="{USE_OWNER_TNS}petWSSoapHttp"/>
+            <list n="PORT_OPS">
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.changePassword.java.lang.String.java.lang.String.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="petPackage.petInfo.retrievePetInformation.java.lang.String.java.lang.String.float.float"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.changePasswordTagCode.java.lang.String.java.lang.String.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="petPackage.petInfo.retrievePetInformationTagCode.java.lang.String.java.lang.String.float.float"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="petPackage.errorMessage.updatePetInformationTagCode.petPackage.petInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="petPackage.errorMessage.updatePetInformation.petPackage.petInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="petPackage.errorMessage.authorize.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+            <url n="URL" protocol="http" host="crius-pc" port="8888" path="/JavaWebService-GetDates-context-root/MyWebService1"/>
+         </hash>
+      </list>
+      <hash n="PROPERTY_GROUPS"/>
+      <list n="PT_">
+         <hash>
+            <value n="AUTO_SERVICE_INTERFACE" v="petPackage.PetWS"/>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaPortType"/>
+            <value n="NAME" v="{USE_OWNER_TNS}petWS"/>
+            <list n="OP_">
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_changePassword"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="changePassword"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="RFIDNum"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="RFIDNum"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="oldPassword"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="oldPassword"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="newPassword"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="newPassword"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
+                  <value n="OP_NAME" v="changePassword"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_changePasswordResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_retrievePetInformation"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="retrievePetInformation"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="rfidNum"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="rfidNum"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="phoneID"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="phoneID"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="latitude"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="latitude"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="float"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="longitude"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="longitude"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="float"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="petPackage.petInfo"/>
+                  <value n="OP_NAME" v="retrievePetInformation"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_retrievePetInformationResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_changePasswordTagCode"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="changePasswordTagCode"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="tagCode"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="tagCode"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="oldPassword"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="oldPassword"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="newPassword"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="newPassword"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
+                  <value n="OP_NAME" v="changePasswordTagCode"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_changePasswordTagCodeResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_retrievePetInformationTagCode"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="retrievePetInformationTagCode"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="tagCode"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="tagCode"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="phoneID"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="phoneID"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="latitude"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="latitude"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="float"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="longitude"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="longitude"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="float"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="petPackage.petInfo"/>
+                  <value n="OP_NAME" v="retrievePetInformationTagCode"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_retrievePetInformationTagCodeResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_updatePetInformationTagCode"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="updatePetInformationTagCode"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="newPet"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="newPet"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="petPackage.petInfo"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="petPackage.errorMessage"/>
+                  <value n="OP_NAME" v="updatePetInformationTagCode"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_updatePetInformationTagCodeResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_updatePetInformation"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="updatePetInformation"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="newPet"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="newPet"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="petPackage.petInfo"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="petPackage.errorMessage"/>
+                  <value n="OP_NAME" v="updatePetInformation"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_updatePetInformationResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_authorize"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="authorize"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="RFIDNum"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="RFIDNum"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="petPackage.errorMessage"/>
+                  <value n="OP_NAME" v="authorize"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_authorizeResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+            <value n="PT_CLASS" v="petPackage.petService"/>
+         </hash>
+      </list>
+      <url n="TARGET_PROJECT" path="../../DemoWS.jpr"/>
+      <list n="WS_DEPENDENT_VALUE_TYPES"/>
+      <url n="WS_MAPPING_FILE" path="../../public_html/WEB-INF/petWS-java-wsdl-mapping.xml"/>
+      <value n="WS_TARGET_NAMESPACE" v="http://petPackage/"/>
+      <value n="WS_TYPE_NAMESPACE" v="http://petPackage/types/"/>
+      <value n="WS_URI" v="petWS"/>
+   </hash>
+</jdevws:WebService>

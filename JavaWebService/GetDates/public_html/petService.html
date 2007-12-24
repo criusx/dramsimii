@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>GentagPet </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="css/format.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <meta name="keywords"
+      content="cell phones, RFID, reader, disposable sensors, diagnostics, wireless skin patch, consumer, sensor, sensor networks, passive, temperature, homeland security, immunoassay, radiation" />
+    <meta name="description" content="Empowering Consumers With Vital Information" />
+    <script type="text/javascript">
+            function clearForm(formIdent) {
+                var form, elements, i, elm;
+                form = document.getElementById
+                ? document.getElementById(formIdent)
+                : document.forms[formIdent];
+                
+                if (document.getElementsByTagName) {
+                    elements = form.getElementsByTagName('input');
+                    for (i = 0, elm; elm = elements.item(i++);) {
+                        if (elm.getAttribute('type') == "text") {
+                            elm.value = '';
+                        }
+                    }
+                    elements = form.getElementsByTagName('select');
+                    for (i = 0, elm; elm = elements.item(i++);) {
+                        elm.options.selectedIndex = 0;
+                    }
+                }
+                
+                // Actually looking through more elements here
+                // but the result is the same.
+                else {
+                    elements = form.elements;
+                    for (i = 0, elm; elm = elements[i++ ];) {
+                        if (elm.type == "text") {
+                            elm.value = '';
+                        }
+                    }
+                }
+            }
+            
+            function retrieveValues() {
+                var tagCode = document.getElementById('tagCodeBox') .value;
+                
+                petWSSoapHttpPort_retrievePetInformationTagCodeAsync(tagCode, 'FFFFF', 0.0, 0.0, receivePetInfo);
+            }
+            
+            function receivePetInfo(reqObject) {
+                if (reqObject.exists) {
+                    document.getElementById("petImage") .src = "data:image/png;base64," + reqObject.image;
+                    document.getElementById("ownerBox") .value = reqObject.owner;
+                    document.getElementById("breedBox") .value = reqObject.breed;
+                    document.getElementById("nameBox") .value = reqObject.name;
+                    document.getElementById("homePhoneBox") .value = reqObject.homePhone;
+                    document.getElementById("cellPhoneBox") .value = reqObject.cellPhone;
+                    document.getElementById("workPhoneBox") .value = reqObject.workPhone;
+                    document.getElementById("emailBox") .value = reqObject.email;
+                    document.getElementById("preferredFoodBox") .value = reqObject.preferredFood;
+                    document.getElementById("medicalNeedsBox") .value = reqObject.medicalNeeds;
+                    document.getElementById("medicationsBox") .value = reqObject.medications;
+                    document.getElementById("vetNameBox") .value = reqObject.vetName;
+                    document.getElementById("vetPhoneBox") .value = reqObject.vetPhone;
+                    document.getElementById("rewardBox") .value = reqObject.reward;
+                    var vetAddress = reqObject.vetAddress.split('\n');
+                    document.getElementById("vetAddress1Box") .value = vetAddress[0];
+                    document.getElementById("vetAddress2Box") .value = vetAddress[1];
+                    document.getElementById("vetAddress3Box") .value = vetAddress[2];
+                    var ownerAddress = reqObject.contactInfo.split('\n');
+                    document.getElementById("ownerAddress1Box") .value = ownerAddress[0];
+                    document.getElementById("ownerAddress2Box") .value = ownerAddress[1];
+                    document.getElementById("ownerAddress3Box") .value = ownerAddress[2];
+                    document.getElementById("statusLine") .value = "Status: Successfully retrieved information";
+                }
+                else {
+                    document.getElementById("statusLine") .value = "Status: Error, no tag exists with this ID";
+                }
+            }
+            
+            function showHideChangePasswordInputs() {
+                if (document.getElementById("changePasswordCheckBox") .checked) {
+                    document.getElementById("changeBoxes") . className = "";
+                }
+                else {
+                    document.getElementById("changeBoxes") . className = "hidden";
+                }
+            }
+            
+            function doChangePassword() {
+                var oldPassword = document.getElementById("passwordBox") .value;
+                var newPassword1 = document.getElementById("newPassword1Box") .value;
+                var newPassword2 = document.getElementById("newPassword2Box") .value;
+                if (oldPassword.length == 0) {
+                    alert("The old password must be correctly entered.");
+                    return;
+                }
+                if (newPassword1.length == 0 || newPassword2.length == 0 || newPassword1 != newPassword2) {
+                    alert("The new password must be entered correctly twice.");
+                    return;
+                }
+                var tagCode = document.getElementById('tagCodeBox') .value;
+                var oldPassword = document.getElementById("passwordBox") .value;
+                var newPassword = document.getElementById("newPassword1Box") .value;
+                
+                petWSSoapHttpPort_changePasswordTagCodeAsync(tagCode, oldPassword, newPassword, receiveChangePasswordResult);
+            }
+            
+            function receiveChangePasswordResult(reqObject) {
+                document.getElementById("statusLine") .removeChild(document.getElementById("statusLine") .firstChild);
+                if (reqObject == "false") {
+                    document.getElementById("statusLine") .appendChild(document.createTextNode("Status: Error, invalid Tag Code or password."));
+                }
+                else {
+                    document.getElementById("statusLine") .appendChild(document.createTextNode("Status: Password successfully updated."));
+                    document.getElementById("changePasswordCheckBox") .checked = false;
+                    showHideChangePasswordInputs();
+                }
+            }
+            
+            function insertUpdateValues() {
+                var newPet = new Object();
+                
+                // TODO: image
+                //document.getElementById("petImage") .src = "data:image/png;base64," + reqObject.image;
+                newPet.image = "ASDFASDFASDF";
+                
+                newPet.owner = document.getElementById("ownerBox") .value;
+                newPet.breed = document.getElementById("breedBox") .value;
+                newPet.name = document.getElementById("nameBox") .value;
+                newPet.homePhone = document.getElementById("homePhoneBox") .value;
+                newPet.cellPhone = document.getElementById("cellPhoneBox") .value;
+                newPet.workPhone = document.getElementById("workPhoneBox") .value;
+                newPet.email = document.getElementById("emailBox") .value;
+                newPet.preferredFood = document.getElementById("preferredFoodBox") .value;
+                newPet.medicalNeeds = document.getElementById("medicalNeedsBox") .value;
+                newPet.medications = document.getElementById("medicationsBox") .value;
+                newPet.vetName = document.getElementById("vetNameBox") .value;
+                newPet.vetPhone = document.getElementById("vetPhoneBox") .value;
+                newPet.reward = parseInt(document.getElementById("rewardBox") .value);
+                newPet.vetAddress = document.getElementById("vetAddress1Box") .value + "\n" + document.getElementById("vetAddress2Box") .value + "\n" + document.getElementById("vetAddress3Box") .value;
+                newPet.contactInfo = document.getElementById("ownerAddress1Box") .value = + "\n" + document.getElementById("ownerAddress2Box") .value + "\n" + document.getElementById("ownerAddress3Box") .value;
+                newPet.password = document.getElementById("passwordBox") .value;
+                if (newPet.password.length == 0) {
+                    newPet.password = "test";
+                }
+                newPet.tagCode = document.getElementById("tagCodeBox") .value;
+                if (newPet.tagCode.length == 0) {
+                    newPet.tagCode = "test";
+                }
+                newPet.rfidNum = "none";
+                newPet.exists = true;
+                
+                petWSSoapHttpPort_insertOrUpdatePetInformationTagCodeAsync(newPet, receiveInsertPetErrorMessage);
+                
+            }
+            function receiveInsertPetErrorMessage(reqObject) {
+                document.getElementById("statusLine") .removeChild(document.getElementById("statusLine") .firstChild);
+                if (reqObject.success) {
+                    document.getElementById("statusLine") .appendChild(document.createTextNode("Status: Successfully uploaded pet data."));
+                }
+                else {
+                    document.getElementById("statusLine") .appendChild(document.createTextNode("Status: Error:" + reqObject.errorMessage));
+                }
+            }</script>
+    <script type="text/javascript">
+            function readFileHttp(fname, callback) {
+                xmlhttp = getXmlHttp();
+                xmlhttp.onreadystatechange = function () {
+                    callback(xmlhttp.responseText);
+                }
+                xmlhttp.open("GET", fname, true);
+                xmlhttp.send(null);
+            }
+            
+            /*
+            Return a cross-browser xmlhttp request object
+            */
+            function getXmlHttp() {
+                if (window.XMLHttpRequest) {
+                    xmlhttp = new XMLHttpRequest();
+                } else if (window.ActiveXObject) {
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                if (xmlhttp == null) {
+                    alert("Your browser does not support XMLHTTP.");
+                }
+                return xmlhttp;
+            }</script>
+    <script type="text/javascript" src="petWSSoapHttpPort?petWSSoapHttpPortstub.js">
+            &nbsp;</script>
+  </head>
+  <body>
+    <div id="content-container" class="wineLookup2">
+      <div id="logo">
+        <img src="http://www.gentag.com/images/Gentag-logo.png" alt="Gentag" id="main-logo" />
+        <br />
+      </div>
+      <table class="GentagPet">
+        <tbody>
+          <tr>
+            <td width="50%">
+              <form class="cmxform" action="#">
+                <fieldset>
+                  <legend>Code from Pet Collar</legend>
+                  <ol>
+                    <li>
+                      <label for="tagCodeBox">Tag Code</label>
+                      <input type="text" id="tagCodeBox" name="tagCodeBox" />
+                    </li>
+                  </ol>
+                </fieldset>
+                <fieldset>
+                  <legend>Password</legend>
+                  <ol>
+                    <li>
+                      <label for="passwordBox">Password</label>
+                      <input type="password" id="passwordBox" name="passwordBox" />
+                      <label for="changePasswordCheckBox">Change</label>
+                      <input type="checkbox" id="changePasswordCheckBox"
+                        name="changePasswordCheckBox" onclick="showHideChangePasswordInputs();" />
+                    </li>
+                    <li id="changeBoxes" class="hidden">
+                      <label for="newPassword1Box" id="changePassword1Label">New Password</label>
+                      <input type="password" id="newPassword1Box" name="newPassword1Box" />
+                      <br />
+                      <label for="newPassword2Box" id="changePassword2Label">Confirm Password</label>
+                      <input type="password" id="newPassword2Box" name="newPassword2Box" />
+                      <br />
+                      <input type="button" id="changePasswordButton" onclick="doChangePassword()"
+                        value="Change Password" />
+                    </li>
+                  </ol>
+                </fieldset>
+                <fieldset>
+                  <legend>Pet Image</legend>
+                  <ol>
+                    <li>
+                      <img id="petImage" src="" alt="Pet Image" />
+                    </li>
+                    <li>
+                     
+                      <label for="petPhotoBox">Photo</label>
+                      <input type="file" id="petPhotoBox" name="petPhotoBox" />
+                    </li>
+                  </ol>
+                </fieldset>
+                <br />
+                <p class="label_field_pair">
+                  <input type="button" id="insertUpdateButton" name="insertUpdateButton"
+                    value="Insert/Update" onclick="insertUpdateValues();" />
+                </p>
+                <p class="label_field_pair">
+                  <input type="button" id="clearButton" name="clearButton" value="Clear"
+                    onclick="clearForm('form1')" />
+                </p>
+                <p class="label_field_pair">
+                  <input type="button" id="retrieveButton" name="retrieveButton" value="Retrieve"
+                    onclick="retrieveValues();" />
+                </p>
+                <br />
+                <p id="statusLine">Status: </p>
+              </form>
+            </td>
+            <td width="50%">
+              <form class="cmxform" action="#">
+                <fieldset>
+                  <legend>Details</legend>
+                  <ol>
+                    <li>
+                      <label for="ownerBox">Owner</label>
+                      <input type="text" id="ownerBox" name="ownerBox" />
+                    </li>
+                    <li>
+                      <label for="breedBox">Breed</label>
+                      <input type="text" id="breedBox" name="breedBox" />
+                    </li>
+                    <li>
+                      <label for="nameBox">Name</label>
+                      <input type="text" id="nameBox" name="nameBox" />
+                    </li>
+                    <li>
+                      <label for="homePhoneBox">Home Phone</label>
+                      <input type="text" id="homePhoneBox" name="homePhoneBox" />
+                    </li>
+                    <li>
+                      <label for="cellPhoneBox">Cell Phone</label>
+                      <input type="text" id="cellPhoneBox" name="cellPhoneBox" />
+                    </li>
+                    <li>
+                      <label for="workPhoneBox">Work Phone</label>
+                      <input type="text" id="workPhoneBox" name="workPhoneBox" />
+                    </li>
+                    <li>
+                      <label for="emailBox">Email</label>
+                      <input type="text" id="emailBox" name="emailBox" />
+                    </li>
+                    <li>
+                      <label for="preferredFoodBox">Preferred Food</label>
+                      <input type="text" id="preferredFoodBox" name="preferredFoodBox" />
+                    </li>
+                    <li>
+                      <label for="medicalNeedsBox">Medical Needs</label>
+                      <input type="text" id="medicalNeedsBox" name="medicalNeedsBox" />
+                    </li>
+                    <li>
+                      <label for="medicationsBox">Medications</label>
+                      <input type="text" id="medicationsBox" name="medicationsBox" />
+                    </li>
+                    <li>
+                      <label for="vetNameBox">Vet Name</label>
+                      <input type="text" id="vetNameBox" name="vetNameBox" />
+                    </li>
+                    <li>
+                      <label for="vetPhoneBox">Vet Phone</label>
+                      <input type="text" id="vetPhoneBox" name="vetPhoneBox" />
+                    </li>
+                    <li>
+                      <label for="rewardBox">Reward</label>
+                      <input type="text" id="rewardBox" name="rewardBox" />
+                    </li>
+                    <li>
+                      <fieldset class="labeclassl_field_pair">
+                        <legend> Owner Address </legend>
+                        <label for="ownerAddress1Box">Address 1</label>
+                        <input type="text" id="ownerAddress1Box" name="ownerAddress1Box" />
+                        <label for="ownerAddress2Box">Address 2</label>
+                        <input type="text" id="ownerAddress2Box" name="ownerAddress2Box" />
+                        <label for="ownerAddress3Box">City, State, ZIP</label>
+                        <input type="text" id="ownerAddress3Box" name="ownerAddress3Box" />
+                      </fieldset>
+                    </li>
+                    <li>
+                      <fieldset title="Vet Address">
+                        <legend>Vet Address</legend>
+                        <label for="vetAddress1Box">Address 1</label>
+                        <input type="text" id="vetAddress1Box" name="vetAddress1Box" />
+                        <label for="vetAddress2Box">Address 2</label>
+                        <input type="text" id="vetAddress2Box" name="vetAddress2Box" />
+                        <label for="vetAddress3Box">City, State, ZIP</label>
+                        <input type="text" id="vetAddress3Box" name="vetAddress3Box" />
+                      </fieldset>
+                    </li>
+                  </ol>
+                </fieldset>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <iframe name="upload" id="upload"  >&nbsp;</iframe>
+    <form action="" target="upload" method="post" enctype="multipart/form-data">
+      <input type="file" />
+      <input type="submit"/>
+    </form>
+    <div id="checkedW3C">
+      <p>
+        <a href="http://validator.w3.org/check?uri=referer">
+          <img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Transitional"
+            height="31" width="88" />
+        </a>
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,353 @@
+<definitions
+     name="GetDatesWS"
+     targetNamespace="http://datespackage/"
+     xmlns="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns="http://datespackage/"
+     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+     xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    >
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://datespackage/" elementFormDefault="qualified"
+             xmlns:tns="http://datespackage/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/">
+            <element name="callHomeElement">
+                <complexType>
+                    <sequence>
+                        <element name="UID" type="string" nillable="true"/>
+                        <element name="lat" type="float" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="longit" type="float" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="timeSinceLastReading" type="long" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="reportedTime" type="long" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="bearing" type="float" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="speed" type="float" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="elevation" type="int" minOccurs="0" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="callHomeResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="checkInteractionElement">
+                <complexType>
+                    <sequence>
+                        <element name="ID" type="string" nillable="true"/>
+                        <element name="drugID" type="string" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="checkInteractionResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getItemElement">
+                <complexType>
+                    <sequence>
+                        <element name="RFIDNum" type="string" nillable="true"/>
+                        <element name="UID" type="string" nillable="true"/>
+                        <element name="lat" type="float"/>
+                        <element name="longit" type="float"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getItemResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:GetDates" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <complexType name="GetDates">
+                <sequence>
+                    <element name="authenticated" type="boolean"/>
+                    <element name="name" type="string" nillable="true"/>
+                    <element name="desc" type="string" nillable="true"/>
+                </sequence>
+            </complexType>
+            <element name="getPatientInfoElement">
+                <complexType>
+                    <sequence>
+                        <element name="String_1" type="string" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getPatientInfoResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:patientInfo" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <complexType name="patientInfo">
+                <sequence>
+                    <element name="description" type="string" nillable="true"/>
+                    <element name="image" type="base64Binary" nillable="true"/>
+                    <element name="rfidNum" type="string" nillable="true"/>
+                    <element name="name" type="string" nillable="true"/>
+                </sequence>
+            </complexType>
+            <element name="getPictureElement">
+                <complexType>
+                    <sequence>
+                        <element name="ID" type="string" nillable="true"/>
+                        <element name="isDrug" type="boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getPictureResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="base64Binary" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getRouteElement">
+                <complexType>
+                    <sequence>
+                        <element name="RFIDNum" type="string" nillable="true"/>
+                        <element name="sinceWhen" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getRouteResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getSinceElement">
+                <complexType>
+                    <sequence>
+                        <element name="timestamp" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getSinceResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getUniqueUIDsElement">
+                <complexType>
+                    <sequence/>
+                </complexType>
+            </element>
+            <element name="getUniqueUIDsResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="setItemElement">
+                <complexType>
+                    <sequence>
+                        <element name="String_1" type="string" nillable="true"/>
+                        <element name="String_2" type="string" nillable="true"/>
+                        <element name="String_3" type="string" nillable="true"/>
+                        <element name="boolean_4" type="boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="setItemResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </types>
+    <message name="GetDatesWS_callHome">
+        <part name="parameters" element="tns:callHomeElement"/>
+    </message>
+    <message name="GetDatesWS_callHomeResponse">
+        <part name="parameters" element="tns:callHomeResponseElement"/>
+    </message>
+    <message name="GetDatesWS_checkInteraction">
+        <part name="parameters" element="tns:checkInteractionElement"/>
+    </message>
+    <message name="GetDatesWS_checkInteractionResponse">
+        <part name="parameters" element="tns:checkInteractionResponseElement"/>
+    </message>
+    <message name="GetDatesWS_getItem">
+        <part name="parameters" element="tns:getItemElement"/>
+    </message>
+    <message name="GetDatesWS_getItemResponse">
+        <part name="parameters" element="tns:getItemResponseElement"/>
+    </message>
+    <message name="GetDatesWS_getPatientInfo">
+        <part name="parameters" element="tns:getPatientInfoElement"/>
+    </message>
+    <message name="GetDatesWS_getPatientInfoResponse">
+        <part name="parameters" element="tns:getPatientInfoResponseElement"/>
+    </message>
+    <message name="GetDatesWS_getPicture">
+        <part name="parameters" element="tns:getPictureElement"/>
+    </message>
+    <message name="GetDatesWS_getPictureResponse">
+        <part name="parameters" element="tns:getPictureResponseElement"/>
+    </message>
+    <message name="GetDatesWS_getRoute">
+        <part name="parameters" element="tns:getRouteElement"/>
+    </message>
+    <message name="GetDatesWS_getRouteResponse">
+        <part name="parameters" element="tns:getRouteResponseElement"/>
+    </message>
+    <message name="GetDatesWS_getSince">
+        <part name="parameters" element="tns:getSinceElement"/>
+    </message>
+    <message name="GetDatesWS_getSinceResponse">
+        <part name="parameters" element="tns:getSinceResponseElement"/>
+    </message>
+    <message name="GetDatesWS_getUniqueUIDs">
+        <part name="parameters" element="tns:getUniqueUIDsElement"/>
+    </message>
+    <message name="GetDatesWS_getUniqueUIDsResponse">
+        <part name="parameters" element="tns:getUniqueUIDsResponseElement"/>
+    </message>
+    <message name="GetDatesWS_setItem">
+        <part name="parameters" element="tns:setItemElement"/>
+    </message>
+    <message name="GetDatesWS_setItemResponse">
+        <part name="parameters" element="tns:setItemResponseElement"/>
+    </message>
+    <portType name="GetDatesWS">
+        <operation name="callHome">
+            <input message="tns:GetDatesWS_callHome"/>
+            <output message="tns:GetDatesWS_callHomeResponse"/>
+        </operation>
+        <operation name="checkInteraction">
+            <input message="tns:GetDatesWS_checkInteraction"/>
+            <output message="tns:GetDatesWS_checkInteractionResponse"/>
+        </operation>
+        <operation name="getItem">
+            <input message="tns:GetDatesWS_getItem"/>
+            <output message="tns:GetDatesWS_getItemResponse"/>
+        </operation>
+        <operation name="getPatientInfo">
+            <input message="tns:GetDatesWS_getPatientInfo"/>
+            <output message="tns:GetDatesWS_getPatientInfoResponse"/>
+        </operation>
+        <operation name="getPicture">
+            <input message="tns:GetDatesWS_getPicture"/>
+            <output message="tns:GetDatesWS_getPictureResponse"/>
+        </operation>
+        <operation name="getRoute">
+            <input message="tns:GetDatesWS_getRoute"/>
+            <output message="tns:GetDatesWS_getRouteResponse"/>
+        </operation>
+        <operation name="getSince">
+            <input message="tns:GetDatesWS_getSince"/>
+            <output message="tns:GetDatesWS_getSinceResponse"/>
+        </operation>
+        <operation name="getUniqueUIDs">
+            <input message="tns:GetDatesWS_getUniqueUIDs"/>
+            <output message="tns:GetDatesWS_getUniqueUIDsResponse"/>
+        </operation>
+        <operation name="setItem">
+            <input message="tns:GetDatesWS_setItem"/>
+            <output message="tns:GetDatesWS_setItemResponse"/>
+        </operation>
+    </portType>
+    <binding name="GetDatesWSSoapHttp" type="tns:GetDatesWS">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="callHome">
+            <soap:operation soapAction="http://datespackage//callHome"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="checkInteraction">
+            <soap:operation soapAction="http://datespackage//checkInteraction"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getItem">
+            <soap:operation soapAction="http://datespackage//getItem"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getPatientInfo">
+            <soap:operation soapAction="http://datespackage//getPatientInfo"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getPicture">
+            <soap:operation soapAction="http://datespackage//getPicture"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getRoute">
+            <soap:operation soapAction="http://datespackage//getRoute"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getSince">
+            <soap:operation soapAction="http://datespackage//getSince"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getUniqueUIDs">
+            <soap:operation soapAction="http://datespackage//getUniqueUIDs"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="setItem">
+            <soap:operation soapAction="http://datespackage//setItem"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="GetDatesWS">
+        <port name="GetDatesWSSoapHttpPort" binding="tns:GetDatesWSSoapHttp">
+            <soap:address location="http://192.168.10.3:8888/JavaWebService-GetDates-context-root/GetDatesWSSoapHttpPort"/>
+        </port>
+    </service>
+</definitions>

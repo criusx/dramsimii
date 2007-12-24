@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Wine Bottle Information Access Monitoring</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+    <link href="css/format.css" rel="stylesheet" type="text/css" media="screen"></link>
+    <script type="text/javascript"
+            src="wineWSSoapHttpPort?wineWSSoapHttpPortstub.js"></script>
+    <meta name="keywords"
+          content="cell phones, RFID, reader, disposable sensors, diagnostics, wireless skin patch, consumer, sensor, sensor networks, passive, temperature, homeland security, immunoassay, radiation"></meta>
+    <meta name="description"
+          content="Empowering Consumers With Vital Information"></meta>
+    <script type="text/javascript">
+    
+    function update()
+    {
+    //alert(lastLookup.toGMTString());
+    wineWSSoapHttpPort_retrieveBottleInformationAsync(document.getElementById("toBeLookedUp").value,"FFFFFFFFFFFFFFFF",0.0,0.0, addResults);
+    }
+
+    function addResults(reqObject)
+    {
+    var divHandle = document.getElementById("idValidated");
+
+    while (divHandle.childNodes[0])
+      divHandle.removeChild(divHandle.childNodes[0]);
+      
+    if (reqObject.authenticated == "true")
+      divHandle.appendChild(document.createTextNode("Validated"));
+    else
+      divHandle.appendChild(document.createTextNode("Not Validated"));
+      
+    divHandle = document.getElementById("lookupTimes");
+    
+    while (divHandle.childNodes[0])
+      divHandle.removeChild(divHandle.childNodes[0]);
+      
+    divHandle.appendChild(document.createTextNode(reqObject.lookedUpTimes));
+    
+    }
+    
+    function enterPress(e) 
+    {
+    var characterCode;
+    
+    if(e && e.which) 
+    {
+      e = e
+      characterCode = e.which 
+    }
+    else
+    {
+      e = event
+      characterCode = e.keyCode 
+    }
+    if(characterCode == 13) 
+    {
+      update(); 
+      return false
+    }
+    else
+    {
+      return true
+    }
+  }
+  </script>
+  </head>
+  <body><div id="content-container" class="wineLookup">
+      <div id="logo">
+        <img src="http://www.gentag.com/images/Gentag-logo.png" alt="Gentag"
+             id="main-logo"></img>
+         
+        <br></br>
+      </div>
+       
+      <div class="roundcont">
+        <div class="roundtop">
+          <img src="tl.png" alt="" width="15" height="15" class="corner"
+               style="display: none"/>
+        </div>
+         
+        <form name="form1" action="javascript:update()" >
+          <input type="submit" value="Lookup" />
+          <input maxlength="36" type="text" id="toBeLookedUp" />
+        </form>
+         
+        <br/>
+         
+        <div id="report">
+          <div id="idValidated"></div>
+           
+          <br/>
+           Number of times ID has been looked up: 
+          <div id="lookupTimes"></div>
+        </div>
+         
+        <div class="roundbottom">
+          <img src="bl.png" alt="" width="15" height="15" class="corner"
+               style="display: none"/>
+        </div>
+      </div>
+    </div></body>
+</html>

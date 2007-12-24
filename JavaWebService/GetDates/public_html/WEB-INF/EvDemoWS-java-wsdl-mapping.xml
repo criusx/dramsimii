@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java-wsdl-mapping xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+  http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd"
+  version="1.1">
+
+    <package-mapping>
+        <package-type>evDemo</package-type>
+        <namespaceURI>http://evDemo/</namespaceURI>
+    </package-mapping>
+    <java-xml-type-mapping>
+        <java-type>evDemo.spectrumInfo</java-type>
+        <anonymous-type-qname>{http://evDemo/}spectrumInfo</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>RFIDNum</java-variable-name>
+            <xml-element-name>RFIDNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>dataArray</java-variable-name>
+            <xml-element-name>dataArray</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>exists</java-variable-name>
+            <xml-element-name>exists</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>evDemo.EvDemoWS_getSpectrum_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://evDemo/}getSpectrumResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>evDemo.EvDemoWS_addSpectrum_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://evDemo/}addSpectrumResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <service-interface-mapping>
+        <service-interface>evDemo.evDemoServiceService</service-interface>
+        <wsdl-service-name xmlns:serviceNS="http://evDemo/">serviceNS:EvDemoWS</wsdl-service-name>
+        <port-mapping>
+            <port-name>EvDemoWSSoapHttpPort</port-name>
+            <java-port-name>EvDemoWSSoapHttpPort</java-port-name>
+        </port-mapping>
+    </service-interface-mapping>
+    <service-endpoint-interface-mapping>
+        <service-endpoint-interface>evDemo.EvDemoWS</service-endpoint-interface>
+        <wsdl-port-type xmlns:portTypeNS="http://evDemo/">portTypeNS:EvDemoWS</wsdl-port-type>
+        <wsdl-binding xmlns:bindingNS="http://evDemo/">bindingNS:EvDemoWSSoapHttp</wsdl-binding>
+        <service-endpoint-method-mapping>
+            <java-method-name>addSpectrum</java-method-name>
+            <wsdl-operation>addSpectrum</wsdl-operation>
+            <wrapped-element />
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>evDemo.spectrumInfo</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:wsdlMsgNS="http://evDemo/">wsdlMsgNS:EvDemoWS_addSpectrum</wsdl-message>
+                    <wsdl-message-part-name>newSample</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>boolean</method-return-value>
+                <wsdl-message xmlns:wsdlMsgNS="http://evDemo/">wsdlMsgNS:EvDemoWS_addSpectrumResponse</wsdl-message>
+                <wsdl-message-part-name>return</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>getSpectrum</java-method-name>
+            <wsdl-operation>getSpectrum</wsdl-operation>
+            <wrapped-element />
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:wsdlMsgNS="http://evDemo/">wsdlMsgNS:EvDemoWS_getSpectrum</wsdl-message>
+                    <wsdl-message-part-name>String_1</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>evDemo.spectrumInfo</method-return-value>
+                <wsdl-message xmlns:wsdlMsgNS="http://evDemo/">wsdlMsgNS:EvDemoWS_getSpectrumResponse</wsdl-message>
+                <wsdl-message-part-name>result</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+    </service-endpoint-interface-mapping>
+</java-wsdl-mapping>
+

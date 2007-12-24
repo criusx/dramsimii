@@ -1,0 +1,238 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<jdevws:WebService xmlns:jdevws="http://xmlns.oracle.com/jdeveloper/10130/webservice">
+   <list n="CHILD_NODES">
+      <url path="wineService.java"/>
+      <url path="WineWS.java"/>
+      <url path="../../public_html/WEB-INF/wsdl/wineWS.wsdl"/>
+      <url path="../../public_html/WEB-INF/wineWS-java-wsdl-mapping.xml"/>
+   </list>
+   <hash n="DATA_MODEL">
+      <value n="ATTACHMENT_ENCODING" v="ATTACHMENT_MIME"/>
+      <list n="BD_">
+         <hash>
+            <value n="BOUND_PORT_TYPE" v="{USE_OWNER_TNS}wineWS"/>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPBinding"/>
+            <value n="NAME" v="{USE_OWNER_TNS}wineWSSoapHttp"/>
+            <list n="OP_BINDINGS">
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="java.lang.String[].getWineAccessesSince.long"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="boolean.enterBottleInformation.java.lang.String[].java.lang.String.int.java.lang.String.java.lang.String.java.lang.String.byte[]"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="winepackage.wineBottle.retrieveBottleInformation.java.lang.String.java.lang.String.float.float"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+         </hash>
+      </list>
+      <value n="GUID" v="a10f80d6-0112-1000-8018-c0a80a14fa97"/>
+      <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaWebService"/>
+      <list n="PO_">
+         <hash>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPPort"/>
+            <value n="NAME" v="wineWSSoapHttpPort"/>
+            <value n="PORT_BINDING_NAME" v="{USE_OWNER_TNS}wineWSSoapHttp"/>
+            <list n="PORT_OPS">
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="java.lang.String[].getWineAccessesSince.long"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.enterBottleInformation.java.lang.String[].java.lang.String.int.java.lang.String.java.lang.String.java.lang.String.byte[]"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="winepackage.wineBottle.retrieveBottleInformation.java.lang.String.java.lang.String.float.float"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+            <url n="URL" protocol="http" host="crius-desktop" port="8888" path="/JavaWebService-GetDates-context-root/MyWebService1"/>
+         </hash>
+      </list>
+      <hash n="PROPERTY_GROUPS">
+         <hash n="REST_PROPERTIES">
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.RestProperties"/>
+         </hash>
+      </hash>
+      <list n="PT_">
+         <hash>
+            <value n="AUTO_SERVICE_INTERFACE" v="winepackage.WineWS"/>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaPortType"/>
+            <value n="NAME" v="{USE_OWNER_TNS}wineWS"/>
+            <list n="OP_">
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_getWineAccessesSince"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="getWineAccessesSince"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="timestamp"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="timestamp"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="long"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="java.lang.String[]"/>
+                  <value n="OP_NAME" v="getWineAccessesSince"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_getWineAccessesSinceResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_enterBottleInformation"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="enterBottleInformation"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="rfidNums"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="rfidNums"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String[]"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="type"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="type"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="year"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="year"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="int"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="country"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="country"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="vineyard"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="vineyard"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="review"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="review"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="labelImage"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="labelImage"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="byte[]"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
+                  <value n="OP_NAME" v="enterBottleInformation"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_enterBottleInformationResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_retrieveBottleInformation"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="retrieveBottleInformation"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="rfidNum"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="rfidNum"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="phoneID"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="phoneID"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="latitude"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="latitude"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="float"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="longitude"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="longitude"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="float"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="winepackage.wineBottle"/>
+                  <value n="OP_NAME" v="retrieveBottleInformation"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_retrieveBottleInformationResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+            <value n="PT_CLASS" v="winepackage.wineService"/>
+         </hash>
+      </list>
+      <url n="TARGET_PROJECT" path="../../DemoWS.jpr"/>
+      <list n="WS_DEPENDENT_VALUE_TYPES"/>
+      <url n="WS_MAPPING_FILE" path="../../public_html/WEB-INF/wineWS-java-wsdl-mapping.xml"/>
+      <value n="WS_REFERENCE_WSDL"/>
+      <value n="WS_TARGET_NAMESPACE" v="http://winePackage/"/>
+      <value n="WS_TYPE_NAMESPACE" v="http://winePackage/types/"/>
+      <value n="WS_URI" v="wineWS"/>
+   </hash>
+</jdevws:WebService>

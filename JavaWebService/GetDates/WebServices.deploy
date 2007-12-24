@@ -1,0 +1,165 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<web-app-deployment nselem="web-app-deployment" class="oracle.jdeveloper.deploy.war.WarProfile" xmlns="http://xmlns.oracle.com/jdeveloper/101303/deploy/j2ee-war">
+   <appletArchiveName/>
+   <appletArchives>
+      <archives/>
+      <selectionMode>0</selectionMode>
+   </appletArchives>
+   <appletDeployedAsArchive>false</appletDeployedAsArchive>
+   <appletDeployment>false</appletDeployment>
+   <appletFiles>
+      <autoInclude>true</autoInclude>
+      <deploySourceAs>0</deploySourceAs>
+      <files/>
+      <selectionFilters>
+         <Item>oracle.jdevimpl.deploy.common.JavaSelectionFilter</Item>
+      </selectionFilters>
+   </appletFiles>
+   <appletLocation/>
+   <archiveOptions>
+      <additionalManifests/>
+      <compressed>true</compressed>
+      <hasManifest>false</hasManifest>
+      <mainClass/>
+   </archiveOptions>
+   <contextRoot>GentagDemo</contextRoot>
+   <defaultConnection>linServer</defaultConnection>
+   <deployClientMaxHeapSize/>
+   <earURL path="deploy/WS.ear"/>
+   <enterpriseAppName>GentagWebApp</enterpriseAppName>
+   <fileGroups>
+      <groups>
+         <Item class="oracle.jdeveloper.deploy.common.PackagingFileGroup" internalName="web-files">
+            <contributors>
+               <Item type="5"/>
+               <Item type="2"/>
+               <Item type="1">
+                  <location path="../../../../../../Documents/Visual Studio 2005/Projects/GenTag Demo/CORE Mobile Med Demo Setup/Release/"/>
+               </Item>
+            </contributors>
+            <displayName>Web Files</displayName>
+            <filters>
+               <rules>
+                  <Item type="0" pattern="petService.html"/>
+                  <Item type="0" pattern="WEB-INF/EvDemoWS-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/EvDemoWS.wsdl"/>
+                  <Item type="0" pattern="realtimeTracking2.html"/>
+                  <Item type="0" pattern="WEB-INF/DhlDemoWS-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/DhlDemoWS.wsdl"/>
+                  <Item type="0" pattern="WEB-INF/DHLDemoWS-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/DHLDemoWS.wsdl"/>
+                  <Item type="0" pattern="links.html"/>
+                  <Item type="0" pattern="WEB-INF/COREMedDemoWS-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/COREMedDemoWS.wsdl"/>
+                  <Item type="0" pattern="WEB-INF/petWS-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/petWS.wsdl"/>
+                  <Item type="0" pattern="wineLookup2.html"/>
+                  <Item type="0" pattern="bl.png"/>
+                  <Item type="0" pattern="br.png"/>
+                  <Item type="0" pattern="tr.png"/>
+                  <Item type="0" pattern="tl.png"/>
+                  <Item type="0" pattern="wineLookup.html"/>
+                  <Item type="0" pattern="WEB-INF/webservices.xml"/>
+                  <Item type="0" pattern="WEB-INF/oracle-webservices.xml"/>
+                  <Item type="0" pattern="WEB-INF/web.xml"/>
+                  <Item type="0" pattern="wineAccesses.html"/>
+                  <Item type="0" pattern="WEB-INF/wineWS-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/wineWS.wsdl"/>
+                  <Item type="0" pattern="realtimeTracking.html"/>
+                  <Item type="0" pattern="ws.js"/>
+                  <Item type="0" pattern="css/format.css"/>
+                  <Item type="0" pattern="monitorTransactions.html"/>
+                  <Item type="0" pattern="WEB-INF/GetDatesWS-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/GetDatesWS.wsdl"/>
+                  <Item type="1" pattern="**/CVS/"/>
+                  <Item type="1" pattern="**.cdi"/>
+                  <Item type="1" pattern="**.contrib"/>
+                  <Item type="1" pattern="**.keep"/>
+                  <Item type="1" pattern="**.rvi"/>
+                  <Item type="1" pattern=".jsps/"/>
+                  <Item type="1" pattern=".tags/"/>
+                  <Item type="1" pattern=".dtags/"/>
+                  <Item type="1" pattern="**/*.jht"/>
+                  <Item type="1" pattern="**/*.jjt"/>
+                  <Item type="1" pattern="**/*.jxt"/>
+               </rules>
+            </filters>
+            <targetWithinJar/>
+         </Item>
+         <Item class="oracle.jdeveloper.deploy.common.PackagingFileGroup" internalName="project-output">
+            <contributors>
+               <Item type="7"/>
+               <Item type="2"/>
+            </contributors>
+            <displayName>WEB-INF/classes</displayName>
+            <filters>
+               <rules>
+                  <Item type="0" pattern="petPackage/errorMessage*.class"/>
+                  <Item type="0" pattern="petPackage/errorMessage.class"/>
+                  <Item type="0" pattern="petPackage/petInfo*.class"/>
+                  <Item type="0" pattern="evDemo/evDemoWS.class"/>
+                  <Item type="0" pattern="evDemo/spectrumInfo*.class"/>
+                  <Item type="0" pattern="evDemo/EvDemoWS*.class"/>
+                  <Item type="0" pattern="evDemo/evDemoService*.class"/>
+                  <Item type="0" pattern="dhlDemo/SendApp$SMTPAuthenticator$1.class"/>
+                  <Item type="0" pattern="dhlDemo/SendApp$SMTPAuthenticator.class"/>
+                  <Item type="0" pattern="dhlDemo/SendApp.class"/>
+                  <Item type="0" pattern="dhlDemo/packageScan*.class"/>
+                  <Item type="0" pattern="dhlDemo/DhlDemoWS*.class"/>
+                  <Item type="0" pattern="dhlDemo/dhlDemoWS.class"/>
+                  <Item type="1" pattern="getdates/"/>
+                  <Item type="0" pattern="dhlDemo/packageInfo*.class"/>
+                  <Item type="0" pattern="dhlDemo/DHLDemoWS*.class"/>
+                  <Item type="0" pattern="dhlDemo/dhlDemoService*.class"/>
+                  <Item type="0" pattern="COREMedDemo/SendApp.class"/>
+                  <Item type="0" pattern="petPackage/petInfo.class"/>
+                  <Item type="0" pattern="datespackage/patientInfo*.class"/>
+                  <Item type="0" pattern="COREMedDemo/patientRecord*.class"/>
+                  <Item type="0" pattern="COREMedDemo/errorReport*.class"/>
+                  <Item type="0" pattern="COREMedDemo/drugInfo*.class"/>
+                  <Item type="0" pattern="COREMedDemo/COREMedDemoWS*.class"/>
+                  <Item type="0" pattern="COREMedDemo/COREMedDemoService*.class"/>
+                  <Item type="0" pattern="petPackage/PetWS*.class"/>
+                  <Item type="0" pattern="petPackage/petService*.class"/>
+                  <Item type="0" pattern="datespackage/patientInfo.class"/>
+                  <Item type="0" pattern="winepackage/wineBottle*.class"/>
+                  <Item type="0" pattern="winepackage/WineWS*.class"/>
+                  <Item type="0" pattern="winepackage/wineService*.class"/>
+                  <Item type="0" pattern="demopackage/DemoWS*.class"/>
+                  <Item type="0" pattern="demopackage/GetDates*.class"/>
+                  <Item type="0" pattern="winePackage/wineBottle*.class"/>
+                  <Item type="0" pattern="winePackage/WineWS*.class"/>
+                  <Item type="0" pattern="winePackage/wineService*.class"/>
+                  <Item type="0" pattern="datespackage/GetDates*.class"/>
+                  <Item type="1" pattern="**/CVS/"/>
+                  <Item type="1" pattern="**.cdi"/>
+                  <Item type="1" pattern="**.contrib"/>
+                  <Item type="1" pattern="**.keep"/>
+                  <Item type="1" pattern="**.rvi"/>
+                  <Item type="1" pattern=".jsps/"/>
+                  <Item type="1" pattern=".tags/"/>
+                  <Item type="1" pattern=".dtags/"/>
+                  <Item type="1" pattern="**/*.jht"/>
+                  <Item type="1" pattern="**/*.jjt"/>
+                  <Item type="1" pattern="**/*.jxt"/>
+               </rules>
+            </filters>
+            <targetWithinJar>WEB-INF/classes</targetWithinJar>
+         </Item>
+         <Item class="oracle.jdeveloper.deploy.common.LibraryFileGroup" internalName="libraries">
+            <displayName>WEB-INF/lib</displayName>
+            <filters>
+               <rules>
+                  <Item type="0" pattern="**"/>
+               </rules>
+            </filters>
+            <selectedLibraries class="[Ljava.lang.Object;"/>
+            <selectionMode>0</selectionMode>
+            <targetWithinJar>WEB-INF/lib</targetWithinJar>
+         </Item>
+      </groups>
+   </fileGroups>
+   <jarURL path="deploy/WebServices.war"/>
+   <profileDeps/>
+   <properties/>
+</web-app-deployment>

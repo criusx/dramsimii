@@ -1,0 +1,418 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<jdevws:WebService xmlns:jdevws="http://xmlns.oracle.com/jdeveloper/10130/webservice">
+   <list n="CHILD_NODES">
+      <url path="COREMedDemoService.java"/>
+      <url path="COREMedDemoWS.java"/>
+      <url path="../../public_html/WEB-INF/wsdl/COREMedDemoWS.wsdl"/>
+      <url path="../../public_html/WEB-INF/COREMedDemoWS-java-wsdl-mapping.xml"/>
+   </list>
+   <hash n="DATA_MODEL">
+      <value n="ATTACHMENT_ENCODING" v="ATTACHMENT_MIME"/>
+      <list n="BD_">
+         <hash>
+            <value n="BOUND_PORT_TYPE" v="{USE_OWNER_TNS}COREMedDemoWS"/>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPBinding"/>
+            <value n="NAME" v="{USE_OWNER_TNS}COREMedDemoWSSoapHttp"/>
+            <list n="OP_BINDINGS">
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.errorReport.enterDrugInfo.COREMedDemo.drugInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.errorReport.enterPatientRecord.COREMedDemo.patientRecord"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.errorReport.enterPatientPhoto.COREMedDemo.patientRecord"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.errorReport.logPatientVitals.java.lang.String.float[].int"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.patientRecord.getPatientRecord.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="boolean.checkInteraction.java.lang.String.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.drugInfo.getDrugInfo.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="boolean.registerDoseGiven.java.lang.String.java.lang.String.java.lang.String.int"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+         </hash>
+         <hash>
+            <value n="BD_SOAP_VERSION" v="1.2"/>
+            <value n="BOUND_PORT_TYPE" v="{USE_OWNER_TNS}COREMedDemoWS"/>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPBinding"/>
+            <value n="NAME" v="{USE_OWNER_TNS}COREMedDemoWSSoap12Http"/>
+            <list n="OP_BINDINGS">
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.errorReport.enterDrugInfo.COREMedDemo.drugInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.errorReport.enterPatientRecord.COREMedDemo.patientRecord"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.errorReport.enterPatientPhoto.COREMedDemo.patientRecord"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.errorReport.logPatientVitals.java.lang.String.float[].int"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.patientRecord.getPatientRecord.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="boolean.checkInteraction.java.lang.String.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="COREMedDemo.drugInfo.getDrugInfo.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BOUND_OPERATION" v="boolean.registerDoseGiven.java.lang.String.java.lang.String.java.lang.String.int"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+         </hash>
+      </list>
+      <value n="GUID" v="db0f8c6c-0113-1000-8005-c0a80a042fa9"/>
+      <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaWebService"/>
+      <list n="PO_">
+         <hash>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPPort"/>
+            <value n="NAME" v="COREMedDemoWSSoapHttpPort"/>
+            <value n="PORT_BINDING_NAME" v="{USE_OWNER_TNS}COREMedDemoWSSoapHttp"/>
+            <list n="PORT_OPS">
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.errorReport.enterDrugInfo.COREMedDemo.drugInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.errorReport.enterPatientRecord.COREMedDemo.patientRecord"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.errorReport.enterPatientPhoto.COREMedDemo.patientRecord"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.errorReport.logPatientVitals.java.lang.String.float[].int"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.patientRecord.getPatientRecord.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.checkInteraction.java.lang.String.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.drugInfo.getDrugInfo.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.registerDoseGiven.java.lang.String.java.lang.String.java.lang.String.int"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+            <url n="URL" protocol="http" host="crius-pc" port="8888" path="/JavaWebService-GetDates-context-root/MyWebService1"/>
+         </hash>
+         <hash>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPPort"/>
+            <value n="NAME" v="COREMedDemoWSSoap12HttpPort"/>
+            <value n="PORT_BINDING_NAME" v="{USE_OWNER_TNS}COREMedDemoWSSoap12Http"/>
+            <list n="PORT_OPS">
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.errorReport.enterDrugInfo.COREMedDemo.drugInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.errorReport.enterPatientRecord.COREMedDemo.patientRecord"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.errorReport.enterPatientPhoto.COREMedDemo.patientRecord"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.errorReport.logPatientVitals.java.lang.String.float[].int"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.patientRecord.getPatientRecord.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.checkInteraction.java.lang.String.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="COREMedDemo.drugInfo.getDrugInfo.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.registerDoseGiven.java.lang.String.java.lang.String.java.lang.String.int"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+         </hash>
+      </list>
+      <hash n="PROPERTY_GROUPS"/>
+      <list n="PT_">
+         <hash>
+            <value n="AUTO_SERVICE_INTERFACE" v="COREMedDemo.COREMedDemoWS"/>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaPortType"/>
+            <value n="NAME" v="{USE_OWNER_TNS}COREMedDemoWS"/>
+            <list n="OP_">
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_enterDrugInfo"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="enterDrugInfo"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="newDrug"/>
+                        <value n="TYPE" v="COREMedDemo.drugInfo"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="COREMedDemo.errorReport"/>
+                  <value n="OP_NAME" v="enterDrugInfo"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_enterDrugInfoResponse"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_enterPatientRecord"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="enterPatientRecord"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="newPatient"/>
+                        <value n="TYPE" v="COREMedDemo.patientRecord"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="COREMedDemo.errorReport"/>
+                  <value n="OP_NAME" v="enterPatientRecord"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_enterPatientRecordResponse"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_enterPatientPhoto"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="enterPatientPhoto"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="newPatient"/>
+                        <value n="TYPE" v="COREMedDemo.patientRecord"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="COREMedDemo.errorReport"/>
+                  <value n="OP_NAME" v="enterPatientPhoto"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_enterPatientPhotoResponse"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_logPatientVitals"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="logPatientVitals"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="RFIDNum"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="temperatures"/>
+                        <value n="TYPE" v="float[]"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="periodicity"/>
+                        <value n="TYPE" v="int"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="COREMedDemo.errorReport"/>
+                  <value n="OP_NAME" v="logPatientVitals"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_logPatientVitalsResponse"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_getPatientRecord"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="getPatientRecord"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="RFIDNum"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="COREMedDemo.patientRecord"/>
+                  <value n="OP_NAME" v="getPatientRecord"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_getPatientRecordResponse"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_checkInteraction"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="checkInteraction"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="ID"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="drugID"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
+                  <value n="OP_NAME" v="checkInteraction"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_checkInteractionResponse"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_getDrugInfo"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="getDrugInfo"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="RFIDNum"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="COREMedDemo.drugInfo"/>
+                  <value n="OP_NAME" v="getDrugInfo"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_getDrugInfoResponse"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_registerDoseGiven"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="registerDoseGiven"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="patientRFIDNum"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="drugRFIDNum"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="nurseID"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="dose"/>
+                        <value n="TYPE" v="int"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
+                  <value n="OP_NAME" v="registerDoseGiven"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}COREMedDemoWS_registerDoseGivenResponse"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+            <value n="PT_CLASS" v="COREMedDemo.COREMedDemoService"/>
+         </hash>
+      </list>
+      <url n="TARGET_PROJECT" path="../../DemoWS.jpr"/>
+      <list n="WS_DEPENDENT_VALUE_TYPES"/>
+      <url n="WS_MAPPING_FILE" path="../../public_html/WEB-INF/COREMedDemoWS-java-wsdl-mapping.xml"/>
+      <value n="WS_REFERENCE_WSDL"/>
+      <value n="WS_TARGET_NAMESPACE" v="http://COREMedDemo/"/>
+      <value n="WS_TYPE_NAMESPACE" v="http://COREMedDemo/types/"/>
+      <value n="WS_URI" v="COREMedDemoWS"/>
+   </hash>
+</jdevws:WebService>

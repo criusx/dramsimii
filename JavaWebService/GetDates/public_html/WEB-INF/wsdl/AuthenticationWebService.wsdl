@@ -1,0 +1,244 @@
+<definitions
+     name="AuthenticationWebService"
+     targetNamespace="http://authenticationPackage/"
+     xmlns="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns="http://authenticationPackage/"
+     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+     xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+     xmlns:tns0="http://authenticationPackage/types/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    >
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://authenticationPackage/types/"
+             elementFormDefault="qualified" xmlns:tns="http://authenticationPackage/types/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/">
+            <complexType name="itemInfo">
+                <sequence>
+                    <element name="RFIDNum" type="string" nillable="true"/>
+                    <element name="description" type="string" nillable="true"/>
+                    <element name="authenticated" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="callHomeElement">
+                <complexType>
+                    <sequence>
+                        <element name="UID" type="string" nillable="true"/>
+                        <element name="lat" type="float" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="longit" type="float" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="timeSinceLastReading" type="long" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="reportedTime" type="long" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="bearing" type="float" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="speed" type="float" minOccurs="0" maxOccurs="unbounded"/>
+                        <element name="elevation" type="int" minOccurs="0" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="callHomeResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getItemElement">
+                <complexType>
+                    <sequence>
+                        <element name="RFIDNum" type="string" nillable="true"/>
+                        <element name="UID" type="string" nillable="true"/>
+                        <element name="lat" type="float"/>
+                        <element name="longit" type="float"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getItemResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:itemInfo" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getRouteElement">
+                <complexType>
+                    <sequence>
+                        <element name="RFIDNum" type="string" nillable="true"/>
+                        <element name="sinceWhen" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getRouteResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getSinceElement">
+                <complexType>
+                    <sequence>
+                        <element name="timestamp" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getSinceResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getUniqueUIDsElement">
+                <complexType>
+                    <sequence/>
+                </complexType>
+            </element>
+            <element name="getUniqueUIDsResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="setItemElement">
+                <complexType>
+                    <sequence>
+                        <element name="newItem" type="tns:itemInfo" nillable="true"/>
+                        <element name="UID" type="string" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="setItemResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </types>
+    <message name="AuthenticationWebService_callHome">
+        <part name="parameters" element="tns0:callHomeElement"/>
+    </message>
+    <message name="AuthenticationWebService_callHomeResponse">
+        <part name="parameters" element="tns0:callHomeResponseElement"/>
+    </message>
+    <message name="AuthenticationWebService_getItem">
+        <part name="parameters" element="tns0:getItemElement"/>
+    </message>
+    <message name="AuthenticationWebService_getItemResponse">
+        <part name="parameters" element="tns0:getItemResponseElement"/>
+    </message>
+    <message name="AuthenticationWebService_getRoute">
+        <part name="parameters" element="tns0:getRouteElement"/>
+    </message>
+    <message name="AuthenticationWebService_getRouteResponse">
+        <part name="parameters" element="tns0:getRouteResponseElement"/>
+    </message>
+    <message name="AuthenticationWebService_getSince">
+        <part name="parameters" element="tns0:getSinceElement"/>
+    </message>
+    <message name="AuthenticationWebService_getSinceResponse">
+        <part name="parameters" element="tns0:getSinceResponseElement"/>
+    </message>
+    <message name="AuthenticationWebService_getUniqueUIDs">
+        <part name="parameters" element="tns0:getUniqueUIDsElement"/>
+    </message>
+    <message name="AuthenticationWebService_getUniqueUIDsResponse">
+        <part name="parameters" element="tns0:getUniqueUIDsResponseElement"/>
+    </message>
+    <message name="AuthenticationWebService_setItem">
+        <part name="parameters" element="tns0:setItemElement"/>
+    </message>
+    <message name="AuthenticationWebService_setItemResponse">
+        <part name="parameters" element="tns0:setItemResponseElement"/>
+    </message>
+    <portType name="AuthenticationWebService">
+        <operation name="callHome">
+            <input message="tns:AuthenticationWebService_callHome"/>
+            <output message="tns:AuthenticationWebService_callHomeResponse"/>
+        </operation>
+        <operation name="getItem">
+            <input message="tns:AuthenticationWebService_getItem"/>
+            <output message="tns:AuthenticationWebService_getItemResponse"/>
+        </operation>
+        <operation name="getRoute">
+            <input message="tns:AuthenticationWebService_getRoute"/>
+            <output message="tns:AuthenticationWebService_getRouteResponse"/>
+        </operation>
+        <operation name="getSince">
+            <input message="tns:AuthenticationWebService_getSince"/>
+            <output message="tns:AuthenticationWebService_getSinceResponse"/>
+        </operation>
+        <operation name="getUniqueUIDs">
+            <input message="tns:AuthenticationWebService_getUniqueUIDs"/>
+            <output message="tns:AuthenticationWebService_getUniqueUIDsResponse"/>
+        </operation>
+        <operation name="setItem">
+            <input message="tns:AuthenticationWebService_setItem"/>
+            <output message="tns:AuthenticationWebService_setItemResponse"/>
+        </operation>
+    </portType>
+    <binding name="AuthenticationWebServiceSoapHttp" type="tns:AuthenticationWebService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="callHome">
+            <soap:operation soapAction="http://authenticationPackage//callHome"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getItem">
+            <soap:operation soapAction="http://authenticationPackage//getItem"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getRoute">
+            <soap:operation soapAction="http://authenticationPackage//getRoute"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getSince">
+            <soap:operation soapAction="http://authenticationPackage//getSince"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getUniqueUIDs">
+            <soap:operation soapAction="http://authenticationPackage//getUniqueUIDs"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="setItem">
+            <soap:operation soapAction="http://authenticationPackage//setItem"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="AuthenticationWebService">
+        <port name="AuthenticationWebServiceSoapHttpPort" binding="tns:AuthenticationWebServiceSoapHttp">
+            <soap:address location="http://192.168.10.5:8888/JavaWebService-GetDates-context-root/AuthenticationWebServiceSoapHttpPort"/>
+        </port>
+    </service>
+</definitions>

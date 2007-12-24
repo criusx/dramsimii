@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Wine Bottle Information Access Monitoring</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="css/format.css" rel="stylesheet" type="text/css" media="screen" />
+    <script type="text/javascript" src="wineWSSoapHttpPort?wineWSSoapHttpPortstub.js">
+            &nbsp;</script>
+    <meta name="keywords"
+      content="cell phones, RFID, reader, disposable sensors, diagnostics, wireless skin patch, consumer, sensor, sensor networks, passive, temperature, homeland security, immunoassay, radiation" />
+    <meta name="description" content="Empowering Consumers With Vital Information" />
+    <script type="text/javascript">
+            // globals
+            var lastLookup = new Date(0);
+            var rows = 0;
+            
+            function init() {
+                update();
+                setInterval("update()", 30000);
+            }
+            
+            function update() {
+                //alert(lastLookup.toGMTString());
+                wineWSSoapHttpPort_retrieveBottleInformationAsync(document.getElementById("toBeLookedUp") .value, "FFFFFFFFFFFFFFFF", 0.0, 0.0, addResults);
+            }
+            
+            function addResults(reqObject) {
+                var divHandle = document.getElementById("theTableBody");
+                
+                var currentRow = document.createElement("tr");
+                //currentRow.style.display = "table-row";
+                
+                if (rows == 0) {
+                    rows = 1;
+                    currentRow.className = "odd";
+                }
+                else {
+                    rows = 0;
+                }
+                
+                if (divHandle) {
+                    var currentCell = document.createElement("td");
+                    currentCell.appendChild(document.createTextNode(reqObject.authenticated));
+                    currentRow.appendChild(currentCell);
+                    currentCell = document.createElement("td");
+                    var newImage = document.createElement("img");
+                    newImage.src = "data:image/png;base64," + reqObject.image;
+                    currentCell.appendChild(newImage);
+                    currentRow.appendChild(currentCell);
+                    currentCell = document.createElement("td");
+                    currentCell.appendChild(document.createTextNode(reqObject.rfidNum));
+                    currentRow.appendChild(currentCell);
+                    currentCell = document.createElement("td");
+                    currentCell.appendChild(document.createTextNode(reqObject.vineyard));
+                    currentRow.appendChild(currentCell);
+                    currentCell = document.createElement("td");
+                    currentCell.appendChild(document.createTextNode(reqObject.year));
+                    currentRow.appendChild(currentCell);
+                    currentCell = document.createElement("td");
+                    currentCell.appendChild(document.createTextNode(reqObject.type));
+                    currentRow.appendChild(currentCell);
+                    currentCell = document.createElement("td");
+                    currentCell.appendChild(document.createTextNode(reqObject.origin));
+                    currentRow.appendChild(currentCell);
+                    currentCell = document.createElement("td");
+                    currentCell.appendChild(document.createTextNode(reqObject.review));
+                    currentRow.appendChild(currentCell);
+                    
+                    
+                    divHandle.insertBefore(currentRow, divHandle.firstChild);
+                }
+            }</script>
+  </head>
+  <body>
+    <div id="content-container" class="wineLookup2">
+      <div id="logo">
+        <img src="http://www.gentag.com/images/Gentag-logo.png" alt="Gentag" id="main-logo" />
+
+        <br />
+      </div>
+
+      <form name="form1" action="">
+        <input type="text" id="toBeLookedUp" />
+        <input type="button" value="Lookup" onclick="update();" />
+      </form>
+
+      <table id="theTable" style="display:table">
+        <caption>Wine Lookups</caption>
+        <thead>
+          <tr>
+            <th>Authenticated</th>
+            <th>Label</th>
+            <th>ID</th>
+            <th>Vineyard</th>
+            <th>Year</th>
+            <th>Type</th>
+            <th>Country</th>
+            <th>Review</th>
+          </tr>
+        </thead>
+        <tbody id="theTableBody" />
+      </table>
+    </div>
+  </body>
+</html>

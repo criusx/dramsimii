@@ -1,0 +1,127 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<jdevws:WebService xmlns:jdevws="http://xmlns.oracle.com/jdeveloper/10130/webservice">
+   <list n="CHILD_NODES">
+      <url path="evDemoService.java"/>
+      <url path="EvDemoWS.java"/>
+      <url path="../../public_html/WEB-INF/wsdl/EvDemoWS.wsdl"/>
+      <url path="../../public_html/WEB-INF/EvDemoWS-java-wsdl-mapping.xml"/>
+   </list>
+   <hash n="DATA_MODEL">
+      <value n="ATTACHMENT_ENCODING" v="ATTACHMENT_MIME"/>
+      <list n="BD_">
+         <hash>
+            <value n="BOUND_PORT_TYPE" v="{USE_OWNER_TNS}EvDemoWS"/>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPBinding"/>
+            <value n="NAME" v="{USE_OWNER_TNS}EvDemoWSSoapHttp"/>
+            <list n="OP_BINDINGS">
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="boolean.addSpectrum.evDemo.spectrumInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="evDemo.spectrumInfo.getSpectrum.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+         </hash>
+      </list>
+      <value n="GUID" v="92562e32-0115-1000-8006-c0a80a034e49"/>
+      <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaWebService"/>
+      <list n="PO_">
+         <hash>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPPort"/>
+            <value n="NAME" v="EvDemoWSSoapHttpPort"/>
+            <value n="PORT_BINDING_NAME" v="{USE_OWNER_TNS}EvDemoWSSoapHttp"/>
+            <list n="PORT_OPS">
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.addSpectrum.evDemo.spectrumInfo"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="evDemo.spectrumInfo.getSpectrum.java.lang.String"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+            <url n="URL" protocol="http" host="crius-pc" port="8888" path="/JavaWebService-GetDates-context-root/MyWebService1"/>
+         </hash>
+      </list>
+      <hash n="PROPERTY_GROUPS"/>
+      <list n="PT_">
+         <hash>
+            <value n="AUTO_SERVICE_INTERFACE" v="evDemo.EvDemoWS"/>
+            <value n="DEFAULT_NAME" v="true"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaPortType"/>
+            <value n="NAME" v="{USE_OWNER_TNS}EvDemoWS"/>
+            <list n="OP_">
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}EvDemoWS_addSpectrum"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="addSpectrum"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="newSample"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="newSample"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="evDemo.spectrumInfo"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
+                  <value n="OP_NAME" v="addSpectrum"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}EvDemoWS_addSpectrumResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}EvDemoWS_getSpectrum"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="getSpectrum"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="RFIDNum"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="RFIDNum"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="evDemo.spectrumInfo"/>
+                  <value n="OP_NAME" v="getSpectrum"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}EvDemoWS_getSpectrumResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </list>
+            <hash n="PROPERTY_GROUPS"/>
+            <value n="PT_CLASS" v="evDemo.evDemoService"/>
+         </hash>
+      </list>
+      <url n="TARGET_PROJECT" path="../../DemoWS.jpr"/>
+      <list n="WS_DEPENDENT_VALUE_TYPES"/>
+      <url n="WS_MAPPING_FILE" path="../../public_html/WEB-INF/EvDemoWS-java-wsdl-mapping.xml"/>
+      <value n="WS_REFERENCE_WSDL"/>
+      <value n="WS_TARGET_NAMESPACE" v="http://evDemo/"/>
+      <value n="WS_TYPE_NAMESPACE" v="http://evDemo/types/"/>
+      <value n="WS_URI" v="EvDemoWS"/>
+   </hash>
+</jdevws:WebService>

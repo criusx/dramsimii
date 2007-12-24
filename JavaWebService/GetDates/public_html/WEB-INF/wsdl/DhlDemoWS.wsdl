@@ -1,0 +1,148 @@
+<definitions
+     name="DhlDemoWS"
+     targetNamespace="http://dhlDemo/"
+     xmlns="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns="http://dhlDemo/"
+     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+     xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    >
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://dhlDemo/" elementFormDefault="qualified"
+             xmlns:tns="http://dhlDemo/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/">
+            <complexType name="packageScan">
+                <sequence>
+                    <element name="RFIDNum" type="string" nillable="true"/>
+                    <element name="longitude" type="float"/>
+                    <element name="actionTaken" type="int"/>
+                    <element name="scannerID" type="string" nillable="true"/>
+                    <element name="scanTime" type="long"/>
+                    <element name="latitude" type="float"/>
+                </sequence>
+            </complexType>
+            <complexType name="packageInfo">
+                <sequence>
+                    <element name="RFIDNum" type="string" nillable="true"/>
+                    <element name="deliveryAddress2" type="string" nillable="true"/>
+                    <element name="deliveryAddress" type="string" nillable="true"/>
+                    <element name="recipientPager" type="string" nillable="true"/>
+                    <element name="exists" type="boolean"/>
+                    <element name="recipientEmail" type="string" nillable="true"/>
+                    <element name="trackingNumber" type="string" nillable="true"/>
+                    <element name="longitude" type="float"/>
+                    <element name="country" type="string" nillable="true"/>
+                    <element name="state" type="string" nillable="true"/>
+                    <element name="zip" type="string" nillable="true"/>
+                    <element name="latitude" type="float"/>
+                    <element name="city" type="string" nillable="true"/>
+                    <element name="recipient" type="string" nillable="true"/>
+                </sequence>
+            </complexType>
+            <element name="getPackageInfo" type="tns:getPackageInfo"/>
+            <complexType name="getPackageInfo">
+                <sequence>
+                    <element name="RFIDNum" type="string" nillable="true"/>
+                </sequence>
+            </complexType>
+            <element name="getPackageInfoResponse" type="tns:getPackageInfoResponse"/>
+            <complexType name="getPackageInfoResponse">
+                <sequence>
+                    <element name="return" type="tns:packageInfo" nillable="true"/>
+                </sequence>
+            </complexType>
+            <element name="scanPackage" type="tns:scanPackage"/>
+            <complexType name="scanPackage">
+                <sequence>
+                    <element name="newScan" type="tns:packageScan" nillable="true"/>
+                </sequence>
+            </complexType>
+            <element name="scanPackageResponse" type="tns:scanPackageResponse"/>
+            <complexType name="scanPackageResponse">
+                <sequence>
+                    <element name="return" type="tns:packageInfo" nillable="true"/>
+                </sequence>
+            </complexType>
+            <element name="setPackageInfo" type="tns:setPackageInfo"/>
+            <complexType name="setPackageInfo">
+                <sequence>
+                    <element name="newPackage" type="tns:packageInfo" nillable="true"/>
+                </sequence>
+            </complexType>
+            <element name="setPackageInfoResponse" type="tns:setPackageInfoResponse"/>
+            <complexType name="setPackageInfoResponse">
+                <sequence>
+                    <element name="return" type="boolean"/>
+                </sequence>
+            </complexType>
+        </schema>
+    </types>
+    <message name="DhlDemoWS_getPackageInfo">
+        <part name="parameters" element="tns:getPackageInfo"/>
+    </message>
+    <message name="DhlDemoWS_getPackageInfoResponse">
+        <part name="parameters" element="tns:getPackageInfoResponse"/>
+    </message>
+    <message name="DhlDemoWS_scanPackage">
+        <part name="parameters" element="tns:scanPackage"/>
+    </message>
+    <message name="DhlDemoWS_scanPackageResponse">
+        <part name="parameters" element="tns:scanPackageResponse"/>
+    </message>
+    <message name="DhlDemoWS_setPackageInfo">
+        <part name="parameters" element="tns:setPackageInfo"/>
+    </message>
+    <message name="DhlDemoWS_setPackageInfoResponse">
+        <part name="parameters" element="tns:setPackageInfoResponse"/>
+    </message>
+    <portType name="DhlDemoWS">
+        <operation name="getPackageInfo">
+            <input message="tns:DhlDemoWS_getPackageInfo"/>
+            <output message="tns:DhlDemoWS_getPackageInfoResponse"/>
+        </operation>
+        <operation name="scanPackage">
+            <input message="tns:DhlDemoWS_scanPackage"/>
+            <output message="tns:DhlDemoWS_scanPackageResponse"/>
+        </operation>
+        <operation name="setPackageInfo">
+            <input message="tns:DhlDemoWS_setPackageInfo"/>
+            <output message="tns:DhlDemoWS_setPackageInfoResponse"/>
+        </operation>
+    </portType>
+    <binding name="DhlDemoWSSoapHttp" type="tns:DhlDemoWS">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="getPackageInfo">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="scanPackage">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="setPackageInfo">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="DhlDemoWS">
+        <port name="DhlDemoWSSoapHttpPort" binding="tns:DhlDemoWSSoapHttp">
+            <soap:address location="http://192.168.10.3:8888/JavaWebService-GetDates-context-root/DhlDemoWSSoapHttpPort"/>
+        </port>
+    </service>
+</definitions>

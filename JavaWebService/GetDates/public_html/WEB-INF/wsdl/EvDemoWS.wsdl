@@ -1,0 +1,100 @@
+<definitions
+     name="EvDemoWS"
+     targetNamespace="http://evDemo/"
+     xmlns="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns="http://evDemo/"
+     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+     xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    >
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://evDemo/" elementFormDefault="qualified"
+             xmlns:tns="http://evDemo/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/">
+            <complexType name="spectrumInfo">
+                <sequence>
+                    <element name="RFIDNum" type="string" nillable="true"/>
+                    <element name="dataArray" type="int" minOccurs="0" maxOccurs="unbounded"/>
+                    <element name="exists" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="addSpectrumElement">
+                <complexType>
+                    <sequence>
+                        <element name="newSample" type="tns:spectrumInfo" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="addSpectrumResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getSpectrumElement">
+                <complexType>
+                    <sequence>
+                        <element name="String_1" type="string" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getSpectrumResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:spectrumInfo" nillable="true"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </types>
+    <message name="EvDemoWS_addSpectrum">
+        <part name="parameters" element="tns:addSpectrumElement"/>
+    </message>
+    <message name="EvDemoWS_addSpectrumResponse">
+        <part name="parameters" element="tns:addSpectrumResponseElement"/>
+    </message>
+    <message name="EvDemoWS_getSpectrum">
+        <part name="parameters" element="tns:getSpectrumElement"/>
+    </message>
+    <message name="EvDemoWS_getSpectrumResponse">
+        <part name="parameters" element="tns:getSpectrumResponseElement"/>
+    </message>
+    <portType name="EvDemoWS">
+        <operation name="addSpectrum">
+            <input message="tns:EvDemoWS_addSpectrum"/>
+            <output message="tns:EvDemoWS_addSpectrumResponse"/>
+        </operation>
+        <operation name="getSpectrum">
+            <input message="tns:EvDemoWS_getSpectrum"/>
+            <output message="tns:EvDemoWS_getSpectrumResponse"/>
+        </operation>
+    </portType>
+    <binding name="EvDemoWSSoapHttp" type="tns:EvDemoWS">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="addSpectrum">
+            <soap:operation soapAction="http://evDemo//addSpectrum"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getSpectrum">
+            <soap:operation soapAction="http://evDemo//getSpectrum"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="EvDemoWS">
+        <port name="EvDemoWSSoapHttpPort" binding="tns:EvDemoWSSoapHttp">
+            <soap:address location="http://192.168.10.5:8888/JavaWebService-GetDates-context-root/EvDemoWSSoapHttpPort"/>
+        </port>
+    </service>
+</definitions>
