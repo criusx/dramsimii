@@ -1,5 +1,8 @@
 package authenticationPackage;
 
+/**
+ * contains information about items being checked for authenticity
+ */
 public class itemInfo
 {
   private String RFIDNum;
