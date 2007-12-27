@@ -21,7 +21,6 @@ using TestPocketGraphBar;
 using Microsoft.WindowsMobile.Status;
 using GentagDemo;
 using System.Web.Services.Protocols;
-using RFIDReader;
 
 
 [assembly: CLSCompliant(true)]
@@ -248,9 +247,9 @@ namespace GentagDemo
         private const int maxLookupThreads = 4;
 
         // the number of lookups sent off already
-        private int pendingLookups = 0;
+        private int pendingLookups;
                 
-        private int queuedLookups = 0;
+        private int queuedLookups;
 
         /// <summary>
         /// The callback for when a tag is received by the reader thread
@@ -904,8 +903,6 @@ namespace GentagDemo
             Cursor.Current = Cursors.Default;
         } 
       
-        private string drugID;
-
         private void trackingCheckBox_CheckStateChanged(object sender, EventArgs e)
         {
             gpsInterpreter.setTracking(trackingCheckBox.Checked);
@@ -932,6 +929,11 @@ namespace GentagDemo
         {
             textBox4.Location = new Point(8, 193);
             inputPanel1.Enabled = false;
+        }
+
+        private void connectGPSButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -780,7 +780,7 @@ namespace DHL_Demo
             // 
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(232, 214);
+            this.tabPage2.Size = new System.Drawing.Size(224, 214);
             this.tabPage2.Text = "Scan";
             // 
             // tabPage3
@@ -824,7 +824,7 @@ namespace DHL_Demo
             this.tabPage3.Controls.Add(this.progressBar16);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(232, 214);
+            this.tabPage3.Size = new System.Drawing.Size(224, 214);
             this.tabPage3.Text = "GPS";
             // 
             // textBox6
@@ -1191,7 +1191,7 @@ namespace DHL_Demo
             this.zipTB.Location = new System.Drawing.Point(184, 151);
             this.zipTB.Name = "zipTB";
             this.zipTB.Size = new System.Drawing.Size(49, 19);
-            this.zipTB.TabIndex = 1;
+            this.zipTB.TabIndex = 9;
             // 
             // stateTB
             // 
@@ -1199,7 +1199,7 @@ namespace DHL_Demo
             this.stateTB.Location = new System.Drawing.Point(158, 151);
             this.stateTB.Name = "stateTB";
             this.stateTB.Size = new System.Drawing.Size(22, 19);
-            this.stateTB.TabIndex = 1;
+            this.stateTB.TabIndex = 8;
             // 
             // cityTB
             // 
@@ -1207,7 +1207,7 @@ namespace DHL_Demo
             this.cityTB.Location = new System.Drawing.Point(83, 151);
             this.cityTB.Name = "cityTB";
             this.cityTB.Size = new System.Drawing.Size(70, 19);
-            this.cityTB.TabIndex = 1;
+            this.cityTB.TabIndex = 7;
             // 
             // address2TB
             // 
@@ -1215,7 +1215,7 @@ namespace DHL_Demo
             this.address2TB.Location = new System.Drawing.Point(83, 127);
             this.address2TB.Name = "address2TB";
             this.address2TB.Size = new System.Drawing.Size(150, 19);
-            this.address2TB.TabIndex = 1;
+            this.address2TB.TabIndex = 6;
             // 
             // address1TB
             // 
@@ -1223,7 +1223,7 @@ namespace DHL_Demo
             this.address1TB.Location = new System.Drawing.Point(83, 103);
             this.address1TB.Name = "address1TB";
             this.address1TB.Size = new System.Drawing.Size(150, 19);
-            this.address1TB.TabIndex = 1;
+            this.address1TB.TabIndex = 5;
             // 
             // pagerTB
             // 
@@ -1231,7 +1231,7 @@ namespace DHL_Demo
             this.pagerTB.Location = new System.Drawing.Point(83, 79);
             this.pagerTB.Name = "pagerTB";
             this.pagerTB.Size = new System.Drawing.Size(150, 19);
-            this.pagerTB.TabIndex = 1;
+            this.pagerTB.TabIndex = 4;
             // 
             // emailTB
             // 
@@ -1239,7 +1239,7 @@ namespace DHL_Demo
             this.emailTB.Location = new System.Drawing.Point(83, 55);
             this.emailTB.Name = "emailTB";
             this.emailTB.Size = new System.Drawing.Size(150, 19);
-            this.emailTB.TabIndex = 1;
+            this.emailTB.TabIndex = 3;
             // 
             // recipientTB
             // 
@@ -1247,7 +1247,7 @@ namespace DHL_Demo
             this.recipientTB.Location = new System.Drawing.Point(83, 31);
             this.recipientTB.Name = "recipientTB";
             this.recipientTB.Size = new System.Drawing.Size(150, 19);
-            this.recipientTB.TabIndex = 1;
+            this.recipientTB.TabIndex = 2;
             // 
             // rfidTB
             // 
@@ -1264,7 +1264,7 @@ namespace DHL_Demo
             this.getRFIDButton.Location = new System.Drawing.Point(203, 7);
             this.getRFIDButton.Name = "getRFIDButton";
             this.getRFIDButton.Size = new System.Drawing.Size(30, 19);
-            this.getRFIDButton.TabIndex = 5;
+            this.getRFIDButton.TabIndex = 0;
             this.getRFIDButton.Text = "Get";
             this.getRFIDButton.Click += new System.EventHandler(this.getRFIDButton_Click);
             // 

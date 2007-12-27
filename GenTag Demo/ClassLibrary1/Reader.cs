@@ -199,6 +199,7 @@ namespace RFIDReader
 
             for (; n > 0; --n)
             {
+                Thread.Sleep(15);
                 if (C1Lib.C1.NET_C1_open_comm() != 1)
                 {
                     errorMessage = "Please ensure that the Sirit reader is completely inserted";
@@ -213,8 +214,7 @@ namespace RFIDReader
                 else // connection was successful
                 {
                     break;
-                }
-                Thread.Sleep(15);
+                }                
             }
 
             if (n == 0)

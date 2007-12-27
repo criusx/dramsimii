@@ -78,6 +78,11 @@ namespace eV_Products_Demo
             this.label9 = new System.Windows.Forms.Label();
             this.countsPerSecondLabel = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.Check_DisStatic = new System.Windows.Forms.CheckBox();
+            this.Check_DisLive = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.Frame2.SuspendLayout();
@@ -378,12 +383,16 @@ namespace eV_Products_Demo
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label12);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.Check_DisStatic);
+            this.groupBox2.Controls.Add(this.Check_DisLive);
             this.groupBox2.Controls.Add(this.smoothLineCheckBox);
             this.groupBox2.Controls.Add(this.antialiasCheck);
             this.groupBox2.Controls.Add(this.Check_EenergyD);
             this.groupBox2.Location = new System.Drawing.Point(878, 541);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(117, 136);
+            this.groupBox2.Size = new System.Drawing.Size(169, 136);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Display Control";
@@ -722,6 +731,70 @@ namespace eV_Products_Demo
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Collection Stats";
             // 
+            // button2
+            // 
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(12, 267);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(114, 37);
+            this.button2.TabIndex = 1;
+            this.button2.Text = "Calibrate";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.Color.Blue;
+            this.label12.Location = new System.Drawing.Point(135, 84);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(34, 13);
+            this.label12.TabIndex = 93;
+            this.label12.Text = "(Blue)";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.Green;
+            this.label1.Location = new System.Drawing.Point(127, 50);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(42, 13);
+            this.label1.TabIndex = 92;
+            this.label1.Text = "(Green)";
+            // 
+            // Check_DisStatic
+            // 
+            this.Check_DisStatic.BackColor = System.Drawing.SystemColors.Control;
+            this.Check_DisStatic.Checked = true;
+            this.Check_DisStatic.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Check_DisStatic.Cursor = System.Windows.Forms.Cursors.Default;
+            this.Check_DisStatic.Enabled = false;
+            this.Check_DisStatic.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Check_DisStatic.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Check_DisStatic.Location = new System.Drawing.Point(12, 61);
+            this.Check_DisStatic.Name = "Check_DisStatic";
+            this.Check_DisStatic.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.Check_DisStatic.Size = new System.Drawing.Size(134, 19);
+            this.Check_DisStatic.TabIndex = 90;
+            this.Check_DisStatic.Text = "Display static spectrum";
+            this.Check_DisStatic.UseVisualStyleBackColor = false;
+            // 
+            // Check_DisLive
+            // 
+            this.Check_DisLive.BackColor = System.Drawing.SystemColors.Control;
+            this.Check_DisLive.Checked = true;
+            this.Check_DisLive.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Check_DisLive.Cursor = System.Windows.Forms.Cursors.Default;
+            this.Check_DisLive.Enabled = false;
+            this.Check_DisLive.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Check_DisLive.Location = new System.Drawing.Point(12, 81);
+            this.Check_DisLive.Name = "Check_DisLive";
+            this.Check_DisLive.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.Check_DisLive.Size = new System.Drawing.Size(129, 19);
+            this.Check_DisLive.TabIndex = 91;
+            this.Check_DisLive.Text = "Display live spectrum";
+            this.Check_DisLive.UseVisualStyleBackColor = false;
+            // 
             // eVDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -735,6 +808,7 @@ namespace eV_Products_Demo
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.storeButton);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.configureButton);
             this.Controls.Add(this.Button_Stop);
             this.Controls.Add(this.Button_Start);
@@ -745,9 +819,8 @@ namespace eV_Products_Demo
             this.MinimizeBox = false;
             this.Name = "eVDemo";
             this.Text = "Gentag / eV Products Demo";
-            this.Load += new System.EventHandler(this.eVDemo_Load);
-            
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.eVDemo_KeyDown);
+            this.Load += new System.EventHandler(this.eVDemo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.Frame2.ResumeLayout(false);
@@ -755,6 +828,7 @@ namespace eV_Products_Demo
             this.Frame1.ResumeLayout(false);
             this.Frame1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.Frame3.ResumeLayout(false);
             this.Frame3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -815,6 +889,11 @@ namespace eV_Products_Demo
         public System.Windows.Forms.Label label9;
         public System.Windows.Forms.Label countsPerSecondLabel;
         private System.Windows.Forms.GroupBox groupBox3;
+        public System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label1;
+        public System.Windows.Forms.CheckBox Check_DisStatic;
+        public System.Windows.Forms.CheckBox Check_DisLive;
     }
 }
 

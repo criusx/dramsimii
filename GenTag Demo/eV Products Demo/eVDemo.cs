@@ -4444,16 +4444,17 @@ namespace eV_Products_Demo
             //    }
             //}
 
+            
+            curveB = pane.AddCurve("Observed", ppl2, Color.Red, SymbolType.None);
+            curveB.Line.Width = 2.0F;
+            //curveB.Line.Fill = new Fill(Color.Red, Color.RosyBrown, 90F);
+            curveB.Line.IsSmooth = true;
+            curveB.Line.SmoothTension = 0.35F;
             curveA = pane.AddCurve("Stored", ppl1, Color.Green, SymbolType.None);
             curveA.Line.Width = 2.0F;
             curveA.Line.Fill = new Fill(Color.Green, Color.FromArgb(128, 60, 220, 220), 90F);
             curveA.Line.IsSmooth = true;
             curveA.Line.SmoothTension = 0.35F;
-            curveB = pane.AddCurve("Observed", ppl2, Color.Red, SymbolType.None);
-            curveB.Line.Width = 2.0F;
-            curveB.Line.Fill = new Fill(Color.Red, Color.RosyBrown, 90F);
-            curveB.Line.IsSmooth = true;
-            curveB.Line.SmoothTension = 0.35F;
             //curveB.Clear();
 
             pane.XAxis.CrossAuto = false;
@@ -5546,6 +5547,7 @@ namespace eV_Products_Demo
                     list.Add(spec.dataArray.Length, 0);
                     for (int i = 3; i < spec.dataArray.Length - 4; i++)
                     {
+                        //Activedata.dCounts[i] = spec.dataArray[i];
                         if ((i % 4) == 0)
                         {
                             int value = (spec.dataArray[i+1] + spec.dataArray[i+2] + spec.dataArray[i+3] + spec.dataArray[i - 3] + spec.dataArray[i - 2] + spec.dataArray[i - 1] + spec.dataArray[i]) / 7;
@@ -5637,6 +5639,23 @@ namespace eV_Products_Demo
                 storeButton.Enabled = lookupButton.Enabled = true;
             }
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if ((Activedata.SeriesIndex >= 0 && this.Check_DisLive.Checked == true) || (Staticdata.SeriesIndex >= 0 && this.Check_DisStatic.Checked == true))
+            {
+                if (this.Check_EenergyD.Checked == false)
+                {
+                    //this.gsNetWinChart1.Cursor = Cursors.Cross; // the proper of LockchartObj should be set true
+                    this.AddOwnedForm(Cal); // for top show
+                    Cal.Show();
+                }
+                else
+                    MessageBox.Show("Please Disable the Kev Display Mode, before pressing Start");
+            }
+            else
+                MessageBox.Show("A spectrum must be displayed to perform a calibration");
         }
         
     }

@@ -215,7 +215,7 @@ namespace COREMobileMedDemo
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(240, 320);
+            this.ClientSize = new System.Drawing.Size(240, 240);
             this.Controls.Add(this.tabControl1);
             this.Location = new System.Drawing.Point(0, 0);
             this.MinimizeBox = false;

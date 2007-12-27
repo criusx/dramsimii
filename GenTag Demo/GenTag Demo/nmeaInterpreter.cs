@@ -62,7 +62,7 @@ namespace GentagDemo
         public delegate void VDOPReceivedEventHandler(double value);
         public delegate void PDOPReceivedEventHandler(double value);
         public delegate void NumberOfSatellitesInViewEventHandler(int numSats);
-        public delegate void SetQueuedRequestsEventHandler(int queueSize);
+        public delegate void SetQueuedRequestsEventHandler(int queueSize, int maxQueueSize);
         #endregion
 
         #region Events
@@ -428,7 +428,7 @@ namespace GentagDemo
                     TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1).ToUniversalTime();
                     elapsedSinceReadQueue.Enqueue((DateTime.Now.Ticks - lastGPSUpdateTime.Ticks) / 1000);
                     reportedTimeQueue.Enqueue((long)t.TotalMilliseconds);
-                    QueueUpdated(latitudeQueue.Count);
+                    QueueUpdated(latitudeQueue.Count, minimumGPSCoordinatesToReport);
                 }
             }
             if ((latitudeQueue.Count > minimumGPSCoordinatesToReport) || (!trackingGPS && latitudeQueue.Count > 0))
@@ -447,7 +447,7 @@ namespace GentagDemo
                             bearingQueue.Clear();
                             elevationQueue.Clear();
                             speedQueue.Clear();
-                            QueueUpdated(latitudeQueue.Count);
+                            QueueUpdated(latitudeQueue.Count, minimumGPSCoordinatesToReport);
                         }
                     }
                     catch (WebException)

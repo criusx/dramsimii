@@ -50,10 +50,15 @@ namespace WineEntryClient
             if (C1Lib.C1.NET_C1_open_comm() == 0)
             {
                 //throw new IOException(@"Unable to open comm to reader");
+                readerRunning = false;
+                setButton(button1, "Get");
                 MessageBox.Show(Properties.Resources.UnableToOpenCommToReader);
             }
             else if (C1Lib.C1.NET_C1_enable() != 1)
             {
+                readerRunning = false;
+                setButton(button1, "Get");
+                
                 C1Lib.C1.NET_C1_disable();
                 MessageBox.Show(Properties.Resources.UnableToEnableDevice);
                 //throw new IOException(@"Unable to enable device");

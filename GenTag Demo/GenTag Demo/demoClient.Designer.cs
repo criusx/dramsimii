@@ -280,7 +280,7 @@ namespace GentagDemo
             this.readWritePage.Controls.Add(this.readButton);
             this.readWritePage.Location = new System.Drawing.Point(0, 0);
             this.readWritePage.Name = "readWritePage";
-            this.readWritePage.Size = new System.Drawing.Size(240, 217);
+            this.readWritePage.Size = new System.Drawing.Size(232, 214);
             this.readWritePage.Text = "R/W";
             // 
             // readWriteTB
@@ -714,7 +714,7 @@ namespace GentagDemo
             this.gpsPage.Controls.Add(this.queueSizeBar);
             this.gpsPage.Location = new System.Drawing.Point(0, 0);
             this.gpsPage.Name = "gpsPage";
-            this.gpsPage.Size = new System.Drawing.Size(232, 214);
+            this.gpsPage.Size = new System.Drawing.Size(240, 217);
             this.gpsPage.Text = "GPS";
             // 
             // trackingCheckBox
@@ -986,7 +986,6 @@ namespace GentagDemo
             this.scanCOMPortButton.Size = new System.Drawing.Size(59, 20);
             this.scanCOMPortButton.TabIndex = 8;
             this.scanCOMPortButton.Text = "scanCOM";
-            this.scanCOMPortButton.Click += new System.EventHandler(this.scanCOMPortButton_Click);
             // 
             // progressBar8
             // 
@@ -1086,8 +1085,8 @@ namespace GentagDemo
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(224, 21);
             this.textBox4.TabIndex = 0;
-            this.textBox4.GotFocus += new System.EventHandler(this.textBox4_GotFocus);
             this.textBox4.LostFocus += new System.EventHandler(this.textBox4_LostFocus);
+            this.textBox4.GotFocus += new System.EventHandler(this.textBox4_GotFocus);
             // 
             // varioSensWPage
             // 
@@ -1228,7 +1227,7 @@ namespace GentagDemo
             this.radPage.Controls.Add(this.radScanButton);
             this.radPage.Location = new System.Drawing.Point(0, 0);
             this.radPage.Name = "radPage";
-            this.radPage.Size = new System.Drawing.Size(232, 214);
+            this.radPage.Size = new System.Drawing.Size(240, 217);
             this.radPage.Text = "CZT";
             // 
             // radIDLabel

@@ -12,7 +12,7 @@
     <ManifestCertificateThumbprint>472AE15287639C36E163F10441577A69C2F24DF5</ManifestCertificateThumbprint>
     <ManifestKeyFile>WineEntryClient_1_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <PublishUrl>http://www.gentag.com/wineEntryClient/</PublishUrl>
     <Install>true</Install>
@@ -212,8 +212,6 @@
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="WineEntryClient_1_TemporaryKey.pfx" />
-    <None Include="WineEntryClient_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
