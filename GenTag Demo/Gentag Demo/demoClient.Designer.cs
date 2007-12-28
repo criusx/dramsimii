@@ -986,6 +986,7 @@ namespace GentagDemo
             this.scanCOMPortButton.Size = new System.Drawing.Size(59, 20);
             this.scanCOMPortButton.TabIndex = 8;
             this.scanCOMPortButton.Text = "scanCOM";
+            this.scanCOMPortButton.Click += new System.EventHandler(this.scanCOMPorts);
             // 
             // progressBar8
             // 

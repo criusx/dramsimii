@@ -11,6 +11,20 @@ namespace GentagDemo
     {
         #region Safe Accessors and Mutators
 
+        private delegate string getComboBoxDelegate(ComboBox cb);
+
+        private string getComboBox(ComboBox cb)
+        {
+            if (this.InvokeRequired)
+            {
+                return (string)this.Invoke(new getComboBoxDelegate(getComboBox), new object[] { cb });
+            }
+            else
+            {
+                return cb.SelectedItem.ToString();
+            }
+        }
+
         private delegate void setPhotoDelegateB(PictureBox pB, Image bA);
 
         private void setPhoto(PictureBox pB, Image bA)

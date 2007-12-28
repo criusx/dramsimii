@@ -103,14 +103,19 @@ namespace GentagDemo
             treeView1.ImageList = myImageList;
 
             // web service inits
+            const int timeout = 15000;
             petWebService = new petWS.petWS();
             wineWebService = new wineWS.wineWS();
             COREMedDemoWebService = new medWS.COREMedDemoWS();
             authenticationWebService = new authenticationWS.AuthenticationWebService();
-            petWebService.Timeout = 30000;
-            wineWebService.Timeout = 30000;
-            COREMedDemoWebService.Timeout = 30000;            
-            authenticationWebService.Timeout = 30000;
+            petWebService.Timeout = timeout;
+            wineWebService.Timeout = timeout;
+            COREMedDemoWebService.Timeout = timeout;
+            authenticationWebService.Timeout = timeout;
+            authenticationWebService.ConnectionGroupName = "authentication";
+            wineWebService.ConnectionGroupName = "wine";
+            petWebService.ConnectionGroupName = "pet";
+            COREMedDemoWebService.ConnectionGroupName = "med";
             authenticationWebService.EnableDecompression = true;
 
             graph.Visible = false;
@@ -175,7 +180,6 @@ namespace GentagDemo
         // the variable that describes whether it's looping looking for wine bottles or general tags
         private loopType loop;
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         private void readerClick(object sender, EventArgs e)
         {
             if (tagReader.running == false)
@@ -373,7 +377,7 @@ namespace GentagDemo
                                 else
                                 {
                                     mostRecentWineID = tagID;
-
+                                    
                                     IAsyncResult handle = wineWebService.BeginretrieveBottleInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, wineWebService);
                                     lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                                     { itemsCurrentlyBeingLookedUp[handle] = tagID; }
@@ -681,6 +685,7 @@ namespace GentagDemo
         }
 
         #region Display Results
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayBottle(wineWS.wineBottle bottle)
         {
             // display the bottle info
@@ -709,6 +714,7 @@ namespace GentagDemo
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayDrug(medWS.drugInfo drug)
         {
             try
@@ -727,11 +733,16 @@ namespace GentagDemo
             setPhoto(drugPhoto, (System.Drawing.Image)null);
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayPatient(medWS.patientRecord patient)
         {
             if (patient == null || patient.RFIDnum == null || patient.image == null)
-                return;
-            if (patient.exists)
+            {
+                setTextBox(patientNameBox, @"");
+                setTextBox(patientDescriptionBox, @"Patient not found");
+                setPhoto(patientPhoto, (Image)null);
+            }
+            else if (patient.exists)
             {
                 try
                 {
@@ -767,15 +778,9 @@ namespace GentagDemo
                 setTextBox(patientDescriptionBox, @"Patient not found");
                 setPhoto(patientPhoto, (Image)null);
             }
-        }
+        }      
 
-        private void clearPatient()
-        {
-            setTextBox(patientNameBox, @"");
-            setTextBox(patientDescriptionBox, @"Patient not found");
-            setPhoto(patientPhoto, (Image)null);
-        }
-
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayPet(petWS.petInfo newPet)
         {
             // display the bottle info
@@ -933,7 +938,19 @@ namespace GentagDemo
 
         private void connectGPSButton_Click(object sender, EventArgs e)
         {
+            gpsInterpreter.Open(getComboBox(comPortsComboBox));
+            // TODO: add disconnect options, change text
+        }
 
+        private void scanCOMPorts(object sender, EventArgs e)
+        {
+            string[] COMPorts = SerialPort.GetPortNames();
+            comPortsComboBox.Items.Clear();
+            foreach (string s in COMPorts)
+            {
+                comPortsComboBox.Items.Add(s);
+            }
+            comPortsComboBox.SelectedIndex = 0;
         }
     }
 }
