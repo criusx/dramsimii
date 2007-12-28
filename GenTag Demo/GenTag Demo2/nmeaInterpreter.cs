@@ -93,8 +93,12 @@ namespace GentagDemo
             gpsSerialPort.PortName = "COM7";
             gpsSerialPort.ReadBufferSize = 8192;
             gpsSerialPort.ReceivedBytesThreshold = 512;
-            gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(gpsSerialPort_DataReceived);
-            
+            gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(gpsSerialPort_DataReceived);            
+        }
+
+        ~nmeaInterpreter()
+        {
+            Close();
         }
 
         public void Open(string comPort)
@@ -285,6 +289,7 @@ namespace GentagDemo
             // Divide the sentence into words
             string[] Words = GetWords(sentence);
 
+            // is this the first GPGSV message?
             bool firstMessage = (Words[2].CompareTo(@"1") == 0) ? true : false;
 
             NumSatsReceived(Convert.ToInt32(Words[3], NmeaCultureInfo));
@@ -311,9 +316,9 @@ namespace GentagDemo
                         // Notify of this satellite's information
                         if (SatelliteReceived != null)
                         {
-                            SatelliteReceived(PseudoRandomCode, Azimuth,
-                            currentElevation, SignalToNoiseRatio, firstMessage);
                             firstMessage = false;
+                            SatelliteReceived(PseudoRandomCode, Azimuth,
+                            currentElevation, SignalToNoiseRatio, firstMessage);                           
                         }
                     }
                 }

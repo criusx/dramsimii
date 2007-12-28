@@ -291,19 +291,20 @@ namespace RFIDReader
                 if (C1Lib.C1.NET_C1_open_comm() != 1)
                 {
                     errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    Thread.Sleep(15);
                     continue;
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
                     C1Lib.C1.NET_C1_disable();
                     errorMessage = "Unable to communicate with Sirit reader";
+                    Thread.Sleep(15);
                     continue;
                 }
                 else // connection was successful
                 {
                     break;
-                }
-                Thread.Sleep(15);
+                }                
             }
 
             if (n == 0)
@@ -348,19 +349,20 @@ namespace RFIDReader
                 if (C1Lib.C1.NET_C1_open_comm() != 1)
                 {
                     errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    Thread.Sleep(15);
                     continue;
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
                     C1Lib.C1.NET_C1_disable();
                     errorMessage = "Unable to communicate with Sirit reader";
+                    Thread.Sleep(15);
                     continue;
                 }
                 else // connection was successful
                 {
                     break;
-                }
-                Thread.Sleep(15);
+                }               
             }
 
             if (n == 0)

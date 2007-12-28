@@ -228,7 +228,9 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GentagA.pfx" />
+    <Content Include="Gentag Demo.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="GentagKey.pfx" />
     <None Include="Resources\Gentag-logo.png" />
     <None Include="Web References\authenticationWS\AuthenticationWebService.wsdl" />
@@ -287,7 +289,6 @@
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <Content Include="Resources\Reading.cur" />
     <Content Include="VarioSens Lib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

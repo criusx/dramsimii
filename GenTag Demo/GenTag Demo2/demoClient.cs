@@ -716,7 +716,7 @@ namespace GentagDemo
                 if (drug != null && drug.exists && drug.picture != null)
                     setPhoto(drugPhoto, drug.picture);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 setPhoto(drugPhoto, (System.Drawing.Image)null);
             }
