@@ -6,8 +6,11 @@ using namespace DRAMSimII;
 // initialize the static member
 queue<fbdFrame> fbdFrame::freeFramePool(4*COMMAND_QUEUE_SIZE,true);
 
-fbdFrame::fbdFrame()
-{}
+fbdFrame::fbdFrame(tick_t time): 
+executeTime(time)
+{
+	commandSlotType[0] = commandSlotType[1] = commandSlotType[2] = EMPTY_COMMAND;
+}
 
 fbdFrame::~fbdFrame()
 {}

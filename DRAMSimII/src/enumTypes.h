@@ -116,7 +116,8 @@ namespace DRAMSimII
 		DRIVE_COMMAND, /* ?? */
 		DATA_COMMAND, /* ?? */
 		CAS_WITH_DRIVE_COMMAND, /* ?? */
-		REFRESH_ALL_COMMAND
+		REFRESH_ALL_COMMAND,
+		EMPTY_COMMAND
 	};
 
 	enum file_io_token_t
