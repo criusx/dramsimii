@@ -315,10 +315,10 @@ namespace GentagDemo
                         SignalToNoiseRatio = Convert.ToInt32(Words[Count * 4 + 3], NmeaCultureInfo);
                         // Notify of this satellite's information
                         if (SatelliteReceived != null)
-                        {
-                            firstMessage = false;
+                        {                            
                             SatelliteReceived(PseudoRandomCode, Azimuth,
-                            currentElevation, SignalToNoiseRatio, firstMessage);                           
+                            currentElevation, SignalToNoiseRatio, firstMessage);
+                            firstMessage = false;
                         }
                     }
                 }

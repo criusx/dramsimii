@@ -870,7 +870,7 @@ namespace GentagDemo
                 itemsCurrentlyBeingLookedUp.Clear();
 
                 clearDrug();
-                clearPatient();
+                displayPatient(null);
             }
             else if (e.KeyCode == System.Windows.Forms.Keys.F2)
             {
@@ -945,6 +945,7 @@ namespace GentagDemo
         private void scanCOMPorts(object sender, EventArgs e)
         {
             string[] COMPorts = SerialPort.GetPortNames();
+            Array.Sort(COMPorts);
             comPortsComboBox.Items.Clear();
             foreach (string s in COMPorts)
             {

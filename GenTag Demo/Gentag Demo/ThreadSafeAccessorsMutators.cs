@@ -117,7 +117,8 @@ namespace GentagDemo
             }
             else
             {
-                pb.Value = value;
+                if (pb.Maximum >= value)
+                    pb.Value = value;
             }
         }
 
