@@ -240,8 +240,8 @@ namespace RFIDReader
                     //rnd.NextBytes(newTag0);
 
                     //for (int i = 0; i < 8; i++)
-                    //{                        
-                    //    newTagBuilder.Append(newTag0[i].ToString("X").PadLeft(2,'0'));
+                    //{
+                    //    newTagBuilder.Append(newTag0[i].ToString("X").PadLeft(2, '0'));
                     //}
 
                     //TagReceived(newTagBuilder.ToString());

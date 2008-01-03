@@ -39,12 +39,16 @@ namespace GentagDemo
 
         string DeviceUID;
 
-        Reader tagReader;        
+        Reader tagReader;
+
+        TextWriter debugOut;
 
         public demoClient()
         {
             // run initializations provided by the designer
             InitializeComponent();
+
+            debugOut = new StreamWriter("debug.txt", false);
 
             tagReader = new Reader();
 
@@ -156,6 +160,11 @@ namespace GentagDemo
             //    regKey.SetValue(@"hostname", @"129.2.99.117");
             //}
             //hostName.Text = regKey.GetValue(@"hostname").ToString();
+        }
+
+        ~demoClient()
+        {
+            debugOut.Close();
         }
 
         private void receiveTagContents(string contents)
@@ -274,9 +283,7 @@ namespace GentagDemo
             {
                 if (pendingLookups < maxLookupThreads)
                 {
-                    int result;
-                    if ((result = scheduleLookup(tagID)) > 0)
-                        pendingLookups += result;
+                    pendingLookups += scheduleLookup(tagID, loop);
 
                     setLabel(pendingLookupsLabel, pendingLookups.ToString());
                 }
@@ -315,7 +322,7 @@ namespace GentagDemo
         /// </summary>
         /// <param name="tagID">the RFID tag string to lookup</param>
         /// <returns>true if the request was sent, false if it wasn't for some reason</returns>
-        private int scheduleLookup(string tagID)
+        private int scheduleLookup(string tagID, loopType whichLoop)
         {
             AsyncCallback cb = new AsyncCallback(receiveResult);
             int result = 1;
@@ -328,7 +335,7 @@ namespace GentagDemo
                 }
                 else
                 {
-                    switch (loop)
+                    switch (whichLoop)
                     {
                         case loopType.counterfeit:
                             {
@@ -340,12 +347,11 @@ namespace GentagDemo
                                 else
                                 {
                                     // get the tag info and cache it
-                                    //IAsyncResult handle = authorizationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authorizationWebService);                                
                                     IAsyncResult handle = authenticationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authenticationWebService);
                                     if (handle == null)
                                         MessageBox.Show("Null handle");
                                     lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                                    { itemsCurrentlyBeingLookedUp[handle] = tagID; }
+                                    { itemsCurrentlyBeingLookedUp.Add(handle,tagID); }
 
                                     updateTreeView1(tagID, @"No description yet", false, true, true);
                                 }
@@ -462,12 +468,7 @@ namespace GentagDemo
             try
             {
                 if (itemsCurrentlyBeingLookedUp.ContainsKey(ar) == true)
-                {
-                    // unmark this item as being looked up
-                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                    {
-                        itemsCurrentlyBeingLookedUp.Remove(ar);
-                    }
+                {                   
 
                     if (ar.AsyncState.GetType() == typeof(authenticationWS.AuthenticationWebService))
                     {
@@ -533,6 +534,7 @@ namespace GentagDemo
                         }
                         catch (InvalidCastException e)
                         {
+                            debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
                             try
                             {
                                 bool alert = ws.EndcheckInteraction(ar);
@@ -541,6 +543,7 @@ namespace GentagDemo
                             }
                             catch (InvalidCastException ex)
                             {
+                                debugOut.WriteLine(ex.ToString() + "@" + ex.StackTrace);
                                 medWS.patientRecord info = ws.EndgetPatientRecord(ar);
 
                                 if (info != null && info.exists == true)
@@ -563,11 +566,10 @@ namespace GentagDemo
                         {
                             if (lookupQueue.Count > 0)
                             {
-                                int lastResult = 0;
-                                while ((lookupQueue.Count > 0) && (lastResult = scheduleLookup(lookupQueue.Dequeue())) == 0)
-                                { }
-                                if (lastResult > 0)
-                                    pendingLookups += lastResult;
+                                while ((pendingLookups < maxLookupThreads) && (lookupQueue.Count > 0))
+                                {
+                                    pendingLookups += scheduleLookup(lookupQueue.Dequeue(), loop);
+                                }                                
                             }
 
                             setLabel(pendingLookupsLabel, pendingLookups.ToString());
@@ -576,58 +578,62 @@ namespace GentagDemo
                         }
                         catch (InvalidOperationException e)
                         {
-                            MessageBox.Show(e.ToString());
+                            debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
                         }
+                    }
 
+                    // unmark this item as being looked up
+                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                    {
+                        itemsCurrentlyBeingLookedUp.Remove(ar);
                     }
                 }
             }
             catch (WebException e)
             {
-                System.Console.WriteLine(e.ToString());
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
                 rescheduleLookup(ar);
             }
             catch (ArgumentNullException e)
             {
-                System.Console.WriteLine(e.ToString());
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
                 rescheduleLookup(ar);
             }
             catch (MemberAccessException e)
             {
-                System.Console.WriteLine(e.ToString());
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
                 MessageBox.Show("unexpected: ");
             }
             catch (SocketException e)
             {
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
                 Thread.Sleep(2000);
-                MessageBox.Show(e.ToString());
             }
             catch (IOException e)
             {
-                MessageBox.Show(e.Message);
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
                 return;
             }
             catch (InvalidCastException e)
             {
-                MessageBox.Show(e.ToString());
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
             }
             catch (InvalidOperationException e)
             {
-                
-                MessageBox.Show("Possible timeout error" + e.StackTrace);
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
             }
             catch (IndexOutOfRangeException e)
             {
-                MessageBox.Show(e.ToString());
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
             }
             catch (NullReferenceException e)
             {
-                MessageBox.Show(e.ToString() + "@" + e.StackTrace);
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
                 rescheduleLookup(ar);
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString());
+                debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
             }
         }
 
@@ -637,51 +643,30 @@ namespace GentagDemo
         /// <param name="ar"></param>
         private void rescheduleLookup(IAsyncResult ar)
         {
-            AsyncCallback cb = new AsyncCallback(receiveResult);
+            string currentTag;
+
+            lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+            {
+                currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
+                itemsCurrentlyBeingLookedUp.Remove(ar);
+            }
 
             if (ar.AsyncState.GetType() == typeof(wineWS.wineWS))
-            {
-                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                {
-                    // get the bottle info and cache it
-                    string currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
-                    itemsCurrentlyBeingLookedUp.Remove(ar);
-                    IAsyncResult handle = wineWebService.BeginretrieveBottleInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, wineWebService);
-                    itemsCurrentlyBeingLookedUp[handle] = currentTag;
-                }
+            {                
+                scheduleLookup(currentTag, loopType.wine);
             }
             else if (ar.AsyncState.GetType() == typeof(petWS.petWS))
             {
-                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                {
-                    string currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
-                    itemsCurrentlyBeingLookedUp.Remove(ar);
-                    IAsyncResult handle = petWebService.BeginretrievePetInformation(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, petWebService);
-                    itemsCurrentlyBeingLookedUp[handle] = currentTag;
-                }
+                scheduleLookup(currentTag, loopType.pet);
             }
             else if (ar.AsyncState.GetType() == typeof(authenticationWS.AuthenticationWebService))
             {
-                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                {
-                    // get the tag info and cache it
-                    string currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
-                    itemsCurrentlyBeingLookedUp.Remove(ar);
-                    IAsyncResult handle = authenticationWebService.BegingetItem(currentTag, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authenticationWebService);
-                    itemsCurrentlyBeingLookedUp[handle] = currentTag;
-                }
+                scheduleLookup(currentTag, loopType.counterfeit);
             }
             else if (ar.AsyncState.GetType() == typeof(medWS.COREMedDemoWS))
             {
-                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                {
-                    // get the tag info and cache it
-                    string currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
-                    itemsCurrentlyBeingLookedUp.Remove(ar);
-                    IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(currentTag, cb, COREMedDemoWebService);
-                    itemsCurrentlyBeingLookedUp[handle] = currentTag;
-                }
-            }
+                scheduleLookup(currentTag, loopType.med);
+            }            
         }
 
         #region Display Results
