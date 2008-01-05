@@ -10,7 +10,7 @@ namespace RFIDReader
     public class Reader
     {
         #region Delegates
-        public delegate void TagReceivedEventHandler(String tagID);
+        public delegate void TagReceivedEventHandler(string tagID);
         public delegate void VarioSensSettingsReceivedEventHandler(Single hiLimit, Single loLimit, short period, short logMode, short batteryCheckInterval);
         public delegate void ReaderErrorHandler(string errorMessage);
         public delegate void VarioSensReadLogHandler(
@@ -23,6 +23,7 @@ namespace RFIDReader
            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Single[] temperatures);
         public delegate void ReturnTagContentsHandler(string contents);
         public delegate void DoneWritingTagContentsHandler(string status);
+        public delegate void TagTypeDetectedHandler(tagTypes tagType, string tagID);
         #endregion
 
         #region Events
@@ -32,6 +33,7 @@ namespace RFIDReader
         public event ReaderErrorHandler ReaderError;
         public event ReturnTagContentsHandler ReturnTagContents;
         public event DoneWritingTagContentsHandler DoneWriting;
+        public event TagTypeDetectedHandler TagTypeDetected;
         #endregion
 
         public Reader()
@@ -214,7 +216,7 @@ namespace RFIDReader
                 else // connection was successful
                 {
                     break;
-                }                
+                }
             }
 
             if (n == 0)
@@ -304,7 +306,7 @@ namespace RFIDReader
                 else // connection was successful
                 {
                     break;
-                }                
+                }
             }
 
             if (n == 0)
@@ -362,7 +364,7 @@ namespace RFIDReader
                 else // connection was successful
                 {
                     break;
-                }               
+                }
             }
 
             if (n == 0)
@@ -421,6 +423,143 @@ namespace RFIDReader
             C1Lib.C1.NET_C1_disable();
             C1Lib.C1.NET_C1_close_comm();
             return newTag.ToString();
+        }
+
+        // tag types
+        public enum tagTypes { none, iso15693, iso14443a, iso14443b, iso14443bsri, iso14443bsr176, iso18000, felica, MiFareClassic, MiFareUltraLight, MiFareDESFire, INSIDE }
+
+        public void detectTag()
+        {
+            string errorMessage = "";
+            int n = retryCount;
+
+            for (; n > 0; --n)
+            {
+                if (C1Lib.C1.NET_C1_open_comm() != 1)
+                {
+                    errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    Thread.Sleep(15);
+                    continue;
+                }
+                else if (C1Lib.C1.NET_C1_enable() != 1)
+                {
+                    C1Lib.C1.NET_C1_disable();
+                    errorMessage = "Unable to communicate with Sirit reader";
+                    Thread.Sleep(15);
+                    continue;
+                }
+                else // connection was successful
+                {
+                    break;
+                }
+            }
+
+            if (n == 0)
+            {
+                ReaderError(errorMessage);
+                return;
+            }
+
+            readerRunning = true;
+
+
+            while (readerRunning)
+            {
+                if (C1Lib.ISO_14443A.NET_get_14443A() == 1)
+                {
+                    for (int i = 0; i < 7; ++i)
+                        newTagBuilder.Append(C1Lib.ISO_14443A.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+
+                    if (C1Lib.ISO_14443A.tag.type == C1Lib.ISO_14443A.MIFARE_CL)
+                        TagTypeDetected(tagTypes.MiFareClassic, newTagBuilder.ToString());
+                    else if (C1Lib.ISO_14443A.tag.type == C1Lib.ISO_14443A.MIFARE_UL)
+                        TagTypeDetected(tagTypes.MiFareUltraLight, newTagBuilder.ToString());
+                    else if (C1Lib.ISO_14443A.tag.type == C1Lib.ISO_14443A.MIFARE_DF)
+                        TagTypeDetected(tagTypes.MiFareDESFire, newTagBuilder.ToString());
+                    else
+                        TagTypeDetected(tagTypes.iso14443a, newTagBuilder.ToString());
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+                }
+                else if (C1Lib.ISO_15693.NET_get_15693(0x00) == 1)
+                {
+                    for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
+                        newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+
+                    TagTypeDetected(tagTypes.iso15693, newTagBuilder.ToString());
+
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+                }
+                else if (C1Lib.ISO_18000.NET_get_18000() == 1)
+                {
+                    for (int i = 0; i < C1Lib.ISO_18000.tag.data_length; i++)
+                        newTagBuilder.Append(C1Lib.ISO_18000.tag.data[i].ToString("X").PadLeft(2, '0'));
+
+                    TagTypeDetected(tagTypes.iso18000, newTagBuilder.ToString());
+
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+                }
+                else if (C1Lib.IC.NET_get_IC(C1Lib.IC.PROTO_15693, false, false) == 1)
+                {
+                    for (int i = 0; i < 8; ++i)
+                        newTagBuilder.Append(C1Lib.IC.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+
+                    TagTypeDetected(tagTypes.INSIDE, newTagBuilder.ToString());
+
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+                }
+                else if (C1Lib.IC.NET_get_IC(C1Lib.IC.PROTO_14443B, false, false) == 1)
+                {
+                    for (int i = 0; i < C1Lib.ISO_14443B.tag.id_length; ++i)
+                        newTagBuilder.Append(C1Lib.IC.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+
+                    TagTypeDetected(tagTypes.INSIDE, newTagBuilder.ToString());
+
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+                }
+                else if (C1Lib.ISO_14443B.NET_get_14443B() == 1)
+                {
+                    for (int i = 0; i < C1Lib.ISO_14443B.tag.id_length; ++i)
+                        newTagBuilder.Append(C1Lib.ISO_14443B.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+
+                    TagTypeDetected(tagTypes.iso14443b, newTagBuilder.ToString());
+
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+                }
+                else if (C1Lib.ISO_14443B.NET_get_14443B_SRI() == 1)
+                {
+                    for (int i = 0; i < C1Lib.ISO_14443B.tag.id_length; ++i)
+                        newTagBuilder.Append(C1Lib.ISO_14443B.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+
+                    TagTypeDetected(tagTypes.iso14443bsri, newTagBuilder.ToString());
+
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+                }
+                else if (C1Lib.ISO_14443B.NET_get_14443B_SR176() == 1)
+                {
+                    for (int i = 0; i < C1Lib.ISO_14443B.tag.id_length; ++i)
+                        newTagBuilder.Append(C1Lib.ISO_14443B.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+
+                    TagTypeDetected(tagTypes.iso14443bsr176, newTagBuilder.ToString());
+
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+                }
+                else if (C1Lib.FeliCa.NET_get_FeliCa() == 1)
+                {
+                    for (int i = 0; i < C1Lib.FeliCa.tag.id_length; ++i)
+                        newTagBuilder.Append(C1Lib.FeliCa.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+
+                    TagTypeDetected(tagTypes.felica, newTagBuilder.ToString());
+
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+                }
+
+                C1Lib.C1.NET_C1_disable();
+                Thread.Sleep(500);
+                C1Lib.C1.NET_C1_enable();
+            }
+
+            C1Lib.C1.NET_C1_disable();
+            C1Lib.C1.NET_C1_close_comm();
         }
     }
 }

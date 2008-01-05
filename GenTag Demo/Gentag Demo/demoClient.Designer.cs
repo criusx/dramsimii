@@ -28,6 +28,7 @@ namespace GentagDemo
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(demoClient));
             this.label23 = new System.Windows.Forms.Label();
             this.readIDButton = new System.Windows.Forms.Button();
@@ -40,23 +41,8 @@ namespace GentagDemo
             this.label22 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.readWritePage = new System.Windows.Forms.TabPage();
-            this.readWriteTB = new System.Windows.Forms.TextBox();
-            this.readWriteStatusLabel = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.writeButton = new System.Windows.Forms.Button();
-            this.readButton = new System.Windows.Forms.Button();
-            this.VarioSens = new System.Windows.Forms.TabPage();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.detectPage = new System.Windows.Forms.TabPage();
+            this.detectTagTypeButton = new System.Windows.Forms.Button();
             this.patientPage = new System.Windows.Forms.TabPage();
             this.medicationButton = new System.Windows.Forms.Button();
             this.readPatientButton = new System.Windows.Forms.Button();
@@ -66,25 +52,6 @@ namespace GentagDemo
             this.patientPhoto = new System.Windows.Forms.PictureBox();
             this.patientDescriptionBox = new System.Windows.Forms.TextBox();
             this.patientNameBox = new System.Windows.Forms.TextBox();
-            this.testsPage = new System.Windows.Forms.TabPage();
-            this.testDescriptionPictureBox = new System.Windows.Forms.PictureBox();
-            this.readTestButton = new System.Windows.Forms.Button();
-            this.winePage = new System.Windows.Forms.TabPage();
-            this.wineButton = new System.Windows.Forms.Button();
-            this.wineCountryLabel = new System.Windows.Forms.Label();
-            this.wineTypeLabel = new System.Windows.Forms.Label();
-            this.wineVineyardLabel = new System.Windows.Forms.Label();
-            this.wineYearLabel = new System.Windows.Forms.Label();
-            this.wineAuthPictureBox = new System.Windows.Forms.PictureBox();
-            this.winePictureBox = new System.Windows.Forms.PictureBox();
-            this.wineReviewTextBox = new System.Windows.Forms.TextBox();
-            this.petPage = new System.Windows.Forms.TabPage();
-            this.petButton = new System.Windows.Forms.Button();
-            this.petContactInfoLabel = new System.Windows.Forms.Label();
-            this.petBreedLabel = new System.Windows.Forms.Label();
-            this.petOwnerLabel = new System.Windows.Forms.Label();
-            this.petPhonenumberLabel = new System.Windows.Forms.Label();
-            this.petPB = new System.Windows.Forms.PictureBox();
             this.gpsPage = new System.Windows.Forms.TabPage();
             this.trackingCheckBox = new System.Windows.Forms.CheckBox();
             this.satellitesUsedTextBox = new System.Windows.Forms.TextBox();
@@ -125,6 +92,42 @@ namespace GentagDemo
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.queueSizeBar = new System.Windows.Forms.ProgressBar();
+            this.readWritePage = new System.Windows.Forms.TabPage();
+            this.readWriteTB = new System.Windows.Forms.TextBox();
+            this.readWriteStatusLabel = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.writeButton = new System.Windows.Forms.Button();
+            this.readButton = new System.Windows.Forms.Button();
+            this.winePage = new System.Windows.Forms.TabPage();
+            this.wineButton = new System.Windows.Forms.Button();
+            this.wineCountryLabel = new System.Windows.Forms.Label();
+            this.wineTypeLabel = new System.Windows.Forms.Label();
+            this.wineVineyardLabel = new System.Windows.Forms.Label();
+            this.wineYearLabel = new System.Windows.Forms.Label();
+            this.wineAuthPictureBox = new System.Windows.Forms.PictureBox();
+            this.winePictureBox = new System.Windows.Forms.PictureBox();
+            this.wineReviewTextBox = new System.Windows.Forms.TextBox();
+            this.VarioSens = new System.Windows.Forms.TabPage();
+            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.testsPage = new System.Windows.Forms.TabPage();
+            this.testDescriptionPictureBox = new System.Windows.Forms.PictureBox();
+            this.readTestButton = new System.Windows.Forms.Button();
+            this.petPage = new System.Windows.Forms.TabPage();
+            this.petButton = new System.Windows.Forms.Button();
+            this.petContactInfoLabel = new System.Windows.Forms.Label();
+            this.petBreedLabel = new System.Windows.Forms.Label();
+            this.petOwnerLabel = new System.Windows.Forms.Label();
+            this.petPhonenumberLabel = new System.Windows.Forms.Label();
+            this.petPB = new System.Windows.Forms.PictureBox();
             this.manualLookupPage = new System.Windows.Forms.TabPage();
             this.treeView2 = new System.Windows.Forms.TreeView();
             this.manualIDButton = new System.Windows.Forms.Button();
@@ -147,16 +150,19 @@ namespace GentagDemo
             this.radPage = new System.Windows.Forms.TabPage();
             this.radIDLabel = new System.Windows.Forms.Label();
             this.radScanButton = new System.Windows.Forms.Button();
-            this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel();
+            this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
+            this.detectTagTypeLabel = new System.Windows.Forms.Label();
+            this.detectTagIDLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.authPage.SuspendLayout();
-            this.readWritePage.SuspendLayout();
-            this.VarioSens.SuspendLayout();
+            this.detectPage.SuspendLayout();
             this.patientPage.SuspendLayout();
-            this.testsPage.SuspendLayout();
-            this.winePage.SuspendLayout();
-            this.petPage.SuspendLayout();
             this.gpsPage.SuspendLayout();
+            this.readWritePage.SuspendLayout();
+            this.winePage.SuspendLayout();
+            this.VarioSens.SuspendLayout();
+            this.testsPage.SuspendLayout();
+            this.petPage.SuspendLayout();
             this.manualLookupPage.SuspendLayout();
             this.varioSensWPage.SuspendLayout();
             this.radPage.SuspendLayout();
@@ -173,7 +179,7 @@ namespace GentagDemo
             // readIDButton
             // 
             this.readIDButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.readIDButton.Location = new System.Drawing.Point(0, 196);
+            this.readIDButton.Location = new System.Drawing.Point(3, 195);
             this.readIDButton.Name = "readIDButton";
             this.readIDButton.Size = new System.Drawing.Size(36, 20);
             this.readIDButton.TabIndex = 0;
@@ -193,13 +199,14 @@ namespace GentagDemo
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.authPage);
-            this.tabControl1.Controls.Add(this.readWritePage);
-            this.tabControl1.Controls.Add(this.VarioSens);
+            this.tabControl1.Controls.Add(this.detectPage);
             this.tabControl1.Controls.Add(this.patientPage);
-            this.tabControl1.Controls.Add(this.testsPage);
-            this.tabControl1.Controls.Add(this.winePage);
-            this.tabControl1.Controls.Add(this.petPage);
             this.tabControl1.Controls.Add(this.gpsPage);
+            this.tabControl1.Controls.Add(this.readWritePage);
+            this.tabControl1.Controls.Add(this.winePage);
+            this.tabControl1.Controls.Add(this.VarioSens);
+            this.tabControl1.Controls.Add(this.testsPage);
+            this.tabControl1.Controls.Add(this.petPage);
             this.tabControl1.Controls.Add(this.manualLookupPage);
             this.tabControl1.Controls.Add(this.varioSensWPage);
             this.tabControl1.Controls.Add(this.radPage);
@@ -270,163 +277,25 @@ namespace GentagDemo
             this.treeView1.Size = new System.Drawing.Size(234, 149);
             this.treeView1.TabIndex = 2;
             // 
-            // readWritePage
+            // detectPage
             // 
-            this.readWritePage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.readWritePage.Controls.Add(this.readWriteTB);
-            this.readWritePage.Controls.Add(this.readWriteStatusLabel);
-            this.readWritePage.Controls.Add(this.label25);
-            this.readWritePage.Controls.Add(this.writeButton);
-            this.readWritePage.Controls.Add(this.readButton);
-            this.readWritePage.Location = new System.Drawing.Point(0, 0);
-            this.readWritePage.Name = "readWritePage";
-            this.readWritePage.Size = new System.Drawing.Size(232, 214);
-            this.readWritePage.Text = "R/W";
+            this.detectPage.Controls.Add(this.detectTagIDLabel);
+            this.detectPage.Controls.Add(this.detectTagTypeLabel);
+            this.detectPage.Controls.Add(this.detectTagTypeButton);
+            this.detectPage.Location = new System.Drawing.Point(0, 0);
+            this.detectPage.Name = "detectPage";
+            this.detectPage.Size = new System.Drawing.Size(240, 217);
+            this.detectPage.Text = "Detect";
             // 
-            // readWriteTB
+            // detectTagTypeButton
             // 
-            this.readWriteTB.Location = new System.Drawing.Point(3, 31);
-            this.readWriteTB.Multiline = true;
-            this.readWriteTB.Name = "readWriteTB";
-            this.readWriteTB.Size = new System.Drawing.Size(234, 138);
-            this.readWriteTB.TabIndex = 3;
-            // 
-            // readWriteStatusLabel
-            // 
-            this.readWriteStatusLabel.Location = new System.Drawing.Point(3, 172);
-            this.readWriteStatusLabel.Name = "readWriteStatusLabel";
-            this.readWriteStatusLabel.Size = new System.Drawing.Size(100, 20);
-            this.readWriteStatusLabel.Text = "Status:";
-            // 
-            // label25
-            // 
-            this.label25.Location = new System.Drawing.Point(72, 8);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(100, 20);
-            this.label25.Text = "Tag Contents";
-            this.label25.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // writeButton
-            // 
-            this.writeButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.writeButton.Location = new System.Drawing.Point(201, 197);
-            this.writeButton.Name = "writeButton";
-            this.writeButton.Size = new System.Drawing.Size(36, 20);
-            this.writeButton.TabIndex = 1;
-            this.writeButton.Text = "Write";
-            this.writeButton.Click += new System.EventHandler(this.readerClick);
-            // 
-            // readButton
-            // 
-            this.readButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.readButton.Location = new System.Drawing.Point(0, 197);
-            this.readButton.Name = "readButton";
-            this.readButton.Size = new System.Drawing.Size(36, 20);
-            this.readButton.TabIndex = 1;
-            this.readButton.Text = "Read";
-            this.readButton.Click += new System.EventHandler(this.readerClick);
-            // 
-            // VarioSens
-            // 
-            this.VarioSens.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.VarioSens.Controls.Add(this.textBox9);
-            this.VarioSens.Controls.Add(this.listBox1);
-            this.VarioSens.Controls.Add(this.checkBox2);
-            this.VarioSens.Controls.Add(this.label4);
-            this.VarioSens.Controls.Add(this.label3);
-            this.VarioSens.Controls.Add(this.label2);
-            this.VarioSens.Controls.Add(this.label1);
-            this.VarioSens.Controls.Add(this.textBox3);
-            this.VarioSens.Controls.Add(this.textBox2);
-            this.VarioSens.Controls.Add(this.textBox1);
-            this.VarioSens.Controls.Add(this.readLogButton);
-            this.VarioSens.Location = new System.Drawing.Point(0, 0);
-            this.VarioSens.Name = "VarioSens";
-            this.VarioSens.Size = new System.Drawing.Size(232, 214);
-            this.VarioSens.Text = "VarioSens";
-            // 
-            // textBox9
-            // 
-            this.textBox9.Location = new System.Drawing.Point(10, 109);
-            this.textBox9.Multiline = true;
-            this.textBox9.Name = "textBox9";
-            this.textBox9.ReadOnly = true;
-            this.textBox9.Size = new System.Drawing.Size(76, 57);
-            this.textBox9.TabIndex = 11;
-            // 
-            // listBox1
-            // 
-            this.listBox1.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.listBox1.Location = new System.Drawing.Point(93, 27);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(144, 184);
-            this.listBox1.TabIndex = 6;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.Enabled = false;
-            this.checkBox2.Location = new System.Drawing.Point(62, 172);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(25, 18);
-            this.checkBox2.TabIndex = 4;
-            // 
-            // label4
-            // 
-            this.label4.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.label4.Location = new System.Drawing.Point(93, 4);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(144, 20);
-            this.label4.Tag = "";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // label3
-            // 
-            this.label3.Location = new System.Drawing.Point(7, 78);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(50, 20);
-            this.label3.Text = "Interval";
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.label2.Location = new System.Drawing.Point(7, 51);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 20);
-            this.label2.Text = "Low Limit";
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.label1.Location = new System.Drawing.Point(7, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(50, 20);
-            this.label1.Text = "Hi Limit";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(57, 78);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(32, 21);
-            this.textBox3.TabIndex = 1;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(57, 51);
-            this.textBox2.MaxLength = 3;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(32, 21);
-            this.textBox2.TabIndex = 1;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(57, 24);
-            this.textBox1.MaxLength = 3;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(32, 21);
-            this.textBox1.TabIndex = 1;
+            this.detectTagTypeButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.detectTagTypeButton.Location = new System.Drawing.Point(3, 195);
+            this.detectTagTypeButton.Name = "detectTagTypeButton";
+            this.detectTagTypeButton.Size = new System.Drawing.Size(36, 20);
+            this.detectTagTypeButton.TabIndex = 1;
+            this.detectTagTypeButton.Text = "Start";
+            this.detectTagTypeButton.Click += new System.EventHandler(this.readerClick);
             // 
             // patientPage
             // 
@@ -441,7 +310,7 @@ namespace GentagDemo
             this.patientPage.Controls.Add(this.patientNameBox);
             this.patientPage.Location = new System.Drawing.Point(0, 0);
             this.patientPage.Name = "patientPage";
-            this.patientPage.Size = new System.Drawing.Size(232, 214);
+            this.patientPage.Size = new System.Drawing.Size(240, 217);
             this.patientPage.Text = "Patient";
             // 
             // medicationButton
@@ -512,164 +381,6 @@ namespace GentagDemo
             this.patientNameBox.Size = new System.Drawing.Size(100, 19);
             this.patientNameBox.TabIndex = 0;
             // 
-            // testsPage
-            // 
-            this.testsPage.Controls.Add(this.testDescriptionPictureBox);
-            this.testsPage.Controls.Add(this.readTestButton);
-            this.testsPage.Location = new System.Drawing.Point(0, 0);
-            this.testsPage.Name = "testsPage";
-            this.testsPage.Size = new System.Drawing.Size(232, 214);
-            this.testsPage.Text = "Tests";
-            // 
-            // testDescriptionPictureBox
-            // 
-            this.testDescriptionPictureBox.Location = new System.Drawing.Point(0, 0);
-            this.testDescriptionPictureBox.Name = "testDescriptionPictureBox";
-            this.testDescriptionPictureBox.Size = new System.Drawing.Size(240, 194);
-            // 
-            // readTestButton
-            // 
-            this.readTestButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.readTestButton.Location = new System.Drawing.Point(0, 196);
-            this.readTestButton.Name = "readTestButton";
-            this.readTestButton.Size = new System.Drawing.Size(36, 20);
-            this.readTestButton.TabIndex = 0;
-            this.readTestButton.Text = "Read";
-            this.readTestButton.Click += new System.EventHandler(this.readerClick);
-            // 
-            // winePage
-            // 
-            this.winePage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.winePage.Controls.Add(this.wineButton);
-            this.winePage.Controls.Add(this.wineCountryLabel);
-            this.winePage.Controls.Add(this.wineTypeLabel);
-            this.winePage.Controls.Add(this.wineVineyardLabel);
-            this.winePage.Controls.Add(this.wineYearLabel);
-            this.winePage.Controls.Add(this.wineAuthPictureBox);
-            this.winePage.Controls.Add(this.winePictureBox);
-            this.winePage.Controls.Add(this.wineReviewTextBox);
-            this.winePage.Location = new System.Drawing.Point(0, 0);
-            this.winePage.Name = "winePage";
-            this.winePage.Size = new System.Drawing.Size(232, 214);
-            this.winePage.Text = "Wine";
-            // 
-            // wineButton
-            // 
-            this.wineButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineButton.Location = new System.Drawing.Point(0, 194);
-            this.wineButton.Name = "wineButton";
-            this.wineButton.Size = new System.Drawing.Size(40, 20);
-            this.wineButton.TabIndex = 11;
-            this.wineButton.Text = "Read";
-            this.wineButton.Click += new System.EventHandler(this.readerClick);
-            // 
-            // wineCountryLabel
-            // 
-            this.wineCountryLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineCountryLabel.Location = new System.Drawing.Point(140, 189);
-            this.wineCountryLabel.Name = "wineCountryLabel";
-            this.wineCountryLabel.Size = new System.Drawing.Size(100, 25);
-            // 
-            // wineTypeLabel
-            // 
-            this.wineTypeLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineTypeLabel.Location = new System.Drawing.Point(41, 189);
-            this.wineTypeLabel.Name = "wineTypeLabel";
-            this.wineTypeLabel.Size = new System.Drawing.Size(100, 25);
-            // 
-            // wineVineyardLabel
-            // 
-            this.wineVineyardLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineVineyardLabel.Location = new System.Drawing.Point(41, 163);
-            this.wineVineyardLabel.Name = "wineVineyardLabel";
-            this.wineVineyardLabel.Size = new System.Drawing.Size(100, 25);
-            // 
-            // wineYearLabel
-            // 
-            this.wineYearLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineYearLabel.Location = new System.Drawing.Point(140, 163);
-            this.wineYearLabel.Name = "wineYearLabel";
-            this.wineYearLabel.Size = new System.Drawing.Size(100, 25);
-            // 
-            // wineAuthPictureBox
-            // 
-            this.wineAuthPictureBox.Location = new System.Drawing.Point(13, 166);
-            this.wineAuthPictureBox.Name = "wineAuthPictureBox";
-            this.wineAuthPictureBox.Size = new System.Drawing.Size(22, 22);
-            this.wineAuthPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            // 
-            // winePictureBox
-            // 
-            this.winePictureBox.Location = new System.Drawing.Point(0, 0);
-            this.winePictureBox.Name = "winePictureBox";
-            this.winePictureBox.Size = new System.Drawing.Size(240, 160);
-            this.winePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            // 
-            // wineReviewTextBox
-            // 
-            this.wineReviewTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.wineReviewTextBox.Location = new System.Drawing.Point(0, 0);
-            this.wineReviewTextBox.Multiline = true;
-            this.wineReviewTextBox.Name = "wineReviewTextBox";
-            this.wineReviewTextBox.Size = new System.Drawing.Size(240, 217);
-            this.wineReviewTextBox.TabIndex = 10;
-            this.wineReviewTextBox.Visible = false;
-            this.wineReviewTextBox.TextChanged += new System.EventHandler(this.wineReviewTextBox_TextChanged);
-            // 
-            // petPage
-            // 
-            this.petPage.BackColor = System.Drawing.SystemColors.Control;
-            this.petPage.Controls.Add(this.petButton);
-            this.petPage.Controls.Add(this.petContactInfoLabel);
-            this.petPage.Controls.Add(this.petBreedLabel);
-            this.petPage.Controls.Add(this.petOwnerLabel);
-            this.petPage.Controls.Add(this.petPhonenumberLabel);
-            this.petPage.Controls.Add(this.petPB);
-            this.petPage.Location = new System.Drawing.Point(0, 0);
-            this.petPage.Name = "petPage";
-            this.petPage.Size = new System.Drawing.Size(232, 214);
-            this.petPage.Text = "Pet";
-            // 
-            // petButton
-            // 
-            this.petButton.Location = new System.Drawing.Point(0, 195);
-            this.petButton.Name = "petButton";
-            this.petButton.Size = new System.Drawing.Size(40, 20);
-            this.petButton.TabIndex = 18;
-            this.petButton.Text = "Read";
-            this.petButton.Click += new System.EventHandler(this.readerClick);
-            // 
-            // petContactInfoLabel
-            // 
-            this.petContactInfoLabel.Location = new System.Drawing.Point(140, 184);
-            this.petContactInfoLabel.Name = "petContactInfoLabel";
-            this.petContactInfoLabel.Size = new System.Drawing.Size(100, 34);
-            // 
-            // petBreedLabel
-            // 
-            this.petBreedLabel.Location = new System.Drawing.Point(46, 189);
-            this.petBreedLabel.Name = "petBreedLabel";
-            this.petBreedLabel.Size = new System.Drawing.Size(100, 25);
-            // 
-            // petOwnerLabel
-            // 
-            this.petOwnerLabel.Location = new System.Drawing.Point(41, 164);
-            this.petOwnerLabel.Name = "petOwnerLabel";
-            this.petOwnerLabel.Size = new System.Drawing.Size(100, 25);
-            // 
-            // petPhonenumberLabel
-            // 
-            this.petPhonenumberLabel.Location = new System.Drawing.Point(140, 164);
-            this.petPhonenumberLabel.Name = "petPhonenumberLabel";
-            this.petPhonenumberLabel.Size = new System.Drawing.Size(100, 20);
-            // 
-            // petPB
-            // 
-            this.petPB.Location = new System.Drawing.Point(0, 1);
-            this.petPB.Name = "petPB";
-            this.petPB.Size = new System.Drawing.Size(240, 160);
-            this.petPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            // 
             // gpsPage
             // 
             this.gpsPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
@@ -714,7 +425,7 @@ namespace GentagDemo
             this.gpsPage.Controls.Add(this.queueSizeBar);
             this.gpsPage.Location = new System.Drawing.Point(0, 0);
             this.gpsPage.Name = "gpsPage";
-            this.gpsPage.Size = new System.Drawing.Size(240, 217);
+            this.gpsPage.Size = new System.Drawing.Size(232, 214);
             this.gpsPage.Text = "GPS";
             // 
             // trackingCheckBox
@@ -1051,6 +762,322 @@ namespace GentagDemo
             this.queueSizeBar.Name = "queueSizeBar";
             this.queueSizeBar.Size = new System.Drawing.Size(59, 14);
             // 
+            // readWritePage
+            // 
+            this.readWritePage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.readWritePage.Controls.Add(this.readWriteTB);
+            this.readWritePage.Controls.Add(this.readWriteStatusLabel);
+            this.readWritePage.Controls.Add(this.label25);
+            this.readWritePage.Controls.Add(this.writeButton);
+            this.readWritePage.Controls.Add(this.readButton);
+            this.readWritePage.Location = new System.Drawing.Point(0, 0);
+            this.readWritePage.Name = "readWritePage";
+            this.readWritePage.Size = new System.Drawing.Size(232, 214);
+            this.readWritePage.Text = "R/W";
+            // 
+            // readWriteTB
+            // 
+            this.readWriteTB.Location = new System.Drawing.Point(3, 31);
+            this.readWriteTB.Multiline = true;
+            this.readWriteTB.Name = "readWriteTB";
+            this.readWriteTB.Size = new System.Drawing.Size(234, 138);
+            this.readWriteTB.TabIndex = 3;
+            // 
+            // readWriteStatusLabel
+            // 
+            this.readWriteStatusLabel.Location = new System.Drawing.Point(3, 172);
+            this.readWriteStatusLabel.Name = "readWriteStatusLabel";
+            this.readWriteStatusLabel.Size = new System.Drawing.Size(100, 20);
+            this.readWriteStatusLabel.Text = "Status:";
+            // 
+            // label25
+            // 
+            this.label25.Location = new System.Drawing.Point(72, 8);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(100, 20);
+            this.label25.Text = "Tag Contents";
+            this.label25.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // writeButton
+            // 
+            this.writeButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.writeButton.Location = new System.Drawing.Point(201, 197);
+            this.writeButton.Name = "writeButton";
+            this.writeButton.Size = new System.Drawing.Size(36, 20);
+            this.writeButton.TabIndex = 1;
+            this.writeButton.Text = "Write";
+            this.writeButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // readButton
+            // 
+            this.readButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.readButton.Location = new System.Drawing.Point(0, 197);
+            this.readButton.Name = "readButton";
+            this.readButton.Size = new System.Drawing.Size(36, 20);
+            this.readButton.TabIndex = 1;
+            this.readButton.Text = "Read";
+            this.readButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // winePage
+            // 
+            this.winePage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.winePage.Controls.Add(this.wineButton);
+            this.winePage.Controls.Add(this.wineCountryLabel);
+            this.winePage.Controls.Add(this.wineTypeLabel);
+            this.winePage.Controls.Add(this.wineVineyardLabel);
+            this.winePage.Controls.Add(this.wineYearLabel);
+            this.winePage.Controls.Add(this.wineAuthPictureBox);
+            this.winePage.Controls.Add(this.winePictureBox);
+            this.winePage.Controls.Add(this.wineReviewTextBox);
+            this.winePage.Location = new System.Drawing.Point(0, 0);
+            this.winePage.Name = "winePage";
+            this.winePage.Size = new System.Drawing.Size(232, 214);
+            this.winePage.Text = "Wine";
+            // 
+            // wineButton
+            // 
+            this.wineButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.wineButton.Location = new System.Drawing.Point(0, 194);
+            this.wineButton.Name = "wineButton";
+            this.wineButton.Size = new System.Drawing.Size(40, 20);
+            this.wineButton.TabIndex = 11;
+            this.wineButton.Text = "Read";
+            this.wineButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // wineCountryLabel
+            // 
+            this.wineCountryLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.wineCountryLabel.Location = new System.Drawing.Point(140, 189);
+            this.wineCountryLabel.Name = "wineCountryLabel";
+            this.wineCountryLabel.Size = new System.Drawing.Size(100, 25);
+            // 
+            // wineTypeLabel
+            // 
+            this.wineTypeLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.wineTypeLabel.Location = new System.Drawing.Point(41, 189);
+            this.wineTypeLabel.Name = "wineTypeLabel";
+            this.wineTypeLabel.Size = new System.Drawing.Size(100, 25);
+            // 
+            // wineVineyardLabel
+            // 
+            this.wineVineyardLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.wineVineyardLabel.Location = new System.Drawing.Point(41, 163);
+            this.wineVineyardLabel.Name = "wineVineyardLabel";
+            this.wineVineyardLabel.Size = new System.Drawing.Size(100, 25);
+            // 
+            // wineYearLabel
+            // 
+            this.wineYearLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.wineYearLabel.Location = new System.Drawing.Point(140, 163);
+            this.wineYearLabel.Name = "wineYearLabel";
+            this.wineYearLabel.Size = new System.Drawing.Size(100, 25);
+            // 
+            // wineAuthPictureBox
+            // 
+            this.wineAuthPictureBox.Location = new System.Drawing.Point(13, 166);
+            this.wineAuthPictureBox.Name = "wineAuthPictureBox";
+            this.wineAuthPictureBox.Size = new System.Drawing.Size(22, 22);
+            this.wineAuthPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            // 
+            // winePictureBox
+            // 
+            this.winePictureBox.Location = new System.Drawing.Point(0, 0);
+            this.winePictureBox.Name = "winePictureBox";
+            this.winePictureBox.Size = new System.Drawing.Size(240, 160);
+            this.winePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            // 
+            // wineReviewTextBox
+            // 
+            this.wineReviewTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.wineReviewTextBox.Location = new System.Drawing.Point(0, 0);
+            this.wineReviewTextBox.Multiline = true;
+            this.wineReviewTextBox.Name = "wineReviewTextBox";
+            this.wineReviewTextBox.Size = new System.Drawing.Size(240, 217);
+            this.wineReviewTextBox.TabIndex = 10;
+            this.wineReviewTextBox.Visible = false;
+            this.wineReviewTextBox.TextChanged += new System.EventHandler(this.wineReviewTextBox_TextChanged);
+            // 
+            // VarioSens
+            // 
+            this.VarioSens.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.VarioSens.Controls.Add(this.textBox9);
+            this.VarioSens.Controls.Add(this.listBox1);
+            this.VarioSens.Controls.Add(this.checkBox2);
+            this.VarioSens.Controls.Add(this.label4);
+            this.VarioSens.Controls.Add(this.label3);
+            this.VarioSens.Controls.Add(this.label2);
+            this.VarioSens.Controls.Add(this.label1);
+            this.VarioSens.Controls.Add(this.textBox3);
+            this.VarioSens.Controls.Add(this.textBox2);
+            this.VarioSens.Controls.Add(this.textBox1);
+            this.VarioSens.Controls.Add(this.readLogButton);
+            this.VarioSens.Location = new System.Drawing.Point(0, 0);
+            this.VarioSens.Name = "VarioSens";
+            this.VarioSens.Size = new System.Drawing.Size(232, 214);
+            this.VarioSens.Text = "VarioSens";
+            // 
+            // textBox9
+            // 
+            this.textBox9.Location = new System.Drawing.Point(10, 109);
+            this.textBox9.Multiline = true;
+            this.textBox9.Name = "textBox9";
+            this.textBox9.ReadOnly = true;
+            this.textBox9.Size = new System.Drawing.Size(76, 57);
+            this.textBox9.TabIndex = 11;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.listBox1.Location = new System.Drawing.Point(93, 27);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(144, 184);
+            this.listBox1.TabIndex = 6;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.Enabled = false;
+            this.checkBox2.Location = new System.Drawing.Point(62, 172);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(25, 18);
+            this.checkBox2.TabIndex = 4;
+            // 
+            // label4
+            // 
+            this.label4.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label4.Location = new System.Drawing.Point(93, 4);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(144, 20);
+            this.label4.Tag = "";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(7, 78);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(50, 20);
+            this.label3.Text = "Interval";
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label2.Location = new System.Drawing.Point(7, 51);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(50, 20);
+            this.label2.Text = "Low Limit";
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label1.Location = new System.Drawing.Point(7, 24);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(50, 20);
+            this.label1.Text = "Hi Limit";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(57, 78);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.ReadOnly = true;
+            this.textBox3.Size = new System.Drawing.Size(32, 21);
+            this.textBox3.TabIndex = 1;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(57, 51);
+            this.textBox2.MaxLength = 3;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(32, 21);
+            this.textBox2.TabIndex = 1;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(57, 24);
+            this.textBox1.MaxLength = 3;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(32, 21);
+            this.textBox1.TabIndex = 1;
+            // 
+            // testsPage
+            // 
+            this.testsPage.Controls.Add(this.testDescriptionPictureBox);
+            this.testsPage.Controls.Add(this.readTestButton);
+            this.testsPage.Location = new System.Drawing.Point(0, 0);
+            this.testsPage.Name = "testsPage";
+            this.testsPage.Size = new System.Drawing.Size(232, 214);
+            this.testsPage.Text = "Tests";
+            // 
+            // testDescriptionPictureBox
+            // 
+            this.testDescriptionPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.testDescriptionPictureBox.Name = "testDescriptionPictureBox";
+            this.testDescriptionPictureBox.Size = new System.Drawing.Size(240, 194);
+            // 
+            // readTestButton
+            // 
+            this.readTestButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.readTestButton.Location = new System.Drawing.Point(0, 196);
+            this.readTestButton.Name = "readTestButton";
+            this.readTestButton.Size = new System.Drawing.Size(36, 20);
+            this.readTestButton.TabIndex = 0;
+            this.readTestButton.Text = "Read";
+            this.readTestButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // petPage
+            // 
+            this.petPage.BackColor = System.Drawing.SystemColors.Control;
+            this.petPage.Controls.Add(this.petButton);
+            this.petPage.Controls.Add(this.petContactInfoLabel);
+            this.petPage.Controls.Add(this.petBreedLabel);
+            this.petPage.Controls.Add(this.petOwnerLabel);
+            this.petPage.Controls.Add(this.petPhonenumberLabel);
+            this.petPage.Controls.Add(this.petPB);
+            this.petPage.Location = new System.Drawing.Point(0, 0);
+            this.petPage.Name = "petPage";
+            this.petPage.Size = new System.Drawing.Size(232, 214);
+            this.petPage.Text = "Pet";
+            // 
+            // petButton
+            // 
+            this.petButton.Location = new System.Drawing.Point(0, 195);
+            this.petButton.Name = "petButton";
+            this.petButton.Size = new System.Drawing.Size(40, 20);
+            this.petButton.TabIndex = 18;
+            this.petButton.Text = "Read";
+            this.petButton.Click += new System.EventHandler(this.readerClick);
+            // 
+            // petContactInfoLabel
+            // 
+            this.petContactInfoLabel.Location = new System.Drawing.Point(140, 184);
+            this.petContactInfoLabel.Name = "petContactInfoLabel";
+            this.petContactInfoLabel.Size = new System.Drawing.Size(100, 34);
+            // 
+            // petBreedLabel
+            // 
+            this.petBreedLabel.Location = new System.Drawing.Point(46, 189);
+            this.petBreedLabel.Name = "petBreedLabel";
+            this.petBreedLabel.Size = new System.Drawing.Size(100, 25);
+            // 
+            // petOwnerLabel
+            // 
+            this.petOwnerLabel.Location = new System.Drawing.Point(41, 164);
+            this.petOwnerLabel.Name = "petOwnerLabel";
+            this.petOwnerLabel.Size = new System.Drawing.Size(100, 25);
+            // 
+            // petPhonenumberLabel
+            // 
+            this.petPhonenumberLabel.Location = new System.Drawing.Point(140, 164);
+            this.petPhonenumberLabel.Name = "petPhonenumberLabel";
+            this.petPhonenumberLabel.Size = new System.Drawing.Size(100, 20);
+            // 
+            // petPB
+            // 
+            this.petPB.Location = new System.Drawing.Point(0, 1);
+            this.petPB.Name = "petPB";
+            this.petPB.Size = new System.Drawing.Size(240, 160);
+            this.petPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            // 
             // manualLookupPage
             // 
             this.manualLookupPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
@@ -1086,8 +1113,8 @@ namespace GentagDemo
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(224, 21);
             this.textBox4.TabIndex = 0;
-            this.textBox4.LostFocus += new System.EventHandler(this.textBox4_LostFocus);
             this.textBox4.GotFocus += new System.EventHandler(this.textBox4_GotFocus);
+            this.textBox4.LostFocus += new System.EventHandler(this.textBox4_LostFocus);
             // 
             // varioSensWPage
             // 
@@ -1228,7 +1255,7 @@ namespace GentagDemo
             this.radPage.Controls.Add(this.radScanButton);
             this.radPage.Location = new System.Drawing.Point(0, 0);
             this.radPage.Name = "radPage";
-            this.radPage.Size = new System.Drawing.Size(240, 217);
+            this.radPage.Size = new System.Drawing.Size(232, 214);
             this.radPage.Text = "CZT";
             // 
             // radIDLabel
@@ -1246,6 +1273,22 @@ namespace GentagDemo
             this.radScanButton.Text = "Scan";
             this.radScanButton.Click += new System.EventHandler(this.readerClick);
             // 
+            // detectTagTypeLabel
+            // 
+            this.detectTagTypeLabel.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
+            this.detectTagTypeLabel.Location = new System.Drawing.Point(8, 66);
+            this.detectTagTypeLabel.Name = "detectTagTypeLabel";
+            this.detectTagTypeLabel.Size = new System.Drawing.Size(225, 57);
+            this.detectTagTypeLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // detectTagIDLabel
+            // 
+            this.detectTagIDLabel.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Regular);
+            this.detectTagIDLabel.Location = new System.Drawing.Point(8, 4);
+            this.detectTagIDLabel.Name = "detectTagIDLabel";
+            this.detectTagIDLabel.Size = new System.Drawing.Size(225, 62);
+            this.detectTagIDLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // demoClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1261,13 +1304,14 @@ namespace GentagDemo
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainForm_KeyDown);
             this.tabControl1.ResumeLayout(false);
             this.authPage.ResumeLayout(false);
-            this.readWritePage.ResumeLayout(false);
-            this.VarioSens.ResumeLayout(false);
+            this.detectPage.ResumeLayout(false);
             this.patientPage.ResumeLayout(false);
-            this.testsPage.ResumeLayout(false);
-            this.winePage.ResumeLayout(false);
-            this.petPage.ResumeLayout(false);
             this.gpsPage.ResumeLayout(false);
+            this.readWritePage.ResumeLayout(false);
+            this.winePage.ResumeLayout(false);
+            this.VarioSens.ResumeLayout(false);
+            this.testsPage.ResumeLayout(false);
+            this.petPage.ResumeLayout(false);
             this.manualLookupPage.ResumeLayout(false);
             this.varioSensWPage.ResumeLayout(false);
             this.radPage.ResumeLayout(false);
@@ -1396,6 +1440,10 @@ namespace GentagDemo
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Button writeButton;
         private System.Windows.Forms.Button readButton;
+        private System.Windows.Forms.TabPage detectPage;
+        private System.Windows.Forms.Button detectTagTypeButton;
+        private System.Windows.Forms.Label detectTagIDLabel;
+        private System.Windows.Forms.Label detectTagTypeLabel;
         
     }
 }

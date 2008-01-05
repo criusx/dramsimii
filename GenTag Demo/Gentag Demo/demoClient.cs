@@ -98,6 +98,7 @@ namespace GentagDemo
             tagReader.VarioSensLogReceived += new RFIDReader.Reader.VarioSensReadLogHandler(writeViolations);
             tagReader.ReturnTagContents += new Reader.ReturnTagContentsHandler(receiveTagContents);
             tagReader.DoneWriting += new Reader.DoneWritingTagContentsHandler(doneWriting);
+            tagReader.TagTypeDetected += new Reader.TagTypeDetectedHandler(displayTagType);
 
             ImageList myImageList = new ImageList();
             myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.blank.GetHbitmap()));
@@ -162,6 +163,52 @@ namespace GentagDemo
             //hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
+        void displayTagType(Reader.tagTypes tagType, string tagID)
+        {
+            Color backup = getTabPageBackground(detectPage);
+            setTabPageBackground(detectPage, Color.Green);
+            switch (tagType)
+            {
+                case Reader.tagTypes.INSIDE:
+                    setLabel(detectTagTypeLabel, "INSIDE");
+                    break;
+                case Reader.tagTypes.iso14443a:
+                    setLabel(detectTagTypeLabel, "ISO14443A");
+                    break;
+                case Reader.tagTypes.iso14443b:
+                    setLabel(detectTagTypeLabel, "ISO14443B");
+                    break;
+                case Reader.tagTypes.iso14443bsr176:
+                    setLabel(detectTagTypeLabel, "ISO14443B");
+                    break;
+                case Reader.tagTypes.iso14443bsri:
+                    setLabel(detectTagTypeLabel, "ISO14443B");
+                    break;
+                case Reader.tagTypes.iso15693:
+                    setLabel(detectTagTypeLabel, "ISO15693");
+                    break;
+                case Reader.tagTypes.iso18000:
+                    setLabel(detectTagTypeLabel, "ISO18000");
+                    break;
+                case Reader.tagTypes.MiFareClassic:
+                    setLabel(detectTagTypeLabel, "MiFare");
+                    break;
+                case Reader.tagTypes.MiFareDESFire:
+                    setLabel(detectTagTypeLabel, "MiFare DESFire");
+                    break;
+                case Reader.tagTypes.MiFareUltraLight:
+                    setLabel(detectTagTypeLabel, "MiFare UltraLight");
+                    break;
+                case Reader.tagTypes.felica:
+                    setLabel(detectTagTypeLabel, "FelICa");
+                    break;
+            }
+
+            setLabel(detectTagIDLabel, tagID);
+            Thread.Sleep(250);
+            setTabPageBackground(detectPage, backup);
+        }
+
         ~demoClient()
         {
             debugOut.Close();
@@ -214,12 +261,12 @@ namespace GentagDemo
 
                     new Thread(new ThreadStart(tagReader.readTagID)).Start();
                 }
-                else if (sender == readButton)                
+                else if (sender == detectTagTypeButton)
+                    new Thread(new ThreadStart(tagReader.detectTag)).Start();
+                else if (sender == readButton)
                     new Thread(new ThreadStart(tagReader.readTag)).Start();
                 else if (sender == writeButton)
-                {
                     new Thread(new ThreadStart(writeTagMemory)).Start();
-                }
                 else if (sender == setValueButton)
                     new Thread(new ThreadStart(launchSetVSSettings)).Start();
                 else if (sender == readValueButton)
@@ -938,5 +985,6 @@ namespace GentagDemo
             }
             comPortsComboBox.SelectedIndex = 0;
         }
+
     }
 }

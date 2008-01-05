@@ -164,6 +164,34 @@ namespace GentagDemo
             }
         }
 
+        private delegate Color getTabPageBackgroundDelegate(TabPage p);
+
+        private Color getTabPageBackground(TabPage p)
+        {
+            if (this.InvokeRequired)
+            {
+                return (Color)this.Invoke(new getTabPageBackgroundDelegate(getTabPageBackground), new object[] { p });
+            }
+            else
+            {
+                return p.BackColor;
+            }
+        }
+
+        private delegate void setTabPageBackgroundDelegate(TabPage p, Color c);
+
+        private void setTabPageBackground(TabPage p, Color c)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setTabPageBackgroundDelegate(setTabPageBackground), new object[] { p, c });
+            }
+            else
+            {
+                p.BackColor = c;
+            }
+        }
+
         private delegate string getTextBoxDelegate(TextBox tb);
 
         private string getTextBox(TextBox tb)
