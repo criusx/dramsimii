@@ -321,10 +321,12 @@ namespace GentagDemo
                 return;
 
             // flash the correct button
-            Button button = loop == loopType.counterfeit ? readIDButton : loop == loopType.pet ? petButton : loop == loopType.wine ? wineButton : loop == loopType.patient ? readPatientButton : medicationButton;
+            //Button button = loop == loopType.counterfeit ? readIDButton : loop == loopType.pet ? petButton : loop == loopType.wine ? wineButton : loop == loopType.patient ? readPatientButton : medicationButton;
+            TabPage tabPage = loop == loopType.counterfeit ? authPage : loop == loopType.pet ? petPage : loop == loopType.wine ? winePage : loop == loopType.patient ? patientPage : patientPage;
 
-            Color backup = getButtonColor(button);
-            setButtonColor(button, Color.Green);
+            Color backup = getTabPageBackground(tabPage);
+            //setButtonColor(button, Color.Green);
+            setTabPageBackground(tabPage, Color.Green);
 
             lock (lookupQueue)
             {
@@ -352,7 +354,8 @@ namespace GentagDemo
 
             // flash the panel to signal the user that a tag was read
             Thread.Sleep(100);
-            setButtonColor(button, backup);
+            //setButtonColor(button, backup);
+            setTabPageBackground(tabPage, backup);
         }
 
         /// <summary>
