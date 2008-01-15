@@ -84,7 +84,7 @@ public class GetDates
   }
 
   static final String connectString = 
-    "jdbc:oracle:thin:rfid/rfid2006@192.168.10.10:1521:orcl1";
+    "jdbc:oracle:thin:rfid/rfid2006@gentag-server1:1521:gentagdb";
 
 
   public boolean checkInteraction(String ID, String drugID)

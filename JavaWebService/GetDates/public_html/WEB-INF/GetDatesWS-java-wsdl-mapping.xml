@@ -10,8 +10,17 @@
         <namespaceURI>http://datespackage/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_getRoute_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}getRouteResponse</anonymous-type-qname>
+        <java-type>datespackage.GetDatesWS_getUniqueUIDs_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}getUniqueUIDsResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>datespackage.GetDatesWS_getPicture_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}getPictureResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -21,6 +30,50 @@
     <java-xml-type-mapping>
         <java-type>datespackage.GetDatesWS_checkInteraction_ResponseStruct</java-type>
         <anonymous-type-qname>{http://datespackage/}checkInteractionResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>datespackage.GetDatesWS_getSince_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}getSinceResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>datespackage.GetDates</java-type>
+        <anonymous-type-qname>{http://datespackage/}GetDates</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>authenticated</java-variable-name>
+            <xml-element-name>authenticated</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>name</java-variable-name>
+            <xml-element-name>name</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>desc</java-variable-name>
+            <xml-element-name>desc</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>datespackage.GetDatesWS_getRoute_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}getRouteResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>datespackage.GetDatesWS_getItem_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}getItemResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -49,15 +102,6 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_getItem_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}getItemResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>datespackage.GetDatesWS_callHome_ResponseStruct</java-type>
         <anonymous-type-qname>{http://datespackage/}callHomeResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -78,50 +122,6 @@
     <java-xml-type-mapping>
         <java-type>datespackage.GetDatesWS_getPatientInfo_ResponseStruct</java-type>
         <anonymous-type-qname>{http://datespackage/}getPatientInfoResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_getSince_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}getSinceResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_getPicture_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}getPictureResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>datespackage.GetDates</java-type>
-        <anonymous-type-qname>{http://datespackage/}GetDates</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>authenticated</java-variable-name>
-            <xml-element-name>authenticated</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>name</java-variable-name>
-            <xml-element-name>name</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>desc</java-variable-name>
-            <xml-element-name>desc</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_getUniqueUIDs_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}getUniqueUIDsResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>

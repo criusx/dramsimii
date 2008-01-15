@@ -10,6 +10,15 @@
         <namespaceURI>http://dhlDemo/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
+        <java-type>dhlDemo.DhlDemoWS_setPackageInfo_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://dhlDemo/}setPackageInfoResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>dhlDemo.DhlDemoWS_scanPackage_ResponseStruct</java-type>
         <anonymous-type-qname>{http://dhlDemo/}scanPackageResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -106,15 +115,6 @@
         <variable-mapping>
             <java-variable-name>recipient</java-variable-name>
             <xml-element-name>recipient</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>dhlDemo.DhlDemoWS_setPackageInfo_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://dhlDemo/}setPackageInfoResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>

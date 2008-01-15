@@ -7,7 +7,7 @@
       <url path="../../public_html/WEB-INF/AuthenticationWebService-java-wsdl-mapping.xml"/>
    </list>
    <hash n="DATA_MODEL">
-      <value n="ATTACHMENT_ENCODING" v="ATTACHMENT_MTOM"/>
+      <value n="ATTACHMENT_ENCODING" v="ATTACHMENT_MIME"/>
       <list n="BD_">
          <hash>
             <value n="BOUND_PORT_TYPE" v="{USE_OWNER_TNS}AuthenticationWebService"/>
@@ -17,25 +17,13 @@
             <list n="OP_BINDINGS">
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="boolean.callHome.java.lang.String.float[].float[].long[].long[].float[].float[].int[]"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="java.lang.String[].getSince.long"/>
+                  <value n="BOUND_OPERATION" v="java.lang.String[].getRoute.java.lang.String.long"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
                   <value n="BOUND_OPERATION" v="boolean.setItem.authenticationPackage.itemInfo.java.lang.String"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="java.lang.String[].getRoute.java.lang.String.long"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -48,6 +36,18 @@
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
                   <value n="BOUND_OPERATION" v="java.lang.String[].getUniqueUIDs"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="boolean.callHome.java.lang.String.float[].float[].long[].long[].float[].float[].int[]"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="java.lang.String[].getSince.long"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -65,22 +65,12 @@
             <value n="PORT_BINDING_NAME" v="{USE_OWNER_TNS}AuthenticationWebServiceSoapHttp"/>
             <list n="PORT_OPS">
                <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="boolean.callHome.java.lang.String.float[].float[].long[].long[].float[].float[].int[]"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="java.lang.String[].getSince.long"/>
+                  <value n="EXPOSED_BD_OPERATION" v="java.lang.String[].getRoute.java.lang.String.long"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="EXPOSED_BD_OPERATION" v="boolean.setItem.authenticationPackage.itemInfo.java.lang.String"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="java.lang.String[].getRoute.java.lang.String.long"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -91,6 +81,16 @@
                </hash>
                <hash>
                   <value n="EXPOSED_BD_OPERATION" v="java.lang.String[].getUniqueUIDs"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.callHome.java.lang.String.float[].float[].long[].long[].float[].float[].int[]"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="java.lang.String[].getSince.long"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -109,10 +109,121 @@
             <list n="OP_">
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
-                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_callHome"/>
-                  <list n="OP_JAVA_EXCEPTIONS">
-                     <string v="java.rmi.RemoteException"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getRoute"/>
+                  <value n="OP_JAVA_NAME" v="getRoute"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="RFIDNum"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="RFIDNum"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="sinceWhen"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="sinceWhen"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="long"/>
+                     </hash>
                   </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="java.lang.String[]"/>
+                  <value n="OP_NAME" v="getRoute"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getRouteResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_setItem"/>
+                  <value n="OP_JAVA_NAME" v="setItem"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="newItem"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="newItem"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="authenticationPackage.itemInfo"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="UID"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="UID"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
+                  <value n="OP_NAME" v="setItem"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_setItemResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getItem"/>
+                  <value n="OP_JAVA_NAME" v="getItem"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="RFIDNum"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="RFIDNum"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="UID"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="UID"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="lat"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="lat"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="float"/>
+                     </hash>
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="longit"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="longit"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="float"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="authenticationPackage.itemInfo"/>
+                  <value n="OP_NAME" v="getItem"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getItemResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getUniqueUIDs"/>
+                  <value n="OP_JAVA_NAME" v="getUniqueUIDs"/>
+                  <value n="OP_JAVA_RETURN_TYPE" v="java.lang.String[]"/>
+                  <value n="OP_NAME" v="getUniqueUIDs"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getUniqueUIDsResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_callHome"/>
                   <value n="OP_JAVA_NAME" v="callHome"/>
                   <list n="OP_JAVA_PARAMETERS">
                      <hash>
@@ -190,9 +301,6 @@
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
                   <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getSince"/>
-                  <list n="OP_JAVA_EXCEPTIONS">
-                     <string v="java.rmi.RemoteException"/>
-                  </list>
                   <value n="OP_JAVA_NAME" v="getSince"/>
                   <list n="OP_JAVA_PARAMETERS">
                      <hash>
@@ -211,132 +319,6 @@
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
-               <hash>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
-                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_setItem"/>
-                  <list n="OP_JAVA_EXCEPTIONS">
-                     <string v="java.rmi.RemoteException"/>
-                  </list>
-                  <value n="OP_JAVA_NAME" v="setItem"/>
-                  <list n="OP_JAVA_PARAMETERS">
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="newItem"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="newItem"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="authenticationPackage.itemInfo"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="UID"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="UID"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="java.lang.String"/>
-                     </hash>
-                  </list>
-                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
-                  <value n="OP_NAME" v="setItem"/>
-                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_setItemResponse"/>
-                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
-                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
-                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getRoute"/>
-                  <list n="OP_JAVA_EXCEPTIONS">
-                     <string v="java.rmi.RemoteException"/>
-                  </list>
-                  <value n="OP_JAVA_NAME" v="getRoute"/>
-                  <list n="OP_JAVA_PARAMETERS">
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="RFIDNum"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="RFIDNum"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="java.lang.String"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="sinceWhen"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="sinceWhen"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="long"/>
-                     </hash>
-                  </list>
-                  <value n="OP_JAVA_RETURN_TYPE" v="java.lang.String[]"/>
-                  <value n="OP_NAME" v="getRoute"/>
-                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getRouteResponse"/>
-                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
-                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
-                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getItem"/>
-                  <list n="OP_JAVA_EXCEPTIONS">
-                     <string v="java.rmi.RemoteException"/>
-                  </list>
-                  <value n="OP_JAVA_NAME" v="getItem"/>
-                  <list n="OP_JAVA_PARAMETERS">
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="RFIDNum"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="RFIDNum"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="java.lang.String"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="UID"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="UID"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="java.lang.String"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="lat"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="lat"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="float"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="longit"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="longit"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="float"/>
-                     </hash>
-                  </list>
-                  <value n="OP_JAVA_RETURN_TYPE" v="authenticationPackage.itemInfo"/>
-                  <value n="OP_NAME" v="getItem"/>
-                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getItemResponse"/>
-                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
-                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
-                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getUniqueUIDs"/>
-                  <list n="OP_JAVA_EXCEPTIONS">
-                     <string v="java.rmi.RemoteException"/>
-                  </list>
-                  <value n="OP_JAVA_NAME" v="getUniqueUIDs"/>
-                  <value n="OP_JAVA_RETURN_TYPE" v="java.lang.String[]"/>
-                  <value n="OP_NAME" v="getUniqueUIDs"/>
-                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getUniqueUIDsResponse"/>
-                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
-                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
             </list>
             <hash n="PROPERTY_GROUPS"/>
             <value n="PT_CLASS" v="authenticationPackage.authenticationService"/>
@@ -345,6 +327,7 @@
       <url n="TARGET_PROJECT" path="../../DemoWS.jpr"/>
       <list n="WS_DEPENDENT_VALUE_TYPES"/>
       <url n="WS_MAPPING_FILE" path="../../public_html/WEB-INF/AuthenticationWebService-java-wsdl-mapping.xml"/>
+      <value n="WS_REFERENCE_WSDL"/>
       <value n="WS_TARGET_NAMESPACE" v="http://authenticationPackage/"/>
       <value n="WS_TYPE_NAMESPACE" v="http://authenticationPackage/types/"/>
       <value n="WS_URI" v="AuthenticationWebService"/>

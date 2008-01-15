@@ -1,20 +1,27 @@
 <oracle-webservices xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/oracle-webservices-10_0.xsd">
-    <webservice-description name="wineWS">
-        <port-component name="wineWSSoapHttpPort">
-            <rest-support>true</rest-support>
+    <webservice-description name="COREMedDemoWS">
+        <port-component name="COREMedDemoWSSoap12HttpPort">
             <operations>
-                <operation name="enterBottleInformation" input="{http://winePackage/}enterBottleInformationElement"/>
-                <operation name="getWineAccessesSince" input="{http://winePackage/}getWineAccessesSinceElement"/>
-                <operation name="retrieveBottleInformation" input="{http://winePackage/}retrieveBottleInformationElement"/>
+                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
+                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
+                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
+                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
+                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
+                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
+                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
+                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
             </operations>
         </port-component>
-    </webservice-description>
-    <webservice-description name="DhlDemoWS">
-        <port-component name="DhlDemoWSSoapHttpPort">
+        <port-component name="COREMedDemoWSSoapHttpPort">
             <operations>
-                <operation name="getPackageInfo" input="{http://dhlDemo/}getPackageInfo"/>
-                <operation name="scanPackage" input="{http://dhlDemo/}scanPackage"/>
-                <operation name="setPackageInfo" input="{http://dhlDemo/}setPackageInfo"/>
+                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
+                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
+                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
+                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
+                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
+                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
+                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
+                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
             </operations>
         </port-component>
     </webservice-description>
@@ -31,6 +38,15 @@
                 <operation name="getSince" input="{http://datespackage/}getSinceElement"/>
                 <operation name="getUniqueUIDs" input="{http://datespackage/}getUniqueUIDsElement"/>
                 <operation name="setItem" input="{http://datespackage/}setItemElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="DhlDemoWS">
+        <port-component name="DhlDemoWSSoapHttpPort">
+            <operations>
+                <operation name="getPackageInfo" input="{http://dhlDemo/}getPackageInfo"/>
+                <operation name="scanPackage" input="{http://dhlDemo/}scanPackage"/>
+                <operation name="setPackageInfo" input="{http://dhlDemo/}setPackageInfo"/>
             </operations>
         </port-component>
     </webservice-description>
@@ -55,42 +71,25 @@
             </operations>
         </port-component>
     </webservice-description>
-    <webservice-description name="AuthenticationWebService">
-        <port-component name="AuthenticationWebServiceSoapHttpPort">
-            <mtom-support>true</mtom-support>
+    <webservice-description name="wineWS">
+        <port-component name="wineWSSoapHttpPort">
+            <rest-support>true</rest-support>
             <operations>
-                <operation name="callHome" input="{http://authenticationPackage/types/}callHomeElement"/>
-                <operation name="getItem" input="{http://authenticationPackage/types/}getItemElement"/>
-                <operation name="getRoute" input="{http://authenticationPackage/types/}getRouteElement"/>
-                <operation name="getSince" input="{http://authenticationPackage/types/}getSinceElement"/>
-                <operation name="getUniqueUIDs" input="{http://authenticationPackage/types/}getUniqueUIDsElement"/>
-                <operation name="setItem" input="{http://authenticationPackage/types/}setItemElement"/>
+                <operation name="enterBottleInformation" input="{http://winePackage/}enterBottleInformationElement"/>
+                <operation name="getWineAccessesSince" input="{http://winePackage/}getWineAccessesSinceElement"/>
+                <operation name="retrieveBottleInformation" input="{http://winePackage/}retrieveBottleInformationElement"/>
             </operations>
         </port-component>
     </webservice-description>
-    <webservice-description name="COREMedDemoWS">
-        <port-component name="COREMedDemoWSSoap12HttpPort">
+    <webservice-description name="AuthenticationWebService">
+        <port-component name="AuthenticationWebServiceSoapHttpPort">
             <operations>
-                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
-                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
-                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
-                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
-                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
-                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
-                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
-                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
-            </operations>
-        </port-component>
-        <port-component name="COREMedDemoWSSoapHttpPort">
-            <operations>
-                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
-                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
-                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
-                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
-                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
-                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
-                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
-                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
+                <operation name="callHome" input="{http://authenticationPackage/}callHome"/>
+                <operation name="getItem" input="{http://authenticationPackage/}getItem"/>
+                <operation name="getRoute" input="{http://authenticationPackage/}getRoute"/>
+                <operation name="getSince" input="{http://authenticationPackage/}getSince"/>
+                <operation name="getUniqueUIDs" input="{http://authenticationPackage/}getUniqueUIDs"/>
+                <operation name="setItem" input="{http://authenticationPackage/}setItem"/>
             </operations>
         </port-component>
     </webservice-description>

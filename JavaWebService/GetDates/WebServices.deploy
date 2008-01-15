@@ -23,7 +23,7 @@
       <mainClass/>
    </archiveOptions>
    <contextRoot>GentagDemo</contextRoot>
-   <defaultConnection>linServer</defaultConnection>
+   <defaultConnection>GentagAS</defaultConnection>
    <deployClientMaxHeapSize/>
    <earURL path="deploy/WS.ear"/>
    <enterpriseAppName>GentagWebApp</enterpriseAppName>

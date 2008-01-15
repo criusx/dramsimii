@@ -23,13 +23,13 @@
                </hash>
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="boolean.setPackageInfo.dhlDemo.packageInfo"/>
+                  <value n="BOUND_OPERATION" v="dhlDemo.packageInfo.getPackageInfo.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="dhlDemo.packageInfo.getPackageInfo.java.lang.String"/>
+                  <value n="BOUND_OPERATION" v="boolean.setPackageInfo.dhlDemo.packageInfo"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -52,12 +52,12 @@
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="boolean.setPackageInfo.dhlDemo.packageInfo"/>
+                  <value n="EXPOSED_BD_OPERATION" v="dhlDemo.packageInfo.getPackageInfo.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="dhlDemo.packageInfo.getPackageInfo.java.lang.String"/>
+                  <value n="EXPOSED_BD_OPERATION" v="boolean.setPackageInfo.dhlDemo.packageInfo"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -91,6 +91,27 @@
                   <value n="OP_JAVA_RETURN_TYPE" v="dhlDemo.packageInfo"/>
                   <value n="OP_NAME" v="scanPackage"/>
                   <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}DhlDemoWS_scanPackageResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}DhlDemoWS_getPackageInfo"/>
+                  <value n="OP_JAVA_NAME" v="getPackageInfo"/>
+                  <list n="OP_JAVA_PARAMETERS">
+                     <hash>
+                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
+                        <value n="NAME" v="RFIDNum"/>
+                        <value n="PA_MODE" v="0"/>
+                        <value n="PA_WSDL_NAME" v="RFIDNum"/>
+                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
+                        <value n="TYPE" v="java.lang.String"/>
+                     </hash>
+                  </list>
+                  <value n="OP_JAVA_RETURN_TYPE" v="dhlDemo.packageInfo"/>
+                  <value n="OP_NAME" v="getPackageInfo"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}DhlDemoWS_getPackageInfoResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>

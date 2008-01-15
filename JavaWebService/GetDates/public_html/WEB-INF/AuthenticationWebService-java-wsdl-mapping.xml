@@ -7,42 +7,38 @@
 
     <package-mapping>
         <package-type>authenticationPackage</package-type>
-        <namespaceURI>http://authenticationPackage/types/</namespaceURI>
-    </package-mapping>
-    <package-mapping>
-        <package-type>authenticationPackage</package-type>
         <namespaceURI>http://authenticationPackage/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getSince_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/types/}getSinceResponse</anonymous-type-qname>
+        <java-type>authenticationPackage.AuthenticationWebService_callHome_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}callHomeResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
+            <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
         <java-type>authenticationPackage.AuthenticationWebService_getRoute_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/types/}getRouteResponse</anonymous-type-qname>
+        <anonymous-type-qname>{http://authenticationPackage/}getRouteResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
+            <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_setItem_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/types/}setItemResponse</anonymous-type-qname>
+        <java-type>authenticationPackage.AuthenticationWebService_getItem_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getItemResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
+            <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
         <java-type>authenticationPackage.itemInfo</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/types/}itemInfo</anonymous-type-qname>
+        <anonymous-type-qname>{http://authenticationPackage/}itemInfo</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>RFIDNum</java-variable-name>
@@ -58,34 +54,34 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_callHome_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/types/}callHomeResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getItem_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/types/}getItemResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>authenticationPackage.AuthenticationWebService_getUniqueUIDs_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/types/}getUniqueUIDsResponse</anonymous-type-qname>
+        <anonymous-type-qname>{http://authenticationPackage/}getUniqueUIDsResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_getSince_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getSinceResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_setItem_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}setItemResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <service-interface-mapping>
-        <service-interface>authenticationPackage.AuthenticationWebService</service-interface>
+        <service-interface>authenticationPackage.authenticationServiceService</service-interface>
         <wsdl-service-name xmlns:serviceNS="http://authenticationPackage/">serviceNS:AuthenticationWebService</wsdl-service-name>
         <port-mapping>
             <port-name>AuthenticationWebServiceSoapHttpPort</port-name>
@@ -175,7 +171,7 @@
             <wsdl-return-value-mapping>
                 <method-return-value>boolean</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHomeResponse</wsdl-message>
-                <wsdl-message-part-name>result</wsdl-message-part-name>
+                <wsdl-message-part-name>return</wsdl-message-part-name>
             </wsdl-return-value-mapping>
         </service-endpoint-method-mapping>
         <service-endpoint-method-mapping>
@@ -221,7 +217,7 @@
             <wsdl-return-value-mapping>
                 <method-return-value>authenticationPackage.itemInfo</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_getItemResponse</wsdl-message>
-                <wsdl-message-part-name>result</wsdl-message-part-name>
+                <wsdl-message-part-name>return</wsdl-message-part-name>
             </wsdl-return-value-mapping>
         </service-endpoint-method-mapping>
         <service-endpoint-method-mapping>
@@ -249,7 +245,7 @@
             <wsdl-return-value-mapping>
                 <method-return-value>java.lang.String[]</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_getRouteResponse</wsdl-message>
-                <wsdl-message-part-name>result</wsdl-message-part-name>
+                <wsdl-message-part-name>return</wsdl-message-part-name>
             </wsdl-return-value-mapping>
         </service-endpoint-method-mapping>
         <service-endpoint-method-mapping>
@@ -268,7 +264,7 @@
             <wsdl-return-value-mapping>
                 <method-return-value>java.lang.String[]</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_getSinceResponse</wsdl-message>
-                <wsdl-message-part-name>result</wsdl-message-part-name>
+                <wsdl-message-part-name>return</wsdl-message-part-name>
             </wsdl-return-value-mapping>
         </service-endpoint-method-mapping>
         <service-endpoint-method-mapping>
@@ -278,7 +274,7 @@
             <wsdl-return-value-mapping>
                 <method-return-value>java.lang.String[]</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_getUniqueUIDsResponse</wsdl-message>
-                <wsdl-message-part-name>result</wsdl-message-part-name>
+                <wsdl-message-part-name>return</wsdl-message-part-name>
             </wsdl-return-value-mapping>
         </service-endpoint-method-mapping>
         <service-endpoint-method-mapping>
@@ -306,7 +302,7 @@
             <wsdl-return-value-mapping>
                 <method-return-value>boolean</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_setItemResponse</wsdl-message>
-                <wsdl-message-part-name>result</wsdl-message-part-name>
+                <wsdl-message-part-name>return</wsdl-message-part-name>
             </wsdl-return-value-mapping>
         </service-endpoint-method-mapping>
     </service-endpoint-interface-mapping>

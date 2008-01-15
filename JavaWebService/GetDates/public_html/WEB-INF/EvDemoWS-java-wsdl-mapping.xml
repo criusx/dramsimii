@@ -10,6 +10,24 @@
         <namespaceURI>http://evDemo/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
+        <java-type>evDemo.EvDemoWS_addSpectrum_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://evDemo/}addSpectrumResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>evDemo.EvDemoWS_getSpectrum_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://evDemo/}getSpectrumResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>evDemo.spectrumInfo</java-type>
         <anonymous-type-qname>{http://evDemo/}spectrumInfo</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -24,24 +42,6 @@
         <variable-mapping>
             <java-variable-name>exists</java-variable-name>
             <xml-element-name>exists</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>evDemo.EvDemoWS_getSpectrum_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://evDemo/}getSpectrumResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>evDemo.EvDemoWS_addSpectrum_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://evDemo/}addSpectrumResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <service-interface-mapping>

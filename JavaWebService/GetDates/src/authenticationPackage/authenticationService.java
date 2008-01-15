@@ -31,6 +31,7 @@ import org.apache.commons.digester.Digester;
 import winepackage.wineBottle;
 
 
+@WebService(name = "AuthenticationWebService", serviceName = "AuthenticationWebService")
 public class authenticationService
 {
   public authenticationService()
@@ -38,9 +39,10 @@ public class authenticationService
   }
 
   private static final String connectString = 
-    "jdbc:oracle:thin:rfid/rfid2006@192.168.10.10:1521:orcl1";
+    "jdbc:oracle:thin:rfid/rfid2006@gentag-server1:1521:gentagdb";
 
 
+  @WebMethod
   public String[] getRoute(String RFIDNum, long sinceWhen)
   {
     OracleDataSource ods;
@@ -97,6 +99,7 @@ public class authenticationService
     return (String[]) results.toArray(new String[results.size()]);
   }
 
+  @WebMethod
   public boolean setItem(itemInfo newItem, String UID)
   {
     OracleDataSource ods;
@@ -144,6 +147,7 @@ public class authenticationService
   }
 
 
+  @WebMethod
   public itemInfo getItem(String RFIDNum, String UID, float lat, 
                           float longit)
   {
@@ -235,6 +239,7 @@ public class authenticationService
    * 
    * @return
    */
+  @WebMethod
   public String[] getUniqueUIDs()
   {
     OracleDataSource ods;
@@ -276,6 +281,7 @@ public class authenticationService
    * @param elevation
    * @return
    */
+  @WebMethod
   public boolean callHome(String UID, float[] lat, float[] longit, 
                           long[] timeSinceLastReading, long[] reportedTime, 
                           float[] bearing, float[] speed, int[] elevation)
@@ -324,6 +330,7 @@ public class authenticationService
     "August", "September", "October", "November", "December" };
 
 
+  @WebMethod
   public String[] getSince(long timestamp)
   {
     OracleDataSource ods;
