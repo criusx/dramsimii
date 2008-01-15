@@ -284,7 +284,7 @@
   </binding>
   <service name="petWS">
     <port name="petWSSoapHttpPort" binding="tns:petWSSoapHttp">
-      <soap:address location="http://crius.dyndns.org:8888/GentagDemo/petWSSoapHttpPort" />
+      <soap:address location="http://192.168.10.24:7777/GentagDemo/petWSSoapHttpPort" />
     </port>
   </service>
 </definitions>

@@ -292,6 +292,8 @@ namespace GentagDemo
             MessageBox.Show(errorMessage);
         }
 
+        private static Color flashColor = Color.Honeydew;
+
         private Hashtable wineBottleCache = new Hashtable();
 
         private Hashtable counterfeitCache = new Hashtable();
@@ -320,13 +322,11 @@ namespace GentagDemo
             if (string.IsNullOrEmpty(tagID)) // if there was no string returned
                 return;
 
-            // flash the correct button
-            //Button button = loop == loopType.counterfeit ? readIDButton : loop == loopType.pet ? petButton : loop == loopType.wine ? wineButton : loop == loopType.patient ? readPatientButton : medicationButton;
+            // flash the correct page            
             TabPage tabPage = loop == loopType.counterfeit ? authPage : loop == loopType.pet ? petPage : loop == loopType.wine ? winePage : loop == loopType.patient ? patientPage : patientPage;
 
             Color backup = getTabPageBackground(tabPage);
-            //setButtonColor(button, Color.Green);
-            setTabPageBackground(tabPage, Color.Green);
+            setTabPageBackground(tabPage, flashColor);
 
             lock (lookupQueue)
             {
@@ -354,7 +354,6 @@ namespace GentagDemo
 
             // flash the panel to signal the user that a tag was read
             Thread.Sleep(100);
-            //setButtonColor(button, backup);
             setTabPageBackground(tabPage, backup);
         }
 
@@ -973,8 +972,23 @@ namespace GentagDemo
 
         private void connectGPSButton_Click(object sender, EventArgs e)
         {
-            gpsInterpreter.Open(getComboBox(comPortsComboBox));
-            // TODO: add disconnect options, change text
+            try
+            {
+                if (gpsInterpreter.IsOpen())
+                {
+                    gpsInterpreter.Close();
+                    setButtonText(connectGPSButton, "Connect");                
+                }
+                else
+                {
+                    gpsInterpreter.Open(getComboBox(comPortsComboBox));
+                    setButtonText(connectGPSButton, "Disconnect");                    
+                }
+            }
+            catch (System.IO.IOException ex)
+            {
+
+            }
         }
 
         private void scanCOMPorts(object sender, EventArgs e)

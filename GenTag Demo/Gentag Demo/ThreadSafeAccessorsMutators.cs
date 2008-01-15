@@ -150,6 +150,20 @@ namespace GentagDemo
             }
         }
 
+        private delegate void setButtonTextDelegate(Button b, string c);
+
+        private void setButtonText(Button b, string c)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setButtonTextDelegate(setButtonText), new object[] { b, c });
+            }
+            else
+            {
+                b.Text = c;
+            }
+        }
+
         private delegate Color getButtonColorDelegate(Button b);
 
         private Color getButtonColor(Button b)

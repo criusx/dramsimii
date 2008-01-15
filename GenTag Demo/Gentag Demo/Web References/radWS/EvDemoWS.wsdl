@@ -84,7 +84,7 @@
   </binding>
   <service name="EvDemoWS">
     <port name="EvDemoWSSoapHttpPort" binding="tns:EvDemoWSSoapHttp">
-      <soap:address location="http://crius.dyndns.org:8888/GentagDemo/EvDemoWSSoapHttpPort" />
+      <soap:address location="http://192.168.10.24:7777/GentagDemo/EvDemoWSSoapHttpPort" />
     </port>
   </service>
 </definitions>

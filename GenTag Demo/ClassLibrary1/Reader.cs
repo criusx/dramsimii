@@ -192,7 +192,7 @@ namespace RFIDReader
 
         StringBuilder newTagBuilder = new StringBuilder(16);
 
-        static private int retryCount = 25;
+        static private int retryCount = 75;
 
         public void readTagID()
         {
