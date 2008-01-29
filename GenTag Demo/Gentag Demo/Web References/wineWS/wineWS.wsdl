@@ -133,7 +133,7 @@
   </binding>
   <service name="wineWS">
     <port name="wineWSSoapHttpPort" binding="tns:wineWSSoapHttp">
-      <soap:address location="http://192.168.10.24:7777/GentagDemo/wineWSSoapHttpPort" />
+      <soap:address location="http://id1.gentag.com:7777/GentagDemo/wineWSSoapHttpPort" />
     </port>
   </service>
 </definitions>

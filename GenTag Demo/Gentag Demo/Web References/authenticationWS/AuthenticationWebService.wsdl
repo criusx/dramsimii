@@ -214,7 +214,7 @@
   </binding>
   <service name="AuthenticationWebService">
     <port name="AuthenticationWebServiceSoapHttpPort" binding="tns:AuthenticationWebServiceSoapHttp">
-      <soap:address location="http://192.168.10.24:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort" />
+      <soap:address location="http://id1.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort" />
     </port>
   </service>
 </definitions>

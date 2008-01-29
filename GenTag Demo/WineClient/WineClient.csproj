@@ -99,10 +99,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://crius.dyndns.org:8888/GentagWineDemo-WineDemo-context-root/WineWSSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/WineWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\org.dyndns.criusWine\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:8888/GentagWineDemo-WineDemo-context-root/WineWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/WineWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

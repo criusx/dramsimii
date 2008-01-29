@@ -28,7 +28,7 @@ namespace GentagDemo.petWS {
         
         /// <remarks/>
         public petWS() {
-            this.Url = "http://192.168.10.24:7777/GentagDemo/petWSSoapHttpPort";
+            this.Url = "http://id1.gentag.com:7777/GentagDemo/petWSSoapHttpPort";
         }
         
         /// <remarks/>

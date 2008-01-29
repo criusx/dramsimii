@@ -384,10 +384,10 @@
   </binding>
   <service name="COREMedDemoWS">
     <port name="COREMedDemoWSSoap12HttpPort" binding="tns:COREMedDemoWSSoap12Http">
-      <soap12:address location="http://192.168.10.24:7777/GentagDemo/COREMedDemoWSSoap12HttpPort" />
+      <soap12:address location="http://id1.gentag.com:7777/GentagDemo/COREMedDemoWSSoap12HttpPort" />
     </port>
     <port name="COREMedDemoWSSoapHttpPort" binding="tns:COREMedDemoWSSoapHttp">
-      <soap:address location="http://192.168.10.24:7777/GentagDemo/COREMedDemoWSSoapHttpPort" />
+      <soap:address location="http://id1.gentag.com:7777/GentagDemo/COREMedDemoWSSoapHttpPort" />
     </port>
   </service>
 </definitions>

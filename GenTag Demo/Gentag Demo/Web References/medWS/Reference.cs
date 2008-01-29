@@ -28,7 +28,7 @@ namespace GentagDemo.medWS {
         
         /// <remarks/>
         public COREMedDemoWS() {
-            this.Url = "http://192.168.10.24:7777/GentagDemo/COREMedDemoWSSoapHttpPort";
+            this.Url = "http://id1.gentag.com:7777/GentagDemo/COREMedDemoWSSoapHttpPort";
         }
         
         /// <remarks/>

@@ -28,7 +28,7 @@ namespace GentagDemo.wineWS {
         
         /// <remarks/>
         public wineWS() {
-            this.Url = "http://192.168.10.24:7777/GentagDemo/wineWSSoapHttpPort";
+            this.Url = "http://id1.gentag.com:7777/GentagDemo/wineWSSoapHttpPort";
         }
         
         /// <remarks/>

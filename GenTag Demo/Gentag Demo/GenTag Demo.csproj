@@ -20,6 +20,7 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>GentagKey.pfx</AssemblyOriginatorKeyFile>
     <StartupObject>GentagDemo.Program</StartupObject>
+    <ApplicationIcon>application-download.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -74,7 +75,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\system.web.services.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\Framework\v2.0.50727\System.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="system.xml, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\system.xml.dll</HintPath>
@@ -155,10 +159,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://crius.dyndns.org:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\authenticationWS\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -168,10 +172,10 @@
       <CachedSettingsPropName>
       </CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://crius.dyndns.org:7777/GentagDemo/COREMedDemoWSSoap12HttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/COREMedDemoWSSoap12HttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\medWS\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:7777/GentagDemo/COREMedDemoWSSoap12HttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/COREMedDemoWSSoap12HttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -181,10 +185,10 @@
       <CachedSettingsPropName>
       </CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://crius.dyndns.org:7777/GentagDemo/EvDemoWSSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/EvDemoWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\radWS\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:7777/GentagDemo/EvDemoWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/EvDemoWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -194,10 +198,10 @@
       <CachedSettingsPropName>
       </CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://crius.dyndns.org:7777/GentagDemo/petWSSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/petWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\petWS\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:7777/GentagDemo/petWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/petWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -207,10 +211,10 @@
       <CachedSettingsPropName>
       </CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://crius.dyndns.org:7777/GentagDemo/wineWSSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/wineWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\wineWS\</RelPath>
-      <UpdateFromURL>http://crius.dyndns.org:7777/GentagDemo/wineWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/wineWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -222,6 +226,7 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="application-download.ico" />
     <Content Include="Gentag Demo.exe.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
