@@ -1,26 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.ComponentModel;
-using System.Data;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using RFIDReader;
-using System.Net;
+using System.Globalization;
 using System.IO;
 using System.IO.Ports;
+using System.Net;
 using System.Net.Sockets;
-using Microsoft.Win32;
-using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Globalization;
 using System.Threading;
-using System.Security.Permissions;
-using TestPocketGraphBar;
-using Microsoft.WindowsMobile.Status;
-using GentagDemo;
 using System.Web.Services.Protocols;
+using System.Windows.Forms;
+using NMEA;
+using RFIDReader;
+using TestPocketGraphBar;
+using System.Text;
 
 
 [assembly: CLSCompliant(true)]
@@ -43,16 +37,36 @@ namespace GentagDemo
 
         TextWriter debugOut;
 
+        private RFIDReadCursor.UserControl1 userControl11;
+
+        Thread versionCheckThread;
+
+        
+
         public demoClient()
         {
             // run initializations provided by the designer
             InitializeComponent();
 
-            debugOut = new StreamWriter("debug.txt", false);
-
             tagReader = new Reader();
 
+            // open comm briefly to preload the assemblies
             tagReader.initialize();
+
+            // intialize threads
+            versionCheckThread = new Thread(versionCheck);
+            versionCheckThread.Start();          
+
+            // initialize the debug stream
+            debugOut = new StreamWriter("debug.txt", false);
+
+            // userControl11
+            this.userControl11 = new RFIDReadCursor.UserControl1();
+            this.userControl11.Location = new System.Drawing.Point(76, 76);
+            this.userControl11.Name = "userControl11";
+            this.userControl11.Size = new System.Drawing.Size(72, 72);           
+
+            
 
             // generate the device's UID
             string AppString = GentagDemo.Properties.Resources.titleString;
@@ -132,6 +146,8 @@ namespace GentagDemo
             VarioSens.Controls.Add(graph);
             radPage.Controls.Add(radGraph);
 
+            
+
             //////////////////////////////////////////////////////////////////////////
             // for wine demo only
             //////////////////////////////////////////////////////////////////////////
@@ -163,10 +179,51 @@ namespace GentagDemo
             //hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
+        private static void versionCheck()
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.gentag.com/version.txt");
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream responseStream = response.GetResponseStream();
+                string tempString = null;
+                int count = 0;
+                byte[] buf = new byte[8192];
+                StringBuilder sb = new StringBuilder();
+
+
+                do
+                {
+                    // fill the buffer with data
+                    count = responseStream.Read(buf, 0, buf.Length);
+
+                    // make sure we read some data
+                    if (count != 0)
+                    {
+                        // translate from bytes to ASCII text
+                        tempString = Encoding.ASCII.GetString(buf, 0, count);
+
+                        // continue building the string
+                        sb.Append(tempString);
+                    }
+                }
+                while (count > 0); // any more data to read?
+
+                Version newVersion = new Version(sb.ToString());
+
+                if (newVersion > System.Reflection.Assembly.GetExecutingAssembly().GetName().Version)
+                    MessageBox.Show("Version " + newVersion.ToString() + " is available. You are running " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ".");
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         void displayTagType(Reader.tagTypes tagType, string tagID)
         {
-            Color backup = getTabPageBackground(detectPage);
-            setTabPageBackground(detectPage, Color.Green);
+            
+            blinkCursor(true);
+
             switch (tagType)
             {
                 case Reader.tagTypes.INSIDE:
@@ -206,18 +263,21 @@ namespace GentagDemo
 
             setLabel(detectTagIDLabel, tagID);
             Thread.Sleep(250);
-            setTabPageBackground(detectPage, backup);
+
+            blinkCursor(false);
         }
 
         ~demoClient()
         {
-            debugOut.Close();
+            stopReading(true);
+            debugOut.Dispose();
+            Dispose(false);
         }
 
         private void receiveTagContents(string contents)
         {
             setTextBox(readWriteTB, contents);
-            stopReading();
+            stopReading(false);
         }        
 
         private void writeTagMemory()
@@ -228,7 +288,7 @@ namespace GentagDemo
         private void doneWriting(string status)
         {
             setLabel(readWriteStatusLabel, "Status: " + status);
-            stopReading();
+            stopReading(false);
         }       
 
         private enum loopType { wine, counterfeit, pet, patient, med, test, none };
@@ -236,15 +296,17 @@ namespace GentagDemo
         // the variable that describes whether it's looping looking for wine bottles or general tags
         private loopType loop;
 
+        Thread readerThread;
+
+        
         private void readerClick(object sender, EventArgs e)
         {
             if (tagReader.running == false)
             {
-                setWaitCursor(true);
-
-                if (sender == readLogButton)
-                    new Thread(new ThreadStart(launchReadVSLog)).Start();
-                else if ((sender == medicationButton) || (sender == readIDButton) || (sender == wineButton) || (sender == petButton) || (sender == readPatientButton) || (sender == readTestButton))
+                stopReading(true);
+                setWaitCursor(true);                
+                
+                if ((sender == medicationButton) || (sender == readIDButton) || (sender == wineButton) || (sender == petButton) || (sender == readPatientButton) || (sender == readTestButton))
                 {
                     if (sender == wineButton)
                         loop = loopType.wine;
@@ -259,41 +321,58 @@ namespace GentagDemo
                     else if (sender == readTestButton)
                         loop = loopType.test;
 
-                    new Thread(new ThreadStart(tagReader.readTagID)).Start();
+                    readerThread = new Thread(tagReader.readTagID);
+
                 }
+                else if (sender == readLogButton)
+                    readerThread = new Thread(launchReadVSLog);
                 else if (sender == detectTagTypeButton)
-                    new Thread(new ThreadStart(tagReader.detectTag)).Start();
+                    readerThread = new Thread(tagReader.detectTag);
                 else if (sender == readButton)
-                    new Thread(new ThreadStart(tagReader.readTag)).Start();
+                    readerThread = new Thread(tagReader.readTag);
                 else if (sender == writeButton)
-                    new Thread(new ThreadStart(writeTagMemory)).Start();
+                    readerThread = new Thread(writeTagMemory);
                 else if (sender == setValueButton)
-                    new Thread(new ThreadStart(launchSetVSSettings)).Start();
+                    readerThread = new Thread(launchSetVSSettings);
                 else if (sender == readValueButton)
-                    new Thread(new ThreadStart(launchGetVSSettings)).Start();
+                    readerThread = new Thread(launchGetVSSettings);
                 else if (sender == radScanButton)
-                    new Thread(new ThreadStart(radScan)).Start();
+                    readerThread = new Thread(radScan);
+
+                readerThread.IsBackground = true;
+                readerThread.Start();
             }
             else
             {
-                stopReading();
+                stopReading(true);
             }
         }
 
-        private void stopReading()
-        {
+        private void stopReading(bool forceStop)
+        {            
             setWaitCursor(false);
+            blinkCursor(false);
             tagReader.running = false;
+
+            if (forceStop)
+            {
+                if (readerThread != null)
+                {
+                    if (readerThread.Join(1250) == false)
+                    {
+                        readerThread.Abort();
+                    }
+                    readerThread = null;
+                }
+            }
         }
 
         private void receiveReaderError(string errorMessage)
         {
-            stopReading();
+            stopReading(false);
             MessageBox.Show(errorMessage);
         }
-
-        private static Color flashColor = Color.Honeydew;
-
+       
         private Hashtable wineBottleCache = new Hashtable();
 
         private Hashtable counterfeitCache = new Hashtable();
@@ -321,12 +400,8 @@ namespace GentagDemo
         {
             if (string.IsNullOrEmpty(tagID)) // if there was no string returned
                 return;
-
-            // flash the correct page            
-            TabPage tabPage = loop == loopType.counterfeit ? authPage : loop == loopType.pet ? petPage : loop == loopType.wine ? winePage : loop == loopType.patient ? patientPage : patientPage;
-
-            Color backup = getTabPageBackground(tabPage);
-            setTabPageBackground(tabPage, flashColor);
+            
+            blinkCursor(true);
 
             lock (lookupQueue)
             {
@@ -334,7 +409,7 @@ namespace GentagDemo
                 {
                     pendingLookups += scheduleLookup(tagID, loop);
 
-                    setLabel(pendingLookupsLabel, pendingLookups.ToString());
+                    setLabel(pendingLookupsLabel, pendingLookups.ToString(CultureInfo.CurrentCulture));
                 }
                 else
                 {
@@ -342,7 +417,7 @@ namespace GentagDemo
                     if (!lookupQueue.Contains(tagID))
                     {
                         queuedLookups++;
-                        setLabel(queuedLookupsLabel, lookupQueue.Count.ToString());
+                        setLabel(queuedLookupsLabel, lookupQueue.Count.ToString(CultureInfo.CurrentCulture));
 
                         if (loop == loopType.counterfeit)
                             updateTreeView1(tagID, @"No description yet", false, true, false);
@@ -354,7 +429,7 @@ namespace GentagDemo
 
             // flash the panel to signal the user that a tag was read
             Thread.Sleep(100);
-            setTabPageBackground(tabPage, backup);
+            blinkCursor(false);
         }
 
         /// <summary>
@@ -441,7 +516,7 @@ namespace GentagDemo
                             }
                         case loopType.test:
                             {
-                                stopReading();
+                                stopReading(false);
                                 if (petCache.ContainsKey(tagID))
                                 {
                                     result = 0;
@@ -457,7 +532,7 @@ namespace GentagDemo
                             }
                         case loopType.patient:
                             {
-                                stopReading();
+                                stopReading(false);
 
                                 if (patientCache.ContainsKey(tagID))
                                 {
@@ -475,7 +550,7 @@ namespace GentagDemo
                             }
                         case loopType.med:
                             {
-                                stopReading();
+                                stopReading(false);
                                 
                                 if (string.IsNullOrEmpty(currentPatientID))
                                     break;
@@ -621,9 +696,9 @@ namespace GentagDemo
                                 }                                
                             }
 
-                            setLabel(pendingLookupsLabel, pendingLookups.ToString());
+                            setLabel(pendingLookupsLabel, pendingLookups.ToString(CultureInfo.CurrentCulture));
 
-                            setLabel(queuedLookupsLabel, lookupQueue.Count.ToString());
+                            setLabel(queuedLookupsLabel, lookupQueue.Count.ToString(CultureInfo.CurrentCulture));
                         }
                         catch (InvalidOperationException e)
                         {
@@ -799,7 +874,7 @@ namespace GentagDemo
                     setTextBox(patientDescriptionBox, description);
                     setPhoto(patientPhoto, patient.image);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     setTextBox(patientNameBox, @"");
                     setTextBox(patientDescriptionBox, @"Patient not found");
@@ -954,7 +1029,7 @@ namespace GentagDemo
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            stopReading();
+            stopReading(true);
         }
 
         private void textBox4_GotFocus(object sender, EventArgs e)
@@ -985,7 +1060,7 @@ namespace GentagDemo
                     setButtonText(connectGPSButton, "Disconnect");                    
                 }
             }
-            catch (System.IO.IOException ex)
+            catch (System.IO.IOException)
             {
 
             }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace GentagDemo
 {
@@ -30,15 +31,15 @@ namespace GentagDemo
 
         void gpsNmea_SpeedReceived(double speed)
         {
-            setTextBox(speedTextBox, speed.ToString());
+            setTextBox(speedTextBox, speed.ToString(CultureInfo.CurrentCulture));
         }
 
         void gpsNmea_BearingReceived(double bearing)
         {
-            setTextBox(directionTextBox, bearing.ToString());
+            setTextBox(directionTextBox, bearing.ToString(CultureInfo.CurrentCulture));
         }
 
-        int currentProgressBar = 0;
+        int currentProgressBar;
 
         void gpsNmea_SatelliteReceived(int PRC, int azimuth, int elevation, int SNR, bool firstMessage)
         {
@@ -65,42 +66,42 @@ namespace GentagDemo
 
             if (currentProgressBar == 0)
             {
-                setLabel(satLabel1, PRC.ToString());
+                setLabel(satLabel1, PRC.ToString(CultureInfo.CurrentCulture));
                 setProgressBar(progressBar1, SNR);
             }
             else if (currentProgressBar == 1)
             {
-                setLabel(satLabel2, PRC.ToString());
+                setLabel(satLabel2, PRC.ToString(CultureInfo.CurrentCulture));
                 setProgressBar(progressBar2, SNR);
             }
             else if (currentProgressBar == 2)
             {
-                setLabel(satLabel3, PRC.ToString());
+                setLabel(satLabel3, PRC.ToString(CultureInfo.CurrentCulture));
                 setProgressBar(progressBar3, SNR);
             }
             else if (currentProgressBar == 3)
             {
-                setLabel(satLabel4, PRC.ToString());
+                setLabel(satLabel4, PRC.ToString(CultureInfo.CurrentCulture));
                 setProgressBar(progressBar4, SNR);
             }
             else if (currentProgressBar == 4)
             {
-                setLabel(satLabel5, PRC.ToString());
+                setLabel(satLabel5, PRC.ToString(CultureInfo.CurrentCulture));
                 setProgressBar(progressBar5, SNR);
             }
             else if (currentProgressBar == 5)
             {
-                setLabel(satLabel6, PRC.ToString());
+                setLabel(satLabel6, PRC.ToString(CultureInfo.CurrentCulture));
                 setProgressBar(progressBar6, SNR);
             }
             else if (currentProgressBar == 6)
             {
-                setLabel(satLabel7, PRC.ToString());
+                setLabel(satLabel7, PRC.ToString(CultureInfo.CurrentCulture));
                 setProgressBar(progressBar7, SNR);
             }
             else if (currentProgressBar == 7)
             {
-                setLabel(satLabel8, PRC.ToString());
+                setLabel(satLabel8, PRC.ToString(CultureInfo.CurrentCulture));
                 setProgressBar(progressBar8, SNR);
             }
 
@@ -114,17 +115,17 @@ namespace GentagDemo
 
         void gpsNmea_HDOPReceived(double HDOP)
         {
-            setTextBox(hdopTextBox, HDOP.ToString());
+            setTextBox(hdopTextBox, HDOP.ToString(CultureInfo.CurrentCulture));
         }
 
         void gpsNmea_VDOPReceived(double VDOP)
         {
-            setTextBox(vdopTextBox, VDOP.ToString());
+            setTextBox(vdopTextBox, VDOP.ToString(CultureInfo.CurrentCulture));
         }
 
         void gpsNmea_NumSatsReceived(int value)
         {
-            setTextBox(satellitesUsedTextBox, value.ToString());
+            setTextBox(satellitesUsedTextBox, value.ToString(CultureInfo.CurrentCulture));
         }
 
         void pendingQueueUpdate(int size, int maxSize)

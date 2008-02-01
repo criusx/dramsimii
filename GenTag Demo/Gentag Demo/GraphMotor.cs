@@ -203,14 +203,14 @@ namespace PocketGraphBar
                 foreach (ListDataCollection dat in mGraphs)
                 {
                     //Each series has its own color
-                    b = new SolidBrush(dat.DisplayColor);
+                    //b = new SolidBrush(dat.DisplayColor);
 
                     //Here I draw for a given series
                     for (bar = 1; bar < mDisplayTimes; bar++)
                     {
                         val = dat[bar * xInterval].Y;
                         height = (int)((val / mMax) * mMaxHeight);
-                        r = new System.Drawing.Rectangle(mLeftMargin + (1 * mThick) + (bar * 20), mMaxHeight - height, 5, height);
+                        //r = new System.Drawing.Rectangle(mLeftMargin + (1 * mThick) + (bar * 20), mMaxHeight - height, 5, height);
                         //e.Graphics.FillRectangle(b, r);                  
                     }
                     mThick += mThick;

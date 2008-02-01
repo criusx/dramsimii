@@ -42,6 +42,8 @@ namespace GentagDemo
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.detectPage = new System.Windows.Forms.TabPage();
+            this.detectTagIDLabel = new System.Windows.Forms.Label();
+            this.detectTagTypeLabel = new System.Windows.Forms.Label();
             this.detectTagTypeButton = new System.Windows.Forms.Button();
             this.patientPage = new System.Windows.Forms.TabPage();
             this.medicationButton = new System.Windows.Forms.Button();
@@ -151,8 +153,6 @@ namespace GentagDemo
             this.radIDLabel = new System.Windows.Forms.Label();
             this.radScanButton = new System.Windows.Forms.Button();
             this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
-            this.detectTagTypeLabel = new System.Windows.Forms.Label();
-            this.detectTagIDLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.authPage.SuspendLayout();
             this.detectPage.SuspendLayout();
@@ -287,6 +287,22 @@ namespace GentagDemo
             this.detectPage.Size = new System.Drawing.Size(240, 217);
             this.detectPage.Text = "Detect";
             // 
+            // detectTagIDLabel
+            // 
+            this.detectTagIDLabel.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Regular);
+            this.detectTagIDLabel.Location = new System.Drawing.Point(8, 4);
+            this.detectTagIDLabel.Name = "detectTagIDLabel";
+            this.detectTagIDLabel.Size = new System.Drawing.Size(225, 62);
+            this.detectTagIDLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // detectTagTypeLabel
+            // 
+            this.detectTagTypeLabel.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
+            this.detectTagTypeLabel.Location = new System.Drawing.Point(8, 161);
+            this.detectTagTypeLabel.Name = "detectTagTypeLabel";
+            this.detectTagTypeLabel.Size = new System.Drawing.Size(225, 31);
+            this.detectTagTypeLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // detectTagTypeButton
             // 
             this.detectTagTypeButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
@@ -310,7 +326,7 @@ namespace GentagDemo
             this.patientPage.Controls.Add(this.patientNameBox);
             this.patientPage.Location = new System.Drawing.Point(0, 0);
             this.patientPage.Name = "patientPage";
-            this.patientPage.Size = new System.Drawing.Size(240, 217);
+            this.patientPage.Size = new System.Drawing.Size(232, 214);
             this.patientPage.Text = "Patient";
             // 
             // medicationButton
@@ -1273,22 +1289,6 @@ namespace GentagDemo
             this.radScanButton.Text = "Scan";
             this.radScanButton.Click += new System.EventHandler(this.readerClick);
             // 
-            // detectTagTypeLabel
-            // 
-            this.detectTagTypeLabel.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
-            this.detectTagTypeLabel.Location = new System.Drawing.Point(8, 66);
-            this.detectTagTypeLabel.Name = "detectTagTypeLabel";
-            this.detectTagTypeLabel.Size = new System.Drawing.Size(225, 57);
-            this.detectTagTypeLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // detectTagIDLabel
-            // 
-            this.detectTagIDLabel.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Regular);
-            this.detectTagIDLabel.Location = new System.Drawing.Point(8, 4);
-            this.detectTagIDLabel.Name = "detectTagIDLabel";
-            this.detectTagIDLabel.Size = new System.Drawing.Size(225, 62);
-            this.detectTagIDLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // demoClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1443,7 +1443,7 @@ namespace GentagDemo
         private System.Windows.Forms.TabPage detectPage;
         private System.Windows.Forms.Button detectTagTypeButton;
         private System.Windows.Forms.Label detectTagIDLabel;
-        private System.Windows.Forms.Label detectTagTypeLabel;
+        private System.Windows.Forms.Label detectTagTypeLabel;        
         
     }
 }

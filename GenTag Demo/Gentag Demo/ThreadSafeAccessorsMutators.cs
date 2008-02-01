@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 
 namespace GentagDemo
 {
@@ -41,7 +39,7 @@ namespace GentagDemo
                 pB.Image = bA;
                 pB.Refresh();
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
 
             }
@@ -55,10 +53,39 @@ namespace GentagDemo
             {
                 this.Invoke(new setWaitCursorDelegate(setWaitCursor), new object[] { set });
             }
-            if (set == true)
-                Cursor.Current = Cursors.WaitCursor;
             else
-                Cursor.Current = Cursors.Default;
+            {
+                if (set == true)
+                {
+                    //Cursor.Current = Cursors.WaitCursor;
+                    tabControl1.TabPages[tabControl1.SelectedIndex].Controls.Add(userControl11);
+                    userControl11.TimerEnabled = true;
+                    userControl11.Visible = true;
+                    userControl11.BringToFront();
+                }
+                else
+                {
+                    tabControl1.TabPages[tabControl1.SelectedIndex].Controls.Remove(userControl11);
+                    userControl11.Visible = false;
+                    userControl11.SendToBack();
+                    userControl11.TimerEnabled = false;
+                    //Cursor.Current = Cursors.Default;
+                }
+            }
+        }
+
+        private delegate void blinkCursorDelegate(bool set);
+
+        private void blinkCursor(bool set)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new blinkCursorDelegate(blinkCursor), new object[] { set });
+            }
+            else
+            {
+                userControl11.Blink = set;
+            }
         }
 
         private delegate void setLabelDelegate(Label tB, string desc);
@@ -89,7 +116,7 @@ namespace GentagDemo
                 pB.Image = new Bitmap(new MemoryStream(bA));
                 pB.Refresh();
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
 
             }
@@ -102,9 +129,9 @@ namespace GentagDemo
             if (this.InvokeRequired)
             {
                 this.Invoke(new setTextBoxDelegate(setTextBox), new object[] { tb, value });
-            }      
+            }
             else
-                tb.Text = value;            
+                tb.Text = value;
         }
 
         private delegate void setProgressBarDelegate(ProgressBar pb, int value);

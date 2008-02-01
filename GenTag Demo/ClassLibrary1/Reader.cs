@@ -192,7 +192,7 @@ namespace RFIDReader
 
         StringBuilder newTagBuilder = new StringBuilder(16);
 
-        static private int retryCount = 75;
+        static private int retryCount = 20;
 
         public void readTagID()
         {
@@ -202,6 +202,7 @@ namespace RFIDReader
             for (; n > 0; --n)
             {
                 Thread.Sleep(15);
+
                 if (C1Lib.C1.NET_C1_open_comm() != 1)
                 {
                     errorMessage = "Please ensure that the Sirit reader is completely inserted";
@@ -209,7 +210,7 @@ namespace RFIDReader
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
-                    C1Lib.C1.NET_C1_disable();
+                    //C1Lib.C1.NET_C1_disable();
                     errorMessage = "Unable to communicate with Sirit reader";
                     continue;
                 }
@@ -356,7 +357,7 @@ namespace RFIDReader
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
-                    C1Lib.C1.NET_C1_disable();
+                    //C1Lib.C1.NET_C1_disable();
                     errorMessage = "Unable to communicate with Sirit reader";
                     Thread.Sleep(15);
                     continue;
@@ -408,7 +409,7 @@ namespace RFIDReader
             }
             else if (C1Lib.C1.NET_C1_enable() != 1)
             {
-                C1Lib.C1.NET_C1_disable();
+                //C1Lib.C1.NET_C1_disable();
                 throw new NotSupportedException("Unable to communicate with Sirit reader");
             }
 
@@ -443,7 +444,7 @@ namespace RFIDReader
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
-                    C1Lib.C1.NET_C1_disable();
+                    //C1Lib.C1.NET_C1_disable();
                     errorMessage = "Unable to communicate with Sirit reader";
                     Thread.Sleep(15);
                     continue;
