@@ -98,7 +98,7 @@ namespace GentagPet
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void tagReceived(string tagID)
+        private void tagReceived(string tagID, bool doneReading)
         {
             if (string.IsNullOrEmpty(tagID)) // if there was no string returned
                 return;

@@ -10,7 +10,7 @@ namespace RFIDReader
     public class Reader
     {
         #region Delegates
-        public delegate void TagReceivedEventHandler(string tagID);
+        public delegate void TagReceivedEventHandler(string tagID, bool doneReading);
         public delegate void VarioSensSettingsReceivedEventHandler(Single hiLimit, Single loLimit, short period, short logMode, short batteryCheckInterval);
         public delegate void ReaderErrorHandler(string errorMessage);
         public delegate void VarioSensReadLogHandler(
@@ -196,6 +196,16 @@ namespace RFIDReader
 
         public void readTagID()
         {
+            readTagLoop(true);
+        }
+
+        public void readOneTagID()
+        {
+            readTagLoop(false);
+        }
+
+        private void readTagLoop(bool repeat)
+        {
             string errorMessage = "";
             int n = retryCount;
 
@@ -232,7 +242,7 @@ namespace RFIDReader
 
             while (readerRunning)
             {
-                Random rnd = new Random();
+                //Random rnd = new Random();
                 // wait while a tag is read
                 while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0))
                 {
@@ -272,9 +282,14 @@ namespace RFIDReader
 
                 if ((string.Compare(newTag, oldTag) != 0) && (newTag.Length == 16))
                 {
-                    TagReceived(newTag.ToString());
+                    // when asynchronous delegates are supported in CF
+                    //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);
+                    TagReceived(newTag.ToString(), !repeat);
                     oldTag = newTag;
                 }
+
+                if (!repeat)
+                    break;
 
             }
             C1Lib.C1.NET_C1_disable();
@@ -398,33 +413,7 @@ namespace RFIDReader
             }
             C1Lib.C1.NET_C1_disable();
             C1Lib.C1.NET_C1_close_comm();
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static string readOneTagID()
-        {
-            if (C1Lib.C1.NET_C1_open_comm() != 1)
-            {
-                throw new NotSupportedException("Please ensure that the Sirit reader is completely inserted");
-            }
-            else if (C1Lib.C1.NET_C1_enable() != 1)
-            {
-                //C1Lib.C1.NET_C1_disable();
-                throw new NotSupportedException("Unable to communicate with Sirit reader");
-            }
-
-            // wait while a tag is read
-            while (C1Lib.ISO_15693.NET_get_15693(0x00) == 0) { Thread.Sleep(20); }
-
-            StringBuilder newTag = new StringBuilder(C1Lib.ISO_15693.tag.id_length);
-
-            for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-                newTag.Append(C1Lib.util.hex_value(C1Lib.ISO_15693.tag.tag_id[i]));
-
-            C1Lib.C1.NET_C1_disable();
-            C1Lib.C1.NET_C1_close_comm();
-            return newTag.ToString();
-        }
+        }        
 
         // tag types
         public enum tagTypes { none, iso15693, iso14443a, iso14443b, iso14443bsri, iso14443bsr176, iso18000, felica, MiFareClassic, MiFareUltraLight, MiFareDESFire, INSIDE }

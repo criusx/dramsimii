@@ -75,6 +75,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="assayResultsChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="assayResultsChooser.Designer.cs">
+      <DependentUpon>assayResultsChooser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -94,6 +100,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="assayResultsChooser.resx">
+      <DependentUpon>assayResultsChooser.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Data.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Data.cs</DependentUpon>
@@ -117,6 +127,11 @@
     </Compile>
     <Compile Include="VarioSensEvents.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Web References\assayWS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
     </Compile>
     <Compile Include="Web References\authenticationWS\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -148,6 +163,19 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/AssayWSSoapHttpPort%3fWSDL">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\assayWS\</RelPath>
+      <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/AssayWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>
+      </CachedAppSettingsObjectName>
+      <CachedSettingsPropName>
+      </CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
       <RelPath>Web References\authenticationWS\</RelPath>
@@ -221,6 +249,14 @@
     </Content>
     <None Include="GentagKey.pfx" />
     <None Include="Resources\Gentag-logo.png" />
+    <None Include="Web References\assayWS\assayInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\assayWS\AssayWS.wsdl" />
+    <None Include="Web References\assayWS\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <None Include="Web References\authenticationWS\AuthenticationWebService.wsdl" />
     <None Include="Web References\authenticationWS\itemInfo.datasource">
       <DependentUpon>Reference.map</DependentUpon>

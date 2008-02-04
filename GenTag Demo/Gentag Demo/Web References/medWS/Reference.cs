@@ -218,69 +218,24 @@ namespace GentagDemo.medWS {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://COREMedDemo/")]
     public partial class drugInfo {
         
-        private string rFIDNumField;
-        
-        private byte[] pictureField;
-        
-        private string descriptionField;
-        
-        private bool existsField;
-        
-        private string nameField;
-        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string RFIDNum {
-            get {
-                return this.rFIDNumField;
-            }
-            set {
-                this.rFIDNumField = value;
-            }
-        }
+        public string RFIDNum;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", IsNullable=true)]
-        public byte[] picture {
-            get {
-                return this.pictureField;
-            }
-            set {
-                this.pictureField = value;
-            }
-        }
+        public byte[] picture;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string description {
-            get {
-                return this.descriptionField;
-            }
-            set {
-                this.descriptionField = value;
-            }
-        }
+        public string description;
         
         /// <remarks/>
-        public bool exists {
-            get {
-                return this.existsField;
-            }
-            set {
-                this.existsField = value;
-            }
-        }
+        public bool exists;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-            }
-        }
+        public string name;
     }
     
     /// <remarks/>
@@ -289,120 +244,39 @@ namespace GentagDemo.medWS {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://COREMedDemo/")]
     public partial class patientRecord {
         
-        private byte[] imageField;
-        
-        private bool existsField;
-        
-        private string middleNameField;
-        
-        private string[] allergiesField;
-        
-        private string[] medicationsField;
-        
-        private string firstNameField;
-        
-        private string lastNameField;
-        
-        private string rFIDnumField;
-        
-        private long dOBField;
-        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", IsNullable=true)]
-        public byte[] image {
-            get {
-                return this.imageField;
-            }
-            set {
-                this.imageField = value;
-            }
-        }
+        public byte[] image;
         
         /// <remarks/>
-        public bool exists {
-            get {
-                return this.existsField;
-            }
-            set {
-                this.existsField = value;
-            }
-        }
+        public bool exists;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string middleName {
-            get {
-                return this.middleNameField;
-            }
-            set {
-                this.middleNameField = value;
-            }
-        }
+        public string middleName;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("allergies", IsNullable=true)]
-        public string[] allergies {
-            get {
-                return this.allergiesField;
-            }
-            set {
-                this.allergiesField = value;
-            }
-        }
+        public string[] allergies;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("medications", IsNullable=true)]
-        public string[] medications {
-            get {
-                return this.medicationsField;
-            }
-            set {
-                this.medicationsField = value;
-            }
-        }
+        public string[] medications;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string firstName {
-            get {
-                return this.firstNameField;
-            }
-            set {
-                this.firstNameField = value;
-            }
-        }
+        public string firstName;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string lastName {
-            get {
-                return this.lastNameField;
-            }
-            set {
-                this.lastNameField = value;
-            }
-        }
+        public string lastName;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string RFIDnum {
-            get {
-                return this.rFIDnumField;
-            }
-            set {
-                this.rFIDnumField = value;
-            }
-        }
+        public string RFIDnum;
         
         /// <remarks/>
-        public long DOB {
-            get {
-                return this.dOBField;
-            }
-            set {
-                this.dOBField = value;
-            }
-        }
+        public long DOB;
     }
     
     /// <remarks/>
@@ -411,29 +285,11 @@ namespace GentagDemo.medWS {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://COREMedDemo/")]
     public partial class errorReport {
         
-        private string errorMessageField;
-        
-        private int errorCodeField;
-        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string errorMessage {
-            get {
-                return this.errorMessageField;
-            }
-            set {
-                this.errorMessageField = value;
-            }
-        }
+        public string errorMessage;
         
         /// <remarks/>
-        public int errorCode {
-            get {
-                return this.errorCodeField;
-            }
-            set {
-                this.errorCodeField = value;
-            }
-        }
+        public int errorCode;
     }
 }

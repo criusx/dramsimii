@@ -205,56 +205,20 @@ namespace GentagDemo.petWS {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://petPackage/types/")]
     public partial class errorMessage {
         
-        private string attribute1Field;
-        
-        private string errorMessage1Field;
-        
-        private string attribute2Field;
-        
-        private bool successField;
-        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string attribute1 {
-            get {
-                return this.attribute1Field;
-            }
-            set {
-                this.attribute1Field = value;
-            }
-        }
+        public string attribute1;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("errorMessage", IsNullable=true)]
-        public string errorMessage1 {
-            get {
-                return this.errorMessage1Field;
-            }
-            set {
-                this.errorMessage1Field = value;
-            }
-        }
+        public string errorMessage1;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string attribute2 {
-            get {
-                return this.attribute2Field;
-            }
-            set {
-                this.attribute2Field = value;
-            }
-        }
+        public string attribute2;
         
         /// <remarks/>
-        public bool success {
-            get {
-                return this.successField;
-            }
-            set {
-                this.successField = value;
-            }
-        }
+        public bool success;
     }
     
     /// <remarks/>
@@ -263,262 +227,82 @@ namespace GentagDemo.petWS {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://petPackage/types/")]
     public partial class petInfo {
         
-        private string passwordField;
-        
-        private string workPhoneField;
-        
-        private string vetNameField;
-        
-        private string ownerField;
-        
-        private string breedField;
-        
-        private bool existsField;
-        
-        private string homePhoneField;
-        
-        private string rfidNumField;
-        
-        private string cellPhoneField;
-        
-        private string medicalNeedsField;
-        
-        private string contactInfoField;
-        
-        private string vetPhoneField;
-        
-        private int rewardField;
-        
-        private byte[] imageField;
-        
-        private string emailField;
-        
-        private string vetAddressField;
-        
-        private string nameField;
-        
-        private string medicationsField;
-        
-        private string preferredFoodField;
-        
-        private string tagCodeField;
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public string password;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string password {
-            get {
-                return this.passwordField;
-            }
-            set {
-                this.passwordField = value;
-            }
-        }
+        public string workPhone;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string workPhone {
-            get {
-                return this.workPhoneField;
-            }
-            set {
-                this.workPhoneField = value;
-            }
-        }
+        public string vetName;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string vetName {
-            get {
-                return this.vetNameField;
-            }
-            set {
-                this.vetNameField = value;
-            }
-        }
+        public string owner;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string owner {
-            get {
-                return this.ownerField;
-            }
-            set {
-                this.ownerField = value;
-            }
-        }
+        public string breed;
+        
+        /// <remarks/>
+        public bool exists;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string breed {
-            get {
-                return this.breedField;
-            }
-            set {
-                this.breedField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public bool exists {
-            get {
-                return this.existsField;
-            }
-            set {
-                this.existsField = value;
-            }
-        }
+        public string homePhone;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string homePhone {
-            get {
-                return this.homePhoneField;
-            }
-            set {
-                this.homePhoneField = value;
-            }
-        }
+        public string rfidNum;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string rfidNum {
-            get {
-                return this.rfidNumField;
-            }
-            set {
-                this.rfidNumField = value;
-            }
-        }
+        public string cellPhone;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string cellPhone {
-            get {
-                return this.cellPhoneField;
-            }
-            set {
-                this.cellPhoneField = value;
-            }
-        }
+        public string medicalNeeds;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string medicalNeeds {
-            get {
-                return this.medicalNeedsField;
-            }
-            set {
-                this.medicalNeedsField = value;
-            }
-        }
+        public string contactInfo;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string contactInfo {
-            get {
-                return this.contactInfoField;
-            }
-            set {
-                this.contactInfoField = value;
-            }
-        }
+        public string vetPhone;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string vetPhone {
-            get {
-                return this.vetPhoneField;
-            }
-            set {
-                this.vetPhoneField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public int reward {
-            get {
-                return this.rewardField;
-            }
-            set {
-                this.rewardField = value;
-            }
-        }
+        public int reward;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", IsNullable=true)]
-        public byte[] image {
-            get {
-                return this.imageField;
-            }
-            set {
-                this.imageField = value;
-            }
-        }
+        public byte[] image;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string email {
-            get {
-                return this.emailField;
-            }
-            set {
-                this.emailField = value;
-            }
-        }
+        public string email;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string vetAddress {
-            get {
-                return this.vetAddressField;
-            }
-            set {
-                this.vetAddressField = value;
-            }
-        }
+        public string vetAddress;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-            }
-        }
+        public string name;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string medications {
-            get {
-                return this.medicationsField;
-            }
-            set {
-                this.medicationsField = value;
-            }
-        }
+        public string medications;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string preferredFood {
-            get {
-                return this.preferredFoodField;
-            }
-            set {
-                this.preferredFoodField = value;
-            }
-        }
+        public string preferredFood;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string tagCode {
-            get {
-                return this.tagCodeField;
-            }
-            set {
-                this.tagCodeField = value;
-            }
-        }
+        public string tagCode;
     }
 }

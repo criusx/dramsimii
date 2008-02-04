@@ -119,130 +119,40 @@ namespace GentagDemo.wineWS {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://winePackage/")]
     public partial class wineBottle {
         
-        private int yearField;
-        
-        private string typeField;
-        
-        private bool authenticatedField;
-        
-        private byte[] imageField;
-        
-        private int lookedUpTimesField;
-        
-        private bool existsField;
-        
-        private string vineyardField;
-        
-        private string originField;
-        
-        private string rfidNumField;
-        
-        private string reviewField;
-        
         /// <remarks/>
-        public int year {
-            get {
-                return this.yearField;
-            }
-            set {
-                this.yearField = value;
-            }
-        }
+        public int year;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string type {
-            get {
-                return this.typeField;
-            }
-            set {
-                this.typeField = value;
-            }
-        }
+        public string type;
         
         /// <remarks/>
-        public bool authenticated {
-            get {
-                return this.authenticatedField;
-            }
-            set {
-                this.authenticatedField = value;
-            }
-        }
+        public bool authenticated;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", IsNullable=true)]
-        public byte[] image {
-            get {
-                return this.imageField;
-            }
-            set {
-                this.imageField = value;
-            }
-        }
+        public byte[] image;
         
         /// <remarks/>
-        public int lookedUpTimes {
-            get {
-                return this.lookedUpTimesField;
-            }
-            set {
-                this.lookedUpTimesField = value;
-            }
-        }
+        public int lookedUpTimes;
         
         /// <remarks/>
-        public bool exists {
-            get {
-                return this.existsField;
-            }
-            set {
-                this.existsField = value;
-            }
-        }
+        public bool exists;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string vineyard {
-            get {
-                return this.vineyardField;
-            }
-            set {
-                this.vineyardField = value;
-            }
-        }
+        public string vineyard;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string origin {
-            get {
-                return this.originField;
-            }
-            set {
-                this.originField = value;
-            }
-        }
+        public string origin;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string rfidNum {
-            get {
-                return this.rfidNumField;
-            }
-            set {
-                this.rfidNumField = value;
-            }
-        }
+        public string rfidNum;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string review {
-            get {
-                return this.reviewField;
-            }
-            set {
-                this.reviewField = value;
-            }
-        }
+        public string review;
     }
 }

@@ -34,6 +34,13 @@ namespace GentagDemo
             this.readIDButton = new System.Windows.Forms.Button();
             this.readLogButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.introPage = new System.Windows.Forms.TabPage();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.versionLabel = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.exitButton = new System.Windows.Forms.Button();
             this.authPage = new System.Windows.Forms.TabPage();
             this.pendingLookupsLabel = new System.Windows.Forms.Label();
             this.queuedLookupsLabel = new System.Windows.Forms.Label();
@@ -54,6 +61,15 @@ namespace GentagDemo
             this.patientPhoto = new System.Windows.Forms.PictureBox();
             this.patientDescriptionBox = new System.Windows.Forms.TextBox();
             this.patientNameBox = new System.Windows.Forms.TextBox();
+            this.assayPage = new System.Windows.Forms.TabPage();
+            this.assayImagePictureBox = new System.Windows.Forms.PictureBox();
+            this.assayTimerLabel = new System.Windows.Forms.Label();
+            this.assayMessageLabel = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.assayClearButton = new System.Windows.Forms.Button();
+            this.assayRecordButton = new System.Windows.Forms.Button();
+            this.assayBeginButton = new System.Windows.Forms.Button();
+            this.assayReadButton = new System.Windows.Forms.Button();
             this.gpsPage = new System.Windows.Forms.TabPage();
             this.trackingCheckBox = new System.Windows.Forms.CheckBox();
             this.satellitesUsedTextBox = new System.Windows.Forms.TextBox();
@@ -153,10 +169,13 @@ namespace GentagDemo
             this.radIDLabel = new System.Windows.Forms.Label();
             this.radScanButton = new System.Windows.Forms.Button();
             this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
+            this.errorReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
+            this.introPage.SuspendLayout();
             this.authPage.SuspendLayout();
             this.detectPage.SuspendLayout();
             this.patientPage.SuspendLayout();
+            this.assayPage.SuspendLayout();
             this.gpsPage.SuspendLayout();
             this.readWritePage.SuspendLayout();
             this.winePage.SuspendLayout();
@@ -166,6 +185,7 @@ namespace GentagDemo
             this.manualLookupPage.SuspendLayout();
             this.varioSensWPage.SuspendLayout();
             this.radPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorReportBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // label23
@@ -198,9 +218,11 @@ namespace GentagDemo
             // 
             // tabControl1
             // 
+            this.tabControl1.Controls.Add(this.introPage);
             this.tabControl1.Controls.Add(this.authPage);
             this.tabControl1.Controls.Add(this.detectPage);
             this.tabControl1.Controls.Add(this.patientPage);
+            this.tabControl1.Controls.Add(this.assayPage);
             this.tabControl1.Controls.Add(this.gpsPage);
             this.tabControl1.Controls.Add(this.readWritePage);
             this.tabControl1.Controls.Add(this.winePage);
@@ -217,6 +239,67 @@ namespace GentagDemo
             this.tabControl1.TabIndex = 5;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
+            // introPage
+            // 
+            this.introPage.Controls.Add(this.label29);
+            this.introPage.Controls.Add(this.label28);
+            this.introPage.Controls.Add(this.versionLabel);
+            this.introPage.Controls.Add(this.label26);
+            this.introPage.Controls.Add(this.pictureBox2);
+            this.introPage.Controls.Add(this.exitButton);
+            this.introPage.Location = new System.Drawing.Point(0, 0);
+            this.introPage.Name = "introPage";
+            this.introPage.Size = new System.Drawing.Size(240, 217);
+            this.introPage.Text = "Home";
+            // 
+            // label29
+            // 
+            this.label29.Location = new System.Drawing.Point(12, 179);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(225, 20);
+            this.label29.Text = "All Rights Reserved";
+            this.label29.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label28
+            // 
+            this.label28.Location = new System.Drawing.Point(8, 159);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(225, 20);
+            this.label28.Text = "Copyright 2008, Gentag, Inc.";
+            this.label28.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // versionLabel
+            // 
+            this.versionLabel.Location = new System.Drawing.Point(7, 139);
+            this.versionLabel.Name = "versionLabel";
+            this.versionLabel.Size = new System.Drawing.Size(225, 20);
+            this.versionLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label26
+            // 
+            this.label26.Location = new System.Drawing.Point(8, 119);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(225, 20);
+            this.label26.Text = "Gentag Demonstration Software";
+            this.label26.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(8, 8);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(225, 104);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            // 
+            // exitButton
+            // 
+            this.exitButton.Location = new System.Drawing.Point(80, 199);
+            this.exitButton.Name = "exitButton";
+            this.exitButton.Size = new System.Drawing.Size(72, 15);
+            this.exitButton.TabIndex = 0;
+            this.exitButton.Text = "Exit";
+            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
+            // 
             // authPage
             // 
             this.authPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
@@ -229,7 +312,7 @@ namespace GentagDemo
             this.authPage.Controls.Add(this.treeView1);
             this.authPage.Location = new System.Drawing.Point(0, 0);
             this.authPage.Name = "authPage";
-            this.authPage.Size = new System.Drawing.Size(240, 217);
+            this.authPage.Size = new System.Drawing.Size(232, 214);
             this.authPage.Text = "Auth";
             // 
             // pendingLookupsLabel
@@ -284,7 +367,7 @@ namespace GentagDemo
             this.detectPage.Controls.Add(this.detectTagTypeButton);
             this.detectPage.Location = new System.Drawing.Point(0, 0);
             this.detectPage.Name = "detectPage";
-            this.detectPage.Size = new System.Drawing.Size(240, 217);
+            this.detectPage.Size = new System.Drawing.Size(232, 214);
             this.detectPage.Text = "Detect";
             // 
             // detectTagIDLabel
@@ -396,6 +479,89 @@ namespace GentagDemo
             this.patientNameBox.Name = "patientNameBox";
             this.patientNameBox.Size = new System.Drawing.Size(100, 19);
             this.patientNameBox.TabIndex = 0;
+            // 
+            // assayPage
+            // 
+            this.assayPage.Controls.Add(this.assayImagePictureBox);
+            this.assayPage.Controls.Add(this.assayTimerLabel);
+            this.assayPage.Controls.Add(this.assayMessageLabel);
+            this.assayPage.Controls.Add(this.label27);
+            this.assayPage.Controls.Add(this.assayClearButton);
+            this.assayPage.Controls.Add(this.assayRecordButton);
+            this.assayPage.Controls.Add(this.assayBeginButton);
+            this.assayPage.Controls.Add(this.assayReadButton);
+            this.assayPage.Location = new System.Drawing.Point(0, 0);
+            this.assayPage.Name = "assayPage";
+            this.assayPage.Size = new System.Drawing.Size(240, 217);
+            this.assayPage.Text = "Assays";
+            // 
+            // assayImagePictureBox
+            // 
+            this.assayImagePictureBox.Location = new System.Drawing.Point(0, 0);
+            this.assayImagePictureBox.Name = "assayImagePictureBox";
+            this.assayImagePictureBox.Size = new System.Drawing.Size(180, 181);
+            // 
+            // assayTimerLabel
+            // 
+            this.assayTimerLabel.Location = new System.Drawing.Point(179, 124);
+            this.assayTimerLabel.Name = "assayTimerLabel";
+            this.assayTimerLabel.Size = new System.Drawing.Size(58, 20);
+            this.assayTimerLabel.Text = "0:00";
+            this.assayTimerLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // assayMessageLabel
+            // 
+            this.assayMessageLabel.Location = new System.Drawing.Point(8, 184);
+            this.assayMessageLabel.Name = "assayMessageLabel";
+            this.assayMessageLabel.Size = new System.Drawing.Size(225, 33);
+            // 
+            // label27
+            // 
+            this.label27.Location = new System.Drawing.Point(188, 104);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(50, 20);
+            this.label27.Text = "Timer";
+            this.label27.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // assayClearButton
+            // 
+            this.assayClearButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.assayClearButton.Location = new System.Drawing.Point(199, 81);
+            this.assayClearButton.Name = "assayClearButton";
+            this.assayClearButton.Size = new System.Drawing.Size(38, 20);
+            this.assayClearButton.TabIndex = 2;
+            this.assayClearButton.Text = "Clear";
+            this.assayClearButton.Click += new System.EventHandler(this.assayClearButton_Click);
+            // 
+            // assayRecordButton
+            // 
+            this.assayRecordButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.assayRecordButton.Location = new System.Drawing.Point(188, 55);
+            this.assayRecordButton.Name = "assayRecordButton";
+            this.assayRecordButton.Size = new System.Drawing.Size(49, 20);
+            this.assayRecordButton.TabIndex = 2;
+            this.assayRecordButton.Text = "Record";
+            this.assayRecordButton.Click += new System.EventHandler(this.assayRecordButton_Click);
+            // 
+            // assayBeginButton
+            // 
+            this.assayBeginButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.assayBeginButton.Location = new System.Drawing.Point(195, 29);
+            this.assayBeginButton.Name = "assayBeginButton";
+            this.assayBeginButton.Size = new System.Drawing.Size(42, 20);
+            this.assayBeginButton.TabIndex = 2;
+            this.assayBeginButton.Text = "Start";
+            this.assayBeginButton.Click += new System.EventHandler(this.assayBeginButton_Click);
+            // 
+            // assayReadButton
+            // 
+            this.assayReadButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.assayReadButton.Location = new System.Drawing.Point(195, 3);
+            this.assayReadButton.Name = "assayReadButton";
+            this.assayReadButton.Size = new System.Drawing.Size(42, 20);
+            this.assayReadButton.TabIndex = 2;
+            this.assayReadButton.Text = "Read";
+            this.assayReadButton.Click += new System.EventHandler(this.readerClick);
             // 
             // gpsPage
             // 
@@ -1289,6 +1455,10 @@ namespace GentagDemo
             this.radScanButton.Text = "Scan";
             this.radScanButton.Click += new System.EventHandler(this.readerClick);
             // 
+            // errorReportBindingSource
+            // 
+            this.errorReportBindingSource.DataSource = typeof(GentagDemo.medWS.errorReport);
+            // 
             // demoClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1303,9 +1473,11 @@ namespace GentagDemo
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainForm_KeyDown);
             this.tabControl1.ResumeLayout(false);
+            this.introPage.ResumeLayout(false);
             this.authPage.ResumeLayout(false);
             this.detectPage.ResumeLayout(false);
             this.patientPage.ResumeLayout(false);
+            this.assayPage.ResumeLayout(false);
             this.gpsPage.ResumeLayout(false);
             this.readWritePage.ResumeLayout(false);
             this.winePage.ResumeLayout(false);
@@ -1315,6 +1487,7 @@ namespace GentagDemo
             this.manualLookupPage.ResumeLayout(false);
             this.varioSensWPage.ResumeLayout(false);
             this.radPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.errorReportBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1443,7 +1616,24 @@ namespace GentagDemo
         private System.Windows.Forms.TabPage detectPage;
         private System.Windows.Forms.Button detectTagTypeButton;
         private System.Windows.Forms.Label detectTagIDLabel;
-        private System.Windows.Forms.Label detectTagTypeLabel;        
+        private System.Windows.Forms.Label detectTagTypeLabel;
+        private System.Windows.Forms.TabPage introPage;
+        private System.Windows.Forms.Button exitButton;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label versionLabel;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.TabPage assayPage;
+        private System.Windows.Forms.Button assayReadButton;
+        private System.Windows.Forms.Label assayMessageLabel;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.BindingSource errorReportBindingSource;
+        private System.Windows.Forms.Button assayBeginButton;
+        private System.Windows.Forms.Label assayTimerLabel;
+        private System.Windows.Forms.Button assayRecordButton;
+        private System.Windows.Forms.PictureBox assayImagePictureBox;
+        private System.Windows.Forms.Button assayClearButton;        
         
     }
 }

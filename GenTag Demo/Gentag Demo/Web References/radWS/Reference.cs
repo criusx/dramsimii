@@ -80,42 +80,15 @@ namespace GentagDemo.radWS {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://evDemo/")]
     public partial class spectrumInfo {
         
-        private string rFIDNumField;
-        
-        private int[] dataArrayField;
-        
-        private bool existsField;
-        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string RFIDNum {
-            get {
-                return this.rFIDNumField;
-            }
-            set {
-                this.rFIDNumField = value;
-            }
-        }
+        public string RFIDNum;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("dataArray")]
-        public int[] dataArray {
-            get {
-                return this.dataArrayField;
-            }
-            set {
-                this.dataArrayField = value;
-            }
-        }
+        public int[] dataArray;
         
         /// <remarks/>
-        public bool exists {
-            get {
-                return this.existsField;
-            }
-            set {
-                this.existsField = value;
-            }
-        }
+        public bool exists;
     }
 }

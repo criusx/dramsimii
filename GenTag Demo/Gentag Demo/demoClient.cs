@@ -41,7 +41,7 @@ namespace GentagDemo
 
         Thread versionCheckThread;
 
-        
+        assayResultsChooser assayResultsDialog;
 
         public demoClient()
         {
@@ -50,12 +50,24 @@ namespace GentagDemo
 
             tagReader = new Reader();
 
+            assayResultsDialog = new assayResultsChooser();
+
+            assayCountdownTimer = new System.Windows.Forms.Timer();
+
+            assayCountdownTimer.Interval = 1000;
+
+            assayCountdownTimer.Tick += new EventHandler(assayCountdownTimer_Tick);
+
             // open comm briefly to preload the assemblies
             tagReader.initialize();
 
             // intialize threads
             versionCheckThread = new Thread(versionCheck);
-            versionCheckThread.Start();          
+            versionCheckThread.IsBackground = true;
+            versionCheckThread.Start();
+
+            // set the version
+            versionLabel.Text = "Version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             // initialize the debug stream
             debugOut = new StreamWriter("debug.txt", false);
@@ -64,9 +76,9 @@ namespace GentagDemo
             this.userControl11 = new RFIDReadCursor.UserControl1();
             this.userControl11.Location = new System.Drawing.Point(76, 76);
             this.userControl11.Name = "userControl11";
-            this.userControl11.Size = new System.Drawing.Size(72, 72);           
+            this.userControl11.Size = new System.Drawing.Size(72, 72);
 
-            
+
 
             // generate the device's UID
             string AppString = GentagDemo.Properties.Resources.titleString;
@@ -127,14 +139,17 @@ namespace GentagDemo
             wineWebService = new wineWS.wineWS();
             COREMedDemoWebService = new medWS.COREMedDemoWS();
             authenticationWebService = new authenticationWS.AuthenticationWebService();
+            assayWebService = new assayWS.AssayWS();
             petWebService.Timeout = timeout;
             wineWebService.Timeout = timeout;
             COREMedDemoWebService.Timeout = timeout;
             authenticationWebService.Timeout = timeout;
+            assayWebService.Timeout = timeout;
             authenticationWebService.ConnectionGroupName = "authentication";
             wineWebService.ConnectionGroupName = "wine";
             petWebService.ConnectionGroupName = "pet";
             COREMedDemoWebService.ConnectionGroupName = "med";
+            assayWebService.ConnectionGroupName = "assay";
             authenticationWebService.EnableDecompression = true;
 
             graph.Visible = false;
@@ -146,7 +161,7 @@ namespace GentagDemo
             VarioSens.Controls.Add(graph);
             radPage.Controls.Add(radGraph);
 
-            
+
 
             //////////////////////////////////////////////////////////////////////////
             // for wine demo only
@@ -158,7 +173,7 @@ namespace GentagDemo
             //tabControl1.TabPages.RemoveAt(2);
             //////////////////////////////////////////////////////////////////////////
 
-            
+
             // Init the Registry
             //RegistryKey regKey = Registry.LocalMachine;
 
@@ -221,7 +236,7 @@ namespace GentagDemo
 
         void displayTagType(Reader.tagTypes tagType, string tagID)
         {
-            
+
             blinkCursor(true);
 
             switch (tagType)
@@ -278,10 +293,10 @@ namespace GentagDemo
         {
             setTextBox(readWriteTB, contents);
             stopReading(false);
-        }        
+        }
 
         private void writeTagMemory()
-        {            
+        {
             tagReader.writeTag(System.Text.Encoding.Unicode.GetBytes(getTextBox(readWriteTB)));
         }
 
@@ -289,24 +304,24 @@ namespace GentagDemo
         {
             setLabel(readWriteStatusLabel, "Status: " + status);
             stopReading(false);
-        }       
+        }
 
-        private enum loopType { wine, counterfeit, pet, patient, med, test, none };
+        private enum loopType { wine, counterfeit, pet, patient, med, test, assay, none };
 
         // the variable that describes whether it's looping looking for wine bottles or general tags
         private loopType loop;
 
         Thread readerThread;
 
-        
+
         private void readerClick(object sender, EventArgs e)
         {
             if (tagReader.running == false)
             {
                 stopReading(true);
-                setWaitCursor(true);                
-                
-                if ((sender == medicationButton) || (sender == readIDButton) || (sender == wineButton) || (sender == petButton) || (sender == readPatientButton) || (sender == readTestButton))
+                setWaitCursor(true);
+
+                if (sender == medicationButton || sender == readIDButton || sender == wineButton || sender == petButton || sender == readPatientButton || sender == readTestButton || sender == assayReadButton)
                 {
                     if (sender == wineButton)
                         loop = loopType.wine;
@@ -320,8 +335,14 @@ namespace GentagDemo
                         loop = loopType.med;
                     else if (sender == readTestButton)
                         loop = loopType.test;
+                    else if (sender == assayReadButton)
+                        loop = loopType.assay;
 
-                    readerThread = new Thread(tagReader.readTagID);
+                    // whether it is a loop lookup or a single item lookup
+                    if (sender == readPatientButton || sender == medicationButton || sender == readTestButton || sender == assayReadButton)
+                        readerThread = new Thread(tagReader.readOneTagID);
+                    else
+                        readerThread = new Thread(tagReader.readTagID);
 
                 }
                 else if (sender == readLogButton)
@@ -349,7 +370,7 @@ namespace GentagDemo
         }
 
         private void stopReading(bool forceStop)
-        {            
+        {
             setWaitCursor(false);
             blinkCursor(false);
             tagReader.running = false;
@@ -358,7 +379,7 @@ namespace GentagDemo
             {
                 if (readerThread != null)
                 {
-                    if (readerThread.Join(1250) == false)
+                    if (readerThread.Join(5000) == false)
                     {
                         readerThread.Abort();
                     }
@@ -372,7 +393,7 @@ namespace GentagDemo
             stopReading(false);
             MessageBox.Show(errorMessage);
         }
-       
+
         private Hashtable wineBottleCache = new Hashtable();
 
         private Hashtable counterfeitCache = new Hashtable();
@@ -380,7 +401,9 @@ namespace GentagDemo
         private Hashtable petCache = new Hashtable();
 
         private Hashtable patientCache = new Hashtable();
-        
+
+        private Hashtable assayCache = new Hashtable();
+
         private Hashtable itemsCurrentlyBeingLookedUp = new Hashtable();
 
         private Queue<string> lookupQueue = new Queue<string>();
@@ -389,18 +412,19 @@ namespace GentagDemo
 
         // the number of lookups sent off already
         private int pendingLookups;
-                
+
         private int queuedLookups;
 
         /// <summary>
         /// The callback for when a tag is received by the reader thread
         /// </summary>
         /// <param name="tagID"></param>
-        private void receiveTag(string tagID)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void receiveTag(string tagID, bool doneReading)
         {
             if (string.IsNullOrEmpty(tagID)) // if there was no string returned
                 return;
-            
+
             blinkCursor(true);
 
             lock (lookupQueue)
@@ -430,6 +454,9 @@ namespace GentagDemo
             // flash the panel to signal the user that a tag was read
             Thread.Sleep(100);
             blinkCursor(false);
+
+            if (doneReading)
+                stopReading(false);
         }
 
         /// <summary>
@@ -439,7 +466,8 @@ namespace GentagDemo
         wineWS.wineWS wineWebService;
         medWS.COREMedDemoWS COREMedDemoWebService;
         authenticationWS.AuthenticationWebService authenticationWebService;
-                                
+        assayWS.AssayWS assayWebService;
+
 
         /// <summary>
         /// Creates the appropriate web service and does the lookup
@@ -475,7 +503,7 @@ namespace GentagDemo
                                     if (handle == null)
                                         MessageBox.Show("Null handle");
                                     lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                                    { itemsCurrentlyBeingLookedUp.Add(handle,tagID); }
+                                    { itemsCurrentlyBeingLookedUp.Add(handle, tagID); }
 
                                     updateTreeView1(tagID, @"No description yet", false, true, true);
                                 }
@@ -507,7 +535,7 @@ namespace GentagDemo
                                 else
                                 {
                                     mostRecentWineID = tagID;
-                                    
+
                                     IAsyncResult handle = wineWebService.BeginretrieveBottleInformation(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, wineWebService);
                                     lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                                     { itemsCurrentlyBeingLookedUp[handle] = tagID; }
@@ -516,7 +544,6 @@ namespace GentagDemo
                             }
                         case loopType.test:
                             {
-                                stopReading(false);
                                 if (petCache.ContainsKey(tagID))
                                 {
                                     result = 0;
@@ -532,13 +559,11 @@ namespace GentagDemo
                             }
                         case loopType.patient:
                             {
-                                stopReading(false);
-
                                 if (patientCache.ContainsKey(tagID))
                                 {
                                     result = 0;
                                     displayPatient((medWS.patientRecord)patientCache[tagID]);
-                                }                                
+                                }
                                 else
                                 {
                                     IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(tagID, cb, COREMedDemoWebService);
@@ -550,8 +575,6 @@ namespace GentagDemo
                             }
                         case loopType.med:
                             {
-                                stopReading(false);
-                                
                                 if (string.IsNullOrEmpty(currentPatientID))
                                     break;
 
@@ -566,6 +589,22 @@ namespace GentagDemo
                                 lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                                 { itemsCurrentlyBeingLookedUp[handle] = currentPatientID; }
 
+                                break;
+                            }
+                        case loopType.assay:
+                            {
+                                if (assayCache.ContainsKey(tagID))
+                                {
+                                    result = 0;
+                                    displayAssay((assayWS.assayInfo)assayCache[tagID]);
+                                }
+                                else
+                                {
+                                    IAsyncResult handle = assayWebService.BeginretrieveAssayInformation(tagID, DeviceUID, cb, assayWebService);
+                                    // to allow association of a handle back to a tag id
+                                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                    { itemsCurrentlyBeingLookedUp[handle] = tagID; }
+                                }
                                 break;
                             }
                         default:
@@ -587,12 +626,16 @@ namespace GentagDemo
 
         private string currentPatientID;
 
+        private string assayRFID;
+
+        private TimeSpan assayTimer;
+
         private void receiveResult(IAsyncResult ar)
         {
             try
             {
                 if (itemsCurrentlyBeingLookedUp.ContainsKey(ar) == true)
-                {                   
+                {
 
                     if (ar.AsyncState.GetType() == typeof(authenticationWS.AuthenticationWebService))
                     {
@@ -680,7 +723,21 @@ namespace GentagDemo
                                 }
                             }
                         }
-                    }                    
+                    }
+                    else if (ar.AsyncState.GetType() == typeof(assayWS.AssayWS))
+                    {
+                        assayWS.AssayWS ws = (assayWS.AssayWS)ar.AsyncState;
+
+                        assayWS.assayInfo info = ws.EndretrieveAssayInformation(ar);
+
+                        if (info.exists)
+                        {
+                            displayAssay(info);
+
+                            assayCache[info.rfidNum] = info;
+                        }
+                    }
+
 
                     // free up some space in the available lookups and schedule a waiting lookup
                     lock (lookupQueue)
@@ -693,7 +750,7 @@ namespace GentagDemo
                                 while ((pendingLookups < maxLookupThreads) && (lookupQueue.Count > 0))
                                 {
                                     pendingLookups += scheduleLookup(lookupQueue.Dequeue(), loop);
-                                }                                
+                                }
                             }
 
                             setLabel(pendingLookupsLabel, pendingLookups.ToString(CultureInfo.CurrentCulture));
@@ -761,6 +818,28 @@ namespace GentagDemo
             }
         }
 
+
+
+        private void displayAssay(assayWS.assayInfo info)
+        {
+
+            setLabel(assayMessageLabel, info.beforeMessage);
+
+            assayTimer = new TimeSpan(0, 0, info.timer);
+
+            setLabel(assayTimerLabel, assayTimer.ToString());
+
+            sessionID = info.sessionID;
+
+            //
+            assayResultsDialog.setImages(info.resultImages);
+
+            assayResultsDialog.setAfterMessage(info.afterMessage);
+
+            setPhoto(assayImagePictureBox, info.descriptionImage);
+
+        }
+
         /// <summary>
         /// Performs a lookup again if the previous lookup has failed
         /// </summary>
@@ -776,7 +855,7 @@ namespace GentagDemo
             }
 
             if (ar.AsyncState.GetType() == typeof(wineWS.wineWS))
-            {                
+            {
                 scheduleLookup(currentTag, loopType.wine);
             }
             else if (ar.AsyncState.GetType() == typeof(petWS.petWS))
@@ -790,7 +869,7 @@ namespace GentagDemo
             else if (ar.AsyncState.GetType() == typeof(medWS.COREMedDemoWS))
             {
                 scheduleLookup(currentTag, loopType.med);
-            }            
+            }
         }
 
         #region Display Results
@@ -887,7 +966,7 @@ namespace GentagDemo
                 setTextBox(patientDescriptionBox, @"Patient not found");
                 setPhoto(patientPhoto, (Image)null);
             }
-        }      
+        }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayPet(petWS.petInfo newPet)
@@ -914,10 +993,10 @@ namespace GentagDemo
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void displayTest(petWS.petInfo newPet)
         {
-            if (newPet != null &&newPet.image != null && newPet.image.Length > 16)
+            if (newPet != null && newPet.image != null && newPet.image.Length > 16)
                 setPhoto(testDescriptionPictureBox, newPet.image);
         }
-        
+
         private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated, bool isNew, bool shouldUpdateIfExists);
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -970,7 +1049,7 @@ namespace GentagDemo
                 treeView1.BeginUpdate();
                 treeView1.Nodes.Clear();
                 treeView1.EndUpdate();
-                
+
                 counterfeitCache.Clear();
                 wineBottleCache.Clear();
                 petCache.Clear();
@@ -1015,8 +1094,8 @@ namespace GentagDemo
             textBox4.Enabled = true;
 
             Cursor.Current = Cursors.Default;
-        } 
-      
+        }
+
         private void trackingCheckBox_CheckStateChanged(object sender, EventArgs e)
         {
             gpsInterpreter.setTracking(trackingCheckBox.Checked);
@@ -1052,12 +1131,12 @@ namespace GentagDemo
                 if (gpsInterpreter.IsOpen())
                 {
                     gpsInterpreter.Close();
-                    setButtonText(connectGPSButton, "Connect");                
+                    setButtonText(connectGPSButton, "Connect");
                 }
                 else
                 {
                     gpsInterpreter.Open(getComboBox(comPortsComboBox));
-                    setButtonText(connectGPSButton, "Disconnect");                    
+                    setButtonText(connectGPSButton, "Disconnect");
                 }
             }
             catch (System.IO.IOException)
@@ -1077,6 +1156,85 @@ namespace GentagDemo
             }
             comPortsComboBox.SelectedIndex = 0;
         }
+
+        private void exitButton_Click(object sender, EventArgs e)
+        {
+            //System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().ManifestModule.FullyQualifiedName, "");
+            this.Close();
+        }
+
+        private void assayClearButton_Click(object sender, EventArgs e)
+        {
+            // TODO:
+        }
+
+        private int assayItemChosen = -1;
+
+        private string sessionID;
+
+        private void assayRecordButton_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(sessionID) || string.IsNullOrEmpty(DeviceUID) || assayItemChosen < 0)
+                return;
+
+            int trials = 0;
+
+            while (trials < 5)
+            {
+                try
+                {
+                    if (!assayWebService.submitAssayResult(sessionID, DeviceUID, assayItemChosen + 1))
+                    {
+                        MessageBox.Show("Failed to submit.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Results recorded.");
+                        assayItemChosen = -1;
+                        break;
+                    }
+                }
+                catch (WebException ex)
+                {
+                    if (trials > 5)
+                        MessageBox.Show("Possible network error, please try again.");                 
+                }
+                finally
+                {
+                    trials++;
+                }
+            }
+            
+        }
+
+
+        System.Windows.Forms.Timer assayCountdownTimer;
+
+        DateTime assayEndTime = new DateTime();
+
+        private void assayBeginButton_Click(object sender, EventArgs e)
+        {
+            assayEndTime = DateTime.Now.Add(assayTimer);
+            assayCountdownTimer.Enabled = true;
+
+        }
+
+        void assayCountdownTimer_Tick(object sender, EventArgs e)
+        {
+
+            setLabel(assayTimerLabel, assayEndTime.Subtract(DateTime.Now).ToString());
+
+            if (DateTime.Now >= assayEndTime)
+            {
+                assayCountdownTimer.Enabled = false;
+                System.Media.SystemSounds.Question.Play();
+                if (DialogResult.OK == assayResultsDialog.ShowDialog())
+                {
+                    assayItemChosen = assayResultsDialog.SelectedIndex;
+                }
+            }
+        }
+
 
     }
 }
