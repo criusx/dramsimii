@@ -40,6 +40,20 @@
             <displayName>Web Files</displayName>
             <filters>
                <rules>
+                  <Item type="0" pattern="WEB-INF/AssayWS-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/AssayWS.wsdl"/>
+                  <Item type="1" pattern="winepackage/.svn/"/>
+                  <Item type="1" pattern="WEB-INF/.svn/"/>
+                  <Item type="1" pattern="petPackage/.svn/"/>
+                  <Item type="1" pattern="evDemo/.svn/"/>
+                  <Item type="1" pattern="dhlDemo/.svn/"/>
+                  <Item type="1" pattern="datespackage/.svn/"/>
+                  <Item type="1" pattern="css/.svn/"/>
+                  <Item type="1" pattern="COREMedDemo/.svn/"/>
+                  <Item type="1" pattern="authenticationPackage/.svn/"/>
+                  <Item type="1" pattern=".svn/"/>
+                  <Item type="0" pattern="WEB-INF/AuthenticationWebService-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/AuthenticationWebService.wsdl"/>
                   <Item type="0" pattern="petService.html"/>
                   <Item type="0" pattern="WEB-INF/EvDemoWS-java-wsdl-mapping.xml"/>
                   <Item type="0" pattern="WEB-INF/wsdl/EvDemoWS.wsdl"/>
@@ -94,6 +108,24 @@
             <displayName>WEB-INF/classes</displayName>
             <filters>
                <rules>
+                  <Item type="0" pattern="assayPackage/assayReport.class"/>
+                  <Item type="0" pattern="assayPackage/assayInfo*.class"/>
+                  <Item type="0" pattern="assayPackage/assayImage*.class"/>
+                  <Item type="0" pattern="assayPackage/AssayWS*.class"/>
+                  <Item type="0" pattern="assayPackage/assayService*.class"/>
+                  <Item type="1" pattern="winepackage/.svn/"/>
+                  <Item type="1" pattern="petPackage/.svn/"/>
+                  <Item type="1" pattern="evDemo/.svn/"/>
+                  <Item type="1" pattern="dhlDemo/.svn/"/>
+                  <Item type="0" pattern="dBInfo/dbConnectInfo.class"/>
+                  <Item type="1" pattern="datespackage/.svn/"/>
+                  <Item type="1" pattern="COREMedDemo/.svn/"/>
+                  <Item type="1" pattern="authenticationPackage/.svn/"/>
+                  <Item type="1" pattern=".tags/"/>
+                  <Item type="1" pattern=".svn/"/>
+                  <Item type="0" pattern="authenticationPackage/itemInfo*.class"/>
+                  <Item type="0" pattern="authenticationPackage/AuthenticationWebService*.class"/>
+                  <Item type="0" pattern="authenticationPackage/authenticationService*.class"/>
                   <Item type="0" pattern="petPackage/errorMessage*.class"/>
                   <Item type="0" pattern="petPackage/errorMessage.class"/>
                   <Item type="0" pattern="petPackage/petInfo*.class"/>
@@ -137,7 +169,6 @@
                   <Item type="1" pattern="**.keep"/>
                   <Item type="1" pattern="**.rvi"/>
                   <Item type="1" pattern=".jsps/"/>
-                  <Item type="1" pattern=".tags/"/>
                   <Item type="1" pattern=".dtags/"/>
                   <Item type="1" pattern="**/*.jht"/>
                   <Item type="1" pattern="**/*.jjt"/>

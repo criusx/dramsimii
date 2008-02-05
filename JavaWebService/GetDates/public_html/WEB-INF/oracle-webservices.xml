@@ -93,4 +93,12 @@
             </operations>
         </port-component>
     </webservice-description>
+    <webservice-description name="AssayWS">
+        <port-component name="AssayWSSoapHttpPort">
+            <operations>
+                <operation name="retrieveAssayInformation" input="{http://assayPackage/}retrieveAssayInformationElement"/>
+                <operation name="submitAssayResult" input="{http://assayPackage/}submitAssayResultElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
 </oracle-webservices>

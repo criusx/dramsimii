@@ -27,15 +27,15 @@ import oracle.jdbc.pool.OracleDataSource;
 import java.util.Random;
 
 import javax.mail.internet.AddressException;
+import dBInfo;
+
+import dBInfo.dbConnectInfo;
 
 public class evDemoService
 {
   public evDemoService()
   {
   }
-
-  static final String connectString = 
-    "jdbc:oracle:thin:rfid/rfid2006@192.168.10.10:1521:orcl1";
 
   /**
    * Return true if the input argument character is
@@ -53,7 +53,7 @@ public class evDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -90,7 +90,7 @@ public class evDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 

@@ -38,8 +38,7 @@
       currentRow.className = "odd";
 
     if (divHandle)
-    {
-      
+    {      
       for (x in reqObject)
       {
         var currentCell = document.createElement("td");
@@ -62,10 +61,14 @@
         currentRow.appendChild(currentCell);
 
         if (x % 5 == 4)
-        {          
-          divHandle.insertBefore(currentRow, divHandle.firstChild);
+        { 
+          if (divHandle.firstChild)
+            divHandle.insertBefore(currentRow, divHandle.firstChild);
+          else
+            divHandle.appendChild(currentRow);
+            
           currentRow = document.createElement("tr");
-          //currentRow.style.display = "table-row";
+          
           if (rows == 0)
           {
             rows = 1;
@@ -84,7 +87,7 @@
     {
       var presentTime = new Date();
       
-      divHandle.firstChild.nodeValue = presentTime.toUTCString();
+      divHandle.nodeValue = presentTime.toUTCString();
     }
     }
   </script>

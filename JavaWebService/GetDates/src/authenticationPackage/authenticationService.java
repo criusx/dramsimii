@@ -29,6 +29,9 @@ import java.util.List;
 import org.apache.commons.digester.Digester;
 
 import winepackage.wineBottle;
+import dBInfo;
+
+import dBInfo.dbConnectInfo;
 
 
 @WebService(name = "AuthenticationWebService", serviceName = "AuthenticationWebService")
@@ -38,10 +41,6 @@ public class authenticationService
   {
   }
 
-  private static final String connectString = 
-    "jdbc:oracle:thin:rfid/rfid2006@gentag-server1:1521:gentagdb";
-
-
   @WebMethod
   public String[] getRoute(String RFIDNum, long sinceWhen)
   {
@@ -50,7 +49,7 @@ public class authenticationService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       Timestamp ts = new Timestamp(sinceWhen);
       String query = 
@@ -106,7 +105,7 @@ public class authenticationService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       conn.setAutoCommit(false);
       // make the matches case insensitive
@@ -167,7 +166,7 @@ public class authenticationService
           return new itemInfo();
 
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -247,7 +246,7 @@ public class authenticationService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       Statement stmt = conn.createStatement();
       ResultSet results = 
@@ -291,7 +290,7 @@ public class authenticationService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       Statement stmt = conn.createStatement();
       conn.setAutoCommit(false);
@@ -338,10 +337,10 @@ public class authenticationService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
-      System.out.println(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
+      System.out.println(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
-      System.out.println("Connected to " + connectString);
+      System.out.println("Connected to " + dbConnectInfo.getConnectInfo());
       Timestamp ts = new Timestamp(timestamp);
       String query = 
         "SELECT * FROM AUTHENTICATIONLOOKUPS WHERE" + "(TIME > timestamp'" + 

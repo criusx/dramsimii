@@ -57,6 +57,13 @@
         <servlet-class>authenticationPackage.authenticationService</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <description>Web Service AssayWSSoapHttpPort</description>
+        <display-name>Web Service AssayWSSoapHttpPort</display-name>
+        <servlet-name>AssayWSSoapHttpPort</servlet-name>
+        <servlet-class>assayPackage.assayService</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>COREMedDemoWSSoap12HttpPort</servlet-name>
         <url-pattern>COREMedDemoWSSoap12HttpPort</url-pattern>
@@ -88,5 +95,9 @@
     <servlet-mapping>
         <servlet-name>AuthenticationWebServiceSoapHttpPort</servlet-name>
         <url-pattern>AuthenticationWebServiceSoapHttpPort</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssayWSSoapHttpPort</servlet-name>
+        <url-pattern>AssayWSSoapHttpPort</url-pattern>
     </servlet-mapping>
 </web-app>

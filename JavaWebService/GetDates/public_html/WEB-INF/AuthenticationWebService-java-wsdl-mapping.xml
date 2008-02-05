@@ -10,15 +10,6 @@
         <namespaceURI>http://authenticationPackage/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_callHome_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}callHomeResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>authenticationPackage.AuthenticationWebService_getRoute_ResponseStruct</java-type>
         <anonymous-type-qname>{http://authenticationPackage/}getRouteResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -51,6 +42,15 @@
         <variable-mapping>
             <java-variable-name>authenticated</java-variable-name>
             <xml-element-name>authenticated</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_callHome_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}callHomeResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>

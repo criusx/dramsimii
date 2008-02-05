@@ -3,6 +3,8 @@ package dhlDemo;
 import COREMedDemo.drugInfo;
 import COREMedDemo.errorReport;
 
+import dBInfo.dbConnectInfo;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -32,9 +34,6 @@ public class dhlDemoService
   {
   }
 
-  static final String connectString = 
-    "jdbc:oracle:thin:rfid/rfid2006@192.168.10.10:1521:orcl1";
-
   /**
    * Return true if the input argument character is
    * a digit, a space, or A-F.
@@ -53,7 +52,7 @@ public class dhlDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -113,7 +112,7 @@ public class dhlDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -157,7 +156,7 @@ public class dhlDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 

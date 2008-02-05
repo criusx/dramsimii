@@ -14,8 +14,8 @@ import com.sun.mail.smtp.*;
 public class SendApp
 {
 
-  private static final String username = "gentag2";
-  private static final String password = "gentag~2007";
+  private static final String username = "feedback@gentag.com";
+  private static final String password = "gentag2006";
   private static final String hostName = "smtp.gmail.com";
   private static final boolean debug = false;
 
@@ -23,6 +23,7 @@ public class SendApp
                    String subject, String body)
     throws AddressException, MessagingException
   {
+    System.out.println("starting mail send");
     // Create a mail session
     java.security.Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
     Properties props = new Properties();
@@ -48,9 +49,11 @@ public class SendApp
       MimeMessage msg = new MimeMessage(session);
       msg.setText(body);
       msg.setSubject(subject);
-      msg.setFrom(new InternetAddress(from));
+      msg.setFrom(new InternetAddress(username));
       msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+      System.out.println("sending mail");
       Transport.send(msg);
+      System.out.println("mail sent");
     }
     catch (Exception mex)
     {

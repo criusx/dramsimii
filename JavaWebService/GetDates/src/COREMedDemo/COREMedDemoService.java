@@ -1,5 +1,9 @@
 package COREMedDemo;
 
+import dBInfo.dbConnectInfo;
+
+import dhlDemo.SendApp;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -45,9 +49,6 @@ public class COREMedDemoService
   {
   }
 
-  static final String connectString = 
-    "jdbc:oracle:thin:rfid/rfid2006@192.168.10.10:1521:orcl1";
-
   /**
    * Return true if the input argument character is
    * a digit, a space, or A-F.
@@ -77,7 +78,7 @@ public class COREMedDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -91,7 +92,7 @@ public class COREMedDemoService
       psC.close();
 
       PreparedStatement ps = 
-        conn.prepareStatement("SELECT * FROM PATIENTDATA WHERE (ID = ?)");
+        conn.prepareStatement("SELECT * FROM PATIENTDATA WHERE (ID = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?))");
       ps.setString(1, RFIDNum);
 
       ResultSet rs = (OracleResultSet) ps.executeQuery();
@@ -117,7 +118,7 @@ public class COREMedDemoService
       ps.close();
 
       ps = 
-          conn.prepareStatement("SELECT DRUGID FROM PATIENTALLERGY WHERE (PATIENTID = ?)");
+          conn.prepareStatement("SELECT DRUGID FROM PATIENTALLERGY WHERE PATIENTID = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?)");
       ps.setString(1, RFIDNum);
 
       rs = ps.executeQuery();
@@ -135,7 +136,7 @@ public class COREMedDemoService
       ps.close();
 
       ps = 
-          conn.prepareStatement("SELECT DRUGID FROM PATIENTMEDICATION WHERE (PATIENTID = ?)");
+          conn.prepareStatement("SELECT DRUGID FROM PATIENTMEDICATION WHERE (PATIENTID = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?))");
       ps.setString(1, RFIDNum);
 
       rs = (OracleResultSet) ps.executeQuery();
@@ -178,12 +179,13 @@ public class COREMedDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
       OracleStatement stmt = (OracleStatement) conn.createStatement();
 
+      //TODO: generate a patient ID and add it to patientlookup
       // insert record without picture data yet
       PreparedStatement ps = 
         conn.prepareStatement("insert into patientdata " + 
@@ -272,11 +274,11 @@ public class COREMedDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
       PreparedStatement ps = 
-        conn.prepareStatement("INSERT INTO PATIENTVITALS (RFID, RECORDTIME, TEMP) VALUES(?, ?, ?)");
+        conn.prepareStatement("INSERT INTO PATIENTVITALS (RFID, RECORDTIME, TEMP) VALUES(SELECT PATIENTID FROM PATIENTLOOKUPS WHERE PATIENTRFID =?, ?, ?)");
       ps.setString(1, RFIDNum);
       Date now = new Date();
 
@@ -309,7 +311,7 @@ public class COREMedDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -351,7 +353,7 @@ public class COREMedDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -365,7 +367,7 @@ public class COREMedDemoService
       ps.setString(3, newDrug.getName());
 
       ps.execute();
-
+      //TODO: add translation from patientlookup
       PreparedStatement ps2 = 
         conn.prepareStatement("SELECT * FROM drugdata WHERE drugid = ? FOR UPDATE");
 
@@ -404,7 +406,7 @@ public class COREMedDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
 
       // set case insensitivity
@@ -416,7 +418,7 @@ public class COREMedDemoService
 
       // then check to see if this is allowed
       PreparedStatement ps = 
-        conn.prepareStatement("SELECT * from PATIENTALLERGY where patientid = ? AND drugid= ?");
+        conn.prepareStatement("SELECT * from PATIENTALLERGY where patientid = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?) AND drugid = (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?)");
       ps.setString(1, ID);
       ps.setString(2, drugID);
 
@@ -426,7 +428,7 @@ public class COREMedDemoService
         System.out.println("No interaction found between " + ID + " and " + 
                            drugID);
         ps = 
-            conn.prepareStatement("INSERT INTO PRESCRIPTIONSGIVEN (PATIENTID, DRUGID) VALUES (?, ?)");
+            conn.prepareStatement("INSERT INTO PRESCRIPTIONSGIVEN (PATIENTID, DRUGID) VALUES (SELECT PATIENTID, (SELECT DRUGID FROM DRUGLOOKUPS WHERE DRUGRFID = ?) FROM PATIENTLOOKUPS WHERE PATIENTRFID = ?)");
         ps.setString(1, ID);
         ps.setString(2, drugID);
         ps.execute();
@@ -437,13 +439,13 @@ public class COREMedDemoService
         System.out.println("Interaction found between " + ID + " and " + 
                            drugID);
         ps = 
-            conn.prepareStatement("INSERT INTO PRESCRIPTIONWARNINGS (PATIENTID, DRUGID) VALUES (?, ?)");
+            conn.prepareStatement("INSERT INTO PRESCRIPTIONWARNINGS (PATIENTID, DRUGID) SELECT PATIENTID, (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?) FROM PATIENTLOOKUP WHERE PATIENTRFID = ?");
         ps.setString(1, ID);
         ps.setString(2, drugID);
         ps.execute();
         // retrieve patient name and doctor id
         ps = 
-            conn.prepareStatement("SELECT FNAME, MNAME, LNAME, DOCTOR FROM PATIENTDATA WHERE ID = ?");
+            conn.prepareStatement("SELECT FNAME, MNAME, LNAME, DOCTOR FROM PATIENTDATA WHERE ID = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?)");
         ps.setString(1, ID);
         result = ps.executeQuery();
         String patientName;
@@ -481,7 +483,7 @@ public class COREMedDemoService
         }
         // retrieve drug name
         ps = 
-            conn.prepareStatement("SELECT NAME FROM DRUGDATA WHERE DRUGID = ?");
+            conn.prepareStatement("SELECT NAME FROM DRUGDATA WHERE DRUGID = (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?)");
         ps.setString(1, drugID);
         result = ps.executeQuery();
         String drugName;
@@ -496,12 +498,13 @@ public class COREMedDemoService
         }
         try
         {
-          SendApp.send("smtp.gmail.com", 25, "joegross@umd.edu", 
-                       doctorContact, 
-                       "Drug interaction noted for patient:" + patientName, 
-                       "Dr. " + doctorName + 
-                       ",\nA nurse has attempted to give " + patientName + 
-                       " a dose of " + drugName + ".");
+          SendApp newSender = new SendApp();
+          newSender.send("smtp.gmail.com", 993, "feedback@gentag.com", 
+                         doctorContact, 
+                         "Drug interaction noted for patient:" + 
+                         patientName, 
+                         "Dr. " + doctorName + ",\nA nurse has attempted to give " + 
+                         patientName + " a dose of " + drugName + ".");
           System.out.println("message sent to: " + doctorContact);
         }
         catch (MessagingException e)
@@ -520,6 +523,7 @@ public class COREMedDemoService
     catch (SQLException e)
     {
       System.out.println("Exception: " + e.toString());
+      e.printStackTrace();
       return false;
     }
   }
@@ -543,7 +547,7 @@ public class COREMedDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -557,7 +561,7 @@ public class COREMedDemoService
       psC.close();
 
       PreparedStatement ps = 
-        conn.prepareStatement("SELECT * FROM DRUGDATA WHERE (DRUGID = ?)");
+        conn.prepareStatement("SELECT * FROM DRUGDATA WHERE (DRUGID = (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?))");
       ps.setString(1, RFIDNum);
 
       ResultSet rs = (OracleResultSet) ps.executeQuery();
@@ -607,14 +611,14 @@ public class COREMedDemoService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       Statement stmt = conn.createStatement();
       conn.setAutoCommit(false);
       PreparedStatement ps = 
         conn.prepareStatement("INSERT INTO MEDICATIONSDISPENSED " + 
                               "(DRUGID, PATIENTID, DOSE, TIMEGIVEN, NURSEID)" + 
-                              "VALUES (?, ?, ?, ?, ?)");
+                              "VALUES (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?, SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?, ?, ?, ?)");
       ps.setString(1, drugRFIDNum);
       ps.setString(2, patientRFIDNum);
       ps.setInt(3, dose);

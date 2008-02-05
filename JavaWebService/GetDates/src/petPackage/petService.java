@@ -1,79 +1,42 @@
 package petPackage;
 
-import java.awt.Graphics;
+import dBInfo.dbConnectInfo;
+
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
-
-import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.sql.Timestamp;
+
+import java.util.Arrays;
+
+import javax.imageio.ImageIO;
 
 import oracle.jdbc.driver.OracleConnection;
 import oracle.jdbc.driver.OraclePreparedStatement;
 import oracle.jdbc.driver.OracleResultSet;
-import oracle.jdbc.driver.OracleStatement;
 import oracle.jdbc.pool.OracleDataSource;
+
+import oracle.sql.BLOB;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import java.sql.Statement;
-import java.sql.Timestamp;
-
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-import java.util.Random;
-
-import javax.jws.WebService;
-
-import oracle.jdbc.OracleParameterMetaData;
-import oracle.jdbc.driver.OracleConnection;
-import oracle.jdbc.driver.OracleResultSet;
-import oracle.jdbc.driver.OracleStatement;
-import oracle.jdbc.pool.OracleDataSource;
-import oracle.jdbc.driver.*;
-
-import oracle.sql.BLOB;
-
-import java.security.SecureRandom;
-
-import java.sql.SQLWarning;
-
-import javax.imageio.ImageIO;
-
-import javax.swing.ImageIcon;
-
 
 public class petService
 {
-  private static final String connectString = 
-    "jdbc:oracle:thin:rfid/rfid2006@192.168.10.10:1521:orcl1";
 
   private static final int iterationNb = 1024;
 
@@ -83,7 +46,7 @@ public class petService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -196,7 +159,7 @@ public class petService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -261,7 +224,7 @@ public class petService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -329,6 +292,7 @@ public class petService
         ps.close();
         rs.close();
         conn.rollback();
+        conn.close();
         return false;
       }
     }
@@ -384,7 +348,7 @@ public class petService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -451,7 +415,7 @@ public class petService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -659,7 +623,7 @@ public class petService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -751,7 +715,7 @@ public class petService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -786,12 +750,12 @@ public class petService
           image = null;
 
         petInfo pet = 
-          new petInfo(image, rs.getString("contactinfo"), 
-                      rs.getString("owner"), rs.getString("workphone"), 
-                      rfidNum, rs.getString("homephone"), 
-                      rs.getString("cellphone"), rs.getString("email"), 
-                      rs.getString("breed"), rs.getString("tagcode"), 
-                      rs.getString("name"), rs.getString("preferredfood"), 
+          new petInfo(image, rs.getString("contactinfo"), rs.getString("owner"), 
+                      rs.getString("workphone"), rfidNum, 
+                      rs.getString("homephone"), rs.getString("cellphone"), 
+                      rs.getString("email"), rs.getString("breed"), 
+                      rs.getString("tagcode"), rs.getString("name"), 
+                      rs.getString("preferredfood"), 
                       rs.getString("medicalneeds"), 
                       rs.getString("medications"), rs.getString("vetname"), 
                       rs.getString("vetaddress"), rs.getString("vetphone"), 

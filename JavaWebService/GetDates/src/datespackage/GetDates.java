@@ -23,6 +23,8 @@ import org.xml.sax.SAXException;
 
 import com.keithpower.gekmlib.*;
 
+import dBInfo.dbConnectInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,20 +85,16 @@ public class GetDates
     return desc;
   }
 
-  static final String connectString = 
-    "jdbc:oracle:thin:rfid/rfid2006@gentag-server1:1521:gentagdb";
-
-
   public boolean checkInteraction(String ID, String drugID)
   {
     OracleDataSource ods;
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
-      System.out.println(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
+      System.out.println(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
-      System.out.println("Connected to " + connectString);
+      System.out.println("Connected to " + dbConnectInfo.getConnectInfo());
       OracleStatement stmt = (OracleStatement) conn.createStatement();
       String query = 
         "SELECT * from interactions where patientid ='" + ID + "' AND drugid='" + 
@@ -130,10 +128,10 @@ public class GetDates
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
-      System.out.println(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
+      System.out.println(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
-      System.out.println("Connected to " + connectString);
+      System.out.println("Connected to " + dbConnectInfo.getConnectInfo());
       OracleStatement stmt = (OracleStatement) conn.createStatement();
       String table = isDrug? "drugdata": "patientdata";
       String id = isDrug? "drugid": "id";
@@ -165,7 +163,7 @@ public class GetDates
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       Timestamp ts = new Timestamp(sinceWhen);
       String query = 
@@ -221,7 +219,7 @@ public class GetDates
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       conn.setAutoCommit(false);
       // make the matches case insensitive
@@ -269,7 +267,7 @@ public class GetDates
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
 
       // first record this
@@ -346,7 +344,7 @@ public class GetDates
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
 
 
@@ -386,7 +384,7 @@ public class GetDates
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       Statement stmt = conn.createStatement();
       ResultSet results = 
@@ -418,7 +416,7 @@ public class GetDates
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       Statement stmt = conn.createStatement();
       conn.setAutoCommit(false);
@@ -464,10 +462,10 @@ public class GetDates
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
-      System.out.println(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
+      System.out.println(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
-      System.out.println("Connected to " + connectString);
+      System.out.println("Connected to " + dbConnectInfo.getConnectInfo());
       Timestamp ts = new Timestamp(timestamp);
       String query = 
         "SELECT * FROM AUTHENTICATIONLOOKUPS WHERE" + "(TIME > timestamp'" + 

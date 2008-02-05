@@ -1,6 +1,8 @@
 package winepackage;
 
 
+import dBInfo.dbConnectInfo;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -43,9 +45,7 @@ public class wineService
   public wineService()
   {
   }
-  private static final String connectString = 
-    "jdbc:oracle:thin:rfid/rfid2006@192.168.10.10:1521:orcl1";
-
+  
   public boolean enterBottleInformation(String[] rfidNums, String type, 
                                         int year, String country, 
                                         String vineyard, String review, 
@@ -55,7 +55,7 @@ public class wineService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       OracleConnection conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
@@ -121,7 +121,7 @@ public class wineService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       Connection conn = ods.getConnection();
       Timestamp ts = new Timestamp(timestamp);
       String query = 
@@ -193,7 +193,7 @@ public class wineService
     try
     {
       ods = new OracleDataSource();
-      ods.setURL(connectString);
+      ods.setURL(dbConnectInfo.getConnectInfo());
       conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
       // enter this information into the db
