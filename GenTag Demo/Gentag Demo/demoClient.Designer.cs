@@ -170,6 +170,7 @@ namespace GentagDemo
             this.radScanButton = new System.Windows.Forms.Button();
             this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
             this.errorReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.mainClearButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.introPage.SuspendLayout();
             this.authPage.SuspendLayout();
@@ -246,6 +247,7 @@ namespace GentagDemo
             this.introPage.Controls.Add(this.versionLabel);
             this.introPage.Controls.Add(this.label26);
             this.introPage.Controls.Add(this.pictureBox2);
+            this.introPage.Controls.Add(this.mainClearButton);
             this.introPage.Controls.Add(this.exitButton);
             this.introPage.Location = new System.Drawing.Point(0, 0);
             this.introPage.Name = "introPage";
@@ -492,7 +494,7 @@ namespace GentagDemo
             this.assayPage.Controls.Add(this.assayReadButton);
             this.assayPage.Location = new System.Drawing.Point(0, 0);
             this.assayPage.Name = "assayPage";
-            this.assayPage.Size = new System.Drawing.Size(240, 217);
+            this.assayPage.Size = new System.Drawing.Size(232, 214);
             this.assayPage.Text = "Assays";
             // 
             // assayImagePictureBox
@@ -1459,6 +1461,15 @@ namespace GentagDemo
             // 
             this.errorReportBindingSource.DataSource = typeof(GentagDemo.medWS.errorReport);
             // 
+            // mainClearButton
+            // 
+            this.mainClearButton.Location = new System.Drawing.Point(188, 199);
+            this.mainClearButton.Name = "mainClearButton";
+            this.mainClearButton.Size = new System.Drawing.Size(44, 16);
+            this.mainClearButton.TabIndex = 0;
+            this.mainClearButton.Text = "Clear";
+            this.mainClearButton.Click += new System.EventHandler(this.mainClearButton_Click);
+            // 
             // demoClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1633,7 +1644,8 @@ namespace GentagDemo
         private System.Windows.Forms.Label assayTimerLabel;
         private System.Windows.Forms.Button assayRecordButton;
         private System.Windows.Forms.PictureBox assayImagePictureBox;
-        private System.Windows.Forms.Button assayClearButton;        
+        private System.Windows.Forms.Button assayClearButton;
+        private System.Windows.Forms.Button mainClearButton;        
         
     }
 }

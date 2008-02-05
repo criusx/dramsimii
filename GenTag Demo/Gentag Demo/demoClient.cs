@@ -1046,19 +1046,7 @@ namespace GentagDemo
         {
             if (e.KeyCode == System.Windows.Forms.Keys.Back)
             {
-                treeView1.BeginUpdate();
-                treeView1.Nodes.Clear();
-                treeView1.EndUpdate();
-
-                counterfeitCache.Clear();
-                wineBottleCache.Clear();
-                petCache.Clear();
-                patientCache.Clear();
-
-                itemsCurrentlyBeingLookedUp.Clear();
-
-                clearDrug();
-                displayPatient(null);
+                clearDemo();
             }
             else if (e.KeyCode == System.Windows.Forms.Keys.F2)
             {
@@ -1067,6 +1055,23 @@ namespace GentagDemo
                 else if (tabControl1.TabPages[tabControl1.SelectedIndex].Name == "winePage")
                     readerClick(wineButton, new EventArgs());
             }
+        }
+
+        private void clearDemo()
+        {
+            treeView1.BeginUpdate();
+            treeView1.Nodes.Clear();
+            treeView1.EndUpdate();
+
+            counterfeitCache.Clear();
+            wineBottleCache.Clear();
+            petCache.Clear();
+            patientCache.Clear();
+
+            itemsCurrentlyBeingLookedUp.Clear();
+
+            clearDrug();
+            displayPatient(null);
         }
 
         private void manualLookupClick(object sender, EventArgs e)
@@ -1233,6 +1238,11 @@ namespace GentagDemo
                     assayItemChosen = assayResultsDialog.SelectedIndex;
                 }
             }
+        }
+
+        private void mainClearButton_Click(object sender, EventArgs e)
+        {
+            clearDemo();
         }
 
 
