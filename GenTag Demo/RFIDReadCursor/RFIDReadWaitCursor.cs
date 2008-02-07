@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace RFIDReadCursor
 {
-    public partial class UserControl1 : UserControl
+    public partial class RFIDReadWaitCursor : UserControl
     {
         private Timer eventTimer = new Timer();
 
@@ -49,8 +49,8 @@ namespace RFIDReadCursor
                 currentImage = 0;
             }
         }
-
-        public UserControl1()
+        
+        public RFIDReadWaitCursor()
         {
             InitializeComponent();
             eventTimer.Tick += new EventHandler(eventTimer_Tick);
@@ -60,6 +60,11 @@ namespace RFIDReadCursor
             refImages[1] = Image.FromHbitmap(RFIDReadCursor.Properties.Resources.RadioAnimation1.GetHbitmap());
             refImages[2] = Image.FromHbitmap(RFIDReadCursor.Properties.Resources.RadioAnimation2.GetHbitmap());
             refImages[3] = Image.FromHbitmap(RFIDReadCursor.Properties.Resources.RadioAnimation3.GetHbitmap());
+        }
+
+        ~RFIDReadWaitCursor()
+        {
+            eventTimer.Enabled = false;
         }
 
         void eventTimer_Tick(object sender, EventArgs e)
@@ -84,8 +89,6 @@ namespace RFIDReadCursor
             }
             try
             {
-                //if (pB.Image != null)
-                //    pB.Image.Dispose();
                 pB.Image = bA;
                 pB.Refresh();
             }

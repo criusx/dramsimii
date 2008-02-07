@@ -1,6 +1,6 @@
 ﻿namespace RFIDReadCursor
 {
-    partial class UserControl1
+    partial class RFIDReadWaitCursor
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserControl1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RFIDReadWaitCursor));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.SuspendLayout();
             // 

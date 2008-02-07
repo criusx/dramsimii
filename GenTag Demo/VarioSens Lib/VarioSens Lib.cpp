@@ -1,11 +1,8 @@
 // VarioSens Lib.cpp : Defines the initialization routines for the DLL.
 //
 #include "stdafx.h"
-#include "VarioSens Lib.h"
 #include "C1lib.h"
-#include <sstream>
 #include <stdio.h>
-#include <stdlib.h>
 
 #define MAXTRIES 1
 
@@ -22,15 +19,9 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 {
 	int errorCode = 0;
 
-	if (!C1_open_comm()) 
+	if (!C1_open_comm() || !C1_enable()) 
 	{
-		C1_close_comm();
 		errorCode = -1;
-	}
-	else if (!C1_enable())
-	{
-		C1_close_comm();
-		errorCode = -2;
 	}
 	else
 	{
@@ -120,14 +111,8 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 //////////////////////////////////////////////////////////////////////////
 extern "C" __declspec(dllexport) LPWSTR getVarioSensTagID()
 {
-	if (!C1_open_comm()) 
+	if (!C1_open_comm() || !C1_enable()) 
 	{
-		C1_close_comm();
-		return NULL;
-	}
-	else if (!C1_enable())
-	{
-		C1_close_comm();
 		return NULL;
 	}
 	else
@@ -177,15 +162,9 @@ extern "C" __declspec(dllexport) int getVarioSensSettings(ARRAYCB2 callbackFunc)
 	static int logMode = 0;
 	static int batteryCheckInterval = 0;
 
-	if (!C1_open_comm()) 
+	if (!C1_open_comm() || !C1_enable()) 
 	{
-		C1_close_comm();
 		errorCode = -1;
-	}
-	else if (!C1_enable())
-	{
-		C1_close_comm();
-		errorCode = -2;
 	}
 	else
 	{
@@ -280,15 +259,9 @@ extern "C" __declspec(dllexport) int getVarioSensLog(ARRAYCB callbackFunc)
 	static unsigned short recordPeriod = 0;
 	int errorCode = -1; // the equivalent of a return code	 
 
-	if (!C1_open_comm()) 
+	if (!C1_open_comm() || !C1_enable()) 
 	{
-		C1_close_comm();
 		errorCode = -1;
-	}
-	else if (!C1_enable())
-	{
-		C1_close_comm();
-		errorCode = -2;
 	}
 	else
 	{

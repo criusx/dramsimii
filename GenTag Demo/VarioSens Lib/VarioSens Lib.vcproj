@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="VarioSens Lib"
 	ProjectGUID="{7775ECF9-017E-489D-84B6-3BC6DF166494}"
 	RootNamespace="VarioSens Lib"
 	Keyword="MFCDLLProj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -76,6 +77,8 @@
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/VarioSens Lib.lib"
 			/>
 			<Tool
@@ -88,89 +91,7 @@
 				Name="VCBscMakeTool"
 			/>
 			<Tool
-				Name="VCCodeSignTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-			<DeploymentTool
-				ForceDirty="-1"
-				RemoteDirectory=""
-				RegisterOutput="0"
-				AdditionalFiles=""
-			/>
-			<DebuggerTool
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Pocket PC 2003 (ARMV4)"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="2"
-			UseOfMFC="1"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES)"
-				MkTypLibCompatible="false"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				ExecutionBucket="7"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\res&quot;"
-				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
-				RuntimeLibrary="0"
-				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES)"
-				Culture="1033"
-				AdditionalIncludeDirectories="$(IntDir)"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions=" /subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE"
-				AdditionalDependencies="C1Lib_PPC.lib"
-				ShowProgress="1"
-				OutputFile="../VarioSens Lib.dll"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)\res&quot;"
-				ModuleDefinitionFile=".\VarioSens Lib.def"
-				GenerateDebugInformation="true"
-				StackReserveSize="65536"
-				StackCommitSize="4096"
-				ImportLibrary="$(OutDir)/VarioSens Lib.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
+				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCCodeSignTool"
@@ -253,6 +174,8 @@
 				StackCommitSize="4096"
 				EntryPointSymbol="_DllMainCRTStartup"
 				BaseAddress="0x000100000"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/VarioSens Lib.lib"
 			/>
 			<Tool
@@ -263,6 +186,101 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCCodeSignTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Copying DLL output"
+				CommandLine="Copy $(OutDir)\*.dll $(ProjectDir)\"
+			/>
+			<DeploymentTool
+				ForceDirty="-1"
+				RemoteDirectory=""
+				RegisterOutput="0"
+				AdditionalFiles=""
+			/>
+			<DebuggerTool
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Pocket PC 2003 (ARMV4)"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="1"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES)"
+				MkTypLibCompatible="false"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				ExecutionBucket="7"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\res&quot;"
+				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="2"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES)"
+				Culture="1033"
+				AdditionalIncludeDirectories="$(IntDir)"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=" /subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE"
+				AdditionalDependencies="C1Lib_PPC.lib"
+				ShowProgress="1"
+				OutputFile="../VarioSens Lib.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)\res&quot;"
+				ModuleDefinitionFile=".\VarioSens Lib.def"
+				GenerateDebugInformation="true"
+				StackReserveSize="65536"
+				StackCommitSize="4096"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="$(OutDir)/VarioSens Lib.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCCodeSignTool"
@@ -307,12 +325,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
-				AdditionalIncludeDirectories="&quot;C:\Users\CriuS\Documents\Visual Studio 2005\Projects\KSW Dev Kit\Sirit\SDIO SDK\cd\include&quot;"
+				Optimization="2"
+				FavorSizeOrSpeed="1"
+				AdditionalIncludeDirectories="../Sirit Libs/"
 				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
 				RuntimeLibrary="0"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -330,15 +350,18 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
 				AdditionalDependencies="C1Lib_PPC.lib"
-				OutputFile="../GenTag Demo/$(ProjectName).dll"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Users\CriuS\Documents\Visual Studio 2005\Projects\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)/Sirit Libs/&quot;"
 				ModuleDefinitionFile=".\VarioSens Lib.def"
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
+				LinkTimeCodeGeneration="1"
 				EntryPointSymbol="_DllMainCRTStartup"
 				BaseAddress="0x000100000"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/VarioSens Lib.lib"
 			/>
 			<Tool
@@ -351,10 +374,15 @@
 				Name="VCBscMakeTool"
 			/>
 			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
 				Name="VCCodeSignTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copying DLL output"
+				CommandLine="Copy &quot;$(TargetDir)*.dll&quot; &quot;$(SolutionDir)Gentag Demo&quot;"
 			/>
 			<DeploymentTool
 				ForceDirty="-1"
@@ -374,42 +402,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\stdafx.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Pocket PC 2003 (ARMV4)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Pocket PC 2003 (ARMV4)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
 			<File
 				RelativePath=".\VarioSens Lib.cpp"
 				>

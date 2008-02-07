@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RFIDReadCursor", "RFIDReadC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DHL Demo", "DHL Demo\DHL Demo.csproj", "{3FF8F886-D438-4760-8801-A97DCAC9C84D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VarioSens Lib", "VarioSens Lib\VarioSens Lib.vcproj", "{7775ECF9-017E-489D-84B6-3BC6DF166494}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -282,6 +284,28 @@ Global
 		{3FF8F886-D438-4760-8801-A97DCAC9C84D}.Release|Pocket PC 2003 (ARMV4).ActiveCfg = Release|Any CPU
 		{3FF8F886-D438-4760-8801-A97DCAC9C84D}.Release|Win32.ActiveCfg = Release|Any CPU
 		{3FF8F886-D438-4760-8801-A97DCAC9C84D}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release|Any CPU
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Any CPU.ActiveCfg = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Mixed Platforms.ActiveCfg = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Mixed Platforms.Build.0 = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Mixed Platforms.Deploy.0 = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Pocket PC 2003 (ARMV4).ActiveCfg = Debug|Pocket PC 2003 (ARMV4)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Pocket PC 2003 (ARMV4).Build.0 = Debug|Pocket PC 2003 (ARMV4)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Pocket PC 2003 (ARMV4).Deploy.0 = Debug|Pocket PC 2003 (ARMV4)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Win32.ActiveCfg = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Any CPU.ActiveCfg = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Mixed Platforms.ActiveCfg = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Mixed Platforms.Build.0 = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Mixed Platforms.Deploy.0 = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Pocket PC 2003 (ARMV4).ActiveCfg = Release|Pocket PC 2003 (ARMV4)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Pocket PC 2003 (ARMV4).Build.0 = Release|Pocket PC 2003 (ARMV4)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Pocket PC 2003 (ARMV4).Deploy.0 = Release|Pocket PC 2003 (ARMV4)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Win32.ActiveCfg = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+		{7775ECF9-017E-489D-84B6-3BC6DF166494}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -293,6 +317,7 @@ Global
 		{9C57E42A-E831-4B6D-A760-CEACFC072583} = {3A06F99D-A469-49D6-9241-DE46AD9BD4F1}
 		{1AF780BB-1370-4C02-B219-599A8C210943} = {3A06F99D-A469-49D6-9241-DE46AD9BD4F1}
 		{E49614CC-5C7D-4E37-A27D-0DB2DFE73E78} = {3A06F99D-A469-49D6-9241-DE46AD9BD4F1}
+		{7775ECF9-017E-489D-84B6-3BC6DF166494} = {3A06F99D-A469-49D6-9241-DE46AD9BD4F1}
 		{62153004-0AA6-49E5-B997-944E2C3F5DF0} = {3FA9D43B-9486-4F14-BFA3-685998F1557C}
 		{0A59304D-922F-491F-A323-2FB541F55573} = {3FA9D43B-9486-4F14-BFA3-685998F1557C}
 		{3FF8F886-D438-4760-8801-A97DCAC9C84D} = {3FA9D43B-9486-4F14-BFA3-685998F1557C}
