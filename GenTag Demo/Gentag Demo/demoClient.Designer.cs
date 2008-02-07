@@ -40,6 +40,7 @@ namespace GentagDemo
             this.versionLabel = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.mainClearButton = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
             this.authPage = new System.Windows.Forms.TabPage();
             this.pendingLookupsLabel = new System.Windows.Forms.Label();
@@ -47,7 +48,7 @@ namespace GentagDemo
             this.label24 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.authTreeView = new System.Windows.Forms.TreeView();
             this.detectPage = new System.Windows.Forms.TabPage();
             this.detectTagIDLabel = new System.Windows.Forms.Label();
             this.detectTagTypeLabel = new System.Windows.Forms.Label();
@@ -147,7 +148,7 @@ namespace GentagDemo
             this.petPhonenumberLabel = new System.Windows.Forms.Label();
             this.petPB = new System.Windows.Forms.PictureBox();
             this.manualLookupPage = new System.Windows.Forms.TabPage();
-            this.treeView2 = new System.Windows.Forms.TreeView();
+            this.manualAuthTreeView = new System.Windows.Forms.TreeView();
             this.manualIDButton = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.varioSensWPage = new System.Windows.Forms.TabPage();
@@ -170,7 +171,6 @@ namespace GentagDemo
             this.radScanButton = new System.Windows.Forms.Button();
             this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
             this.errorReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.mainClearButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.introPage.SuspendLayout();
             this.authPage.SuspendLayout();
@@ -191,7 +191,8 @@ namespace GentagDemo
             // 
             // label23
             // 
-            this.label23.Location = new System.Drawing.Point(82, 194);
+            this.label23.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label23.Location = new System.Drawing.Point(78, 191);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(23, 20);
             this.label23.Text = "ID:";
@@ -199,8 +200,9 @@ namespace GentagDemo
             // 
             // readIDButton
             // 
+            this.readIDButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.readIDButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.readIDButton.Location = new System.Drawing.Point(3, 195);
+            this.readIDButton.Location = new System.Drawing.Point(-1, 192);
             this.readIDButton.Name = "readIDButton";
             this.readIDButton.Size = new System.Drawing.Size(36, 20);
             this.readIDButton.TabIndex = 0;
@@ -209,8 +211,9 @@ namespace GentagDemo
             // 
             // readLogButton
             // 
+            this.readLogButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.readLogButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.readLogButton.Location = new System.Drawing.Point(2, 196);
+            this.readLogButton.Location = new System.Drawing.Point(-2, 193);
             this.readLogButton.Name = "readLogButton";
             this.readLogButton.Size = new System.Drawing.Size(84, 18);
             this.readLogButton.TabIndex = 0;
@@ -256,6 +259,7 @@ namespace GentagDemo
             // 
             // label29
             // 
+            this.label29.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label29.Location = new System.Drawing.Point(12, 179);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(225, 20);
@@ -264,6 +268,7 @@ namespace GentagDemo
             // 
             // label28
             // 
+            this.label28.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label28.Location = new System.Drawing.Point(8, 159);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(225, 20);
@@ -272,6 +277,7 @@ namespace GentagDemo
             // 
             // versionLabel
             // 
+            this.versionLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.versionLabel.Location = new System.Drawing.Point(7, 139);
             this.versionLabel.Name = "versionLabel";
             this.versionLabel.Size = new System.Drawing.Size(225, 20);
@@ -279,6 +285,7 @@ namespace GentagDemo
             // 
             // label26
             // 
+            this.label26.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label26.Location = new System.Drawing.Point(8, 119);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(225, 20);
@@ -293,8 +300,19 @@ namespace GentagDemo
             this.pictureBox2.Size = new System.Drawing.Size(225, 104);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             // 
+            // mainClearButton
+            // 
+            this.mainClearButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.mainClearButton.Location = new System.Drawing.Point(188, 199);
+            this.mainClearButton.Name = "mainClearButton";
+            this.mainClearButton.Size = new System.Drawing.Size(44, 16);
+            this.mainClearButton.TabIndex = 0;
+            this.mainClearButton.Text = "Clear";
+            this.mainClearButton.Click += new System.EventHandler(this.mainClearButton_Click);
+            // 
             // exitButton
             // 
+            this.exitButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.exitButton.Location = new System.Drawing.Point(80, 199);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(72, 15);
@@ -311,7 +329,7 @@ namespace GentagDemo
             this.authPage.Controls.Add(this.label22);
             this.authPage.Controls.Add(this.pictureBox1);
             this.authPage.Controls.Add(this.readIDButton);
-            this.authPage.Controls.Add(this.treeView1);
+            this.authPage.Controls.Add(this.authTreeView);
             this.authPage.Location = new System.Drawing.Point(0, 0);
             this.authPage.Name = "authPage";
             this.authPage.Size = new System.Drawing.Size(232, 214);
@@ -319,21 +337,24 @@ namespace GentagDemo
             // 
             // pendingLookupsLabel
             // 
-            this.pendingLookupsLabel.Location = new System.Drawing.Point(81, 173);
+            this.pendingLookupsLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.pendingLookupsLabel.Location = new System.Drawing.Point(77, 170);
             this.pendingLookupsLabel.Name = "pendingLookupsLabel";
             this.pendingLookupsLabel.Size = new System.Drawing.Size(43, 20);
             this.pendingLookupsLabel.Text = "0";
             // 
             // queuedLookupsLabel
             // 
-            this.queuedLookupsLabel.Location = new System.Drawing.Point(81, 155);
+            this.queuedLookupsLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.queuedLookupsLabel.Location = new System.Drawing.Point(77, 152);
             this.queuedLookupsLabel.Name = "queuedLookupsLabel";
             this.queuedLookupsLabel.Size = new System.Drawing.Size(43, 20);
             this.queuedLookupsLabel.Text = "0";
             // 
             // label24
             // 
-            this.label24.Location = new System.Drawing.Point(4, 173);
+            this.label24.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label24.Location = new System.Drawing.Point(0, 170);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(71, 20);
             this.label24.Text = "Pending";
@@ -341,7 +362,8 @@ namespace GentagDemo
             // 
             // label22
             // 
-            this.label22.Location = new System.Drawing.Point(4, 155);
+            this.label22.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label22.Location = new System.Drawing.Point(0, 152);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(71, 20);
             this.label22.Text = "Queued";
@@ -349,21 +371,23 @@ namespace GentagDemo
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(130, 155);
+            this.pictureBox1.Location = new System.Drawing.Point(126, 152);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(103, 60);
             // 
-            // treeView1
+            // authTreeView
             // 
-            this.treeView1.Location = new System.Drawing.Point(3, 3);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.PathSeparator = "\\";
-            this.treeView1.Size = new System.Drawing.Size(234, 149);
-            this.treeView1.TabIndex = 2;
+            this.authTreeView.Location = new System.Drawing.Point(3, 3);
+            this.authTreeView.Name = "authTreeView";
+            this.authTreeView.PathSeparator = "\\";
+            this.authTreeView.Size = new System.Drawing.Size(234, 149);
+            this.authTreeView.TabIndex = 2;
             // 
             // detectPage
             // 
+            this.detectPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.detectPage.Controls.Add(this.detectTagIDLabel);
             this.detectPage.Controls.Add(this.detectTagTypeLabel);
             this.detectPage.Controls.Add(this.detectTagTypeButton);
@@ -374,24 +398,27 @@ namespace GentagDemo
             // 
             // detectTagIDLabel
             // 
+            this.detectTagIDLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.detectTagIDLabel.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Regular);
-            this.detectTagIDLabel.Location = new System.Drawing.Point(8, 4);
+            this.detectTagIDLabel.Location = new System.Drawing.Point(4, 4);
             this.detectTagIDLabel.Name = "detectTagIDLabel";
             this.detectTagIDLabel.Size = new System.Drawing.Size(225, 62);
             this.detectTagIDLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // detectTagTypeLabel
             // 
+            this.detectTagTypeLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.detectTagTypeLabel.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
-            this.detectTagTypeLabel.Location = new System.Drawing.Point(8, 161);
+            this.detectTagTypeLabel.Location = new System.Drawing.Point(4, 158);
             this.detectTagTypeLabel.Name = "detectTagTypeLabel";
             this.detectTagTypeLabel.Size = new System.Drawing.Size(225, 31);
             this.detectTagTypeLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // detectTagTypeButton
             // 
+            this.detectTagTypeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.detectTagTypeButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.detectTagTypeButton.Location = new System.Drawing.Point(3, 195);
+            this.detectTagTypeButton.Location = new System.Drawing.Point(-1, 192);
             this.detectTagTypeButton.Name = "detectTagTypeButton";
             this.detectTagTypeButton.Size = new System.Drawing.Size(36, 20);
             this.detectTagTypeButton.TabIndex = 1;
@@ -416,8 +443,9 @@ namespace GentagDemo
             // 
             // medicationButton
             // 
+            this.medicationButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.medicationButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.medicationButton.Location = new System.Drawing.Point(61, 135);
+            this.medicationButton.Location = new System.Drawing.Point(57, 132);
             this.medicationButton.Name = "medicationButton";
             this.medicationButton.Size = new System.Drawing.Size(66, 20);
             this.medicationButton.TabIndex = 4;
@@ -426,8 +454,9 @@ namespace GentagDemo
             // 
             // readPatientButton
             // 
+            this.readPatientButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.readPatientButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.readPatientButton.Location = new System.Drawing.Point(8, 135);
+            this.readPatientButton.Location = new System.Drawing.Point(4, 132);
             this.readPatientButton.Name = "readPatientButton";
             this.readPatientButton.Size = new System.Drawing.Size(48, 20);
             this.readPatientButton.TabIndex = 4;
@@ -436,16 +465,18 @@ namespace GentagDemo
             // 
             // label11
             // 
+            this.label11.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label11.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.label11.Location = new System.Drawing.Point(7, 158);
+            this.label11.Location = new System.Drawing.Point(3, 155);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(100, 12);
             this.label11.Text = "Patient Description";
             // 
             // label10
             // 
+            this.label10.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label10.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.label10.Location = new System.Drawing.Point(133, 135);
+            this.label10.Location = new System.Drawing.Point(129, 132);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(100, 12);
             this.label10.Text = "Patient Name";
@@ -466,8 +497,9 @@ namespace GentagDemo
             // 
             // patientDescriptionBox
             // 
+            this.patientDescriptionBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.patientDescriptionBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.patientDescriptionBox.Location = new System.Drawing.Point(8, 174);
+            this.patientDescriptionBox.Location = new System.Drawing.Point(4, 171);
             this.patientDescriptionBox.Multiline = true;
             this.patientDescriptionBox.Name = "patientDescriptionBox";
             this.patientDescriptionBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -476,8 +508,9 @@ namespace GentagDemo
             // 
             // patientNameBox
             // 
+            this.patientNameBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.patientNameBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.patientNameBox.Location = new System.Drawing.Point(133, 151);
+            this.patientNameBox.Location = new System.Drawing.Point(129, 148);
             this.patientNameBox.Name = "patientNameBox";
             this.patientNameBox.Size = new System.Drawing.Size(100, 19);
             this.patientNameBox.TabIndex = 0;
@@ -502,6 +535,7 @@ namespace GentagDemo
             this.assayImagePictureBox.Location = new System.Drawing.Point(0, 0);
             this.assayImagePictureBox.Name = "assayImagePictureBox";
             this.assayImagePictureBox.Size = new System.Drawing.Size(180, 181);
+            this.assayImagePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             // 
             // assayTimerLabel
             // 
@@ -513,7 +547,8 @@ namespace GentagDemo
             // 
             // assayMessageLabel
             // 
-            this.assayMessageLabel.Location = new System.Drawing.Point(8, 184);
+            this.assayMessageLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.assayMessageLabel.Location = new System.Drawing.Point(4, 181);
             this.assayMessageLabel.Name = "assayMessageLabel";
             this.assayMessageLabel.Size = new System.Drawing.Size(225, 33);
             // 
@@ -969,7 +1004,8 @@ namespace GentagDemo
             // 
             // readWriteStatusLabel
             // 
-            this.readWriteStatusLabel.Location = new System.Drawing.Point(3, 172);
+            this.readWriteStatusLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.readWriteStatusLabel.Location = new System.Drawing.Point(-1, 169);
             this.readWriteStatusLabel.Name = "readWriteStatusLabel";
             this.readWriteStatusLabel.Size = new System.Drawing.Size(100, 20);
             this.readWriteStatusLabel.Text = "Status:";
@@ -984,8 +1020,9 @@ namespace GentagDemo
             // 
             // writeButton
             // 
+            this.writeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.writeButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.writeButton.Location = new System.Drawing.Point(201, 197);
+            this.writeButton.Location = new System.Drawing.Point(197, 194);
             this.writeButton.Name = "writeButton";
             this.writeButton.Size = new System.Drawing.Size(36, 20);
             this.writeButton.TabIndex = 1;
@@ -994,8 +1031,9 @@ namespace GentagDemo
             // 
             // readButton
             // 
+            this.readButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.readButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.readButton.Location = new System.Drawing.Point(0, 197);
+            this.readButton.Location = new System.Drawing.Point(-4, 194);
             this.readButton.Name = "readButton";
             this.readButton.Size = new System.Drawing.Size(36, 20);
             this.readButton.TabIndex = 1;
@@ -1015,11 +1053,12 @@ namespace GentagDemo
             this.winePage.Controls.Add(this.wineReviewTextBox);
             this.winePage.Location = new System.Drawing.Point(0, 0);
             this.winePage.Name = "winePage";
-            this.winePage.Size = new System.Drawing.Size(232, 214);
+            this.winePage.Size = new System.Drawing.Size(240, 217);
             this.winePage.Text = "Wine";
             // 
             // wineButton
             // 
+            this.wineButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.wineButton.Location = new System.Drawing.Point(0, 194);
             this.wineButton.Name = "wineButton";
@@ -1030,6 +1069,7 @@ namespace GentagDemo
             // 
             // wineCountryLabel
             // 
+            this.wineCountryLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineCountryLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.wineCountryLabel.Location = new System.Drawing.Point(140, 189);
             this.wineCountryLabel.Name = "wineCountryLabel";
@@ -1037,6 +1077,7 @@ namespace GentagDemo
             // 
             // wineTypeLabel
             // 
+            this.wineTypeLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineTypeLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.wineTypeLabel.Location = new System.Drawing.Point(41, 189);
             this.wineTypeLabel.Name = "wineTypeLabel";
@@ -1044,6 +1085,7 @@ namespace GentagDemo
             // 
             // wineVineyardLabel
             // 
+            this.wineVineyardLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineVineyardLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.wineVineyardLabel.Location = new System.Drawing.Point(41, 163);
             this.wineVineyardLabel.Name = "wineVineyardLabel";
@@ -1051,6 +1093,7 @@ namespace GentagDemo
             // 
             // wineYearLabel
             // 
+            this.wineYearLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineYearLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.wineYearLabel.Location = new System.Drawing.Point(140, 163);
             this.wineYearLabel.Name = "wineYearLabel";
@@ -1058,6 +1101,7 @@ namespace GentagDemo
             // 
             // wineAuthPictureBox
             // 
+            this.wineAuthPictureBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineAuthPictureBox.Location = new System.Drawing.Point(13, 166);
             this.wineAuthPictureBox.Name = "wineAuthPictureBox";
             this.wineAuthPictureBox.Size = new System.Drawing.Size(22, 22);
@@ -1200,8 +1244,9 @@ namespace GentagDemo
             // 
             // readTestButton
             // 
+            this.readTestButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.readTestButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.readTestButton.Location = new System.Drawing.Point(0, 196);
+            this.readTestButton.Location = new System.Drawing.Point(-4, 193);
             this.readTestButton.Name = "readTestButton";
             this.readTestButton.Size = new System.Drawing.Size(36, 20);
             this.readTestButton.TabIndex = 0;
@@ -1224,7 +1269,8 @@ namespace GentagDemo
             // 
             // petButton
             // 
-            this.petButton.Location = new System.Drawing.Point(0, 195);
+            this.petButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.petButton.Location = new System.Drawing.Point(-4, 192);
             this.petButton.Name = "petButton";
             this.petButton.Size = new System.Drawing.Size(40, 20);
             this.petButton.TabIndex = 18;
@@ -1233,25 +1279,29 @@ namespace GentagDemo
             // 
             // petContactInfoLabel
             // 
-            this.petContactInfoLabel.Location = new System.Drawing.Point(140, 184);
+            this.petContactInfoLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.petContactInfoLabel.Location = new System.Drawing.Point(136, 181);
             this.petContactInfoLabel.Name = "petContactInfoLabel";
             this.petContactInfoLabel.Size = new System.Drawing.Size(100, 34);
             // 
             // petBreedLabel
             // 
-            this.petBreedLabel.Location = new System.Drawing.Point(46, 189);
+            this.petBreedLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.petBreedLabel.Location = new System.Drawing.Point(42, 186);
             this.petBreedLabel.Name = "petBreedLabel";
             this.petBreedLabel.Size = new System.Drawing.Size(100, 25);
             // 
             // petOwnerLabel
             // 
-            this.petOwnerLabel.Location = new System.Drawing.Point(41, 164);
+            this.petOwnerLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.petOwnerLabel.Location = new System.Drawing.Point(37, 161);
             this.petOwnerLabel.Name = "petOwnerLabel";
             this.petOwnerLabel.Size = new System.Drawing.Size(100, 25);
             // 
             // petPhonenumberLabel
             // 
-            this.petPhonenumberLabel.Location = new System.Drawing.Point(140, 164);
+            this.petPhonenumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.petPhonenumberLabel.Location = new System.Drawing.Point(136, 161);
             this.petPhonenumberLabel.Name = "petPhonenumberLabel";
             this.petPhonenumberLabel.Size = new System.Drawing.Size(100, 20);
             // 
@@ -1265,7 +1315,7 @@ namespace GentagDemo
             // manualLookupPage
             // 
             this.manualLookupPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
-            this.manualLookupPage.Controls.Add(this.treeView2);
+            this.manualLookupPage.Controls.Add(this.manualAuthTreeView);
             this.manualLookupPage.Controls.Add(this.manualIDButton);
             this.manualLookupPage.Controls.Add(this.textBox4);
             this.manualLookupPage.Location = new System.Drawing.Point(0, 0);
@@ -1273,17 +1323,18 @@ namespace GentagDemo
             this.manualLookupPage.Size = new System.Drawing.Size(232, 214);
             this.manualLookupPage.Text = "Manual";
             // 
-            // treeView2
+            // manualAuthTreeView
             // 
-            this.treeView2.Location = new System.Drawing.Point(0, 0);
-            this.treeView2.Name = "treeView2";
-            this.treeView2.PathSeparator = "\\";
-            this.treeView2.Size = new System.Drawing.Size(240, 161);
-            this.treeView2.TabIndex = 2;
+            this.manualAuthTreeView.Location = new System.Drawing.Point(0, 0);
+            this.manualAuthTreeView.Name = "manualAuthTreeView";
+            this.manualAuthTreeView.PathSeparator = "\\";
+            this.manualAuthTreeView.Size = new System.Drawing.Size(240, 161);
+            this.manualAuthTreeView.TabIndex = 2;
             // 
             // manualIDButton
             // 
-            this.manualIDButton.Location = new System.Drawing.Point(8, 167);
+            this.manualIDButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.manualIDButton.Location = new System.Drawing.Point(4, 164);
             this.manualIDButton.Name = "manualIDButton";
             this.manualIDButton.Size = new System.Drawing.Size(72, 20);
             this.manualIDButton.TabIndex = 1;
@@ -1292,7 +1343,8 @@ namespace GentagDemo
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(8, 193);
+            this.textBox4.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.textBox4.Location = new System.Drawing.Point(4, 190);
             this.textBox4.MaxLength = 25;
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(224, 21);
@@ -1444,13 +1496,15 @@ namespace GentagDemo
             // 
             // radIDLabel
             // 
-            this.radIDLabel.Location = new System.Drawing.Point(111, 194);
+            this.radIDLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.radIDLabel.Location = new System.Drawing.Point(107, 191);
             this.radIDLabel.Name = "radIDLabel";
             this.radIDLabel.Size = new System.Drawing.Size(122, 20);
             // 
             // radScanButton
             // 
-            this.radScanButton.Location = new System.Drawing.Point(4, 194);
+            this.radScanButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.radScanButton.Location = new System.Drawing.Point(0, 191);
             this.radScanButton.Name = "radScanButton";
             this.radScanButton.Size = new System.Drawing.Size(72, 20);
             this.radScanButton.TabIndex = 0;
@@ -1460,15 +1514,6 @@ namespace GentagDemo
             // errorReportBindingSource
             // 
             this.errorReportBindingSource.DataSource = typeof(GentagDemo.medWS.errorReport);
-            // 
-            // mainClearButton
-            // 
-            this.mainClearButton.Location = new System.Drawing.Point(188, 199);
-            this.mainClearButton.Name = "mainClearButton";
-            this.mainClearButton.Size = new System.Drawing.Size(44, 16);
-            this.mainClearButton.TabIndex = 0;
-            this.mainClearButton.Text = "Clear";
-            this.mainClearButton.Click += new System.EventHandler(this.mainClearButton_Click);
             // 
             // demoClient
             // 
@@ -1519,7 +1564,7 @@ namespace GentagDemo
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView authTreeView;
         private System.Windows.Forms.TabPage manualLookupPage;
         private System.Windows.Forms.TabPage varioSensWPage;
         private System.Windows.Forms.Button manualIDButton;
@@ -1527,7 +1572,7 @@ namespace GentagDemo
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TreeView treeView2;
+        private System.Windows.Forms.TreeView manualAuthTreeView;
         private System.Windows.Forms.Button readValueButton;
         private System.Windows.Forms.Button setValueButton;
         private System.Windows.Forms.TextBox intervalTextBox;

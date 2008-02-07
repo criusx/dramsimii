@@ -201,34 +201,6 @@ namespace GentagDemo.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap RadioAnimation0 {
-            get {
-                object obj = ResourceManager.GetObject("RadioAnimation0", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap RadioAnimation1 {
-            get {
-                object obj = ResourceManager.GetObject("RadioAnimation1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap RadioAnimation2 {
-            get {
-                object obj = ResourceManager.GetObject("RadioAnimation2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap RadioAnimation3 {
-            get {
-                object obj = ResourceManager.GetObject("RadioAnimation3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         /// <summary>
         ///   Looks up a localized string similar to Read Tag.
         /// </summary>

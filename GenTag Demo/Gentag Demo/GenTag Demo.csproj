@@ -313,10 +313,6 @@
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Resources\RadioAnimation0.png" />
-    <None Include="Resources\RadioAnimation1.png" />
-    <None Include="Resources\RadioAnimation2.png" />
-    <None Include="Resources\RadioAnimation3.png" />
     <Content Include="VarioSens Lib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

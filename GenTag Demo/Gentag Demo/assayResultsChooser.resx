@@ -117,84 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="blank" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\blank.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\cancel.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="emptyString" xml:space="preserve">
-    <value />
-  </data>
-  <data name="error1" xml:space="preserve">
-    <value>Please ensure that the Sirit reader is completely inserted</value>
-  </data>
-  <data name="error2" xml:space="preserve">
-    <value>Unable to communicate with Sirit reader</value>
-  </data>
-  <data name="error3" xml:space="preserve">
-    <value>Error, cannot read tag</value>
-  </data>
-  <data name="error4" xml:space="preserve">
-    <value>Error, cannot retrieve log state from VarioSens card</value>
-  </data>
-  <data name="error5" xml:space="preserve">
-    <value>Error, cannot get violation data</value>
-  </data>
-  <data name="error6" xml:space="preserve">
-    <value>No violations recorded</value>
-  </data>
-  <data name="error7" xml:space="preserve">
-    <value>Error, not a VarioSens tag</value>
-  </data>
-  <data name="Gentag_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Gentag-logo.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="logString" xml:space="preserve">
-    <value>Temperature Violation Log</value>
-  </data>
-  <data name="loLimitString" xml:space="preserve">
-    <value>Lo Limit</value>
-  </data>
-  <data name="manualIDButtonInit" xml:space="preserve">
-    <value>Lookup</value>
-  </data>
-  <data name="ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ok.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="readIDButtonInit" xml:space="preserve">
-    <value>Read Tag</value>
-  </data>
-  <data name="readLogButtonInit" xml:space="preserve">
-    <value>Read VarioSens</value>
-  </data>
-  <data name="readValueButtonInit" xml:space="preserve">
-    <value>Read Values</value>
-  </data>
-  <data name="setValueButtonInit" xml:space="preserve">
-    <value>Set Values</value>
-  </data>
-  <data name="tab1String" xml:space="preserve">
-    <value>VarioSens</value>
-  </data>
-  <data name="tab2String" xml:space="preserve">
-    <value>ID Lookup</value>
-  </data>
-  <data name="tab3String" xml:space="preserve">
-    <value>Manual</value>
-  </data>
-  <data name="tab4String" xml:space="preserve">
-    <value>VarioSens/W</value>
-  </data>
-  <data name="titleString" xml:space="preserve">
-    <value>Gentag Demo</value>
-  </data>
-  <data name="DrugInteractionWarningMessage" xml:space="preserve">
-    <value>Warning! 
-This drug should not be taken by this patient.</value>
-  </data>
-  <data name="question" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\question.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  <metadata name="$this.FormFactorShadowProperty" xml:space="preserve">
+    <value>Pocket_PC_Phone_Square_Screen</value>
+  </metadata>
+  <metadata name="$this.FormFactor" xml:space="preserve">
+    <value>Pocket_PC_Phone_Square_Screen</value>
+  </metadata>
+  <metadata name="$this.Skin" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

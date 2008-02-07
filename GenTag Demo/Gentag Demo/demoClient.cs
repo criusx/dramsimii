@@ -37,7 +37,7 @@ namespace GentagDemo
 
         TextWriter debugOut;
 
-        private RFIDReadCursor.UserControl1 userControl11;
+        private RFIDReadCursor.RFIDReadWaitCursor userControl11;
 
         Thread versionCheckThread;
 
@@ -50,8 +50,12 @@ namespace GentagDemo
 
             tagReader = new Reader();
 
+            // assayResultsDialog
             assayResultsDialog = new assayResultsChooser();
 
+            assayResultsDialog.Height = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
+            
+            // assayCountdownTimer
             assayCountdownTimer = new System.Windows.Forms.Timer();
 
             assayCountdownTimer.Interval = 1000;
@@ -60,6 +64,28 @@ namespace GentagDemo
 
             // open comm briefly to preload the assemblies
             tagReader.initialize();
+
+            this.ClientSize = new Size(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width,System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width);
+            tabControl1.Size = this.ClientSize;
+            foreach (TabPage tP in tabControl1.TabPages)
+            {
+                tP.Size = new Size(this.ClientSize.Width,Convert.ToInt32(Convert.ToSingle(this.ClientSize.Height) / 240F) * tP.Size.Height);
+                foreach (Control childControl in tP.Controls)
+                {
+
+                    if (childControl.GetType() == typeof(PictureBox) || childControl.GetType() == typeof(TreeView))
+                    {
+                        // special case
+                        if (childControl == wineAuthPictureBox)
+                            continue;
+                        int newValue = this.ClientSize.Height - 240 + childControl.Height;
+                        childControl.Height = newValue;
+                        //childControl.Size = new Size(childControl.Size.Width, this.ClientSize.Height / 240 * childControl.Size.Height);
+                    }
+                    //childControl.Location = new Point(childControl.Location.X, this.ClientSize.Height / 240 * childControl.Location.Y);
+                    //childControl.Location.Y = this.ClientSize.Height / 240 * childControl.Location.Y;
+                }
+            }
 
             // intialize threads
             versionCheckThread = new Thread(versionCheck);
@@ -73,8 +99,10 @@ namespace GentagDemo
             debugOut = new StreamWriter("debug.txt", false);
 
             // userControl11
-            this.userControl11 = new RFIDReadCursor.UserControl1();
-            this.userControl11.Location = new System.Drawing.Point(76, 76);
+            int systemWidth = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;
+            int systemHeight = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
+            this.userControl11 = new RFIDReadCursor.RFIDReadWaitCursor();
+            this.userControl11.Location = new System.Drawing.Point((systemWidth - userControl11.Size.Width)/2, (systemHeight - userControl11.Size.Height)/2);
             this.userControl11.Name = "userControl11";
             this.userControl11.Size = new System.Drawing.Size(72, 72);
 
@@ -131,7 +159,7 @@ namespace GentagDemo
             myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.cancel.GetHbitmap()));
             myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.ok.GetHbitmap()));
             myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.question.GetHbitmap()));
-            treeView1.ImageList = myImageList;
+            authTreeView.ImageList = myImageList;
 
             // web service inits
             const int timeout = 15000;
@@ -1008,11 +1036,11 @@ namespace GentagDemo
                     new object[] { currentTag, rfidDescr, isAuthenticated, isNew, shouldUpdateIfExists });
                 return;
             }
-            treeView1.BeginUpdate();
+            authTreeView.BeginUpdate();
 
             bool exists = false;
 
-            foreach (TreeNode tn in treeView1.Nodes)
+            foreach (TreeNode tn in authTreeView.Nodes)
             {
                 if (tn.Text == currentTag)
                 {
@@ -1035,9 +1063,9 @@ namespace GentagDemo
                 subTn.SelectedImageIndex = subTn.ImageIndex = 0;
 
                 superTn.Nodes.Add(subTn);
-                treeView1.Nodes.Add(superTn);
+                authTreeView.Nodes.Add(superTn);
             }
-            treeView1.EndUpdate();
+            authTreeView.EndUpdate();
         }
         #endregion
 
@@ -1059,9 +1087,9 @@ namespace GentagDemo
 
         private void clearDemo()
         {
-            treeView1.BeginUpdate();
-            treeView1.Nodes.Clear();
-            treeView1.EndUpdate();
+            authTreeView.BeginUpdate();
+            authTreeView.Nodes.Clear();
+            authTreeView.EndUpdate();
 
             counterfeitCache.Clear();
             wineBottleCache.Clear();
