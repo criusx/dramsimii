@@ -191,12 +191,12 @@ namespace PocketGraphBar
                 decimal val;
 
                 //This is my bar
-                Rectangle r;
+                //Rectangle r;
 
                 int height;
                 //int x_val;
                 int bar;
-                SolidBrush b;
+                //SolidBrush b;
                 SolidBrush legends = new System.Drawing.SolidBrush(mAxisColor);
 
                 //I begin to draw each series of data

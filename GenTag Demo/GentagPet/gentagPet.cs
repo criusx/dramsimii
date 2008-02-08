@@ -29,22 +29,8 @@ namespace GentagPet
         public gentagPet()
         {
             InitializeComponent();
-
-            // generate the device's UID
-            string AppString = GentagPet.Properties.Resources.appTitle;
-
-            byte[] AppData = new byte[AppString.Length];
-
-            for (int count = 0; count < AppString.Length; count++)
-                AppData[count] = (byte)AppString[count];
-
-            int appDataSize = AppData.Length;
-
-            byte[] dUID = new byte[20];
-
-            uint SizeOut = 20;
-
-            Reader.GetDeviceUniqueID(AppData, appDataSize, 1, dUID, out SizeOut);
+            
+            DeviceUID = Reader.getDeviceUniqueID();
 
             for (int i = 0; i < 20; i++)
                 DeviceUID += dUID[i].ToString("X", CultureInfo.CurrentUICulture);

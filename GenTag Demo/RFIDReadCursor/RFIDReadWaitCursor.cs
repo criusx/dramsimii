@@ -47,6 +47,7 @@ namespace RFIDReadCursor
             {
                 eventTimer.Enabled = value;
                 currentImage = 0;
+                setPhoto(pictureBox1, refImages[currentImage]);
             }
         }
         

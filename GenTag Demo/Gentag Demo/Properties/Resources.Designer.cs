@@ -153,6 +153,15 @@ namespace GentagDemo.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to submit..
+        /// </summary>
+        internal static string FailedToSubmit {
+            get {
+                return ResourceManager.GetString("FailedToSubmit", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap Gentag_logo {
             get {
                 object obj = ResourceManager.GetObject("Gentag_logo", resourceCulture);
@@ -187,10 +196,55 @@ namespace GentagDemo.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to No description found.
+        /// </summary>
+        internal static string NoDescriptionFound {
+            get {
+                return ResourceManager.GetString("NoDescriptionFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No description yet.
+        /// </summary>
+        internal static string NoDescriptionYet {
+            get {
+                return ResourceManager.GetString("NoDescriptionYet", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap ok {
             get {
                 object obj = ResourceManager.GetObject("ok", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patient information was not found..
+        /// </summary>
+        internal static string patientInfoNotFound {
+            get {
+                return ResourceManager.GetString("patientInfoNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Possible network error, please try again..
+        /// </summary>
+        internal static string PossibleNetworkErrorPleaseTryAgain {
+            get {
+                return ResourceManager.GetString("PossibleNetworkErrorPleaseTryAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem connecting to web service: .
+        /// </summary>
+        internal static string ProblemConnectingToWebService {
+            get {
+                return ResourceManager.GetString("ProblemConnectingToWebService", resourceCulture);
             }
         }
         
@@ -229,11 +283,29 @@ namespace GentagDemo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Results recorded..
+        /// </summary>
+        internal static string ResultsRecorded {
+            get {
+                return ResourceManager.GetString("ResultsRecorded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Values.
         /// </summary>
         internal static string setValueButtonInit {
             get {
                 return ResourceManager.GetString("setValueButtonInit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: .
+        /// </summary>
+        internal static string Status {
+            get {
+                return ResourceManager.GetString("Status", resourceCulture);
             }
         }
         

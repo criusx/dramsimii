@@ -4,16 +4,167 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Globalization;
 
+[assembly: CLSCompliant(true)]
 namespace RFIDReader
 {
-    public class Reader
+    // tag types
+    public enum tagTypes { none, iso15693, iso14443a, iso14443b, iso14443bsri, iso14443bsr176, iso18000, felica, MiFareClassic, MiFareUltraLight, MiFareDESFire, INSIDE }
+
+    public enum readType { none, readOne, readMany, readVarioSensLog, detectMany, readTagMemory, setVarioSensSettings, getVarioSensSettings, radiationScan, writeTagMemory }
+
+    #region EventArgs
+    public class ReaderErrorEventArgs : EventArgs
     {
-        #region Delegates
-        public delegate void TagReceivedEventHandler(string tagID, bool doneReading);
-        public delegate void VarioSensSettingsReceivedEventHandler(Single hiLimit, Single loLimit, short period, short logMode, short batteryCheckInterval);
-        public delegate void ReaderErrorHandler(string errorMessage);
-        public delegate void VarioSensReadLogHandler(
+        private string errorReason;
+
+        public ReaderErrorEventArgs(string value)
+        {
+            errorReason = value;
+        }
+
+        public string Reason
+        {
+            get
+            {
+                return errorReason;
+            }
+        }
+    }
+
+    public class TagReceivedEventArgs : EventArgs
+    {
+        private string tagID;
+
+        private bool doneReading;
+
+        public TagReceivedEventArgs(string _tag, bool _done)
+        {
+            tagID = _tag;
+            doneReading = _done;
+        }
+
+        public string Tag
+        {
+            get
+            {
+                return tagID;
+            }
+        }
+
+        public bool Done
+        {
+            get
+            {
+                return doneReading;
+            }
+        }
+    }
+
+    public class VarioSensSettingsEventArgs : EventArgs
+    {
+        private Single highLimit;
+        private Single lowLimit;
+        private short period;
+        private short logMode;
+        private short batteryCheckInterval;
+
+        public VarioSensSettingsEventArgs(Single _high, Single _low, short _period, short _logMode, short _batteryCheckInterval)
+        {
+            highLimit = _high;
+            lowLimit = _low;
+            period = _period;
+            logMode = _logMode;
+            batteryCheckInterval = _batteryCheckInterval;
+        }
+
+        public Single HighLimit
+        {get { return highLimit; }}
+        public Single LowLimit
+        {get { return lowLimit; }}
+        public short Period
+        { get { return period; } }
+        public short LogMode
+        { get { return logMode; } }
+        public short BatteryCheckInterval
+        { get { return batteryCheckInterval; } }
+    }
+
+    public class TagContentsEventArgs : EventArgs
+    {
+        private string contents;
+        public TagContentsEventArgs(string value)
+        { contents = value; }
+
+        public string Contents
+        { get { return contents; } }
+    }
+
+    public class FinishedWritingStatusEventArgs : EventArgs
+    {
+        private string status;
+        public FinishedWritingStatusEventArgs(string value)
+        { status = value; }
+        public string Status
+        { get { return status; } }
+    }
+
+    public class TagTypeEventArgs : EventArgs
+    {
+        private tagTypes type;
+        private string tagID;
+        public TagTypeEventArgs(tagTypes value, string ID)
+        { type = value; tagID = ID; }
+
+        public tagTypes Type
+        { get { return type; } }
+
+        public string TagID
+        { get { return tagID; } }
+    }
+
+    public class VarioSensLogEventArgs:EventArgs
+    {
+        private Single upperLimit;
+        private Single lowerLimit;
+        private Int32 length;
+        private short recordPeriod;
+        private int[] recordDates;
+        private Byte[] logModes;
+        private Single[] temperatures;
+        public VarioSensLogEventArgs(Single ul, Single ll, Int32 len, short rp, int[] rd, Byte[] lm, Single[] t)
+        {
+            upperLimit = ul;
+            lowerLimit = ll;
+            length = len;
+            recordPeriod = rp;
+            recordDates = rd;
+            logModes = lm;
+            temperatures = t;
+        }
+
+        public Single UpperLimit
+        { get { return upperLimit; } }
+        public Single LowerLimit
+        { get { return lowerLimit; } }
+        public Int32 Length
+        { get { return length; } }
+        public short RecordPeriod
+        { get { return recordPeriod; } }
+        public int[] RecordDate
+        { get { return recordDates; } }
+        public Byte[] LogMode
+        { get { return logModes; } }
+        public Single[] Temperature
+        { get { return temperatures; } }
+    }
+    #endregion
+
+    #region DLL Imports
+    internal class NativeMethods
+    {
+        public delegate void VarioSensReadLogCallback(
            Single upperTempLimit,
            Single lowerTempLimit,
            Int32 len,
@@ -21,32 +172,13 @@ namespace RFIDReader
            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] dateTime,
            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Byte[] logMode,
            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Single[] temperatures);
-        public delegate void ReturnTagContentsHandler(string contents);
-        public delegate void DoneWritingTagContentsHandler(string status);
-        public delegate void TagTypeDetectedHandler(tagTypes tagType, string tagID);
-        #endregion
 
-        #region Events
-        public event TagReceivedEventHandler TagReceived;
-        public event VarioSensSettingsReceivedEventHandler VarioSensSettingsReceived;
-        public event VarioSensReadLogHandler VarioSensLogReceived;
-        public event ReaderErrorHandler ReaderError;
-        public event ReturnTagContentsHandler ReturnTagContents;
-        public event DoneWritingTagContentsHandler DoneWriting;
-        public event TagTypeDetectedHandler TagTypeDetected;
-        #endregion
-
-        public Reader()
-        {
-            if (existingNativeMethods == null)
-                existingNativeMethods = this;
-            else
-                throw new ArgumentException("Too many NativeMethods classes created");
-        }
-
-        private static Reader existingNativeMethods;
-
-        #region DLL Imports
+        public delegate void VarioSensSettingsCallback(
+            Single upperTempLimit,
+            Single lowerTempLimit,
+            short recordPeriod,
+            short logMode,
+            short batteryCheckInterval);
 
         [DllImport("coredll.dll")]
         public extern static int GetDeviceUniqueID(
@@ -57,24 +189,89 @@ namespace RFIDReader
             out uint pcbDeviceIDOutput);
 
         [DllImport("VarioSens Lib.dll")]
-        private static extern int getVarioSensLog(VarioSensReadLogHandler cb);
+        public static extern int getVarioSensLog(VarioSensReadLogCallback cb);
 
         [DllImport("VarioSens Lib.dll")]
-        private static extern int setVarioSensSettings(float lowTemp, float hiTemp, int interval, int mode, int batteryCheckInterval);
+        public static extern int setVarioSensSettings(float lowTemp, float hiTemp, int interval, int mode, int batteryCheckInterval);
 
         [DllImport("VarioSens Lib.dll")]
-        private static extern IntPtr getVarioSensTagID();
+        public static extern IntPtr getVarioSensTagID();
 
         [DllImport("VarioSens Lib.dll")]
-        private static extern int getVarioSensSettings(writeVSSettingsCB cb);
-
+        public static extern int getVarioSensSettings(VarioSensSettingsCallback cb);
+    }
         #endregion
-        public delegate void writeVSSettingsCB(
-            Single upperTempLimit,
-            Single lowerTempLimit,
-            short recordPeriod,
-            short logMode,
-            short batteryCheckInterval);
+
+    public class Reader
+    {
+        #region Events
+        public event EventHandler<TagReceivedEventArgs> TagReceived;
+        public event EventHandler<VarioSensSettingsEventArgs> VarioSensSettingsReceived;
+        public event EventHandler<VarioSensLogEventArgs> VarioSensLogReceived;
+        public event EventHandler<ReaderErrorEventArgs> ReaderError;
+        public event EventHandler<TagContentsEventArgs> ReturnTagContents;
+        public event EventHandler<FinishedWritingStatusEventArgs> DoneWriting;
+        public event EventHandler<TagTypeEventArgs> TagTypeDetected;
+        #endregion
+
+        public Reader()
+        {
+            if (existingNativeMethods == null)
+                existingNativeMethods = this;
+            else
+                throw new ArgumentException(Properties.Resources.TooManyNativeMethodsClassesCreated);
+        }
+
+        private static Reader existingNativeMethods;
+
+        private readType readThreadType = readType.none;
+
+        private Thread readerThread = null;
+
+        public readType ReadThreadType
+        {
+            get { return readThreadType; }
+            set
+            {
+                readThreadType = value;
+
+                switch (value)
+                {
+                    case readType.none:
+                        break;
+                    case readType.readOne:
+                        readerThread = new Thread(readOneTagID);
+                        break;
+                    case readType.readMany:
+                        readerThread = new Thread(readTagID);
+                        break;
+                    case readType.detectMany:
+                        readerThread = new Thread(detectTag);
+                        break;
+                    case readType.getVarioSensSettings:
+                        readerThread = new Thread(getVSSettings);
+                        break;
+                    case readType.setVarioSensSettings:
+                        readerThread = new Thread(launchSetVarioSensSettings);
+                        break;
+                    case readType.radiationScan:
+                        readerThread = new Thread(radiationScan);
+                        break;
+                    case readType.readVarioSensLog:
+                        readerThread = new Thread(readLog);
+                        break;
+                    case readType.readTagMemory:
+                        readerThread = new Thread(readTag);
+                        break;
+                    case readType.writeTagMemory:
+                        readerThread = new Thread(launchWriteTagMemory);
+                        break;
+                    default:
+                        break;
+                }
+                readerThread.IsBackground = true;
+            }
+        }
 
         public delegate void writeViolationsDelegate(
             Single upperTempLimit,
@@ -85,29 +282,63 @@ namespace RFIDReader
             Byte[] logMode,
             Single[] temperatures);
 
-        private static bool readerRunning;
+        private bool readerRunning;
 
-        public bool running
+        public bool Running
         {
             get { return readerRunning; }
-            set { readerRunning = value; }
+            set
+            {
+                //readerRunning = value;
+
+                if (value == true)
+                {
+                    if (readerThread != null)
+                        readerThread.Start();
+                }
+                else
+                {
+                    readerRunning = false;
+                    if (readerThread == null)
+                    {
+                        throw new ArgumentException("Cannot stop a nonrunning reader thread.");
+                    }
+                    else
+                    {
+                        if (readerThread.Join(5000) == false)
+                        {
+                            readerThread.Abort();
+                        }
+                        readerThread = null;
+                    }
+                }
+            }
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         unsafe public static string readOneVSTagID()
         {
-            return new string((char*)getVarioSensTagID());
+            return new string((char*)NativeMethods.getVarioSensTagID());
+        }
+
+        private void VarioSensReadLog(Single upperTempLimit, Single lowerTempLimit, Int32 len, short recordPeriod, int[] dateTime, Byte[] logMode, Single[] temperatures)
+        {
+            VarioSensLogReceived(this, new VarioSensLogEventArgs(upperTempLimit,lowerTempLimit,len,recordPeriod,dateTime,logMode,temperatures));
+        }
+
+        private void radiationScan()
+        {
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void readLog()
         {
-            //writeViolationsCB mycb = new writeViolationsCB(writeViolations);
+            NativeMethods.VarioSensReadLogCallback mycb = new NativeMethods.VarioSensReadLogCallback(VarioSensReadLog);
             readerRunning = true;
             int errorCode = 0;
             while (readerRunning == true)
             {
-                if ((errorCode = getVarioSensLog(VarioSensLogReceived)) == 0)
+                if ((errorCode = NativeMethods.getVarioSensLog(mycb)) == 0)
                     readerRunning = false;
                 else if ((errorCode == -1) || (errorCode == -2) || (errorCode == -6))
                     readerRunning = false;
@@ -117,17 +348,67 @@ namespace RFIDReader
             switch (errorCode)
             {
                 case -1:
-                    ReaderError("Please ensure that the Sirit reader is completely inserted");
+                    ReaderError(this, new ReaderErrorEventArgs(Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted));
                     break;
                 case -2:
-                    ReaderError("Unable to communicate with Sirit reader");
+                    ReaderError(this, new ReaderErrorEventArgs(Properties.Resources.UnableToCommunicateWithSiritReader));
                     break;
                 default:
                     break;
             }
         }
 
-        private static DateTime origin = System.TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
+        public static string getDeviceUniqueID(string AppString)
+        {
+            byte[] AppData = new byte[AppString.Length];
+
+            for (int count = 0; count < AppString.Length; count++)
+                AppData[count] = (byte)AppString[count];
+
+            int appDataSize = AppData.Length;
+
+            byte[] dUID = new byte[20];
+
+            uint SizeOut = 20;
+
+            NativeMethods.GetDeviceUniqueID(AppData, appDataSize, 1, dUID, out SizeOut);
+
+            string DeviceUID = "";
+
+            for (int i = 0; i < 20; i++)
+            {
+                DeviceUID += dUID[i].ToString("X", CultureInfo.InvariantCulture);
+            }
+
+            return DeviceUID;
+        }
+
+        private bool tagDataSet = false;
+
+        private byte[] tagData;
+
+        // because there are no ParameterizedThreads in .NET CF
+        public void launchWriteTagMemory()
+        {
+            writeTag(tagData);
+            tagDataSet = false;
+        }
+
+        private bool VSsettingsSet = false;
+
+        private int VSmode;
+        private float VShighTemp;
+        private float VSlowTemp;
+        private int VSinterval;
+        private int VSbatteryCheckInt;
+
+        // because there are no ParameterizedThreads in .NET CF
+        public void launchSetVarioSensSettings()
+        {
+            setVSSettings(VSmode, VShighTemp, VSlowTemp, VSinterval, VSbatteryCheckInt);
+            VSsettingsSet = false;
+        }
+
 
         public int setVSSettings(int mode, float hiTemp, float loTemp, int interval, int batteryCheckInterval)
         {
@@ -138,20 +419,20 @@ namespace RFIDReader
                 errorCode = -1;
 
                 while ((readerRunning == true) &&
-                    ((errorCode = setVarioSensSettings(loTemp, hiTemp, interval, mode, batteryCheckInterval)) != 0))
+                    ((errorCode = NativeMethods.setVarioSensSettings(loTemp, hiTemp, interval, mode, batteryCheckInterval)) != 0))
                     Thread.Sleep(100);
             }
             catch (ArgumentException ex)
             {
-                ReaderError("Error parsing: " + ex.ToString());
+                ReaderError(this, new ReaderErrorEventArgs(Properties.Resources.ErrorParsing + ex.ToString()));
             }
             catch (FormatException ex)
             {
-                ReaderError("A setting is not in a valid format: " + ex.ToString());
+                ReaderError(this, new ReaderErrorEventArgs(Properties.Resources.ASettingIsNotInAValidFormat + ex.ToString()));
             }
             catch (OverflowException ex)
             {
-                ReaderError("A value is too large or small: " + ex.ToString());
+                ReaderError(this, new ReaderErrorEventArgs(Properties.Resources.AValueIsTooLargeOrSmall + ex.ToString()));
             }
 
             readerRunning = false;
@@ -162,27 +443,27 @@ namespace RFIDReader
         private static void getVSSettingsCB(Single upper, Single lower, short period, short logMode, short batteryCheckInterval)
         {
             // yet static methods must have a way to access existing instances
-            existingNativeMethods.VarioSensSettingsReceived(upper, lower, period, logMode, batteryCheckInterval);
+            existingNativeMethods.VarioSensSettingsReceived(null, new VarioSensSettingsEventArgs(upper, lower, period, logMode, batteryCheckInterval));
         }
 
         public void getVSSettings()
         {
-            writeVSSettingsCB writeVSCB = new writeVSSettingsCB(getVSSettingsCB);
+            NativeMethods.VarioSensSettingsCallback writeVSCB = new NativeMethods.VarioSensSettingsCallback(getVSSettingsCB);
 
             int errorCode = -1;
 
-            while ((readerRunning == true) && ((errorCode = getVarioSensSettings(writeVSCB)) != 0))
+            while ((readerRunning == true) && ((errorCode = NativeMethods.getVarioSensSettings(writeVSCB)) != 0))
             {
                 Thread.Sleep(100);
             }
 
             if (errorCode != 0)
-                VarioSensSettingsReceived(0, 0, 0, 0, -1);
+                ReaderError(this, new ReaderErrorEventArgs(Properties.Resources.ErrorReadingVarioSensTag + errorCode));
 
             readerRunning = false;
         }
 
-        public void initialize()
+        public static void initialize()
         {
             if (C1Lib.C1.NET_C1_open_comm() == 1)
             {
@@ -190,7 +471,7 @@ namespace RFIDReader
             }
         }
 
-        StringBuilder newTagBuilder = new StringBuilder(16);
+        private StringBuilder newTagBuilder = new StringBuilder(16);
 
         static private int retryCount = 20;
 
@@ -215,13 +496,13 @@ namespace RFIDReader
 
                 if (C1Lib.C1.NET_C1_open_comm() != 1)
                 {
-                    errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    errorMessage = Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted;
                     continue;
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
                     //C1Lib.C1.NET_C1_disable();
-                    errorMessage = "Unable to communicate with Sirit reader";
+                    errorMessage = Properties.Resources.UnableToCommunicateWithSiritReader;
                     continue;
                 }
                 else // connection was successful
@@ -232,7 +513,8 @@ namespace RFIDReader
 
             if (n == 0)
             {
-                ReaderError(errorMessage);
+                ReaderError(this, new ReaderErrorEventArgs(errorMessage));
+                readerRunning = false;
                 return;
             }
 
@@ -274,22 +556,25 @@ namespace RFIDReader
                 //rfidDescr += "\n";
 
                 for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-                    newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+                    newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
                 string newTag = newTagBuilder.ToString();
 
                 newTagBuilder.Remove(0, newTagBuilder.Length);
 
-                if ((string.Compare(newTag, oldTag) != 0) && (newTag.Length == 16))
+                if ((string.Compare(newTag, oldTag, StringComparison.InvariantCulture) != 0) && (newTag.Length == 16))
                 {
                     // when asynchronous delegates are supported in CF
                     //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);
-                    TagReceived(newTag.ToString(), !repeat);
+                    TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
                     oldTag = newTag;
                 }
 
                 if (!repeat)
+                {
+                    readerRunning = false;
                     break;
+                }
 
             }
             C1Lib.C1.NET_C1_disable();
@@ -308,14 +593,14 @@ namespace RFIDReader
             {
                 if (C1Lib.C1.NET_C1_open_comm() != 1)
                 {
-                    errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    errorMessage = Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted;
                     Thread.Sleep(15);
                     continue;
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
                     C1Lib.C1.NET_C1_disable();
-                    errorMessage = "Unable to communicate with Sirit reader";
+                    errorMessage = Properties.Resources.UnableToCommunicateWithSiritReader;
                     Thread.Sleep(15);
                     continue;
                 }
@@ -327,7 +612,7 @@ namespace RFIDReader
 
             if (n == 0)
             {
-                ReaderError(errorMessage);
+                ReaderError(this, new ReaderErrorEventArgs(errorMessage));
                 return;
             }
 
@@ -347,15 +632,13 @@ namespace RFIDReader
                 if (C1Lib.ISO_15693.NET_write_multi_15693(0, outputBuffer.Length, outputBuffer) == 1)
                 {
                     readerRunning = false;
-                    DoneWriting("Success");
+                    DoneWriting(this, new FinishedWritingStatusEventArgs(Properties.Resources.Success));
                 }
 
             }
             C1Lib.C1.NET_C1_disable();
             C1Lib.C1.NET_C1_close_comm();
         }
-
-        System.Text.Encoding enc = System.Text.Encoding.Unicode;
 
         public void readTag()
         {
@@ -366,14 +649,14 @@ namespace RFIDReader
             {
                 if (C1Lib.C1.NET_C1_open_comm() != 1)
                 {
-                    errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    errorMessage = Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted;
                     Thread.Sleep(15);
                     continue;
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
                     //C1Lib.C1.NET_C1_disable();
-                    errorMessage = "Unable to communicate with Sirit reader";
+                    errorMessage = Properties.Resources.UnableToCommunicateWithSiritReader;
                     Thread.Sleep(15);
                     continue;
                 }
@@ -385,7 +668,7 @@ namespace RFIDReader
 
             if (n == 0)
             {
-                ReaderError(errorMessage);
+                ReaderError(this, new ReaderErrorEventArgs(errorMessage));
                 return;
             }
 
@@ -406,18 +689,16 @@ namespace RFIDReader
                 {
                     readerRunning = false;
                     string input = System.Text.Encoding.Unicode.GetString(C1Lib.ISO_15693.tag.read_buff, 0, C1Lib.ISO_15693.tag.read_buff.Length);
-                    ReturnTagContents(input);
+                    ReturnTagContents(this, new TagContentsEventArgs(input));
 
                 }
 
             }
             C1Lib.C1.NET_C1_disable();
             C1Lib.C1.NET_C1_close_comm();
-        }        
+        }
 
-        // tag types
-        public enum tagTypes { none, iso15693, iso14443a, iso14443b, iso14443bsri, iso14443bsr176, iso18000, felica, MiFareClassic, MiFareUltraLight, MiFareDESFire, INSIDE }
-
+        
         public void detectTag()
         {
             string errorMessage = "";
@@ -427,14 +708,14 @@ namespace RFIDReader
             {
                 if (C1Lib.C1.NET_C1_open_comm() != 1)
                 {
-                    errorMessage = "Please ensure that the Sirit reader is completely inserted";
+                    errorMessage = Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted;
                     Thread.Sleep(15);
                     continue;
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
                     //C1Lib.C1.NET_C1_disable();
-                    errorMessage = "Unable to communicate with Sirit reader";
+                    errorMessage = Properties.Resources.UnableToCommunicateWithSiritReader;
                     Thread.Sleep(15);
                     continue;
                 }
@@ -446,7 +727,7 @@ namespace RFIDReader
 
             if (n == 0)
             {
-                ReaderError(errorMessage);
+                ReaderError(this, new ReaderErrorEventArgs(errorMessage));
                 return;
             }
 
@@ -458,93 +739,93 @@ namespace RFIDReader
                 if (C1Lib.ISO_14443A.NET_get_14443A() == 1)
                 {
                     for (int i = 0; i < 7; ++i)
-                        newTagBuilder.Append(C1Lib.ISO_14443A.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+                        newTagBuilder.Append(C1Lib.ISO_14443A.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
                     if (C1Lib.ISO_14443A.tag.type == C1Lib.ISO_14443A.MIFARE_CL)
-                        TagTypeDetected(tagTypes.MiFareClassic, newTagBuilder.ToString());
+                        TagTypeDetected(this, new TagTypeEventArgs(tagTypes.MiFareClassic, newTagBuilder.ToString()));
                     else if (C1Lib.ISO_14443A.tag.type == C1Lib.ISO_14443A.MIFARE_UL)
-                        TagTypeDetected(tagTypes.MiFareUltraLight, newTagBuilder.ToString());
+                        TagTypeDetected(this, new TagTypeEventArgs(tagTypes.MiFareUltraLight, newTagBuilder.ToString()));
                     else if (C1Lib.ISO_14443A.tag.type == C1Lib.ISO_14443A.MIFARE_DF)
-                        TagTypeDetected(tagTypes.MiFareDESFire, newTagBuilder.ToString());
+                        TagTypeDetected(this, new TagTypeEventArgs(tagTypes.MiFareDESFire, newTagBuilder.ToString()));
                     else
-                        TagTypeDetected(tagTypes.iso14443a, newTagBuilder.ToString());
+                        TagTypeDetected(this, new TagTypeEventArgs(tagTypes.iso14443a, newTagBuilder.ToString()));
                     newTagBuilder.Remove(0, newTagBuilder.Length);
                 }
                 else if (C1Lib.ISO_15693.NET_get_15693(0x00) == 1)
                 {
                     for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-                        newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+                        newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
-                    TagTypeDetected(tagTypes.iso15693, newTagBuilder.ToString());
+                    TagTypeDetected(this, new TagTypeEventArgs(tagTypes.iso15693, newTagBuilder.ToString()));
 
                     newTagBuilder.Remove(0, newTagBuilder.Length);
                 }
                 else if (C1Lib.ISO_18000.NET_get_18000() == 1)
                 {
                     for (int i = 0; i < C1Lib.ISO_18000.tag.data_length; i++)
-                        newTagBuilder.Append(C1Lib.ISO_18000.tag.data[i].ToString("X").PadLeft(2, '0'));
+                        newTagBuilder.Append(C1Lib.ISO_18000.tag.data[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
-                    TagTypeDetected(tagTypes.iso18000, newTagBuilder.ToString());
+                    TagTypeDetected(this, new TagTypeEventArgs(tagTypes.iso18000, newTagBuilder.ToString()));
 
                     newTagBuilder.Remove(0, newTagBuilder.Length);
                 }
                 else if (C1Lib.IC.NET_get_IC(C1Lib.IC.PROTO_15693, false, false) == 1)
                 {
                     for (int i = 0; i < 8; ++i)
-                        newTagBuilder.Append(C1Lib.IC.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+                        newTagBuilder.Append(C1Lib.IC.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
-                    TagTypeDetected(tagTypes.INSIDE, newTagBuilder.ToString());
+                    TagTypeDetected(this, new TagTypeEventArgs(tagTypes.INSIDE, newTagBuilder.ToString()));
 
                     newTagBuilder.Remove(0, newTagBuilder.Length);
                 }
                 else if (C1Lib.IC.NET_get_IC(C1Lib.IC.PROTO_14443B, false, false) == 1)
                 {
                     for (int i = 0; i < C1Lib.ISO_14443B.tag.id_length; ++i)
-                        newTagBuilder.Append(C1Lib.IC.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+                        newTagBuilder.Append(C1Lib.IC.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
-                    TagTypeDetected(tagTypes.INSIDE, newTagBuilder.ToString());
+                    TagTypeDetected(this, new TagTypeEventArgs(tagTypes.INSIDE, newTagBuilder.ToString()));
 
                     newTagBuilder.Remove(0, newTagBuilder.Length);
                 }
                 else if (C1Lib.ISO_14443B.NET_get_14443B() == 1)
                 {
                     for (int i = 0; i < C1Lib.ISO_14443B.tag.id_length; ++i)
-                        newTagBuilder.Append(C1Lib.ISO_14443B.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+                        newTagBuilder.Append(C1Lib.ISO_14443B.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
-                    TagTypeDetected(tagTypes.iso14443b, newTagBuilder.ToString());
+                    TagTypeDetected(this, new TagTypeEventArgs(tagTypes.iso14443b, newTagBuilder.ToString()));
 
                     newTagBuilder.Remove(0, newTagBuilder.Length);
                 }
                 else if (C1Lib.ISO_14443B.NET_get_14443B_SRI() == 1)
                 {
                     for (int i = 0; i < C1Lib.ISO_14443B.tag.id_length; ++i)
-                        newTagBuilder.Append(C1Lib.ISO_14443B.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+                        newTagBuilder.Append(C1Lib.ISO_14443B.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
-                    TagTypeDetected(tagTypes.iso14443bsri, newTagBuilder.ToString());
+                    TagTypeDetected(this, new TagTypeEventArgs(tagTypes.iso14443bsri, newTagBuilder.ToString()));
 
                     newTagBuilder.Remove(0, newTagBuilder.Length);
                 }
                 else if (C1Lib.ISO_14443B.NET_get_14443B_SR176() == 1)
                 {
                     for (int i = 0; i < C1Lib.ISO_14443B.tag.id_length; ++i)
-                        newTagBuilder.Append(C1Lib.ISO_14443B.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+                        newTagBuilder.Append(C1Lib.ISO_14443B.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
-                    TagTypeDetected(tagTypes.iso14443bsr176, newTagBuilder.ToString());
+                    TagTypeDetected(this, new TagTypeEventArgs(tagTypes.iso14443bsr176, newTagBuilder.ToString()));
 
                     newTagBuilder.Remove(0, newTagBuilder.Length);
                 }
                 else if (C1Lib.FeliCa.NET_get_FeliCa() == 1)
                 {
                     for (int i = 0; i < C1Lib.FeliCa.tag.id_length; ++i)
-                        newTagBuilder.Append(C1Lib.FeliCa.tag.tag_id[i].ToString("X").PadLeft(2, '0'));
+                        newTagBuilder.Append(C1Lib.FeliCa.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
 
-                    TagTypeDetected(tagTypes.felica, newTagBuilder.ToString());
+                    TagTypeDetected(this, new TagTypeEventArgs(tagTypes.felica, newTagBuilder.ToString()));
 
                     newTagBuilder.Remove(0, newTagBuilder.Length);
                 }
 
                 C1Lib.C1.NET_C1_disable();
-                Thread.Sleep(500);
+                Thread.Sleep(250);
                 C1Lib.C1.NET_C1_enable();
             }
 

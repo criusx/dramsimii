@@ -2,23 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using RFIDReader;
 
 namespace GentagDemo
 {
     public partial class demoClient : Form
     {
-        void receiveVarioSensSettings(Single upperLimit, Single lowerLimit, short recordPeriod, short logMode, short batteryCheckInterval)
+        void receiveVarioSensSettings(object sender, VarioSensSettingsEventArgs args)
         {
             throw new Exception("Implement this");
         }
 
-        void writeViolations( Single upperTempLimit,
-            Single lowerTempLimit,
-            Int32 len,
-            short recordPeriod,
-            int[] dateTime,
-            Byte[] logMode,
-            Single[] temperatures)
+        void writeViolations(object sender, VarioSensLogEventArgs args)
         {
             throw new Exception("Implement this");
         }

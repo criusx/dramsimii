@@ -54,6 +54,8 @@ namespace GentagDemo
             assayResultsDialog = new assayResultsChooser();
 
             assayResultsDialog.Height = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
+
+            DeviceUID = Reader.getDeviceUniqueID(GentagDemo.Properties.Resources.titleString);
             
             // assayCountdownTimer
             assayCountdownTimer = new System.Windows.Forms.Timer();
@@ -63,7 +65,7 @@ namespace GentagDemo
             assayCountdownTimer.Tick += new EventHandler(assayCountdownTimer_Tick);
 
             // open comm briefly to preload the assemblies
-            tagReader.initialize();
+            Reader.initialize();
 
             this.ClientSize = new Size(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width,System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width);
             tabControl1.Size = this.ClientSize;
@@ -109,25 +111,9 @@ namespace GentagDemo
 
 
             // generate the device's UID
-            string AppString = GentagDemo.Properties.Resources.titleString;
+            string AppString =  Reader.getDeviceUniqueID(GentagDemo.Properties.Resources.titleString);
 
-            byte[] AppData = new byte[AppString.Length];
-
-            for (int count = 0; count < AppString.Length; count++)
-                AppData[count] = (byte)AppString[count];
-
-            int appDataSize = AppData.Length;
-
-            byte[] dUID = new byte[20];
-
-            uint SizeOut = 20;
-
-            RFIDReader.Reader.GetDeviceUniqueID(AppData, appDataSize, 1, dUID, out SizeOut);
-
-            for (int i = 0; i < 20; i++)
-                DeviceUID += dUID[i].ToString("X", CultureInfo.CurrentUICulture);
-
-            gpsInterpreter = new nmeaInterpreter(new CultureInfo("en-US"), DeviceUID);
+            gpsInterpreter = new nmeaInterpreter(CultureInfo.CurrentCulture, DeviceUID);
 
             mF = this;
 
@@ -146,13 +132,13 @@ namespace GentagDemo
             gpsInterpreter.QueueUpdated += new nmeaInterpreter.SetQueuedRequestsEventHandler(pendingQueueUpdate);
 
             // setup event callbacks for tag reading events
-            tagReader.TagReceived += new RFIDReader.Reader.TagReceivedEventHandler(receiveTag);
-            tagReader.VarioSensSettingsReceived += new RFIDReader.Reader.VarioSensSettingsReceivedEventHandler(receiveVarioSensSettings);
-            tagReader.ReaderError += new RFIDReader.Reader.ReaderErrorHandler(receiveReaderError);
-            tagReader.VarioSensLogReceived += new RFIDReader.Reader.VarioSensReadLogHandler(writeViolations);
-            tagReader.ReturnTagContents += new Reader.ReturnTagContentsHandler(receiveTagContents);
-            tagReader.DoneWriting += new Reader.DoneWritingTagContentsHandler(doneWriting);
-            tagReader.TagTypeDetected += new Reader.TagTypeDetectedHandler(displayTagType);
+            tagReader.TagReceived += new EventHandler<TagReceivedEventArgs>(receiveTag);
+            tagReader.VarioSensSettingsReceived += new EventHandler<VarioSensSettingsEventArgs>(receiveVarioSensSettings);
+            tagReader.ReaderError += new EventHandler<ReaderErrorEventArgs>(receiveReaderError);
+            tagReader.VarioSensLogReceived += new EventHandler<VarioSensLogEventArgs>(writeViolations);
+            tagReader.ReturnTagContents += new EventHandler<TagContentsEventArgs>(receiveTagContents);
+            tagReader.DoneWriting += new EventHandler<FinishedWritingStatusEventArgs>(doneWriting);
+            tagReader.TagTypeDetected += new EventHandler<TagTypeEventArgs>(displayTagType);
 
             ImageList myImageList = new ImageList();
             myImageList.Images.Add(Image.FromHbitmap(GentagDemo.Properties.Resources.blank.GetHbitmap()));
@@ -262,49 +248,49 @@ namespace GentagDemo
             }
         }
 
-        void displayTagType(Reader.tagTypes tagType, string tagID)
+        void displayTagType(object sender, TagTypeEventArgs args)
         {
 
             blinkCursor(true);
 
-            switch (tagType)
+            switch (args.Type)
             {
-                case Reader.tagTypes.INSIDE:
+                case tagTypes.INSIDE:
                     setLabel(detectTagTypeLabel, "INSIDE");
                     break;
-                case Reader.tagTypes.iso14443a:
+                case tagTypes.iso14443a:
                     setLabel(detectTagTypeLabel, "ISO14443A");
                     break;
-                case Reader.tagTypes.iso14443b:
+                case tagTypes.iso14443b:
                     setLabel(detectTagTypeLabel, "ISO14443B");
                     break;
-                case Reader.tagTypes.iso14443bsr176:
+                case tagTypes.iso14443bsr176:
                     setLabel(detectTagTypeLabel, "ISO14443B");
                     break;
-                case Reader.tagTypes.iso14443bsri:
+                case tagTypes.iso14443bsri:
                     setLabel(detectTagTypeLabel, "ISO14443B");
                     break;
-                case Reader.tagTypes.iso15693:
+                case tagTypes.iso15693:
                     setLabel(detectTagTypeLabel, "ISO15693");
                     break;
-                case Reader.tagTypes.iso18000:
+                case tagTypes.iso18000:
                     setLabel(detectTagTypeLabel, "ISO18000");
                     break;
-                case Reader.tagTypes.MiFareClassic:
+                case tagTypes.MiFareClassic:
                     setLabel(detectTagTypeLabel, "MiFare");
                     break;
-                case Reader.tagTypes.MiFareDESFire:
+                case tagTypes.MiFareDESFire:
                     setLabel(detectTagTypeLabel, "MiFare DESFire");
                     break;
-                case Reader.tagTypes.MiFareUltraLight:
+                case tagTypes.MiFareUltraLight:
                     setLabel(detectTagTypeLabel, "MiFare UltraLight");
                     break;
-                case Reader.tagTypes.felica:
+                case tagTypes.felica:
                     setLabel(detectTagTypeLabel, "FelICa");
                     break;
             }
 
-            setLabel(detectTagIDLabel, tagID);
+            setLabel(detectTagIDLabel, args.TagID);
             Thread.Sleep(250);
 
             blinkCursor(false);
@@ -312,15 +298,16 @@ namespace GentagDemo
 
         ~demoClient()
         {
-            stopReading(true);
+            stopReading();
+            tagReader.Running = false;
             debugOut.Dispose();
             Dispose(false);
         }
 
-        private void receiveTagContents(string contents)
+        private void receiveTagContents(object sender, TagContentsEventArgs args)
         {
-            setTextBox(readWriteTB, contents);
-            stopReading(false);
+            setTextBox(readWriteTB, args.Contents);
+            stopReading();
         }
 
         private void writeTagMemory()
@@ -328,10 +315,10 @@ namespace GentagDemo
             tagReader.writeTag(System.Text.Encoding.Unicode.GetBytes(getTextBox(readWriteTB)));
         }
 
-        private void doneWriting(string status)
+        private void doneWriting(object sender, FinishedWritingStatusEventArgs args)
         {
-            setLabel(readWriteStatusLabel, "Status: " + status);
-            stopReading(false);
+            setLabel(readWriteStatusLabel, Properties.Resources.Status + args.Status);
+            stopReading();
         }
 
         private enum loopType { wine, counterfeit, pet, patient, med, test, assay, none };
@@ -339,14 +326,11 @@ namespace GentagDemo
         // the variable that describes whether it's looping looking for wine bottles or general tags
         private loopType loop;
 
-        Thread readerThread;
-
 
         private void readerClick(object sender, EventArgs e)
         {
-            if (tagReader.running == false)
+            if (tagReader.Running == false)
             {
-                stopReading(true);
                 setWaitCursor(true);
 
                 if (sender == medicationButton || sender == readIDButton || sender == wineButton || sender == petButton || sender == readPatientButton || sender == readTestButton || sender == assayReadButton)
@@ -368,58 +352,46 @@ namespace GentagDemo
 
                     // whether it is a loop lookup or a single item lookup
                     if (sender == readPatientButton || sender == medicationButton || sender == readTestButton || sender == assayReadButton)
-                        readerThread = new Thread(tagReader.readOneTagID);
+                        tagReader.ReadThreadType = readType.readOne;
                     else
-                        readerThread = new Thread(tagReader.readTagID);
+                        tagReader.ReadThreadType = readType.readMany;
 
                 }
                 else if (sender == readLogButton)
-                    readerThread = new Thread(launchReadVSLog);
+                    tagReader.ReadThreadType = readType.readVarioSensLog;
                 else if (sender == detectTagTypeButton)
-                    readerThread = new Thread(tagReader.detectTag);
+                    tagReader.ReadThreadType = readType.detectMany;
                 else if (sender == readButton)
-                    readerThread = new Thread(tagReader.readTag);
+                    tagReader.ReadThreadType = readType.readTagMemory;
                 else if (sender == writeButton)
-                    readerThread = new Thread(writeTagMemory);
+                    tagReader.ReadThreadType = readType.writeTagMemory;
                 else if (sender == setValueButton)
-                    readerThread = new Thread(launchSetVSSettings);
+                    tagReader.ReadThreadType = readType.setVarioSensSettings;
                 else if (sender == readValueButton)
-                    readerThread = new Thread(launchGetVSSettings);
+                    tagReader.ReadThreadType = readType.getVarioSensSettings;
                 else if (sender == radScanButton)
-                    readerThread = new Thread(radScan);
+                    tagReader.ReadThreadType = readType.radiationScan;
 
-                readerThread.IsBackground = true;
-                readerThread.Start();
+                //TODO: send values for setVarioSensSettings and writeTagMemory
+                tagReader.Running = true;
             }
             else
             {
-                stopReading(true);
+                tagReader.Running = false;
+                stopReading();
             }
         }
 
-        private void stopReading(bool forceStop)
+        private void stopReading()
         {
             setWaitCursor(false);
             blinkCursor(false);
-            tagReader.running = false;
-
-            if (forceStop)
-            {
-                if (readerThread != null)
-                {
-                    if (readerThread.Join(5000) == false)
-                    {
-                        readerThread.Abort();
-                    }
-                    readerThread = null;
-                }
-            }
         }
 
-        private void receiveReaderError(string errorMessage)
+        private void receiveReaderError(object sender, ReaderErrorEventArgs args)
         {
-            stopReading(false);
-            MessageBox.Show(errorMessage);
+            stopReading();
+            MessageBox.Show(args.Reason);            
         }
 
         private Hashtable wineBottleCache = new Hashtable();
@@ -448,9 +420,9 @@ namespace GentagDemo
         /// </summary>
         /// <param name="tagID"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void receiveTag(string tagID, bool doneReading)
+        private void receiveTag(object sender, TagReceivedEventArgs args)
         {
-            if (string.IsNullOrEmpty(tagID)) // if there was no string returned
+            if (string.IsNullOrEmpty(args.Tag)) // if there was no string returned
                 return;
 
             blinkCursor(true);
@@ -459,22 +431,22 @@ namespace GentagDemo
             {
                 if (pendingLookups < maxLookupThreads)
                 {
-                    pendingLookups += scheduleLookup(tagID, loop);
+                    pendingLookups += scheduleLookup(args.Tag, loop);
 
                     setLabel(pendingLookupsLabel, pendingLookups.ToString(CultureInfo.CurrentCulture));
                 }
                 else
                 {
                     // no need to add it to the queue if it already exists
-                    if (!lookupQueue.Contains(tagID))
+                    if (!lookupQueue.Contains(args.Tag))
                     {
                         queuedLookups++;
                         setLabel(queuedLookupsLabel, lookupQueue.Count.ToString(CultureInfo.CurrentCulture));
 
                         if (loop == loopType.counterfeit)
-                            updateTreeView1(tagID, @"No description yet", false, true, false);
+                            updateTreeView1(args.Tag, Properties.Resources.NoDescriptionYet, false, true, false);
                         // queue it up for later and return
-                        lookupQueue.Enqueue(tagID);
+                        lookupQueue.Enqueue(args.Tag);
                     }
                 }
             }
@@ -483,8 +455,8 @@ namespace GentagDemo
             Thread.Sleep(100);
             blinkCursor(false);
 
-            if (doneReading)
-                stopReading(false);
+            if (args.Done)
+                stopReading();
         }
 
         /// <summary>
@@ -533,7 +505,7 @@ namespace GentagDemo
                                     lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                                     { itemsCurrentlyBeingLookedUp.Add(handle, tagID); }
 
-                                    updateTreeView1(tagID, @"No description yet", false, true, true);
+                                    updateTreeView1(tagID, Properties.Resources.NoDescriptionYet, false, true, true);
                                 }
                                 break;
                             }
@@ -653,8 +625,6 @@ namespace GentagDemo
         private string mostRecentWineID;
 
         private string currentPatientID;
-
-        private string assayRFID;
 
         private TimeSpan assayTimer;
 
@@ -844,29 +814,7 @@ namespace GentagDemo
             {
                 debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
             }
-        }
-
-
-
-        private void displayAssay(assayWS.assayInfo info)
-        {
-
-            setLabel(assayMessageLabel, info.beforeMessage);
-
-            assayTimer = new TimeSpan(0, 0, info.timer);
-
-            setLabel(assayTimerLabel, assayTimer.ToString());
-
-            sessionID = info.sessionID;
-
-            //
-            assayResultsDialog.setImages(info.resultImages);
-
-            assayResultsDialog.setAfterMessage(info.afterMessage);
-
-            setPhoto(assayImagePictureBox, info.descriptionImage);
-
-        }
+        }        
 
         /// <summary>
         /// Performs a lookup again if the previous lookup has failed
@@ -901,42 +849,110 @@ namespace GentagDemo
         }
 
         #region Display Results
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        private void displayBottle(wineWS.wineBottle bottle)
+        private delegate void displayAssayDelegate(assayWS.assayInfo info);
+
+        /// <summary>
+        /// Displays the assay photo, messages, result pictures and initializes the countdown timer
+        /// </summary>
+        /// <param name="info">This is the assayInfo object that contains all the parameters for the assay</param>
+        private void displayAssay(assayWS.assayInfo info)
         {
-            // display the bottle info
-            if (bottle.exists)
+            if (this.InvokeRequired)
             {
-                setLabel(wineCountryLabel, bottle.origin);
-                setLabel(wineYearLabel, bottle.year.ToString(CultureInfo.CurrentUICulture));
-                setLabel(wineTypeLabel, bottle.type);
-                setLabel(wineVineyardLabel, bottle.vineyard);
-                setTextBox(wineReviewTextBox, bottle.review);
-                setPhoto(winePictureBox, bottle.image);
-                if (bottle.authenticated)
-                    setPhoto(wineAuthPictureBox, Image.FromHbitmap(GentagDemo.Properties.Resources.ok.GetHbitmap()));
-                else
-                    setPhoto(wineAuthPictureBox, Image.FromHbitmap(GentagDemo.Properties.Resources.cancel.GetHbitmap()));
+                this.Invoke(new displayAssayDelegate(displayAssay), new object[] { info });
             }
             else
             {
-                setPhoto(winePictureBox, (System.Drawing.Image)null);
-                setPhoto(wineAuthPictureBox, Image.FromHbitmap(GentagDemo.Properties.Resources.cancel.GetHbitmap()));
-                setLabel(wineCountryLabel, GentagDemo.Properties.Resources.emptyString);
-                setLabel(wineYearLabel, GentagDemo.Properties.Resources.emptyString);
-                setLabel(wineTypeLabel, GentagDemo.Properties.Resources.emptyString);
-                setLabel(wineVineyardLabel, GentagDemo.Properties.Resources.emptyString);
-                setTextBox(wineReviewTextBox, GentagDemo.Properties.Resources.emptyString);
+                assayPage.SuspendLayout();
+
+                if (info.exists)
+                {
+                    assayMessageLabel.Text = info.beforeMessage;
+
+                    assayTimer = new TimeSpan(0, 0, info.timer);
+
+                    assayTimerLabel.Text = assayTimer.ToString();
+
+                    sessionID = info.sessionID;
+
+                    assayResultsDialog.setImages(info.resultImages);
+
+                    assayResultsDialog.setAfterMessage(info.afterMessage);
+
+                    setPhoto(assayImagePictureBox, info.descriptionImage);
+                }
+                else
+                {
+                    assayMessageLabel.Text = "Assay not found.";
+
+                    assayTimerLabel.Text = GentagDemo.Properties.Resources.emptyString;
+
+                    sessionID = null;
+
+                    assayResultsDialog.setImages(null);
+
+                    assayResultsDialog.setAfterMessage(null);
+
+                    setPhoto(assayImagePictureBox,(System.Drawing.Image) null);
+                }
+                assayPage.ResumeLayout();
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
+        private delegate void displayBottleDelegate(wineWS.wineBottle bottle);
+
+        /// <summary>
+        /// Displays the wine bottle
+        /// </summary>
+        /// <param name="bottle">Wine bottle information provided by the web service</param>
+        private void displayBottle(wineWS.wineBottle bottle)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new displayBottleDelegate(displayBottle), new object[] {bottle});
+            }
+            else
+            {
+                winePage.SuspendLayout();
+
+                if (bottle.exists)
+                {
+                    wineCountryLabel.Text = bottle.origin;
+                    wineYearLabel.Text = bottle.year.ToString(CultureInfo.CurrentUICulture);
+                    wineTypeLabel.Text = bottle.type;
+                    wineVineyardLabel.Text = bottle.vineyard;
+                    wineReviewTextBox.Text = bottle.review;
+                    setPhoto(winePictureBox, bottle.image);
+                    
+                    if (bottle.authenticated)
+                        setPhoto(wineAuthPictureBox, Image.FromHbitmap(GentagDemo.Properties.Resources.ok.GetHbitmap()));
+                    else
+                        setPhoto(wineAuthPictureBox, Image.FromHbitmap(GentagDemo.Properties.Resources.cancel.GetHbitmap()));
+                }
+                else
+                {
+                    setPhoto(winePictureBox, (System.Drawing.Image)null);
+                    setPhoto(wineAuthPictureBox, Image.FromHbitmap(GentagDemo.Properties.Resources.cancel.GetHbitmap()));
+
+                    wineCountryLabel.Text = GentagDemo.Properties.Resources.emptyString;
+                    wineYearLabel.Text = GentagDemo.Properties.Resources.emptyString;
+                    wineTypeLabel.Text = GentagDemo.Properties.Resources.emptyString;
+                    wineVineyardLabel.Text = GentagDemo.Properties.Resources.emptyString;
+                    wineReviewTextBox.Text = GentagDemo.Properties.Resources.emptyString;
+                }
+
+                winePage.ResumeLayout();
+            }
+        }
+        
         private void displayDrug(medWS.drugInfo drug)
         {
             try
             {
                 if (drug != null && drug.exists && drug.picture != null)
                     setPhoto(drugPhoto, drug.picture);
+                else
+                    setPhoto(drugPhoto, (System.Drawing.Image)null);
             }
             catch (Exception)
             {
@@ -944,18 +960,19 @@ namespace GentagDemo
             }
         }
 
-        private void clearDrug()
-        {
-            setPhoto(drugPhoto, (System.Drawing.Image)null);
-        }
+        private delegate void displayPatientDelegate(medWS.patientRecord patient);
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
+        /// <summary>
+        /// Displays the patient information, such as DOB, photo, allergies, medical history, etc.
+        /// </summary>
+        /// <param name="patient"></param>
         private void displayPatient(medWS.patientRecord patient)
         {
+
             if (patient == null || patient.RFIDnum == null || patient.image == null)
             {
-                setTextBox(patientNameBox, @"");
-                setTextBox(patientDescriptionBox, @"Patient not found");
+                setTextBox(patientNameBox, GentagDemo.Properties.Resources.emptyString);
+                setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.patientInfoNotFound);
                 setPhoto(patientPhoto, (Image)null);
             }
             else if (patient.exists)
@@ -983,15 +1000,15 @@ namespace GentagDemo
                 }
                 catch (Exception)
                 {
-                    setTextBox(patientNameBox, @"");
-                    setTextBox(patientDescriptionBox, @"Patient not found");
+                    setTextBox(patientNameBox, GentagDemo.Properties.Resources.emptyString);
+                    setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.patientInfoNotFound);
                     setPhoto(patientPhoto, (Image)null);
                 }
             }
             else
             {
-                setTextBox(patientNameBox, @"");
-                setTextBox(patientDescriptionBox, @"Patient not found");
+                setTextBox(patientNameBox, GentagDemo.Properties.Resources.emptyString);
+                setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.patientInfoNotFound);
                 setPhoto(patientPhoto, (Image)null);
             }
         }
@@ -1098,7 +1115,7 @@ namespace GentagDemo
 
             itemsCurrentlyBeingLookedUp.Clear();
 
-            clearDrug();
+            displayDrug(null);
             displayPatient(null);
         }
 
@@ -1110,7 +1127,7 @@ namespace GentagDemo
 
             authenticationWS.AuthenticationWebService ws = new authenticationWS.AuthenticationWebService();
 
-            string rfidDescr = @"No description found";
+            string rfidDescr = Properties.Resources.NoDescriptionFound;
 
             try
             {
@@ -1119,7 +1136,7 @@ namespace GentagDemo
             }
             catch (WebException ex)
             {
-                MessageBox.Show(@"Problem connecting to web service: " + ex.Message);
+                MessageBox.Show(Properties.Resources.ProblemConnectingToWebService + ex.Message);
             }
 
             updateTreeView1(textBox4.Text, rfidDescr, false, false, true);
@@ -1141,7 +1158,7 @@ namespace GentagDemo
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            stopReading(true);
+            stopReading();
         }
 
         private void textBox4_GotFocus(object sender, EventArgs e)
@@ -1218,19 +1235,21 @@ namespace GentagDemo
                 {
                     if (!assayWebService.submitAssayResult(sessionID, DeviceUID, assayItemChosen + 1))
                     {
-                        MessageBox.Show("Failed to submit.");
+                        MessageBox.Show(Properties.Resources.FailedToSubmit);
                     }
                     else
                     {
-                        MessageBox.Show("Results recorded.");
+                        MessageBox.Show(Properties.Resources.ResultsRecorded);
                         assayItemChosen = -1;
                         break;
                     }
                 }
                 catch (WebException ex)
                 {
+                    debugOut.WriteLine(ex.StackTrace);
+
                     if (trials > 5)
-                        MessageBox.Show("Possible network error, please try again.");                 
+                        MessageBox.Show(Properties.Resources.PossibleNetworkErrorPleaseTryAgain);                 
                 }
                 finally
                 {
