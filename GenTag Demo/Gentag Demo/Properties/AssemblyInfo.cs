@@ -11,7 +11,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Gentag, Inc.")]
 [assembly: AssemblyProduct("Gentag_Demo")]
-[assembly: AssemblyCopyright("Copyright © Gentag, Inc. 2007")]
+[assembly: AssemblyCopyright("Copyright © Gentag, Inc. 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

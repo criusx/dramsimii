@@ -8,13 +8,14 @@ using System.IO.Ports;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Web.Services.Protocols;
 using System.Windows.Forms;
 using NMEA;
 using RFIDReader;
 using TestPocketGraphBar;
-using System.Text;
+using SecureWS;
 
 
 [assembly: CLSCompliant(true)]
@@ -36,6 +37,8 @@ namespace GentagDemo
         Reader tagReader;
 
         TextWriter debugOut;
+
+        Service1 s = new Service1();
 
         private RFIDReadCursor.RFIDReadWaitCursor userControl11;
 
@@ -164,7 +167,7 @@ namespace GentagDemo
             petWebService.ConnectionGroupName = "pet";
             COREMedDemoWebService.ConnectionGroupName = "med";
             assayWebService.ConnectionGroupName = "assay";
-            authenticationWebService.EnableDecompression = true;
+            authenticationWebService.EnableDecompression = true;            
 
             graph.Visible = false;
             radGraph.Visible = false;
@@ -295,6 +298,8 @@ namespace GentagDemo
 
             blinkCursor(false);
         }
+
+        
 
         ~demoClient()
         {
@@ -575,7 +580,8 @@ namespace GentagDemo
                             }
                         case loopType.med:
                             {
-                                if (string.IsNullOrEmpty(currentPatientID))
+                                // patient and med RFID cannot be the same
+                                if (string.IsNullOrEmpty(currentPatientID) || string.Compare(currentPatientID,tagID,true) == 0)
                                     break;
 
                                 result = 2;
