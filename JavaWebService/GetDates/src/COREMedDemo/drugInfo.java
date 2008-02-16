@@ -7,14 +7,26 @@ public class drugInfo
   private byte[] picture;
   private String name;
   private boolean exists;
-  
+  private boolean retryNeeded;
+
   public drugInfo(boolean _exists)
   {
     exists = false;
+    retryNeeded = false;
   }
 
   public drugInfo()
   {
+    exists = false;
+    retryNeeded = false;
+  }
+
+  public drugInfo(String rfidNum, boolean retry)
+  {
+    exists = false;
+    description = "";
+    RFIDNum = rfidNum;
+    retryNeeded = retry;
   }
 
   public void setRFIDNum(String rFIDNum)
@@ -65,5 +77,15 @@ public class drugInfo
   public boolean isExists()
   {
     return exists;
+  }
+
+  public void setRetryNeeded(boolean retryNeeded)
+  {
+    this.retryNeeded = retryNeeded;
+  }
+
+  public boolean isRetryNeeded()
+  {
+    return retryNeeded;
   }
 }

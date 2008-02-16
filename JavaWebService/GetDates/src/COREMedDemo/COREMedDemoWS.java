@@ -19,17 +19,18 @@ public interface COREMedDemoWS
     int periodicity)
     throws RemoteException;
 
-  public patientRecord getPatientRecord(String RFIDNum)
-    throws RemoteException;
-
-  public boolean checkInteraction(String ID, String drugID)
-    throws RemoteException;
-
-  public drugInfo getDrugInfo(String RFIDNum)
-    throws RemoteException;
 
   public boolean registerDoseGiven(String patientRFIDNum, 
                                    String drugRFIDNum, String nurseID, 
                                    int dose)
+    throws RemoteException;
+
+  public errorReport checkInteraction(String ID, String drugID)
+    throws RemoteException;
+
+  public patientRecord getPatientRecord(String RFIDNum, String UID)
+    throws RemoteException;
+
+  public drugInfo getDrugInfo(String RFIDNum, String UID)
     throws RemoteException;
 }

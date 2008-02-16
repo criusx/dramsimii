@@ -45,7 +45,7 @@ public class wineService
   public wineService()
   {
   }
-  
+
   public boolean enterBottleInformation(String[] rfidNums, String type, 
                                         int year, String country, 
                                         String vineyard, String review, 
@@ -197,20 +197,28 @@ public class wineService
       conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
       // enter this information into the db
-      java.util.Date today = new java.util.Date();
-      Timestamp ts = new Timestamp(today.getTime());
+      try
+      {
       OraclePreparedStatement ps = 
-        (OraclePreparedStatement) conn.prepareStatement("INSERT INTO WINEAUTHENTICATIONLOOKUPS VALUES (?, ?, ?, ?, ?)");
-      ps.setString(1, phoneID);
-      ps.setString(2, rfidNum);
-      ps.setFloat(3, latitude);
-      ps.setFloat(4, longitude);
-      ps.setTimestamp(5, ts);
-      ps.execute();
+          (OraclePreparedStatement) conn.prepareStatement("INSERT INTO WINEAUTHENTICATIONLOOKUPS VALUES (?, ?, ?, ?, ?)");
+        ps.setString(1, phoneID);
+        ps.setString(2, rfidNum);
+        ps.setFloat(3, latitude);
+        ps.setFloat(4, longitude);
+        ps.setTimestamp(5, new Timestamp((new java.util.Date()).getTime()));
+        ps.execute();
+        
+        ps.close();
+      }
+      catch (SQLException e)
+      {
+        System.out.println(e.toString());
+        e.printStackTrace();
+      }
 
-      ps = 
+      OraclePreparedStatement ps = 
           (OraclePreparedStatement) conn.prepareStatement("SELECT vineyard, year, type, review, country, label from WINEDESCRIPTIONS where ID = ?");
-      System.out.println("Wine bottle lookup: " + rfidNum);
+      
       ps.setString(1, rfidNum);
       OracleResultSet rs = (OracleResultSet) ps.executeQuery();
 
@@ -220,24 +228,26 @@ public class wineService
       OracleResultSet rs2 = (OracleResultSet) ps.executeQuery();
 
 
-      if (rs2.next())
+      if (rs2.next() && rs.next())
       {
         conn.commit();
         if (rs.next())
         {
           BLOB b = rs.getBLOB("label");
 
-
+          System.out.println("Wine bottle lookup: " + rfidNum);
+          
           return new wineBottle(rs.getNUMBER("year").intValue(), true, 
                                 rs.getString("vineyard"), 
                                 rs.getString("type"), 
                                 rs.getString("country"), 
                                 b.getBytes((long) 1, (int) b.length()), 
                                 rs.getString("review"), rfidNum, 
-                                rs2.getNUMBER(1).intValue());
+                                rs2.getNUMBER(1).intValue(), false);
         }
         else
         {
+        // else the number has been looked up multiple times but there is no entry
           return new wineBottle(rfidNum, rs2.getNUMBER(1).intValue());
         }
       }
@@ -245,7 +255,7 @@ public class wineService
       {
         conn.rollback();
         return new wineBottle(0, false, "unknown", "unknown", "unknown", 
-                              new byte[0], "not available", rfidNum, 0);
+                              new byte[0], "not available", rfidNum, 0, false);
       }
 
 
@@ -253,37 +263,41 @@ public class wineService
     catch (SQLException e)
     {
       System.out.println(e.toString());
-      try
-      {
-        if (conn != null)
-          conn.rollback();
-      }
-      catch (SQLException ex)
-      {
-        System.out.println(ex.toString());
-      }
-      finally
-      {
+      e.printStackTrace();
+     
         return new wineBottle(0, false, "unknown", "unknown", "unknown", 
-                              new byte[0], "not available", rfidNum, 0);
-      }
+                              new byte[0], "not available", rfidNum, 0, true);
+      
     }
     catch (NullPointerException e)
     {
       System.out.println(e.toString());
+      e.printStackTrace();
+        return new wineBottle(0, false, "unknown", "unknown", "unknown", 
+                              new byte[0], "not available", rfidNum, 0, true);      
+    }
+    finally
+    {
+      // close up the connection
       try
       {
         if (conn != null)
-          conn.rollback();
+        {
+          conn.close();
+        }
       }
       catch (SQLException ex)
       {
-        System.out.println(ex.toString());
-      }
-      finally
-      {
-        return new wineBottle(0, false, "unknown", "unknown", "unknown", 
-                              new byte[0], "not available", rfidNum, 0);
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
       }
     }
   }

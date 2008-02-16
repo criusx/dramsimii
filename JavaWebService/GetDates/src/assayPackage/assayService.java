@@ -1,5 +1,7 @@
 package assayPackage;
 
+import authenticationPackage.itemInfo;
+
 import dBInfo.dbConnectInfo;
 
 import java.io.IOException;
@@ -28,21 +30,25 @@ import sun.misc.BASE64Encoder;
 
 public class assayService
 {
-  public assayInfo retrieveAssayInformation(String rfidNum, String phoneID)
+  public assayInfo retrieveAssayInformation(String RFIDNum, String UID)
   {
-    if (rfidNum == null || phoneID == null)
+    // ignore blank requests
+    if (RFIDNum == null || UID == null)
+    {
+      System.out.println("Null value.");
       return new assayInfo();
-
-    rfidNum = rfidNum.replaceAll("\\s+", "");
-    phoneID = phoneID.replaceAll("\\s+", "");
-
-    // if a non hex string is entered, don't try any db stuff on it
-    for (int i = 0; i < phoneID.length(); i++)
-      if (!isHexStringChar(phoneID.charAt(i)))
-        return new assayInfo();
-
-    for (int i = 0; i < rfidNum.length(); i++)
-      if (!isHexStringChar(rfidNum.charAt(i)))
+    }
+    // if they can't be real tags anyway
+    if (RFIDNum.length() > 16 || UID.length() > 128)
+    {
+      System.out.println("Value too long.");
+      return new assayInfo();
+    }
+    // sanitize to help prevent sql injection
+    RFIDNum = RFIDNum.replaceAll("\\s+", "");
+    // only accept ids in hex
+    for (int i = 0; i < RFIDNum.length(); i++)
+      if (!isHexStringChar(RFIDNum.charAt(i)))
         return new assayInfo();
 
     OracleDataSource ods;
@@ -61,13 +67,11 @@ public class assayService
       OraclePreparedStatement ps2 = 
         (OraclePreparedStatement) conn.prepareStatement("SELECT IMAGE FROM ASSAYRESULTPHOTOS WHERE TESTID = (SELECT TESTID FROM ASSAYLOOKUP WHERE TESTRFID = ?) ORDER BY IMAGEID ASC");
 
-      ps.setString(1, rfidNum);
-      ps2.setString(1, rfidNum);
+      ps.setString(1, RFIDNum);
+      ps2.setString(1, RFIDNum);
 
       OracleResultSet rs = (OracleResultSet) ps.executeQuery();
       OracleResultSet rs2 = (OracleResultSet) ps2.executeQuery();
-
-      assayInfo info;
 
       // ensure that both parts exist
       if (rs.next() && rs2.next())
@@ -79,7 +83,7 @@ public class assayService
         String sessionID = byteToBase64(sessionIDArray);
 
         // get data
-        info = new assayInfo(true);
+        assayInfo info = new assayInfo(true, false);
 
         BLOB b = rs.getBLOB("picture");
         byte[] image;
@@ -113,79 +117,78 @@ public class assayService
         ps = 
             (OraclePreparedStatement) conn.prepareStatement("INSERT INTO ASSAYRESULTS (SESSIONID, UNIQUEID, TESTID) SELECT ?, ?, TESTID FROM ASSAYLOOKUP WHERE TESTRFID = ?");
         ps.setString(1, sessionID);
-        ps.setString(2, phoneID);
-        ps.setString(3, rfidNum);
+        ps.setString(2, UID);
+        ps.setString(3, RFIDNum);
+
         ps.execute();
+
+        conn.commit();
+
+        info.setRfidNum(RFIDNum);
+
+        System.out.println("Assay Lookup (success) " + RFIDNum);
+
+        return info;
       }
       else
       {
         conn.rollback();
         return new assayInfo();
       }
-      // store session ID, UID into db to be filled in later
-      //java.util.Date today = new java.util.Date();
-      //Timestamp ts = new Timestamp(today.getTime());
-
-
-      conn.commit();
-      conn.close();
-
-      info.setRfidNum(rfidNum);
-
-      return info;
     }
     // TODO
     // catch duplicate entry failure and choose another session ID
     catch (SQLException e)
     {
-      System.out.println(e.toString());
       e.printStackTrace();
-      try
-      {
-        if (conn != null)
-          conn.rollback();
-      }
-      catch (SQLException ex)
-      {
-        System.out.println(ex.toString());
-      }
-      finally
-      {
-        return new assayInfo();
-      }
+      return new assayInfo(false, true);
     }
     catch (NoSuchAlgorithmException exc)
     {
-      System.out.println(exc.toString());
-      return new assayInfo();
+      exc.printStackTrace();
+      return new assayInfo(false, true);
     }
     catch (NullPointerException e)
     {
-      System.out.println(e.toString());
       e.printStackTrace();
+      return new assayInfo(false, true);
+    }
+    finally
+    {
+      // close up the connection
       try
       {
         if (conn != null)
-          conn.rollback();
+        {
+          conn.close();
+        }
       }
       catch (SQLException ex)
       {
         ex.printStackTrace();
-        System.out.println(ex.toString());
-      }
-
-      finally
-      {
-        return new assayInfo();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
       }
     }
   }
 
-  public boolean submitAssayResult(String sessionID, String phoneID, 
-                                   int imageChosen)
+  public assayResultResponse submitAssayResult(String sessionID, 
+                                               String phoneID, 
+                                               int imageChosen)
   {
+    // TODO: make sure image chosen value is within range
     if (sessionID == null || phoneID == null)
-      return false;
+    {
+      System.out.println("Rejecting assay for null inputs.");
+      return new assayResultResponse(false, false);
+    }
 
     sessionID = sessionID.replaceAll("\\s+", "");
     phoneID = phoneID.replaceAll("\\s+", "");
@@ -196,19 +199,18 @@ public class assayService
       if (!isHexStringChar(phoneID.charAt(i)))
       {
         System.out.println("Rejecting bad Phone UID " + phoneID);
-        return false;
+        return new assayResultResponse(false, false);
       }
 
     for (int i = 0; i < sessionID.length(); i++)
       if (!isBase64Char(sessionID.charAt(i)))
       {
         System.out.println("Rejecting bad session ID " + sessionID);
-        return false;
+        return new assayResultResponse(false, false);
       }
 
     OracleDataSource ods;
     OracleConnection conn = null;
-    boolean retVal = false;
 
     try
     {
@@ -239,17 +241,23 @@ public class assayService
         System.out.println(x.getMessage());
 
       if (rs.next())
-      {      
+      {
         rs.updateInt("IMAGECHOSEN", imageChosen);
         rs.updateTimestamp("SUBMITTIME", 
                            new Timestamp((new java.util.Date()).getTime()));
         rs.updateRow();
-        retVal = true;
+        rs.close();
+        ps.close();
+        System.out.println("Assay result sent (success).");
+        return new assayResultResponse(true, false);
       }
       else
       {
-        System.out.println("Unknown session ID: " + sessionID);
-        retVal = false;
+        System.out.println("Assay result: Unknown session ID: " + 
+                           sessionID);
+        rs.close();
+        ps.close();
+        return new assayResultResponse(false, false);
       }
     }
     // TODO
@@ -258,35 +266,38 @@ public class assayService
     {
       System.out.println(e.toString());
       e.printStackTrace();
+      return new assayResultResponse(false, true);
     }
     catch (NullPointerException e)
     {
       System.out.println(e.toString());
       e.printStackTrace();
+      return new assayResultResponse(false, true);
     }
     finally
     {
-
+      // close up the connection
       try
       {
         if (conn != null)
         {
-          if (retVal)
-            conn.commit();
-          else
-            conn.rollback();
-
           conn.close();
         }
       }
       catch (SQLException ex)
       {
         ex.printStackTrace();
-        System.out.println(ex.toString());
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
       }
-
     }
-    return retVal;
   }
 
   /**

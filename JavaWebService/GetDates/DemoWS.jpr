@@ -55,6 +55,24 @@
       </hash>
    </hash>
    <hash n="oracle.jdeveloper.compiler.OjcConfiguration">
+      <list n="copyRes">
+         <string v=".gif"/>
+         <string v=".jpg"/>
+         <string v=".jpeg"/>
+         <string v=".png"/>
+         <string v=".properties"/>
+         <string v=".xml"/>
+         <string v="-apf.xml"/>
+         <string v=".ejx"/>
+         <string v=".xcfg"/>
+         <string v=".cpx"/>
+         <string v=".dcx"/>
+         <string v=".wsdl"/>
+         <string v=".ini"/>
+         <string v=".tld"/>
+         <string v=".tag"/>
+         <string v=".jks"/>
+      </list>
       <value n="internalEncoding" v="Cp1252"/>
    </hash>
    <hash n="oracle.jdeveloper.model.J2eeSettings">
@@ -200,6 +218,8 @@
    <list n="ownerMap">
       <hash><value n="nodeClass" v="oracle.jdeveloper.model.JavaSourceNode"/><url n="nodeURL" path="src/assayPackage/assayService.java"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/assayPackage/AssayWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdeveloper.model.JavaSourceNode"/><url n="nodeURL" path="src/assayPackage/AssayWS.java"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/assayPackage/AssayWS.jaxrpc"/></hash>
+      <hash><value n="nodeClass" v="oracle.jdeveloper.model.JavaSourceNode"/><url n="nodeURL" path="src/authenticationPackage/authenticationSecureService.java"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/authenticationPackage/AuthenticationSecureWS.jaxrpc"/></hash>
+      <hash><value n="nodeClass" v="oracle.jdeveloper.model.JavaSourceNode"/><url n="nodeURL" path="src/authenticationPackage/AuthenticationSecureWS.java"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/authenticationPackage/AuthenticationSecureWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdeveloper.model.JavaSourceNode"/><url n="nodeURL" path="src/authenticationPackage/authenticationService.java"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/authenticationPackage/AuthenticationWebService.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdeveloper.model.JavaSourceNode"/><url n="nodeURL" path="src/authenticationPackage/AuthenticationWebService.java"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/authenticationPackage/AuthenticationWebService.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdeveloper.model.JavaSourceNode"/><url n="nodeURL" path="src/COREMedDemo/COREMedDemoService.java"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/COREMedDemo/COREMedDemoWS.jaxrpc"/></hash>
@@ -216,6 +236,7 @@
       <hash><value n="nodeClass" v="oracle.jdeveloper.model.JavaSourceNode"/><url n="nodeURL" path="src/winepackage/wineService.java"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/winepackage/WineWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdeveloper.model.JavaSourceNode"/><url n="nodeURL" path="src/winepackage/WineWS.java"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/winepackage/WineWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.MappingFileNode"/><url n="nodeURL" path="public_html/WEB-INF/AssayWS-java-wsdl-mapping.xml"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/assayPackage/AssayWS.jaxrpc"/></hash>
+      <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.MappingFileNode"/><url n="nodeURL" path="public_html/WEB-INF/AuthenticationSecureWS-java-wsdl-mapping.xml"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/authenticationPackage/AuthenticationSecureWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.MappingFileNode"/><url n="nodeURL" path="public_html/WEB-INF/AuthenticationWebService-java-wsdl-mapping.xml"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/authenticationPackage/AuthenticationWebService.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.MappingFileNode"/><url n="nodeURL" path="public_html/WEB-INF/COREMedDemoWS-java-wsdl-mapping.xml"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/COREMedDemo/COREMedDemoWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.MappingFileNode"/><url n="nodeURL" path="public_html/WEB-INF/DhlDemoWS-java-wsdl-mapping.xml"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/dhlDemo/DhlDemoWS.jaxrpc"/></hash>
@@ -224,6 +245,7 @@
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.MappingFileNode"/><url n="nodeURL" path="public_html/WEB-INF/petWS-java-wsdl-mapping.xml"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/petPackage/PetWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.MappingFileNode"/><url n="nodeURL" path="public_html/WEB-INF/wineWS-java-wsdl-mapping.xml"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/winePackage/WineWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.WSDLArtifactNode"/><url n="nodeURL" path="public_html/WEB-INF/wsdl/AssayWS.wsdl"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/assayPackage/AssayWS.jaxrpc"/></hash>
+      <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.WSDLArtifactNode"/><url n="nodeURL" path="public_html/WEB-INF/wsdl/AuthenticationSecureWS.wsdl"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/authenticationPackage/AuthenticationSecureWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.WSDLArtifactNode"/><url n="nodeURL" path="public_html/WEB-INF/wsdl/AuthenticationWebService.wsdl"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/authenticationPackage/AuthenticationWebService.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.WSDLArtifactNode"/><url n="nodeURL" path="public_html/WEB-INF/wsdl/COREMedDemoWS.wsdl"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/COREMedDemo/COREMedDemoWS.jaxrpc"/></hash>
       <hash><value n="nodeClass" v="oracle.jdevimpl.webservices.ide.WSDLArtifactNode"/><url n="nodeURL" path="public_html/WEB-INF/wsdl/DhlDemoWS.wsdl"/><value n="ownerClass" v="oracle.jdeveloper.webservices.model.WebServiceNode"/><url n="ownerURL" path="src/dhlDemo/DhlDemoWS.jaxrpc"/></hash>

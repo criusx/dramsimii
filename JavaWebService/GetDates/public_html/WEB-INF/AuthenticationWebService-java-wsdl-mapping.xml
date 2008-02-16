@@ -10,30 +10,16 @@
         <namespaceURI>http://authenticationPackage/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getRoute_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getRouteResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getItem_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getItemResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>authenticationPackage.itemInfo</java-type>
         <anonymous-type-qname>{http://authenticationPackage/}itemInfo</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>RFIDNum</java-variable-name>
             <xml-element-name>RFIDNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>retryNeeded</java-variable-name>
+            <xml-element-name>retryNeeded</xml-element-name>
         </variable-mapping>
         <variable-mapping>
             <java-variable-name>description</java-variable-name>
@@ -45,8 +31,35 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_setItem_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}setItemResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_getRoute_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getRouteResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>authenticationPackage.AuthenticationWebService_callHome_ResponseStruct</java-type>
         <anonymous-type-qname>{http://authenticationPackage/}callHomeResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_getItem_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getItemResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -65,15 +78,6 @@
     <java-xml-type-mapping>
         <java-type>authenticationPackage.AuthenticationWebService_getSince_ResponseStruct</java-type>
         <anonymous-type-qname>{http://authenticationPackage/}getSinceResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_setItem_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}setItemResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>

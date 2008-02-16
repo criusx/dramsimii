@@ -14,6 +14,33 @@
         <namespaceURI>http://winePackage/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
+        <java-type>winepackage.WineWS_retrieveBottleInformation_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://winePackage/}retrieveBottleInformationResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>winepackage.WineWS_getWineAccessesSince_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://winePackage/}getWineAccessesSinceResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>winepackage.WineWS_enterBottleInformation_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://winePackage/}enterBottleInformationResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>winepackage.wineBottle</java-type>
         <anonymous-type-qname>{http://winePackage/}wineBottle</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -24,6 +51,10 @@
         <variable-mapping>
             <java-variable-name>type</java-variable-name>
             <xml-element-name>type</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>retryNeeded</java-variable-name>
+            <xml-element-name>retryNeeded</xml-element-name>
         </variable-mapping>
         <variable-mapping>
             <java-variable-name>authenticated</java-variable-name>
@@ -56,33 +87,6 @@
         <variable-mapping>
             <java-variable-name>review</java-variable-name>
             <xml-element-name>review</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>winepackage.WineWS_retrieveBottleInformation_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://winePackage/}retrieveBottleInformationResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>winepackage.WineWS_getWineAccessesSince_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://winePackage/}getWineAccessesSinceResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>winepackage.WineWS_enterBottleInformation_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://winePackage/}enterBottleInformationResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>

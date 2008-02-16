@@ -7,6 +7,8 @@ public class assayReport
 
   public assayReport()
   {
+    sessionID = "";
+    selectedIndex = -1;
   }
 
   public void setSessionID(String sessionID)

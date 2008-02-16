@@ -11,14 +11,16 @@ public class patientRecord
   private String RFIDnum;
   private byte[] image;
   private boolean exists;
+  private boolean retryNeeded;
 
   public patientRecord()
   {
   }
   
-  public patientRecord(boolean _exists)
+  public patientRecord(boolean Exists, boolean RetryNeeded)
   {
-    exists = _exists;
+    exists = Exists;
+    retryNeeded = RetryNeeded;
   }
   
   public void setFirstName(String firstName)
@@ -109,5 +111,15 @@ public class patientRecord
   public boolean isExists()
   {
     return exists;
+  }
+
+  public void setRetryNeeded(boolean retryNeeded)
+  {
+    this.retryNeeded = retryNeeded;
+  }
+
+  public boolean isRetryNeeded()
+  {
+    return retryNeeded;
   }
 }

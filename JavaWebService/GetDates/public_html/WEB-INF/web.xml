@@ -2,17 +2,17 @@
      xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
      version="2.4">
     <servlet>
-        <description>Web Service COREMedDemoWSSoap12HttpPort</description>
-        <display-name>Web Service COREMedDemoWSSoap12HttpPort</display-name>
-        <servlet-name>COREMedDemoWSSoap12HttpPort</servlet-name>
-        <servlet-class>COREMedDemo.COREMedDemoService</servlet-class>
+        <description>Web Service EvDemoWSSoapHttpPort</description>
+        <display-name>Web Service EvDemoWSSoapHttpPort</display-name>
+        <servlet-name>EvDemoWSSoapHttpPort</servlet-name>
+        <servlet-class>evDemo.evDemoService</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
-        <description>Web Service COREMedDemoWSSoapHttpPort</description>
-        <display-name>Web Service COREMedDemoWSSoapHttpPort</display-name>
-        <servlet-name>COREMedDemoWSSoapHttpPort</servlet-name>
-        <servlet-class>COREMedDemo.COREMedDemoService</servlet-class>
+        <description>Web Service AuthenticationSecureWSSoapHttpPort</description>
+        <display-name>Web Service AuthenticationSecureWSSoapHttpPort</display-name>
+        <servlet-name>AuthenticationSecureWSSoapHttpPort</servlet-name>
+        <servlet-class>authenticationPackage.authenticationSecureService</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
@@ -30,24 +30,10 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
-        <description>Web Service EvDemoWSSoapHttpPort</description>
-        <display-name>Web Service EvDemoWSSoapHttpPort</display-name>
-        <servlet-name>EvDemoWSSoapHttpPort</servlet-name>
-        <servlet-class>evDemo.evDemoService</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
         <description>Web Service petWSSoapHttpPort</description>
         <display-name>Web Service petWSSoapHttpPort</display-name>
         <servlet-name>petWSSoapHttpPort</servlet-name>
         <servlet-class>petPackage.petService</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <description>Web Service wineWSSoapHttpPort</description>
-        <display-name>Web Service wineWSSoapHttpPort</display-name>
-        <servlet-name>wineWSSoapHttpPort</servlet-name>
-        <servlet-class>winepackage.wineService</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
@@ -64,13 +50,34 @@
         <servlet-class>assayPackage.assayService</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <servlet-mapping>
+    <servlet>
+        <description>Web Service COREMedDemoWSSoap12HttpPort</description>
+        <display-name>Web Service COREMedDemoWSSoap12HttpPort</display-name>
         <servlet-name>COREMedDemoWSSoap12HttpPort</servlet-name>
-        <url-pattern>COREMedDemoWSSoap12HttpPort</url-pattern>
+        <servlet-class>COREMedDemo.COREMedDemoService</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <description>Web Service COREMedDemoWSSoapHttpPort</description>
+        <display-name>Web Service COREMedDemoWSSoapHttpPort</display-name>
+        <servlet-name>COREMedDemoWSSoapHttpPort</servlet-name>
+        <servlet-class>COREMedDemo.COREMedDemoService</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <description>Web Service wineWSSoapHttpPort</description>
+        <display-name>Web Service wineWSSoapHttpPort</display-name>
+        <servlet-name>wineWSSoapHttpPort</servlet-name>
+        <servlet-class>winepackage.wineService</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EvDemoWSSoapHttpPort</servlet-name>
+        <url-pattern>EvDemoWSSoapHttpPort</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>COREMedDemoWSSoapHttpPort</servlet-name>
-        <url-pattern>COREMedDemoWSSoapHttpPort</url-pattern>
+        <servlet-name>AuthenticationSecureWSSoapHttpPort</servlet-name>
+        <url-pattern>AuthenticationSecureWSSoapHttpPort</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetDatesWSSoapHttpPort</servlet-name>
@@ -81,16 +88,8 @@
         <url-pattern>DhlDemoWSSoapHttpPort</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>EvDemoWSSoapHttpPort</servlet-name>
-        <url-pattern>EvDemoWSSoapHttpPort</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>petWSSoapHttpPort</servlet-name>
         <url-pattern>petWSSoapHttpPort</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>wineWSSoapHttpPort</servlet-name>
-        <url-pattern>wineWSSoapHttpPort/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AuthenticationWebServiceSoapHttpPort</servlet-name>
@@ -99,5 +98,17 @@
     <servlet-mapping>
         <servlet-name>AssayWSSoapHttpPort</servlet-name>
         <url-pattern>AssayWSSoapHttpPort</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>COREMedDemoWSSoap12HttpPort</servlet-name>
+        <url-pattern>COREMedDemoWSSoap12HttpPort</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>COREMedDemoWSSoapHttpPort</servlet-name>
+        <url-pattern>COREMedDemoWSSoapHttpPort</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>wineWSSoapHttpPort</servlet-name>
+        <url-pattern>wineWSSoapHttpPort/*</url-pattern>
     </servlet-mapping>
 </web-app>

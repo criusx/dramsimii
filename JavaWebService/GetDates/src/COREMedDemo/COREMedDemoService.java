@@ -1,5 +1,7 @@
 package COREMedDemo;
 
+import authenticationPackage.itemInfo;
+
 import dBInfo.dbConnectInfo;
 
 import dhlDemo.SendApp;
@@ -59,27 +61,32 @@ public class COREMedDemoService
             (("0123456789abcdefABCDEF".indexOf(c)) >= 0));
   }
 
-  public patientRecord getPatientRecord(String RFIDNum)
+  public patientRecord getPatientRecord(String RFIDNum, String UID)
   {
-    System.out.println(RFIDNum);
-    if (RFIDNum == null || RFIDNum.length() < 1)
-      return new patientRecord(false);
+    if (RFIDNum == null || RFIDNum.length() < 1 || RFIDNum.length() > 16 || 
+        UID == null || UID.length() < 1 || UID.length() > 128)
+      return new patientRecord(false, false);
 
     RFIDNum = RFIDNum.replaceAll("\\s+", "");
+    UID = UID.replaceAll("\\s+", "");
 
     // if a non hex string is entered, don't try any db stuff on it
     for (int i = 0; i < RFIDNum.length(); i++)
       if (!isHexStringChar(RFIDNum.charAt(i)))
-        return new patientRecord(false);
+        return new patientRecord(false, false);
+
+    for (int i = 0; i < UID.length(); i++)
+      if (!isHexStringChar(UID.charAt(i)))
+        return new patientRecord(false, false);
 
     OracleDataSource ods;
+    OracleConnection conn = null;
 
-    patientRecord pR = new patientRecord();
     try
     {
       ods = new OracleDataSource();
       ods.setURL(dbConnectInfo.getConnectInfo());
-      OracleConnection conn = (OracleConnection) ods.getConnection();
+      conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
       OracleStatement stmt = (OracleStatement) conn.createStatement();
@@ -99,67 +106,96 @@ public class COREMedDemoService
 
       // if there is no patient by this id
       if (!rs.next())
-        return new patientRecord(false);
-
-      pR.setFirstName(rs.getString("FNAME"));
-      pR.setMiddleName(rs.getString("MNAME"));
-      pR.setLastName(rs.getString("LNAME"));
-
-      pR.setDOB(rs.getTimestamp("DOB").getTime());
-
-      Blob b = rs.getBlob("PICTURE");
-
-      pR.setImage(b.getBytes((long) 1, (int) b.length()));
-
-      pR.setRFIDnum(RFIDNum);
-
-      pR.setExists(true);
-
-      ps.close();
-
-      ps = 
-          conn.prepareStatement("SELECT DRUGID FROM PATIENTALLERGY WHERE PATIENTID = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?)");
-      ps.setString(1, RFIDNum);
-
-      rs = ps.executeQuery();
-
-      ArrayList<String> aL = new ArrayList<String>();
-
-      while (rs.next())
+        return new patientRecord(false, false);
+      else
       {
-        aL.add(rs.getString("DRUGID"));
+        patientRecord pR = new patientRecord();
+
+        pR.setFirstName(rs.getString("FNAME"));
+        pR.setMiddleName(rs.getString("MNAME"));
+        pR.setLastName(rs.getString("LNAME"));
+
+        pR.setDOB(rs.getTimestamp("DOB").getTime());
+
+        Blob b = rs.getBlob("PICTURE");
+
+        pR.setImage(b.getBytes((long) 1, (int) b.length()));
+
+        pR.setRFIDnum(RFIDNum);
+
+        pR.setExists(true);
+
+        pR.setRetryNeeded(false);
+
+        ps.close();
+
+        ps = 
+            conn.prepareStatement("SELECT DRUGID FROM PATIENTALLERGY WHERE PATIENTID = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?)");
+        ps.setString(1, RFIDNum);
+
+        rs = ps.executeQuery();
+
+        ArrayList<String> aL = new ArrayList<String>();
+
+        while (rs.next())
+        {
+          aL.add(rs.getString("DRUGID"));
+        }
+        pR.setAllergies((String[]) aL.toArray(new String[aL.size()]));
+
+        aL.clear();
+
+        ps.close();
+
+        ps = 
+            conn.prepareStatement("SELECT DRUGID FROM PATIENTMEDICATION WHERE (PATIENTID = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?))");
+        ps.setString(1, RFIDNum);
+
+        rs = (OracleResultSet) ps.executeQuery();
+
+        while (rs.next())
+        {
+          aL.add(rs.getString("DRUGID"));
+        }
+
+        pR.setMedications((String[]) aL.toArray(new String[aL.size()]));
+
+        ps.close();
+
+        System.out.println("Patient Lookup (success): " + RFIDNum);
+
+        return pR;
       }
-      pR.setAllergies((String[]) aL.toArray(new String[aL.size()]));
-
-      aL.clear();
-
-      ps.close();
-
-      ps = 
-          conn.prepareStatement("SELECT DRUGID FROM PATIENTMEDICATION WHERE (PATIENTID = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?))");
-      ps.setString(1, RFIDNum);
-
-      rs = (OracleResultSet) ps.executeQuery();
-
-      while (rs.next())
-      {
-        aL.add(rs.getString("DRUGID"));
-      }
-
-      pR.setMedications((String[]) aL.toArray(new String[aL.size()]));
-
-      rs.next();
-
-      ps.close();
-
-      return pR;
     }
     catch (SQLException e)
     {
-      System.out.println("exception:" + e.toString());
-      return new patientRecord(false);
+      e.printStackTrace();
+      return new patientRecord(false, true);
     }
-
+    finally
+    {
+      // close up the connection
+      try
+      {
+        if (conn != null)
+        {
+          conn.close();
+        }
+      }
+      catch (SQLException ex)
+      {
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
+    }
   }
 
   public errorReport enterPatientRecord(patientRecord newPatient)
@@ -400,14 +436,40 @@ public class COREMedDemoService
     }
   }
 
-  public boolean checkInteraction(String ID, String drugID)
+  public errorReport checkInteraction(String RFIDNum, String drugID)
   {
+    // ignore blank requests
+    if (RFIDNum == null || drugID == null)
+    {
+      System.out.println("Null value.");
+      return new errorReport();
+    }
+    // if they can't be real tags anyway
+    if (RFIDNum.length() > 16 || drugID.length() > 16)
+    {
+      System.out.println("Value too long.");
+      return new errorReport();
+    }
+    // sanitize to help prevent sql injection
+    RFIDNum = RFIDNum.replaceAll("\\s+", "");
+    drugID = drugID.replaceAll("\\s+", "");
+    // only accept ids in hex
+    for (int i = 0; i < RFIDNum.length(); i++)
+      if (!isHexStringChar(RFIDNum.charAt(i)))
+        return new errorReport();
+
+    for (int i = 0; i < drugID.length(); i++)
+      if (!isHexStringChar(drugID.charAt(i)))
+        return new errorReport();
+
     OracleDataSource ods;
+    OracleConnection conn = null;
+
     try
     {
       ods = new OracleDataSource();
       ods.setURL(dbConnectInfo.getConnectInfo());
-      OracleConnection conn = (OracleConnection) ods.getConnection();
+      conn = (OracleConnection) ods.getConnection();
 
       // set case insensitivity
       OracleStatement psC = (OracleStatement) conn.createStatement();
@@ -416,37 +478,66 @@ public class COREMedDemoService
 
       psC.close();
 
+
+      PreparedStatement checkPatient = 
+        conn.prepareStatement("SELECT * FROM PATIENTLOOKUP WHERE PATIENTRFID = ?");
+      checkPatient.setString(1, RFIDNum);
+
+      PreparedStatement checkDrug = 
+        conn.prepareStatement("SELECT * FROM DRUGLOOKUP WHERE DRUGRFID = ?");
+      checkDrug.setString(1, drugID);
+
+      ResultSet checkPatientRS = checkPatient.executeQuery();
+      ResultSet checkDrugRS = checkDrug.executeQuery();
+      if (!checkPatientRS.next() || !checkDrugRS.next())
+      {
+        checkPatientRS.close();
+        checkDrugRS.close();
+        checkPatient.close();
+        checkDrug.close();
+        return new errorReport("Not patient or drug ID", false, false, -1);
+      }
+
+      checkPatientRS.close();
+      checkDrugRS.close();
+      checkPatient.close();
+      checkDrug.close();
+
+
       // then check to see if this is allowed
       PreparedStatement ps = 
         conn.prepareStatement("SELECT * from PATIENTALLERGY where patientid = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?) AND drugid = (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?)");
-      ps.setString(1, ID);
+      ps.setString(1, RFIDNum);
       ps.setString(2, drugID);
 
       ResultSet result = ps.executeQuery();
+      
       if (!result.next())
       {
-        System.out.println("No interaction found between " + ID + " and " + 
+        System.out.println("No interaction found between " + RFIDNum + " and " + 
                            drugID);
         ps = 
-            conn.prepareStatement("INSERT INTO PRESCRIPTIONSGIVEN (PATIENTID, DRUGID) VALUES (SELECT PATIENTID, (SELECT DRUGID FROM DRUGLOOKUPS WHERE DRUGRFID = ?) FROM PATIENTLOOKUPS WHERE PATIENTRFID = ?)");
-        ps.setString(1, ID);
+            conn.prepareStatement("INSERT INTO PRESCRIPTIONSGIVEN (PATIENTID, DRUGID) SELECT PATIENTID, (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?) FROM PATIENTLOOKUP WHERE PATIENTRFID = ?");
+        ps.setString(1, RFIDNum);
         ps.setString(2, drugID);
         ps.execute();
-        return false;
+        ps.close();
+        System.out.println("No interaction found between " + RFIDNum + " and " + drugID);
+        return new errorReport("No interaction found.", true, false, 0);
       }
       else
       {
-        System.out.println("Interaction found between " + ID + " and " + 
-                           drugID);
+        
         ps = 
             conn.prepareStatement("INSERT INTO PRESCRIPTIONWARNINGS (PATIENTID, DRUGID) SELECT PATIENTID, (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?) FROM PATIENTLOOKUP WHERE PATIENTRFID = ?");
-        ps.setString(1, ID);
+        ps.setString(1, RFIDNum);
         ps.setString(2, drugID);
         ps.execute();
         // retrieve patient name and doctor id
+
         ps = 
             conn.prepareStatement("SELECT FNAME, MNAME, LNAME, DOCTOR FROM PATIENTDATA WHERE ID = (SELECT PATIENTID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?)");
-        ps.setString(1, ID);
+        ps.setString(1, RFIDNum);
         result = ps.executeQuery();
         String patientName;
         String doctorID;
@@ -460,7 +551,8 @@ public class COREMedDemoService
         else
         {
           System.out.println("Could not find patient information");
-          return false;
+          return new errorReport("Could not find patient information", 
+                                 false, false, -2);
         }
         // retrieve the doctor's name and contact info
         ps = 
@@ -479,14 +571,17 @@ public class COREMedDemoService
         else
         {
           System.out.println("Could not find doctor information");
-          return false;
+          return new errorReport("Could not find doctor information.", 
+                                 false, false, -3);
         }
+        result.close();
+        ps.close();
         // retrieve drug name
         ps = 
             conn.prepareStatement("SELECT NAME FROM DRUGDATA WHERE DRUGID = (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?)");
         ps.setString(1, drugID);
         result = ps.executeQuery();
-        String drugName;
+        String drugName = null;
         if (result.next())
         {
           drugName = result.getString("NAME");
@@ -494,61 +589,93 @@ public class COREMedDemoService
         else
         {
           System.out.println("Could not find drug name.");
-          return false;
+          return new errorReport("Could not find drug name", false, false, -4);
         }
-        try
+        result.close();
+        ps.close();
+        //try
         {
-          SendApp newSender = new SendApp();
-          newSender.send("smtp.gmail.com", 993, "feedback@gentag.com", 
-                         doctorContact, 
-                         "Drug interaction noted for patient:" + 
-                         patientName, 
-                         "Dr. " + doctorName + ",\nA nurse has attempted to give " + 
-                         patientName + " a dose of " + drugName + ".");
-          System.out.println("message sent to: " + doctorContact);
+          //SendApp newSender = new SendApp();
+          //newSender.send("smtp.gmail.com", 993, "feedback@gentag.com", 
+          //               doctorContact, 
+          //               "Drug interaction noted for patient:" + 
+          //               patientName, 
+          //               "Dr. " + doctorName + ",\nA nurse has attempted to give " + 
+          //               patientName + " a dose of " + drugName + ".");
+          //System.out.println("message sent to: " + doctorContact);
         }
-        catch (MessagingException e)
-        {
-          // TODO
-          System.out.println("ex: " + e.toString());
-        }
-        //catch (AddressException e)
+        //catch (MessagingException e)
         {
           // TODO
           //System.out.println("ex: " + e.toString());
         }
-        return true;
+        System.out.println("Interaction found between " + RFIDNum + " and " + 
+                           drugID);
+        return new errorReport("Warning: " + patientName + " has an allergy to " + (drugName == null ? "" : drugName) + ".", false, false, 1);
       }
     }
     catch (SQLException e)
     {
       System.out.println("Exception: " + e.toString());
       e.printStackTrace();
-      return false;
+      return new errorReport("Exception" + e.toString(), false, true, -5);
+    }
+    finally
+    {
+      // close up the connection
+      try
+      {
+        if (conn != null)
+        {
+          conn.close();
+        }
+      }
+      catch (SQLException ex)
+      {
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
     }
   }
 
 
-  public drugInfo getDrugInfo(String RFIDNum)
+  public drugInfo getDrugInfo(String RFIDNum, String UID)
   {
-    if (RFIDNum == null)
-      return new drugInfo(false);
-
+    // ignore blank requests
+    if (RFIDNum == null || UID == null)
+    {
+      System.out.println("Null value.");
+      return new drugInfo();
+    }
+    // if they can't be real tags anyway
+    if (RFIDNum.length() > 16 || UID.length() > 128)
+    {
+      System.out.println("Value too long.");
+      return new drugInfo();
+    }
+    // sanitize to help prevent sql injection
     RFIDNum = RFIDNum.replaceAll("\\s+", "");
-
-    // if a non hex string is entered, don't try any db stuff on it
+    // only accept ids in hex
     for (int i = 0; i < RFIDNum.length(); i++)
       if (!isHexStringChar(RFIDNum.charAt(i)))
-        return new drugInfo(false);
+        return new drugInfo();
 
     OracleDataSource ods;
+    OracleConnection conn = null;
 
-    drugInfo pR = new drugInfo();
     try
     {
       ods = new OracleDataSource();
       ods.setURL(dbConnectInfo.getConnectInfo());
-      OracleConnection conn = (OracleConnection) ods.getConnection();
+      conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
       OracleStatement stmt = (OracleStatement) conn.createStatement();
@@ -571,7 +698,9 @@ public class COREMedDemoService
         return new drugInfo(false);
       else
       {
+        drugInfo pR = new drugInfo();
         pR.setRFIDNum(RFIDNum);
+        pR.setRetryNeeded(false);
         pR.setDescription(rs.getString("DESCRIPTION"));
         pR.setExists(true);
 
@@ -583,13 +712,39 @@ public class COREMedDemoService
 
         ps.close();
 
+        System.out.println("Drug Lookup (success):" + RFIDNum);
+
         return pR;
       }
     }
     catch (SQLException e)
     {
-      System.out.println("exception:" + e.toString());
-      return new drugInfo(false);
+      e.printStackTrace();
+      return new drugInfo(RFIDNum, true);
+    }
+    finally
+    {
+      // close up the connection
+      try
+      {
+        if (conn != null)
+        {
+          conn.close();
+        }
+      }
+      catch (SQLException ex)
+      {
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
     }
   }
 

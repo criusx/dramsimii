@@ -23,7 +23,6 @@ public class SendApp
                    String subject, String body)
     throws AddressException, MessagingException
   {
-    System.out.println("starting mail send");
     // Create a mail session
     java.security.Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
     Properties props = new Properties();
@@ -51,9 +50,8 @@ public class SendApp
       msg.setSubject(subject);
       msg.setFrom(new InternetAddress(username));
       msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-      System.out.println("sending mail");
+      
       Transport.send(msg);
-      System.out.println("mail sent");
     }
     catch (Exception mex)
     {

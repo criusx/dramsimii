@@ -8,20 +8,23 @@ public class itemInfo
   private String RFIDNum;
   private String description;
   private boolean authenticated;
+  private boolean retryNeeded;
 
   public itemInfo()
   {
     authenticated = false;
     RFIDNum = "";
     description = "";
+    retryNeeded = false;
   }
 
   public itemInfo(String _RFIDNum, String _description, 
-                  boolean _authenticated)
+                  boolean _authenticated, boolean RetryNeeded)
   {
     RFIDNum = _RFIDNum;
     description = _description;
     authenticated = _authenticated;
+    retryNeeded = RetryNeeded;
   }
 
   public void setRFIDNum(String rFIDNum)
@@ -52,5 +55,15 @@ public class itemInfo
   public boolean isAuthenticated()
   {
     return authenticated;
+  }
+
+  public void setRetryNeeded(boolean retryNeeded)
+  {
+    this.retryNeeded = retryNeeded;
+  }
+
+  public boolean isRetryNeeded()
+  {
+    return retryNeeded;
   }
 }

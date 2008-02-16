@@ -9,7 +9,8 @@ public interface AssayWS
   public assayInfo retrieveAssayInformation(String rfidNum, String phoneID)
     throws RemoteException;
 
-  public boolean submitAssayResult(String sessionID, String phoneID, 
-                                   int imageChosen)
+  public assayResultResponse submitAssayResult(String sessionID, 
+                                               String phoneID, 
+                                               int imageChosen)
     throws RemoteException;
 }

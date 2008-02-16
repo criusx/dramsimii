@@ -23,7 +23,7 @@
                </hash>
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="boolean.submitAssayResult.java.lang.String.java.lang.String.int"/>
+                  <value n="BOUND_OPERATION" v="assayPackage.assayResultResponse.submitAssayResult.java.lang.String.java.lang.String.int"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -46,7 +46,7 @@
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="boolean.submitAssayResult.java.lang.String.java.lang.String.int"/>
+                  <value n="EXPOSED_BD_OPERATION" v="assayPackage.assayResultResponse.submitAssayResult.java.lang.String.java.lang.String.int"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -128,7 +128,7 @@
                         <value n="TYPE" v="int"/>
                      </hash>
                   </list>
-                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
+                  <value n="OP_JAVA_RETURN_TYPE" v="assayPackage.assayResultResponse"/>
                   <value n="OP_NAME" v="submitAssayResult"/>
                   <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AssayWS_submitAssayResultResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>

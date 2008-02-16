@@ -95,7 +95,13 @@
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
             </list>
-            <hash n="PROPERTY_GROUPS"/>
+            <hash n="PROPERTY_GROUPS">
+               <hash n="SECURITY">
+                  <value n="KEYSTORE_OS_LOCATION" v="C:\Users\CriuS\.keystore"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.security.SecurityModel"/>
+                  <value n="SECURITY_ENABLED" v="false"/>
+               </hash>
+            </hash>
             <url n="URL" protocol="http" host="crius-pc" port="8888" path="/JavaWebService-GetDates-context-root/MyWebService1"/>
          </hash>
       </list>

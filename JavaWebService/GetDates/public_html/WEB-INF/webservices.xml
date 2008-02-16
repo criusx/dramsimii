@@ -2,23 +2,28 @@
      xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
      version="1.1">
     <webservice-description>
-        <webservice-description-name>COREMedDemoWS</webservice-description-name>
-        <wsdl-file>WEB-INF/wsdl/COREMedDemoWS.wsdl</wsdl-file>
-        <jaxrpc-mapping-file>WEB-INF/COREMedDemoWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
+        <webservice-description-name>EvDemoWS</webservice-description-name>
+        <wsdl-file>WEB-INF/wsdl/EvDemoWS.wsdl</wsdl-file>
+        <jaxrpc-mapping-file>WEB-INF/EvDemoWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
         <port-component>
-            <port-component-name>COREMedDemoWSSoap12HttpPort</port-component-name>
-            <wsdl-port xmlns:wsa0="http://COREMedDemo/">wsa0:COREMedDemoWSSoap12HttpPort</wsdl-port>
-            <service-endpoint-interface>COREMedDemo.COREMedDemoWS</service-endpoint-interface>
+            <port-component-name>EvDemoWSSoapHttpPort</port-component-name>
+            <wsdl-port xmlns:wsa0="http://evDemo/">wsa0:EvDemoWSSoapHttpPort</wsdl-port>
+            <service-endpoint-interface>evDemo.EvDemoWS</service-endpoint-interface>
             <service-impl-bean>
-                <servlet-link>COREMedDemoWSSoap12HttpPort</servlet-link>
+                <servlet-link>EvDemoWSSoapHttpPort</servlet-link>
             </service-impl-bean>
         </port-component>
+    </webservice-description>
+    <webservice-description>
+        <webservice-description-name>AuthenticationSecureWS</webservice-description-name>
+        <wsdl-file>WEB-INF/wsdl/AuthenticationSecureWS.wsdl</wsdl-file>
+        <jaxrpc-mapping-file>WEB-INF/AuthenticationSecureWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
         <port-component>
-            <port-component-name>COREMedDemoWSSoapHttpPort</port-component-name>
-            <wsdl-port xmlns:wsa1="http://COREMedDemo/">wsa1:COREMedDemoWSSoapHttpPort</wsdl-port>
-            <service-endpoint-interface>COREMedDemo.COREMedDemoWS</service-endpoint-interface>
+            <port-component-name>AuthenticationSecureWSSoapHttpPort</port-component-name>
+            <wsdl-port xmlns:wsa0="http://authenticationPackage/">wsa0:AuthenticationSecureWSSoapHttpPort</wsdl-port>
+            <service-endpoint-interface>authenticationPackage.AuthenticationSecureWS</service-endpoint-interface>
             <service-impl-bean>
-                <servlet-link>COREMedDemoWSSoapHttpPort</servlet-link>
+                <servlet-link>AuthenticationSecureWSSoapHttpPort</servlet-link>
             </service-impl-bean>
         </port-component>
     </webservice-description>
@@ -49,19 +54,6 @@
         </port-component>
     </webservice-description>
     <webservice-description>
-        <webservice-description-name>EvDemoWS</webservice-description-name>
-        <wsdl-file>WEB-INF/wsdl/EvDemoWS.wsdl</wsdl-file>
-        <jaxrpc-mapping-file>WEB-INF/EvDemoWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
-        <port-component>
-            <port-component-name>EvDemoWSSoapHttpPort</port-component-name>
-            <wsdl-port xmlns:wsa0="http://evDemo/">wsa0:EvDemoWSSoapHttpPort</wsdl-port>
-            <service-endpoint-interface>evDemo.EvDemoWS</service-endpoint-interface>
-            <service-impl-bean>
-                <servlet-link>EvDemoWSSoapHttpPort</servlet-link>
-            </service-impl-bean>
-        </port-component>
-    </webservice-description>
-    <webservice-description>
         <webservice-description-name>petWS</webservice-description-name>
         <wsdl-file>WEB-INF/wsdl/petWS.wsdl</wsdl-file>
         <jaxrpc-mapping-file>WEB-INF/petWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
@@ -71,19 +63,6 @@
             <service-endpoint-interface>petPackage.PetWS</service-endpoint-interface>
             <service-impl-bean>
                 <servlet-link>petWSSoapHttpPort</servlet-link>
-            </service-impl-bean>
-        </port-component>
-    </webservice-description>
-    <webservice-description>
-        <webservice-description-name>wineWS</webservice-description-name>
-        <wsdl-file>WEB-INF/wsdl/wineWS.wsdl</wsdl-file>
-        <jaxrpc-mapping-file>WEB-INF/wineWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
-        <port-component>
-            <port-component-name>wineWSSoapHttpPort</port-component-name>
-            <wsdl-port xmlns:wsa0="http://winePackage/">wsa0:wineWSSoapHttpPort</wsdl-port>
-            <service-endpoint-interface>winepackage.WineWS</service-endpoint-interface>
-            <service-impl-bean>
-                <servlet-link>wineWSSoapHttpPort</servlet-link>
             </service-impl-bean>
         </port-component>
     </webservice-description>
@@ -110,6 +89,40 @@
             <service-endpoint-interface>assayPackage.AssayWS</service-endpoint-interface>
             <service-impl-bean>
                 <servlet-link>AssayWSSoapHttpPort</servlet-link>
+            </service-impl-bean>
+        </port-component>
+    </webservice-description>
+    <webservice-description>
+        <webservice-description-name>COREMedDemoWS</webservice-description-name>
+        <wsdl-file>WEB-INF/wsdl/COREMedDemoWS.wsdl</wsdl-file>
+        <jaxrpc-mapping-file>WEB-INF/COREMedDemoWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
+        <port-component>
+            <port-component-name>COREMedDemoWSSoap12HttpPort</port-component-name>
+            <wsdl-port xmlns:wsa0="http://COREMedDemo/">wsa0:COREMedDemoWSSoap12HttpPort</wsdl-port>
+            <service-endpoint-interface>COREMedDemo.COREMedDemoWS</service-endpoint-interface>
+            <service-impl-bean>
+                <servlet-link>COREMedDemoWSSoap12HttpPort</servlet-link>
+            </service-impl-bean>
+        </port-component>
+        <port-component>
+            <port-component-name>COREMedDemoWSSoapHttpPort</port-component-name>
+            <wsdl-port xmlns:wsa1="http://COREMedDemo/">wsa1:COREMedDemoWSSoapHttpPort</wsdl-port>
+            <service-endpoint-interface>COREMedDemo.COREMedDemoWS</service-endpoint-interface>
+            <service-impl-bean>
+                <servlet-link>COREMedDemoWSSoapHttpPort</servlet-link>
+            </service-impl-bean>
+        </port-component>
+    </webservice-description>
+    <webservice-description>
+        <webservice-description-name>wineWS</webservice-description-name>
+        <wsdl-file>WEB-INF/wsdl/wineWS.wsdl</wsdl-file>
+        <jaxrpc-mapping-file>WEB-INF/wineWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
+        <port-component>
+            <port-component-name>wineWSSoapHttpPort</port-component-name>
+            <wsdl-port xmlns:wsa0="http://winePackage/">wsa0:wineWSSoapHttpPort</wsdl-port>
+            <service-endpoint-interface>winepackage.WineWS</service-endpoint-interface>
+            <service-impl-bean>
+                <servlet-link>wineWSSoapHttpPort</servlet-link>
             </service-impl-bean>
         </port-component>
     </webservice-description>

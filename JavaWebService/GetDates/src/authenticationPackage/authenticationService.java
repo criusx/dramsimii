@@ -29,12 +29,14 @@ import java.util.List;
 import org.apache.commons.digester.Digester;
 
 import winepackage.wineBottle;
+
 import dBInfo;
 
 import dBInfo.dbConnectInfo;
 
 
-@WebService(name = "AuthenticationWebService", serviceName = "AuthenticationWebService")
+@WebService(name = "AuthenticationWebService", 
+            serviceName = "AuthenticationWebService")
 public class authenticationService
 {
   public authenticationService()
@@ -150,50 +152,64 @@ public class authenticationService
   public itemInfo getItem(String RFIDNum, String UID, float lat, 
                           float longit)
   {
+    // ignore blank requests
     if (RFIDNum == null || UID == null)
+    {
+      System.out.println("Null value.");
       return new itemInfo();
+    }
+    // if they can't be real tags anyway
     if (RFIDNum.length() > 16 || UID.length() > 128)
     {
       System.out.println("Value too long.");
       return new itemInfo();
     }
+    // sanitize to help prevent sql injection
+    RFIDNum = RFIDNum.replaceAll("\\s+", "");
+    // only accept ids in hex
+    for (int i = 0; i < RFIDNum.length(); i++)
+      if (!isHexStringChar(RFIDNum.charAt(i)))
+        return new itemInfo();
+
     OracleDataSource ods;
+    OracleConnection conn = null;
+
     try
     {
-      RFIDNum = RFIDNum.replaceAll("\\s+", "");
-      for (int i = 0; i < RFIDNum.length(); i++)
-        if (!isHexStringChar(RFIDNum.charAt(i)))
-          return new itemInfo();
-
       ods = new OracleDataSource();
       ods.setURL(dbConnectInfo.getConnectInfo());
-      Connection conn = ods.getConnection();
+      conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
-      // first record this
-      PreparedStatement ps = 
-        conn.prepareStatement("INSERT INTO AUTHENTICATIONLOOKUPS VALUES (?, ?, ?, ?, ?)");
+      try
+      {
+        // first record this
+        PreparedStatement ps = 
+          conn.prepareStatement("INSERT INTO AUTHENTICATIONLOOKUPS VALUES (?, ?, ?, ?, ?)");
 
-      java.util.Date today = new java.util.Date();
-      ps.setString(1, UID);
-      ps.setString(2, RFIDNum);
-      ps.setFloat(3, lat);
-      ps.setFloat(4, longit);
-      ps.setTimestamp(5, new Timestamp(today.getTime()));
+        java.util.Date today = new java.util.Date();
+        ps.setString(1, UID);
+        ps.setString(2, RFIDNum);
+        ps.setFloat(3, lat);
+        ps.setFloat(4, longit);
+        ps.setTimestamp(5, new Timestamp(today.getTime()));
 
-      System.out.println("Lookup: " + RFIDNum);
-      ps.execute();
-      ps.close();
+        ps.execute();
+        ps.close();
+      }
+      catch (SQLException e)
+      {
+        System.out.println("Insert lookup failed." + e.getErrorCode());
+      }
       // then see if it's authenticated
-      ps = 
-          conn.prepareStatement("SELECT * FROM DESCRIPTIONS WHERE ID = ?");
+      PreparedStatement ps = 
+        conn.prepareStatement("SELECT * FROM DESCRIPTIONS WHERE ID = ?");
       ps.setString(1, RFIDNum);
 
-      ResultSet result = ps.executeQuery();
+      ResultSet result = ps.executeQuery();      
 
       boolean authenticated;
       String description;
-
       if (result.next())
       {
         description = result.getString("DESCRIPTION");
@@ -212,16 +228,43 @@ public class authenticationService
       ps.close();
 
       conn.commit();
-      conn.close();
-
-      return new itemInfo(RFIDNum, description, authenticated);
+      System.out.println("Lookup: " + RFIDNum + " " + authenticated);
+      return new itemInfo(RFIDNum, description, authenticated, false);
     }
     catch (SQLException e)
     {
-      System.out.println("Exception" + e.toString());
+      e.printStackTrace();
+      if (conn != null)
+        conn.rollback();
+
       return new itemInfo();
     }
+    finally
+    {
+      // close up the connection
+      try
+      {
+        if (conn != null)
+        {
+          conn.close();
+        }
+      }
+      catch (SQLException ex)
+      {
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
+    }
   }
+
 
   /**
    * Checks the character to see if it is hexadecimal

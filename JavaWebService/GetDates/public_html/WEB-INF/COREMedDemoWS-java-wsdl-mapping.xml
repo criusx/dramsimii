@@ -10,42 +10,6 @@
         <namespaceURI>http://COREMedDemo/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_getPatientRecord_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}getPatientRecordResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_logPatientVitals_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}logPatientVitalsResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_enterDrugInfo_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}enterDrugInfoResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_enterPatientRecord_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}enterPatientRecordResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>COREMedDemo.COREMedDemoWS_registerDoseGiven_ResponseStruct</java-type>
         <anonymous-type-qname>{http://COREMedDemo/}registerDoseGivenResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -55,65 +19,13 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>COREMedDemo.drugInfo</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}drugInfo</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>RFIDNum</java-variable-name>
-            <xml-element-name>RFIDNum</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>picture</java-variable-name>
-            <xml-element-name>picture</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>description</java-variable-name>
-            <xml-element-name>description</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>exists</java-variable-name>
-            <xml-element-name>exists</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>name</java-variable-name>
-            <xml-element-name>name</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_enterPatientPhoto_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}enterPatientPhotoResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_getDrugInfo_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}getDrugInfoResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.errorReport</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}errorReport</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>errorMessage</java-variable-name>
-            <xml-element-name>errorMessage</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>errorCode</java-variable-name>
-            <xml-element-name>errorCode</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>COREMedDemo.patientRecord</java-type>
         <anonymous-type-qname>{http://COREMedDemo/}patientRecord</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>retryNeeded</java-variable-name>
+            <xml-element-name>retryNeeded</xml-element-name>
+        </variable-mapping>
         <variable-mapping>
             <java-variable-name>image</java-variable-name>
             <xml-element-name>image</xml-element-name>
@@ -152,8 +64,112 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
+        <java-type>COREMedDemo.COREMedDemoWS_enterPatientRecord_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}enterPatientRecordResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.COREMedDemoWS_enterPatientPhoto_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}enterPatientPhotoResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.COREMedDemoWS_getPatientRecord_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}getPatientRecordResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.drugInfo</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}drugInfo</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>RFIDNum</java-variable-name>
+            <xml-element-name>RFIDNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>retryNeeded</java-variable-name>
+            <xml-element-name>retryNeeded</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>picture</java-variable-name>
+            <xml-element-name>picture</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>description</java-variable-name>
+            <xml-element-name>description</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>exists</java-variable-name>
+            <xml-element-name>exists</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>name</java-variable-name>
+            <xml-element-name>name</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.COREMedDemoWS_logPatientVitals_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}logPatientVitalsResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>COREMedDemo.COREMedDemoWS_checkInteraction_ResponseStruct</java-type>
         <anonymous-type-qname>{http://COREMedDemo/}checkInteractionResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.COREMedDemoWS_getDrugInfo_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}getDrugInfoResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.errorReport</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}errorReport</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>retryNeeded</java-variable-name>
+            <xml-element-name>retryNeeded</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>errorMessage</java-variable-name>
+            <xml-element-name>errorMessage</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>success</java-variable-name>
+            <xml-element-name>success</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>errorCode</java-variable-name>
+            <xml-element-name>errorCode</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.COREMedDemoWS_enterDrugInfo_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}enterDrugInfoResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -199,7 +215,7 @@
                 </wsdl-message-mapping>
             </method-param-parts-mapping>
             <wsdl-return-value-mapping>
-                <method-return-value>boolean</method-return-value>
+                <method-return-value>COREMedDemo.errorReport</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_checkInteractionResponse</wsdl-message>
                 <wsdl-message-part-name>return</wsdl-message-part-name>
             </wsdl-return-value-mapping>
@@ -270,14 +286,23 @@
                 <param-type>java.lang.String</param-type>
                 <wsdl-message-mapping>
                     <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getDrugInfo</wsdl-message>
-                    <wsdl-message-part-name>RFIDNum</wsdl-message-part-name>
+                    <wsdl-message-part-name>String_1</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getDrugInfo</wsdl-message>
+                    <wsdl-message-part-name>String_2</wsdl-message-part-name>
                     <parameter-mode>IN</parameter-mode>
                 </wsdl-message-mapping>
             </method-param-parts-mapping>
             <wsdl-return-value-mapping>
                 <method-return-value>COREMedDemo.drugInfo</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getDrugInfoResponse</wsdl-message>
-                <wsdl-message-part-name>return</wsdl-message-part-name>
+                <wsdl-message-part-name>result</wsdl-message-part-name>
             </wsdl-return-value-mapping>
         </service-endpoint-method-mapping>
         <service-endpoint-method-mapping>
@@ -290,6 +315,15 @@
                 <wsdl-message-mapping>
                     <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getPatientRecord</wsdl-message>
                     <wsdl-message-part-name>RFIDNum</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getPatientRecord</wsdl-message>
+                    <wsdl-message-part-name>String_2</wsdl-message-part-name>
                     <parameter-mode>IN</parameter-mode>
                 </wsdl-message-mapping>
             </method-param-parts-mapping>
@@ -410,7 +444,7 @@
                 </wsdl-message-mapping>
             </method-param-parts-mapping>
             <wsdl-return-value-mapping>
-                <method-return-value>boolean</method-return-value>
+                <method-return-value>COREMedDemo.errorReport</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_checkInteractionResponse</wsdl-message>
                 <wsdl-message-part-name>return</wsdl-message-part-name>
             </wsdl-return-value-mapping>
@@ -481,14 +515,23 @@
                 <param-type>java.lang.String</param-type>
                 <wsdl-message-mapping>
                     <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getDrugInfo</wsdl-message>
-                    <wsdl-message-part-name>RFIDNum</wsdl-message-part-name>
+                    <wsdl-message-part-name>String_1</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getDrugInfo</wsdl-message>
+                    <wsdl-message-part-name>String_2</wsdl-message-part-name>
                     <parameter-mode>IN</parameter-mode>
                 </wsdl-message-mapping>
             </method-param-parts-mapping>
             <wsdl-return-value-mapping>
                 <method-return-value>COREMedDemo.drugInfo</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getDrugInfoResponse</wsdl-message>
-                <wsdl-message-part-name>return</wsdl-message-part-name>
+                <wsdl-message-part-name>result</wsdl-message-part-name>
             </wsdl-return-value-mapping>
         </service-endpoint-method-mapping>
         <service-endpoint-method-mapping>
@@ -501,6 +544,15 @@
                 <wsdl-message-mapping>
                     <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getPatientRecord</wsdl-message>
                     <wsdl-message-part-name>RFIDNum</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:wsdlMsgNS="http://COREMedDemo/">wsdlMsgNS:COREMedDemoWS_getPatientRecord</wsdl-message>
+                    <wsdl-message-part-name>String_2</wsdl-message-part-name>
                     <parameter-mode>IN</parameter-mode>
                 </wsdl-message-mapping>
             </method-param-parts-mapping>

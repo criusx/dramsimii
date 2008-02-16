@@ -1,27 +1,66 @@
 <oracle-webservices xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/oracle-webservices-10_0.xsd">
-    <webservice-description name="COREMedDemoWS">
-        <port-component name="COREMedDemoWSSoap12HttpPort">
+    <webservice-description name="EvDemoWS">
+        <port-component name="EvDemoWSSoapHttpPort">
             <operations>
-                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
-                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
-                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
-                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
-                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
-                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
-                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
-                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
+                <operation name="addSpectrum" input="{http://evDemo/}addSpectrumElement"/>
+                <operation name="getSpectrum" input="{http://evDemo/}getSpectrumElement"/>
             </operations>
         </port-component>
-        <port-component name="COREMedDemoWSSoapHttpPort">
+    </webservice-description>
+    <webservice-description name="AuthenticationSecureWS">
+        <port-component name="AuthenticationSecureWSSoapHttpPort">
+            <runtime enabled="security">
+                <security>
+                    <key-store name="" store-pass="" path="META-INF/.keystore"/>
+                    <signature-key key-pass="" alias="user1"/>
+                    <encryption-key key-pass="" alias="user1"/>
+                    <inbound>
+                        <verify-username-token password-type="PLAINTEXT" require-nonce="true" require-created="true"/>
+                        <verify-x509-token>
+                            <property name="mapping-attribute" value="CN"/>
+                        </verify-x509-token>
+                        <verify-signature>
+                            <signature-methods>
+                                <signature-method>DSA-SHA1</signature-method>
+                                <signature-method>RSA-MD5</signature-method>
+                                <signature-method>RSA-SHA1</signature-method>
+                            </signature-methods>
+                            <tbs-elements>
+                                <tbs-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                            </tbs-elements>
+                            <verify-timestamp created="false" expiry="28800"/>
+                        </verify-signature>
+                        <decrypt>
+                            <encryption-methods>
+                                <encryption-method>AES-128</encryption-method>
+                                <encryption-method>AES-256</encryption-method>
+                                <encryption-method>3DES</encryption-method>
+                            </encryption-methods>
+                            <tbe-elements>
+                                <tbe-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                            </tbe-elements>
+                        </decrypt>
+                    </inbound>
+                    <outbound>
+                        <signature>
+                            <signature-method>RSA-SHA1</signature-method>
+                            <tbs-elements>
+                                <tbs-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                            </tbs-elements>
+                            <add-timestamp created="false" expiry="28800"/>
+                        </signature>
+                        <encrypt>
+                            <use-request-cert>true</use-request-cert>
+                            <encryption-method>AES-256</encryption-method>
+                            <tbe-elements>
+                                <tbe-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                            </tbe-elements>
+                        </encrypt>
+                    </outbound>
+                </security>
+            </runtime>
             <operations>
-                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
-                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
-                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
-                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
-                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
-                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
-                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
-                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
+                <operation name="setItem" input="{http://authenticationPackage/types/}setItemElement"/>
             </operations>
         </port-component>
     </webservice-description>
@@ -50,14 +89,6 @@
             </operations>
         </port-component>
     </webservice-description>
-    <webservice-description name="EvDemoWS">
-        <port-component name="EvDemoWSSoapHttpPort">
-            <operations>
-                <operation name="addSpectrum" input="{http://evDemo/}addSpectrumElement"/>
-                <operation name="getSpectrum" input="{http://evDemo/}getSpectrumElement"/>
-            </operations>
-        </port-component>
-    </webservice-description>
     <webservice-description name="petWS">
         <port-component name="petWSSoapHttpPort">
             <operations>
@@ -71,25 +102,140 @@
             </operations>
         </port-component>
     </webservice-description>
-    <webservice-description name="wineWS">
-        <port-component name="wineWSSoapHttpPort">
-            <rest-support>true</rest-support>
-            <operations>
-                <operation name="enterBottleInformation" input="{http://winePackage/}enterBottleInformationElement"/>
-                <operation name="getWineAccessesSince" input="{http://winePackage/}getWineAccessesSinceElement"/>
-                <operation name="retrieveBottleInformation" input="{http://winePackage/}retrieveBottleInformationElement"/>
-            </operations>
-        </port-component>
-    </webservice-description>
     <webservice-description name="AuthenticationWebService">
         <port-component name="AuthenticationWebServiceSoapHttpPort">
+            <runtime enabled="">
+                <security>
+                    <key-store name="" store-pass="" path="META-INF/.keystore"/>
+                    <signature-key alias="user1" key-pass=""/>
+                    <encryption-key alias="user1" key-pass=""/>
+                    <inbound>
+                        <verify-username-token require-nonce="true" require-created="true" password-type="PLAINTEXT"/>
+                        <verify-signature>
+                            <signature-methods>
+                                <signature-method>DSA-SHA1</signature-method>
+                                <signature-method>RSA-MD5</signature-method>
+                                <signature-method>RSA-SHA1</signature-method>
+                            </signature-methods>
+                            <tbs-elements>
+                                <tbs-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                            </tbs-elements>
+                            <verify-timestamp created="false" expiry="28800"/>
+                        </verify-signature>
+                        <decrypt>
+                            <encryption-methods>
+                                <encryption-method>AES-128</encryption-method>
+                                <encryption-method>AES-256</encryption-method>
+                                <encryption-method>3DES</encryption-method>
+                            </encryption-methods>
+                            <tbe-elements>
+                                <tbe-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"
+                                     mode="CONTENT"/>
+                            </tbe-elements>
+                        </decrypt>
+                    </inbound>
+                    <outbound>
+                        <signature>
+                            <signature-method>RSA-SHA1</signature-method>
+                            <tbs-elements>
+                                <tbs-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                            </tbs-elements>
+                            <add-timestamp created="false" expiry="28800"/>
+                        </signature>
+                    </outbound>
+                </security>
+            </runtime>
             <operations>
-                <operation name="callHome" input="{http://authenticationPackage/}callHome"/>
-                <operation name="getItem" input="{http://authenticationPackage/}getItem"/>
-                <operation name="getRoute" input="{http://authenticationPackage/}getRoute"/>
-                <operation name="getSince" input="{http://authenticationPackage/}getSince"/>
-                <operation name="getUniqueUIDs" input="{http://authenticationPackage/}getUniqueUIDs"/>
-                <operation name="setItem" input="{http://authenticationPackage/}setItem"/>
+                <operation name="callHome" input="{http://authenticationPackage/}callHome">
+                    <runtime>
+                        <security>
+                            <inbound>
+                                <verify-username-token require-nonce="true" require-created="true" password-type="PLAINTEXT"/>
+                                <decrypt>
+                                    <encryption-methods>
+                                        <encryption-method>AES-128</encryption-method>
+                                        <encryption-method>AES-256</encryption-method>
+                                        <encryption-method>3DES</encryption-method>
+                                    </encryption-methods>
+                                    <tbe-elements>
+                                        <tbe-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"
+                                             mode="CONTENT"/>
+                                    </tbe-elements>
+                                </decrypt>
+                            </inbound>
+                            <outbound>
+                                <signature>
+                                    <signature-method>RSA-SHA1</signature-method>
+                                    <tbs-elements>
+                                        <tbs-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                                    </tbs-elements>
+                                    <add-timestamp created="false" expiry="28800"/>
+                                </signature>
+                            </outbound>
+                        </security>
+                    </runtime>
+                </operation>
+                <operation name="getItem" input="{http://authenticationPackage/}getItem">
+                    <runtime>
+                        <security>
+                            <inbound/>
+                            <outbound/>
+                        </security>
+                    </runtime>
+                </operation>
+                <operation name="getRoute" input="{http://authenticationPackage/}getRoute">
+                    <runtime>
+                        <security>
+                            <inbound/>
+                            <outbound/>
+                        </security>
+                    </runtime>
+                </operation>
+                <operation name="getSince" input="{http://authenticationPackage/}getSince">
+                    <runtime>
+                        <security>
+                            <inbound/>
+                            <outbound/>
+                        </security>
+                    </runtime>
+                </operation>
+                <operation name="getUniqueUIDs" input="{http://authenticationPackage/}getUniqueUIDs">
+                    <runtime>
+                        <security>
+                            <inbound/>
+                            <outbound/>
+                        </security>
+                    </runtime>
+                </operation>
+                <operation name="setItem" input="{http://authenticationPackage/}setItem">
+                    <runtime>
+                        <security>
+                            <inbound>
+                                <verify-username-token require-nonce="true" require-created="true" password-type="PLAINTEXT"/>
+                                <decrypt>
+                                    <encryption-methods>
+                                        <encryption-method>AES-128</encryption-method>
+                                        <encryption-method>AES-256</encryption-method>
+                                        <encryption-method>3DES</encryption-method>
+                                    </encryption-methods>
+                                    <tbe-elements>
+                                        <tbe-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"
+                                             mode="CONTENT"/>
+                                    </tbe-elements>
+                                </decrypt>
+                            </inbound>
+                            <outbound>
+                                <signature>
+                                    <signature-method>RSA-SHA1</signature-method>
+                                    <tbs-elements>
+                                        <tbs-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                                    </tbs-elements>
+                                    <add-timestamp created="false" expiry="28800"/>
+                                </signature>
+                            </outbound>
+                        </security>
+                    </runtime>
+                </operation>
             </operations>
         </port-component>
     </webservice-description>
@@ -98,6 +244,42 @@
             <operations>
                 <operation name="retrieveAssayInformation" input="{http://assayPackage/}retrieveAssayInformationElement"/>
                 <operation name="submitAssayResult" input="{http://assayPackage/}submitAssayResultElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="COREMedDemoWS">
+        <port-component name="COREMedDemoWSSoap12HttpPort">
+            <operations>
+                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
+                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
+                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
+                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
+                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
+                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
+                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
+                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
+            </operations>
+        </port-component>
+        <port-component name="COREMedDemoWSSoapHttpPort">
+            <operations>
+                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
+                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
+                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
+                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
+                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
+                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
+                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
+                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="wineWS">
+        <port-component name="wineWSSoapHttpPort">
+            <rest-support>true</rest-support>
+            <operations>
+                <operation name="enterBottleInformation" input="{http://winePackage/}enterBottleInformationElement"/>
+                <operation name="getWineAccessesSince" input="{http://winePackage/}getWineAccessesSinceElement"/>
+                <operation name="retrieveBottleInformation" input="{http://winePackage/}retrieveBottleInformationElement"/>
             </operations>
         </port-component>
     </webservice-description>

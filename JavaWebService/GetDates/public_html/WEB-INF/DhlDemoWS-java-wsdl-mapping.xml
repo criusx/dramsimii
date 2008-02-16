@@ -10,15 +10,6 @@
         <namespaceURI>http://dhlDemo/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>dhlDemo.DhlDemoWS_setPackageInfo_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://dhlDemo/}setPackageInfoResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>dhlDemo.DhlDemoWS_scanPackage_ResponseStruct</java-type>
         <anonymous-type-qname>{http://dhlDemo/}scanPackageResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -28,32 +19,12 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>dhlDemo.packageScan</java-type>
-        <anonymous-type-qname>{http://dhlDemo/}packageScan</anonymous-type-qname>
+        <java-type>dhlDemo.DhlDemoWS_getPackageInfo_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://dhlDemo/}getPackageInfoResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
-            <java-variable-name>RFIDNum</java-variable-name>
-            <xml-element-name>RFIDNum</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>longitude</java-variable-name>
-            <xml-element-name>longitude</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>actionTaken</java-variable-name>
-            <xml-element-name>actionTaken</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>scannerID</java-variable-name>
-            <xml-element-name>scannerID</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>scanTime</java-variable-name>
-            <xml-element-name>scanTime</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>latitude</java-variable-name>
-            <xml-element-name>latitude</xml-element-name>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
@@ -118,8 +89,37 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>dhlDemo.DhlDemoWS_getPackageInfo_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://dhlDemo/}getPackageInfoResponse</anonymous-type-qname>
+        <java-type>dhlDemo.packageScan</java-type>
+        <anonymous-type-qname>{http://dhlDemo/}packageScan</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>RFIDNum</java-variable-name>
+            <xml-element-name>RFIDNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>longitude</java-variable-name>
+            <xml-element-name>longitude</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>actionTaken</java-variable-name>
+            <xml-element-name>actionTaken</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>scannerID</java-variable-name>
+            <xml-element-name>scannerID</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>scanTime</java-variable-name>
+            <xml-element-name>scanTime</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>latitude</java-variable-name>
+            <xml-element-name>latitude</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>dhlDemo.DhlDemoWS_setPackageInfo_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://dhlDemo/}setPackageInfoResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>

@@ -12,17 +12,19 @@ public class assayInfo
   private String beforeMessage;
   private String afterMessage;
   private boolean exists;
+  private boolean needRetry;
 
   public assayInfo()
   {
     exists = false;
+    needRetry = false;
   }
 
-  public assayInfo(boolean value)
+  public assayInfo(boolean Exists, boolean NeedRetry)
   {
-    exists = true;
+    exists = Exists;
+    needRetry = NeedRetry;
   }
-
 
   public void setSessionID(String sessionID)
   {
@@ -103,5 +105,15 @@ public class assayInfo
   public String getRfidNum()
   {
     return rfidNum;
+  }
+
+  public void setNeedRetry(boolean needRetry)
+  {
+    this.needRetry = needRetry;
+  }
+
+  public boolean isNeedRetry()
+  {
+    return needRetry;
   }
 }

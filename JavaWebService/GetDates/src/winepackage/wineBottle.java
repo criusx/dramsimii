@@ -12,6 +12,7 @@ public class wineBottle
   private String rfidNum;
   private byte[] image;
   private int lookedUpTimes;
+  private boolean retryNeeded;
 
   public wineBottle()
   {
@@ -28,7 +29,7 @@ public class wineBottle
 
   public wineBottle(int _year, boolean _authenticated, String _vineyard, 
                     String _type, String _origin, byte[] _image, 
-                    String _review, String _rfidNum, int _lookedUpTimes)
+                    String _review, String _rfidNum, int _lookedUpTimes, boolean RetryNeeded)
   {
     rfidNum = _rfidNum;
     authenticated = _authenticated;
@@ -40,6 +41,7 @@ public class wineBottle
     review = _review;
     exists = true;
     lookedUpTimes = _lookedUpTimes;
+    retryNeeded = RetryNeeded;
   }
 
   // called when the bottle does not exist, but it has been tried a number of times
@@ -149,5 +151,15 @@ public class wineBottle
   public String getOrigin()
   {
     return origin;
+  }
+
+  public void setRetryNeeded(boolean retryNeeded)
+  {
+    this.retryNeeded = retryNeeded;
+  }
+
+  public boolean isRetryNeeded()
+  {
+    return retryNeeded;
   }
 }
