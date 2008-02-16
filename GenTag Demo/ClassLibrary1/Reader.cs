@@ -270,6 +270,7 @@ namespace RFIDReader
                         break;
                 }
                 readerThread.IsBackground = true;
+                readerThread.Priority = ThreadPriority.BelowNormal;
             }
         }
 
@@ -289,30 +290,143 @@ namespace RFIDReader
             get { return readerRunning; }
             set
             {
-                //readerRunning = value;
-
                 if (value == true)
                 {
                     if (readerThread != null)
                         readerThread.Start();
+                    //readerRunning = true;
+                    // individual threads will set this to true if they're able to start
                 }
                 else
                 {
-                    readerRunning = false;
                     if (readerThread == null)
                     {
-                        throw new ArgumentException("Cannot stop a nonrunning reader thread.");
+                        throw new ArgumentException(Properties.Resources.CannotStopANonrunningReaderThread);
                     }
                     else
                     {
                         if (readerThread.Join(5000) == false)
-                        {
                             readerThread.Abort();
-                        }
+
+
                         readerThread = null;
                     }
+
+                    readerRunning = false;
+                }
+
+                
+            }
+        }
+
+        private StringBuilder newTagBuilder = new StringBuilder(16);
+
+        private const int retryCount = 50;
+
+        public void readTagID()
+        {
+            readTagLoop(true);
+        }
+
+        public void readOneTagID()
+        {
+            readTagLoop(false);
+        }
+
+        private void readTagLoop(bool repeat)
+        {
+            string errorMessage = "";
+            int n = retryCount;
+
+            for (; n > 0; --n)
+            {
+                Thread.Sleep(20);
+
+                if (C1Lib.C1.NET_C1_open_comm() != 1)
+                {
+                    errorMessage = Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted;
+                    continue;
+                }
+                else if (C1Lib.C1.NET_C1_enable() != 1)
+                {
+                    //C1Lib.C1.NET_C1_disable();
+                    errorMessage = Properties.Resources.UnableToCommunicateWithSiritReader;
+                    continue;
+                }
+                else // connection was successful
+                {
+                    break;
                 }
             }
+
+            if (n == 0)
+            {
+                ReaderError(this, new ReaderErrorEventArgs(errorMessage));
+                readerRunning = false;
+                return;
+            }
+
+            string oldTag = "";
+
+            readerRunning = true;
+
+            while (readerRunning)
+            {
+                //Random rnd = new Random();
+                // wait while a tag is read
+                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0))
+                {
+                    Thread.Sleep(40);
+                    //////////////////////////////////////////////////////////////////////////                    
+                    //string basic = "";
+                    //byte[] newTag0 = new byte[8];
+                    //rnd.NextBytes(newTag0);
+
+                    //for (int i = 0; i < 8; i++)
+                    //{
+                    //    newTagBuilder.Append(newTag0[i].ToString("X").PadLeft(2, '0'));
+                    //}
+
+                    //TagReceived(newTagBuilder.ToString());
+                    //newTagBuilder.Remove(0, newTagBuilder.Length);
+                    //////////////////////////////////////////////////////////////////////////
+
+                }
+
+                if (readerRunning == false)
+                    break;
+
+                // this code will read the contents of the tag
+                //while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
+
+
+                //string rfidDescr = C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
+                //rfidDescr += "\n";
+
+                for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
+                    newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
+
+                string newTag = newTagBuilder.ToString();
+
+                newTagBuilder.Remove(0, newTagBuilder.Length);
+
+                if ((string.Compare(newTag, oldTag, StringComparison.InvariantCulture) != 0) && (newTag.Length == 16))
+                {
+                    // when asynchronous delegates are supported in CF
+                    //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);
+                    TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
+                    oldTag = newTag;
+                }
+
+                if (!repeat)
+                {
+                    readerRunning = false;
+                    break;
+                }
+
+            }
+            C1Lib.C1.NET_C1_disable();
+            C1Lib.C1.NET_C1_close_comm();
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -469,116 +583,6 @@ namespace RFIDReader
             {
                 C1Lib.C1.NET_C1_close_comm();
             }
-        }
-
-        private StringBuilder newTagBuilder = new StringBuilder(16);
-
-        static private int retryCount = 20;
-
-        public void readTagID()
-        {
-            readTagLoop(true);
-        }
-
-        public void readOneTagID()
-        {
-            readTagLoop(false);
-        }
-
-        private void readTagLoop(bool repeat)
-        {
-            string errorMessage = "";
-            int n = retryCount;
-
-            for (; n > 0; --n)
-            {
-                Thread.Sleep(15);
-
-                if (C1Lib.C1.NET_C1_open_comm() != 1)
-                {
-                    errorMessage = Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted;
-                    continue;
-                }
-                else if (C1Lib.C1.NET_C1_enable() != 1)
-                {
-                    //C1Lib.C1.NET_C1_disable();
-                    errorMessage = Properties.Resources.UnableToCommunicateWithSiritReader;
-                    continue;
-                }
-                else // connection was successful
-                {
-                    break;
-                }
-            }
-
-            if (n == 0)
-            {
-                ReaderError(this, new ReaderErrorEventArgs(errorMessage));
-                readerRunning = false;
-                return;
-            }
-
-            string oldTag = "";
-
-            readerRunning = true;
-
-            while (readerRunning)
-            {
-                //Random rnd = new Random();
-                // wait while a tag is read
-                while ((readerRunning == true) && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0))
-                {
-                    Thread.Sleep(20);
-                    //////////////////////////////////////////////////////////////////////////                    
-                    //string basic = "";
-                    //byte[] newTag0 = new byte[8];
-                    //rnd.NextBytes(newTag0);
-
-                    //for (int i = 0; i < 8; i++)
-                    //{
-                    //    newTagBuilder.Append(newTag0[i].ToString("X").PadLeft(2, '0'));
-                    //}
-
-                    //TagReceived(newTagBuilder.ToString());
-                    //newTagBuilder.Remove(0, newTagBuilder.Length);
-                    //////////////////////////////////////////////////////////////////////////
-
-                }
-
-                if (readerRunning == false)
-                    break;
-
-                // this code will read the contents of the tag
-                //while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
-
-
-                //string rfidDescr = C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
-                //rfidDescr += "\n";
-
-                for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-                    newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
-
-                string newTag = newTagBuilder.ToString();
-
-                newTagBuilder.Remove(0, newTagBuilder.Length);
-
-                if ((string.Compare(newTag, oldTag, StringComparison.InvariantCulture) != 0) && (newTag.Length == 16))
-                {
-                    // when asynchronous delegates are supported in CF
-                    //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);
-                    TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
-                    oldTag = newTag;
-                }
-
-                if (!repeat)
-                {
-                    readerRunning = false;
-                    break;
-                }
-
-            }
-            C1Lib.C1.NET_C1_disable();
-            C1Lib.C1.NET_C1_close_comm();
         }
 
         public void writeTag(byte[] outputBuffer)
