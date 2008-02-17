@@ -347,9 +347,6 @@ namespace WineEntryClient
                 {
                     Cursor.Current = Cursors.WaitCursor;
                     authenticationWebService.AuthenticationWebService ws = new authenticationWebService.AuthenticationWebService();
-                    ws.PreAuthenticate = true;                    
-                    ws.Credentials = CredentialCache.DefaultCredentials;
-                    ws.
                     authenticationWebService.itemInfo newItem = new authenticationWebService.itemInfo();
                     newItem.authenticated = authCheckBox.Checked;
                     newItem.description = descriptionTextBox.Text;

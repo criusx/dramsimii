@@ -30,15 +30,13 @@ namespace GentagPet
         {
             InitializeComponent();
             
-            DeviceUID = Reader.getDeviceUniqueID();
+            DeviceUID = Reader.getDeviceUniqueID(GentagPet.Properties.Resources.appTitle);
 
-            for (int i = 0; i < 20; i++)
-                DeviceUID += dUID[i].ToString("X", CultureInfo.CurrentUICulture);
-
+           
             // setup callbacks
             // setup event callbacks for tag reading events
-            tagReader.TagReceived += new Reader.TagReceivedEventHandler(tagReceived);
-            tagReader.ReaderError += new Reader.ReaderErrorHandler(receiveReaderError);
+            tagReader.TagReceived += new EventHandler<TagReceivedEventArgs>(tagReceived);
+            tagReader.ReaderError += new EventHandler<ReaderErrorEventArgs>(receiveReaderError);
 
         }
 
@@ -72,7 +70,7 @@ namespace GentagPet
         {
             setWaitCursor(false);
             readerRunning = false;
-            tagReader.running = false;
+            tagReader.Running = false;
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]

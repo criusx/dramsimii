@@ -57,6 +57,15 @@ namespace GentagDemo.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Assay not found..
+        /// </summary>
+        internal static string AssayNotFound {
+            get {
+                return ResourceManager.GetString("AssayNotFound", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap blank {
             get {
                 object obj = ResourceManager.GetObject("blank", resourceCulture);
@@ -68,6 +77,15 @@ namespace GentagDemo.Properties {
             get {
                 object obj = ResourceManager.GetObject("cancel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disabled, currently VarioSens is not compatible with the Sirit reader..
+        /// </summary>
+        internal static string DisabledVarioSens {
+            get {
+                return ResourceManager.GetString("DisabledVarioSens", resourceCulture);
             }
         }
         
@@ -214,6 +232,15 @@ namespace GentagDemo.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Not found..
+        /// </summary>
+        internal static string NotFound {
+            get {
+                return ResourceManager.GetString("NotFound", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap ok {
             get {
                 object obj = ResourceManager.GetObject("ok", resourceCulture);
@@ -227,6 +254,15 @@ namespace GentagDemo.Properties {
         internal static string patientInfoNotFound {
             get {
                 return ResourceManager.GetString("patientInfoNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait....
+        /// </summary>
+        internal static string PleaseWait {
+            get {
+                return ResourceManager.GetString("PleaseWait", resourceCulture);
             }
         }
         

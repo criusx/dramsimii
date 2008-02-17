@@ -7,6 +7,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
+[assembly: CLSCompliant(true)]
 namespace RFIDReadCursor
 {
     public partial class RFIDReadWaitCursor : UserControl
@@ -34,6 +35,10 @@ namespace RFIDReadCursor
             set
             {
                 this.BackColor = value == true ? Color.Red : Color.Black;
+            }
+            get
+            {
+                return this.BackColor == Color.Red;
             }
         }
 

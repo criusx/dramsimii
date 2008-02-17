@@ -9,6 +9,20 @@ namespace GentagDemo
     {
         #region Safe Accessors and Mutators
 
+        private delegate void showMessageDelegate(string errorMessage);
+
+        private void showMessage(string errorMessage)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new showMessageDelegate(showMessage), new object[] { errorMessage });
+            }
+            else
+            {
+                MessageBox.Show(errorMessage);
+            }
+        }
+
         private delegate string getComboBoxDelegate(ComboBox cb);
 
         private string getComboBox(ComboBox cb)
@@ -188,6 +202,20 @@ namespace GentagDemo
             else
             {
                 b.Text = c;
+            }
+        }
+
+        private delegate void setButtonEnabledDelegate(Button b, bool enabled);
+
+        private void setButtonEnabled(Button b, bool enabled)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setButtonEnabledDelegate(setButtonEnabled), new object[] { b, enabled });
+            }
+            else
+            {
+                b.Enabled = enabled;
             }
         }
 

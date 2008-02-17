@@ -252,6 +252,9 @@
     <None Include="Web References\assayWS\assayInfo.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
+    <None Include="Web References\assayWS\assayResultResponse.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\assayWS\AssayWS.wsdl" />
     <None Include="Web References\assayWS\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>

@@ -221,4 +221,16 @@ This drug should not be taken by this patient.</value>
   <data name="Status" xml:space="preserve">
     <value>Status: </value>
   </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Not found.</value>
+  </data>
+  <data name="DisabledVarioSens" xml:space="preserve">
+    <value>Disabled, currently VarioSens is not compatible with the Sirit reader.</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Please wait...</value>
+  </data>
+  <data name="AssayNotFound" xml:space="preserve">
+    <value>Assay not found.</value>
+  </data>
 </root>

@@ -57,17 +57,19 @@ namespace GentagDemo
             this.medicationButton = new System.Windows.Forms.Button();
             this.readPatientButton = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.drugPhoto = new System.Windows.Forms.PictureBox();
             this.patientPhoto = new System.Windows.Forms.PictureBox();
             this.patientDescriptionBox = new System.Windows.Forms.TextBox();
+            this.drugNameBox = new System.Windows.Forms.TextBox();
             this.patientNameBox = new System.Windows.Forms.TextBox();
             this.assayPage = new System.Windows.Forms.TabPage();
             this.assayImagePictureBox = new System.Windows.Forms.PictureBox();
             this.assayTimerLabel = new System.Windows.Forms.Label();
             this.assayMessageLabel = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
-            this.assayClearButton = new System.Windows.Forms.Button();
+            this.assayResetButton = new System.Windows.Forms.Button();
             this.assayRecordButton = new System.Windows.Forms.Button();
             this.assayBeginButton = new System.Windows.Forms.Button();
             this.assayReadButton = new System.Windows.Forms.Button();
@@ -431,21 +433,24 @@ namespace GentagDemo
             this.patientPage.Controls.Add(this.medicationButton);
             this.patientPage.Controls.Add(this.readPatientButton);
             this.patientPage.Controls.Add(this.label11);
+            this.patientPage.Controls.Add(this.label30);
             this.patientPage.Controls.Add(this.label10);
             this.patientPage.Controls.Add(this.drugPhoto);
             this.patientPage.Controls.Add(this.patientPhoto);
             this.patientPage.Controls.Add(this.patientDescriptionBox);
+            this.patientPage.Controls.Add(this.drugNameBox);
             this.patientPage.Controls.Add(this.patientNameBox);
             this.patientPage.Location = new System.Drawing.Point(0, 0);
             this.patientPage.Name = "patientPage";
-            this.patientPage.Size = new System.Drawing.Size(232, 214);
+            this.patientPage.Size = new System.Drawing.Size(240, 217);
             this.patientPage.Text = "Patient";
             // 
             // medicationButton
             // 
             this.medicationButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.medicationButton.Enabled = false;
             this.medicationButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.medicationButton.Location = new System.Drawing.Point(57, 132);
+            this.medicationButton.Location = new System.Drawing.Point(61, 135);
             this.medicationButton.Name = "medicationButton";
             this.medicationButton.Size = new System.Drawing.Size(66, 20);
             this.medicationButton.TabIndex = 4;
@@ -456,7 +461,7 @@ namespace GentagDemo
             // 
             this.readPatientButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.readPatientButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.readPatientButton.Location = new System.Drawing.Point(4, 132);
+            this.readPatientButton.Location = new System.Drawing.Point(8, 135);
             this.readPatientButton.Name = "readPatientButton";
             this.readPatientButton.Size = new System.Drawing.Size(48, 20);
             this.readPatientButton.TabIndex = 4;
@@ -467,23 +472,32 @@ namespace GentagDemo
             // 
             this.label11.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label11.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.label11.Location = new System.Drawing.Point(3, 155);
+            this.label11.Location = new System.Drawing.Point(7, 158);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(100, 12);
             this.label11.Text = "Patient Description";
+            // 
+            // label30
+            // 
+            this.label30.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label30.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label30.Location = new System.Drawing.Point(133, 92);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(100, 14);
+            this.label30.Text = "Drug Name";
             // 
             // label10
             // 
             this.label10.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label10.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.label10.Location = new System.Drawing.Point(129, 132);
+            this.label10.Location = new System.Drawing.Point(133, 135);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(100, 12);
             this.label10.Text = "Patient Name";
             // 
             // drugPhoto
             // 
-            this.drugPhoto.Location = new System.Drawing.Point(121, 54);
+            this.drugPhoto.Location = new System.Drawing.Point(121, 22);
             this.drugPhoto.Name = "drugPhoto";
             this.drugPhoto.Size = new System.Drawing.Size(112, 54);
             this.drugPhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -499,19 +513,31 @@ namespace GentagDemo
             // 
             this.patientDescriptionBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.patientDescriptionBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.patientDescriptionBox.Location = new System.Drawing.Point(4, 171);
+            this.patientDescriptionBox.Location = new System.Drawing.Point(8, 174);
             this.patientDescriptionBox.Multiline = true;
             this.patientDescriptionBox.Name = "patientDescriptionBox";
+            this.patientDescriptionBox.ReadOnly = true;
             this.patientDescriptionBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.patientDescriptionBox.Size = new System.Drawing.Size(225, 40);
             this.patientDescriptionBox.TabIndex = 0;
+            // 
+            // drugNameBox
+            // 
+            this.drugNameBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.drugNameBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.drugNameBox.Location = new System.Drawing.Point(133, 110);
+            this.drugNameBox.Name = "drugNameBox";
+            this.drugNameBox.ReadOnly = true;
+            this.drugNameBox.Size = new System.Drawing.Size(100, 19);
+            this.drugNameBox.TabIndex = 0;
             // 
             // patientNameBox
             // 
             this.patientNameBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.patientNameBox.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.patientNameBox.Location = new System.Drawing.Point(129, 148);
+            this.patientNameBox.Location = new System.Drawing.Point(133, 151);
             this.patientNameBox.Name = "patientNameBox";
+            this.patientNameBox.ReadOnly = true;
             this.patientNameBox.Size = new System.Drawing.Size(100, 19);
             this.patientNameBox.TabIndex = 0;
             // 
@@ -521,7 +547,7 @@ namespace GentagDemo
             this.assayPage.Controls.Add(this.assayTimerLabel);
             this.assayPage.Controls.Add(this.assayMessageLabel);
             this.assayPage.Controls.Add(this.label27);
-            this.assayPage.Controls.Add(this.assayClearButton);
+            this.assayPage.Controls.Add(this.assayResetButton);
             this.assayPage.Controls.Add(this.assayRecordButton);
             this.assayPage.Controls.Add(this.assayBeginButton);
             this.assayPage.Controls.Add(this.assayReadButton);
@@ -560,18 +586,19 @@ namespace GentagDemo
             this.label27.Text = "Timer";
             this.label27.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // assayClearButton
+            // assayResetButton
             // 
-            this.assayClearButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
-            this.assayClearButton.Location = new System.Drawing.Point(199, 81);
-            this.assayClearButton.Name = "assayClearButton";
-            this.assayClearButton.Size = new System.Drawing.Size(38, 20);
-            this.assayClearButton.TabIndex = 2;
-            this.assayClearButton.Text = "Clear";
-            this.assayClearButton.Click += new System.EventHandler(this.assayClearButton_Click);
+            this.assayResetButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.assayResetButton.Location = new System.Drawing.Point(199, 81);
+            this.assayResetButton.Name = "assayResetButton";
+            this.assayResetButton.Size = new System.Drawing.Size(38, 20);
+            this.assayResetButton.TabIndex = 2;
+            this.assayResetButton.Text = "Reset";
+            this.assayResetButton.Click += new System.EventHandler(this.assayClearButton_Click);
             // 
             // assayRecordButton
             // 
+            this.assayRecordButton.Enabled = false;
             this.assayRecordButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
             this.assayRecordButton.Location = new System.Drawing.Point(188, 55);
             this.assayRecordButton.Name = "assayRecordButton";
@@ -582,6 +609,7 @@ namespace GentagDemo
             // 
             // assayBeginButton
             // 
+            this.assayBeginButton.Enabled = false;
             this.assayBeginButton.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
             this.assayBeginButton.Location = new System.Drawing.Point(195, 29);
             this.assayBeginButton.Name = "assayBeginButton";
@@ -1053,14 +1081,14 @@ namespace GentagDemo
             this.winePage.Controls.Add(this.wineReviewTextBox);
             this.winePage.Location = new System.Drawing.Point(0, 0);
             this.winePage.Name = "winePage";
-            this.winePage.Size = new System.Drawing.Size(240, 217);
+            this.winePage.Size = new System.Drawing.Size(232, 214);
             this.winePage.Text = "Wine";
             // 
             // wineButton
             // 
             this.wineButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineButton.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineButton.Location = new System.Drawing.Point(0, 194);
+            this.wineButton.Location = new System.Drawing.Point(-4, 191);
             this.wineButton.Name = "wineButton";
             this.wineButton.Size = new System.Drawing.Size(40, 20);
             this.wineButton.TabIndex = 11;
@@ -1071,7 +1099,7 @@ namespace GentagDemo
             // 
             this.wineCountryLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineCountryLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineCountryLabel.Location = new System.Drawing.Point(140, 189);
+            this.wineCountryLabel.Location = new System.Drawing.Point(136, 186);
             this.wineCountryLabel.Name = "wineCountryLabel";
             this.wineCountryLabel.Size = new System.Drawing.Size(100, 25);
             // 
@@ -1079,7 +1107,7 @@ namespace GentagDemo
             // 
             this.wineTypeLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineTypeLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineTypeLabel.Location = new System.Drawing.Point(41, 189);
+            this.wineTypeLabel.Location = new System.Drawing.Point(37, 186);
             this.wineTypeLabel.Name = "wineTypeLabel";
             this.wineTypeLabel.Size = new System.Drawing.Size(100, 25);
             // 
@@ -1087,7 +1115,7 @@ namespace GentagDemo
             // 
             this.wineVineyardLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineVineyardLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineVineyardLabel.Location = new System.Drawing.Point(41, 163);
+            this.wineVineyardLabel.Location = new System.Drawing.Point(37, 160);
             this.wineVineyardLabel.Name = "wineVineyardLabel";
             this.wineVineyardLabel.Size = new System.Drawing.Size(100, 25);
             // 
@@ -1095,14 +1123,14 @@ namespace GentagDemo
             // 
             this.wineYearLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.wineYearLabel.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
-            this.wineYearLabel.Location = new System.Drawing.Point(140, 163);
+            this.wineYearLabel.Location = new System.Drawing.Point(136, 160);
             this.wineYearLabel.Name = "wineYearLabel";
             this.wineYearLabel.Size = new System.Drawing.Size(100, 25);
             // 
             // wineAuthPictureBox
             // 
             this.wineAuthPictureBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.wineAuthPictureBox.Location = new System.Drawing.Point(13, 166);
+            this.wineAuthPictureBox.Location = new System.Drawing.Point(9, 163);
             this.wineAuthPictureBox.Name = "wineAuthPictureBox";
             this.wineAuthPictureBox.Size = new System.Drawing.Size(22, 22);
             this.wineAuthPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -1689,8 +1717,10 @@ namespace GentagDemo
         private System.Windows.Forms.Label assayTimerLabel;
         private System.Windows.Forms.Button assayRecordButton;
         private System.Windows.Forms.PictureBox assayImagePictureBox;
-        private System.Windows.Forms.Button assayClearButton;
-        private System.Windows.Forms.Button mainClearButton;        
+        private System.Windows.Forms.Button assayResetButton;
+        private System.Windows.Forms.Button mainClearButton;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox drugNameBox;        
         
     }
 }

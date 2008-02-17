@@ -127,6 +127,9 @@ namespace GentagDemo.wineWS {
         public string type;
         
         /// <remarks/>
+        public bool retryNeeded;
+        
+        /// <remarks/>
         public bool authenticated;
         
         /// <remarks/>

@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <DeployDeviceID>4118C335-430C-497f-BE48-11C3316B135Ed6518ffb-710f-11d3-99f2-00105a0df099</DeployDeviceID>
+    <DeployDeviceID>25D984D9-0DFE-4DB1-A5A0-9A4F660BF2CE</DeployDeviceID>
     <EnableSigning>true</EnableSigning>
     <SigningCertHash>472AE15287639C36E163F10441577A69C2F24DF5</SigningCertHash>
     <ProvisionStore>priv</ProvisionStore>

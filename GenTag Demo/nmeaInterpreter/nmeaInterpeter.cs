@@ -8,6 +8,7 @@
     using System.IO.Ports;
     using System.Net;
     using authenticationWS;
+    using System.IO;
 
     public class nmeaInterpreter
     {        
@@ -96,7 +97,6 @@
             MPHPerKnot = float.Parse("1.150779", NmeaCultureInfo);
 
             gpsSerialPort.BaudRate = 4800;
-            gpsSerialPort.PortName = "COM7";
             gpsSerialPort.ReadBufferSize = 8192;
             gpsSerialPort.ReceivedBytesThreshold = 512;
             gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(gpsSerialPort_DataReceived);
@@ -107,15 +107,46 @@
             Close();
         }
 
-        public void Open(string comPort)
+        public bool Open(string comPort)
         {
-            gpsSerialPort.PortName = comPort;
-            gpsSerialPort.Open();
+            try
+            {
+                gpsSerialPort.PortName = comPort;
+                gpsSerialPort.Open();
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+            }            
+            catch (IOException)
+            {
+            }
+            catch (UnauthorizedAccessException)
+            {
+            }
+            catch (ArgumentNullException)
+            {
+            }
+            catch (ArgumentException)
+            {
+            }
+            return false;
         }
 
-        public void Close()
+        public bool Close()
         {
-            gpsSerialPort.Close();
+            try
+            {
+                gpsSerialPort.Close();
+                return true;
+            }
+            catch (InvalidOperationException)
+            { 
+            }
+            return false;
         }
 
         public bool IsOpen()

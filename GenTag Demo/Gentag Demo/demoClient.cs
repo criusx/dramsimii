@@ -15,7 +15,6 @@ using System.Windows.Forms;
 using NMEA;
 using RFIDReader;
 using TestPocketGraphBar;
-using SecureWS;
 
 
 [assembly: CLSCompliant(true)]
@@ -38,8 +37,6 @@ namespace GentagDemo
 
         TextWriter debugOut;
 
-        Service1 s = new Service1();
-
         private RFIDReadCursor.RFIDReadWaitCursor userControl11;
 
         Thread versionCheckThread;
@@ -53,13 +50,15 @@ namespace GentagDemo
 
             tagReader = new Reader();
 
+            mF = this;
+
             // assayResultsDialog
             assayResultsDialog = new assayResultsChooser();
 
             assayResultsDialog.Height = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
 
             DeviceUID = Reader.getDeviceUniqueID(GentagDemo.Properties.Resources.titleString);
-            
+
             // assayCountdownTimer
             assayCountdownTimer = new System.Windows.Forms.Timer();
 
@@ -68,27 +67,25 @@ namespace GentagDemo
             assayCountdownTimer.Tick += new EventHandler(assayCountdownTimer_Tick);
 
             // open comm briefly to preload the assemblies
-            Reader.initialize();
+            //Reader.initialize();
 
-            this.ClientSize = new Size(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width,System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width);
+            // resize the client depending on the resolution
+            this.ClientSize = new Size(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width,System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height);
+
             tabControl1.Size = this.ClientSize;
+
             foreach (TabPage tP in tabControl1.TabPages)
             {
                 tP.Size = new Size(this.ClientSize.Width,Convert.ToInt32(Convert.ToSingle(this.ClientSize.Height) / 240F) * tP.Size.Height);
                 foreach (Control childControl in tP.Controls)
                 {
-
                     if (childControl.GetType() == typeof(PictureBox) || childControl.GetType() == typeof(TreeView))
                     {
                         // special case
                         if (childControl == wineAuthPictureBox)
                             continue;
-                        int newValue = this.ClientSize.Height - 240 + childControl.Height;
-                        childControl.Height = newValue;
-                        //childControl.Size = new Size(childControl.Size.Width, this.ClientSize.Height / 240 * childControl.Size.Height);
+                        childControl.Height = this.ClientSize.Height - 240 + childControl.Height;
                     }
-                    //childControl.Location = new Point(childControl.Location.X, this.ClientSize.Height / 240 * childControl.Location.Y);
-                    //childControl.Location.Y = this.ClientSize.Height / 240 * childControl.Location.Y;
                 }
             }
 
@@ -98,10 +95,20 @@ namespace GentagDemo
             versionCheckThread.Start();
 
             // set the version
-            versionLabel.Text = "Version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            versionLabel.Text = "Version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + " Alpha";
 
             // initialize the debug stream
-            debugOut = new StreamWriter("debug.txt", false);
+            for (int i = 5; i > 0; i--)
+            {
+                try
+                {
+                    debugOut = new StreamWriter("debug.txt" + (i - 5).ToString(), false);
+                    break;
+                }
+                catch (IOException)
+                {
+                }
+            }
 
             // userControl11
             int systemWidth = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;
@@ -111,15 +118,9 @@ namespace GentagDemo
             this.userControl11.Name = "userControl11";
             this.userControl11.Size = new System.Drawing.Size(72, 72);
 
-
-
-            // generate the device's UID
-            string AppString =  Reader.getDeviceUniqueID(GentagDemo.Properties.Resources.titleString);
-
+            
             gpsInterpreter = new nmeaInterpreter(CultureInfo.CurrentCulture, DeviceUID);
-
-            mF = this;
-
+            
             // setup event callbacks for nmea events
             gpsInterpreter.DateTimeChanged += new nmeaInterpreter.DateTimeChangedEventHandler(gpsNmea_DateTimeChanged);
             gpsInterpreter.FixObtained += new nmeaInterpreter.FixObtainedEventHandler(gpsNmea_FixObtained);
@@ -151,7 +152,7 @@ namespace GentagDemo
             authTreeView.ImageList = myImageList;
 
             // web service inits
-            const int timeout = 15000;
+            const int timeout = 10000;
             petWebService = new petWS.petWS();
             wineWebService = new wineWS.wineWS();
             COREMedDemoWebService = new medWS.COREMedDemoWS();
@@ -162,17 +163,19 @@ namespace GentagDemo
             COREMedDemoWebService.Timeout = timeout;
             authenticationWebService.Timeout = timeout;
             assayWebService.Timeout = timeout;
-            authenticationWebService.ConnectionGroupName = "authentication";
-            wineWebService.ConnectionGroupName = "wine";
-            petWebService.ConnectionGroupName = "pet";
-            COREMedDemoWebService.ConnectionGroupName = "med";
-            assayWebService.ConnectionGroupName = "assay";
-            authenticationWebService.EnableDecompression = true;            
+            
+            //authenticationWebService.ConnectionGroupName = "authentication";
+            //wineWebService.ConnectionGroupName = "wine";
+            //petWebService.ConnectionGroupName = "pet";
+            //COREMedDemoWebService.ConnectionGroupName = "med";
+            //assayWebService.ConnectionGroupName = "assay";
+
+            //authenticationWebService.EnableDecompression = true;            
 
             graph.Visible = false;
             radGraph.Visible = false;
-            graph.Size = new Size(240, 230);
-            radGraph.Size = new Size(240, 230);
+            graph.Size = new Size(240, System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height);
+            radGraph.Size = new Size(240, System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height);
             graph.Location = new Point(0, 0);
             radGraph.Location = new Point(0, 0);
             VarioSens.Controls.Add(graph);
@@ -189,6 +192,20 @@ namespace GentagDemo
             //tabControl1.TabPages.RemoveAt(3);
             //tabControl1.TabPages.RemoveAt(2);
             //////////////////////////////////////////////////////////////////////////
+
+            //////////////////////////////////////////////////////////////////////////
+            // for McKesson Demo
+            //////////////////////////////////////////////////////////////////////////
+            tabControl1.TabPages.RemoveAt(6);
+            tabControl1.TabPages.RemoveAt(6);
+            tabControl1.TabPages.RemoveAt(6);
+            tabControl1.TabPages.RemoveAt(6);
+            tabControl1.TabPages.RemoveAt(6);
+            tabControl1.TabPages.RemoveAt(7);
+            tabControl1.TabPages.RemoveAt(7);
+            tabControl1.SelectedIndex = 0;
+            //////////////////////////////////////////////////////////////////////////
+
 
 
             // Init the Registry
@@ -244,7 +261,7 @@ namespace GentagDemo
                 Version newVersion = new Version(sb.ToString());
 
                 if (newVersion > System.Reflection.Assembly.GetExecutingAssembly().GetName().Version)
-                    MessageBox.Show("Version " + newVersion.ToString() + " is available. You are running " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ".");
+                    mF.showMessage("Version " + newVersion.ToString() + " is available. You are running " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ".");
             }
             catch (Exception)
             {
@@ -387,17 +404,7 @@ namespace GentagDemo
             }
         }
 
-        private void stopReading()
-        {
-            setWaitCursor(false);
-            blinkCursor(false);
-        }
-
-        private void receiveReaderError(object sender, ReaderErrorEventArgs args)
-        {
-            stopReading();
-            MessageBox.Show(args.Reason);            
-        }
+        
 
         private Hashtable wineBottleCache = new Hashtable();
 
@@ -571,7 +578,8 @@ namespace GentagDemo
                                 }
                                 else
                                 {
-                                    IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(tagID, cb, COREMedDemoWebService);
+                                    setTextBox(patientNameBox, Properties.Resources.PleaseWait);
+                                    IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(tagID, DeviceUID,cb, COREMedDemoWebService);
                                     lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                                     { itemsCurrentlyBeingLookedUp[handle] = tagID; }
                                     currentPatientID = tagID;
@@ -586,7 +594,8 @@ namespace GentagDemo
 
                                 result = 2;
 
-                                IAsyncResult handle = COREMedDemoWebService.BegingetDrugInfo(tagID, cb, COREMedDemoWebService);
+                                setTextBox(drugNameBox, Properties.Resources.PleaseWait);
+                                IAsyncResult handle = COREMedDemoWebService.BegingetDrugInfo(tagID, DeviceUID, cb, COREMedDemoWebService);
                                 lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                                 { itemsCurrentlyBeingLookedUp[handle] = tagID; }
 
@@ -606,6 +615,7 @@ namespace GentagDemo
                                 }
                                 else
                                 {
+                                    setLabel(assayMessageLabel, GentagDemo.Properties.Resources.PleaseWait);
                                     IAsyncResult handle = assayWebService.BeginretrieveAssayInformation(tagID, DeviceUID, cb, assayWebService);
                                     // to allow association of a handle back to a tag id
                                     lock (itemsCurrentlyBeingLookedUp.SyncRoot)
@@ -647,6 +657,9 @@ namespace GentagDemo
                         authenticationWS.AuthenticationWebService ws = (authenticationWS.AuthenticationWebService)ar.AsyncState;
                         authenticationWS.itemInfo info = ws.EndgetItem(ar);
 
+                        if (info.retryNeeded)
+                            throw new WebException();
+
                         // display the tag info
                         if (info != null)
                         {
@@ -663,6 +676,10 @@ namespace GentagDemo
                         // try to cast as wineBottle
                         wineWS.wineWS ws = (wineWS.wineWS)ar.AsyncState;
                         wineWS.wineBottle bottle = ws.EndretrieveBottleInformation(ar);
+
+                        if (bottle.retryNeeded)
+                            throw new WebException();
+
                         lock (wineBottleCache.SyncRoot)
                         {
                             wineBottleCache[bottle.rfidNum] = bottle;
@@ -699,23 +716,31 @@ namespace GentagDemo
                         try
                         {
                             medWS.drugInfo drugInf = ws.EndgetDrugInfo(ar);
+                            
+                            if (drugInf.retryNeeded)
+                                throw new WebException();
 
-                            if (drugInf != null && drugInf.exists)
+                            if (drugInf != null)
                                 displayDrug(drugInf);
                         }
                         catch (InvalidCastException e)
                         {
-                            debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
                             try
                             {
-                                bool alert = ws.EndcheckInteraction(ar);
-                                if (alert)
-                                    MessageBox.Show(Properties.Resources.DrugInteractionWarningMessage);
+                                medWS.errorReport er = ws.EndcheckInteraction(ar);
+                            
+                                if (er.retryNeeded)
+                                    throw new WebException();
+
+                                if (er.errorCode > 0)
+                                    MessageBox.Show(er.errorMessage);
                             }
                             catch (InvalidCastException ex)
                             {
-                                debugOut.WriteLine(ex.ToString() + "@" + ex.StackTrace);
                                 medWS.patientRecord info = ws.EndgetPatientRecord(ar);
+
+                                if (info.retryNeeded)
+                                    throw new WebException();
 
                                 if (info != null && info.exists == true)
                                 {
@@ -733,6 +758,9 @@ namespace GentagDemo
                         assayWS.AssayWS ws = (assayWS.AssayWS)ar.AsyncState;
 
                         assayWS.assayInfo info = ws.EndretrieveAssayInformation(ar);
+
+                        if (info.needRetry)
+                            throw new WebException();
 
                         if (info.exists)
                         {
@@ -820,6 +848,19 @@ namespace GentagDemo
             {
                 debugOut.WriteLine(e.ToString() + "@" + e.StackTrace);
             }
+        }
+
+        private void stopReading()
+        {
+            setWaitCursor(false);
+            blinkCursor(false);
+        }
+
+        private void receiveReaderError(object sender, ReaderErrorEventArgs args)
+        {
+            stopReading();
+
+            showMessage(args.Reason);
         }        
 
         /// <summary>
@@ -871,25 +912,47 @@ namespace GentagDemo
             {
                 assayPage.SuspendLayout();
 
-                if (info.exists)
+                if (info != null && info.exists)
                 {
-                    assayMessageLabel.Text = info.beforeMessage;
+                    if (info.exists)
+                    {
+                        assayRecordButton.Enabled = false;
 
-                    assayTimer = new TimeSpan(0, 0, info.timer);
+                        assayBeginButton.Enabled = true;
 
-                    assayTimerLabel.Text = assayTimer.ToString();
+                        assayMessageLabel.Text = info.beforeMessage;
 
-                    sessionID = info.sessionID;
+                        assayTimer = new TimeSpan(0, 0, info.timer);
 
-                    assayResultsDialog.setImages(info.resultImages);
+                        assayTimerLabel.Text = assayTimer.ToString();
 
-                    assayResultsDialog.setAfterMessage(info.afterMessage);
+                        sessionID = info.sessionID;
 
-                    setPhoto(assayImagePictureBox, info.descriptionImage);
-                }
+                        assayResultsDialog.setImages(info.resultImages);
+
+                        assayResultsDialog.setAfterMessage(info.afterMessage);
+
+                        setPhoto(assayImagePictureBox, info.descriptionImage);
+                    }
+                    else
+                    {
+
+                        assayMessageLabel.Text = Properties.Resources.AssayNotFound;
+
+                        assayTimerLabel.Text = GentagDemo.Properties.Resources.emptyString;
+
+                        sessionID = null;
+
+                        assayResultsDialog.setImages(null);
+
+                        assayResultsDialog.setAfterMessage(null);
+
+                        setPhoto(assayImagePictureBox, (System.Drawing.Image)null);
+                    }
+                }                
                 else
                 {
-                    assayMessageLabel.Text = "Assay not found.";
+                    assayMessageLabel.Text = GentagDemo.Properties.Resources.emptyString;
 
                     assayTimerLabel.Text = GentagDemo.Properties.Resources.emptyString;
 
@@ -956,13 +1019,20 @@ namespace GentagDemo
             try
             {
                 if (drug != null && drug.exists && drug.picture != null)
+                {
                     setPhoto(drugPhoto, drug.picture);
+                    setTextBox(drugNameBox, drug.name);
+                }
                 else
+                {
                     setPhoto(drugPhoto, (System.Drawing.Image)null);
+                    setTextBox(drugNameBox, Properties.Resources.emptyString);
+                }
             }
             catch (Exception)
             {
                 setPhoto(drugPhoto, (System.Drawing.Image)null);
+                setTextBox(drugNameBox, GentagDemo.Properties.Resources.emptyString);
             }
         }
 
@@ -974,12 +1044,12 @@ namespace GentagDemo
         /// <param name="patient"></param>
         private void displayPatient(medWS.patientRecord patient)
         {
-
             if (patient == null || patient.RFIDnum == null || patient.image == null)
             {
                 setTextBox(patientNameBox, GentagDemo.Properties.Resources.emptyString);
-                setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.patientInfoNotFound);
+                setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.emptyString);
                 setPhoto(patientPhoto, (Image)null);
+                setButtonEnabled(medicationButton, false);
             }
             else if (patient.exists)
             {
@@ -1003,6 +1073,7 @@ namespace GentagDemo
                     }
                     setTextBox(patientDescriptionBox, description);
                     setPhoto(patientPhoto, patient.image);
+                    setButtonEnabled(medicationButton, true);
                 }
                 catch (Exception)
                 {
@@ -1014,7 +1085,7 @@ namespace GentagDemo
             else
             {
                 setTextBox(patientNameBox, GentagDemo.Properties.Resources.emptyString);
-                setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.patientInfoNotFound);
+                setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.emptyString);
                 setPhoto(patientPhoto, (Image)null);
             }
         }
@@ -1118,11 +1189,14 @@ namespace GentagDemo
             wineBottleCache.Clear();
             petCache.Clear();
             patientCache.Clear();
+            assayCache.Clear();
 
             itemsCurrentlyBeingLookedUp.Clear();
-
+            setLabel(detectTagIDLabel, GentagDemo.Properties.Resources.emptyString);
+            setLabel(detectTagTypeLabel, GentagDemo.Properties.Resources.emptyString);
             displayDrug(null);
             displayPatient(null);
+            displayAssay(null);
         }
 
         private void manualLookupClick(object sender, EventArgs e)
@@ -1186,13 +1260,13 @@ namespace GentagDemo
             {
                 if (gpsInterpreter.IsOpen())
                 {
-                    gpsInterpreter.Close();
-                    setButtonText(connectGPSButton, "Connect");
+                    if (gpsInterpreter.Close())
+                        setButtonText(connectGPSButton, "Connect");
                 }
                 else
                 {
-                    gpsInterpreter.Open(getComboBox(comPortsComboBox));
-                    setButtonText(connectGPSButton, "Disconnect");
+                    if (gpsInterpreter.Open(getComboBox(comPortsComboBox)))
+                        setButtonText(connectGPSButton, "Disconnect");
                 }
             }
             catch (System.IO.IOException)
@@ -1221,7 +1295,8 @@ namespace GentagDemo
 
         private void assayClearButton_Click(object sender, EventArgs e)
         {
-            // TODO:
+            assayTimerLabel.Text = assayTimer.ToString();
+            setButtonEnabled(assayBeginButton,true);
         }
 
         private int assayItemChosen = -1;
@@ -1239,7 +1314,8 @@ namespace GentagDemo
             {
                 try
                 {
-                    if (!assayWebService.submitAssayResult(sessionID, DeviceUID, assayItemChosen + 1))
+                    assayWS.assayResultResponse response = assayWebService.submitAssayResult(sessionID, DeviceUID, assayItemChosen + 1);
+                    if (response.needRetry || !response.success)
                     {
                         MessageBox.Show(Properties.Resources.FailedToSubmit);
                     }
@@ -1247,6 +1323,7 @@ namespace GentagDemo
                     {
                         MessageBox.Show(Properties.Resources.ResultsRecorded);
                         assayItemChosen = -1;
+                        setButtonEnabled(assayRecordButton, false);
                         break;
                     }
                 }
@@ -1285,10 +1362,12 @@ namespace GentagDemo
             if (DateTime.Now >= assayEndTime)
             {
                 assayCountdownTimer.Enabled = false;
+                setButtonEnabled(assayBeginButton, false);
                 System.Media.SystemSounds.Question.Play();
                 if (DialogResult.OK == assayResultsDialog.ShowDialog())
                 {
                     assayItemChosen = assayResultsDialog.SelectedIndex;
+                    setButtonEnabled(assayRecordButton, true);
                 }
             }
         }
@@ -1297,7 +1376,5 @@ namespace GentagDemo
         {
             clearDemo();
         }
-
-
     }
 }
