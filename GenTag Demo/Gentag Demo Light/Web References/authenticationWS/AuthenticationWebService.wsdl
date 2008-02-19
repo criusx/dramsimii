@@ -79,6 +79,20 @@
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="return" nillable="true" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
+      <xsd:element name="sendError" type="tns:sendError" />
+      <xsd:complexType name="sendError">
+        <xsd:sequence>
+          <xsd:element name="exception" nillable="true" type="xsd:string" />
+          <xsd:element name="stackTrace" nillable="true" type="xsd:string" />
+          <xsd:element name="message" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="sendErrorResponse" type="tns:sendErrorResponse" />
+      <xsd:complexType name="sendErrorResponse">
+        <xsd:sequence>
+          <xsd:element name="return" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:element name="setItem" type="tns:setItem" />
       <xsd:complexType name="setItem">
         <xsd:sequence>
@@ -124,6 +138,12 @@
   <message name="AuthenticationWebService_getUniqueUIDsResponse">
     <part name="parameters" element="tns:getUniqueUIDsResponse" />
   </message>
+  <message name="AuthenticationWebService_sendError">
+    <part name="parameters" element="tns:sendError" />
+  </message>
+  <message name="AuthenticationWebService_sendErrorResponse">
+    <part name="parameters" element="tns:sendErrorResponse" />
+  </message>
   <message name="AuthenticationWebService_setItem">
     <part name="parameters" element="tns:setItem" />
   </message>
@@ -150,6 +170,10 @@
     <operation name="getUniqueUIDs">
       <input message="tns:AuthenticationWebService_getUniqueUIDs" />
       <output message="tns:AuthenticationWebService_getUniqueUIDsResponse" />
+    </operation>
+    <operation name="sendError">
+      <input message="tns:AuthenticationWebService_sendError" />
+      <output message="tns:AuthenticationWebService_sendErrorResponse" />
     </operation>
     <operation name="setItem">
       <input message="tns:AuthenticationWebService_setItem" />
@@ -195,6 +219,15 @@
       </output>
     </operation>
     <operation name="getUniqueUIDs">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="sendError">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />

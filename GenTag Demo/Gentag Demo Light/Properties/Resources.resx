@@ -260,4 +260,10 @@ This drug should not be taken by this patient.</value>
   <data name="ConnectionProblem" xml:space="preserve">
     <value>Connection Problem</value>
   </data>
+  <data name="Alert" xml:space="preserve">
+    <value>Alert</value>
+  </data>
+  <data name="Notice" xml:space="preserve">
+    <value>Notice</value>
+  </data>
 </root>

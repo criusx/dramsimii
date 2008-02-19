@@ -159,6 +159,31 @@ namespace GentagDemo.authenticationWS {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://authenticationPackage/", ResponseNamespace="http://authenticationPackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("return")]
+        public bool sendError([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string exception, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string stackTrace, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string message) {
+            object[] results = this.Invoke("sendError", new object[] {
+                        exception,
+                        stackTrace,
+                        message});
+            return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginsendError(string exception, string stackTrace, string message, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("sendError", new object[] {
+                        exception,
+                        stackTrace,
+                        message}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public bool EndsendError(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((bool)(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://authenticationPackage/", ResponseNamespace="http://authenticationPackage/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return")]
         public bool setItem([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] itemInfo newItem, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string UID) {
             object[] results = this.Invoke("setItem", new object[] {
                         newItem,

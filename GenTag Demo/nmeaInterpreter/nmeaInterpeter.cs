@@ -1,14 +1,12 @@
 ﻿namespace NMEA
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
-    using System.Text;
     using System.Globalization;
+    using System.IO;
     using System.IO.Ports;
     using System.Net;
     using authenticationWS;
-    using System.IO;
 
     public class nmeaInterpreter
     {        

@@ -23,14 +23,26 @@ namespace GentagDemo
 {
     public partial class demoClient : Form
     {
+        private class lookupInfo
+        {
+            public string tagID;
+            public loopType whichLookup;
+
+            public lookupInfo(string tagValue, loopType lookupValue)
+            {
+                tagID = tagValue;
+                whichLookup = lookupValue;
+            }
+        }
+
         #region Enumerated Types
-        private enum loopType { counterfeit, patient, med, assay, none };
+        private enum loopType { counterfeit, patient, med, assay, interaction, none };
         #endregion
 
         #region Members
         private static demoClient mF;
 
-        private Notification notification1 = null;
+        private Notification popupNotification = null;
 
         private nmeaInterpreter gpsInterpreter;
 
@@ -100,7 +112,7 @@ namespace GentagDemo
 
             tagReader = new Reader();
 
-            inputPanel1.Enabled = false;
+            softInputPanel.Enabled = false;
 
             // assayResultsDialog
             assayResultsDialog = new assayResultsChooser();
@@ -146,17 +158,23 @@ namespace GentagDemo
             versionLabel.Text = Properties.Resources.Version + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + Properties.Resources.Alpha;
 
             // initialize the debug stream
-            for (int i = 50; i > 0; i--)
+            for (int i = 500; i >= 0; i--)
             {
                 try
                 {
-                    debugOut = new StreamWriter("debug.txt" + (i - 50).ToString(), false);
+                    debugOut = new StreamWriter("debug" + (i - 500).ToString() + ".txt", false);
                     break;
                 }
                 catch (IOException)
                 {
                 }
+                if (i == 0)
+                {
+                    MessageBox.Show("Cannot write debug file, quitting.");
+                    this.Close();
+                }
             }
+            //throw new Exception();
 
             // initialize the custom wait cursor
             int systemWidth = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;
@@ -232,89 +250,19 @@ namespace GentagDemo
             //hostName.Text = regKey.GetValue(@"hostname").ToString();
         }
 
-        
-
-        
-
-        void displayTagType(object sender, TagTypeEventArgs args)
-        {
-
-            blinkCursor(true);
-
-            switch (args.Type)
-            {
-                case tagTypes.INSIDE:
-                    setLabel(detectTagTypeLabel, "INSIDE");
-                    break;
-                case tagTypes.iso14443a:
-                    setLabel(detectTagTypeLabel, "ISO14443A");
-                    break;
-                case tagTypes.iso14443b:
-                    setLabel(detectTagTypeLabel, "ISO14443B");
-                    break;
-                case tagTypes.iso14443bsr176:
-                    setLabel(detectTagTypeLabel, "ISO14443B");
-                    break;
-                case tagTypes.iso14443bsri:
-                    setLabel(detectTagTypeLabel, "ISO14443B");
-                    break;
-                case tagTypes.iso15693:
-                    setLabel(detectTagTypeLabel, "ISO15693");
-                    break;
-                case tagTypes.iso18000:
-                    setLabel(detectTagTypeLabel, "ISO18000");
-                    break;
-                case tagTypes.MiFareClassic:
-                    setLabel(detectTagTypeLabel, "MiFare");
-                    break;
-                case tagTypes.MiFareDESFire:
-                    setLabel(detectTagTypeLabel, "MiFare DESFire");
-                    break;
-                case tagTypes.MiFareUltraLight:
-                    setLabel(detectTagTypeLabel, "MiFare UltraLight");
-                    break;
-                case tagTypes.felica:
-                    setLabel(detectTagTypeLabel, "FelICa");
-                    break;
-            }
-
-            setLabel(detectTagIDLabel, args.TagID);
-            Thread.Sleep(250);
-
-            blinkCursor(false);
-        }
-
-        ~demoClient()
-        {
-            stopReading();
-            tagReader.Running = false;
-            debugOut.Dispose();
-            Dispose(false);
-        }
-
-        private void receiveTagContents(object sender, TagContentsEventArgs args)
-        {
-            setTextBox(readWriteTB, args.Contents);
-            stopReading();
-        }
-
-        private void writeTagMemory()
-        {
-            tagReader.writeTag(System.Text.Encoding.Unicode.GetBytes(getTextBox(readWriteTB)));
-        }
-
-        private void doneWriting(object sender, FinishedWritingStatusEventArgs args)
-        {
-            setLabel(readWriteStatusLabel, Properties.Resources.Status + args.Status);
-            stopReading();
-        }
-
+        /// <summary>
+        /// Function called when a button is clicked that should initiate reading of a tag.
+        /// Different tags require different reading methods.
+        /// </summary>
+        /// <param name="sender">The button or other object whose event was fired.</param>
+        /// <param name="e">Parameters related to this event.</param>
         private void readerClick(object sender, EventArgs e)
         {
             if (tagReader.Running == false)
             {
                 setWaitCursor(true);
 
+                // read tag ID functions
                 if (sender == medicationButton || sender == readIDButton || sender == readPatientButton || sender == assayReadButton)
                 {
                     if (sender == readIDButton)
@@ -333,6 +281,7 @@ namespace GentagDemo
                         tagReader.ReadThreadType = readType.readMany;
 
                 }
+                // other functions
                 if (sender == detectTagTypeButton)
                     tagReader.ReadThreadType = readType.detectMany;
                 else if (sender == readButton)
@@ -345,8 +294,8 @@ namespace GentagDemo
             }
             else
             {
-                tagReader.Running = false;
                 stopReading();
+                tagReader.Running = false;
             }
         }
 
@@ -359,8 +308,10 @@ namespace GentagDemo
         {
             if (string.IsNullOrEmpty(args.Tag)) // if there was no string returned
                 return;
-
-            blinkCursor(true);
+            if (args.Done)
+                stopReading();
+            else
+                blinkCursor();
 
             lock (lookupQueue)
             {
@@ -379,33 +330,28 @@ namespace GentagDemo
                         setLabel(queuedLookupsLabel, lookupQueue.Count.ToString(CultureInfo.CurrentCulture));
 
                         if (loop == loopType.counterfeit)
-                            updateTreeView1(args.Tag, Properties.Resources.NoDescriptionYet, false, true, false);
+                            updateTreeView1(args.Tag, Properties.Resources.NoDescriptionYet, authenticatedType.unknown);
                         // queue it up for later and return
                         lookupQueue.Enqueue(args.Tag);
                     }
                 }
             }
-
-            // flash the panel to signal the user that a tag was read
-            Thread.Sleep(100);
-            blinkCursor(false);
-
-            if (args.Done)
-                stopReading();
         }
 
         /// <summary>
         /// Creates the appropriate web service and does the lookup
         /// </summary>
         /// <param name="tagID">the RFID tag string to lookup</param>
-        /// <returns>true if the request was sent, false if it wasn't for some reason</returns>
+        /// <returns>The number of requests that were sent</returns>
         private int scheduleLookup(string tagID, loopType whichLoop)
         {
             AsyncCallback cb = new AsyncCallback(receiveResult);
+
             int result = 1;
 
             try
             {
+                // TODO: check for tagID in the lookupInfo data type
                 if (itemsCurrentlyBeingLookedUp.ContainsValue(tagID))
                 {
                     result = 0;
@@ -423,13 +369,13 @@ namespace GentagDemo
                                 }
                                 else
                                 {
+                                    updateTreeView1(tagID, Properties.Resources.NoDescriptionYet, authenticatedType.unknown);
+
                                     // get the tag info and cache it
                                     IAsyncResult handle = authenticationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, authenticationWebService);
-                                    
-                                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                                    { itemsCurrentlyBeingLookedUp.Add(handle, tagID); }
 
-                                    updateTreeView1(tagID, Properties.Resources.NoDescriptionYet, false, true, true);
+                                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                    { itemsCurrentlyBeingLookedUp.Add(handle, new lookupInfo(tagID, loopType.counterfeit)); }
                                 }
                                 break;
                             }
@@ -443,9 +389,10 @@ namespace GentagDemo
                                 else
                                 {
                                     setTextBox(patientNameBox, Properties.Resources.PleaseWait);
+
                                     IAsyncResult handle = COREMedDemoWebService.BegingetPatientRecord(tagID, DeviceUID, cb, COREMedDemoWebService);
                                     lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                                    { itemsCurrentlyBeingLookedUp[handle] = tagID; }
+                                    { itemsCurrentlyBeingLookedUp[handle] = new lookupInfo(tagID, loopType.patient); }
                                     currentPatientID = tagID;
                                 }
                                 break;
@@ -461,12 +408,12 @@ namespace GentagDemo
                                 setTextBox(drugNameBox, Properties.Resources.PleaseWait);
                                 IAsyncResult handle = COREMedDemoWebService.BegingetDrugInfo(tagID, DeviceUID, cb, COREMedDemoWebService);
                                 lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                                { itemsCurrentlyBeingLookedUp[handle] = tagID; }
+                                { itemsCurrentlyBeingLookedUp[handle] = new lookupInfo(tagID, loopType.med); }
 
                                 handle = COREMedDemoWebService.BegincheckInteraction(currentPatientID, tagID, cb, COREMedDemoWebService);
 
                                 lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                                { itemsCurrentlyBeingLookedUp[handle] = currentPatientID; }
+                                { itemsCurrentlyBeingLookedUp[handle] = new lookupInfo(tagID, loopType.interaction); }
 
                                 break;
                             }
@@ -483,12 +430,24 @@ namespace GentagDemo
                                     IAsyncResult handle = assayWebService.BeginretrieveAssayInformation(tagID, DeviceUID, cb, assayWebService);
                                     // to allow association of a handle back to a tag id
                                     lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                                    { itemsCurrentlyBeingLookedUp[handle] = tagID; }
+                                    { itemsCurrentlyBeingLookedUp[handle] = new lookupInfo(tagID, loopType.assay); }
                                 }
                                 break;
                             }
+                        case loopType.interaction:
+                            {
+                                if (string.IsNullOrEmpty(currentPatientID))
+                                    break;
+
+                                IAsyncResult handle = COREMedDemoWebService.BegincheckInteraction(currentPatientID, tagID, cb, COREMedDemoWebService);
+
+                                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                                { itemsCurrentlyBeingLookedUp[handle] = new lookupInfo(tagID, loopType.interaction); }
+
+                                break;
+                            }
                         default:
-                            notify(Properties.Resources.Error,Properties.Resources.Error);
+                            notify(Properties.Resources.Error, Properties.Resources.Error, true);
                             break;
                     }
                 }
@@ -500,13 +459,16 @@ namespace GentagDemo
             return result;
         }
 
+        /// <summary>
+        /// Called when an asynchronous web request returns, either by finishing or timing out
+        /// </summary>
+        /// <param name="ar">The result of the web request</param>
         private void receiveResult(IAsyncResult ar)
         {
             try
             {
                 if (itemsCurrentlyBeingLookedUp.ContainsKey(ar) == true)
                 {
-
                     if (ar.AsyncState.GetType() == typeof(authenticationWS.AuthenticationWebService))
                     {
                         // try to cast as a standard item lookup    
@@ -519,7 +481,8 @@ namespace GentagDemo
                         // display the tag info
                         if (info != null)
                         {
-                            updateTreeView1(info.RFIDNum, info.description, info.authenticated, false, true);
+                            lookupInfo item = (lookupInfo)itemsCurrentlyBeingLookedUp[ar];
+                            updateTreeView1(item.tagID, info.description, info.authenticated ? authenticatedType.yes : authenticatedType.no);
 
                             lock (counterfeitCache.SyncRoot)
                             {
@@ -551,7 +514,7 @@ namespace GentagDemo
                                     throw new WebException();
 
                                 if (er.errorCode > 0)
-                                    MessageBox.Show(er.errorMessage);
+                                    notify(Properties.Resources.Alert, er.errorMessage, true);
                             }
                             catch (InvalidCastException ex)
                             {
@@ -587,6 +550,7 @@ namespace GentagDemo
                             assayCache[info.rfidNum] = info;
                         }
                     }
+
                     // free up some space in the available lookups and schedule a waiting lookup
                     lock (lookupQueue)
                     {
@@ -666,34 +630,6 @@ namespace GentagDemo
             }
         }
 
-        private void stopReading()
-        {
-            setWaitCursor(false);
-            blinkCursor(false);
-        }
-
-        private void receiveReaderError(object sender, ReaderErrorEventArgs args)
-        {
-            stopReading();
-            notify(Properties.Resources.ProblemWithReader, args.Reason);
-        }
-
-        private void notify(string caption, string text)
-        {
-            try
-            {
-                if (notification1 != null)
-                    notification1.Dispose();
-            }
-            catch (Exception)
-            { }
-            notification1 = new Notification();
-            notification1.Caption = caption;
-            notification1.Text = text;
-            notification1.Critical = true;
-            notification1.Visible = true;
-        }
-
         /// <summary>
         /// Performs a lookup again if the previous lookup has failed
         /// </summary>
@@ -701,24 +637,117 @@ namespace GentagDemo
         private void rescheduleLookup(IAsyncResult ar)
         {
             string currentTag;
+            loopType whichLoop;
 
             lock (itemsCurrentlyBeingLookedUp.SyncRoot)
             {
-                currentTag = (string)itemsCurrentlyBeingLookedUp[ar];
+                lookupInfo itemInfo = (lookupInfo)itemsCurrentlyBeingLookedUp[ar];
+                currentTag = itemInfo.tagID;
+                whichLoop = itemInfo.whichLookup;
                 itemsCurrentlyBeingLookedUp.Remove(ar);
             }
 
-            if (ar.AsyncState.GetType() == typeof(authenticationWS.AuthenticationWebService))
-            {
-                scheduleLookup(currentTag, loopType.counterfeit);
-            }
-            else if (ar.AsyncState.GetType() == typeof(medWS.COREMedDemoWS))
-            {
-                scheduleLookup(currentTag, loopType.med);
-            }
+            scheduleLookup(currentTag, whichLoop);
+            return;
+
         }
 
+        /// <summary>
+        /// Signals a stop to reading of tags.
+        /// Turns off the wait cursor and resets its state.
+        /// </summary>
+        private void stopReading()
+        {
+            setWaitCursor(false);
+        }
+
+        /// <summary>
+        /// Called when the reader experiences an error and must stop
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void receiveReaderError(object sender, ReaderErrorEventArgs args)
+        {
+            stopReading();
+            notify(Properties.Resources.ProblemWithReader, args.Reason, true);
+        }
+
+        /// <summary>
+        /// The destructor for the class, ensures that the tag reader quits and that the debug text file is closed
+        /// </summary>
+        ~demoClient()
+        {
+            tagReader.Running = false;
+            debugOut.Dispose();
+            Dispose(false);
+        }
+
+        private void receiveTagContents(object sender, TagContentsEventArgs args)
+        {
+            stopReading();
+            setTextBox(readWriteTB, args.Contents);
+        }
+
+        private void writeTagMemory()
+        {
+            tagReader.writeTag(System.Text.Encoding.Unicode.GetBytes(getTextBox(readWriteTB)));
+        }
+
+        private void doneWriting(object sender, FinishedWritingStatusEventArgs args)
+        {
+            setLabel(readWriteStatusLabel, Properties.Resources.Status + args.Status);
+            stopReading();
+        }
+
+
+
+
+
         #region Display Results
+        void displayTagType(object sender, TagTypeEventArgs args)
+        {
+            blinkCursor();
+
+            switch (args.Type)
+            {
+                case tagTypes.INSIDE:
+                    setLabel(detectTagTypeLabel, "INSIDE");
+                    break;
+                case tagTypes.iso14443a:
+                    setLabel(detectTagTypeLabel, "ISO14443A");
+                    break;
+                case tagTypes.iso14443b:
+                    setLabel(detectTagTypeLabel, "ISO14443B");
+                    break;
+                case tagTypes.iso14443bsr176:
+                    setLabel(detectTagTypeLabel, "ISO14443B");
+                    break;
+                case tagTypes.iso14443bsri:
+                    setLabel(detectTagTypeLabel, "ISO14443B");
+                    break;
+                case tagTypes.iso15693:
+                    setLabel(detectTagTypeLabel, "ISO15693");
+                    break;
+                case tagTypes.iso18000:
+                    setLabel(detectTagTypeLabel, "ISO18000");
+                    break;
+                case tagTypes.MiFareClassic:
+                    setLabel(detectTagTypeLabel, "MiFare");
+                    break;
+                case tagTypes.MiFareDESFire:
+                    setLabel(detectTagTypeLabel, "MiFare DESFire");
+                    break;
+                case tagTypes.MiFareUltraLight:
+                    setLabel(detectTagTypeLabel, "MiFare UltraLight");
+                    break;
+                case tagTypes.felica:
+                    setLabel(detectTagTypeLabel, "FelICa");
+                    break;
+            }
+
+            setLabel(detectTagIDLabel, args.TagID);
+        }
+
         private delegate void displayAssayDelegate(assayWS.assayInfo info);
 
         /// <summary>
@@ -867,65 +896,95 @@ namespace GentagDemo
             }
         }
 
-        private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, bool isAuthenticated, bool isNew, bool shouldUpdateIfExists);
+        enum authenticatedType { unknown, yes, no };
+
+        private delegate void updateTreeView1Delegate(string currentTag, string rfidDescr, authenticatedType authType);
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void updateTreeView1(string currentTag, string rfidDescr, bool isAuthenticated, bool isNew, bool shouldUpdateIfExists)
+        private void updateTreeView1(string currentTag, string rfidDescr, authenticatedType authType)
         {
+
             if (this.InvokeRequired)
             {
                 Invoke(new updateTreeView1Delegate(updateTreeView1),
-                    new object[] { currentTag, rfidDescr, isAuthenticated, isNew, shouldUpdateIfExists });
+                    new object[] { currentTag, rfidDescr, authType });
                 return;
             }
             authTreeView.BeginUpdate();
 
             bool exists = false;
 
-            foreach (TreeNode tn in authTreeView.Nodes)
+            foreach (TreeNode currentTreeNode in authTreeView.Nodes)
             {
-                if (tn.Text == currentTag)
+                if (currentTreeNode.Text.CompareTo(currentTag) == 0)
                 {
                     exists = true;
-                    if (shouldUpdateIfExists)
+                    if (authType == authenticatedType.no || authType == authenticatedType.yes)
                     {
-                        tn.Nodes.Clear();
+                        // if it exists and wants to be Yes/No, then update this entry
+                        currentTreeNode.Nodes.Clear();
                         TreeNode tN = new TreeNode(rfidDescr);
-                        tn.SelectedImageIndex = tn.ImageIndex = isNew ? 3 : (isAuthenticated ? 2 : 1);
-                        tn.Nodes.Add(tN);
+                        currentTreeNode.SelectedImageIndex = currentTreeNode.ImageIndex = authType == authenticatedType.yes ? 2 : 1;
+                        currentTreeNode.Nodes.Add(tN);
                     }
                 }
             }
+            if (!exists && (authType == authenticatedType.yes || authType == authenticatedType.no))
+                MessageBox.Show("adding yes/no and there is no existing item");
             if (!exists)
             {
-                TreeNode superTn = new TreeNode(currentTag);
-                superTn.SelectedImageIndex = superTn.ImageIndex = isNew ? 3 : (isAuthenticated ? 2 : 1);
+                if (authType == authenticatedType.unknown)
+                {
+                    TreeNode superTn = new TreeNode(currentTag);
+                    superTn.SelectedImageIndex = superTn.ImageIndex = 3;
 
-                TreeNode subTn = new TreeNode(rfidDescr);
-                subTn.SelectedImageIndex = subTn.ImageIndex = 0;
+                    TreeNode subTn = new TreeNode(rfidDescr);
+                    subTn.SelectedImageIndex = subTn.ImageIndex = 0;
 
-                superTn.Nodes.Add(subTn);
-                authTreeView.Nodes.Add(superTn);
+                    superTn.Nodes.Add(subTn);
+                    authTreeView.Nodes.Add(superTn);
+                }
             }
+
+
+
             authTreeView.EndUpdate();
         }
         #endregion
 
 
+        /// <summary>
+        /// When a key is pressed this creates shortcuts to certain functions
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mainForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == System.Windows.Forms.Keys.Back)
             {
-                clearDemo();
+                clearDemo(null, null);
+            }
+            else if (e.KeyCode == System.Windows.Forms.Keys.F1)
+            {
+                if (mainTabControl.TabPages[mainTabControl.SelectedIndex].Name == "patientPage")
+                    readerClick(readPatientButton, new EventArgs());
             }
             else if (e.KeyCode == System.Windows.Forms.Keys.F2)
             {
                 if (mainTabControl.TabPages[mainTabControl.SelectedIndex].Name == "authPage")
                     readerClick(readIDButton, new EventArgs());
+                else if (mainTabControl.TabPages[mainTabControl.SelectedIndex].Name == "patientPage")
+                    readerClick(medicationButton, new EventArgs());
+                else if (mainTabControl.TabPages[mainTabControl.SelectedIndex].Name == "assayPage")
+                    readerClick(assayReadButton, new EventArgs());
             }
         }
 
-        private void clearDemo()
+        /// <summary>
+        /// Clears all the pages to their original state
+        /// </summary>
+        ///
+        private void clearDemo(object sender, EventArgs e)
         {
             authTreeView.BeginUpdate();
             authTreeView.Nodes.Clear();
@@ -937,7 +996,18 @@ namespace GentagDemo
             patientCache.Clear();
             assayCache.Clear();
 
-            itemsCurrentlyBeingLookedUp.Clear();
+            lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+            {
+                itemsCurrentlyBeingLookedUp.Clear();
+            }
+            lock (lookupQueue)
+            {
+                pendingLookups = 0;
+                setLabel(pendingLookupsLabel, pendingLookups.ToString(CultureInfo.CurrentCulture));
+                lookupQueue.Clear();
+                setLabel(queuedLookupsLabel, lookupQueue.Count.ToString(CultureInfo.CurrentCulture));
+
+            }
             setLabel(detectTagIDLabel, GentagDemo.Properties.Resources.emptyString);
             setLabel(detectTagTypeLabel, GentagDemo.Properties.Resources.emptyString);
             displayDrug(null);
@@ -954,20 +1024,21 @@ namespace GentagDemo
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            tagReader.Running = false;
             stopReading();
         }
 
-        private void textBox4_GotFocus(object sender, EventArgs e)
+        private void manualLookupClick(object sender, EventArgs e)
         {
-            inputPanel1.Enabled = true;
+            softInputPanel.Enabled = true;
+
             if (manualDialog.ShowDialog() == DialogResult.Yes)
             {
-                updateTreeView1(manualDialog.Value, Properties.Resources.NoDescriptionYet, false, true, false);
-                TagReceivedEventArgs arg = new TagReceivedEventArgs(manualDialog.Value, true);
-                receiveTag(this, arg);
-                scheduleLookup(manualDialog.Value, loopType.counterfeit);
+                loop = loopType.counterfeit;
+                receiveTag(this, new TagReceivedEventArgs(manualDialog.Value, true));
             }
-            inputPanel1.Enabled = false;
+
+            softInputPanel.Enabled = false;
         }
 
         private void connectGPSButton_Click(object sender, EventArgs e)
@@ -1022,29 +1093,32 @@ namespace GentagDemo
 
             int trials = 0;
 
-            while (trials < 5)
+            while (trials < 10)
             {
                 try
                 {
                     assayWS.assayResultResponse response = assayWebService.submitAssayResult(sessionID, DeviceUID, assayItemChosen + 1);
-                    if (response.needRetry || !response.success)
+
+                    if (response.needRetry)
+                    { }
+                    else if (!response.success)
                     {
                         MessageBox.Show(Properties.Resources.FailedToSubmit);
                     }
                     else
                     {
-                        MessageBox.Show(Properties.Resources.ResultsRecorded);
+                        notify(Properties.Resources.Notice, Properties.Resources.ResultsRecorded, false);
                         assayItemChosen = -1;
                         setButtonEnabled(assayRecordButton, false);
-                        break;
+                        return;
                     }
                 }
                 catch (WebException ex)
                 {
                     debugOut.WriteLine(ex.StackTrace);
 
-                    if (trials > 5)
-                        notify(Properties.Resources.ConnectionProblem,Properties.Resources.PossibleNetworkErrorPleaseTryAgain);
+                    if (trials > 10)
+                        notify(Properties.Resources.ConnectionProblem, Properties.Resources.PossibleNetworkErrorPleaseTryAgain, false);
                 }
                 finally
                 {
@@ -1056,12 +1130,12 @@ namespace GentagDemo
         private void assayBeginButton_Click(object sender, EventArgs e)
         {
             assayEndTime = DateTime.Now.Add(assayTimer);
+            setButtonEnabled(assayBeginButton, false);
             assayCountdownTimer.Enabled = true;
         }
 
         void assayCountdownTimer_Tick(object sender, EventArgs e)
         {
-
             setLabel(assayTimerLabel, assayEndTime.Subtract(DateTime.Now).ToString());
 
             if (DateTime.Now >= assayEndTime)
@@ -1077,14 +1151,9 @@ namespace GentagDemo
             }
         }
 
-        private void mainClearButton_Click(object sender, EventArgs e)
-        {
-            clearDemo();
-        }
-
         private void notification1_ResponseSubmitted(object sender, Microsoft.WindowsCE.Forms.ResponseSubmittedEventArgs e)
         {
-            notification1.Visible = false;
+            popupNotification.Visible = false;
         }
 
         private void initStatusPage()
@@ -1221,8 +1290,7 @@ namespace GentagDemo
                 Version newVersion = new Version(sb.ToString());
 
                 if (newVersion > System.Reflection.Assembly.GetExecutingAssembly().GetName().Version)
-
-                    mF.notify(Properties.Resources.UpdateAvailable, Properties.Resources.Version + newVersion.ToString() + Properties.Resources.IsAvailableYouAreRunning + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                    mF.notify(Properties.Resources.UpdateAvailable, Properties.Resources.Version + newVersion.ToString() + Properties.Resources.IsAvailableYouAreRunning + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(), true);
             }
             catch (Exception)
             {
@@ -1259,7 +1327,7 @@ namespace GentagDemo
             statusListView.Items[9].SubItems[1].Text = batteryLevel;
         }
 
-       
+
 
         void signalStrengthChanged(object sender, ChangeEventArgs args)
         {

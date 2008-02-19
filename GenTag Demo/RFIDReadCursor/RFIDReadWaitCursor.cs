@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 
 [assembly: CLSCompliant(true)]
@@ -30,11 +25,15 @@ namespace RFIDReadCursor
             }
         }
 
+        private int lastTickTime = 0;
+
         public bool Blink
         {
             set
             {
                 this.BackColor = value == true ? Color.Red : Color.Black;
+                if (value)
+                    lastTickTime = Environment.TickCount;
             }
             get
             {
@@ -75,6 +74,9 @@ namespace RFIDReadCursor
 
         void eventTimer_Tick(object sender, EventArgs e)
         {
+            if (Environment.TickCount - lastTickTime > 500)
+                Blink = false;
+
             currentImage = (currentImage + 1) % refImages.Length;
             setPhoto(pictureBox1, refImages[currentImage]);
         }

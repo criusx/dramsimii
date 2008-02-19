@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.WindowsCE.Forms;
 
 namespace GentagDemo
 {
@@ -59,6 +60,33 @@ namespace GentagDemo
             }
         }
 
+        private delegate void notifyDelegate(string caption, string text, bool critical);
+
+        private void notify(string caption, string text, bool critical)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new notifyDelegate(notify), new object[] { caption, text, critical });
+            }
+            else
+            {
+                try
+                {
+                    if (popupNotification != null)
+                        popupNotification.Dispose();
+                }
+                catch (Exception)
+                { }
+                popupNotification = new Notification();
+                popupNotification.Caption = caption;
+                popupNotification.Text = text;
+                popupNotification.Critical = critical;
+                popupNotification.InitialDuration = critical ? 60 : 5;
+
+                popupNotification.Visible = true;
+            }
+        }
+
         private delegate void setWaitCursorDelegate(bool set);
 
         private void setWaitCursor(bool set)
@@ -71,7 +99,6 @@ namespace GentagDemo
             {
                 if (set == true)
                 {
-                    //Cursor.Current = Cursors.WaitCursor;
                     mainTabControl.TabPages[mainTabControl.SelectedIndex].Controls.Add(waitCursor);
                     waitCursor.TimerEnabled = true;
                     waitCursor.Visible = true;
@@ -79,26 +106,25 @@ namespace GentagDemo
                 }
                 else
                 {
-                    mainTabControl.TabPages[mainTabControl.SelectedIndex].Controls.Remove(waitCursor);
                     waitCursor.Visible = false;
-                    waitCursor.SendToBack();
+                    mainTabControl.TabPages[mainTabControl.SelectedIndex].Controls.Remove(waitCursor);
                     waitCursor.TimerEnabled = false;
-                    //Cursor.Current = Cursors.Default;
                 }
+                this.Refresh();
             }
         }
 
-        private delegate void blinkCursorDelegate(bool set);
+        private delegate void blinkCursorDelegate();
 
-        private void blinkCursor(bool set)
+        private void blinkCursor()
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new blinkCursorDelegate(blinkCursor), new object[] { set });
+                this.Invoke(new blinkCursorDelegate(blinkCursor), new object[] {  });
             }
             else
             {
-                waitCursor.Blink = set;
+                waitCursor.Blink = true;
             }
         }
 
