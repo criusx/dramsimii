@@ -394,6 +394,11 @@ namespace RFIDReader
                         TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
                         oldTag = newTag;
                     }
+
+                    // disable and enable
+                    C1Lib.C1.NET_C1_disable();
+                    C1Lib.C1.NET_C1_enable();
+
                     if (!repeat)
                     {
                         readerRunning = false;
@@ -421,10 +426,8 @@ namespace RFIDReader
                 //     newTagBuilder.Remove(0, newTagBuilder.Length);
                 //     //////////////////////////////////////////////////////////////////////////
                 // }
+
                 
-                // disable and enable
-                C1Lib.C1.NET_C1_disable();
-                C1Lib.C1.NET_C1_enable();
                
                 Thread.Sleep(10);
 

@@ -711,7 +711,7 @@ namespace GentagDemo
             }
             catch (SoapException ex)
             {
-                MessageBox.Show(Properties.Resources.UnexpectedSOAPException + ex.Message);
+                //MessageBox.Show(Properties.Resources.UnexpectedSOAPException + ex.Message);
             }
             return result;
         }
