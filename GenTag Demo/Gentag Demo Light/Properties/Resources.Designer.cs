@@ -472,6 +472,15 @@ namespace GentagDemo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unexpected SOAP exception: .
+        /// </summary>
+        internal static string UnexpectedSOAPException {
+            get {
+                return ResourceManager.GetString("UnexpectedSOAPException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update Available.
         /// </summary>
         internal static string UpdateAvailable {

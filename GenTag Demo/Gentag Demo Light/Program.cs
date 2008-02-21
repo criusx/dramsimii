@@ -32,7 +32,7 @@ namespace GentagDemo
                             ws.sendError(e.ToString(), e.StackTrace, e.Message);
                             break;
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                         }
                     }

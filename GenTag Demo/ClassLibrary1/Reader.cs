@@ -269,7 +269,7 @@ namespace RFIDReader
                         break;
                 }
                 readerThread.IsBackground = true;
-                readerThread.Priority = ThreadPriority.BelowNormal;
+                readerThread.Priority = ThreadPriority.Normal;
             }
         }
 
@@ -307,8 +307,12 @@ namespace RFIDReader
                     }
                     else
                     {
-                        if (readerThread.Join(5000) == false)
+                        if (readerThread.Join(4500) == false)
+                        {
                             readerThread.Abort();
+                            C1Lib.C1.NET_C1_disable();
+                            C1Lib.C1.NET_C1_close_comm();
+                        }
 
 
                         readerThread = null;
@@ -319,7 +323,7 @@ namespace RFIDReader
 
         private StringBuilder newTagBuilder = new StringBuilder(16);
 
-        private const int retryCount = 20;
+        private const int retryCount = 5;
 
         public void readTagID()
         {
@@ -331,6 +335,7 @@ namespace RFIDReader
             readTagLoop(false);
         }
 
+        //[MethodImpl(MethodImplOptions.Synchronized)]
         private void readTagLoop(bool repeat)
         {
             string errorMessage = "";
@@ -357,6 +362,8 @@ namespace RFIDReader
 
             if (n == 0)
             {
+                //C1Lib.C1.NET_C1_disable();
+                //C1Lib.C1.NET_C1_close_comm();
                 ReaderError(this, new ReaderErrorEventArgs(errorMessage));
                 readerRunning = false;
                 return;
@@ -368,63 +375,58 @@ namespace RFIDReader
 
             while (readerRunning)
             {
+                //Random rnd = new Random();
+                // wait while a tag is read
+                if (C1Lib.ISO_15693.NET_get_15693(0x00) != 0)
+                
+                {
+                    for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
+                        newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
+
+                    string newTag = newTagBuilder.ToString();
+
+                    newTagBuilder.Remove(0, newTagBuilder.Length);
+
+                    if ((string.Compare(newTag, oldTag, StringComparison.InvariantCulture) != 0) && (newTag.Length == 16))
+                    {
+                        // when asynchronous delegates are supported in CF
+                        //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);
+                        TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
+                        oldTag = newTag;
+                    }
+                    if (!repeat)
+                    {
+                        readerRunning = false;
+                        break;
+                    }
+                }
+                //// else // randomly generate a tag
+                // {
+                //    // Thread.Sleep(40);
+                //     //C1Lib.C1.NET_C1_disable();
+                //     //C1Lib.C1.NET_C1_enable();
+                //     //////////////////////////////////////////////////////////////////////////                    
+                //     // for random tag generation
+                //     //////////////////////////////////////////////////////////////////////////                    
+                //     string basic = "";
+                //     byte[] newTag0 = new byte[8];
+                //     rnd.NextBytes(newTag0);
+
+                //     for (int i = 0; i < 8; i++)
+                //     {
+                //         newTagBuilder.Append(newTag0[i].ToString("X").PadLeft(2, '0'));
+                //     }
+
+                //     TagReceived(this, new TagReceivedEventArgs(newTagBuilder.ToString(), false));
+                //     newTagBuilder.Remove(0, newTagBuilder.Length);
+                //     //////////////////////////////////////////////////////////////////////////
+                // }
+                
                 // disable and enable
                 C1Lib.C1.NET_C1_disable();
                 C1Lib.C1.NET_C1_enable();
-
-                //Random rnd = new Random();
-                // wait while a tag is read
-                while (readerRunning && (C1Lib.ISO_15693.NET_get_15693(0x00) == 0))
-                {
-                    Thread.Sleep(40);
-                    C1Lib.C1.NET_C1_disable();
-                    C1Lib.C1.NET_C1_enable();
-                    //////////////////////////////////////////////////////////////////////////                    
-                    //string basic = "";
-                    //byte[] newTag0 = new byte[8];
-                    //rnd.NextBytes(newTag0);
-
-                    //for (int i = 0; i < 8; i++)
-                    //{
-                    //    newTagBuilder.Append(newTag0[i].ToString("X").PadLeft(2, '0'));
-                    //}
-
-                    //TagReceived(this, new TagReceivedEventArgs(newTagBuilder.ToString(), false));
-                    //newTagBuilder.Remove(0, newTagBuilder.Length);
-                    //////////////////////////////////////////////////////////////////////////
-
-                }
-
-                if (readerRunning == false)
-                    break;
-
-                // this code will read the contents of the tag
-                //while (C1Lib.ISO_15693.NET_read_multi_15693(0x00, C1Lib.ISO_15693.tag.blocks) != 1) { }
-
-
-                //string rfidDescr = C1Lib.util.to_str(C1Lib.ISO_15693.tag.read_buff, 256);
-                //rfidDescr += "\n";
-
-                for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-                    newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
-
-                string newTag = newTagBuilder.ToString();
-
-                newTagBuilder.Remove(0, newTagBuilder.Length);
-
-                if ((string.Compare(newTag, oldTag, StringComparison.InvariantCulture) != 0) && (newTag.Length == 16))
-                {
-                    // when asynchronous delegates are supported in CF
-                    //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);
-                    TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
-                    oldTag = newTag;
-                }
-
-                if (!repeat)
-                {
-                    readerRunning = false;
-                    break;
-                }
+               
+                Thread.Sleep(10);
 
             }
             C1Lib.C1.NET_C1_disable();

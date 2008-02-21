@@ -266,4 +266,7 @@ This drug should not be taken by this patient.</value>
   <data name="Notice" xml:space="preserve">
     <value>Notice</value>
   </data>
+  <data name="UnexpectedSOAPException" xml:space="preserve">
+    <value>Unexpected SOAP exception: </value>
+  </data>
 </root>

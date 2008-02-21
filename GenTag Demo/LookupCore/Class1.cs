@@ -7,6 +7,7 @@ using RFIDReader;
 using System.IO;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using System.Net;
 
 namespace LookupCore
 {
