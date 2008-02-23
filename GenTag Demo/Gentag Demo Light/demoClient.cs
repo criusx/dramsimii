@@ -16,6 +16,7 @@ using NMEA;
 using RFIDReader;
 using Microsoft.WindowsMobile.Status;
 using Microsoft.WindowsCE.Forms;
+using System.Diagnostics;
 
 
 [assembly: CLSCompliant(true)]
@@ -170,7 +171,16 @@ namespace GentagDemo
 
         private manualTag manualDialog;
 
-        private System.Windows.Forms.Timer tagSearchTimer;
+        /// <summary>
+        /// Timer to retrieve tags sent by the reader thread
+        /// </summary>
+        private System.Threading.Timer tagSearchTimer;
+
+        private TimerCallback tagSearchCallback;
+
+        private AutoResetEvent tagSearchAutoEvent;
+
+        private bool tagSearchReading;
 
         private bool newTag;
 
@@ -218,15 +228,6 @@ namespace GentagDemo
 
             doneReading = false;
 
-            // tagSearchTimer
-            tagSearchTimer = new System.Windows.Forms.Timer();
-
-            tagSearchTimer.Interval = 500;
-
-            tagSearchTimer.Tick += new EventHandler(tagSearchTimer_Tick);
-
-            tagSearchTimer.Enabled = true;
-
             // resize the client depending on the resolution
             this.ClientSize = new Size(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width, System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height);
 
@@ -248,6 +249,10 @@ namespace GentagDemo
             versionCheckThread = new Thread(versionCheck);
             versionCheckThread.IsBackground = true;
             versionCheckThread.Start();
+
+            tagSearchCallback = new TimerCallback(tagSearchTimer_Tick);
+
+            tagSearchAutoEvent = new AutoResetEvent(false);
 
             // load the manual tag input dialog
             manualDialog = new manualTag();
@@ -304,7 +309,6 @@ namespace GentagDemo
             // setup event callbacks for tag reading events
             tagReader.TagReceived += new EventHandler<TagReceivedEventArgs>(receiveTag);
             tagReader.VarioSensSettingsReceived += new EventHandler<VarioSensSettingsEventArgs>(receiveVarioSensSettings);
-            tagReader.ReaderError += new EventHandler<ReaderErrorEventArgs>(receiveReaderError);
             tagReader.VarioSensLogReceived += new EventHandler<VarioSensLogEventArgs>(writeViolations);
             tagReader.ReturnTagContents += new EventHandler<TagContentsEventArgs>(receiveTagContents);
             tagReader.DoneWriting += new EventHandler<FinishedWritingStatusEventArgs>(doneWriting);
@@ -329,7 +333,7 @@ namespace GentagDemo
             authenticationWebService.Timeout = timeout;
             assayWebService.Timeout = timeout;
 
-            initStatusPage();
+            //initStatusPage();
 
             ///////////////////////////////////////////////////
             /////// For McKesson Demo
@@ -368,10 +372,8 @@ namespace GentagDemo
         /// <param name="e">Parameters related to this event.</param>
         private void readerClick(object sender, EventArgs e)
         {
-            if (tagReader.Running == false)
+            if (!tagReader.Running)
             {
-                setWaitCursor(true);
-
                 // read tag ID functions
                 if (sender == medicationButton || sender == readIDButton || sender == readPatientButton || sender == assayReadButton)
                 {
@@ -400,11 +402,26 @@ namespace GentagDemo
                     tagReader.ReadThreadType = readType.writeTagMemory;
 
                 //TODO: send values for setVarioSensSettings and writeTagMemory
-                tagReader.Running = true;
+                try
+                {
+                    tagReader.Running = true;
+                    tagSearchTimer = new System.Threading.Timer(tagSearchCallback, tagSearchAutoEvent, 50, 500);
+                    tagSearchReading = true;
+                    //tagSearchAutoEvent.Reset();
+
+                    setWaitCursor(true);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
             else
             {
-                stopReading();
+                tagSearchReading = false;
+                tagSearchAutoEvent.WaitOne(50, false);
+                tagSearchTimer.Dispose();
+                setWaitCursor(false);
                 tagReader.Running = false;
             }
         }
@@ -417,43 +434,32 @@ namespace GentagDemo
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void tagSearchTimer_Tick(object sender, EventArgs e)
+        void tagSearchTimer_Tick(object sender)
         {
             if (Monitor.TryEnter(pendingTagQueue))
             {
-                // process a done message
-                if (doneReading)
-                {
-                    stopReading();
-                    tagReader.Running = false;
-                    doneReading = false;
-                }
-
                 // move the messages from the incoming queue to the pending queue
                 // the should be done quickly to avoid slowing down the reader thread
-                Monitor.Enter(incomingTagQueue);
-
-                while (incomingTagQueue.Count > 0)
-                    pendingTagQueue.Enqueue(incomingTagQueue.Dequeue());
-
-                Monitor.Exit(incomingTagQueue);
+                lock (incomingTagQueue)
+                {
+                    while (incomingTagQueue.Count > 0)
+                        pendingTagQueue.Enqueue(incomingTagQueue.Dequeue());
+                }
 
 
                 // move from the pending queue to the lookup queue, this should eliminate duplicates
                 // it's also OK for this to wait longer to acquire the lock
                 // also OK to switch threads in by updating the tree view
-                lock (lookupQueue)
-                {
-                    while (pendingTagQueue.Count > 0)
-                        if (!lookupQueue.Contains(pendingTagQueue.Peek()))
-                        {
-                            if (pendingTagQueue.Peek().whichLookup == loopType.authentication)
-                                updateTreeView1(pendingTagQueue.Peek().tagID, GentagDemo.Properties.Resources.NoDescriptionYet, authenticatedType.unknown);
-                            lookupQueue.Enqueue(pendingTagQueue.Dequeue());
-                        }
-                        else
-                            pendingTagQueue.Dequeue();
-                }
+                while (pendingTagQueue.Count > 0)
+                    if (!lookupQueue.Contains(pendingTagQueue.Peek()))
+                    {
+                        if (pendingTagQueue.Peek().whichLookup == loopType.authentication)
+                            updateTreeView1(pendingTagQueue.Peek().tagID, GentagDemo.Properties.Resources.NoDescriptionYet, authenticatedType.unknown);
+                        lookupQueue.Enqueue(pendingTagQueue.Dequeue());
+                    }
+                    else
+                        pendingTagQueue.Dequeue();
+
 
                 // then go through the lookup queue to see how many pending requests can be
                 // sent as real requests
@@ -461,15 +467,12 @@ namespace GentagDemo
                 {
                     lookupInfo currentTag = null;
                     // get the next tag
-                    lock (lookupQueue)
+                    if (lookupQueue.Count > 0)
                     {
-                        if (lookupQueue.Count > 0)
-                        {
-                            currentTag = lookupQueue.Dequeue();
-                        }
-                        else
-                            break;
+                        currentTag = lookupQueue.Dequeue();
                     }
+                    else
+                        break;
 
                     blinkCursor();
 
@@ -490,6 +493,16 @@ namespace GentagDemo
                         }
                     }
                 }
+
+                // short circuit if this read is over
+                if (!tagSearchReading)
+                {
+                    tagSearchAutoEvent.Set();
+                    Monitor.Exit(pendingTagQueue);
+                    return;
+                }
+
+                Monitor.Exit(pendingTagQueue);
 
                 // update the status labels
                 setLabel(queuedLookupsLabel, lookupQueue.Count.ToString(CultureInfo.CurrentCulture));
@@ -540,11 +553,19 @@ namespace GentagDemo
                     }
 
                     setLabel(detectTagIDLabel, newTagID);
+
                 }
-                Monitor.Exit(pendingTagQueue);
+
+                // process a done message
+                if (doneReading)
+                {
+                    //setWaitCursor(false);
+                    tagReader.Running = false;
+                    doneReading = false;
+                }
             }
             else
-                MessageBox.Show("had to wait");
+                Debug.WriteLine("had to wait");
         }
 
         /// <summary>
@@ -555,21 +576,15 @@ namespace GentagDemo
         private void receiveTag(object sender, TagReceivedEventArgs args)
         {
             lookupInfo newLookupInfo = new lookupInfo(args.Tag, loop, currentPatientID);
-            for (int n = 5; n > 0; --n)
+
+            lock (incomingTagQueue)
             {
-                if (Monitor.TryEnter(incomingTagQueue))
-                {
-                    if (!incomingTagQueue.Contains(newLookupInfo))
-                        incomingTagQueue.Enqueue(newLookupInfo);
+                if (!incomingTagQueue.Contains(newLookupInfo))
+                    incomingTagQueue.Enqueue(newLookupInfo);
 
-                    doneReading = args.Done;
-
-                    Monitor.Exit(incomingTagQueue);
-                    break;
-                }
-                Thread.Sleep(5);
+                doneReading = args.Done;
             }
-                        
+
         }
 
         /// <summary>
@@ -584,7 +599,7 @@ namespace GentagDemo
             int result = 1;
 
             try
-            {                
+            {
                 if (itemsCurrentlyBeingLookedUp.ContainsValue(tagID))
                 {
                     result = 0;
@@ -805,7 +820,7 @@ namespace GentagDemo
                                 displayAssay(assayRecord);
 
                                 lock (assayCache.SyncRoot)
-                                { assayCache[assayRecord.rfidNum] = assayRecord; }                                
+                                { assayCache[assayRecord.rfidNum] = assayRecord; }
                             }
                             break;
 
@@ -891,27 +906,6 @@ namespace GentagDemo
         }
 
         /// <summary>
-        /// Signals a stop to reading of tags.
-        /// Turns off the wait cursor and resets its state.
-        /// </summary>
-        private void stopReading()
-        {
-            setWaitCursor(false);
-        }
-
-        /// <summary>
-        /// Called when the reader experiences an error and must stop
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void receiveReaderError(object sender, ReaderErrorEventArgs args)
-        {
-            stopReading();
-            //notify(Properties.Resources.ProblemWithReader, args.Reason, true);
-            MessageBox.Show(Properties.Resources.ProblemWithReader);
-        }
-
-        /// <summary>
         /// The destructor for the class, ensures that the tag reader quits and that the debug text file is closed
         /// </summary>
         ~demoClient()
@@ -924,7 +918,7 @@ namespace GentagDemo
 
         private void receiveTagContents(object sender, TagContentsEventArgs args)
         {
-            stopReading();
+            setWaitCursor(false);
             setTextBox(readWriteTB, args.Contents);
         }
 
@@ -936,12 +930,12 @@ namespace GentagDemo
         private void doneWriting(object sender, FinishedWritingStatusEventArgs args)
         {
             setLabel(readWriteStatusLabel, Properties.Resources.Status + args.Status);
-            stopReading();
+            setWaitCursor(false);
         }
 
         #region Display Results
         void displayTagType(object sender, TagTypeEventArgs args)
-        {            
+        {
             newTagType = args.Type;
             newTagID = args.TagID;
             newTag = true;
@@ -1111,53 +1105,53 @@ namespace GentagDemo
         private void updateTreeView1(string currentTag, string rfidDescr, authenticatedType authType)
         {
 
-            if (this.InvokeRequired)
+            if (authTreeView.InvokeRequired)
             {
-                Invoke(new updateTreeView1Delegate(updateTreeView1),
+                authTreeView.BeginInvoke(new updateTreeView1Delegate(updateTreeView1),
                     new object[] { currentTag, rfidDescr, authType });
-                return;
+
             }
-            
-
-            bool exists = false;
-
-            foreach (TreeNode currentTreeNode in authTreeView.Nodes)
+            else
             {
-                if (currentTreeNode.Text.CompareTo(currentTag) == 0)
+                bool exists = false;
+
+                foreach (TreeNode currentTreeNode in authTreeView.Nodes)
                 {
-                    exists = true;
-                    if (authType == authenticatedType.no || authType == authenticatedType.yes)
+                    if (currentTreeNode.Text.CompareTo(currentTag) == 0)
+                    {
+                        exists = true;
+                        if (authType == authenticatedType.no || authType == authenticatedType.yes)
+                        {
+                            authTreeView.BeginUpdate();
+                            // if it exists and wants to be Yes/No, then update this entry
+                            currentTreeNode.Nodes.Clear();
+                            TreeNode tN = new TreeNode(rfidDescr);
+                            currentTreeNode.SelectedImageIndex = currentTreeNode.ImageIndex = authType == authenticatedType.yes ? 2 : 1;
+                            currentTreeNode.Nodes.Add(tN);
+                            authTreeView.EndUpdate();
+                        }
+                    }
+                }
+                //if (!exists && (authType == authenticatedType.yes || authType == authenticatedType.no))
+                //    MessageBox.Show("adding yes/no and there is no existing item");
+                if (!exists)
+                {
+                    if (authType == authenticatedType.unknown)
                     {
                         authTreeView.BeginUpdate();
-                        // if it exists and wants to be Yes/No, then update this entry
-                        currentTreeNode.Nodes.Clear();
-                        TreeNode tN = new TreeNode(rfidDescr);
-                        currentTreeNode.SelectedImageIndex = currentTreeNode.ImageIndex = authType == authenticatedType.yes ? 2 : 1;
-                        currentTreeNode.Nodes.Add(tN);
+                        TreeNode superTn = new TreeNode(currentTag);
+                        superTn.SelectedImageIndex = superTn.ImageIndex = 3;
+
+                        TreeNode subTn = new TreeNode(rfidDescr);
+                        subTn.SelectedImageIndex = subTn.ImageIndex = 0;
+
+                        superTn.Nodes.Add(subTn);
+                        authTreeView.Nodes.Add(superTn);
                         authTreeView.EndUpdate();
                     }
                 }
             }
-            //if (!exists && (authType == authenticatedType.yes || authType == authenticatedType.no))
-            //    MessageBox.Show("adding yes/no and there is no existing item");
-            if (!exists)
-            {
-                if (authType == authenticatedType.unknown)
-                {
-                    authTreeView.BeginUpdate();
-                    TreeNode superTn = new TreeNode(currentTag);
-                    superTn.SelectedImageIndex = superTn.ImageIndex = 3;
 
-                    TreeNode subTn = new TreeNode(rfidDescr);
-                    subTn.SelectedImageIndex = subTn.ImageIndex = 0;
-
-                    superTn.Nodes.Add(subTn);
-                    authTreeView.Nodes.Add(superTn);
-                    authTreeView.EndUpdate();
-                }
-            }
-
-            
         }
         #endregion
 
@@ -1234,7 +1228,7 @@ namespace GentagDemo
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             tagReader.Running = false;
-            stopReading();
+            setWaitCursor(false);
         }
 
         private void manualLookupClick(object sender, EventArgs e)

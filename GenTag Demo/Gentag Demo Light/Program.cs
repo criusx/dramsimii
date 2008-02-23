@@ -40,8 +40,11 @@ namespace GentagDemo
                     //goto Start;
                     
                     //System.Reflection.AssemblyName an = System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase;
+                    Cursor.Current = Cursors.WaitCursor;
                     Application.Exit();
+
                     AppDomain.CreateDomain("abc").ExecuteAssembly(Assembly.GetExecutingAssembly().GetName().CodeBase);
+                    Cursor.Current = Cursors.Default;
                     //ProcessStartInfo process = new ProcessStartInfo(Assembly.GetExecutingAssembly().GetName().CodeBase, "");
                     //process.UseShellExecute = true;
                     //Process.Start(process);

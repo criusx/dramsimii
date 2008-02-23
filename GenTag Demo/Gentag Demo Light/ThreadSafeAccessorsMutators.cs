@@ -132,12 +132,14 @@ namespace GentagDemo
 
         private void setLabel(Label tB, string val)
         {
-            if (this.InvokeRequired)
+            if (tB.InvokeRequired)
             {
-                this.Invoke(new setLabelDelegate(setLabel), new object[] { tB, val });
-                return;
+                tB.BeginInvoke(new setLabelDelegate(setLabel), new object[] { tB, val });             
             }
-            tB.Text = val;
+            else
+            {
+                tB.Text = val;
+            }
         }
 
         private delegate void setPhotoDelegate(PictureBox pB, byte[] bA);
