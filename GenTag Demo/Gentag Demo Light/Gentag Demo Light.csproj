@@ -226,6 +226,9 @@
     <Content Include="Resources\cancel.png" />
     <Content Include="Resources\ok.png" />
     <None Include="Resources\question.png" />
+    <Content Include="sdid1020NetBase.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="VarioSens Lib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

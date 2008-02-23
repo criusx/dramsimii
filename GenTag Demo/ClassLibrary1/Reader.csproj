@@ -92,7 +92,9 @@
     <None Include="RFIDReaderKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sdid1020NetBase.dll" />
+    <Content Include="sdid1020NetBase.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
   <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

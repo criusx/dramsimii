@@ -1,3 +1,4 @@
+#define WDREADER
 using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -205,7 +206,7 @@ namespace RFIDReader
 
             timerAutoEvent = new AutoResetEvent(false);
 
-            timerDelegate = new TimerCallback(readTick);
+            timerDelegate = new TimerCallback(siritReadTick);
             
             oldTag = "";
         }
@@ -248,7 +249,11 @@ namespace RFIDReader
                         break;
                     case readType.readMany:
                         repeat = true;
-                        timerDelegate = new TimerCallback(readTick); 
+#if (WDREADER)
+                        timerDelegate = new TimerCallback(wdReadTick); 
+#else
+                        timerDelegate = new TimerCallback(siritReadTick); 
+#endif
                         //readerThread = new Thread(readTagID);
                         break;
                     case readType.detectMany:
@@ -291,13 +296,17 @@ namespace RFIDReader
 
         private bool readerRunning;
 
+
+
         public bool Running
         {
             get { return readTimer != null; }
             set
-            {                
-                if (value == true && readTimer == null)
+            {
+
+                if (value)
                 {                    
+#if (!WDREADER)
                     string errorMessage = "";
                     int n = retryCount;
 
@@ -327,6 +336,7 @@ namespace RFIDReader
                         
                     }
                     else
+#endif
                     {                        
                         // restart the thread if it somehow already exists
                         if (readTimer != null)
@@ -338,31 +348,13 @@ namespace RFIDReader
                             readTimer.Dispose();
                             readTimer = null;
                         }
-                        readerRunning = true;
-                        //timerAutoEvent.Reset();
+                        readerRunning = true;                        
                         readTimer = new System.Threading.Timer(timerDelegate, timerAutoEvent, 50, 50);
                     }
                 }
                 else
                 {
-                    //readerRunning = false;
-
-                    //if (readerThread == null)
-                    //{
-                    //    //throw new ArgumentException(Properties.Resources.CannotStopANonrunningReaderThread);
-                    //}
-                    //else
-                    //{
-                    //    if (readerThread.Join(4500) == false)
-                    //    {
-                    //        readerThread.Abort();
-                    //        C1Lib.C1.NET_C1_disable();
-                    //        C1Lib.C1.NET_C1_close_comm();
-                    //    }
-
-
-                    //    readerThread = null;
-                    //}          
+                    
                     if (readTimer != null)
                     {
                         readerRunning = false;
@@ -370,16 +362,18 @@ namespace RFIDReader
                             Debug.WriteLine("didn't make it");
                         readTimer.Dispose();
                         readTimer = null;
-
+#if (!WDREADER)
                         //readTimer.Enabled = false;
                         C1Lib.C1.NET_C1_disable();
                         C1Lib.C1.NET_C1_close_comm();
+#endif
                     }
-                }                
+                }    
+
             }
         }
 
-        private void readTick(object stateInfo)
+        private void siritReadTick(object stateInfo)
         {
             if (readerRunning && Monitor.TryEnter(this))
             {
@@ -409,17 +403,84 @@ namespace RFIDReader
                         readTimer = null; 
                     }
                 }
+                Monitor.Exit(this);
 
                 if (!readerRunning)
                     timerAutoEvent.Set();
+            }
+        }
+
+        enum ERR
+        {
+            NONE = 0,
+            CARD_AVAILABLE = 1,
+            EJECTED = 150102,
+        }
+
+        private bool shouldReinit = true;
+
+        private SDiD1020.ISO15693.ISO15693Card card = new SDiD1020.ISO15693.ISO15693Card();
+
+        private SDiD1020.Utility.WDIUtility wdiUtil = new SDiD1020.Utility.WDIUtility();
+
+        private const int ICODE_SLI_UID_SIZE = 8;
+        private const int ICODE_SLI_BLOCK_SIZE = 4;
+        private const int ICODE_SLI_NUMBER_OF_BLOCKS = 16;
+
+        private void wdReadTick(object stateInfo)
+        {
+            if (Monitor.TryEnter(this))
+            {
+                if (shouldReinit)
+                {
+                    wdiUtil.ChangeProtocol(2, 1);
+                    shouldReinit = false;
+                }
+
+                ERR ec = (ERR)card.IsCardAvailable();
+                switch (ec)
+                {
+                    case ERR.NONE:
+                        //No card available do nothing
+
+                        break;
+
+                    case ERR.CARD_AVAILABLE:
+                        //Card available
+                        byte[] uid = new byte[ICODE_SLI_UID_SIZE];
+                        card.GetUID(uid);
+
+                        for (int i = 0; i < uid.Length; i++)
+                            newTagBuilder.Append(uid[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
+
+                        string newTag = newTagBuilder.ToString();
+
+                        newTagBuilder.Remove(0, newTagBuilder.Length);
+                        TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
+                        break;
+
+                    case ERR.EJECTED:
+                        //SDiD in not inserted
+                        //throw new IOException(Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted);
+                        Debug.WriteLine("Card not inserted");
+                        break;
+
+                    default:
+                        //Some other error
+                        //Ignore for now
+                        break;
+                }
+
 
                 Monitor.Exit(this);
+                if (!readerRunning)
+                    timerAutoEvent.Set();
             }
         }
 
         private StringBuilder newTagBuilder = new StringBuilder(16);
 
-        private const int retryCount = 5;
+        private const int retryCount = 1;
 
         public void readTagID()
         {

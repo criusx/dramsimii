@@ -182,12 +182,6 @@ namespace GentagDemo
 
         private bool tagSearchReading;
 
-        private bool newTag;
-
-        private string newTagID;
-
-        private tagTypes newTagType;
-
         /// <summary>
         /// The reader indicates that it is done reading now
         /// </summary>
@@ -440,12 +434,13 @@ namespace GentagDemo
             {
                 // move the messages from the incoming queue to the pending queue
                 // the should be done quickly to avoid slowing down the reader thread
+                int newTags;
                 lock (incomingTagQueue)
                 {
-                    while (incomingTagQueue.Count > 0)
+                    newTags = incomingTagQueue.Count;
+                    while (newTags > 0)
                         pendingTagQueue.Enqueue(incomingTagQueue.Dequeue());
-                }
-
+                }                
 
                 // move from the pending queue to the lookup queue, this should eliminate duplicates
                 // it's also OK for this to wait longer to acquire the lock
@@ -460,102 +455,57 @@ namespace GentagDemo
                     else
                         pendingTagQueue.Dequeue();
 
+                // indicate that there were new tags found
+                if (newTags > 0)
+                    waitCursor.Blink();
 
-                // then go through the lookup queue to see how many pending requests can be
-                // sent as real requests
-                while ((lookupQueue.Count > 0) && (pendingLookups < maxLookupThreads))
-                {
-                    lookupInfo currentTag = null;
-                    // get the next tag
-                    if (lookupQueue.Count > 0)
-                    {
-                        currentTag = lookupQueue.Dequeue();
-                    }
-                    else
-                        break;
-
-                    blinkCursor();
-
-                    if (string.IsNullOrEmpty(currentTag.tagID)) // if there was no string returned
-                        continue;
-
-                    // then begin a lookup                
-                    lock (itemsCurrentlyBeingLookedUp.SyncRoot)
-                    {
-                        if (!itemsCurrentlyBeingLookedUp.ContainsValue(currentTag))
-                        {
-                            if (pendingLookups < maxLookupThreads)
-                            {
-                                pendingLookups += scheduleLookup(currentTag.tagID, currentTag.whichLookup, currentPatientID);
-
-
-                            }
-                        }
-                    }
-                }
-
-                // short circuit if this read is over
-                if (!tagSearchReading)
-                {
-                    tagSearchAutoEvent.Set();
-                    Monitor.Exit(pendingTagQueue);
-                    return;
-                }
-
-                Monitor.Exit(pendingTagQueue);
+                startScheduledLookups();
 
                 // update the status labels
                 setLabel(queuedLookupsLabel, lookupQueue.Count.ToString(CultureInfo.CurrentCulture));
                 setLabel(pendingLookupsLabel, pendingLookups.ToString(CultureInfo.CurrentCulture));
 
                 // use this loop to also update the detect screen
-                if (newTag)
-                {
-                    newTag = false;
+                //    switch (newTagType)
+                //    {
+                //        case tagTypes.INSIDE:
+                //            setLabel(detectTagTypeLabel, "INSIDE");
+                //            break;
+                //        case tagTypes.iso14443a:
+                //            setLabel(detectTagTypeLabel, "ISO14443A");
+                //            break;
+                //        case tagTypes.iso14443b:
+                //            setLabel(detectTagTypeLabel, "ISO14443B");
+                //            break;
+                //        case tagTypes.iso14443bsr176:
+                //            setLabel(detectTagTypeLabel, "ISO14443B");
+                //            break;
+                //        case tagTypes.iso14443bsri:
+                //            setLabel(detectTagTypeLabel, "ISO14443B");
+                //            break;
+                //        case tagTypes.iso15693:
+                //            setLabel(detectTagTypeLabel, "ISO15693");
+                //            break;
+                //        case tagTypes.iso18000:
+                //            setLabel(detectTagTypeLabel, "ISO18000");
+                //            break;
+                //        case tagTypes.MiFareClassic:
+                //            setLabel(detectTagTypeLabel, "MiFare");
+                //            break;
+                //        case tagTypes.MiFareDESFire:
+                //            setLabel(detectTagTypeLabel, "MiFare DESFire");
+                //            break;
+                //        case tagTypes.MiFareUltraLight:
+                //            setLabel(detectTagTypeLabel, "MiFare UltraLight");
+                //            break;
+                //        case tagTypes.felica:
+                //            setLabel(detectTagTypeLabel, "FelICa");
+                //            break;
+                //    }
 
-                    blinkCursor();
+                //    setLabel(detectTagIDLabel, newTagID);
 
-                    switch (newTagType)
-                    {
-                        case tagTypes.INSIDE:
-                            setLabel(detectTagTypeLabel, "INSIDE");
-                            break;
-                        case tagTypes.iso14443a:
-                            setLabel(detectTagTypeLabel, "ISO14443A");
-                            break;
-                        case tagTypes.iso14443b:
-                            setLabel(detectTagTypeLabel, "ISO14443B");
-                            break;
-                        case tagTypes.iso14443bsr176:
-                            setLabel(detectTagTypeLabel, "ISO14443B");
-                            break;
-                        case tagTypes.iso14443bsri:
-                            setLabel(detectTagTypeLabel, "ISO14443B");
-                            break;
-                        case tagTypes.iso15693:
-                            setLabel(detectTagTypeLabel, "ISO15693");
-                            break;
-                        case tagTypes.iso18000:
-                            setLabel(detectTagTypeLabel, "ISO18000");
-                            break;
-                        case tagTypes.MiFareClassic:
-                            setLabel(detectTagTypeLabel, "MiFare");
-                            break;
-                        case tagTypes.MiFareDESFire:
-                            setLabel(detectTagTypeLabel, "MiFare DESFire");
-                            break;
-                        case tagTypes.MiFareUltraLight:
-                            setLabel(detectTagTypeLabel, "MiFare UltraLight");
-                            break;
-                        case tagTypes.felica:
-                            setLabel(detectTagTypeLabel, "FelICa");
-                            break;
-                    }
-
-                    setLabel(detectTagIDLabel, newTagID);
-
-                }
-
+                //}
                 // process a done message
                 if (doneReading)
                 {
@@ -563,16 +513,60 @@ namespace GentagDemo
                     tagReader.Running = false;
                     doneReading = false;
                 }
+                Monitor.Exit(pendingTagQueue);
+                // short circuit if this read is over
+                if (!tagSearchReading)
+                {
+                    tagSearchAutoEvent.Set();                    
+                }
+
+                
             }
             else
                 Debug.WriteLine("had to wait");
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void startScheduledLookups()
+        {
+            // then go through the lookup queue to see how many pending requests can be
+            // sent as real requests
+            while ((lookupQueue.Count > 0) && (pendingLookups < maxLookupThreads))
+            {
+                lookupInfo currentTag = null;
+                // get the next tag
+                if (lookupQueue.Count > 0)
+                {
+                    currentTag = lookupQueue.Dequeue();
+                }
+                else
+                    break;
+
+                waitCursor.Blink();
+
+                if (string.IsNullOrEmpty(currentTag.tagID)) // if there was no string returned
+                    continue;
+
+                // then begin a lookup                
+                lock (itemsCurrentlyBeingLookedUp.SyncRoot)
+                {
+                    if (!itemsCurrentlyBeingLookedUp.ContainsValue(currentTag))
+                    {
+                        if (pendingLookups < maxLookupThreads)
+                        {
+                            pendingLookups += scheduleLookup(currentTag.tagID, currentTag.whichLookup, currentPatientID);
+
+
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// The callback for when a tag is received by the reader thread
         /// </summary>
-        /// <param name="tagID"></param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
+        /// <param name="tagID"></param>        
         private void receiveTag(object sender, TagReceivedEventArgs args)
         {
             lookupInfo newLookupInfo = new lookupInfo(args.Tag, loop, currentPatientID);
@@ -832,6 +826,7 @@ namespace GentagDemo
                     lock (lookupQueue)
                     {
                         pendingLookups--;
+                        startScheduledLookups();
                     }
                 }
             }
@@ -888,7 +883,7 @@ namespace GentagDemo
                 lock (itemsCurrentlyBeingLookedUp.SyncRoot)
                 {
                     itemsCurrentlyBeingLookedUp.Remove(ar);
-                }
+                }                
             }
         }
 
@@ -911,7 +906,6 @@ namespace GentagDemo
         ~demoClient()
         {
             tagReader.Running = false;
-            //tagSearchTimer.Enabled = false;
             debugOut.Dispose();
             Dispose(false);
         }
@@ -1104,12 +1098,10 @@ namespace GentagDemo
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void updateTreeView1(string currentTag, string rfidDescr, authenticatedType authType)
         {
-
             if (authTreeView.InvokeRequired)
             {
                 authTreeView.BeginInvoke(new updateTreeView1Delegate(updateTreeView1),
                     new object[] { currentTag, rfidDescr, authType });
-
             }
             else
             {
@@ -1227,8 +1219,14 @@ namespace GentagDemo
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            tagReader.Running = false;
-            setWaitCursor(false);
+            if (tagSearchReading)
+            {
+                tagSearchReading = false;
+                tagSearchAutoEvent.WaitOne(50, false);
+                tagSearchTimer.Dispose();
+                setWaitCursor(false);
+                tagReader.Running = false;
+            }
         }
 
         private void manualLookupClick(object sender, EventArgs e)

@@ -27,18 +27,10 @@ namespace RFIDReadCursor
 
         private int lastBlinkTime = 0;
 
-        private Color nextColor;
-
-        public bool Blink
+        public void Blink()
         {
-            set
-            {
-                lastBlinkTime = Environment.TickCount;
-            }
-            get
-            {
-                return (Environment.TickCount - lastBlinkTime) < 1500;
-            }
+            lastBlinkTime = Environment.TickCount;
+
         }
 
         public bool TimerEnabled
@@ -49,18 +41,17 @@ namespace RFIDReadCursor
             }
             set
             {
-                eventTimer.Enabled = value;
                 currentImage = 0;
-                setPhoto(pictureBox1, refImages[currentImage]);
+                pictureBox1.Image = refImages[currentImage];
+                eventTimer.Enabled = value;
             }
         }
-        
+
         public RFIDReadWaitCursor()
         {
             InitializeComponent();
-            nextColor = Color.Black;
             eventTimer.Tick += new EventHandler(eventTimer_Tick);
-            eventTimer.Interval = 750;
+            eventTimer.Interval = 500;
             refImages = new Image[4];
             refImages[0] = Image.FromHbitmap(RFIDReadCursor.Properties.Resources.RadioAnimation0.GetHbitmap());
             refImages[1] = Image.FromHbitmap(RFIDReadCursor.Properties.Resources.RadioAnimation1.GetHbitmap());
@@ -79,7 +70,7 @@ namespace RFIDReadCursor
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new eventTimer_TickDelegate(eventTimer_Tick), new object[] { sender, e });
+                this.BeginInvoke(new eventTimer_TickDelegate(eventTimer_Tick), new object[] { sender, e });
             }
             else
             {
@@ -89,32 +80,7 @@ namespace RFIDReadCursor
                     this.BackColor = Color.Red;
 
                 currentImage = (currentImage + 1) % refImages.Length;
-                setPhoto(pictureBox1, refImages[currentImage]);
-            }
-        }
-
-        private void UserControl1_Click(object sender, EventArgs e)
-        {
-            eventTimer.Enabled = !eventTimer.Enabled;
-        }
-
-        private delegate void setPhotoDelegateB(PictureBox pB, Image bA);
-
-        private void setPhoto(PictureBox pB, Image bA)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new setPhotoDelegateB(setPhoto), new object[] { pB, bA });
-                return;
-            }
-            try
-            {
-                pB.Image = bA;
-                pB.Refresh();
-            }
-            catch (ArgumentException)
-            {
-
+                pictureBox1.Image = refImages[currentImage];
             }
         }
     }

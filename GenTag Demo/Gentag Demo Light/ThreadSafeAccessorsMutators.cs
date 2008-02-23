@@ -42,21 +42,22 @@ namespace GentagDemo
 
         private void setPhoto(PictureBox pB, Image bA)
         {
-            if (this.InvokeRequired)
+            if (pB.InvokeRequired)
             {
-                this.Invoke(new setPhotoDelegateB(setPhoto), new object[] { pB, bA });
-                return;
-            }
-            try
-            {
-                if (pB.Image != null)
-                    pB.Image.Dispose();
-                pB.Image = bA;
-                pB.Refresh();
-            }
-            catch (ArgumentException)
-            {
+                pB.BeginInvoke(new setPhotoDelegateB(setPhoto), new object[] { pB, bA });
 
+            }
+            else
+            {
+                try
+                {
+                    if (pB.Image != null)
+                        pB.Image.Dispose();
+                    pB.Image = bA;
+                    pB.Refresh();
+                }
+                catch (ArgumentException)
+                { }
             }
         }
 
@@ -93,7 +94,7 @@ namespace GentagDemo
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new setWaitCursorDelegate(setWaitCursor), new object[] { set });
+                this.BeginInvoke(new setWaitCursorDelegate(setWaitCursor), new object[] { set });
             }
             else
             {
@@ -113,21 +114,7 @@ namespace GentagDemo
                 this.Refresh();
             }
         }
-
-        private delegate void blinkCursorDelegate();
-
-        private void blinkCursor()
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new blinkCursorDelegate(blinkCursor), new object[] {  });
-            }
-            else
-            {
-                waitCursor.Blink = true;
-            }
-        }
-
+       
         private delegate void setLabelDelegate(Label tB, string desc);
 
         private void setLabel(Label tB, string val)
@@ -146,9 +133,9 @@ namespace GentagDemo
 
         private void setPhoto(PictureBox pB, byte[] bA)
         {
-            if (this.InvokeRequired)
+            if (pB.InvokeRequired)
             {
-                this.Invoke(new setPhotoDelegate(setPhoto), new object[] { pB, bA });
+                pB.BeginInvoke(new setPhotoDelegate(setPhoto), new object[] { pB, bA });
                 return;
             }
             try
@@ -168,9 +155,9 @@ namespace GentagDemo
 
         private void setTextBox(TextBox tb, string value)
         {
-            if (this.InvokeRequired)
+            if (tb.InvokeRequired)
             {
-                this.Invoke(new setTextBoxDelegate(setTextBox), new object[] { tb, value });
+                tb.BeginInvoke(new setTextBoxDelegate(setTextBox), new object[] { tb, value });
             }
             else
                 tb.Text = value;

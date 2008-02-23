@@ -40,15 +40,14 @@
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(64, 64);
             // 
-            // UserControl1
+            // RFIDReadWaitCursor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.Controls.Add(this.pictureBox1);
-            this.Name = "UserControl1";
+            this.Name = "RFIDReadWaitCursor";
             this.Size = new System.Drawing.Size(72, 72);
-            this.Click += new System.EventHandler(this.UserControl1_Click);
             this.ResumeLayout(false);
 
         }
