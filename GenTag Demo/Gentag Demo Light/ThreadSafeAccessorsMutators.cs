@@ -121,7 +121,7 @@ namespace GentagDemo
         {
             if (tB.InvokeRequired)
             {
-                tB.BeginInvoke(new setLabelDelegate(setLabel), new object[] { tB, val });             
+                tB.Invoke(new setLabelDelegate(setLabel), new object[] { tB, val });             
             }
             else
             {

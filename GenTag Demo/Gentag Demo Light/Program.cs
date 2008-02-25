@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Diagnostics;
+using System.Threading;
 
 namespace GentagDemo
 {
@@ -14,9 +15,11 @@ namespace GentagDemo
         [MTAThread]
         static void Main()
         {
-            authenticationWS.AuthenticationWebService ws = new authenticationWS.AuthenticationWebService();
-            ws.Timeout = 10000;
-                        
+            //int a, b;
+            //System.Threading.ThreadPool.GetMaxThreads(out a,out b);
+            //MessageBox.Show("has " + a.ToString() + " threads.\nhas " + b.ToString() + " IO threads.");
+            System.Threading.ThreadPool.SetMaxThreads(50, 500);
+            
             try
             {
                 Application.Run(new demoClient());
@@ -25,6 +28,9 @@ namespace GentagDemo
             {
                 if (DialogResult.Yes == MessageBox.Show("The application has encountered an error and must restart, click Yes to report this error and restart, No to quit.", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1))
                 {
+                    authenticationWS.AuthenticationWebService ws = new authenticationWS.AuthenticationWebService();
+                    ws.Timeout = 10000;
+
                     for (int i = 5; i > 0; i--)
                     {
                         try

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 [assembly: CLSCompliant(true)]
 namespace RFIDReader
@@ -20,13 +21,12 @@ namespace RFIDReader
     public class TagReceivedEventArgs : EventArgs
     {
         private string tagID;
+        private tagTypes type;
 
-        private bool doneReading;
-
-        public TagReceivedEventArgs(string _tag, bool _done)
+        public TagReceivedEventArgs(string _tag, tagTypes _type)
         {
             tagID = _tag;
-            doneReading = _done;
+            type = _type;
         }
 
         public string Tag
@@ -37,11 +37,11 @@ namespace RFIDReader
             }
         }
 
-        public bool Done
+        public tagTypes Type
         {
             get
             {
-                return doneReading;
+                return type;
             }
         }
     }
@@ -64,9 +64,9 @@ namespace RFIDReader
         }
 
         public Single HighLimit
-        {get { return highLimit; }}
+        { get { return highLimit; } }
         public Single LowLimit
-        {get { return lowLimit; }}
+        { get { return lowLimit; } }
         public short Period
         { get { return period; } }
         public short LogMode
@@ -108,7 +108,7 @@ namespace RFIDReader
         { get { return tagID; } }
     }
 
-    public class VarioSensLogEventArgs:EventArgs
+    public class VarioSensLogEventArgs : EventArgs
     {
         private Single upperLimit;
         private Single lowerLimit;
@@ -184,7 +184,7 @@ namespace RFIDReader
         [DllImport("VarioSens Lib.dll")]
         public static extern int getVarioSensSettings(VarioSensSettingsCallback cb);
     }
-        #endregion
+    #endregion
 
     public class Reader
     {
@@ -207,13 +207,13 @@ namespace RFIDReader
             timerAutoEvent = new AutoResetEvent(false);
 
             timerDelegate = new TimerCallback(siritReadTick);
-            
-            oldTag = "";
         }
 
-        private string oldTag;
-
-        private bool repeat;
+        /// <summary>
+        /// The previous tag value, helps prevent sending the same tag twice in a row since a 
+        /// single scan may create dozens of reads of a single tag
+        /// </summary>
+        private byte[] oldTag = new byte[8];
 
         /// <summary>
         /// The timer thread that does tag reads
@@ -223,8 +223,6 @@ namespace RFIDReader
         private AutoResetEvent timerAutoEvent;
 
         private TimerCallback timerDelegate;
-
-        private bool timerRunning;
 
         private static Reader existingNativeMethods;
 
@@ -244,20 +242,25 @@ namespace RFIDReader
                     case readType.none:
                         break;
                     case readType.readOne:
-                        repeat = false;
-                        readerThread = new Thread(readOneTagID);
-                        break;
-                    case readType.readMany:
-                        repeat = true;
 #if (WDREADER)
-                        timerDelegate = new TimerCallback(wdReadTick); 
+                        timerDelegate = new TimerCallback(wdReadTick);
+#else
+                        timerDelegate = new TimerCallback(siritReadTick);
+#endif                        
+                        break;
+                    case readType.readMany:                        
+#if (WDREADER)
+                        timerDelegate = new TimerCallback(wdReadTick);
 #else
                         timerDelegate = new TimerCallback(siritReadTick); 
-#endif
-                        //readerThread = new Thread(readTagID);
+#endif                        
                         break;
                     case readType.detectMany:
-                        readerThread = new Thread(detectTag);
+#if (WDREADER)
+                        timerDelegate = new TimerCallback(wdReadTick);
+#else
+                        timerDelegate = new TimerCallback(siritReadTick);
+#endif                        
                         break;
                     case readType.getVarioSensSettings:
                         readerThread = new Thread(getVSSettings);
@@ -296,8 +299,6 @@ namespace RFIDReader
 
         private bool readerRunning;
 
-
-
         public bool Running
         {
             get { return readTimer != null; }
@@ -305,7 +306,7 @@ namespace RFIDReader
             {
 
                 if (value)
-                {                    
+                {
 #if (!WDREADER)
                     string errorMessage = "";
                     int n = retryCount;
@@ -337,76 +338,99 @@ namespace RFIDReader
                     }
                     else
 #endif
-                    {                        
+                    {
                         // restart the thread if it somehow already exists
                         if (readTimer != null)
                         {
                             Debug.WriteLine("restarting read thread");
                             readerRunning = false;
-                            if (!timerAutoEvent.WaitOne(3000, false))
+                            if (!timerAutoEvent.WaitOne(5000, false))
                                 Debug.WriteLine("didn't make it");
                             readTimer.Dispose();
                             readTimer = null;
                         }
-                        readerRunning = true;                        
+                        readerRunning = true;
                         readTimer = new System.Threading.Timer(timerDelegate, timerAutoEvent, 50, 50);
                     }
                 }
                 else
                 {
-                    
+
                     if (readTimer != null)
                     {
                         readerRunning = false;
                         if (!timerAutoEvent.WaitOne(3500, false))
+                        {
                             Debug.WriteLine("didn't make it");
+                            MessageBox.Show("killing reader thread");
+                        }
+                        lock (this)
+                        {                      
                         readTimer.Dispose();
                         readTimer = null;
+                        for (int i = 0; i < oldTag.Length; i++)
+                            oldTag[i] = 0x00;
 #if (!WDREADER)
                         //readTimer.Enabled = false;
-                        C1Lib.C1.NET_C1_disable();
-                        C1Lib.C1.NET_C1_close_comm();
+                            C1Lib.C1.NET_C1_disable();
+                            C1Lib.C1.NET_C1_close_comm();
+                        
 #endif
+                        }
                     }
-                }    
+                }
 
             }
         }
 
         private void siritReadTick(object stateInfo)
         {
-            if (readerRunning && Monitor.TryEnter(this))
+            if (Monitor.TryEnter(this))
             {
-                C1Lib.C1.NET_C1_disable();
-                C1Lib.C1.NET_C1_enable();
-                
-                if (C1Lib.ISO_15693.NET_get_15693(0x00) != 0)
+                try
                 {
-                    for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
-                        newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
+                    //Thread.Sleep(20);
+                    C1Lib.C1.NET_C1_disable();
+                    //Thread.Sleep(40);
+                    C1Lib.C1.NET_C1_enable();
 
-                    string newTag = newTagBuilder.ToString();
-
-                    newTagBuilder.Remove(0, newTagBuilder.Length);
-
-                       // when asynchronous delegates are supported in CF
-                        //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);                       
-                            TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
-                    
-                    // disable and enable
-                    //C1Lib.C1.NET_C1_disable();
-                    //C1Lib.C1.NET_C1_enable();
-
-                    if (!repeat)
+                    if (C1Lib.ISO_15693.NET_get_15693(0x00) != 0)
                     {
-                        readTimer.Dispose();
-                        readTimer = null; 
-                    }
-                }
-                Monitor.Exit(this);
+                        bool match = true;
+                        for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
+                        {
+                            if (oldTag[i] != C1Lib.ISO_15693.tag.tag_id[i])
+                                match = false;
+                            oldTag[i] = C1Lib.ISO_15693.tag.tag_id[i];
+                            newTagBuilder.Append(C1Lib.ISO_15693.tag.tag_id[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
+                        }
 
-                if (!readerRunning)
-                    timerAutoEvent.Set();
+                        if (!match)
+                        {
+                            // when asynchronous delegates are supported in CF
+                            //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);                       
+                            TagReceived(this, new TagReceivedEventArgs(newTagBuilder.ToString(),tagTypes.iso15693));
+                            
+                            // disable and enable
+                            //C1Lib.C1.NET_C1_disable();
+                            //C1Lib.C1.NET_C1_enable();
+
+                            if ((readThreadType != readType.readMany) && (readThreadType != readType.detectMany))
+                            {
+                                readTimer.Dispose();
+                                readTimer = null;
+                            }
+                        }
+                        newTagBuilder.Remove(0, newTagBuilder.Length);
+                    }
+
+                    if (!readerRunning)
+                        timerAutoEvent.Set();
+                }
+                finally
+                {
+                    Monitor.Exit(this);
+                }                
             }
         }
 
@@ -426,55 +450,68 @@ namespace RFIDReader
         private const int ICODE_SLI_UID_SIZE = 8;
         private const int ICODE_SLI_BLOCK_SIZE = 4;
         private const int ICODE_SLI_NUMBER_OF_BLOCKS = 16;
+        byte[] uid = new byte[ICODE_SLI_UID_SIZE];
 
         private void wdReadTick(object stateInfo)
         {
             if (Monitor.TryEnter(this))
             {
-                if (shouldReinit)
+                try
                 {
-                    wdiUtil.ChangeProtocol(2, 1);
-                    shouldReinit = false;
-                }
+                    if (shouldReinit)
+                    {
+                        wdiUtil.ChangeProtocol(2, 1);
+                        shouldReinit = false;
+                    }
 
-                ERR ec = (ERR)card.IsCardAvailable();
-                switch (ec)
+                    ERR ec = (ERR)card.IsCardAvailable(true);
+                    
+
+                    switch (ec)
+                    {
+                        case ERR.NONE:
+                            //No card available do nothing
+
+                            break;
+
+                        case ERR.CARD_AVAILABLE:
+                            //Card available
+                            
+                            //card.GetUID(uid);
+                            for (int n = 0; n < card.numUID; n++)
+                            {
+                                uid = card.GetCardUID(n);
+                                for (int i = 0; i < uid.Length; i++)
+                                    newTagBuilder.Append(uid[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
+
+                                string newTag = newTagBuilder.ToString();
+
+                                newTagBuilder.Remove(0, newTagBuilder.Length);
+                                TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), tagTypes.iso15693));
+                            }
+                            break;
+
+                        case ERR.EJECTED:
+                            //SDiD in not inserted
+                            //throw new IOException(Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted);
+                            Debug.WriteLine("Card not inserted");
+                            break;
+
+                        default:
+                            //Some other error
+                            //Ignore for now
+                            break;
+                    }
+
+
+
+                    if (!readerRunning)
+                        timerAutoEvent.Set();
+                }
+                finally
                 {
-                    case ERR.NONE:
-                        //No card available do nothing
-
-                        break;
-
-                    case ERR.CARD_AVAILABLE:
-                        //Card available
-                        byte[] uid = new byte[ICODE_SLI_UID_SIZE];
-                        card.GetUID(uid);
-
-                        for (int i = 0; i < uid.Length; i++)
-                            newTagBuilder.Append(uid[i].ToString("X", CultureInfo.InvariantCulture).PadLeft(2, '0'));
-
-                        string newTag = newTagBuilder.ToString();
-
-                        newTagBuilder.Remove(0, newTagBuilder.Length);
-                        TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
-                        break;
-
-                    case ERR.EJECTED:
-                        //SDiD in not inserted
-                        //throw new IOException(Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted);
-                        Debug.WriteLine("Card not inserted");
-                        break;
-
-                    default:
-                        //Some other error
-                        //Ignore for now
-                        break;
+                    Monitor.Exit(this);
                 }
-
-
-                Monitor.Exit(this);
-                if (!readerRunning)
-                    timerAutoEvent.Set();
             }
         }
 
@@ -547,7 +584,7 @@ namespace RFIDReader
                     {
                         // when asynchronous delegates are supported in CF
                         //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);
-                        TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), !repeat));
+                        TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), tagTypes.iso15693));
                         oldTag = newTag;
                     }
 
@@ -600,7 +637,7 @@ namespace RFIDReader
 
         private void VarioSensReadLog(Single upperTempLimit, Single lowerTempLimit, Int32 len, short recordPeriod, int[] dateTime, Byte[] logMode, Single[] temperatures)
         {
-            VarioSensLogReceived(this, new VarioSensLogEventArgs(upperTempLimit,lowerTempLimit,len,recordPeriod,dateTime,logMode,temperatures));
+            VarioSensLogReceived(this, new VarioSensLogEventArgs(upperTempLimit, lowerTempLimit, len, recordPeriod, dateTime, logMode, temperatures));
         }
 
         private void radiationScan()
@@ -737,7 +774,7 @@ namespace RFIDReader
             if (errorCode != 0)
                 //ReaderError(this, new ReaderErrorEventArgs(Properties.Resources.ErrorReadingVarioSensTag + errorCode));
 
-            readerRunning = false;
+                readerRunning = false;
         }
 
         public static void initialize()
@@ -865,7 +902,7 @@ namespace RFIDReader
             C1Lib.C1.NET_C1_close_comm();
         }
 
-        
+
         public void detectTag()
         {
             string errorMessage = "";
@@ -876,7 +913,7 @@ namespace RFIDReader
                 if (C1Lib.C1.NET_C1_open_comm() != 1)
                 {
                     C1Lib.C1.NET_C1_close_comm();
-                    errorMessage = Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted;                    
+                    errorMessage = Properties.Resources.PleaseEnsureThatTheSiritReaderIsCompletelyInserted;
                 }
                 else if (C1Lib.C1.NET_C1_enable() != 1)
                 {
@@ -992,7 +1029,7 @@ namespace RFIDReader
                     TagTypeDetected(this, new TagTypeEventArgs(tagTypes.felica, newTagBuilder.ToString()));
 
                     newTagBuilder.Remove(0, newTagBuilder.Length);
-                }                
+                }
             }
 
             C1Lib.C1.NET_C1_disable();
