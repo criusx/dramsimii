@@ -13,6 +13,20 @@ namespace GentagDemo
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            if (!disposing)
+            {
+                tagReader.Running = false;
+                tagSearchReading = false;
+                
+                tagSearchAutoEvent.Close();
+
+                if (tagSearchTimer != null)
+                {
+                    tagSearchAutoEvent.WaitOne(500, false);
+                    tagSearchTimer.Dispose();
+                }
+                debugOut.Dispose();
+            }
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -30,16 +44,16 @@ namespace GentagDemo
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(demoClient));
-            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem25 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem26 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem27 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem28 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem29 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem30 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem();
             this.readIDButton = new System.Windows.Forms.Button();
             this.mainTabControl = new System.Windows.Forms.TabControl();
             this.introPage = new System.Windows.Forms.TabPage();
@@ -233,7 +247,7 @@ namespace GentagDemo
             // mainClearButton
             // 
             this.mainClearButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.mainClearButton.Location = new System.Drawing.Point(188, 199);
+            this.mainClearButton.Location = new System.Drawing.Point(194, 199);
             this.mainClearButton.Name = "mainClearButton";
             this.mainClearButton.Size = new System.Drawing.Size(44, 16);
             this.mainClearButton.TabIndex = 0;
@@ -1020,27 +1034,27 @@ namespace GentagDemo
             // 
             this.statusListView.Columns.Add(this.columnHeader1);
             this.statusListView.Columns.Add(this.columnHeader2);
-            listViewItem21.Text = "ActiveSync Status";
-            listViewItem21.SubItems.Add("");
-            listViewItem22.Text = "Phone: 1xRtt Coverage";
-            listViewItem23.Text = "Phone: No Service";
-            listViewItem24.Text = "Phone: Radio Off";
-            listViewItem25.Text = "Phone: Signal Strength";
-            listViewItem26.Text = "Connection Count";
-            listViewItem27.Text = "Cellular Conn Count";
-            listViewItem28.Text = "Network Count";
-            listViewItem29.Text = "Phone: Searching";
-            listViewItem30.Text = "Battery Power";
-            this.statusListView.Items.Add(listViewItem21);
-            this.statusListView.Items.Add(listViewItem22);
-            this.statusListView.Items.Add(listViewItem23);
-            this.statusListView.Items.Add(listViewItem24);
-            this.statusListView.Items.Add(listViewItem25);
-            this.statusListView.Items.Add(listViewItem26);
-            this.statusListView.Items.Add(listViewItem27);
-            this.statusListView.Items.Add(listViewItem28);
-            this.statusListView.Items.Add(listViewItem29);
-            this.statusListView.Items.Add(listViewItem30);
+            listViewItem1.Text = "ActiveSync Status";
+            listViewItem1.SubItems.Add("");
+            listViewItem2.Text = "Phone: 1xRtt Coverage";
+            listViewItem3.Text = "Phone: No Service";
+            listViewItem4.Text = "Phone: Radio Off";
+            listViewItem5.Text = "Phone: Signal Strength";
+            listViewItem6.Text = "Connection Count";
+            listViewItem7.Text = "Cellular Conn Count";
+            listViewItem8.Text = "Network Count";
+            listViewItem9.Text = "Phone: Searching";
+            listViewItem10.Text = "Battery Power";
+            this.statusListView.Items.Add(listViewItem1);
+            this.statusListView.Items.Add(listViewItem2);
+            this.statusListView.Items.Add(listViewItem3);
+            this.statusListView.Items.Add(listViewItem4);
+            this.statusListView.Items.Add(listViewItem5);
+            this.statusListView.Items.Add(listViewItem6);
+            this.statusListView.Items.Add(listViewItem7);
+            this.statusListView.Items.Add(listViewItem8);
+            this.statusListView.Items.Add(listViewItem9);
+            this.statusListView.Items.Add(listViewItem10);
             this.statusListView.Location = new System.Drawing.Point(0, 0);
             this.statusListView.Name = "statusListView";
             this.statusListView.Size = new System.Drawing.Size(240, 217);

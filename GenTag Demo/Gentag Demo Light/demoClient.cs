@@ -46,8 +46,22 @@ namespace GentagDemo
 
             public override bool Equals(object obj)
             {
-                if (!(obj is lookupInfo)) return false;
-                return this == (lookupInfo)obj;
+                if (!(obj.GetType() == typeof(lookupInfo)))
+                    return false;
+                else
+                    return this == (lookupInfo)obj;
+            }
+
+            public override int GetHashCode()
+            {
+                int result = 0;
+                for (int i = 0; i < tagID.Length; ++i)
+                    result ^= tagID[i];
+                if (extraTagValue != null)
+                    for (int j = 0; j < extraTagValue.Length; ++j )
+                        result ^= extraTagValue[j];
+
+                return result;
             }
 
             public static bool operator ==(lookupInfo inf1, lookupInfo inf2)
@@ -58,14 +72,14 @@ namespace GentagDemo
                     (inf1.extraTagValue != null && inf2.extraTagValue == null))
                         return false;
                     else if (inf1.extraTagValue == null && inf2.extraTagValue == null)
-                        return inf1.tagID.Equals(inf2.tagID, StringComparison.InvariantCultureIgnoreCase) &&
+                        return inf1.tagID.Equals(inf2.tagID, StringComparison.OrdinalIgnoreCase) &&
                         inf1.whichLookup == inf2.whichLookup;
                     else
-                        return inf1.tagID.Equals(inf2.tagID, StringComparison.InvariantCultureIgnoreCase) &&
-                            inf1.extraTagValue.Equals(inf2.extraTagValue, StringComparison.InvariantCultureIgnoreCase) &&
+                        return inf1.tagID.Equals(inf2.tagID, StringComparison.OrdinalIgnoreCase) &&
+                            inf1.extraTagValue.Equals(inf2.extraTagValue, StringComparison.OrdinalIgnoreCase) &&
                             (inf1.whichLookup == inf2.whichLookup);
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 { return false; }
             }
 
@@ -73,11 +87,11 @@ namespace GentagDemo
             {
                 try
                 {
-                    return !inf1.tagID.Equals(inf2.tagID, StringComparison.InvariantCultureIgnoreCase) ||
-                    !inf1.extraTagValue.Equals(inf2.extraTagValue, StringComparison.InvariantCultureIgnoreCase) ||
+                    return !inf1.tagID.Equals(inf2.tagID, StringComparison.OrdinalIgnoreCase) ||
+                    !inf1.extraTagValue.Equals(inf2.extraTagValue, StringComparison.OrdinalIgnoreCase) ||
                     (inf1.whichLookup != inf2.whichLookup);
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 { return false; }
             }
         }
@@ -90,7 +104,7 @@ namespace GentagDemo
         #region Members
         private static demoClient mF;
 
-        private Notification popupNotification = null;
+        private Notification popupNotification;
 
         private nmeaInterpreter gpsInterpreter;
 
@@ -271,7 +285,7 @@ namespace GentagDemo
             {
                 try
                 {
-                    debugOut = new StreamWriter("debug" + (i - 500).ToString() + ".txt", false);
+                    debugOut = new StreamWriter("debug" + (i - 500).ToString(CultureInfo.InvariantCulture) + ".txt", false);
                     break;
                 }
                 catch (IOException)
@@ -692,7 +706,7 @@ namespace GentagDemo
                         case loopType.med:
                             {
                                 // patient and med RFID cannot be the same
-                                if (string.IsNullOrEmpty(currentPatientID) || string.Compare(currentPatientID, tagID, true) == 0)
+                                if (string.IsNullOrEmpty(currentPatientID) || string.Compare(currentPatientID, tagID, true,CultureInfo.CurrentCulture) == 0)
                                     break;
 
                                 result = 2;
@@ -758,7 +772,7 @@ namespace GentagDemo
                     }
                 }
             }
-            catch (SoapException ex)
+            catch (SoapException)
             {
                 //MessageBox.Show(Properties.Resources.UnexpectedSOAPException + ex.Message);
             }
@@ -913,11 +927,7 @@ namespace GentagDemo
             {
                 debugOut.WriteLine(e.ToString() + Properties.Resources.at + e.StackTrace);
                 rescheduleLookup(ar);
-            }
-            catch (Exception e)
-            {
-                debugOut.WriteLine(e.ToString() + Properties.Resources.at + e.StackTrace);
-            }
+            }           
             finally
             {
                 // unmark this item as being looked up
@@ -942,14 +952,25 @@ namespace GentagDemo
         /// The destructor for the class, ensures that the tag reader quits and that the debug text file is closed
         /// </summary>
         ~demoClient()
-        {
-            tagReader.Running = false;
-            tagSearchReading = false;
-            tagSearchAutoEvent.WaitOne(500, false);
-            tagSearchTimer.Dispose();
-            debugOut.Dispose();
+        {            
             Dispose(false);
         }
+
+        //protected virtual void Dispose(bool disposing)
+        //{
+        //    if (!disposing)
+        //    {
+        //        tagReader.Running = false;
+        //        tagSearchReading = false;
+
+        //        if (tagSearchTimer != null)
+        //        {
+        //            tagSearchAutoEvent.WaitOne(500, false);
+        //            tagSearchTimer.Dispose();
+        //        }
+        //        debugOut.Dispose();
+        //    }
+        //}
 
         private void receiveTagContents(object sender, TagContentsEventArgs args)
         {
@@ -1147,7 +1168,7 @@ namespace GentagDemo
 
                 foreach (TreeNode currentTreeNode in authTreeView.Nodes)
                 {
-                    if (currentTreeNode.Text.CompareTo(currentTag) == 0)
+                    if (string.Compare(currentTreeNode.Text,currentTag,StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         exists = true;
                         if (authType == authenticatedType.no || authType == authenticatedType.yes)
@@ -1399,19 +1420,19 @@ namespace GentagDemo
                 systemState = new SystemState(SystemProperty.ConnectionsCount);
                 systemState.Changed += new ChangeEventHandler(connectionCountChanged);
                 ListViewItem.ListViewSubItem lvi = new ListViewItem.ListViewSubItem();
-                lvi.Text = ((int)systemState.CurrentValue).ToString();
+                lvi.Text = ((int)systemState.CurrentValue).ToString(CultureInfo.CurrentCulture);
                 statusListView.Items[5].SubItems.Add(lvi);
 
                 systemState = new SystemState(SystemProperty.ConnectionsCellularCount);
                 systemState.Changed += new ChangeEventHandler(cellularConnectionCountChanged);
                 lvi = new ListViewItem.ListViewSubItem();
-                lvi.Text = ((int)systemState.CurrentValue).ToString();
+                lvi.Text = ((int)systemState.CurrentValue).ToString(CultureInfo.CurrentCulture);
                 statusListView.Items[6].SubItems.Add(lvi);
 
                 systemState = new SystemState(SystemProperty.ConnectionsNetworkCount);
                 systemState.Changed += new ChangeEventHandler(networkConnectionCountChanged);
                 lvi = new ListViewItem.ListViewSubItem();
-                lvi.Text = ((int)systemState.CurrentValue).ToString();
+                lvi.Text = ((int)systemState.CurrentValue).ToString(CultureInfo.CurrentCulture);
                 statusListView.Items[7].SubItems.Add(lvi);
 
                 try
@@ -1419,7 +1440,7 @@ namespace GentagDemo
                     systemState = new SystemState(SystemProperty.ActiveSyncStatus);
                     systemState.Changed += new ChangeEventHandler(activeSyncStatusChanged);
                     lvi = new ListViewItem.ListViewSubItem();
-                    lvi.Text = ((ActiveSyncStatus)systemState.CurrentValue).ToString();
+                    lvi.Text = ((ActiveSyncStatus)systemState.CurrentValue).ToString(CultureInfo.CurrentCulture);
                     statusListView.Items[0].SubItems.Add(lvi);
                 }
                 catch (NullReferenceException)
@@ -1430,25 +1451,25 @@ namespace GentagDemo
                 systemState = new SystemState(SystemProperty.Phone1xRttCoverage);
                 systemState.Changed += new ChangeEventHandler(phoneCoverageChanged);
                 lvi = new ListViewItem.ListViewSubItem();
-                lvi.Text = Convert.ToBoolean(systemState.CurrentValue).ToString();
+                lvi.Text = Convert.ToBoolean(systemState.CurrentValue, CultureInfo.CurrentCulture).ToString(CultureInfo.CurrentCulture);
                 statusListView.Items[1].SubItems.Add(lvi);
 
                 systemState = new SystemState(SystemProperty.PhoneNoService);
                 systemState.Changed += new ChangeEventHandler(phoneNoServiceChanged);
                 lvi = new ListViewItem.ListViewSubItem();
-                lvi.Text = Convert.ToBoolean(systemState.CurrentValue).ToString();
+                lvi.Text = Convert.ToBoolean(systemState.CurrentValue, CultureInfo.CurrentCulture).ToString();
                 statusListView.Items[2].SubItems.Add(lvi);
 
                 systemState = new SystemState(SystemProperty.PhoneRadioOff);
                 systemState.Changed += new ChangeEventHandler(phoneRadioOffChanged);
                 lvi = new ListViewItem.ListViewSubItem();
-                lvi.Text = Convert.ToBoolean(systemState.CurrentValue).ToString();
+                lvi.Text = Convert.ToBoolean(systemState.CurrentValue, CultureInfo.CurrentCulture).ToString();
                 statusListView.Items[3].SubItems.Add(lvi);
 
                 systemState = new SystemState(SystemProperty.PhoneSearchingForService);
                 systemState.Changed += new ChangeEventHandler(searchingForServiceChanged);
                 lvi = new ListViewItem.ListViewSubItem();
-                lvi.Text = Convert.ToBoolean(systemState.CurrentValue).ToString();
+                lvi.Text = Convert.ToBoolean(systemState.CurrentValue, CultureInfo.CurrentCulture).ToString();
                 statusListView.Items[8].SubItems.Add(lvi);
 
                 try
@@ -1583,17 +1604,17 @@ namespace GentagDemo
 
         void searchingForServiceChanged(object sender, ChangeEventArgs args)
         {
-            statusListView.Items[8].SubItems[1].Text = Convert.ToBoolean(args.NewValue).ToString();
+            statusListView.Items[8].SubItems[1].Text = Convert.ToBoolean(args.NewValue, CultureInfo.CurrentCulture).ToString();
         }
 
         void phoneRadioOffChanged(object sender, ChangeEventArgs args)
         {
-            statusListView.Items[3].SubItems[1].Text = Convert.ToBoolean(args.NewValue).ToString();
+            statusListView.Items[3].SubItems[1].Text = Convert.ToBoolean(args.NewValue, CultureInfo.CurrentCulture).ToString();
         }
 
         void phoneNoServiceChanged(object sender, ChangeEventArgs args)
         {
-            statusListView.Items[2].SubItems[1].Text = Convert.ToBoolean(args.NewValue).ToString();
+            statusListView.Items[2].SubItems[1].Text = Convert.ToBoolean(args.NewValue, CultureInfo.CurrentCulture).ToString();
         }
 
         void phoneCoverageChanged(object sender, ChangeEventArgs args)
@@ -1615,23 +1636,19 @@ namespace GentagDemo
 
         void networkConnectionCountChanged(object sender, ChangeEventArgs args)
         {
-            statusListView.Items[7].SubItems[1].Text = ((int)args.NewValue).ToString();
+            statusListView.Items[7].SubItems[1].Text = ((int)args.NewValue).ToString(CultureInfo.CurrentCulture);
         }
 
         void cellularConnectionCountChanged(object sender, ChangeEventArgs args)
         {
-            statusListView.Items[6].SubItems[1].Text = ((int)args.NewValue).ToString();
+            statusListView.Items[6].SubItems[1].Text = ((int)args.NewValue).ToString(CultureInfo.CurrentCulture);
         }
 
         void connectionCountChanged(object sender, ChangeEventArgs args)
         {
-            statusListView.Items[5].SubItems[1].Text = ((int)args.NewValue).ToString();
+            statusListView.Items[5].SubItems[1].Text = ((int)args.NewValue).ToString(CultureInfo.CurrentCulture);
         }
         #endregion
 
-        private void updateGUI_Tick()
-        {
-
-        }
     }
 }

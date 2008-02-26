@@ -489,6 +489,11 @@ namespace RFIDReader
                                 newTagBuilder.Remove(0, newTagBuilder.Length);
                                 TagReceived(this, new TagReceivedEventArgs(newTag.ToString(), tagTypes.iso15693));
                             }
+                            if ((readThreadType != readType.readMany) && (readThreadType != readType.detectMany))
+                            {
+                                readTimer.Dispose();
+                                readTimer = null;
+                            }
                             break;
 
                         case ERR.EJECTED:

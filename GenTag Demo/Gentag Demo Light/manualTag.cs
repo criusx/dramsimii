@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using System.Globalization;
 
 namespace GentagDemo
 {
@@ -17,9 +18,9 @@ namespace GentagDemo
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (textBox1.Text.Length < 16 && "0123456789ABCDEF".IndexOf(char.ToUpper(e.KeyChar)) >= 0)
+            if (textBox1.Text.Length < 16 && "0123456789ABCDEF".IndexOf(char.ToUpper(e.KeyChar,CultureInfo.CurrentCulture)) >= 0)
             {
-                textBox1.Text += char.ToUpper(e.KeyChar);
+                textBox1.Text += char.ToUpper(e.KeyChar, CultureInfo.CurrentCulture);
                 textBox1.SelectionStart = textBox1.Text.Length;
             }
             else if (e.KeyChar == (int)Keys.Back)

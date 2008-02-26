@@ -38,7 +38,7 @@ namespace GentagDemo
                             ws.sendError(e.ToString(), e.StackTrace, e.Message);
                             break;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
                     }
@@ -54,12 +54,11 @@ namespace GentagDemo
                     //ProcessStartInfo process = new ProcessStartInfo(Assembly.GetExecutingAssembly().GetName().CodeBase, "");
                     //process.UseShellExecute = true;
                     //Process.Start(process);
-                    
-
                 }
                 else
-                {
+                {                   
                     Application.Exit();
+                    throw;
                 }
             }
         }
