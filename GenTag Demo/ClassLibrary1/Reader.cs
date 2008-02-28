@@ -1,4 +1,4 @@
-#define WDREADER
+//#define WDREADER
 using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -23,6 +23,12 @@ namespace RFIDReader
         private string tagID;
         private tagTypes type;
 
+        public TagReceivedEventArgs()
+        {
+            tagID = string.Empty;
+            type = tagTypes.none;
+        }
+
         public TagReceivedEventArgs(string _tag, tagTypes _type)
         {
             tagID = _tag;
@@ -35,6 +41,10 @@ namespace RFIDReader
             {
                 return tagID;
             }
+            set
+            {
+                tagID = value;
+            }
         }
 
         public tagTypes Type
@@ -42,6 +52,10 @@ namespace RFIDReader
             get
             {
                 return type;
+            }
+            set
+            {
+                type = value;
             }
         }
     }
@@ -207,6 +221,8 @@ namespace RFIDReader
             timerAutoEvent = new AutoResetEvent(false);
 
             timerDelegate = new TimerCallback(siritReadTick);
+
+            tag.Type = tagTypes.iso15693;
         }
 
         /// <summary>
@@ -383,18 +399,39 @@ namespace RFIDReader
             }
         }
 
+        private TagReceivedEventArgs tag = new TagReceivedEventArgs();
+
         private void siritReadTick(object stateInfo)
         {
-            if (Monitor.TryEnter(this))
+            if (readerRunning && Monitor.TryEnter(this))
             {
+                bool doDisable = false;
                 try
                 {
-                    //Thread.Sleep(20);
-                    C1Lib.C1.NET_C1_disable();
-                    //Thread.Sleep(40);
-                    C1Lib.C1.NET_C1_enable();
+                    // reset or reinit the reader
+                    if (C1Lib.C1.NET_C1_enable() != 1)
+                    {
+                        C1Lib.C1.NET_C1_disable();
+                        C1Lib.C1.NET_C1_close_comm();
+                        Thread.Sleep(250);
+                        if (C1Lib.C1.NET_C1_open_comm() == 0 ||
+                            C1Lib.C1.NET_C1_enable() == 0)
+                        {
+                            Debug.WriteLine("Problem Enabling COM port.  Please re-insert card and try again.");
+                            return;
+                        }
+                        else
+                            doDisable = true;
+                    }
+                    else
+                        doDisable = true;
 
-                    if (C1Lib.ISO_15693.NET_get_15693(0x00) != 0)
+                    uint n = 5;
+
+                    while ((n > 0) && readerRunning && (C1Lib.ISO_15693.NET_get_15693(0) == 0))
+                    { }
+
+                    if ((n > 0) && readerRunning)
                     {
                         bool match = true;
                         for (int i = 0; i < C1Lib.ISO_15693.tag.id_length; i++)
@@ -409,8 +446,9 @@ namespace RFIDReader
                         {
                             // when asynchronous delegates are supported in CF
                             //TagReceived.BeginInvoke(newTag.ToString(), !repeat, null, null);                       
-                            TagReceived(this, new TagReceivedEventArgs(newTagBuilder.ToString(),tagTypes.iso15693));
-                            
+                            tag.Tag = newTagBuilder.ToString();
+
+                            TagReceived(this, tag);
                             // disable and enable
                             //C1Lib.C1.NET_C1_disable();
                             //C1Lib.C1.NET_C1_enable();
@@ -423,14 +461,20 @@ namespace RFIDReader
                         }
                         newTagBuilder.Remove(0, newTagBuilder.Length);
                     }
-
-                    if (!readerRunning)
-                        timerAutoEvent.Set();
                 }
                 finally
                 {
+                    if (doDisable)
+                        C1Lib.C1.NET_C1_disable();
                     Monitor.Exit(this);
-                }                
+                        
+                    if (!readerRunning)
+                        timerAutoEvent.Set();
+                }
+            }
+            else
+            {
+                Debug.WriteLine("looped too fast for sirit reader");
             }
         }
 
@@ -522,7 +566,7 @@ namespace RFIDReader
 
         private StringBuilder newTagBuilder = new StringBuilder(16);
 
-        private const int retryCount = 1;
+        private const int retryCount = 3;
 
         public void readTagID()
         {
