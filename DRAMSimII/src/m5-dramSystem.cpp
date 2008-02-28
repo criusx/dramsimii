@@ -94,20 +94,19 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	//if (!pkt->needsResponse())
 	if (!pkt->needsResponse() && !pkt->isWrite())
 	{
-#ifdef M5DEBUG
-		timingOutStream << "packet not needing response." << endl;
-#endif
-		if (pkt->cmd != MemCmd::UpgradeReq)
-		{
-			cerr << "deleted pkt, not upgradereq, not write, needs no resp" << endl;
-			delete pkt->req;
-			delete pkt;
-		}
-		else
-		{
-			cerr << "####################### not upgrade request" << endl;
-		}
-		return true;
+		M5_TIMING_LOG("packet not needing response.")
+
+			if (pkt->cmd != MemCmd::UpgradeReq)
+			{
+				cerr << "deleted pkt, not upgradereq, not write, needs no resp" << endl;
+				delete pkt->req;
+				delete pkt;
+			}
+			else
+			{
+				cerr << "####################### not upgrade request" << endl;
+			}
+			return true;
 	}
 	else
 	{
@@ -140,7 +139,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		// should also not start/finish any commands, since this would happen at a scheduled time
 		// instead of now
 		memory->moveToTime(currentMemCycle);
-		
+
 		assert(!pkt->wasNacked());
 		// turn packet around to go back to requester if response expected
 
@@ -162,7 +161,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			//pkt->setSrc(memID);
 			//doSendTiming(pkt,0);
 
-			
+
 			// http://m5.eecs.umich.edu/wiki/index.php/Memory_System
 			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
 			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
@@ -170,10 +169,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			memory->mostRecentChannel = trans->getAddresses().channel;
 			delete trans;
 
-#ifdef M5DEBUG
-			timingOutStream << "Wait for retry before sending more to ch[" << trans->getAddresses().channel << "]" << endl;
-#endif
-			return false;
+			M5_TIMING_LOG("Wait for retry before sending more to ch[" << trans->getAddresses().channel << "]")
+				return false;
 		}
 		else
 		{
@@ -183,12 +180,12 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 			tick_t next = min(memory->nextStats,memory->ds->nextTick());
 			assert(next < TICK_T_MAX);
-			
-#ifdef M5DEBUG
-				timingOutStream << "schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]" << endl;
-#endif
+
+
+			M5_TIMING_LOG("schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]")
+
 				memory->tickEvent.schedule(memory->getCpuRatio() * next);
-			
+
 			return true;
 		}
 #endif
@@ -212,14 +209,12 @@ void M5dramSystem::TickEvent::process()
 	while (currentMemCycle >= memory->nextStats)
 		memory->nextStats += STATS_INTERVAL;
 
-#ifdef M5DEBUG
-	timingOutStream << "intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]" << endl;
-#endif
+	M5_TIMING_LOG("intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]")
 
-	// move memory channels to the current time
-	memory->moveToTime(currentMemCycle);
-	
-	
+		// move memory channels to the current time
+		memory->moveToTime(currentMemCycle);
+
+
 	// deschedule yourself
 	if (memory->tickEvent.scheduled())
 		memory->tickEvent.deschedule();
@@ -227,12 +222,11 @@ void M5dramSystem::TickEvent::process()
 	// determine the next time to wake up
 	tick_t next = min(memory->nextStats,memory->ds->nextTick());	
 	assert(next < TICK_T_MAX);
-	
-#ifdef M5DEBUG
-		timingOutStream << "schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]" << endl;
-#endif
+
+	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]")
+
 		assert(next * memory->getCpuRatio() > curTick);
-		schedule(static_cast<Tick>(next * memory->getCpuRatio()));
+	schedule(static_cast<Tick>(next * memory->getCpuRatio()));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -260,19 +254,16 @@ void M5dramSystem::moveToTime(const tick_t now)
 			bool needsResponse = packet->needsResponse();
 
 			//doFunctionalAccess(packet);
-			
+
 			doAtomicAccess(packet);		
 
 			if (needsResponse)
 			{			
 				assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
 
-#ifdef M5DEBUG
-				timingOutStream << "<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick << endl;
-#endif
+				M5_TIMING_LOG("<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick)
 
-				
-				ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
+					ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
 			}
 			else
 			{
@@ -285,12 +276,9 @@ void M5dramSystem::moveToTime(const tick_t now)
 	// if there is now room, allow a retry to happen
 	if (needRetry && !ds->isFull(mostRecentChannel))
 	{
+		M5_TIMING_LOG("Allow retrys")
 
-#ifdef M5DEBUG
-		timingOutStream << "Allow retrys" << endl;
-#endif
-
-		needRetry = false;
+			needRetry = false;
 		ports[lastPortIndex]->sendRetry();
 	}
 }
@@ -419,11 +407,9 @@ void M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
 
 Tick M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
 { 
-#ifdef M5DEBUG
-	timingOutStream << "M5dramSystem recvAtomic()" << endl;
-#endif
+	M5_TIMING_LOG("M5dramSystem recvAtomic()")
 
-	return memory->doAtomicAccess(pkt);
+		return memory->doAtomicAccess(pkt);
 }
 
 void M5dramSystem::MemoryPort::recvStatusChange(Port::Status status)

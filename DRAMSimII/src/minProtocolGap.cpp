@@ -13,9 +13,9 @@ int dramChannel::minProtocolGap(const command *this_c) const
 	int min_gap = 0;
 
 	const unsigned this_rank = this_c->getAddress().rank;
-	
+
 	const rank_c &currentRank = rank[this_rank];
-	
+
 	const bank_c &currentBank = currentRank.bank[this_c->getAddress().bank];
 
 	switch(this_c->getCommandType())
@@ -46,7 +46,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 
 			// respect tRP of same bank
 			int tRPGap = (int)(currentBank.getLastPrechargeTime() - time) + timingSpecification.tRP();
-			
+
 			// respect the t_faw value for DDR2 and beyond
 			int tFAWGap;
 
@@ -63,8 +63,10 @@ int dramChannel::minProtocolGap(const command *this_c) const
 
 			// respect tRFC
 			int tRFCGap = (int)(currentRank.lastRefreshTime - time) + timingSpecification.tRFC();
-			
+
 			min_gap = max(max(max(tRFCGap,tRCGap) , tRPGap) , max(tRRDGap , tFAWGap));
+
+			//DEBUG_TIMING_LOG(this_c->getCommandType() << " ras[" << setw(2) << t_ras_gap << "] rrd[" << setw(2) << t_rrd_gap << "] faw[" << setw(2) << t_faw_gap << "] cas[" << setw(2) << t_cas_gap << "] rrd[" << setw(2) << t_rrd_gap << "] rp[" << setw(2) << t_rp_gap << "] min[" << setw(2) << min_gap << "]");
 		}
 		break;
 
@@ -110,7 +112,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
 			int t_cas_gap = (int)((currentRank.lastCASTime - time) + timingSpecification.tBurst());
-			
+
 			//respect last cas write of same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
@@ -124,7 +126,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 				t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASWTime - time) + timingSpecification.tCWD() + otherRankLastCASWLength + timingSpecification.tRTRS() - timingSpecification.tCAS());
 			}
 			min_gap = max(tRCDGap,t_cas_gap);
-			
+
 			//fprintf(stderr," [%8d] [%8d] [%8d] [%8d] [%8d] [%2d]\n",(int)now,(int)this_r_last_cas_time,(int)this_r_last_casw_time,(int)other_r_last_cas_time,(int)other_r_last_casw_time,min_gap);
 		}
 		break;
@@ -166,20 +168,20 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			// DW 3/9/2006 add these two lines
 			//cas_length = max(timing_specification.t_int_burst,this_r.last_cas_length);
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
-			
+
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
 			int t_cas_gap = max(0,(int)(currentRank.lastCASTime - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
-			
+
 			// respect last cas to different ranks
 			t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASTime - time) + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD());
-			
+
 			// respect last cas write to same rank
 			// DW 3/9/2006 replace the line after next with the next line			
 			// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
 			t_cas_gap = max(t_cas_gap,(int)(currentRank.lastCASWTime - time) + timingSpecification.tBurst());
-			
+
 			// respect last cas write to different ranks
 			t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASWTime - time) + otherRankLastCASWLength);
 
@@ -226,10 +228,229 @@ int dramChannel::minProtocolGap(const command *this_c) const
 		break;
 	}
 
-#ifdef DEBUG_MIN_PROTOCOL_GAP
-	outStream << this_c->commandType;
-	outStream << " ras[" << setw(2) << t_ras_gap << "] rrd[" << setw(2) << t_rrd_gap << "] faw[" << setw(2) << t_faw_gap << "] cas[" << setw(2) << t_cas_gap << "] rrd[" << setw(2) << t_rrd_gap << "] rp[" << setw(2) << t_rp_gap << "] min[" << setw(2) << min_gap << "]" << endl;
-#endif
-
 	return max(min_gap,timingSpecification.tCMD());
+}
+
+//! Returns the soonest time that this command may execute
+/*! Looks at all of the timing parameters and decides when the this command may soonest execute */
+tick_t dramChannel::nearestExecuteTime(const command *currentCommand) const
+{ 
+	tick_t nextTime;
+
+	const unsigned this_rank = currentCommand->getAddress().rank;
+
+	const rank_c &currentRank = rank[this_rank];
+
+	const bank_c &currentBank = currentRank.bank[currentCommand->getAddress().bank];
+
+	switch(currentCommand->getCommandType())
+	{
+	case RAS_COMMAND:
+		{
+			// refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk
+
+			// respect the row cycle time limitation
+			tick_t tRCLimit = currentBank.getLastRASTime() + timingSpecification.tRC();
+
+			// respect tRRD and tRC of all other banks of same rank
+			tick_t tRRDLimit;
+
+			if (currentRank.lastRASTimes.isEmpty())
+			{
+				tRRDLimit = time;
+			}
+			else 
+			{
+				// read tail end of RAS history
+				const tick_t *lastRASTime = currentRank.lastRASTimes.back(); 
+				// respect the row-to-row activation delay
+				tRRDLimit = *lastRASTime + timingSpecification.tRRD();				
+			}
+
+			// respect tRP of same bank
+			tick_t tRPLimit = currentBank.getLastPrechargeTime() + timingSpecification.tRP();
+
+			// respect the t_faw value for DDR2 and beyond
+			tick_t tFAWLimit;
+
+			if (currentRank.lastRASTimes.isFull())
+			{
+				// read head of ras history
+				const tick_t *fourthRASTime = currentRank.lastRASTimes.front(); 
+				tFAWLimit = (int)(*fourthRASTime - time) + timingSpecification.tFAW();
+			}
+			else
+			{
+				tFAWLimit = time;
+			}
+
+			// respect tRFC
+			tick_t tRFCLimit = currentRank.lastRefreshTime + timingSpecification.tRFC();
+
+			nextTime = max(max(max(tRFCLimit,tRCLimit) , tRPLimit) , max(tRRDLimit , tFAWLimit));
+
+			//DEBUG_TIMING_LOG(this_c->getCommandType() << " ras[" << setw(2) << t_ras_gap << "] rrd[" << setw(2) << t_rrd_gap << "] faw[" << setw(2) << t_faw_gap << "] cas[" << setw(2) << t_cas_gap << "] rrd[" << setw(2) << t_rrd_gap << "] rp[" << setw(2) << t_rp_gap << "] min[" << setw(2) << min_gap << "]");
+		}
+		break;
+
+	case CAS_AND_PRECHARGE_COMMAND:
+		// Auto precharge will be issued as part of command,
+		// but DRAM devices are intelligent enough to delay the prec command
+		// until tRAS timing is met (thanks to tAL), so no need to check tRAS timing requirement here.
+
+	case CAS_COMMAND:
+		{
+			//respect last RAS of same rank
+			tick_t tRCDLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
+
+			// ensure that if no other rank has issued a CAS command that it will treat
+			// this as if a CAS command was issued long ago
+			tick_t otherRankLastCASTime = time - 1000;
+			int otherRankLastCASLength = timingSpecification.tBurst();
+			tick_t otherRankLastCASWTime = time - 1000;
+			int otherRankLastCASWLength = timingSpecification.tBurst();
+
+			// find the most recent cas(w) time and length
+			for (vector<rank_c>::const_iterator thisRank = rank.begin(); thisRank != rank.end(); thisRank++)
+			{
+				if (thisRank->getRankID() != currentRank.getRankID())
+				{
+					if (thisRank->lastCASTime > otherRankLastCASTime)
+					{
+						otherRankLastCASTime = thisRank->lastCASTime;
+						otherRankLastCASLength = thisRank->lastCASLength;
+					}
+					if (thisRank->lastCASWTime > otherRankLastCASWTime)
+					{
+						otherRankLastCASWTime = thisRank->lastCASWTime;
+						otherRankLastCASWLength = thisRank->lastCASWLength;
+					}
+				}
+			}			
+
+			//respect last cas of same rank
+			// DW 3/9/2006 add these two lines
+			//cas_length = max(timing_specification.t_int_burst,this_r.last_cas_length);
+			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
+			// DW 3/9/2006 replace the line after next with the next line
+			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
+			tick_t tCASLimit = currentRank.lastCASTime + timingSpecification.tBurst();
+
+			//respect last cas write of same rank
+			// DW 3/9/2006 replace the line after next with the next line
+			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
+			tCASLimit = max(tCASLimit,currentRank.lastCASWTime + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR());
+
+			if (rank.size() > 1) 
+			{
+				//respect most recent CAS of different rank
+				tCASLimit = max(tCASLimit,otherRankLastCASTime + otherRankLastCASLength + timingSpecification.tRTRS());
+				//respect timing of READ follow WRITE, different ranks
+				tCASLimit = max(tCASLimit,otherRankLastCASWTime + timingSpecification.tCWD() + otherRankLastCASWLength + timingSpecification.tRTRS() - timingSpecification.tCAS());
+			}
+			
+			nextTime = max(tRCDLimit,tCASLimit);
+
+			//fprintf(stderr," [%8d] [%8d] [%8d] [%8d] [%8d] [%2d]\n",(int)now,(int)this_r_last_cas_time,(int)this_r_last_casw_time,(int)other_r_last_cas_time,(int)other_r_last_casw_time,min_gap);
+		}
+		break;
+
+	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+		// Auto precharge will be issued as part of command, so
+		// Since commodity DRAM devices are write-cycle limited, we don't have to worry if
+		// the precharge will met tRAS timing or not. So CAS_WRITE_AND_PRECHARGE_COMMAND
+		// has the exact same timing requirements as a simple CAS COMMAND.
+
+	case CAS_WRITE_COMMAND:
+		{
+			//respect last RAS of same rank
+			tick_t tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
+
+			tick_t otherRankLastCASTime = time - 1000;
+			int otherRankLastCASLength = timingSpecification.tBurst();
+			tick_t otherRankLastCASWTime = time - 1000;
+			int otherRankLastCASWLength = timingSpecification.tBurst();
+
+			// find the most recent CAS/CASW time and length
+			// FIXME: change to use iterators
+			for (unsigned rank_id = 0; rank_id < rank.size() ; rank_id++)
+			{
+				if (rank_id != this_rank)
+				{
+					if (rank[rank_id].lastCASTime > otherRankLastCASTime)
+					{
+						otherRankLastCASTime = rank[rank_id].lastCASTime;
+						otherRankLastCASLength = rank[rank_id].lastCASLength;
+					}
+					if (rank[rank_id].lastCASWTime > otherRankLastCASWTime)
+					{
+						otherRankLastCASWTime = rank[rank_id].lastCASWTime;
+						otherRankLastCASWLength = rank[rank_id].lastCASWLength;
+					}
+				}
+			}
+			// DW 3/9/2006 add these two lines
+			//cas_length = max(timing_specification.t_int_burst,this_r.last_cas_length);
+			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
+
+			// respect last cas to same rank
+			// DW 3/9/2006 replace the line after next with the next line
+			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
+			tick_t tCASLimit = max(time,currentRank.lastCASTime + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
+
+			// respect last cas to different ranks
+			tCASLimit = max(tCASLimit,otherRankLastCASTime + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD());
+
+			// respect last cas write to same rank
+			// DW 3/9/2006 replace the line after next with the next line			
+			// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
+			tCASLimit = max(tCASLimit,currentRank.lastCASWTime + timingSpecification.tBurst());
+
+			// respect last cas write to different ranks
+			tCASLimit = max(tCASLimit,otherRankLastCASWTime + otherRankLastCASWLength);
+
+			nextTime = max(tRASLimit,tCASLimit);
+		}
+		break;
+
+	case RETIRE_COMMAND:
+		break;
+
+	case PRECHARGE_COMMAND:
+		{
+			// respect t_ras of same bank
+			tick_t tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRAS();
+
+			// respect t_cas of same bank
+			tick_t tCASLimit = max(time,currentBank.getLastCASTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
+
+			// respect t_casw of same bank
+			tCASLimit = max(tCASLimit,currentBank.getLastCASWTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
+
+			nextTime = max(tRASLimit,tCASLimit);
+		}
+		break;
+
+	case PRECHARGE_ALL_COMMAND:
+		break;
+
+	case RAS_ALL_COMMAND:
+		break;
+
+	case DRIVE_COMMAND:
+		break;
+
+	case DATA_COMMAND:
+		break;
+
+	case CAS_WITH_DRIVE_COMMAND:
+		break;
+
+	case REFRESH_ALL_COMMAND:
+		// respect tRFC and tRP
+		nextTime = max(currentRank.lastRefreshTime + timingSpecification.tRFC(), currentRank.lastPrechargeTime + timingSpecification.tRP());
+		break;
+	}
+
+	return max(nextTime, time + timingSpecification.tCMD());
 }

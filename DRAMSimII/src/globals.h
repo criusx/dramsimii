@@ -113,7 +113,34 @@ namespace DRAMSimII
 	extern boost::iostreams::filtering_ostream statsOutStream;
 
 	// converts a string to its corresponding magnitude representation
-	double ascii2multiplier(const std::string &);	
+	double ascii2multiplier(const std::string &);
+
+	// debug macros
+#ifdef M5DEBUG
+#define M5_TIMING_LOG(X) timingOutStream << X << endl;
+#define M5_DEBUG(X) X;
+#else
+#define M5_TIMING_LOG(X)
+#define M5_DEBUG(X)
+#endif
+#ifdef DEBUG_TRANSACTION
+#define DEBUG_TRANSACTION_LOG(X) timingOutStream << X << endl;
+#else
+#define DEBUG_TRANSACTION_LOG(X)
+#endif
+#ifdef DEBUG_COMMAND
+#define DEBUG_COMMAND_LOG(X) timingOutStream << X << endl;
+#else
+#define DEBUG_COMMAND_LOG(X)
+#endif
+#ifdef DEBUG
+#define DEBUG_TIMING_LOG(X) timingOutStream << X << endl;
+#define DEBUG_LOG(X) cerr << X << endl;
+#else
+#define DEBUG_LOG(X)
+#define DEBUG(X)
+#endif
+
 }
 
 #endif

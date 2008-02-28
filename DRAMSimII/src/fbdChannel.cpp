@@ -231,146 +231,129 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 	outStream << " ras[" << setw(2) << t_ras_gap << "] rrd[" << setw(2) << t_rrd_gap << "] faw[" << setw(2) << t_faw_gap << "] cas[" << setw(2) << t_cas_gap << "] rrd[" << setw(2) << t_rrd_gap << "] rp[" << setw(2) << t_rp_gap << "] min[" << setw(2) << min_gap << "]" << endl;
 #endif
 
-	return max(min_gap,timingSpecification.tCMD());
+	//return max(min_gap,timingSpecification.tCMD());
+	return min_gap;
 }
 
 
+// may only execute commands from the previous frame or from the first slot in the next frame
+// however, up to three commands must be executed
 const void *fbdChannel::moveChannelToTime(const tick_t endTime, tick_t *transFinishTime)
 {
+
+	while (time < endTime)
 	{
-		while (time < endTime)
+		// try to convert any transactions into commands first
+		if (checkForAvailableCommandSlots(readTransaction()))
 		{
-			// attempt first to move transactions out of the transactions queue and
-			// convert them into commands after a fixed amount of time
-			const transaction *temp_t = readTransaction();
+			// actually remove it from the queue now
+			transaction *decodedTransaction = getTransaction();
 
+			// then break into commands and insert into per bank command queues
+			bool t2cResult = transaction2commands(decodedTransaction);
+			assert(t2cResult == true);
 
-			// has room to decode this transaction
-			if (checkForAvailableCommandSlots(temp_t))
-			{
-				// actually remove it from the queue now
-				transaction *decodedTransaction = getTransaction();
-				assert(decodedTransaction == temp_t);
-
-				// then break into commands and insert into per bank command queues
-				bool t2cResult = transaction2commands(decodedTransaction);
-				assert(t2cResult == true);
-
-				// since reading vs dequeuing should yield the same result
-				assert(temp_t == decodedTransaction);
-
-#ifdef DEBUG_TRANSACTION
-				timingOutStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
-#endif
-			}
-			else
-			{
-
-#ifdef M5DEBUG
-				if (temp_t)
-					timingOutStream << "!T2C " << temp_t << endl;
-#endif
-
-				// move time up by executing commands
-				const command *temp_c = readNextCommand();
-
-				if (temp_c)
-				{
-					int min_gap = minProtocolGap(temp_c);
-
-#ifdef M5DEBUG
-					timingOutStream << "mg: " << min_gap << endl;
-#endif
-
-					// allow system to overrun so that it may send a command
-					// FIXME: will this work?
-					if (min_gap + time <= endTime + timingSpecification.tCMD())
-					{
-						command *temp_com = getNextCommand();
-
-						executeCommand(temp_com, min_gap);
-
-						statistics->collectCommandStats(temp_com);
-
-#ifdef DEBUG_COMMAND
-						timingOutStream << "C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_com << endl;
-#endif
-
-						// only get completed commands if they have finished TODO:
-						transaction *completed_t = completionQueue.pop();
-
-						if (completed_t)
-						{
-							statistics->collectTransactionStats(completed_t);
-
-#ifdef DEBUG_TRANSACTION
-							timingOutStream << "T CH[" << setw(2) << channelID << "] " << completed_t << endl;
-#endif
-
-							// reuse the refresh transactions
-							if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
-							{
-								completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
-
-								assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
-
-								delete completed_t;
-
-								return NULL;
-							}
-							else // return what was pointed to
-							{
-								const void *origTrans = completed_t->getOriginalTransaction();
-
-#ifdef M5DEBUG
-								assert(completed_t->getOriginalTransaction());
-#endif
-
-								*transFinishTime = completed_t->getCompletionTime();
-
-								delete completed_t;
-
-								return origTrans;
-							}
-						}
-					}
-					else
-					{
-						time = endTime;
-					}
-				}
-				else
-				{
-					// the transaction queue and all the per bank queues are empty,
-					// so just move time forward to the point where the transaction starts
-					// or move time forward until the transaction is ready to be decoded
-					if ((transactionQueue.size() > 0) && (time + timingSpecification.tBufferDelay() <= endTime))
-					{
-						tick_t oldTime = time;
-						assert(timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime() <= endTime);
-
-						time = timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime();
-						assert(oldTime < time);
-					}
-					// no transactions to convert, no commands to issue, just go forward
-					else
-					{
-						time = endTime;
-					}
-				}
-			}
+			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << decodedTransaction);
 		}
+		// if all available transactions are converted to commands, then execute the frame corresponding to this time
+		else
+		{
+			// move time up by executing frames
+			fbdFrame *nextFrame = getNextFrame();
 
-		assert(time <= endTime + timingSpecification.tCMD());
+			// if there's a frame at this time
+			if (nextFrame)
+			{
+				// execute any commands in this frame
+				if (nextFrame->getCommandAType() != EMPTY_COMMAND)
+				{
+					statistics->collectCommandStats(nextFrame->getCommandA());
+					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandA());
+					executeCommand(nextFrame->getCommandA(),0);
+				}
+				if (nextFrame->getCommandBType() != EMPTY_COMMAND && nextFrame->getCommandBType() != DATA_COMMAND)
+				{
+					statistics->collectCommandStats(nextFrame->getCommandB());
+					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandB());
+					executeCommand(nextFrame->getCommandB(),0);
+				}
+				if (nextFrame->getCommandCType() != EMPTY_COMMAND && nextFrame->getCommandCType() != DATA_COMMAND)
+				{
+					statistics->collectCommandStats(nextFrame->getCommandC());
+					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandC());
+					executeCommand(nextFrame->getCommandC(),0);
+				}
+			}
 
-		*transFinishTime = endTime;
+			delete nextFrame;
 
-#ifdef M5DEBUG
-		timingOutStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
-#endif
+			// then build a frame for t+1, if possible
+			makeFrame(time);
+			
+			// only get completed commands if they have finished TODO:
+			if (transaction *completed_t = completionQueue.pop())
+			{
+				statistics->collectTransactionStats(completed_t);
 
-		return NULL;
+				DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completed_t);
+
+				// reuse the refresh transactions
+				if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
+				{
+					completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
+
+					assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
+
+					delete completed_t;
+
+					return NULL;
+				}
+				else // return what was pointed to
+				{
+					const void *origTrans = completed_t->getOriginalTransaction();
+
+					*transFinishTime = completed_t->getCompletionTime();
+
+					M5_DEBUG(assert(completed_t->getOriginalTransaction()));								
+
+					delete completed_t;
+
+					return origTrans;
+				}
+			}
+
+			// last, move time forward to either the next transaction decode or frame create time
+			tick_t nextDecodeTime = nextTransactionDecodeTime();
+			assert(nextDecodeTime > time);
+			tick_t nextFrameTime = nextFrameExecuteTime();
+			assert(nextFrameTime > time);
+
+			
+			time = min(endTime, min(nextDecodeTime, nextFrameTime));
+		}		
 	}
+
+
+	assert(time <= endTime + timingSpecification.tCMD());
+
+	*transFinishTime = endTime;
+
+	M5_TIMING_LOG("ch[" << channelID << "] @ " << std::dec << time);
+
+	return NULL;
+
+}
+
+tick_t fbdChannel::nextFrameExecuteTime() const
+{
+	assert(frameQueue.front()->getExecuteTime() > time);
+	return frameQueue.front()->getExecuteTime();
+}
+
+fbdFrame *fbdChannel::getNextFrame() 
+{
+	assert(frameQueue.front()->getExecuteTime() == time);
+	return frameQueue.pop();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -387,15 +370,15 @@ bool fbdChannel::makeFrame(const tick_t currentTime)
 	// then there is already a frame here that contains data so try to find a command to fill the A slot
 	if (frameQueue.front()->getExecuteTime() == currentTime)
 	{
-		newFrame = frameQueue.front();
+		newFrame = frameQueue.read(0);
 		// search for an A command, something that can be executed in < 2 ticks
 		// this command should also not conflict with the others in the queue
 		// or others
-		const command *newCommand = readNextCommand();
+		const command *newCommand = readNextCommand(NULL, NULL);
 		// if the command can be issued on the next tick
 		if (newCommand && (minProtocolGap(newCommand) - timingSpecification.tCMD() < 1))
 		{
-			newFrame.setSlotA(getNextCommand());
+			newFrame->setCommandA(getNextCommand(NULL, NULL));
 		}
 	}
 	else
@@ -410,36 +393,84 @@ bool fbdChannel::makeFrame(const tick_t currentTime)
 		// if the command can be issued on the next tick
 		if (newCommand && (minProtocolGap(newCommand) - timingSpecification.tCMD() < 1))
 		{
-			newFrame.setSlotA(getNextCommand(NULL, NULL));
+			newFrame->setCommandA(getNextCommand(NULL, NULL));
 
 			// if this was a CAS+W then the frame type will be CMD+D
-			if (newCommand->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND)
+			if (newCommand->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || newCommand->getCommandType() == CAS_WRITE_COMMAND)
 			{
-				newFrame.setSlotB(NULL);
-				newFrame.setSlotC(NULL);
+				newFrame->setCommandB(NULL);
+				newFrame->setCommandC(NULL);
 				// create some new frames for the remainder of the data
 				for (int i = 1; i < timingSpecification.tBurst(); ++i)
 				{
 					fbdFrame *extraFrame = new fbdFrame(currentTime + i);
-					extraFrame->setSlotA(NULL);
-					extraFrame->setSlotB(NULL);
-					extraFrame->setSlotC(NULL);
+					extraFrame->setCommandA(NULL);
+					extraFrame->setCommandB(NULL);
+					extraFrame->setCommandC(NULL);
 					frameQueue.push(extraFrame);
 				}
 			}
 			// otherwise try to find two more commands to fill the B and C slots
 			else
 			{
-				// overloaded readNextCommand() will only return commands which do not interfere with the slot A command
+				// overloaded readNextCommand() will only return commands which do not interfere with the commands passed in
 				if (readNextCommand(newCommand, NULL))
-					newFrame->setSlotB(getNextCommand(newCommand, NULL));
-				if (readNextCommand(newCommand, newFrame->getSlotB())
-					newFrame->setSlotC(getNextCommand(newCommand, newFrame->getSlotB()));
+				{
+					newFrame->setCommandB(getNextCommand(newCommand, NULL));
+				}
+				if (readNextCommand(newCommand, newFrame->getCommandB()))
+				{
+					newFrame->setCommandC(getNextCommand(newCommand, newFrame->getCommandB()));
+				}
 			}
 		}
 	}
 
 	return true;
+}
+
+
+/// <summary>
+/// Chooses the command which should be executed next from the given channel
+/// Choice is made based on command_ordering_algorithm from system config
+/// Command returned has already been removed from the per_bank_command_queue
+/// from which it was selected
+/// </summary>
+command *fbdChannel::getNextCommand(const command *slotACommand, const command *slotBCommand)
+{
+	const command *nextCommand = readNextCommand(slotACommand, slotBCommand);
+
+	if (nextCommand)
+	{
+		rank_c &currentRank = rank[nextCommand->getAddress().rank];
+
+		// if it was a refresh all command, then dequeue all n banks worth of commands
+		if (nextCommand->getCommandType() == REFRESH_ALL_COMMAND)
+		{
+			command *tempCommand = NULL;
+
+			for (vector<bank_c>::iterator cur_bank = currentRank.bank.begin(); cur_bank != currentRank.bank.end();cur_bank++)
+			{
+				if (tempCommand)
+					delete tempCommand;
+				tempCommand = cur_bank->getPerBankQueue().pop();
+				assert(tempCommand->getCommandType() == REFRESH_ALL_COMMAND);
+			}
+
+			return tempCommand;
+
+		}
+		else
+		{
+			//bank_c &currentBank = currentRank.bank[nextCommand->getAddress().bank_id];
+			assert(currentRank.bank[nextCommand->getAddress().bank].getPerBankQueue().front() == nextCommand);
+			return currentRank.bank[nextCommand->getAddress().bank].getPerBankQueue().pop();
+		}
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -451,15 +482,6 @@ bool fbdChannel::executeFrame(const tick_t currentTime)
 	return true;
 }
 
-
-/// <summary>
-/// Chooses the command which should be executed next from the given channel
-/// Choice is made based on command_ordering_algorithm from system config
-/// Command returned is not yet removed from the per_bank_command_queue
-/// from which it was selected
-/// This FBD variant will only choose items which can be immediately be put
-/// into a frame.
-/// </summary>
 /// <summary>
 /// Chooses the command which should be executed next from the given channel
 /// Choice is made based on command_ordering_algorithm from system config
@@ -467,7 +489,7 @@ bool fbdChannel::executeFrame(const tick_t currentTime)
 /// from which it was selected
 /// </summary>
 // TODO: do not select commands which go to the same chan/rank/bank as the slotACommand
-const command *dramChannel::readNextCommand(const command *slotACommand, const command *slotBCommand) const
+const command *fbdChannel::readNextCommand(const command *slotACommand, const command *slotBCommand) const
 {
 	// look at the most recently retired command in this channel's history
 
@@ -495,7 +517,7 @@ const command *dramChannel::readNextCommand(const command *slotACommand, const c
 			for (vector<rank_c>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 			{
 				// do not consider ranks which have already had a command chosen from them
-				if (currentRank.getRankID() == slotARank || currentRank.getRankID() == slotBRank)
+				if (currentRank->getRankID() == slotARank || currentRank->getRankID() == slotBRank)
 					continue;
 
 				bool notAllRefresh = false;
@@ -915,9 +937,7 @@ const command *dramChannel::readNextCommand(const command *slotACommand, const c
 			{
 				assert(candidateCommand->getCommandType() == REFRESH_ALL_COMMAND || rank[candidateCommand->getAddress().rank].bank[candidateCommand->getAddress().bank].getPerBankQueue().front() == candidateCommand);
 
-#ifdef DEBUG_GREEDY
-				timingOutStream << "R[" << candidateCommand->getAddress().rank << "] B[" << candidateCommand->getAddress().bank << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]" << endl;
-#endif
+				DEBUG_TIMING_LOG("R[" << candidateCommand->getAddress().rank << "] B[" << candidateCommand->getAddress().bank << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]")
 			}
 
 			return candidateCommand;

@@ -88,135 +88,116 @@ rank((unsigned)dc.rank.size(), rank_c(dc.rank[0],timingSpecification))
 const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFinishTime)
 {
 	while (time < endTime)
-	{
-		// attempt first to move transactions out of the transactions queue and
-		// convert them into commands after a fixed amount of time
-		const transaction *temp_t = readTransaction();
-		
+	{	
 		// has room to decode this transaction
-		if (checkForAvailableCommandSlots(temp_t))
+		if (checkForAvailableCommandSlots(readTransaction()))
 		{
 			// actually remove it from the queue now
 			transaction *decodedTransaction = getTransaction();
-			// since reading vs dequeuing should yield the same result
-			assert(decodedTransaction == temp_t);
 
 			// then break into commands and insert into per bank command queues			
 			bool t2cResult = transaction2commands(decodedTransaction);
 			// checkForAvailablecommandSlots() should not have returned true if there was not enough space
 			assert(t2cResult == true);
 
-#ifdef DEBUG_TRANSACTION
-			timingOutStream << "T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << temp_t << endl;
-#endif
+			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << decodedTransaction)
 		}
 		else
 		{
+			M5_TIMING_LOG("!T2C " << decodedTransaction)
 
-#ifdef M5DEBUG
-			if (temp_t)
-				timingOutStream << "!T2C " << temp_t << endl;
-#endif
-
-			// move time up by executing commands
-			const command *temp_c = readNextCommand();
-
-			if (temp_c)
-			{
-				int min_gap = minProtocolGap(temp_c);
-
-#ifdef M5DEBUG
-				timingOutStream << "mg: " << min_gap << endl;
-#endif
-
-				// allow system to overrun so that it may send a command
-				// FIXME: will this work?
-				if (min_gap + time <= endTime + timingSpecification.tCMD())
+				// move time up by executing commands
+				if (const command *temp_c = readNextCommand())
 				{
-					command *temp_com = getNextCommand();
+					int min_gap = minProtocolGap(temp_c);
 
-					executeCommand(temp_com, min_gap);
+					M5_TIMING_LOG("mg: " << min_gap)
 
-					statistics->collectCommandStats(temp_com);
-
-#ifdef DEBUG_COMMAND
-					timingOutStream << "C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_com << endl;
-#endif
-
-					// only get completed commands if they have finished TODO:
-					transaction *completed_t = completionQueue.pop();
-
-					if (completed_t)
+						// if there is a transaction to decode prior to issuing this command
+						// may allow a different command to be chosen, possibly earlier
+						tick_t nextDecodeTime = nextTransactionDecodeTime();
+					if (nextDecodeTime < min(time + min_gap, endTime))
 					{
-						statistics->collectTransactionStats(completed_t);
+						time = nextDecodeTime;
+					}
+					// allow system to overrun so that it may send a command				
+					else if (min_gap + time <= endTime + timingSpecification.tCMD())
+					{
+						command *temp_com = getNextCommand();
 
-#ifdef DEBUG_TRANSACTION
-						timingOutStream << "T CH[" << setw(2) << channelID << "] " << completed_t << endl;
-#endif
+						executeCommand(temp_com, min_gap);
 
-						// reuse the refresh transactions
-						if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
+						statistics->collectCommandStats(temp_com);
+
+						DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << min_gap << "] " << *temp_com)
+
+							// only get completed commands if they have finished TODO:
+							transaction *completed_t = completionQueue.pop();
+
+						if (completed_t)
 						{
-							//completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
+							statistics->collectTransactionStats(completed_t);
 
-							assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
+							DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completed_t)
 
-							delete completed_t;
+								// reuse the refresh transactions
+								if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
+								{
+									//completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
 
-							return NULL;
+									assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
+
+									delete completed_t;
+
+									return NULL;
+								}
+								else // return what was pointed to
+								{
+									const void *origTrans = completed_t->getOriginalTransaction();
+
+									M5_DEBUG(assert(completed_t->getOriginalTransaction()))
+
+										*transFinishTime = completed_t->getCompletionTime();
+
+									delete completed_t;
+
+									return origTrans;
+								}
 						}
-						else // return what was pointed to
-						{
-							const void *origTrans = completed_t->getOriginalTransaction();
-
-#ifdef M5DEBUG
-							assert(completed_t->getOriginalTransaction());
-#endif
-
-							*transFinishTime = completed_t->getCompletionTime();
-
-							delete completed_t;
-
-							return origTrans;
-						}
+					}
+					else
+					{
+						time = endTime;
 					}
 				}
 				else
 				{
-					time = endTime;
-				}
-			}
-			else
-			{
-				// the transaction queue and all the per bank queues are empty,
-				// so just move time forward to the point where the transaction starts
-				// or move time forward until the transaction is ready to be decoded
-				if ((transactionQueue.size() > 0) && (time + timingSpecification.tBufferDelay() <= endTime))
-				{
-					tick_t oldTime = time;
-					assert(timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime() <= endTime);
+					// the transaction queue and all the per bank queues are empty,
+					// so just move time forward to the point where the transaction starts
+					// or move time forward until the transaction is ready to be decoded
+					if ((transactionQueue.size() > 0) && (time + timingSpecification.tBufferDelay() <= endTime))
+					{
+						tick_t oldTime = time;
+						assert(timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime() <= endTime);
 
-					time = timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime();
-					assert(oldTime < time);
+						time = timingSpecification.tBufferDelay() + transactionQueue.front()->getEnqueueTime();
+						assert(oldTime < time);
+					}
+					// no transactions to convert, no commands to issue, just go forward
+					else
+					{
+						time = endTime;
+					}
 				}
-				// no transactions to convert, no commands to issue, just go forward
-				else
-				{
-					time = endTime;
-				}
-			}
 		}
 	}
 
 	assert(time <= endTime + timingSpecification.tCMD());
 
 	*transFinishTime = endTime;
+	M5_TIMING_LOG("ch[" << channelID << "] @ " << std::dec << time)
 
-#ifdef M5DEBUG
-	timingOutStream << "ch[" << channelID << "] @ " << std::dec << time << endl;
-#endif
-
-	return NULL;
+		return NULL;
 }
 
 void dramChannel::recordCommand(command *latest_command)
@@ -238,6 +219,19 @@ bool dramChannel::enqueue(transaction *in)
 		exit(-1); // TODO
 		assert(systemConfig.getTransactionOrderingAlgorithm() == RIFF);
 	}
+}
+
+tick_t dramChannel::nextTransactionDecodeTime() const
+{
+	tick_t nextTime = TICK_T_MAX;
+	if (const transaction *nextTrans = readTransaction())
+	{
+		if (checkForAvailableCommandSlots(nextTrans))
+		{
+			nextTime = nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay();
+		}
+	}
+	return nextTime;
 }
 
 
@@ -267,14 +261,13 @@ enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const in
 			empty_count++;
 		}
 	}
-#ifdef DEBUG_FLAG
-	cerr << "Rank[" << rank_id << "] Read[" << read_count << "] Write[" << write_count << "] Empty[" << empty_count << "]" << endl;
-#endif
 
-	if (read_count >= write_count)
-		return READ_TRANSACTION;
-	else
-		return WRITE_TRANSACTION;
+	DEBUG_LOG("Rank[" << rank_id << "] Read[" << read_count << "] Write[" << write_count << "] Empty[" << empty_count << "]")
+
+		if (read_count >= write_count)
+			return READ_TRANSACTION;
+		else
+			return WRITE_TRANSACTION;
 }
 
 // calculate the power consumed by all channels during the last epoch
@@ -403,10 +396,8 @@ const transaction *dramChannel::readTransaction() const
 	{
 		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
 		{
-#ifdef M5DEBUG
-			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;
-#endif
-			return NULL; // not enough time has passed
+			M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay())
+				return NULL; // not enough time has passed
 		}
 		return tempTrans;
 	}
@@ -421,14 +412,13 @@ const transaction *dramChannel::readTransaction() const
 			// if this transaction has not yet been decoded, then look to see if the refresh trans has arrived
 			if (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay())
 			{
-#ifdef M5DEBUG
-				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;
-#endif
-				// if this refresh command has arrived
-				if (refreshTrans->getEnqueueTime() < time) 
-					return refreshTrans;
-				else
-					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
+				M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay())
+
+					// if this refresh command has arrived
+					if (refreshTrans->getEnqueueTime() < time) 
+						return refreshTrans;
+					else
+						return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
 			}
 			return tempTrans;
 		}
@@ -452,10 +442,9 @@ transaction *dramChannel::getTransaction()
 	{
 		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
 		{
-#ifdef M5DEBUG
-			timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;
-#endif
-			return NULL; // not enough time has passed
+			M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay())
+
+				return NULL; // not enough time has passed
 		}
 		return transactionQueue.pop();
 	}
@@ -467,14 +456,13 @@ transaction *dramChannel::getTransaction()
 		{
 			if (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay())
 			{
-#ifdef M5DEBUG
-				timingOutStream << "resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay() << endl;
-#endif
-				// if this refresh command has arrived
-				if (refreshTrans->getEnqueueTime() < time) 
-					return getRefresh();
-				else
-					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
+				M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay())
+
+					// if this refresh command has arrived
+					if (refreshTrans->getEnqueueTime() < time) 
+						return getRefresh();
+					else
+						return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
 			}
 			return transactionQueue.pop();
 		}

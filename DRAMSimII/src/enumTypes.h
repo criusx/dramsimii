@@ -114,7 +114,7 @@ namespace DRAMSimII
 		PRECHARGE_ALL_COMMAND, /* ?? */
 		RAS_ALL_COMMAND, /* ?? */
 		DRIVE_COMMAND, /* ?? */
-		DATA_COMMAND, /* ?? */
+		DATA_COMMAND,					// for FBD, holds data instead of a command
 		CAS_WITH_DRIVE_COMMAND, /* ?? */
 		REFRESH_ALL_COMMAND,
 		EMPTY_COMMAND

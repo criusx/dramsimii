@@ -37,14 +37,14 @@ tick_t dramSystem::nextTick() const
 		if (const transaction *nextTrans = currentChan->readTransactionSimple())
 		{
 			// make sure it can finish
-			int tempGap = max(1,(int)(nextTrans->getEnqueueTime() - currentChan->getTime()) + currentChan->getTimingSpecification().tBufferDelay()); 
+			tick_t tempWake = nextTrans->getEnqueueTime() + currentChan->getTimingSpecification().tBufferDelay(); 
 
 			assert(nextTrans->getEnqueueTime() <= currentChan->getTime());
-			assert(tempGap <= currentChan->getTimingSpecification().tBufferDelay() );
+			assert(tempWake <= currentChan->getTime() + currentChan->getTimingSpecification().tBufferDelay());
 			// whenever the next transaction is ready and there are available slots for the R/C/P commands
-			if ((tempGap + currentChan->getTime() < nextWake) && (currentChan->checkForAvailableCommandSlots(nextTrans)))
+			if ((tempWake < nextWake) && (currentChan->checkForAvailableCommandSlots(nextTrans)))
 			{
-				nextWake = tempGap + currentChan->getTime();
+				nextWake = tempWake;
 			}
 		}
 

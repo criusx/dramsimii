@@ -136,11 +136,13 @@ namespace DRAMSimII
 			}
 		}
 
+		// to get a pointer to the item at the head of the queue to view only
 		const T *front() const
 		{
 			return count ? entry[head] : NULL;
 		}
 
+		// to get a pointer to the item most recently inserted into the queue
 		const T* back() const
 		{
 			return count ? entry[(head + count - 1) % depth] : NULL;
@@ -208,6 +210,15 @@ namespace DRAMSimII
 			return depth - count;
 		}
 
+		bool isFull() const
+		{
+			return (depth - count) == 0;
+		}
+
+		bool isEmpty() const
+		{
+			return count == 0;
+		}
 		
 
 		queue<T> &operator=(const queue<T> &right)

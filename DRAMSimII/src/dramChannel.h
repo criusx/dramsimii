@@ -42,12 +42,14 @@ namespace DRAMSimII
 		command *getNextCommand();		
 		void doPowerCalculation();
 		void executeCommand(command *thisCommand,const int gap);
+		tick_t nextTransactionDecodeTime() const;
 
-		// functions that may differ for architectures that inher it this
+		// functions that may differ for architectures that inherit this
 		
 		virtual const command *readNextCommand() const;
 		virtual const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
 		virtual int minProtocolGap(const command *thisCommand) const;
+		virtual tick_t nearestExecuteTime(const command *thisCommand) const;
 
 		// accessors
 		const dramTimingSpecification& getTimingSpecification() const { return timingSpecification; }
