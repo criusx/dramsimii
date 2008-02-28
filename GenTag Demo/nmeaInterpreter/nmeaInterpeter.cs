@@ -7,6 +7,7 @@
     using System.IO.Ports;
     using System.Net;
     using authenticationWS;
+    using System.Diagnostics;
 
     public class nmeaInterpreter
     {        
@@ -94,7 +95,8 @@
 
             MPHPerKnot = float.Parse("1.150779", NmeaCultureInfo);
 
-            gpsSerialPort.BaudRate = 4800;
+            //gpsSerialPort.BaudRate = 4800;
+            gpsSerialPort.BaudRate = 57600;
             gpsSerialPort.ReadBufferSize = 8192;
             gpsSerialPort.ReceivedBytesThreshold = 512;
             gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(gpsSerialPort_DataReceived);
@@ -119,8 +121,9 @@
             catch (ArgumentOutOfRangeException)
             {
             }            
-            catch (IOException)
+            catch (IOException e)
             {
+                Debug.WriteLine(e.Message);
             }
             catch (UnauthorizedAccessException)
             {

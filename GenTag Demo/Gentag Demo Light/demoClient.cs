@@ -163,7 +163,7 @@ namespace GentagDemo
         private Queue<lookupInfo> lookupQueue = new Queue<lookupInfo>();
 
         // the maximum number of lookup threads which may run concurrently
-        private const int maxLookupThreads = 4;
+        private const int maxLookupThreads = 2;
 
         // the number of lookups currently in-flight
         private int pendingLookups;
@@ -356,11 +356,11 @@ namespace GentagDemo
             ///////////////////////////////////////////////////
             /////// For McKesson Demo
             ///////////////////////////////////////////////////
-            trackingCheckBox.Enabled = false;
-            scanCOMPortButton.Enabled = false;
-            connectGPSButton.Enabled = false;
-            readButton.Enabled = false;
-            writeButton.Enabled = false;
+            //trackingCheckBox.Enabled = false;
+            //scanCOMPortButton.Enabled = false;
+            //connectGPSButton.Enabled = false;
+            //readButton.Enabled = false;
+            //writeButton.Enabled = false;
 
             // Init the Registry
             //RegistryKey regKey = Registry.LocalMachine;
@@ -451,7 +451,7 @@ namespace GentagDemo
         /// <param name="e"></param>
         void tagSearchTimer_Tick(object sender)
         {
-            if (Monitor.TryEnter(pendingTagQueue))
+            if (tagSearchReading && Monitor.TryEnter(pendingTagQueue))
             {
                 try
                 {
@@ -498,15 +498,15 @@ namespace GentagDemo
 
                     startScheduledLookups();
 
-                    //updateGUI_Tick();
-                    if (!tagSearchReading)
-                    {
-                        tagSearchAutoEvent.Set();
-                    }
+                    
                 }
                 finally
                 {
                     Monitor.Exit(pendingTagQueue);
+                    if (!tagSearchReading)
+                    {
+                        tagSearchAutoEvent.Set();
+                    }
                 }
             }
             else
@@ -584,19 +584,14 @@ namespace GentagDemo
                 else
                     break;
 
-                waitCursor.Blink();
-
                 if (string.IsNullOrEmpty(currentTag.tagID)) // if there was no string returned
                     continue;
 
                 // then begin a lookup                
-                if (!itemsCurrentlyBeingLookedUp.ContainsValue(currentTag))
+                if (!itemsCurrentlyBeingLookedUp.ContainsValue(currentTag) && (pendingLookups < maxLookupThreads))
                 {
-                    if (pendingLookups < maxLookupThreads)
-                    {
                         for (int i = scheduleLookup(currentTag.tagID, currentTag.whichLookup, currentPatientID); i > 0; i--)
                             System.Threading.Interlocked.Increment(ref pendingLookups);
-                    }
                 }
             }
         }
@@ -816,7 +811,7 @@ namespace GentagDemo
                                     { authenticationCache[info.RFIDNum] = info; }
                                 }
                             }
-                            break;
+                            break; 
 
                         case loopType.med:
                             {
@@ -1037,7 +1032,7 @@ namespace GentagDemo
 
                         assayMessageLabel.Text = Properties.Resources.AssayNotFound;
 
-                        assayTimerLabel.Text = GentagDemo.Properties.Resources.emptyString;
+                        assayTimerLabel.Text = string.Empty;
 
                         sessionID = null;
 
@@ -1050,9 +1045,9 @@ namespace GentagDemo
                 }
                 else
                 {
-                    assayMessageLabel.Text = GentagDemo.Properties.Resources.emptyString;
+                    assayMessageLabel.Text = string.Empty;
 
-                    assayTimerLabel.Text = GentagDemo.Properties.Resources.emptyString;
+                    assayTimerLabel.Text = string.Empty;
 
                     sessionID = null;
 
@@ -1086,13 +1081,13 @@ namespace GentagDemo
                 else
                 {
                     setPhoto(drugPhoto, (System.Drawing.Image)null);
-                    setTextBox(drugNameBox, Properties.Resources.emptyString);
+                    setTextBox(drugNameBox, string.Empty);
                 }
             }
             catch (Exception)
             {
                 setPhoto(drugPhoto, (System.Drawing.Image)null);
-                setTextBox(drugNameBox, GentagDemo.Properties.Resources.emptyString);
+                setTextBox(drugNameBox, string.Empty);
             }
         }
 
@@ -1106,8 +1101,8 @@ namespace GentagDemo
         {
             if (patient == null || patient.RFIDnum == null || patient.image == null)
             {
-                setTextBox(patientNameBox, GentagDemo.Properties.Resources.emptyString);
-                setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.emptyString);
+                setTextBox(patientNameBox, string.Empty);
+                setTextBox(patientDescriptionBox, string.Empty);
                 setPhoto(patientPhoto, (Image)null);
                 setButtonEnabled(medicationButton, false);
             }
@@ -1137,7 +1132,7 @@ namespace GentagDemo
                 }
                 catch (Exception)
                 {
-                    setTextBox(patientNameBox, GentagDemo.Properties.Resources.emptyString);
+                    setTextBox(patientNameBox, string.Empty);
                     setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.patientInfoNotFound);
                     setPhoto(patientPhoto, (Image)null);
                 }
@@ -1145,7 +1140,7 @@ namespace GentagDemo
             else
             {
                 setTextBox(patientNameBox, GentagDemo.Properties.Resources.NotFound);
-                setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.emptyString);
+                setTextBox(patientDescriptionBox, string.Empty);
                 setPhoto(patientPhoto, (Image)null);
             }
         }
@@ -1263,8 +1258,8 @@ namespace GentagDemo
                 setLabel(queuedLookupsLabel, lookupQueue.Count.ToString(CultureInfo.CurrentCulture));
 
             }
-            setLabel(detectTagIDLabel, GentagDemo.Properties.Resources.emptyString);
-            setLabel(detectTagTypeLabel, GentagDemo.Properties.Resources.emptyString);
+            setLabel(detectTagIDLabel, string.Empty);
+            setLabel(detectTagTypeLabel, string.Empty);
             displayDrug(null);
             displayPatient(null);
             displayAssay(null);

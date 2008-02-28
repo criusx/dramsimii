@@ -321,10 +321,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClassLibrary1\Reader.csproj">
-      <Project>{C69C8781-21A8-44CA-8AE3-04521DF1A1B3}</Project>
-      <Name>Reader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\nmeaInterpreter\nmeaInterpreter.csproj">
       <Project>{1AF780BB-1370-4C02-B219-599A8C210943}</Project>
       <Name>nmeaInterpreter</Name>

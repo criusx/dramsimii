@@ -98,6 +98,14 @@
       <DependentUpon>assayResultsChooser.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="demoClient.en-US.resx">
+      <DependentUpon>demoClient.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="demoClient.nl-NL.resx">
+      <DependentUpon>demoClient.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="demoClient.resx">
       <SubType>Designer</SubType>
       <DependentUpon>demoClient.cs</DependentUpon>
@@ -234,10 +242,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClassLibrary1\Reader.csproj">
-      <Project>{C69C8781-21A8-44CA-8AE3-04521DF1A1B3}</Project>
-      <Name>Reader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\nmeaInterpreter\nmeaInterpreter.csproj">
       <Project>{1AF780BB-1370-4C02-B219-599A8C210943}</Project>
       <Name>nmeaInterpreter</Name>
@@ -245,6 +249,10 @@
     <ProjectReference Include="..\RFIDReadCursor\RFIDReadCursor.csproj">
       <Project>{E49614CC-5C7D-4E37-A27D-0DB2DFE73E78}</Project>
       <Name>RFIDReadCursor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RFIDReaderLibrary\Reader.csproj">
+      <Project>{C69C8781-21A8-44CA-8AE3-04521DF1A1B3}</Project>
+      <Name>Reader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />

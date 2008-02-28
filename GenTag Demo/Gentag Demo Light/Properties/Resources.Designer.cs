@@ -136,15 +136,6 @@ namespace GentagDemo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string emptyString {
-            get {
-                return ResourceManager.GetString("emptyString", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to error.
         /// </summary>
         internal static string Error {

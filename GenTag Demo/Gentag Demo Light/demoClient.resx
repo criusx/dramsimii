@@ -117,75 +117,2249 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;medicationButton.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="exitButton.Text" xml:space="preserve">
+    <value>Exit</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pictureBox2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        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
-</value>
+  <data name="progressBar8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="&gt;&gt;statusListView.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="readPatientButton.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="writeButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="progressBar2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="&gt;&gt;speedTextBox.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;longitudeTextBox.Name" xml:space="preserve">
+    <value>longitudeTextBox</value>
+  </data>
+  <data name="&gt;&gt;writeButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label16.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 176</value>
+  </data>
+  <data name="&gt;&gt;assayImagePictureBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="readWritePage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="label24.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;assayMessageLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;assayPage.Name" xml:space="preserve">
+    <value>assayPage</value>
+  </data>
+  <data name="label25.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 8</value>
+  </data>
+  <data name="satLabel2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="detectPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="authTreeView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>234, 149</value>
+  </data>
+  <data name="assayTimerLabel.Text" xml:space="preserve">
+    <value>0:00</value>
+  </data>
+  <data name="&gt;&gt;label12.Name" xml:space="preserve">
+    <value>label12</value>
+  </data>
+  <data name="&gt;&gt;detectTagTypeLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label26.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;statusListView.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label29.Text" xml:space="preserve">
+    <value>All Rights Reserved</value>
+  </data>
+  <data name="&gt;&gt;detectTagIDLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="patientDescriptionBox.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="connectGPSButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 20</value>
+  </data>
+  <data name="directionTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;authPage.Name" xml:space="preserve">
+    <value>authPage</value>
+  </data>
+  <data name="&gt;&gt;satLabel2.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="assayImagePictureBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="label11.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;patientDescriptionBox.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;label14.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;queueSizeBar.ZOrder" xml:space="preserve">
+    <value>38</value>
+  </data>
+  <data name="introPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>240, 217</value>
+  </data>
+  <data name="satLabel6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 17</value>
+  </data>
+  <data name="connectGPSButton.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;label15.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;patientDescriptionBox.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="satLabel6.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="label11.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="detectTagTypeLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="manualLookupButton.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;queueSizeBar.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="detectTagTypeLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 158</value>
+  </data>
+  <data name="label22.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="progressBar8.Location" type="System.Drawing.Point, System.Drawing">
+    <value>162, 191</value>
+  </data>
+  <data name="&gt;&gt;mainClearButton.Name" xml:space="preserve">
+    <value>mainClearButton</value>
+  </data>
+  <data name="&gt;&gt;assayResetButton.Name" xml:space="preserve">
+    <value>assayResetButton</value>
+  </data>
+  <data name="mainClearButton.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="readPatientButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;label16.Name" xml:space="preserve">
+    <value>label16</value>
+  </data>
+  <data name="label17.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="assayReadButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>195, 3</value>
+  </data>
+  <data name="introPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;label20.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;progressBar7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="medicationButton.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;connectGPSButton.Name" xml:space="preserve">
+    <value>connectGPSButton</value>
+  </data>
+  <data name="label13.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 142</value>
+  </data>
+  <data name="&gt;&gt;connectGPSButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;satLabel8.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="statusListView.Items4" xml:space="preserve">
+    <value>Phone: Signal Strength</value>
+  </data>
+  <data name="statusListView.Items5" xml:space="preserve">
+    <value>Connection Count</value>
+  </data>
+  <data name="readPatientButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 132</value>
+  </data>
+  <data name="statusListView.Items7" xml:space="preserve">
+    <value>Network Count</value>
+  </data>
+  <data name="&gt;&gt;drugNameBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="statusListView.Items1" xml:space="preserve">
+    <value>Phone: 1xRtt Coverage</value>
+  </data>
+  <data name="hdopTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="statusListView.Items3" xml:space="preserve">
+    <value>Phone: Radio Off</value>
+  </data>
+  <data name="label18.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;vdopTextBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;satellitesUsedTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mainClearButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>194, 199</value>
+  </data>
+  <data name="&gt;&gt;label12.ZOrder" xml:space="preserve">
+    <value>26</value>
+  </data>
+  <data name="&gt;&gt;satLabel3.Name" xml:space="preserve">
+    <value>satLabel3</value>
+  </data>
+  <data name="&gt;&gt;label17.Name" xml:space="preserve">
+    <value>label17</value>
+  </data>
+  <data name="assayPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 214</value>
+  </data>
+  <data name="patientPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;satLabel1.Name" xml:space="preserve">
+    <value>satLabel1</value>
+  </data>
+  <data name="assayResetButton.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="detectTagIDLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 18pt</value>
+  </data>
+  <data name="&gt;&gt;progressBar7.Name" xml:space="preserve">
+    <value>progressBar7</value>
+  </data>
+  <data name="&gt;&gt;hdopTextBox.Name" xml:space="preserve">
+    <value>hdopTextBox</value>
+  </data>
+  <data name="writeButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;progressBar1.Name" xml:space="preserve">
+    <value>progressBar1</value>
+  </data>
+  <data name="label28.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="assayResetButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>199, 81</value>
+  </data>
+  <data name="&gt;&gt;hdopTextBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="progressBar2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>162, 35</value>
+  </data>
+  <data name="label19.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 71</value>
+  </data>
+  <data name="&gt;&gt;queuedLookupsLabel.Name" xml:space="preserve">
+    <value>queuedLookupsLabel</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>demoClient</value>
+  </data>
+  <data name="&gt;&gt;readIDButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label15.ZOrder" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="satLabel5.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;label13.ZOrder" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="&gt;&gt;satLabel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="latitudeTextBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 7pt</value>
+  </data>
+  <data name="detectTagTypeButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 20</value>
+  </data>
+  <data name="&gt;&gt;satLabel6.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="queuedLookupsLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="readIDButton.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;GUIUpdateTimer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label26.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="writeButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 20</value>
+  </data>
+  <data name="patientDescriptionBox.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
+    <value>Vertical</value>
+  </data>
+  <data name="statusTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 19</value>
+  </data>
+  <data name="versionLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 139</value>
+  </data>
+  <data name="&gt;&gt;patientPhoto.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="label15.Text" xml:space="preserve">
+    <value>Speed</value>
+  </data>
+  <data name="&gt;&gt;detectPage.Parent" xml:space="preserve">
+    <value>mainTabControl</value>
+  </data>
+  <data name="label20.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;label14.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="satLabel2.Text" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="mainTabControl.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="queuedLookupsLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;satLabel3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;progressBar3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="statusListView.Items" xml:space="preserve">
+    <value>ActiveSync Status</value>
+  </data>
+  <data name="readWritePage.Text" xml:space="preserve">
+    <value>R/W</value>
+  </data>
+  <data name="connectGPSButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 50</value>
+  </data>
+  <data name="&gt;&gt;drugPhoto.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="vdopTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 156</value>
+  </data>
+  <data name="&gt;&gt;label27.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;readIDButton.Parent" xml:space="preserve">
+    <value>authPage</value>
+  </data>
+  <data name="&gt;&gt;satLabel2.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;label18.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;detectTagIDLabel.Name" xml:space="preserve">
+    <value>detectTagIDLabel</value>
+  </data>
+  <data name="&gt;&gt;label10.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="assayResetButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 9pt</value>
+  </data>
+  <data name="&gt;&gt;label14.ZOrder" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="assayPage.Text" xml:space="preserve">
+    <value>Assays</value>
+  </data>
+  <data name="statusPage.Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="&gt;&gt;queuedLookupsLabel.Parent" xml:space="preserve">
+    <value>authPage</value>
+  </data>
+  <data name="readButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;comPortsComboBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;detectTagTypeLabel.Name" xml:space="preserve">
+    <value>detectTagTypeLabel</value>
+  </data>
+  <data name="&gt;&gt;progressBar1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="longitudeTextBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 7pt</value>
+  </data>
+  <data name="&gt;&gt;readWriteStatusLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="patientNameBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>129, 148</value>
+  </data>
+  <data name="&gt;&gt;label30.Name" xml:space="preserve">
+    <value>label30</value>
+  </data>
+  <data name="&gt;&gt;authTreeView.Name" xml:space="preserve">
+    <value>authTreeView</value>
+  </data>
+  <data name="assayRecordButton.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="satLabel4.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="label19.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="readWriteTB.Size" type="System.Drawing.Size, System.Drawing">
+    <value>234, 138</value>
+  </data>
+  <data name="drugNameBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="satLabel7.Text" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>240, 240</value>
+  </data>
+  <data name="&gt;&gt;label16.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="label15.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;label11.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="satLabel4.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="readPatientButton.Text" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="drugPhoto.Size" type="System.Drawing.Size, System.Drawing">
+    <value>112, 54</value>
+  </data>
+  <data name="label30.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;satLabel7.Name" xml:space="preserve">
+    <value>satLabel7</value>
+  </data>
+  <data name="readIDButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="mainTabControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>240, 240</value>
+  </data>
+  <data name="&gt;&gt;mainTabControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;assayBeginButton.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;satLabel7.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;latitudeTextBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="assayBeginButton.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;label13.Name" xml:space="preserve">
+    <value>label13</value>
+  </data>
+  <data name="satLabel3.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;satLabel8.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 155</value>
+  </data>
+  <data name="&gt;&gt;pendingLookupsLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="manualLookupButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="assayTimerLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>179, 124</value>
+  </data>
+  <data name="&gt;&gt;progressBar1.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="assayResetButton.Text" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="readIDButton.Text" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="connectGPSButton.Text" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="&gt;&gt;progressBar8.ZOrder" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="label13.Text" xml:space="preserve">
+    <value>Longitude</value>
+  </data>
+  <data name="statusPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 214</value>
+  </data>
+  <data name="trackingCheckBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 4</value>
+  </data>
+  <data name="label29.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 179</value>
+  </data>
+  <data name="detectTagIDLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="assayResetButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>38, 20</value>
+  </data>
+  <data name="&gt;&gt;label18.Name" xml:space="preserve">
+    <value>label18</value>
+  </data>
+  <data name="latitudeTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 18</value>
+  </data>
+  <data name="&gt;&gt;detectTagTypeLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;satLabel3.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;assayImagePictureBox.Parent" xml:space="preserve">
+    <value>assayPage</value>
+  </data>
+  <data name="patientPhoto.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 8</value>
+  </data>
+  <data name="medicationButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;patientDescriptionBox.Name" xml:space="preserve">
+    <value>patientDescriptionBox</value>
+  </data>
+  <data name="readWriteStatusLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 20</value>
+  </data>
+  <data name="&gt;&gt;label17.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="label14.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 14</value>
+  </data>
+  <data name="label27.Location" type="System.Drawing.Point, System.Drawing">
+    <value>188, 104</value>
+  </data>
+  <data name="satLabel4.Text" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="progressBar1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="pictureBox1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;label22.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;satLabel5.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="progressBar7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="drugNameBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;label15.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label17.Text" xml:space="preserve">
+    <value>VDOP</value>
+  </data>
+  <data name="&gt;&gt;directionTextBox.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;label19.Name" xml:space="preserve">
+    <value>label19</value>
+  </data>
+  <data name="&gt;&gt;patientPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label10.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="satLabel3.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;label25.Name" xml:space="preserve">
+    <value>label25</value>
+  </data>
+  <data name="assayRecordButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>188, 55</value>
+  </data>
+  <data name="&gt;&gt;satLabel5.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="speedTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;versionLabel.Parent" xml:space="preserve">
+    <value>introPage</value>
+  </data>
+  <data name="label22.Text" xml:space="preserve">
+    <value>Queued</value>
+  </data>
+  <data name="&gt;&gt;assayBeginButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="statusListView.Items6" xml:space="preserve">
+    <value>Cellular Conn Count</value>
+  </data>
+  <data name="&gt;&gt;introPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;progressBar4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;progressBar8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="detectTagIDLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 62</value>
+  </data>
+  <data name="&gt;&gt;patientPage.Parent" xml:space="preserve">
+    <value>mainTabControl</value>
+  </data>
+  <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;progressBar7.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="detectTagTypeLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 31</value>
+  </data>
+  <data name="drugNameBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;manualLookupButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="assayImagePictureBox.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>CenterImage</value>
+  </data>
+  <data name="&gt;&gt;label11.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="satLabel3.Text" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="&gt;&gt;detectTagTypeButton.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label16.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;assayBeginButton.Name" xml:space="preserve">
+    <value>assayBeginButton</value>
+  </data>
+  <data name="&gt;&gt;progressBar2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="readWriteTB.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="assayRecordButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>49, 20</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 12</value>
+  </data>
+  <data name="label19.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 14</value>
+  </data>
+  <data name="label26.Text" xml:space="preserve">
+    <value>Gentag Demonstration Software</value>
+  </data>
+  <data name="label29.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 20</value>
+  </data>
+  <data name="&gt;&gt;scanCOMPortButton.Name" xml:space="preserve">
+    <value>scanCOMPortButton</value>
+  </data>
+  <data name="&gt;&gt;columnHeader1.Name" xml:space="preserve">
+    <value>columnHeader1</value>
+  </data>
+  <data name="&gt;&gt;hdopTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;scanCOMPortButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label28.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label24.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopRight</value>
+  </data>
+  <data name="&gt;&gt;label11.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label20.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 14</value>
+  </data>
+  <data name="label14.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;drugNameBox.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="label10.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;assayTimerLabel.Parent" xml:space="preserve">
+    <value>assayPage</value>
+  </data>
+  <data name="&gt;&gt;patientDescriptionBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;readWriteStatusLabel.Parent" xml:space="preserve">
+    <value>readWritePage</value>
+  </data>
+  <data name="assayReadButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 9pt</value>
+  </data>
+  <data name="medicationButton.Text" xml:space="preserve">
+    <value>Medication</value>
+  </data>
+  <data name="&gt;&gt;satLabel7.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="versionLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 20</value>
+  </data>
+  <data name="&gt;&gt;assayTimerLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 14</value>
+  </data>
+  <data name="exitButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 15</value>
+  </data>
+  <data name="label13.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;authTreeView.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;timeTextBox.Name" xml:space="preserve">
+    <value>timeTextBox</value>
+  </data>
+  <data name="&gt;&gt;label12.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="progressBar4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="latitudeTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 122</value>
+  </data>
+  <data name="assayRecordButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 9pt</value>
+  </data>
+  <data name="&gt;&gt;comPortsComboBox.Name" xml:space="preserve">
+    <value>comPortsComboBox</value>
+  </data>
+  <data name="&gt;&gt;label29.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;longitudeTextBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="comPortsComboBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 20</value>
+  </data>
+  <data name="&gt;&gt;patientPhoto.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="satLabel7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 168</value>
+  </data>
+  <data name="satLabel5.Text" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="&gt;&gt;satLabel5.Name" xml:space="preserve">
+    <value>satLabel5</value>
+  </data>
+  <data name="satellitesUsedTextBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="label17.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 14</value>
+  </data>
+  <data name="label27.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 20</value>
+  </data>
+  <data name="queueSizeBar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 14</value>
+  </data>
+  <data name="label20.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="statusTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 191</value>
+  </data>
+  <data name="&gt;&gt;satLabel4.Name" xml:space="preserve">
+    <value>satLabel4</value>
+  </data>
+  <data name="&gt;&gt;satLabel3.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="readButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="progressBar3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="label26.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 20</value>
+  </data>
+  <data name="label29.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;statusTextBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;label24.Name" xml:space="preserve">
+    <value>label24</value>
+  </data>
+  <data name="&gt;&gt;label13.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;versionLabel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;label17.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;detectTagIDLabel.Parent" xml:space="preserve">
+    <value>detectPage</value>
+  </data>
+  <data name="assayReadButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>42, 20</value>
+  </data>
+  <data name="detectPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 214</value>
+  </data>
+  <data name="satLabel6.Text" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="&gt;&gt;patientNameBox.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="pendingLookupsLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="columnHeader1.Width" type="System.Int32, mscorlib">
+    <value>143</value>
+  </data>
+  <data name="timeTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 19</value>
+  </data>
+  <data name="&gt;&gt;progressBar2.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="satLabel1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>162, 9</value>
+  </data>
+  <data name="&gt;&gt;patientNameBox.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="progressBar6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="statusListView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>240, 217</value>
+  </data>
+  <data name="medicationButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>57, 132</value>
+  </data>
+  <data name="&gt;&gt;assayMessageLabel.Parent" xml:space="preserve">
+    <value>assayPage</value>
+  </data>
+  <data name="&gt;&gt;timeTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="progressBar7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>162, 165</value>
+  </data>
+  <data name="&gt;&gt;satLabel6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="writeButton.Text" xml:space="preserve">
+    <value>Write</value>
+  </data>
+  <data name="&gt;&gt;label18.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="label30.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 14</value>
+  </data>
+  <data name="&gt;&gt;assayReadButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="detectTagTypeLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;manualLookupButton.Name" xml:space="preserve">
+    <value>manualLookupButton</value>
+  </data>
+  <data name="&gt;&gt;label26.Name" xml:space="preserve">
+    <value>label26</value>
+  </data>
+  <data name="label15.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="authPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 214</value>
+  </data>
+  <data name="label24.Text" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="satLabel2.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="label14.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;readWriteStatusLabel.Name" xml:space="preserve">
+    <value>readWriteStatusLabel</value>
+  </data>
+  <data name="detectTagTypeButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;comPortsComboBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label13.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 14</value>
+  </data>
+  <data name="&gt;&gt;label20.Name" xml:space="preserve">
+    <value>label20</value>
+  </data>
+  <data name="&gt;&gt;satLabel4.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="directionTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 86</value>
+  </data>
+  <data name="&gt;&gt;drugNameBox.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="assayMessageLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 33</value>
+  </data>
+  <data name="&gt;&gt;progressBar2.Name" xml:space="preserve">
+    <value>progressBar2</value>
+  </data>
+  <data name="&gt;&gt;progressBar3.ZOrder" xml:space="preserve">
+    <value>35</value>
+  </data>
+  <data name="&gt;&gt;label30.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;drugNameBox.Name" xml:space="preserve">
+    <value>drugNameBox</value>
+  </data>
+  <data name="&gt;&gt;label19.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;queuedLookupsLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 107</value>
+  </data>
+  <data name="drugNameBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>129, 107</value>
+  </data>
+  <data name="satLabel7.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="label17.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 141</value>
+  </data>
+  <data name="&gt;&gt;directionTextBox.Name" xml:space="preserve">
+    <value>directionTextBox</value>
+  </data>
+  <data name="&gt;&gt;label27.Name" xml:space="preserve">
+    <value>label27</value>
+  </data>
+  <data name="&gt;&gt;authTreeView.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TreeView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;directionTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="patientNameBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="assayReadButton.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;authTreeView.Parent" xml:space="preserve">
+    <value>authPage</value>
+  </data>
+  <data name="label22.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopRight</value>
+  </data>
+  <data name="&gt;&gt;statusTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;medicationButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="readWriteStatusLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>-1, 169</value>
+  </data>
+  <data name="vdopTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 19</value>
+  </data>
+  <data name="label19.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;satLabel1.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;label13.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="satLabel1.Text" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="progressBar6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>162, 139</value>
+  </data>
+  <data name="statusListView.Items2" xml:space="preserve">
+    <value>Phone: No Service</value>
+  </data>
+  <data name="patientDescriptionBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 171</value>
+  </data>
+  <data name="&gt;&gt;readButton.Parent" xml:space="preserve">
+    <value>readWritePage</value>
+  </data>
+  <data name="&gt;&gt;columnHeader2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label14.Text" xml:space="preserve">
+    <value>Direction</value>
+  </data>
+  <data name="&gt;&gt;satellitesUsedTextBox.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;detectPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;progressBar7.ZOrder" xml:space="preserve">
+    <value>31</value>
+  </data>
+  <data name="assayBeginButton.Text" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="patientDescriptionBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 40</value>
+  </data>
+  <data name="&gt;&gt;label24.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;statusListView.Name" xml:space="preserve">
+    <value>statusListView</value>
+  </data>
+  <data name="&gt;&gt;label25.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;detectTagTypeLabel.Parent" xml:space="preserve">
+    <value>detectPage</value>
+  </data>
+  <data name="satLabel8.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 194</value>
+  </data>
+  <data name="&gt;&gt;satLabel8.Name" xml:space="preserve">
+    <value>satLabel8</value>
+  </data>
+  <data name="&gt;&gt;readIDButton.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;GUIUpdateTimer.Name" xml:space="preserve">
+    <value>GUIUpdateTimer</value>
+  </data>
+  <data name="&gt;&gt;progressBar3.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;queueSizeBar.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;exitButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;authPage.Parent" xml:space="preserve">
+    <value>mainTabControl</value>
+  </data>
+  <data name="label28.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;progressBar4.Name" xml:space="preserve">
+    <value>progressBar4</value>
+  </data>
+  <data name="readButton.Text" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="&gt;&gt;assayPage.Parent" xml:space="preserve">
+    <value>mainTabControl</value>
+  </data>
+  <data name="&gt;&gt;columnHeader1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="satLabel7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 17</value>
+  </data>
+  <data name="&gt;&gt;label18.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label30.Location" type="System.Drawing.Point, System.Drawing">
+    <value>129, 89</value>
+  </data>
+  <data name="$this.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="columnHeader2.Text" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="&gt;&gt;statusPage.Name" xml:space="preserve">
+    <value>statusPage</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>Patient Name</value>
+  </data>
+  <data name="label18.Text" xml:space="preserve">
+    <value>HDOP</value>
+  </data>
+  <data name="detectTagIDLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 4</value>
+  </data>
+  <data name="label10.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;introPage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="satLabel6.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="label25.Text" xml:space="preserve">
+    <value>Tag Contents</value>
+  </data>
+  <data name="&gt;&gt;assayImagePictureBox.Name" xml:space="preserve">
+    <value>assayImagePictureBox</value>
+  </data>
+  <data name="&gt;&gt;label22.Name" xml:space="preserve">
+    <value>label22</value>
+  </data>
+  <data name="satLabel7.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="pictureBox2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 104</value>
+  </data>
+  <data name="&gt;&gt;connectGPSButton.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="label14.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 71</value>
+  </data>
+  <data name="label20.Text" xml:space="preserve">
+    <value>Satellites</value>
+  </data>
+  <data name="&gt;&gt;detectTagIDLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="speedTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 191</value>
+  </data>
+  <data name="&gt;&gt;patientPhoto.Name" xml:space="preserve">
+    <value>patientPhoto</value>
+  </data>
+  <data name="&gt;&gt;assayPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="comPortsComboBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;label20.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;assayResetButton.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;readWriteTB.Parent" xml:space="preserve">
+    <value>readWritePage</value>
+  </data>
+  <data name="&gt;&gt;writeButton.Parent" xml:space="preserve">
+    <value>readWritePage</value>
+  </data>
+  <data name="readPatientButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>48, 20</value>
+  </data>
+  <data name="readIDButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 9pt</value>
+  </data>
+  <data name="satLabel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 38</value>
+  </data>
+  <data name="&gt;&gt;readIDButton.Name" xml:space="preserve">
+    <value>readIDButton</value>
+  </data>
+  <data name="gpsPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 214</value>
+  </data>
+  <data name="&gt;&gt;progressBar5.Name" xml:space="preserve">
+    <value>progressBar5</value>
+  </data>
+  <data name="label22.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 152</value>
+  </data>
+  <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 14</value>
+  </data>
+  <data name="&gt;&gt;connectGPSButton.ZOrder" xml:space="preserve">
+    <value>28</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.Parent" xml:space="preserve">
+    <value>introPage</value>
+  </data>
+  <data name="scanCOMPortButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;assayReadButton.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;label19.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="satellitesUsedTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 50</value>
+  </data>
+  <data name="exitButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="scanCOMPortButton.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;pendingLookupsLabel.Name" xml:space="preserve">
+    <value>pendingLookupsLabel</value>
+  </data>
+  <data name="&gt;&gt;gpsPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="satLabel8.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="pictureBox2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 8</value>
+  </data>
+  <data name="&gt;&gt;writeButton.Name" xml:space="preserve">
+    <value>writeButton</value>
+  </data>
+  <data name="&gt;&gt;authPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label16.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 14</value>
+  </data>
+  <data name="&gt;&gt;progressBar8.Name" xml:space="preserve">
+    <value>progressBar8</value>
+  </data>
+  <data name="label24.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="drugPhoto.Location" type="System.Drawing.Point, System.Drawing">
+    <value>121, 22</value>
+  </data>
+  <data name="statusTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="authPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;manualLookupButton.Parent" xml:space="preserve">
+    <value>authPage</value>
+  </data>
+  <data name="manualLookupButton.Text" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="&gt;&gt;readWritePage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="assayRecordButton.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;label28.Name" xml:space="preserve">
+    <value>label28</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
+    <value>authPage</value>
+  </data>
+  <data name="&gt;&gt;gpsPage.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;patientPage.Name" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="statusListView.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="patientPage.Text" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="readWriteStatusLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="timeTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="pendingLookupsLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="label27.Text" xml:space="preserve">
+    <value>Timer</value>
+  </data>
+  <data name="&gt;&gt;detectTagTypeButton.Name" xml:space="preserve">
+    <value>detectTagTypeButton</value>
+  </data>
+  <data name="&gt;&gt;label20.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;pendingLookupsLabel.Parent" xml:space="preserve">
+    <value>authPage</value>
+  </data>
+  <data name="&gt;&gt;exitButton.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="label18.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;label24.Parent" xml:space="preserve">
+    <value>authPage</value>
+  </data>
+  <data name="readWriteTB.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
+    <value>129, 132</value>
+  </data>
+  <data name="assayPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;authPage.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 12</value>
+  </data>
+  <data name="satLabel6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 142</value>
+  </data>
+  <data name="&gt;&gt;label29.Name" xml:space="preserve">
+    <value>label29</value>
+  </data>
+  <data name="timeTextBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="label28.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 20</value>
+  </data>
+  <data name="satLabel8.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="vdopTextBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;progressBar4.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;progressBar5.ZOrder" xml:space="preserve">
+    <value>33</value>
+  </data>
+  <data name="&gt;&gt;assayRecordButton.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="label18.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 106</value>
+  </data>
+  <data name="&gt;&gt;vdopTextBox.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;statusTextBox.Name" xml:space="preserve">
+    <value>statusTextBox</value>
+  </data>
+  <data name="&gt;&gt;label17.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;drugPhoto.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="progressBar3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>162, 61</value>
+  </data>
+  <data name="pictureBox2.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>CenterImage</value>
+  </data>
+  <data name="satellitesUsedTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="exitButton.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;label19.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;manualLookupButton.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;queueSizeBar.Name" xml:space="preserve">
+    <value>queueSizeBar</value>
+  </data>
+  <data name="satLabel4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 90</value>
+  </data>
+  <data name="label29.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="satLabel4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 17</value>
+  </data>
+  <data name="&gt;&gt;assayResetButton.Parent" xml:space="preserve">
+    <value>assayPage</value>
+  </data>
+  <data name="timeTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 86</value>
+  </data>
+  <data name="&gt;&gt;timeTextBox.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="readWriteTB.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 31</value>
+  </data>
+  <data name="label24.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 170</value>
+  </data>
+  <data name="detectPage.Text" xml:space="preserve">
+    <value>Detect</value>
+  </data>
+  <data name="progressBar5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>162, 113</value>
+  </data>
+  <data name="hdopTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 19</value>
+  </data>
+  <data name="&gt;&gt;queuedLookupsLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;readWriteTB.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label30.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;satLabel5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label26.Parent" xml:space="preserve">
+    <value>introPage</value>
+  </data>
+  <data name="&gt;&gt;progressBar1.ZOrder" xml:space="preserve">
+    <value>37</value>
+  </data>
+  <data name="readWritePage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 214</value>
+  </data>
+  <data name="detectTagTypeButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>-1, 192</value>
+  </data>
+  <data name="&gt;&gt;label16.ZOrder" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="&gt;&gt;readButton.Name" xml:space="preserve">
+    <value>readButton</value>
+  </data>
+  <data name="&gt;&gt;timeTextBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;label26.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;vdopTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="statusListView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;readPatientButton.Name" xml:space="preserve">
+    <value>readPatientButton</value>
+  </data>
+  <data name="assayBeginButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>42, 20</value>
+  </data>
+  <data name="readButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 20</value>
+  </data>
+  <data name="&gt;&gt;detectTagTypeButton.Parent" xml:space="preserve">
+    <value>detectPage</value>
+  </data>
+  <data name="satLabel5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 17</value>
+  </data>
+  <data name="&gt;&gt;progressBar8.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;readWriteTB.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="authTreeView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="authTreeView.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="drugNameBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 19</value>
+  </data>
+  <data name="&gt;&gt;label30.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="&gt;&gt;progressBar5.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;label27.Parent" xml:space="preserve">
+    <value>assayPage</value>
+  </data>
+  <data name="&gt;&gt;medicationButton.Name" xml:space="preserve">
+    <value>medicationButton</value>
+  </data>
+  <data name="&gt;&gt;patientPage.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;label16.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="manualLookupButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 9pt</value>
+  </data>
+  <data name="comPortsComboBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 27</value>
+  </data>
+  <data name="satLabel5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 116</value>
+  </data>
+  <data name="&gt;&gt;assayRecordButton.Name" xml:space="preserve">
+    <value>assayRecordButton</value>
+  </data>
+  <data name="label12.Text" xml:space="preserve">
+    <value>Latitude</value>
+  </data>
+  <data name="&gt;&gt;label27.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label10.Name" xml:space="preserve">
+    <value>label10</value>
+  </data>
+  <data name="drugPhoto.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>CenterImage</value>
+  </data>
+  <data name="&gt;&gt;readWritePage.Parent" xml:space="preserve">
+    <value>mainTabControl</value>
+  </data>
+  <data name="&gt;&gt;assayResetButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label11.Text" xml:space="preserve">
+    <value>Patient Description</value>
+  </data>
+  <data name="label19.Text" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="&gt;&gt;readPatientButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;satLabel1.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="assayTimerLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 20</value>
+  </data>
+  <data name="statusPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="label22.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="&gt;&gt;latitudeTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="satellitesUsedTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 19</value>
+  </data>
+  <data name="satLabel5.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;assayImagePictureBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="gpsPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="queuedLookupsLabel.Text" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="assayReadButton.Text" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="medicationButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="label20.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 35</value>
+  </data>
+  <data name="&gt;&gt;exitButton.Name" xml:space="preserve">
+    <value>exitButton</value>
+  </data>
+  <data name="&gt;&gt;label12.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="patientPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 214</value>
+  </data>
+  <data name="&gt;&gt;readWriteStatusLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pendingLookupsLabel.Text" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="mainClearButton.Text" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="queueSizeBar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 21</value>
+  </data>
+  <data name="&gt;&gt;readWritePage.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="label28.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 159</value>
+  </data>
+  <data name="&gt;&gt;assayPage.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>126, 152</value>
+  </data>
+  <data name="&gt;&gt;introPage.Name" xml:space="preserve">
+    <value>introPage</value>
+  </data>
+  <data name="readPatientButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;mainTabControl.Name" xml:space="preserve">
+    <value>mainTabControl</value>
+  </data>
+  <data name="&gt;&gt;statusTextBox.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="latitudeTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;directionTextBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="satLabel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 12</value>
+  </data>
+  <data name="&gt;&gt;pendingLookupsLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="hdopTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>88, 121</value>
+  </data>
+  <data name="progressBar4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>162, 87</value>
+  </data>
+  <data name="assayBeginButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 9pt</value>
+  </data>
+  <data name="hdopTextBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="label30.Text" xml:space="preserve">
+    <value>Drug Name</value>
+  </data>
+  <data name="&gt;&gt;label15.Name" xml:space="preserve">
+    <value>label15</value>
+  </data>
+  <data name="satLabel3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 64</value>
+  </data>
+  <data name="&gt;&gt;progressBar2.ZOrder" xml:space="preserve">
+    <value>36</value>
+  </data>
+  <data name="&gt;&gt;patientPhoto.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gpsPage.Parent" xml:space="preserve">
+    <value>mainTabControl</value>
+  </data>
+  <data name="&gt;&gt;label22.Parent" xml:space="preserve">
+    <value>authPage</value>
+  </data>
+  <data name="&gt;&gt;assayRecordButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;drugPhoto.Name" xml:space="preserve">
+    <value>drugPhoto</value>
+  </data>
+  <data name="introPage.Text" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="vdopTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;assayMessageLabel.Name" xml:space="preserve">
+    <value>assayMessageLabel</value>
+  </data>
+  <data name="&gt;&gt;satLabel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label22.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="exitButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>80, 199</value>
+  </data>
+  <data name="&gt;&gt;readButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="scanCOMPortButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 20</value>
+  </data>
+  <data name="longitudeTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 18</value>
+  </data>
+  <data name="&gt;&gt;medicationButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="label30.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="satLabel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 17</value>
+  </data>
+  <data name="writeButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>197, 194</value>
+  </data>
+  <data name="mainClearButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;detectPage.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>103, 60</value>
+  </data>
+  <data name="authPage.Text" xml:space="preserve">
+    <value>Auth</value>
+  </data>
+  <data name="&gt;&gt;latitudeTextBox.Name" xml:space="preserve">
+    <value>latitudeTextBox</value>
+  </data>
+  <data name="patientPhoto.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>CenterImage</value>
+  </data>
+  <data name="directionTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 19</value>
+  </data>
+  <data name="label26.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="manualLookupButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>46, 16</value>
+  </data>
+  <data name="&gt;&gt;mainTabControl.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="writeButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 9pt</value>
+  </data>
+  <data name="longitudeTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="assayRecordButton.Text" xml:space="preserve">
+    <value>Record</value>
+  </data>
+  <data name="&gt;&gt;statusPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label12.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="medicationButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>66, 20</value>
+  </data>
+  <data name="&gt;&gt;readWritePage.Name" xml:space="preserve">
+    <value>readWritePage</value>
+  </data>
+  <data name="&gt;&gt;assayMessageLabel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;patientNameBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;readPatientButton.Parent" xml:space="preserve">
+    <value>patientPage</value>
+  </data>
+  <data name="&gt;&gt;columnHeader2.Name" xml:space="preserve">
+    <value>columnHeader2</value>
+  </data>
+  <data name="versionLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;assayReadButton.Parent" xml:space="preserve">
+    <value>assayPage</value>
+  </data>
+  <data name="readButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>-4, 194</value>
+  </data>
+  <data name="&gt;&gt;assayBeginButton.Parent" xml:space="preserve">
+    <value>assayPage</value>
+  </data>
+  <data name="&gt;&gt;versionLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="satLabel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 17</value>
+  </data>
+  <data name="&gt;&gt;progressBar6.Name" xml:space="preserve">
+    <value>progressBar6</value>
+  </data>
+  <data name="versionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;progressBar3.Name" xml:space="preserve">
+    <value>progressBar3</value>
+  </data>
+  <data name="columnHeader1.Text" xml:space="preserve">
+    <value>Property Name</value>
+  </data>
+  <data name="&gt;&gt;assayTimerLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="assayMessageLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="detectTagTypeLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 20pt, style=Bold</value>
+  </data>
+  <data name="columnHeader2.Width" type="System.Int32, mscorlib">
+    <value>60</value>
+  </data>
+  <data name="&gt;&gt;longitudeTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;speedTextBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="assayBeginButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>195, 29</value>
+  </data>
+  <data name="readIDButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>-1, 192</value>
+  </data>
+  <data name="detectTagIDLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="readWriteStatusLabel.Text" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="&gt;&gt;label28.Parent" xml:space="preserve">
+    <value>introPage</value>
+  </data>
+  <data name="&gt;&gt;exitButton.Parent" xml:space="preserve">
+    <value>introPage</value>
+  </data>
+  <data name="assayImagePictureBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 181</value>
+  </data>
+  <data name="&gt;&gt;gpsPage.Name" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="scanCOMPortButton.Text" xml:space="preserve">
+    <value>scanCOM</value>
+  </data>
+  <data name="&gt;&gt;satellitesUsedTextBox.Name" xml:space="preserve">
+    <value>satellitesUsedTextBox</value>
+  </data>
+  <data name="readIDButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 16</value>
+  </data>
+  <data name="&gt;&gt;scanCOMPortButton.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;label28.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mainTabControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;readPatientButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;introPage.Parent" xml:space="preserve">
+    <value>mainTabControl</value>
+  </data>
+  <data name="&gt;&gt;satLabel4.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;drugPhoto.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="scanCOMPortButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 6</value>
+  </data>
+  <data name="patientNameBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 19</value>
+  </data>
+  <data name="&gt;&gt;softInputPanel.Name" xml:space="preserve">
+    <value>softInputPanel</value>
+  </data>
+  <data name="&gt;&gt;satLabel2.Name" xml:space="preserve">
+    <value>satLabel2</value>
+  </data>
+  <data name="&gt;&gt;satLabel6.Name" xml:space="preserve">
+    <value>satLabel6</value>
+  </data>
+  <data name="directionTextBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="trackingCheckBox.TabIndex" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="&gt;&gt;label29.Parent" xml:space="preserve">
+    <value>introPage</value>
+  </data>
+  <data name="comPortsComboBox.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="patientDescriptionBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="label12.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;satLabel8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="longitudeTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 157</value>
+  </data>
+  <data name="&gt;&gt;label29.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="readButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 9pt</value>
+  </data>
+  <data name="&gt;&gt;statusPage.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;readWriteTB.Name" xml:space="preserve">
+    <value>readWriteTB</value>
+  </data>
+  <data name="label27.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopRight</value>
+  </data>
+  <data name="pendingLookupsLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>77, 170</value>
+  </data>
+  <data name="&gt;&gt;label11.Name" xml:space="preserve">
+    <value>label11</value>
+  </data>
+  <data name="&gt;&gt;assayRecordButton.Parent" xml:space="preserve">
+    <value>assayPage</value>
+  </data>
+  <data name="&gt;&gt;comPortsComboBox.ZOrder" xml:space="preserve">
+    <value>27</value>
+  </data>
+  <data name="&gt;&gt;label25.Parent" xml:space="preserve">
+    <value>readWritePage</value>
+  </data>
+  <data name="satLabel1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;detectPage.Name" xml:space="preserve">
+    <value>detectPage</value>
+  </data>
+  <data name="&gt;&gt;satLabel7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;readButton.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;mainClearButton.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="label16.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;satLabel4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label14.Name" xml:space="preserve">
+    <value>label14</value>
+  </data>
+  <data name="&gt;&gt;latitudeTextBox.ZOrder" xml:space="preserve">
+    <value>22</value>
+  </data>
+  <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 176</value>
+  </data>
+  <data name="patientDescriptionBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="trackingCheckBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 15</value>
+  </data>
+  <data name="&gt;&gt;progressBar6.ZOrder" xml:space="preserve">
+    <value>32</value>
+  </data>
+  <data name="progressBar5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="connectGPSButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;speedTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mainClearButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="patientPhoto.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 121</value>
+  </data>
+  <data name="statusTextBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="label25.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 20</value>
+  </data>
+  <data name="&gt;&gt;writeButton.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;softInputPanel.Type" xml:space="preserve">
+    <value>Microsoft.CompactFramework.Design.UnsafeComponent, Microsoft.CompactFramework.Design, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mainClearButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 16</value>
+  </data>
+  <data name="speedTextBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8pt</value>
+  </data>
+  <data name="&gt;&gt;versionLabel.Name" xml:space="preserve">
+    <value>versionLabel</value>
+  </data>
+  <data name="&gt;&gt;statusPage.Parent" xml:space="preserve">
+    <value>mainTabControl</value>
+  </data>
+  <data name="detectTagTypeButton.Text" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="&gt;&gt;patientNameBox.Name" xml:space="preserve">
+    <value>patientNameBox</value>
+  </data>
+  <data name="&gt;&gt;scanCOMPortButton.ZOrder" xml:space="preserve">
+    <value>29</value>
+  </data>
+  <data name="&gt;&gt;progressBar4.ZOrder" xml:space="preserve">
+    <value>34</value>
+  </data>
+  <data name="label26.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 119</value>
+  </data>
+  <data name="gpsPage.Text" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="patientDescriptionBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;mainClearButton.Parent" xml:space="preserve">
+    <value>introPage</value>
+  </data>
+  <data name="&gt;&gt;detectTagTypeButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="detectTagTypeButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="queuedLookupsLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>77, 152</value>
+  </data>
+  <data name="label13.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.Name" xml:space="preserve">
+    <value>pictureBox2</value>
+  </data>
+  <data name="patientNameBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="assayMessageLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 181</value>
+  </data>
+  <data name="&gt;&gt;satLabel6.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;statusListView.Parent" xml:space="preserve">
+    <value>statusPage</value>
+  </data>
+  <data name="&gt;&gt;longitudeTextBox.ZOrder" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="patientNameBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;label24.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;progressBar6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="detectTagTypeButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 9pt</value>
+  </data>
+  <data name="satLabel3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 17</value>
+  </data>
+  <data name="label25.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
+  </data>
+  <data name="assayTimerLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopRight</value>
+  </data>
+  <data name="&gt;&gt;satellitesUsedTextBox.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;assayTimerLabel.Name" xml:space="preserve">
+    <value>assayTimerLabel</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="assayBeginButton.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;progressBar6.Parent" xml:space="preserve">
+    <value>gpsPage</value>
+  </data>
+  <data name="&gt;&gt;hdopTextBox.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="label17.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopCenter</value>
   </data>
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -328,22 +2502,148 @@
         SUVORK5CYII=
 </value>
   </data>
-  <metadata name="softInputPanel.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="GUIUpdateTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>147, 17</value>
-  </metadata>
+  <data name="satLabel8.Text" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="&gt;&gt;speedTextBox.Name" xml:space="preserve">
+    <value>speedTextBox</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
+    <value>pictureBox1</value>
+  </data>
+  <data name="label16.Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="medicationButton.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="label18.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 14</value>
+  </data>
+  <data name="satLabel8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 17</value>
+  </data>
+  <data name="&gt;&gt;progressBar5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mainTabControl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="pictureBox2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAJoAAABaCAIAAADPddj0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAADrRJREFUeF7tnU2u
+        JEcVhQ1LYAcsgjkLYM6UARILgFUw8wZASEyQPEEMDQMkJlg2AgkJCQsJ1JJlYxka82g13Yb2yf6qz7t1
+        IzIyszLqN6sVeqrKjIyfe+Lcv4is/sqrV6/euv+7GQkIzvu/m5HAWzczk/tEBkV7l8ItSeAO5y2heT52
+        vnj5BYL83xcv04ebEvBpJ3Midj579vTp07/x97NP/qzCh0+e/E5/Hz7/O381d9U5rQRuqrejwynYhNmf
+        /viz9997W+W3v/lutbz7ix/orqr99S+/ErR3UA9bZceCU5AIHoEk8N756bdi0cVUUgV9NbpaDYdNbJtP
+        dYbz4dMnYpjwiCgm5gkhFalWirWueGkGR4DVlG7ZxG4Tp5mz7ganNKpgizAIG8EgtJYiofqCWc+mBrVQ
+        7mRt49oBTunVKHd9FhL4Nev/qR2hGNvX16XrY/0wrqWFVXA+f/4C1UqR0MXRxszl4ODNCm+8HhU7t40H
+        hR/G2H3pwWsR8SnHeTicgsHClXmTuB1KegJEJtEolm4t7hIF55agpUpBXTeo+tBLB5xS4kft6xA4JWhC
+        DhhZaj/IpOsRJ8chMNIFjqZIBu8J01vOP6r3tj44quwusPHFcIoQtmT6kMQtgsJFc85se/niP+3569mX
+        DzttHJdC1QPSilFHqAd1d4GSPcuQlsEZaZFIKbREFFgLt/RVFw9zW/RUbFBtqrtStXptqcfDOjqL0I/X
+        6QI4RcQxTwQ/BSAld5Gs44itt/GZy8Zxx3S3NN4dh3EVTc2Fk7ASexm9SnECxQiQDd+ExCyWEmNJsX+r
+        5dLAQ3fpSOumNKhGdOMcnQWnxGd7KUi8TvEz8XeEdylKKUy4hR80WaiGlq6ywauqzBPhaWucV0GjIw1y
+        Gk7sE3BGXgonRxclKYlPDOSQWPj0SSOxrltqhJCUVB+5+HKJqCY0HbT6PuogumXPaAJOycu8jFgKLbAs
+        oxTyc4ZEX5eaNPxbL4WoD7yohRyKNyGKu7vZJMMEnMTsCM6iNC+T1AgeDOTKTS4yt4CqZsvWWFK6m5YL
+        dnSb8WgLThiAmzOJpSjVEL0fl+iVGhQ2sbQNCbs0gq2kKYiWGoJVqI6OZKIuttlROMUMPAv9tWkUBgCc
+        PBEClarEmbnPIcR8UPzM+YQxQoup7IGXWhRESz1B7Huxcj/SwEbhdBpPQqRv5/Z0Jeo3sKxGKXqE0wgU
+        krHisa67yPgRw7jaWMJWTaF4kyxANGlXluPWNtTqcEq4mEytcfsaDvsih8gElU4mlg+EpC1n6j0/hSdc
+        zelXOYo5TxkGNaKLm4pEK3DizZIx8JK3KxtJYF4m9xLdCCSTqdqq2vFSKNUviYuSo8RFsTWtBpIbR9Js
+        F9hsBU7H47Y94ha6N4pGVMBeJsBAorpftnT+KGqtifQgiCbtii1IF4WxEJ2pG5YO7wLrV+B00sCeZDXI
+        w9tMCQTSeB23IUnElz4tyYRkGjGucXmhabYThmY4RQUcWgcnEhzUjAuf+DJRoTuWMToqM0REpUkbkwGO
+        vNmUBc1wCqSUz0Mcw6p/s09CqjZFeySDOvIyqbLBKy60rnpMS4rFFwkqJawZVVNLF6gtVw5pD047QZo/
+        q97UjEseakbhyjgNRq7Tca9FUyrtYvXKYR7ZopFcQuU9OJ0GshPkK6ZmGfzJgayat0uY3tbGsAcnNlLU
+        tAbz3oXlAjWjxRJNVX9pnn1rgj7NfB/hjJsncNEpPTuQ6N6oeDkcdBY1exoBXVcvj3CSKCCBwBy8c+LE
+        Cjmg6FaQnLtT80JQf4TT2QPnCvBpowfLcYKU5CsdzguZ2waHsYOTqJyTXTacmFKr1lLT6ooqbyfncvnr
+        45GdjjixlFKw7IXZcIqFKXWAE3T5k9zOCAc42cdwbg+2OeduOFO4SXzSV9Oq60YZs9BsietvuxhU6s9U
+        KhIOjfN4tQtaK29VN3PofeYK81CrYikFsmMnXg+I0pnztPZad3C+yRWQOuh1pPbDj//x/R/++uvf+PFX
+        v/Z2o3zne7/8/QcfRlnoq56aU37+7u4MIh2p6MOkZPWUxqOa6lSfGeGc7vxUHC0t0HV75+6zh+dzBPLN
+        b7+jNj2LHZzCzG4t3ZS5PfwgDwLD2SXb8t4fPrKYBNhY0dBB2sBonIIT+epuu/gptc8j+qvPbbf8Rz95
+        38BonNUuQKi8pWcjlp//879Mga7Tuow1P/r4367ZFghNsdr0b6dsIzu54c1qkGdPKm6QAWeXzWHkq7+a
+        RkMLaSRwRVOVaKgJnHr2X/9/1i4eqiavRyRrI9roNMKpFlIXWs0MqTqARH2a0uD9YaxfT1MLqDE2LUSY
+        oEJfO3aiWuP5GkcpLF5e5Yxwsq+5Hk5pFVZiG0ubLggq5ZzgnFSblgtwqgUrT4Ex9niEsypZw9k2h+qO
+        1SMA1BdTTvSlBd1lhFEJjTUu+asptSwxPsJpdjpbezI4hSLriwFN/tMkNVtXhp2Rr5MtICx0nfW8EK0a
+        jl5wooHUNfRgEWjWXpcetqZG5Tlw0pSdgIGd6sApoTE4j6dsDeccdpZQWdkuZadNV0S0bL8LnFXwIKjN
+        3sFwxjHvebYEmtkVevPiQNUVWq9sG3DqlhZvtRg8u0INfxgeJGUbPREjKhGn/PN6OK1aE3KaHWNOBrLB
+        TnkMYwKB9JVABZ0ju4gpdSiS9lI49rE+UGnAGf1AZo5ajiKwsm14gLoVRRmVrTG2bVOnUU+sh5MW4npK
+        C0s9RoY14GTksThkYsw7OHlHjHMILHzn3yfSCKu3rBtwShAlSMnLt7KdNJkNdnIrImqOroRT2KT1F8dZ
+        9YkacEpplwLBFdqDk3xsPPMu8uHrev+EY5jldsp8OVZrIsSZrpDnbwW10hVKQ9JgrBJwUlbCCZ80u3Yw
+        Hae/yBWSjiXbkNk5loJ3VpYjQnGzs0ussihQwS+vKltHopPLq6ps/ZQiy4hozApVW24EKjHF0U4kRZ8I
+        hMbCmDQGCaQCp9gpnDjDZ8DSUQQOssY3GjgevXLvmgERiU8i4fja5q2jso2+JYjqL2Mr/U9XHoPTy0LP
+        jvkvXJemiT6RBFJOc0wyTiPsxZ2q7Zx7Oiikr3Zf8Ybi6Va2rydhaFewY2kJSgSpCGyMUFq2ZkB7+euu
+        Y/Y2OxmqbA3BH2USzuTOSGL2gObs7TMkNYLj4iQfF3HlyoLVjEx43CATQf0uA/iRyFXxfjX6NuIHrVe+
+        yqm+hCiAtQsZsrg4BCfJ0skHHZWT3mvnz+hCQ6LxavqGOmoWEsdRYf/Uy8xUAPipvsMn9iTmzCsmVfLR
+        L/Qt/o6WFfrW6pdkQjrI2oWgyELLRRNrlCrLpdYUL6V3RtPX+JM4qi9xzyGNuqOdxk6DZKIKajOOTY2r
+        i3SxraLYpkyWS/22BZKSJ3twYj7jzwt4X8X6Fv82ElRdDqe/ijPNKzVw9XHp+TQBwt9UuXzNyCeHjzGq
+        y2lzD05+OYj4BPzKF8egbCJox82yhmi0Ysr3NctzhEI3vddASuRyhH68kYy+1JCO2kaHCIImkXHQpMv2
+        Z3W2vNKbcoq8FZO03HBCfz+5Ub5OczyBnrflDCfn+aK+9c52TCBA0MgVgpYjIVo9mc2vMSTkNICkaXdv
+        8k79IuB5YejVe/2FQN7VtaTKs/BkkWIMiut0DETBstwwKd83km5Ii0yjYpy95HXh7VTgtENkKZigUbNV
+        Ve7g0b2ORFfmFpCaFo1aU6liqcEk3asBJ92LN9BlMBcOJMOrwBkDUAeUuLgqUTRkFZIEcaBW0lQ40Uj1
+        RT76Le2oLibgt/b7JRU4hQf5W1xcYBftOEWtvzFiG0MUX1d3hceiJMPwQyavtatK9UF6TD4Xr9OkhaWu
+        NYv1W3hXwctRduoG2ynlr12QNopSE0WMaLmVTY4eIyeQFFlXzwwQQYuOKOrhzdzavhsBrrBMMGMyk4FU
+        m1v7nYu6sgVnCdRv1RsnToilF+uNaHp9xYs6Eg7aYREBLxZdGQt1NJ4y3rXaKHUv+30zUz9XxL/2UOvK
+        lmckPnZA48K3EU1WDc9INUWyxokTEYsIUtWgo77qYuMRQiCMdKomruv6oHv3fxAZb65qd28GuepEWnBK
+        dla5MW07hqjggUD620WU+MmcUSobBMv4Fg0zxGRuJziJuLbgHFRu+CETJw3QriCdpEwGFcZMMrVBFLUD
+        kJCy1MAEviWWoilO3PozadfI4wk4NSXniaR47aFERMtABZ/FTCUMjXsapaTUoCqkX7Itkz48iAkvMwZq
+        gZTWNrFsuUJR4k4sDHtn4XCzPaOq3PGAIq6E+cn94aurQcfBJ6r9/wA4RGCZKuhrPOt0jdxaP+Zpdtot
+        YuFHjuoWP2SC4i1dFZ4dcN3/YXC0cSwCSaCqNX5Ps5wYGUR3lFxW7OU23Z8FtjNWtaMrRGPyXS6JgCQk
+        FULlvkdsRFDt9KpU6+vClcbCVPu4zbRfbqway1Ltr1/v19XCXHYyq6h109aj1aCEDtXWZ0pJDxnIKlok
+        sDb407XVdbYMzohoNRiARpzARpcKj0WOycDdh+H8ETbS2rVM+JFbLvX/dfGp72gXw4m9RI5si5baz78L
+        D64oSZwgPUvegHMxfCCfECH0gtDFMrMjFW1SlvmgvgK6rtYOgVMzFIckRztHEm5JQWfh0Zbgmkq6CKdx
+        gMtzJFb4JuU2cwWNFXYgnLSIq2lQdaiwqlfly0BBBySEpCDn6IW039gGCKk+a4WNHOVaqhtWwQlNrfdI
+        x5AMmhyHHpyZHyd3GIFsO8+TXd9whbVwIhqOU0eJYyzn4DomXP77FLeJy3PXru212AdOg4o7ivq1En5M
+        9DTPX0VbG1EESGnaG2ZVr6n1hJMxOXseQY3o4g05JYSXNFZ5LG3ba/431k5/OKOAyNk6EiX8wJv15/ID
+        0eqmDoX0WlVHhNPZO/ao2fCycyuYY/FBL++FLUo+9BLHtbdzRDiTaAyPzx4Mrwq9saZ38LqspNPB2WW4
+        90ZO59neZX12CdzZeXYIeg7gDmdPaZ69rTucZ4eg5wC+BKn2Hx/ta+jJAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="label28.Text" xml:space="preserve">
+    <value>Copyright 2008, Gentag, Inc.</value>
+  </data>
+  <data name="speedTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 19</value>
+  </data>
+  <data name="&gt;&gt;label25.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;vdopTextBox.Name" xml:space="preserve">
+    <value>vdopTextBox</value>
+  </data>
+  <data name="manualLookupButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>80, 192</value>
+  </data>
+  <data name="&gt;&gt;assayReadButton.Name" xml:space="preserve">
+    <value>assayReadButton</value>
+  </data>
+  <data name="trackingCheckBox.Text" xml:space="preserve">
+    <value>Track</value>
+  </data>
   <metadata name="$this.FormFactorShadowProperty" xml:space="preserve">
     <value>Pocket_PC_Phone_Square_Screen</value>
   </metadata>
-  <metadata name="$this.FormFactor" xml:space="preserve">
-    <value>Pocket_PC_Phone_Square_Screen</value>
+  <metadata name="softInputPanel.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
   </metadata>
   <metadata name="$this.Skin" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="label28.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>42</value>
+  </metadata>
+  <metadata name="label29.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <metadata name="$this.FormFactor" xml:space="preserve">
+    <value>Pocket_PC_Phone_Square_Screen</value>
+  </metadata>
+  <metadata name="GUIUpdateTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>147, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </metadata>
 </root>
