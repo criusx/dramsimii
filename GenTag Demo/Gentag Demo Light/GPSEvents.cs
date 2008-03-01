@@ -11,16 +11,17 @@ namespace GentagDemo
         void gpsNmea_DateTimeChanged(DateTime newTime)
         {
             setTextBox(timeTextBox, newTime.ToLocalTime().ToShortTimeString());
+            setTextBox(dateTextBox, newTime.Date.ToShortDateString());
         }
 
         void gpsNmea_FixObtained()
         {
-            setTextBox(statusTextBox, "Locked");
+            setTextBox(statusTextBox, Properties.Resources.Locked);
         }
 
         void gpsNmea_FixLost()
         {
-            setTextBox(statusTextBox, "Searching...");
+            setTextBox(statusTextBox, Properties.Resources.Searching);
         }
 
         void gpsNmea_PositionReceived(string latitude, string longitude)
@@ -46,15 +47,13 @@ namespace GentagDemo
             if (firstMessage)
             {
                 currentProgressBar = 0;
-                //setLabel(satLabel1, "");
-                setLabel(satLabel2, "");
-                setLabel(satLabel3, "");
-                setLabel(satLabel4, "");
-                setLabel(satLabel5, "");
-                setLabel(satLabel6, "");
-                setLabel(satLabel7, "");
-                setLabel(satLabel8, "");
-                //setProgressBar(progressBar1, 0);
+                setLabel(satLabel2, string.Empty);
+                setLabel(satLabel3, string.Empty);
+                setLabel(satLabel4, string.Empty);
+                setLabel(satLabel5, string.Empty);
+                setLabel(satLabel6, string.Empty);
+                setLabel(satLabel7, string.Empty);
+                setLabel(satLabel8, string.Empty);
                 setProgressBar(progressBar2, 0);
                 setProgressBar(progressBar3, 0);
                 setProgressBar(progressBar4, 0);
@@ -113,6 +112,11 @@ namespace GentagDemo
 
         }
 
+        void gpsNmea_AltitudeReceived(float altitude)
+        {
+            setTextBox(altitudeTextBox, altitude.ToString(CultureInfo.CurrentCulture));
+        }
+
         void gpsNmea_HDOPReceived(double HDOP)
         {
             setTextBox(hdopTextBox, HDOP.ToString(CultureInfo.CurrentCulture));
@@ -120,7 +124,7 @@ namespace GentagDemo
 
         void gpsNmea_VDOPReceived(double VDOP)
         {
-            setTextBox(vdopTextBox, VDOP.ToString(CultureInfo.CurrentCulture));
+            // nowhere to display right now
         }
 
         void gpsNmea_NumSatsReceived(int value)

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -10,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Gentag, Inc.")]
 [assembly: AssemblyProduct("nmeaInterpreter")]
-[assembly: AssemblyCopyright("Copyright © Gentag, Inc.")]
+[assembly: AssemblyCopyright("Copyright 2008 © Gentag, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,3 +34,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.*")]
 
+[assembly: NeutralResourcesLanguageAttribute("en-US")]

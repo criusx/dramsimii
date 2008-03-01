@@ -1,13 +1,13 @@
 ﻿namespace NMEA
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.IO.Ports;
     using System.Net;
-    using authenticationWS;
-    using System.Diagnostics;
 
     public class nmeaInterpreter
     {        
@@ -17,41 +17,61 @@
 
         private System.Threading.Timer reportGPSTimer;
 
-        const int checkGPSRate = 30;
+        private const int checkGPSRate = 30;
 
-        const int minimumGPSCoordinatesToReport = 30;
+        private const int minimumGPSCoordinatesToReport = 30;
 
         private System.IO.Ports.SerialPort gpsSerialPort = new System.IO.Ports.SerialPort();
 
-        // Represents the EN-US culture, used for numbers in NMEA sentences
-        private static CultureInfo NmeaCultureInfo;
+        private bool trackingGPS;
+
+        private static char[] fieldSplitter = new char[] { ',', '*' };
+
+        private AuthenticationWebService.AuthenticationWebService ws = new AuthenticationWebService.AuthenticationWebService();
+
+        private Queue<float> latitudeQueue = new Queue<float>();
+        private Queue<float> longitudeQueue = new Queue<float>();
+        private Queue<long> elapsedSinceReadQueue = new Queue<long>();
+        private Queue<long> reportedTimeQueue = new Queue<long>();
+        private Queue<float> bearingQueue = new Queue<float>();
+        private Queue<float> speedQueue = new Queue<float>();
+        private Queue<float> elevationQueue = new Queue<float>();    
 
         // Used to convert knots into miles per hour
-        private static float MPHPerKnot;
+        private const float MPHPerKnot = 1.150779F;
 
-        private const double maximumHDOPValue = 7.0;
-
+        private const float maximumHDOPValue = 5.0F;
+        
+        private DateTime lastGPSUpdateTime = new DateTime(0);
+        
+        // current variables, updated by messages
         private float currentLatitude;
+
+        private string currentLatitudeString;
 
         private float currentLongitude;
 
+        private string currentLongitudeString;
+
         private float currentSpeed;
 
-        private int currentElevation;
+        private float currentAltitude;
 
         private float currentBearing;
 
-        private DateTime lastGPSUpdateTime = new DateTime(0);
+        private float currentHDOPValue = 15;
 
-        private double currentHDOPValue = 15;
+        private float currentPDOPValue;
 
-        private double currentPDOPValue;
+        private float currentVDOPValue;
 
-        private double currentVDOPValue;
+        private DateTime currentTime;
 
-        private bool trackingGPS;
+        private int currentSatellitesUsed;
 
-        private AuthenticationWebService ws = new AuthenticationWebService();
+        private bool validData;
+
+        private Hashtable satellitesInView = new Hashtable();
         #endregion
 
         #region Delegates
@@ -67,6 +87,7 @@
         public delegate void PDOPReceivedEventHandler(double value);
         public delegate void NumberOfSatellitesInViewEventHandler(int numSats);
         public delegate void SetQueuedRequestsEventHandler(int queueSize, int maxQueueSize);
+        public delegate void AltitudeReceivedEventHandler(float altitude);
         #endregion
 
         #region Events
@@ -82,18 +103,15 @@
         public event PDOPReceivedEventHandler PDOPReceived;
         public event NumberOfSatellitesInViewEventHandler NumSatsReceived;
         public event SetQueuedRequestsEventHandler QueueUpdated;
+        public event AltitudeReceivedEventHandler AltitudeReceived;
         #endregion
 
-        public nmeaInterpreter(CultureInfo cultureInfo, string deviceUniqueID)
+        public nmeaInterpreter(string deviceUniqueID)
         {
             reportGPSTimer =
                 new System.Threading.Timer(reportGPSPosition, null, checkGPSRate * 1000, checkGPSRate * 1000);
 
             deviceUID = deviceUniqueID;
-
-            NmeaCultureInfo = cultureInfo;
-
-            MPHPerKnot = float.Parse("1.150779", NmeaCultureInfo);
 
             //gpsSerialPort.BaudRate = 4800;
             gpsSerialPort.BaudRate = 57600;
@@ -107,12 +125,18 @@
             Close();
         }
 
+        /// <summary>
+        /// Attempts to open the specified COM port
+        /// </summary>
+        /// <param name="comPort"></param>
+        /// <returns></returns>
         public bool Open(string comPort)
         {
             try
             {
                 gpsSerialPort.PortName = comPort;
                 gpsSerialPort.Open();
+                gpsSerialPort.WriteLine("$PSRF151,01*0F");
                 return true;
             }
             catch (InvalidOperationException)
@@ -137,6 +161,10 @@
             return false;
         }
 
+        /// <summary>
+        /// Tries to close the specified COM port
+        /// </summary>
+        /// <returns></returns>
         public bool Close()
         {
             try
@@ -150,77 +178,69 @@
             return false;
         }
 
+        /// <summary>
+        /// Returns the open status of the COM port
+        /// </summary>
+        /// <returns></returns>
         public bool IsOpen()
         {
             return gpsSerialPort.IsOpen;
         }
 
-        public void setTracking(bool isTracking)
-        {
-            trackingGPS = isTracking;
-        }
-
-        public bool IsTracking()
-        {
-            return trackingGPS;
-        }
-
         /// <summary>
-        /// Get the latitude
+        /// Gets or sets tracking
         /// </summary>
-        /// <returns>float representing current latitude</returns>
-        /// <throws>NotSupportedException</throws>
-        public float getLatitude()
+        public bool Tracking
         {
-            //if (lastGPSUpdateTime.Ticks == 0)
-            //    throw new NotSupportedException("No GPS values yet");
-            return currentLatitude;
-        }
-
-        /// <summary>
-        /// Get the longitude
-        /// </summary>
-        /// <returns>float representing current longitude</returns>
-        /// <throws>NotSupportedException</throws>
-        public float getLongitude()
-        {
-            //if (lastGPSUpdateTime.Ticks == 0)
-            //    throw new NotSupportedException("No GPS values yet");
-            return currentLongitude;
-        }
-
-        // Processes information from the GPS receiver
-        private bool Parse(string sentence)
-        {
-            // Discard the sentence if its checksum 
-            // does not match our calculated checksum
-            if (!IsValid(sentence)) return false;
-            // Look at the first word to decide where to go next
-            switch (GetWords(sentence)[0])
+            get
             {
-                case "$GPRMC":
-                    // A "Recommended Minimum" sentence was found!
-                    return ParseGPRMC(sentence);
-                case "$GPGSV":
-                    // A "Satellites in View" sentence was received
-                    return ParseGPGSV(sentence);
-                case "$GPGSA":
-                    return ParseGPGSA(sentence);
-                default:
-                    // Indicate that the sentence was not recognized
-                    return false;
+                return trackingGPS;
+            }
+            set
+            {
+                trackingGPS = value;
             }
         }
 
-        private static char[] splitter = new char[] { ',', '*' };
-
-        // Divides a sentence into individual words
-        private static string[] GetWords(string sentence)
+        /// <summary>
+        /// Returns the most recent known latitude value
+        /// </summary>
+        public float getLatitude
         {
-            return sentence.Split(splitter);
+            get
+            {
+                return currentLatitude;
+            }
         }
 
-        // Interprets a $GPRMC message
+        /// <summary>
+        /// Returns the most recent known longitude value
+        /// </summary>
+        public float Longitude
+        {
+            get
+            {
+            return currentLongitude;
+            }
+        }               
+
+        /// <summary>
+        /// Divides a sentence into individual words
+        /// </summary>
+        /// <param name="sentence"></param>
+        /// <returns></returns> 
+        private static string[] GetWords(string sentence)
+        {
+            return sentence.Split(fieldSplitter);
+        }
+
+        
+        /// <summary>
+        /// Interprets a GPRMC sentence
+        /// Recommended Minimum Specific GPS/TRANSIT Data
+        /// </summary>
+        /// <param name="sentence"></param>
+        /// <returns></returns>
         private bool ParseGPRMC(string sentence)
         {
             // Divide the sentence into words
@@ -232,73 +252,54 @@
                 !string.IsNullOrEmpty(Words[5]) &&
                 !string.IsNullOrEmpty(Words[6]))
             {
-                // Yes. Extract latitude and longitude
-
                 // Append hours
-                string Latitude = Words[3].Substring(0, 2) + @"°";
-                currentLatitude = float.Parse(Words[3].Substring(0, 2), CultureInfo.CurrentUICulture);
+                currentLatitudeString = Words[3].Substring(0, 2) + @"°";
+                currentLatitude = float.Parse(Words[3].Substring(0, 2), CultureInfo.InvariantCulture);
 
                 // Append minutes
-                Latitude = Latitude + Words[3].Substring(2) + "\"";
-                currentLatitude += float.Parse(Words[3].Substring(2), CultureInfo.CurrentUICulture) / 60;
+                currentLatitudeString += Words[3].Substring(2) + "\"";
+                currentLatitude += float.Parse(Words[3].Substring(2), CultureInfo.InvariantCulture) / 60;
 
                 // Append the hemisphere
-                Latitude = Latitude + Words[4];
+                currentLatitudeString += Words[4];
                 currentLatitude = Words[4] == "N" ? currentLatitude : -1 * currentLatitude;
 
                 // Append hours
-                string Longitude = Words[5].Substring(0, 3) + "°";
-                currentLongitude = float.Parse(Words[5].Substring(0, 3), CultureInfo.CurrentUICulture);
+                currentLongitudeString = Words[5].Substring(0, 3) + "°";
+                currentLongitude = float.Parse(Words[5].Substring(0, 3), CultureInfo.InvariantCulture);
 
                 // Append minutes
-                Longitude = Longitude + Words[5].Substring(3) + "\"";
-                currentLongitude += float.Parse(Words[5].Substring(3), CultureInfo.CurrentUICulture) / 60;
+                currentLongitudeString += Words[5].Substring(3) + "\"";
+                currentLongitude += float.Parse(Words[5].Substring(3), CultureInfo.InvariantCulture) / 60;
 
                 // Append the hemisphere
-                Longitude = Longitude + Words[6];
+                currentLongitudeString += Words[6];
                 currentLongitude = Words[6] == "W" ? -1 * currentLongitude : currentLongitude;
-                // Notify the calling application of the change
-                if ((PositionReceived != null) && (currentHDOPValue < maximumHDOPValue))
-                    PositionReceived(Latitude, Longitude);
-
             }
             // Do we have enough values to parse satellite-derived time?
-            if (!string.IsNullOrEmpty(Words[1]))
+            if (!string.IsNullOrEmpty(Words[1]) &&
+                !string.IsNullOrEmpty(Words[9]))
             {
-                // Yes. Extract hours, minutes, seconds and milliseconds
-                int UtcHours = Convert.ToInt32(Words[1].Substring(0, 2), NmeaCultureInfo);
-                int UtcMinutes = Convert.ToInt32(Words[1].Substring(2, 2), NmeaCultureInfo);
-                int UtcSeconds = Convert.ToInt32(Words[1].Substring(4, 2), NmeaCultureInfo);
-
-                // Extract milliseconds if it is available
-                int UtcMilliseconds = (Words[1].Length > 7) ? Convert.ToInt32(Words[1].Substring(7), NmeaCultureInfo) : 0;
-
-                // Now build a DateTime object with all values
-                System.DateTime Today = System.DateTime.Now.ToUniversalTime();
-                System.DateTime SatelliteTime = new System.DateTime(Today.Year, Today.Month, Today.Day, UtcHours, UtcMinutes, UtcSeconds, UtcMilliseconds);
-                // Notify of the new time, adjusted to the local time zone
-                if (DateTimeChanged != null)
-                {
-                    lastGPSUpdateTime = SatelliteTime.ToLocalTime();
-                    DateTimeChanged(SatelliteTime.ToLocalTime());
-                }
+                // Yes. Extract hours, minutes, seconds and milliseconds, etc.
+                currentTime = new DateTime(Convert.ToInt32(Words[9].Substring(4, 2), CultureInfo.InvariantCulture),
+                    Convert.ToInt32(Words[9].Substring(2, 2), CultureInfo.InvariantCulture),
+                    Convert.ToInt32(Words[9].Substring(0, 2), CultureInfo.InvariantCulture),
+                    Convert.ToInt32(Words[1].Substring(0, 2), CultureInfo.InvariantCulture),
+                    Convert.ToInt32(Words[1].Substring(2, 2), CultureInfo.InvariantCulture),
+                    Convert.ToInt32(Words[1].Substring(4, 2), CultureInfo.InvariantCulture),
+                    Convert.ToInt32(Words[1].Substring(7), CultureInfo.InvariantCulture));
             }
             // Do we have enough information to extract the current speed?
             if (!string.IsNullOrEmpty(Words[7]))
             {
                 // Yes. Parse the speed and convert it to MPH
-                currentSpeed = float.Parse(Words[7], NmeaCultureInfo) * MPHPerKnot;
-                // Notify of the new speed
-                if (SpeedReceived != null)
-                    SpeedReceived(currentSpeed);
+                currentSpeed = float.Parse(Words[7], CultureInfo.InvariantCulture) * MPHPerKnot;
             }
             // Do we have enough information to extract bearing?
             if (!string.IsNullOrEmpty(Words[8]))
             {
                 // Indicate that the sentence was recognized
-                currentBearing = float.Parse(Words[8], NmeaCultureInfo);
-                if (BearingReceived != null)
-                    BearingReceived(currentBearing);
+                currentBearing = float.Parse(Words[8], CultureInfo.InvariantCulture);
             }
             // Does the device currently have a satellite fix?
             if (!string.IsNullOrEmpty(Words[2]))
@@ -306,19 +307,22 @@
                 switch (Words[2])
                 {
                     case "A":
-                        if (FixObtained != null)
-                            FixObtained();
+                        validData = true;
                         break;
                     case "V":
-                        if (FixLost != null)
-                            FixLost();
+                        validData = false;
                         break;
                 }
             }
             // Indicate that the sentence was recognized
             return true;
         }
-        // Interprets a "Satellites in View" NMEA sentence
+        
+        /// <summary>
+        /// Interprets a GPS Satellites in View sentence
+        /// </summary>
+        /// <param name="sentence"></param>
+        /// <returns></returns>
         private bool ParseGPGSV(string sentence)
         {
             int PseudoRandomCode = 0;
@@ -328,9 +332,9 @@
             string[] Words = GetWords(sentence);
 
             // is this the first GPGSV message?
-            bool firstMessage = (Words[2].CompareTo(@"1") == 0) ? true : false;
+            if (Words[2].Equals(@"1", StringComparison.Ordinal) == 0)
+                satellitesInView.Clear();
 
-            NumSatsReceived(Convert.ToInt32(Words[3], NmeaCultureInfo));
             // Each sentence contains four blocks of satellite information. 
             // Read each block and report each satellite's information
             int Count = 0;
@@ -347,24 +351,24 @@
                         !string.IsNullOrEmpty(Words[Count * 4 + 3]))
                     {
                         // Yes. Extract satellite information and report it
-                        PseudoRandomCode = System.Convert.ToInt32(Words[Count * 4], NmeaCultureInfo);
-                        currentElevation = Convert.ToInt32(Words[Count * 4 + 1], NmeaCultureInfo);
-                        Azimuth = Convert.ToInt32(Words[Count * 4 + 2], NmeaCultureInfo);
-                        SignalToNoiseRatio = Convert.ToInt32(Words[Count * 4 + 3], NmeaCultureInfo);
-                        // Notify of this satellite's information
-                        if (SatelliteReceived != null)
-                        {
-                            SatelliteReceived(PseudoRandomCode, Azimuth,
-                            currentElevation, SignalToNoiseRatio, firstMessage);
-                            firstMessage = false;
-                        }
+                        // associate this satellite's Pseudo Random Code with it's SNR
+                        satellitesInView[System.Convert.ToInt32(Words[Count * 4], CultureInfo.InvariantCulture)] =
+                            Convert.ToInt32(Words[Count * 4 + 3], CultureInfo.InvariantCulture);
+                        // ignore elevation and azimuth for now
+                        //currentElevation = Convert.ToInt32(Words[Count * 4 + 1], NmeaCultureInfo);
+                        //Azimuth = Convert.ToInt32(Words[Count * 4 + 2], NmeaCultureInfo);
                     }
                 }
             }
             // Indicate that the sentence was recognized
             return true;
         }
-        // Interprets a "Fixed Satellites and DOP" NMEA sentence
+
+        /// <summary>
+        /// Interprets a "Fixed Satellites and DOP" NMEA sentence
+        /// </summary>
+        /// <param name="sentence"></param>
+        /// <returns></returns>
         private bool ParseGPGSA(string sentence)
         {
             // Divide the sentence into words
@@ -374,85 +378,167 @@
                 // Update the DOP values
                 if (!string.IsNullOrEmpty(Words[15]))
                 {
-                    if (PDOPReceived != null)
-                    {
-                        currentPDOPValue = double.Parse(Words[15], NmeaCultureInfo);
-                        PDOPReceived(currentPDOPValue);
-                    }
-                }
-                if (!string.IsNullOrEmpty(Words[16]))
-                {
-                    if (HDOPReceived != null)
-                    {
-                        currentHDOPValue = double.Parse(Words[16], NmeaCultureInfo);
-                        HDOPReceived(currentHDOPValue);
-                    }
-                }
-                if (!string.IsNullOrEmpty(Words[17]))
-                {
-                    if (VDOPReceived != null)
-                    {
-                        currentVDOPValue = double.Parse(Words[17], NmeaCultureInfo);
-                        VDOPReceived(currentVDOPValue);
-                    }
-                }
-            }
-            catch (FormatException)
-            { ;}
-            return true;
-        }
-        // Returns True if a sentence's checksum matches the calculated checksum
-        private static bool IsValid(string sentence)
-        {
-            // Compare the characters after the asterisk to the calculation
-            return sentence.Substring(sentence.IndexOf("*") + 1) == GetChecksum(sentence);
-        }
-
-        // Calculates the checksum for a sentence
-        private static string GetChecksum(string sentence)
-        {
-            // Loop through all chars to get a checksum
-            int Checksum = 0;
-            foreach (char Character in sentence)
-            {
-                if (Character == '$')
-                {
-                    // Ignore the dollar sign
-                }
-                else if (Character == '*')
-                {
-                    // Stop processing before the asterisk
-                    break;
+                    currentPDOPValue = float.Parse(Words[15], CultureInfo.InvariantCulture);
                 }
                 else
                 {
-                    // Is this the first value for the checksum?
-                    if (Checksum == 0)
-                    {
-                        // Yes. Set the checksum to the value
-                        Checksum = Convert.ToByte(Character);
-                    }
-                    else
-                    {
-                        // No. XOR the checksum with this character's value
-                        Checksum = Checksum ^ Convert.ToByte(Character);
-                    }
+                    currentPDOPValue = -1.0F;
+                }
+
+                if (!string.IsNullOrEmpty(Words[16]))
+                {
+                    currentHDOPValue = float.Parse(Words[16], CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    currentHDOPValue = -1.0F;
+                }
+
+                if (!string.IsNullOrEmpty(Words[17]))
+                {
+                    currentVDOPValue = float.Parse(Words[17], CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    currentVDOPValue = -1.0F;
                 }
             }
-            // Return the checksum formatted as a two-character hexadecimal
-            return Checksum.ToString("X2", NmeaCultureInfo);
+            catch (FormatException)
+            { }
+            return true;
         }
 
-        private Queue<float> latitudeQueue = new Queue<float>();
-        private Queue<float> longitudeQueue = new Queue<float>();
-        private Queue<long> elapsedSinceReadQueue = new Queue<long>();
-        private Queue<long> reportedTimeQueue = new Queue<long>();
-        private Queue<float> bearingQueue = new Queue<float>();
-        private Queue<float> speedQueue = new Queue<float>();
-        private Queue<int> elevationQueue = new Queue<int>();
+        /// <summary>
+        /// Parses and sets values from a GPS Fixed Data sentence
+        /// </summary>
+        /// <param name="sentence"></param>
+        /// <returns></returns>
+        private bool ParseGPGGA(string sentence)
+        {
+            // Divide the sentence into words
+            string[] Words = GetWords(sentence);
+            try
+            {            
+                // get position
+                // Do we have enough values to describe our location?
+                if (!string.IsNullOrEmpty(Words[2]) &&
+                    !string.IsNullOrEmpty(Words[3]) &&
+                    !string.IsNullOrEmpty(Words[4]) &&
+                    !string.IsNullOrEmpty(Words[5]))
+                {
+                    // Append hours
+                    currentLatitudeString = Words[2].Substring(0, 2) + @"°";
+                    currentLatitude = float.Parse(Words[2].Substring(0, 2), CultureInfo.InvariantCulture);
 
+                    // Append minutes
+                    currentLatitudeString += Words[2].Substring(2) + "\"";
+                    currentLatitude += float.Parse(Words[2].Substring(2), CultureInfo.InvariantCulture) / 60;
+
+                    // Append the hemisphere
+                    currentLatitudeString += Words[3];
+                    currentLatitude = Words[3] == "N" ? currentLatitude : -1 * currentLatitude;
+
+                    // Append hours
+                    currentLongitudeString = Words[4].Substring(0, 3) + "°";
+                    currentLongitude = float.Parse(Words[4].Substring(0, 3), CultureInfo.InvariantCulture);
+
+                    // Append minutes
+                    currentLongitudeString += Words[4].Substring(3) + "\"";
+                    currentLongitude += float.Parse(Words[4].Substring(3), CultureInfo.InvariantCulture) / 60;
+
+                    // Append the hemisphere
+                    currentLongitudeString += Words[5];
+                    currentLongitude = Words[5] == "W" ? -1 * currentLongitude : currentLongitude;
+                }
+
+                // send the number of satellites used in the calculation
+                if (!string.IsNullOrEmpty(Words[7]))
+                {
+                    currentSatellitesUsed = Convert.ToInt32(Words[7], CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    currentSatellitesUsed = -1;
+                }
+
+                if (!string.IsNullOrEmpty(Words[9]))
+                {
+                    currentAltitude = Convert.ToSingle(Words[9], CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    currentAltitude = -1;
+                }
+            }
+            catch (FormatException)
+            { }
+            return true;
+        }
+
+
+        // Returns True if a sentence's checksum matches the calculated checksum
+        private static bool IsValid(string sentence)
+        {
+            try
+            {
+                if (sentence.Length < 8)
+                    return false;
+                // Compare the characters after the asterisk to the calculation
+                return byte.Parse(sentence.Substring(sentence.IndexOf('*') + 1, 2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture) == GetChecksum(sentence);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // the sentence did not have a * at the end
+                return false;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+            catch (OverflowException)
+            {
+                return false;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
         
+        /// <summary>
+        /// Calculates the checksum for a sentence
+        /// This is useful for verifying that a sentence is complete and there were no data transmission errors
+        /// </summary>
+        /// <param name="sentence"></param>
+        /// <returns></returns>
+        private static byte GetChecksum(string sentence)
+        {
+            // Loop through all chars to get a checksum
+            byte Checksum = 0x00;
 
+            foreach (char Character in sentence)
+            {
+                switch (Character)
+                {
+                    case '$':
+                        break;
+                    case '*':
+                        return Checksum;
+                    default:
+                        Checksum ^= Convert.ToByte(Character);
+                        break;
+                }
+            }
+            // Return the checksum formatted as a two-character hexadecimal if no end was found for the string
+            return Checksum;
+        }
+
+       
+
+        /// <summary>
+        /// Sends the GPS queued GPS data to a server for tracking purposes
+        /// </summary>
+        /// <param name="stateInfo"></param>
         private void reportGPSPosition(Object stateInfo)
         {
             // if tracking is disabled and there are no pending transfers
@@ -467,7 +553,7 @@
                     longitudeQueue.Enqueue(currentLongitude);
                     bearingQueue.Enqueue(currentBearing);
                     speedQueue.Enqueue(currentSpeed);
-                    elevationQueue.Enqueue(currentElevation);
+                    elevationQueue.Enqueue(currentAltitude);
                     TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1).ToUniversalTime();
                     elapsedSinceReadQueue.Enqueue((DateTime.Now.Ticks - lastGPSUpdateTime.Ticks) / 1000);
                     reportedTimeQueue.Enqueue((long)t.TotalMilliseconds);
@@ -501,26 +587,49 @@
             }
         }
 
-        // fired when enough data has been received
+        /// <summary>
+        /// Event fired once enough data is received
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gpsSerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            //if (InvokeRequired)
-            //    Invoke(new SerialDataReceivedEventHandler(gpsSerialPort_DataReceived), new object[] { sender, e });
-            //else
-            {
-                string[] buffer = gpsSerialPort.ReadExisting().Split('$');
-                gpsSerialPort.DiscardInBuffer();
-                foreach (string inString in buffer)
-                {
-                    // only want to look at GPRMC, GPGSV and GPGSA messages
-                    if (inString.StartsWith(@"GPRMC") || inString.StartsWith(@"GPGSV") || inString.StartsWith(@"GPGSA"))
+            string[] buffer = gpsSerialPort.ReadExisting().Split('\n');
+            gpsSerialPort.DiscardInBuffer();
+            foreach (string inString in buffer)
+            {                
+                // only want to look at GPRMC, GPGSV and GPGSA messages
+                if (inString.StartsWith(@"$GPRMC") || inString.StartsWith(@"$GPGSV") || inString.StartsWith(@"$GPGSA") || inString.StartsWith(@"$GPGGA"))
+                {                    
+                    // Discard the sentence if its checksum does not match our calculated checksum
+                    if (IsValid(inString))
                     {
-                        Parse(@"$" + inString.Substring(0, inString.Length - 2));
+                        // Look at the first word to decide where to go next
+                        switch (GetWords(inString)[0])
+                        {
+                            case "$GPRMC":
+                                ParseGPRMC(inString);
+                                break;
+                            case "$GPGSV":
+                                ParseGPGSV(inString);
+                                break;
+                            case "$GPGSA":
+                                ParseGPGSA(inString);
+                                break;
+                            case "$GPGGA":
+                                ParseGPGGA(inString);
+                                break;
+                            default:
+                                // Indicate that the sentence was not recognized
+                                break;                                
+                        }
                     }
                 }
+                else
+                {
+                    Debug.WriteLine(inString);
+                }
             }
-
         }
-
     }
 }

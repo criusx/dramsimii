@@ -17,6 +17,7 @@ using RFIDReader;
 using Microsoft.WindowsMobile.Status;
 using Microsoft.WindowsCE.Forms;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 
 [assembly: CLSCompliant(true)]
@@ -323,6 +324,7 @@ namespace GentagDemo
             gpsInterpreter.VDOPReceived += new nmeaInterpreter.VDOPReceivedEventHandler(gpsNmea_VDOPReceived);
             gpsInterpreter.NumSatsReceived += new nmeaInterpreter.NumberOfSatellitesInViewEventHandler(gpsNmea_NumSatsReceived);
             gpsInterpreter.QueueUpdated += new nmeaInterpreter.SetQueuedRequestsEventHandler(pendingQueueUpdate);
+            gpsInterpreter.AltitudeReceived +=new nmeaInterpreter.AltitudeReceivedEventHandler(gpsNmea_AltitudeReceived);
 
             // setup event callbacks for tag reading events
             tagReader.TagReceived += new EventHandler<TagReceivedEventArgs>(receiveTag);
@@ -1268,7 +1270,7 @@ namespace GentagDemo
 
         private void trackingCheckBox_CheckStateChanged(object sender, EventArgs e)
         {
-            gpsInterpreter.setTracking(trackingCheckBox.Checked);
+            gpsInterpreter.Tracking = trackingCheckBox.Checked;
         }
 
 
@@ -1315,13 +1317,65 @@ namespace GentagDemo
         private void scanCOMPorts(object sender, EventArgs e)
         {
             string[] COMPorts = SerialPort.GetPortNames();
+            // Init the Registry
+            RegistryKey regKey = Registry.LocalMachine;
+
+            regKey = regKey.OpenSubKey(@"System");
+            regKey = regKey.OpenSubKey(@"CurrentControlSet");
+            regKey = regKey.OpenSubKey(@"GPS Intermediate Driver");
+            int intermediateDriverEnabled = (int)regKey.GetValue("IsEnabled");
+            string gpsComPort = string.Empty;
+            if (intermediateDriverEnabled == 1)
+            {
+                regKey = regKey.OpenSubKey(@"Multiplexer");
+                gpsComPort = (string)regKey.GetValue("DriverInterface");
+            }
+            else
+            {
+                regKey = regKey.OpenSubKey(@"Drivers");
+                string currentDriver = (string)regKey.GetValue("CurrentDriver");
+                regKey = regKey.OpenSubKey(currentDriver);
+                gpsComPort = (string)regKey.GetValue(@"CommPort");
+                
+            }
+
+            Hashtable comPorts = new Hashtable();
+
+            gpsComPort = gpsComPort.Substring(0,4);
+
+            comPorts.Add(gpsComPort, true);
+            
+
+            //if (Array.IndexOf(regKey.GetSubKeyNames(), @"Gentag", 0) == -1)
+            //    regKey.CreateSubKey(@"Gentag");
+            //regKey = regKey.OpenSubKey(@"Gentag", true);
+
+            //string[] settingKeys = regKey.GetSubKeyNames();
+
+            ////user ID
+            //if (Array.IndexOf(settingKeys, @"hostname", 0) == -1)
+            //{
+            //    regKey.CreateSubKey(@"hostname");
+            //    regKey.SetValue(@"hostname", @"129.2.99.117");
+            //}
+            //hostName.Text = regKey.GetValue(@"hostname").ToString();
+
             Array.Sort(COMPorts);
-            comPortsComboBox.Items.Clear();
+
             foreach (string s in COMPorts)
             {
-                comPortsComboBox.Items.Add(s);
+                comPorts[s]= true;
             }
-            comPortsComboBox.SelectedIndex = 0;
+
+            comPortsComboBox.Items.Clear();
+            
+            foreach (string s in comPorts.Keys)
+            {                
+                comPortsComboBox.Items.Add(s);
+                if (string.Compare(s, gpsComPort) == 0)
+                    comPortsComboBox.SelectedItem = s;
+             
+            }            
         }
 
         private void exitButton_Click(object sender, EventArgs e)

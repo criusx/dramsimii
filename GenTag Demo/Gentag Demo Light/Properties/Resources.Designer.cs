@@ -233,6 +233,15 @@ namespace GentagDemo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Locked.
+        /// </summary>
+        internal static string Locked {
+            get {
+                return ResourceManager.GetString("Locked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Temperature Violation Log.
         /// </summary>
         internal static string logString {

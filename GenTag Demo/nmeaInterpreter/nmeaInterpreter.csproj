@@ -7,7 +7,7 @@
     <ProjectGuid>{1AF780BB-1370-4C02-B219-599A8C210943}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>nmeaInterpreter</RootNamespace>
+    <RootNamespace>NMEA</RootNamespace>
     <AssemblyName>nmeaInterpreter</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
@@ -62,7 +62,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Web References\authenticationWS\Reference.cs">
+    <Compile Include="Web References\AuthenticationWebService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -81,7 +81,7 @@
   <ItemGroup>
     <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL">
       <UrlBehavior>Static</UrlBehavior>
-      <RelPath>Web References\authenticationWS\</RelPath>
+      <RelPath>Web References\AuthenticationWebService\</RelPath>
       <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
@@ -94,11 +94,11 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Web References\authenticationWS\AuthenticationWebService.wsdl" />
-    <None Include="Web References\authenticationWS\itemInfo.datasource">
+    <None Include="Web References\AuthenticationWebService\AuthenticationWebService.wsdl" />
+    <None Include="Web References\AuthenticationWebService\itemInfo1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\authenticationWS\Reference.map">
+    <None Include="Web References\AuthenticationWebService\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

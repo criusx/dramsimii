@@ -266,4 +266,10 @@ This drug should not be taken by this patient.</value>
   <data name="UnexpectedSOAPException" xml:space="preserve">
     <value>Unexpected SOAP exception: </value>
   </data>
+  <data name="Locked" xml:space="preserve">
+    <value>Locked</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>Searching...</value>
+  </data>
 </root>
