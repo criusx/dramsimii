@@ -18,6 +18,7 @@ using Microsoft.WindowsMobile.Status;
 using Microsoft.WindowsCE.Forms;
 using System.Diagnostics;
 using Microsoft.Win32;
+using RFIDReadCursor;
 
 
 [assembly: CLSCompliant(true)]
@@ -103,38 +104,61 @@ namespace GentagDemo
         #endregion
 
         #region Members
+        /// <summary>
+        /// A pointer back to this class so that static functions will have access to this class
+        /// Necessary because P/Invoked functions with callbacks must point to static functions
+        /// </summary>
         private static demoClient mF;
 
+        /// <summary>
+        /// The popup notification that tells users of important inforation
+        /// Used to tell the user of updated software versions, patient interactions, reader errors, etc.
+        /// </summary>
         private Notification popupNotification;
 
+        /// <summary>
+        /// The serial port and NMEA parser
+        /// </summary>
         private nmeaInterpreter gpsInterpreter;
 
+        /// <summary>
+        /// The unique ID for this handset/PDA/Laptop, is based on the hardware configuration
+        /// </summary>
         private string DeviceUID;
 
-        private Reader tagReader;
+        /// <summary>
+        /// The interface to the reader module, currently a Sirit or Wireless Dynamics device
+        /// </summary>
+        private Reader tagReader = new Reader();
 
+        /// <summary>
+        /// The output file for debug output, prints diagnostic messages
+        /// </summary>
         private TextWriter debugOut;
 
         /// <summary>
         /// The waiting cursor which allows the user to know that the reader is running
         /// </summary>
-        private RFIDReadCursor.RFIDReadWaitCursor waitCursor;
+        private RFIDReadWaitCursor waitCursor;
 
         /// <summary>
         /// The thread which does a check to see if this is the newest version, synchronously
         /// </summary>
-        private Thread versionCheckThread;
+        private Thread versionCheckThread = new Thread(versionCheck);
 
         /// <summary>
         /// The dialog box which allows the user to select
         /// </summary>
-        private assayResultsChooser assayResultsDialog;
+        private assayResultsChooser assayResultsDialog = new assayResultsChooser();
 
         /// <summary>
         /// The RFID of the patient currently being looked up
         /// </summary>
         private string currentPatientID;
 
+        /// <summary>
+        /// Stored the length of time that an assay must be run for before it will yield a valid result
+        /// </summary>
         private TimeSpan assayTimer;
 
         /// <summary>
@@ -142,16 +166,25 @@ namespace GentagDemo
         /// </summary>
         private loopType loop;
 
-        //private Hashtable wineBottleCache = new Hashtable();
-
+        /// <summary>
+        /// The cache of authenticated items, avoids doing a network access for repeated lookups of the same item
+        /// </summary>
         private Hashtable authenticationCache = new Hashtable();
 
-        //private Hashtable petCache = new Hashtable();
-
+        /// <summary>
+        /// Caches patient information
+        /// </summary>
         private Hashtable patientCache = new Hashtable();
 
+        /// <summary>
+        /// Caches assay information
+        /// </summary>
         private Hashtable assayCache = new Hashtable();
 
+        /// <summary>
+        /// The items currently being looked up
+        /// This makes it easier to track the handles of threads currently doing lookups
+        /// </summary>
         private Hashtable itemsCurrentlyBeingLookedUp = new Hashtable();
 
         // new tags are placed into this queue by the reader thread
@@ -163,43 +196,82 @@ namespace GentagDemo
         // tags are stored here if they are not able to be looked up currently
         private Queue<lookupInfo> lookupQueue = new Queue<lookupInfo>();
 
-        // the maximum number of lookup threads which may run concurrently
-        private const int maxLookupThreads = 2;
+        /// <summary>
+        /// The maximum number of lookups which may be pending at a time
+        /// Limits network usage and reduces threads in use
+        /// </summary>
+        private const int maxLookupThreads = 4;
 
-        // the number of lookups currently in-flight
+        /// <summary>
+        /// The number of lookups for authentications currently pending
+        /// </summary>
         private int pendingLookups;
 
-        // various web services are below
-        private medWS.COREMedDemoWS COREMedDemoWebService;
+        /// <summary>
+        /// The web service which includes various medical items, like patient lookups, drug lookups and drug/patient interactions
+        /// </summary>
+        private medWS.COREMedDemoWS COREMedDemoWebService = new medWS.COREMedDemoWS();
 
-        private authenticationWS.AuthenticationWebService authenticationWebService;
+        /// <summary>
+        /// The web service which allows authentications to be made
+        /// </summary>
+        private authenticationWS.AuthenticationWebService authenticationWebService = new authenticationWS.AuthenticationWebService();
 
-        private assayWS.AssayWS assayWebService;
+        /// <summary>
+        /// The web service which allows assay information to be retrieved and results to be returned
+        /// </summary>
+        private assayWS.AssayWS assayWebService = new assayWS.AssayWS();
 
+        /// <summary>
+        /// The item chosen by the patient to represent what the assay looks like
+        /// </summary>
         private int assayItemChosen = -1;
 
+        /// <summary>
+        /// The session ID given by the server when retrieving assay information
+        /// Allows the assay session to be matched uniquely
+        /// </summary>
         private string sessionID;
 
-        private System.Windows.Forms.Timer assayCountdownTimer;
+        /// <summary>
+        /// The timer that counts down the seconds while the user waits for the assay to complete
+        /// </summary>
+        private System.Windows.Forms.Timer assayCountdownTimer = new System.Windows.Forms.Timer();
 
+        /// <summary>
+        /// The time when the assay will finish, reset whenever the user starts an assay timing session
+        /// </summary>
         private DateTime assayEndTime = new DateTime();
 
-        private manualTag manualDialog;
+        /// <summary>
+        /// The dialog box that allows a user to manually enter a tag ID to be authenticated
+        /// </summary>
+        private manualTag manualDialog = new manualTag();
+
+        /// <summary>
+        /// The callback called by the tag search timer, so every n ms this function will be called to see if any tags have been added to the queue
+        /// </summary>
+        private TimerCallback tagSearchCallback;
+
+        /// <summary>
+        /// The AutoResetEvent that allows the timer to be killed at the end of the callback function
+        /// </summary>
+        private AutoResetEvent tagSearchAutoEvent = new AutoResetEvent(false);
+
+        private bool tagSearchReading = true;
 
         /// <summary>
         /// Timer to retrieve tags sent by the reader thread
         /// </summary>
         private System.Threading.Timer tagSearchTimer;
 
-        private TimerCallback tagSearchCallback;
-
-        private AutoResetEvent tagSearchAutoEvent;
-
-        private bool tagSearchReading;
-
-        private string newTagID = "";
+        private string newTagID = string.Empty;
 
         private tagTypes newTagType = tagTypes.none;
+
+        private List<ProgressBar> satProgressBarList = new List<ProgressBar>();
+
+        private List<Label> satLabelList = new List<Label>();
 
         /// <summary>
         /// The reader indicates that it is done reading now
@@ -207,6 +279,9 @@ namespace GentagDemo
         //private bool doneReading;
         #endregion
 
+        /// <summary>
+        /// The constructor
+        /// </summary>
         public demoClient()
         {
             // run initializations provided by the designer
@@ -214,14 +289,9 @@ namespace GentagDemo
 
             mF = this;
 
-            tagReader = new Reader();
-
             softInputPanel.Enabled = false;
 
-            // assayResultsDialog
-            assayResultsDialog = new assayResultsChooser();
-
-            //assayResultsDialog.Height = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
+            tagSearchTimer = new System.Threading.Timer(tagSearchCallback, tagSearchAutoEvent, 50, 500);        
 
             try
             {
@@ -232,14 +302,14 @@ namespace GentagDemo
                 DeviceUID = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
             }
 
-            // assayCountdownTimer
-            assayCountdownTimer = new System.Windows.Forms.Timer();
+            gpsInterpreter = new nmeaInterpreter(DeviceUID);
 
+            tagSearchCallback = new TimerCallback(tagSearchTimer_Tick);
+
+            // assayCountdownTimer
             assayCountdownTimer.Interval = 1000;
 
             assayCountdownTimer.Tick += new EventHandler(assayCountdownTimer_Tick);
-
-            //doneReading = false;
 
             // resize the client depending on the resolution
             if (this.ClientSize.Height > 240)
@@ -262,20 +332,10 @@ namespace GentagDemo
             }
 
             // intialize threads
-            versionCheckThread = new Thread(versionCheck);
             versionCheckThread.IsBackground = true;
             versionCheckThread.Start();
             
-            tagSearchReading = true;
-
-            tagSearchCallback = new TimerCallback(tagSearchTimer_Tick);
-
-            tagSearchAutoEvent = new AutoResetEvent(false);            
-
-            tagSearchTimer = new System.Threading.Timer(tagSearchCallback, tagSearchAutoEvent, 50, 500);
-
-            // load the manual tag input dialog
-            manualDialog = new manualTag();
+            // load the manual tag input dialog            
             manualDialog.Hide();
 
             // set the version
@@ -299,7 +359,23 @@ namespace GentagDemo
                 }
             }
 
-                       
+            satProgressBarList.Add(progressBar1);
+            satProgressBarList.Add(progressBar2);
+            satProgressBarList.Add(progressBar3);
+            satProgressBarList.Add(progressBar4);
+            satProgressBarList.Add(progressBar5);
+            satProgressBarList.Add(progressBar6);
+            satProgressBarList.Add(progressBar7);
+            satProgressBarList.Add(progressBar8);
+
+            satLabelList.Add(satLabel1);
+            satLabelList.Add(satLabel2);
+            satLabelList.Add(satLabel3);
+            satLabelList.Add(satLabel4);
+            satLabelList.Add(satLabel5);
+            satLabelList.Add(satLabel6);
+            satLabelList.Add(satLabel7);
+            satLabelList.Add(satLabel8);                       
 
             // initialize the custom wait cursor
             int systemWidth = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;
@@ -307,24 +383,6 @@ namespace GentagDemo
             this.waitCursor = new RFIDReadCursor.RFIDReadWaitCursor();
             this.waitCursor.Location = new System.Drawing.Point((systemWidth - waitCursor.Size.Width) / 2, (systemHeight - waitCursor.Size.Height) / 2);
             this.waitCursor.Size = new System.Drawing.Size(72, 72);
-
-            // initialize the nmea receiver
-            gpsInterpreter = new nmeaInterpreter(CultureInfo.CurrentCulture, DeviceUID);
-
-            // setup event callbacks for nmea events
-            gpsInterpreter.DateTimeChanged += new nmeaInterpreter.DateTimeChangedEventHandler(gpsNmea_DateTimeChanged);
-            gpsInterpreter.FixObtained += new nmeaInterpreter.FixObtainedEventHandler(gpsNmea_FixObtained);
-            gpsInterpreter.FixLost += new nmeaInterpreter.FixLostEventHandler(gpsNmea_FixLost);
-            gpsInterpreter.PositionReceived += new nmeaInterpreter.PositionReceivedEventHandler(gpsNmea_PositionReceived);
-            gpsInterpreter.SpeedReceived += new nmeaInterpreter.SpeedReceivedEventHandler(gpsNmea_SpeedReceived);
-            gpsInterpreter.BearingReceived += new nmeaInterpreter.BearingReceivedEventHandler(gpsNmea_BearingReceived);
-            gpsInterpreter.SatelliteReceived += new nmeaInterpreter.SatelliteReceivedEventHandler(gpsNmea_SatelliteReceived);
-            gpsInterpreter.PDOPReceived += new nmeaInterpreter.PDOPReceivedEventHandler(gpsNmea_PDOPReceived);
-            gpsInterpreter.HDOPReceived += new nmeaInterpreter.HDOPReceivedEventHandler(gpsNmea_HDOPReceived);
-            gpsInterpreter.VDOPReceived += new nmeaInterpreter.VDOPReceivedEventHandler(gpsNmea_VDOPReceived);
-            gpsInterpreter.NumSatsReceived += new nmeaInterpreter.NumberOfSatellitesInViewEventHandler(gpsNmea_NumSatsReceived);
-            gpsInterpreter.QueueUpdated += new nmeaInterpreter.SetQueuedRequestsEventHandler(pendingQueueUpdate);
-            gpsInterpreter.AltitudeReceived +=new nmeaInterpreter.AltitudeReceivedEventHandler(gpsNmea_AltitudeReceived);
 
             // setup event callbacks for tag reading events
             tagReader.TagReceived += new EventHandler<TagReceivedEventArgs>(receiveTag);
@@ -345,13 +403,12 @@ namespace GentagDemo
             // web service inits
             const int timeout = 10000;
 
-            COREMedDemoWebService = new medWS.COREMedDemoWS();
-            authenticationWebService = new authenticationWS.AuthenticationWebService();
-            assayWebService = new assayWS.AssayWS();
-
             COREMedDemoWebService.Timeout = timeout;
             authenticationWebService.Timeout = timeout;
             assayWebService.Timeout = timeout;
+
+            // setup gps stuff
+
 
             //initStatusPage();
 
@@ -527,6 +584,8 @@ namespace GentagDemo
             setLabel(queuedLookupsLabel, lookupQueue.Count.ToString(CultureInfo.CurrentCulture));
             setLabel(pendingLookupsLabel, pendingLookups.ToString(CultureInfo.CurrentCulture));
 
+            updateGPS();
+
             if (loop == loopType.detect)
             {
              //use this loop to also update the detect screen
@@ -668,7 +727,7 @@ namespace GentagDemo
                                     {
                                         lookupInfo newInfo = new lookupInfo(tagID, loopType.authentication);
                                         // get the tag info and cache it
-                                        IAsyncResult handle = authenticationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.getLatitude(), gpsInterpreter.getLongitude(), cb, newInfo);
+                                        IAsyncResult handle = authenticationWebService.BegingetItem(tagID, DeviceUID, gpsInterpreter.Latitude, gpsInterpreter.Longitude, cb, newInfo);
 
                                         itemsCurrentlyBeingLookedUp[handle] = newInfo;
                                     }
@@ -1489,7 +1548,7 @@ namespace GentagDemo
                     systemState = new SystemState(SystemProperty.ActiveSyncStatus);
                     systemState.Changed += new ChangeEventHandler(activeSyncStatusChanged);
                     lvi = new ListViewItem.ListViewSubItem();
-                    lvi.Text = ((ActiveSyncStatus)systemState.CurrentValue).ToString(CultureInfo.CurrentCulture);
+                    lvi.Text = ((ActiveSyncStatus)systemState.CurrentValue).ToString();
                     statusListView.Items[0].SubItems.Add(lvi);
                 }
                 catch (NullReferenceException)

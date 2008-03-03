@@ -8,6 +8,7 @@
     using System.IO;
     using System.IO.Ports;
     using System.Net;
+    using System.Threading;
 
     public class nmeaInterpreter
     {        
@@ -45,13 +46,13 @@
         private DateTime lastGPSUpdateTime = new DateTime(0);
         
         // current variables, updated by messages
-        private float currentLatitude;
+        private float currentLatitude = 0.0F;
 
-        private string currentLatitudeString;
+        private string currentLatitudeString = string.Empty;
 
         private float currentLongitude;
 
-        private string currentLongitudeString;
+        private string currentLongitudeString = string.Empty;
 
         private float currentSpeed;
 
@@ -65,47 +66,21 @@
 
         private float currentVDOPValue;
 
-        private DateTime currentTime;
+        private DateTime currentTime = new DateTime(0);
 
         private int currentSatellitesUsed;
+
+        private int currentQueueSize;
 
         private bool validData;
 
         private Hashtable satellitesInView = new Hashtable();
-        #endregion
+        #endregion       
 
-        #region Delegates
-        public delegate void PositionReceivedEventHandler(string latitude, string longitude);
-        public delegate void DateTimeChangedEventHandler(System.DateTime dateTime);
-        public delegate void BearingReceivedEventHandler(double bearing);
-        public delegate void SpeedReceivedEventHandler(double speed);
-        public delegate void FixObtainedEventHandler();
-        public delegate void FixLostEventHandler();
-        public delegate void SatelliteReceivedEventHandler(int pseudoRandomCode, int azimuth, int elevation, int signalToNoiseRatio, bool firstMessage);
-        public delegate void HDOPReceivedEventHandler(double value);
-        public delegate void VDOPReceivedEventHandler(double value);
-        public delegate void PDOPReceivedEventHandler(double value);
-        public delegate void NumberOfSatellitesInViewEventHandler(int numSats);
-        public delegate void SetQueuedRequestsEventHandler(int queueSize, int maxQueueSize);
-        public delegate void AltitudeReceivedEventHandler(float altitude);
-        #endregion
-
-        #region Events
-        public event PositionReceivedEventHandler PositionReceived;
-        public event DateTimeChangedEventHandler DateTimeChanged;
-        public event BearingReceivedEventHandler BearingReceived;
-        public event SpeedReceivedEventHandler SpeedReceived;
-        public event FixObtainedEventHandler FixObtained;
-        public event FixLostEventHandler FixLost;
-        public event SatelliteReceivedEventHandler SatelliteReceived;
-        public event HDOPReceivedEventHandler HDOPReceived;
-        public event VDOPReceivedEventHandler VDOPReceived;
-        public event PDOPReceivedEventHandler PDOPReceived;
-        public event NumberOfSatellitesInViewEventHandler NumSatsReceived;
-        public event SetQueuedRequestsEventHandler QueueUpdated;
-        public event AltitudeReceivedEventHandler AltitudeReceived;
-        #endregion
-
+        /// <summary>
+        /// Constructor, sets baud rate and other serial port parameters, starts the tracking timer
+        /// </summary>
+        /// <param name="deviceUniqueID">The unique ID of this device</param>
         public nmeaInterpreter(string deviceUniqueID)
         {
             reportGPSTimer =
@@ -115,8 +90,8 @@
 
             //gpsSerialPort.BaudRate = 4800;
             gpsSerialPort.BaudRate = 57600;
-            gpsSerialPort.ReadBufferSize = 8192;
-            gpsSerialPort.ReceivedBytesThreshold = 512;
+            gpsSerialPort.ReadBufferSize = 16384;
+            gpsSerialPort.ReceivedBytesThreshold = 1024;
             gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(gpsSerialPort_DataReceived);
         }
 
@@ -178,6 +153,7 @@
             return false;
         }
 
+        #region Properties
         /// <summary>
         /// Returns the open status of the COM port
         /// </summary>
@@ -205,11 +181,19 @@
         /// <summary>
         /// Returns the most recent known latitude value
         /// </summary>
-        public float getLatitude
+        public float Latitude
         {
             get
             {
                 return currentLatitude;
+            }
+        }
+
+        public string LatitudeString
+        {
+            get
+            {
+                return currentLatitudeString;
             }
         }
 
@@ -222,7 +206,106 @@
             {
             return currentLongitude;
             }
-        }               
+        }
+
+        public string LongitudeString
+        {
+            get
+            {
+                return currentLongitudeString;
+            }
+        }
+
+        public float Speed
+        {
+            get
+            {
+                return currentSpeed;
+            }
+        }
+
+        public float Altitude
+        {
+            get
+            {
+                return currentAltitude;
+            }
+        }
+
+        public float Bearing
+        {
+            get
+            {
+                return currentBearing;
+            }
+        }
+
+        public float HDOP
+        {
+            get
+            {
+                return currentHDOPValue;
+            }
+        }
+
+        public float PDOP
+        {
+            get
+            {
+                return currentPDOPValue;
+            }
+        }
+
+        public float VDOP
+        {
+            get
+            {
+                return currentVDOPValue;
+            }
+        }
+
+        public DateTime Time
+        {
+            get
+            {
+                return currentTime;
+            }
+        }
+
+        public int Satellites
+        {
+            get
+            {
+                return currentSatellitesUsed;
+            }
+        }
+
+        public int QueueSize
+        {
+            get
+            {
+                return currentQueueSize;
+            }
+        }
+
+        public bool Fixed
+        {
+            get
+            {
+                return validData;
+            }
+        }
+
+        public Hashtable SatellitesInView
+        {
+            get
+            {
+                return satellitesInView;
+            }
+        }
+
+#endregion
+
 
         /// <summary>
         /// Divides a sentence into individual words
@@ -241,11 +324,8 @@
         /// </summary>
         /// <param name="sentence"></param>
         /// <returns></returns>
-        private bool ParseGPRMC(string sentence)
+        private bool ParseRMC(string[] Words)
         {
-            // Divide the sentence into words
-            string[] Words = GetWords(sentence);
-
             // Do we have enough values to describe our location?
             if (!string.IsNullOrEmpty(Words[3]) &&
                 !string.IsNullOrEmpty(Words[4]) &&
@@ -295,11 +375,19 @@
                 // Yes. Parse the speed and convert it to MPH
                 currentSpeed = float.Parse(Words[7], CultureInfo.InvariantCulture) * MPHPerKnot;
             }
+            else
+            {
+                currentSpeed = -1.0F;
+            }
             // Do we have enough information to extract bearing?
             if (!string.IsNullOrEmpty(Words[8]))
             {
                 // Indicate that the sentence was recognized
                 currentBearing = float.Parse(Words[8], CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                currentBearing = -1.0F;
             }
             // Does the device currently have a satellite fix?
             if (!string.IsNullOrEmpty(Words[2]))
@@ -323,16 +411,13 @@
         /// </summary>
         /// <param name="sentence"></param>
         /// <returns></returns>
-        private bool ParseGPGSV(string sentence)
+        private bool ParseGSV(string[] Words)
         {
             int PseudoRandomCode = 0;
             int Azimuth = 0;
-            int SignalToNoiseRatio = 0;
-            // Divide the sentence into words
-            string[] Words = GetWords(sentence);
 
             // is this the first GPGSV message?
-            if (Words[2].Equals(@"1", StringComparison.Ordinal) == 0)
+            if (Words[2].Equals(@"1", StringComparison.Ordinal))
                 satellitesInView.Clear();
 
             // Each sentence contains four blocks of satellite information. 
@@ -369,10 +454,8 @@
         /// </summary>
         /// <param name="sentence"></param>
         /// <returns></returns>
-        private bool ParseGPGSA(string sentence)
+        private bool ParseGSA(string[] Words)
         {
-            // Divide the sentence into words
-            string[] Words = GetWords(sentence);
             try
             {
                 // Update the DOP values
@@ -413,10 +496,8 @@
         /// </summary>
         /// <param name="sentence"></param>
         /// <returns></returns>
-        private bool ParseGPGGA(string sentence)
+        private bool ParseGGA(string[] Words)
         {
-            // Divide the sentence into words
-            string[] Words = GetWords(sentence);
             try
             {            
                 // get position
@@ -557,7 +638,7 @@
                     TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1).ToUniversalTime();
                     elapsedSinceReadQueue.Enqueue((DateTime.Now.Ticks - lastGPSUpdateTime.Ticks) / 1000);
                     reportedTimeQueue.Enqueue((long)t.TotalMilliseconds);
-                    QueueUpdated(latitudeQueue.Count, minimumGPSCoordinatesToReport);
+                    currentQueueSize = latitudeQueue.Count;
                 }
             }
             if ((latitudeQueue.Count > minimumGPSCoordinatesToReport) || (!trackingGPS && latitudeQueue.Count > 0))
@@ -567,17 +648,17 @@
                     try
                     {
                         // attempt to unload the queues each time                            
-                        if (ws.callHome(deviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray(), bearingQueue.ToArray(), speedQueue.ToArray(), elevationQueue.ToArray()))
-                        {
-                            latitudeQueue.Clear();
-                            longitudeQueue.Clear();
-                            elapsedSinceReadQueue.Clear();
-                            reportedTimeQueue.Clear();
-                            bearingQueue.Clear();
-                            elevationQueue.Clear();
-                            speedQueue.Clear();
-                            QueueUpdated(latitudeQueue.Count, minimumGPSCoordinatesToReport);
-                        }
+                        //if (ws.callHome(deviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray(), bearingQueue.ToArray(), speedQueue.ToArray(), elevationQueue.ToArray()))
+                        //{
+                        //    latitudeQueue.Clear();
+                        //    longitudeQueue.Clear();
+                        //    elapsedSinceReadQueue.Clear();
+                        //    reportedTimeQueue.Clear();
+                        //    bearingQueue.Clear();
+                        //    elevationQueue.Clear();
+                        //    speedQueue.Clear();
+                        //    QueueUpdated(latitudeQueue.Count, minimumGPSCoordinatesToReport);
+                        //}
                     }
                     catch (WebException)
                     {
@@ -594,42 +675,60 @@
         /// <param name="e"></param>
         private void gpsSerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string[] buffer = gpsSerialPort.ReadExisting().Split('\n');
-            gpsSerialPort.DiscardInBuffer();
-            foreach (string inString in buffer)
-            {                
-                // only want to look at GPRMC, GPGSV and GPGSA messages
-                if (inString.StartsWith(@"$GPRMC") || inString.StartsWith(@"$GPGSV") || inString.StartsWith(@"$GPGSA") || inString.StartsWith(@"$GPGGA"))
-                {                    
-                    // Discard the sentence if its checksum does not match our calculated checksum
-                    if (IsValid(inString))
+            if (Monitor.TryEnter(this))
+            {
+                try
+                {
+                    string[] buffer = gpsSerialPort.ReadExisting().Split('\n');
+                    gpsSerialPort.DiscardInBuffer();
+
+                    int start = Environment.TickCount;
+                    foreach (string inString in buffer)
                     {
-                        // Look at the first word to decide where to go next
-                        switch (GetWords(inString)[0])
+                        // divide up the string by commas
+                        string[] inStringDivided = GetWords(inString);
+
+                        // Discard the sentence if its checksum does not match our calculated checksum
+                        if (IsValid(inString))
                         {
-                            case "$GPRMC":
-                                ParseGPRMC(inString);
-                                break;
-                            case "$GPGSV":
-                                ParseGPGSV(inString);
-                                break;
-                            case "$GPGSA":
-                                ParseGPGSA(inString);
-                                break;
-                            case "$GPGGA":
-                                ParseGPGGA(inString);
-                                break;
-                            default:
-                                // Indicate that the sentence was not recognized
-                                break;                                
+                            // Look at the first word to decide where to go next
+                            switch (inStringDivided[0])
+                            {
+                                case "$GPRMC":
+                                    ParseRMC(inStringDivided);
+                                    break;
+                                case "$GPGSV":
+                                    ParseGSV(inStringDivided);
+                                    break;
+                                case "$GPGSA":
+                                    ParseGSA(inStringDivided);
+                                    break;
+                                case "$GPGGA":
+                                    ParseGGA(inStringDivided);
+                                    break;
+                                default:
+                                    //Debug.WriteLine("Valid, unidentified string " + inString);
+                                    // Indicate that the sentence was not recognized
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            //Debug.WriteLine("Invalid string " + inString);
                         }
                     }
+                    int end = Environment.TickCount;
+                    Debug.WriteLine(buffer.Length + " sentences in " + (end - start) + "ms");
                 }
-                else
+                catch (Exception)
+                { }
+                finally
                 {
-                    Debug.WriteLine(inString);
+                    Monitor.Exit(this);
                 }
             }
+            else
+                Debug.WriteLine("skipped gps parse pass");
         }
     }
 }

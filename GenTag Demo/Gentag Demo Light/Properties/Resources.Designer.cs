@@ -400,6 +400,15 @@ namespace GentagDemo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Searching....
+        /// </summary>
+        internal static string Searching {
+            get {
+                return ResourceManager.GetString("Searching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Values.
         /// </summary>
         internal static string setValueButtonInit {
