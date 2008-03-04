@@ -67,6 +67,15 @@ namespace GentagDemo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allergies.
+        /// </summary>
+        internal static string Allergies {
+            get {
+                return ResourceManager.GetString("Allergies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  Alpha.
         /// </summary>
         internal static string Alpha {
@@ -265,6 +274,15 @@ namespace GentagDemo.Properties {
         internal static string manualIDButtonInit {
             get {
                 return ResourceManager.GetString("manualIDButtonInit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Medications.
+        /// </summary>
+        internal static string Medications {
+            get {
+                return ResourceManager.GetString("Medications", resourceCulture);
             }
         }
         

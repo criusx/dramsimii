@@ -291,6 +291,8 @@ namespace GentagDemo
 
             softInputPanel.Enabled = false;
 
+            tagSearchCallback = new TimerCallback(tagSearchTimer_Tick);
+
             tagSearchTimer = new System.Threading.Timer(tagSearchCallback, tagSearchAutoEvent, 50, 500);        
 
             try
@@ -303,9 +305,7 @@ namespace GentagDemo
             }
 
             gpsInterpreter = new nmeaInterpreter(DeviceUID);
-
-            tagSearchCallback = new TimerCallback(tagSearchTimer_Tick);
-
+            
             // assayCountdownTimer
             assayCountdownTimer.Interval = 1000;
 
@@ -1160,49 +1160,56 @@ namespace GentagDemo
         /// <param name="patient"></param>
         private void displayPatient(medWS.patientRecord patient)
         {
-            if (patient == null || patient.RFIDnum == null || patient.image == null)
+            if (this.InvokeRequired)
             {
-                setTextBox(patientNameBox, string.Empty);
-                setTextBox(patientDescriptionBox, string.Empty);
-                setPhoto(patientPhoto, (Image)null);
-                setButtonEnabled(medicationButton, false);
-            }
-            else if (patient.exists)
-            {
-                try
-                {
-                    setTextBox(patientNameBox, patient.lastName + ", " + patient.firstName + " " + patient.middleName);
-                    DateTime dob = new DateTime(1970, 1, 1);
-                    dob = dob.AddTicks(patient.DOB * 1000);
-                    string description = dob.ToString() + System.Console.Out.NewLine;
-                    if (patient.allergies != null)
-                    {
-                        description += "Allergies" + System.Console.Out.NewLine;
-                        foreach (string s in patient.allergies)
-                            description += s + System.Console.Out.NewLine;
-                    }
-                    if (patient.medications != null)
-                    {
-                        description += "Medications" + System.Console.Out.NewLine;
-                        foreach (string s in patient.medications)
-                            description += s + System.Console.Out.NewLine;
-                    }
-                    setTextBox(patientDescriptionBox, description);
-                    setPhoto(patientPhoto, patient.image);
-                    setButtonEnabled(medicationButton, true);
-                }
-                catch (Exception)
-                {
-                    setTextBox(patientNameBox, string.Empty);
-                    setTextBox(patientDescriptionBox, GentagDemo.Properties.Resources.patientInfoNotFound);
-                    setPhoto(patientPhoto, (Image)null);
-                }
+                this.Invoke(new displayPatientDelegate(displayPatient), new object[] { patient });
             }
             else
             {
-                setTextBox(patientNameBox, GentagDemo.Properties.Resources.NotFound);
-                setTextBox(patientDescriptionBox, string.Empty);
-                setPhoto(patientPhoto, (Image)null);
+                if (patient == null || patient.RFIDnum == null || patient.image == null)
+                {
+                    patientNameBox.Text = string.Empty;
+                    patientDescriptionBox.Text = string.Empty;
+                    setPhoto(patientPhoto, (Image)null);
+                    medicationButton.Enabled = false;
+                }
+                else if (patient.exists)
+                {
+                    try
+                    {
+                        patientNameBox.Text =  patient.lastName + ", " + patient.firstName + " " + patient.middleName;
+                        DateTime dob = new DateTime(1970, 1, 1);
+                        dob = dob.AddTicks(patient.DOB * 1000);
+                        string description = dob.ToString() + System.Console.Out.NewLine;
+                        if (patient.allergies != null)
+                        {
+                            description += Properties.Resources.Allergies + System.Console.Out.NewLine;
+                            foreach (string s in patient.allergies)
+                                description += s + System.Console.Out.NewLine;
+                        }
+                        if (patient.medications != null)
+                        {
+                            description += Properties.Resources.Medications + System.Console.Out.NewLine;
+                            foreach (string s in patient.medications)
+                                description += s + System.Console.Out.NewLine;
+                        }
+                        patientDescriptionBox.Text = description;
+                        setPhoto(patientPhoto, patient.image);
+                        medicationButton.Enabled = true;
+                    }
+                    catch (Exception)
+                    {
+                        patientNameBox.Text = string.Empty;
+                        patientDescriptionBox.Text = GentagDemo.Properties.Resources.patientInfoNotFound;
+                        setPhoto(patientPhoto, (Image)null);
+                    }
+                }
+                else
+                {
+                    patientNameBox.Text = GentagDemo.Properties.Resources.NotFound;
+                    patientDescriptionBox.Text = string.Empty;
+                    setPhoto(patientPhoto, (Image)null);
+                }
             }
         }
 
@@ -1376,34 +1383,43 @@ namespace GentagDemo
         private void scanCOMPorts(object sender, EventArgs e)
         {
             string[] COMPorts = SerialPort.GetPortNames();
-            // Init the Registry
-            RegistryKey regKey = Registry.LocalMachine;
-
-            regKey = regKey.OpenSubKey(@"System");
-            regKey = regKey.OpenSubKey(@"CurrentControlSet");
-            regKey = regKey.OpenSubKey(@"GPS Intermediate Driver");
-            int intermediateDriverEnabled = (int)regKey.GetValue("IsEnabled");
-            string gpsComPort = string.Empty;
-            if (intermediateDriverEnabled == 1)
-            {
-                regKey = regKey.OpenSubKey(@"Multiplexer");
-                gpsComPort = (string)regKey.GetValue("DriverInterface");
-            }
-            else
-            {
-                regKey = regKey.OpenSubKey(@"Drivers");
-                string currentDriver = (string)regKey.GetValue("CurrentDriver");
-                regKey = regKey.OpenSubKey(currentDriver);
-                gpsComPort = (string)regKey.GetValue(@"CommPort");
-                
-            }
 
             Hashtable comPorts = new Hashtable();
 
-            gpsComPort = gpsComPort.Substring(0,4);
+            string gpsComPort = string.Empty;
 
-            comPorts.Add(gpsComPort, true);
-            
+            try
+            {
+                // Init the Registry
+                RegistryKey regKey = Registry.LocalMachine;
+
+                regKey = regKey.OpenSubKey(@"System");
+                regKey = regKey.OpenSubKey(@"CurrentControlSet");
+                regKey = regKey.OpenSubKey(@"GPS Intermediate Driver");
+                int intermediateDriverEnabled = (int)regKey.GetValue("IsEnabled");
+                
+                if (intermediateDriverEnabled == 1)
+                {
+                    regKey = regKey.OpenSubKey(@"Multiplexer");
+                    gpsComPort = (string)regKey.GetValue("DriverInterface");
+                }
+                else
+                {
+                    regKey = regKey.OpenSubKey(@"Drivers");
+                    string currentDriver = (string)regKey.GetValue("CurrentDriver");
+                    regKey = regKey.OpenSubKey(currentDriver);
+                    gpsComPort = (string)regKey.GetValue(@"CommPort");
+
+                }
+
+                
+
+                gpsComPort = gpsComPort.Substring(0, 4);
+
+                comPorts.Add(gpsComPort, true);
+            }
+            catch (NullReferenceException)
+            { }
 
             //if (Array.IndexOf(regKey.GetSubKeyNames(), @"Gentag", 0) == -1)
             //    regKey.CreateSubKey(@"Gentag");

@@ -272,4 +272,10 @@ This drug should not be taken by this patient.</value>
   <data name="Searching" xml:space="preserve">
     <value>Searching...</value>
   </data>
+  <data name="Allergies" xml:space="preserve">
+    <value>Allergies</value>
+  </data>
+  <data name="Medications" xml:space="preserve">
+    <value>Medications</value>
+  </data>
 </root>
