@@ -271,12 +271,7 @@ namespace GentagDemo
 
         private List<ProgressBar> satProgressBarList = new List<ProgressBar>();
 
-        private List<Label> satLabelList = new List<Label>();
-
-        /// <summary>
-        /// The reader indicates that it is done reading now
-        /// </summary>
-        //private bool doneReading;
+        private List<Label> satLabelList = new List<Label>();       
         #endregion
 
         /// <summary>
@@ -284,8 +279,11 @@ namespace GentagDemo
         /// </summary>
         public demoClient()
         {
+            int start = Environment.TickCount;
             // run initializations provided by the designer
             InitializeComponent();
+
+            Debug.WriteLine("InitializeComponent() in " + (Environment.TickCount - start));
 
             mF = this;
 
@@ -293,7 +291,7 @@ namespace GentagDemo
 
             tagSearchCallback = new TimerCallback(tagSearchTimer_Tick);
 
-            tagSearchTimer = new System.Threading.Timer(tagSearchCallback, tagSearchAutoEvent, 50, 500);        
+            tagSearchTimer = new System.Threading.Timer(tagSearchCallback, tagSearchAutoEvent, 5000, 1000);        
 
             try
             {
@@ -439,6 +437,7 @@ namespace GentagDemo
             //    regKey.SetValue(@"hostname", @"129.2.99.117");
             //}
             //hostName.Text = regKey.GetValue(@"hostname").ToString();
+            Debug.WriteLine("Loaded in " + (Environment.TickCount - start));
         }
 
         /// <summary>
@@ -1002,31 +1001,7 @@ namespace GentagDemo
         {
             lookupInfo itemInfo = (lookupInfo)ar.AsyncState;
             scheduleLookup(itemInfo.tagID, itemInfo.whichLookup, itemInfo.extraTagValue);
-        }
-
-        /// <summary>
-        /// The destructor for the class, ensures that the tag reader quits and that the debug text file is closed
-        /// </summary>
-        ~demoClient()
-        {            
-            Dispose(false);
-        }
-
-        //protected virtual void Dispose(bool disposing)
-        //{
-        //    if (!disposing)
-        //    {
-        //        tagReader.Running = false;
-        //        tagSearchReading = false;
-
-        //        if (tagSearchTimer != null)
-        //        {
-        //            tagSearchAutoEvent.WaitOne(500, false);
-        //            tagSearchTimer.Dispose();
-        //        }
-        //        debugOut.Dispose();
-        //    }
-        //}
+        }       
 
         private void receiveTagContents(object sender, TagContentsEventArgs args)
         {
@@ -1439,7 +1414,7 @@ namespace GentagDemo
 
             foreach (string s in COMPorts)
             {
-                comPorts[s]= true;
+                comPorts[s] = true;
             }
 
             comPortsComboBox.Items.Clear();
@@ -1447,7 +1422,7 @@ namespace GentagDemo
             foreach (string s in comPorts.Keys)
             {                
                 comPortsComboBox.Items.Add(s);
-                if (string.Compare(s, gpsComPort) == 0)
+                if (string.Compare(s, gpsComPort,StringComparison.OrdinalIgnoreCase) == 0)
                     comPortsComboBox.SelectedItem = s;
              
             }            

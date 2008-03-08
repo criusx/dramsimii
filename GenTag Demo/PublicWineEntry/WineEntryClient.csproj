@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{62153004-0AA6-49E5-B997-944E2C3F5DF0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -136,6 +136,8 @@
   </ItemGroup>
   <ItemGroup>
     <BaseApplicationManifest Include="Properties\app.manifest" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="Resources\Gentag-logo.png" />
     <None Include="Web References\org.dyndns.crius\InfoPacket.datasource">
       <DependentUpon>Reference.map</DependentUpon>

@@ -1,4 +1,7 @@
-﻿namespace NMEA
+﻿using System;
+
+[assembly: CLSCompliant(true)]
+namespace NMEA
 {
     using System;
     using System.Collections;
@@ -10,7 +13,7 @@
     using System.Net;
     using System.Threading;
 
-    public class nmeaInterpreter
+    public class nmeaInterpreter: IDisposable
     {        
         #region Member Variables
 
@@ -95,9 +98,28 @@
             gpsSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(gpsSerialPort_DataReceived);
         }
 
-        ~nmeaInterpreter()
+        protected virtual void Dispose(bool disposing)
         {
-            Close();
+            if (disposing)
+            {
+                if (gpsSerialPort.IsOpen)
+                    gpsSerialPort.Close();
+                //ws.Abort();
+                if (reportGPSTimer != null)
+                {
+                    reportGPSTimer.Dispose();
+                    reportGPSTimer = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Dispose function that is invoked by the Garbage Collector
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -413,7 +435,6 @@
         /// <returns></returns>
         private bool ParseGSV(string[] Words)
         {
-            int PseudoRandomCode = 0;
             int Azimuth = 0;
 
             // is this the first GPGSV message?
@@ -422,8 +443,7 @@
 
             // Each sentence contains four blocks of satellite information. 
             // Read each block and report each satellite's information
-            int Count = 0;
-            for (Count = 1; Count <= 4; Count++)
+            for (int Count = 1; Count <= 4; Count++)
             {
                 // Does the sentence have enough words to analyze?
                 if ((Words.Length - 1) >= (Count * 4 + 3))
@@ -649,16 +669,16 @@
                     {
                         // attempt to unload the queues each time                            
                         //if (ws.callHome(deviceUID, latitudeQueue.ToArray(), longitudeQueue.ToArray(), elapsedSinceReadQueue.ToArray(), reportedTimeQueue.ToArray(), bearingQueue.ToArray(), speedQueue.ToArray(), elevationQueue.ToArray()))
-                        //{
-                        //    latitudeQueue.Clear();
-                        //    longitudeQueue.Clear();
-                        //    elapsedSinceReadQueue.Clear();
-                        //    reportedTimeQueue.Clear();
-                        //    bearingQueue.Clear();
-                        //    elevationQueue.Clear();
-                        //    speedQueue.Clear();
-                        //    QueueUpdated(latitudeQueue.Count, minimumGPSCoordinatesToReport);
-                        //}
+                        if (true)
+                        {
+                            latitudeQueue.Clear();
+                            longitudeQueue.Clear();
+                            elapsedSinceReadQueue.Clear();
+                            reportedTimeQueue.Clear();
+                            bearingQueue.Clear();
+                            elevationQueue.Clear();
+                            speedQueue.Clear();
+                        }
                     }
                     catch (WebException)
                     {

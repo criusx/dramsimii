@@ -52,7 +52,7 @@ namespace GentagDemo
                     for (; (hashtableEnumerator.MoveNext()) && (i < 8); i++)
                     {
                         satLabelList[i].Text = hashtableEnumerator.Key.ToString();
-                        satProgressBarList[i].Value = int.Parse(hashtableEnumerator.Value.ToString());
+                        satProgressBarList[i].Value = int.Parse(hashtableEnumerator.Value.ToString(),CultureInfo.CurrentCulture);
                     }
 
                     for (; i < 8; i++)

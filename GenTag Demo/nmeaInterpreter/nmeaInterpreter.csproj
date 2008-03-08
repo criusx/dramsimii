@@ -18,6 +18,8 @@
     <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>nmeaInterpreterKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -94,6 +96,9 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
+    <None Include="nmeaInterpreterKey.pfx" />
     <None Include="Web References\AuthenticationWebService\AuthenticationWebService.wsdl" />
     <None Include="Web References\AuthenticationWebService\itemInfo1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
