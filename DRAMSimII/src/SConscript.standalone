@@ -19,6 +19,7 @@ sources = Split("""
 			fbdAMB.cpp
 			fbdChannel.cpp
 			fbdFrame.cpp
+			fbdSystem.cpp
 			getNextCommand.cpp
 			globals.cpp
 			InputStream.cpp
