@@ -244,7 +244,7 @@ const void *fbdChannel::moveChannelToTime(const tick_t endTime, tick_t *transFin
 	while (time < endTime)
 	{
 		// try to convert any transactions into commands first
-		if (checkForAvailableCommandSlots(readTransaction()))
+		if (checkForAvailableCommandSlots(readTransaction(true)))
 		{
 			// actually remove it from the queue now
 			transaction *decodedTransaction = getTransaction();

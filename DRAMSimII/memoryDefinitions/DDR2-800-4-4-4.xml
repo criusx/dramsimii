@@ -60,6 +60,7 @@
 		<transactionQueueDepth>8</transactionQueueDepth>
 		<eventQueueDepth>8</eventQueueDepth>
 		<refreshQueueDepth>8</refreshQueueDepth>
+		<!-- used to determine how long a refresh transaction may be deprioritized relative to normal transactions -->
 		<seniorityAgeLimit>256</seniorityAgeLimit>
 		<!--attempts to group reads and writes together in time-->
 		<readWriteGrouping>false</readWriteGrouping>

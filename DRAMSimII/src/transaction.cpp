@@ -5,9 +5,10 @@
 using namespace std;
 using namespace DRAMSimII;
 
-// initialize the static member
+// initialize the static members
 queue<transaction> transaction::freeTransactionPool(4*COMMAND_QUEUE_SIZE,true);
 
+/// constructor to make a transaction with no values set
 transaction::transaction():
 event_no(0),
 type(CONTROL_TRANSACTION),
@@ -20,6 +21,7 @@ addr(),
 originalTransaction(0)
 {}
 
+/// copy constructor to duplicate a transaction
 transaction::transaction(const transaction *rs):
 event_no(rs->event_no),
 type(rs->type),
@@ -32,6 +34,7 @@ addr(rs->addr),
 originalTransaction(rs->originalTransaction)
 {}
 
+/// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
 transaction::transaction(const int attribute,const tick_t enqueueTime,const int Size,const unsigned long long address, const void *originalTrans):
 event_no(0),
 status(0),
@@ -52,6 +55,7 @@ originalTransaction(originalTrans)
 	}
 }
 
+/// overrides the new operator to draw from the transaction pool instead
 void * transaction::operator new(size_t size)
 {
 	assert(size == sizeof(transaction));
@@ -60,13 +64,14 @@ void * transaction::operator new(size_t size)
 	return newTrans;
 }
 
+/// override the delete operator to send transactions back to the pool
 void transaction::operator delete(void *mem)
 {
 	transaction *trans = static_cast<transaction*>(mem);
 	freeTransactionPool.release_item(trans);
 }
 
-
+/// prints the key attributes of a transaction
 std::ostream &DRAMSimII::operator<<(std::ostream &os, const transaction *this_t)
 {	
 	os << "Q[" << std::setw(8) << std::dec << this_t->getEnqueueTime() << "] ";
@@ -80,6 +85,7 @@ std::ostream &DRAMSimII::operator<<(std::ostream &os, const transaction *this_t)
 	return os;
 }
 
+/// decodes and prints the transaction type
 ostream &DRAMSimII::operator<<(ostream &os, const transaction_type_t type)
 {
 	switch (type)

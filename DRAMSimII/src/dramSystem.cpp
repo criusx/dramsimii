@@ -33,46 +33,14 @@ tick_t dramSystem::nextTick() const
 	// find the next time to wake from among all the channels
 	for (vector<dramChannel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
-		// first look for transactions
-		if (const transaction *nextTrans = currentChan->readTransactionSimple())
+		tick_t channelNextWake = currentChan->nextTick();
+		if (channelNextWake < nextWake)
 		{
-			// make sure it can finish
-			tick_t tempWake = nextTrans->getEnqueueTime() + currentChan->getTimingSpecification().tBufferDelay(); 
-
-			assert(nextTrans->getEnqueueTime() <= currentChan->getTime());
-			assert(tempWake <= currentChan->getTime() + currentChan->getTimingSpecification().tBufferDelay());
-			// whenever the next transaction is ready and there are available slots for the R/C/P commands
-			if ((tempWake < nextWake) && (currentChan->checkForAvailableCommandSlots(nextTrans)))
-			{
-				nextWake = tempWake;
-			}
-		}
-
-		// then check to see when the next command occurs
-		if (const command *tempCommand = currentChan->readNextCommand())
-		{
-			int tempGap = currentChan->minProtocolGap(tempCommand);
-
-			if (tempGap + currentChan->getTime() < nextWake)
-			{
-				nextWake = tempGap + currentChan->getTime();
-			}
-		}
-
-		// check the refresh queue
-		if (systemConfig.getRefreshPolicy() != NO_REFRESH)
-		{
-			const transaction *refresh_t = (*currentChan).readRefresh();
-
-			if (refresh_t->getEnqueueTime() < nextWake)
-			{
-				// a refresh transaction may have been missed, so ensure that the correct time is chosen in the future
-				nextWake = max(currentChan->getTime() + 1,refresh_t->getEnqueueTime());
-			}
+			nextWake = channelNextWake;
 		}
 	}
 
-	return nextWake;
+	return max(nextWake, time + 1);
 }
 
 bool dramSystem::convertAddress(addresses &this_a) const

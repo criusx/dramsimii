@@ -14,7 +14,7 @@ namespace DRAMSimII
 	class bank_c
 	{
 	private:
-		const dramTimingSpecification& timing;
+		const dramTimingSpecification& timing;	///< a reference to the timing specification
 	protected:	
 		// members
 		queue<command> perBankQueue;	///< the command priority queue, stores the commands to be executed

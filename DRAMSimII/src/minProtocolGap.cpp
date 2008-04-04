@@ -233,7 +233,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 
 //! Returns the soonest time that this command may execute
 /*! Looks at all of the timing parameters and decides when the this command may soonest execute */
-tick_t dramChannel::nearestExecuteTime(const command *currentCommand) const
+tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 { 
 	tick_t nextTime;
 

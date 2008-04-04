@@ -10,21 +10,21 @@
 
 namespace DRAMSimII
 {
+	/// a request to read or write some portion of memory, atomically
 	class transaction
 	{
-	private:
-		static queue<transaction> freeTransactionPool;	// transactions are stored here to avoid allocating memory after initialization
+	protected:
+		static queue<transaction> freeTransactionPool;	///< transactions are stored here to avoid allocating memory after initialization
 
-		unsigned event_no;
-		transaction_type_t type;	// transaction type
-		int status;
-		unsigned length;					// how long?
-		tick_t enqueueTime;			// time when the transaction enters the MC queue
-		tick_t completionTime;		// time when transaction has completed in DRAM ticks
-		tick_t decodeTime;			// when the transaction was split up into several commands
-		addresses addr;
-		const void *originalTransaction;	// utility pointer in the event that this transaction represents another version of a transaction
-
+		unsigned event_no;					///< the nth event
+		transaction_type_t type;			///< transaction type
+		int status;							///< status of this transaction
+		unsigned length;					///< the number of words requested
+		tick_t enqueueTime;					///< time when the transaction enters the MC queue
+		tick_t completionTime;				///< time when transaction has completed in DRAM ticks
+		tick_t decodeTime;					///< when the transaction was split up into several commands
+		addresses addr;						///< the physical, virtual, and mapped representations of the address for this transaction
+		const void *originalTransaction;	///< utility pointer in the event that this transaction represents another version of a transaction
 
 	public:
 		
@@ -37,7 +37,7 @@ namespace DRAMSimII
 		unsigned getLength() const { return length; }
 		transaction_type_t getType() const { return type; }
 		unsigned getEventNumber() const { return event_no; }
-		const void *getOriginalTransaction() const { return originalTransaction; }
+		const void *getOriginalTransaction() const { return originalTransaction; }		
 
 		// mutators
 		void setEnqueueTime(const tick_t value) { enqueueTime = value; }

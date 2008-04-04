@@ -16,40 +16,47 @@
 
 namespace DRAMSimII
 {
+	/// represents a DRAM channel, has individual timing parameters, ranks, banks, clock, etc.
 	class dramChannel
 	{
 		// members
 	protected:
-		tick_t time;							// channel time, allow for channel concurrency			
-		tick_t lastRefreshTime;					// tells me when last refresh was done
-		unsigned lastRankID;					// id of the last accessed rank of this channel
-		dramTimingSpecification timingSpecification; // the timing specs for this channel
-		queue<transaction> transactionQueue;	// transaction queue for the channel
-		transaction **refreshCounter;			// holds the next refresh commands
-		queue<command> historyQueue;			// what were the last N commands to this channel?
-		queue<transaction> completionQueue;		// completed_q, can send status back to memory controller
-		const dramSystemConfiguration& systemConfig;	// a pointer to common system config values
-		dramStatistics *statistics;				// backward pointer to the stats engine
-		powerConfig powerModel;
-		dramAlgorithm algorithm;
-		unsigned channelID;						// the ordinal value of this channel (0..n)
-		std::vector<rank_c> rank;				// vector of the array of ranks
+		tick_t time;									///< channel time, allow for channel concurrency			
+		tick_t lastRefreshTime;							///< tells me when last refresh was done
+		unsigned lastRankID;							///< id of the last accessed rank of this channel
+		dramTimingSpecification timingSpecification;	///< the timing specs for this channel
+		queue<transaction> transactionQueue;			///< transaction queue for the channel
+		transaction **refreshCounter;					///< holds the next refresh commands
+		queue<command> historyQueue;					///< what were the last N commands to this channel?
+		queue<transaction> completionQueue;				///< completed_q, can send status back to memory controller
+		const dramSystemConfiguration& systemConfig;	///< a pointer to common system config values
+		dramStatistics *statistics;					///< backward pointer to the stats engine
+		powerConfig powerModel;						///< the power model for this channel, retains power stats
+		dramAlgorithm algorithm;					///< the algorithms used for transaction, command, etc. ordering
+		unsigned channelID;							///< the ordinal value of this channel (0..n)
+		std::vector<rank_c> rank;					///< vector of the array of ranks
 
 	public:
 		// functions
+		bool enqueue(transaction *in);
+		bool isFull() const { return transactionQueue.freecount() == 0; }
+		void recordCommand(command *);
+		unsigned getChannelID() const { return channelID; }
 		bool checkForAvailableCommandSlots(const transaction *trans) const;	
 		bool transaction2commands(transaction *);
 		command *getNextCommand();		
 		void doPowerCalculation();
 		void executeCommand(command *thisCommand,const int gap);
+		void dramChannel::executeCommand(command *thisCommand);
 		tick_t nextTransactionDecodeTime() const;
-
-		// functions that may differ for architectures that inherit this
+		virtual tick_t nextTick() const;
 		
+
+		// functions that may differ for architectures that inherit this		
 		virtual const command *readNextCommand() const;
 		virtual const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
 		virtual int minProtocolGap(const command *thisCommand) const;
-		virtual tick_t nearestExecuteTime(const command *thisCommand) const;
+		virtual tick_t earliestExecuteTime(const command *thisCommand) const;
 
 		// accessors
 		const dramTimingSpecification& getTimingSpecification() const { return timingSpecification; }
@@ -60,7 +67,7 @@ namespace DRAMSimII
 		tick_t getTime() const { return time; }
 		unsigned getLastRankID() const { return lastRankID; }
 		transaction *getTransaction();			// remove and return the oldest transaction
-		const transaction *readTransaction() const;	// read the oldest transaction without affecting the queue
+		const transaction *readTransaction(bool) const;	// read the oldest transaction without affecting the queue
 		const transaction *readTransactionSimple() const { return transactionQueue.front(); }
 		transaction *getRefresh();
 		const transaction *readRefresh() const;
@@ -74,12 +81,6 @@ namespace DRAMSimII
 		void setTime(tick_t new_time) { time = new_time; }
 		void setChannelID(const unsigned value) { channelID = value; }
 		enum transaction_type_t setReadWriteType(const int,const int) const;
-
-		// functions
-		bool enqueue(transaction *in);
-		bool isFull() const { return transactionQueue.freecount() == 0; }
-		void recordCommand(command *);
-		unsigned getChannelID() const { return channelID; }
 
 		// constructors
 		explicit dramChannel();	

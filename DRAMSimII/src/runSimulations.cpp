@@ -42,7 +42,6 @@ void dramSystem::runSimulations2()
 void dramSystem::runSimulations3()
 {
 	transaction *input_t = NULL;
-	tick_t nextArrival = 0;
 	tick_t nextStats = STATSINTERVAL;
 
 	for (unsigned i = simParameters.get_request_count(); i > 0; )
@@ -70,15 +69,15 @@ void dramSystem::runSimulations3()
 		
 
 		tick_t nearFinish = 0;
-		//const void *error;
 
-		nextArrival = min(input_t->getEnqueueTime(),nextArrival);
 		// as long as transactions keep happening prior to this time
-		if (moveAllChannelsToTime(nextArrival,&nearFinish))
+		if (moveAllChannelsToTime(min(input_t->getEnqueueTime(),nextTick()),&nearFinish))
 		{
 			cerr << "not right, no host transactions here" << endl;
 		}
 
+		// attempt to enqueue external transactions
+		// as internal transactions (REFRESH) are enqueued automatically
 		if (nearFinish >= input_t->getEnqueueTime()) 
 		{
 			if (enqueue(input_t))
@@ -90,7 +89,6 @@ void dramSystem::runSimulations3()
 				// figure that the cpu <=> mch bus runs at the mostly the same speed
 				input_t->setEnqueueTime(input_t->getEnqueueTime() + channel[0].getTimingSpecification().tCMD());
 		}
-		nextArrival = nextTick();
 	}
 }
 
@@ -98,7 +96,7 @@ void dramSystem::runSimulations3()
 /// Return true if there was room, else false
 bool dramSystem::enqueue(transaction *trans)
 {
-	// map the PA of this transaction to this system, assuming the transaction is withing range
+	// map the PA of this transaction to this system, assuming the transaction is within range
 	if (trans->getAddresses().physicalAddress != ULLONG_MAX)
 		convertAddress(trans->getAddresses());
 
@@ -204,7 +202,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 		// attempt first to move transactions out of the transactions queue and
 		// convert them into commands
 		// FIXME: no longer returns transactions
-		const transaction *temp_t = channel[chan].readTransaction();
+		const transaction *temp_t = channel[chan].readTransaction(true);
 
 		// if there were no transactions left in the queue or there was not
 		// enough room to split the transaction into commands
