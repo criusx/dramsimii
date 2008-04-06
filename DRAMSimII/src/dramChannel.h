@@ -30,18 +30,18 @@ namespace DRAMSimII
 		queue<command> historyQueue;					///< what were the last N commands to this channel?
 		queue<transaction> completionQueue;				///< completed_q, can send status back to memory controller
 		const dramSystemConfiguration& systemConfig;	///< a pointer to common system config values
-		dramStatistics *statistics;					///< backward pointer to the stats engine
-		powerConfig powerModel;						///< the power model for this channel, retains power stats
-		dramAlgorithm algorithm;					///< the algorithms used for transaction, command, etc. ordering
-		unsigned channelID;							///< the ordinal value of this channel (0..n)
-		std::vector<rank_c> rank;					///< vector of the array of ranks
+		dramStatistics *statistics;						///< backward pointer to the stats engine
+		powerConfig powerModel;							///< the power model for this channel, retains power stats
+		dramAlgorithm algorithm;						///< the algorithms used for transaction, command, etc. ordering
+		unsigned channelID;								///< the ordinal value of this channel (0..n)
+		std::vector<rank_c> rank;						///< vector of the array of ranks
 
 	public:
 		// functions
 		bool enqueue(transaction *in);
-		bool isFull() const { return transactionQueue.freecount() == 0; }
+		bool isFull() const { return transactionQueue.freecount() == 0; }	///< determines whether there is room for more transactions
 		void recordCommand(command *);
-		unsigned getChannelID() const { return channelID; }
+		unsigned getChannelID() const { return channelID; } ///< return the ordinal of this channel
 		bool checkForAvailableCommandSlots(const transaction *trans) const;	
 		bool transaction2commands(transaction *);
 		command *getNextCommand();		
@@ -77,10 +77,10 @@ namespace DRAMSimII
 		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
 
 		// mutators
-		void setStatistics(dramStatistics *value) { statistics = value; }
-		void setTime(tick_t new_time) { time = new_time; }
-		void setChannelID(const unsigned value) { channelID = value; }
-		enum transaction_type_t setReadWriteType(const int,const int) const;
+		void setStatistics(dramStatistics *value) { statistics = value; }	///< set the statistics pointer to a dramStatistics object
+		void setTime(tick_t new_time) { time = new_time; }	///< update the time for this channel
+		void setChannelID(const unsigned value) { channelID = value; }	///< set the channel ordinal
+		enum transaction_type_t setReadWriteType(const int,const int) const;	///< determine whether a read or write transaction should be generated
 
 		// constructors
 		explicit dramChannel();	

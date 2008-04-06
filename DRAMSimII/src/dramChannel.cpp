@@ -103,6 +103,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 	while (time < endTime)
 	{	
 		// has room to decode an available transaction
+		/// @todo should this switch to use nextTransactionDecodeTime() ? 
 		if (checkForAvailableCommandSlots(readTransaction(true)))
 		{
 			// actually remove it from the queue now
