@@ -18,7 +18,7 @@ namespace GentagDemo
             //int a, b;
             //System.Threading.ThreadPool.GetMaxThreads(out a,out b);
             //MessageBox.Show("has " + a.ToString() + " threads.\nhas " + b.ToString() + " IO threads.");
-            System.Threading.ThreadPool.SetMaxThreads(50, 500);
+            //System.Threading.ThreadPool.SetMaxThreads(50, 500);
             
             try
             {

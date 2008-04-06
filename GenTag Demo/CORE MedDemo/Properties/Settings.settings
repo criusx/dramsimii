@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="CORE_MedDemo_COREMedDemoWS_COREMedDemoWS" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://crius.dyndns.org:8888/GentagDemo/COREMedDemoWSSoapHttpPort</Value>
+      <Value Profile="(Default)">http://id1.gentag.com:7777/GentagDemo/COREMedDemoWSSoap12HttpPort</Value>
     </Setting>
   </Settings>
 </SettingsFile>

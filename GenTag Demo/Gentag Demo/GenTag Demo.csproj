@@ -329,6 +329,10 @@
       <Project>{E49614CC-5C7D-4E37-A27D-0DB2DFE73E78}</Project>
       <Name>RFIDReadCursor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RFIDReaderLibrary\Reader.csproj">
+      <Project>{C69C8781-21A8-44CA-8AE3-04521DF1A1B3}</Project>
+      <Name>Reader</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
   <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

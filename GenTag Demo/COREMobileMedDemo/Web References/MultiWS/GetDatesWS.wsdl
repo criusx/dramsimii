@@ -140,6 +140,23 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:element name="setItemElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="String_1" nillable="true" type="xsd:string" />
+            <xsd:element name="String_2" nillable="true" type="xsd:string" />
+            <xsd:element name="String_3" nillable="true" type="xsd:string" />
+            <xsd:element name="boolean_4" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="setItemResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
     </xsd:schema>
   </types>
   <message name="GetDatesWS_callHome">
@@ -190,6 +207,12 @@
   <message name="GetDatesWS_getUniqueUIDsResponse">
     <part name="parameters" element="tns:getUniqueUIDsResponseElement" />
   </message>
+  <message name="GetDatesWS_setItem">
+    <part name="parameters" element="tns:setItemElement" />
+  </message>
+  <message name="GetDatesWS_setItemResponse">
+    <part name="parameters" element="tns:setItemResponseElement" />
+  </message>
   <portType name="GetDatesWS">
     <operation name="callHome">
       <input message="tns:GetDatesWS_callHome" />
@@ -222,6 +245,10 @@
     <operation name="getUniqueUIDs">
       <input message="tns:GetDatesWS_getUniqueUIDs" />
       <output message="tns:GetDatesWS_getUniqueUIDsResponse" />
+    </operation>
+    <operation name="setItem">
+      <input message="tns:GetDatesWS_setItem" />
+      <output message="tns:GetDatesWS_setItemResponse" />
     </operation>
   </portType>
   <binding name="GetDatesWSSoapHttp" type="tns:GetDatesWS">
@@ -298,10 +325,19 @@
         <soap:body use="literal" />
       </output>
     </operation>
+    <operation name="setItem">
+      <soap:operation soapAction="http://datespackage//setItem" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
   </binding>
   <service name="GetDatesWS">
     <port name="GetDatesWSSoapHttpPort" binding="tns:GetDatesWSSoapHttp">
-      <soap:address location="http://crius.dyndns.org:8888/GentagDemo/GetDatesWSSoapHttpPort" />
+      <soap:address location="http://id1.gentag.com:7777/GentagDemo/GetDatesWSSoapHttpPort" />
     </port>
   </service>
 </definitions>

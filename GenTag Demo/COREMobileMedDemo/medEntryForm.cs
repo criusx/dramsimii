@@ -7,15 +7,11 @@ namespace COREMobileMedDemo
 {
     class medEntryForm : Form
     {
-        private Label label1;
-        private Label label2;
         private Label medNameLabel;
         private Label patientNameLabel;
         private NumericUpDown medDosageUpDown;
         private PictureBox medImagePB;
         private Label label5;
-        private Label label6;
-        private Label label7;
         private Button noButton;
         private Button okButton;
         private PictureBox medPB;
@@ -53,40 +49,58 @@ namespace COREMobileMedDemo
         {
             get
             {
-                return medDosageUpDown.Value;
+                return getNumericUpDownValue(medDosageUpDown);
+            }
+        }
+
+        private delegate decimal getNumericUpDownValueDelegate(NumericUpDown updown);
+
+        private decimal getNumericUpDownValue(NumericUpDown updown)
+        {
+            if (updown.InvokeRequired)
+            {
+                return (decimal)updown.Invoke(new getNumericUpDownValueDelegate(getNumericUpDownValue), new object[] { updown });
+            }
+            else
+            {
+                return updown.Value;
             }
         }
 
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            System.Windows.Forms.Label label1;
+            System.Windows.Forms.Label label2;
+            System.Windows.Forms.Label label6;
+            System.Windows.Forms.Label label7;
             this.medNameLabel = new System.Windows.Forms.Label();
             this.patientNameLabel = new System.Windows.Forms.Label();
             this.medDosageUpDown = new System.Windows.Forms.NumericUpDown();
             this.medImagePB = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.noButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            label2 = new System.Windows.Forms.Label();
+            label6 = new System.Windows.Forms.Label();
+            label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(3, 2);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 20);
-            this.label1.Text = "Patient Name";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            label1.Location = new System.Drawing.Point(3, 2);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(82, 20);
+            label1.Text = "Patient Name";
+            label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(3, 22);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(82, 20);
-            this.label2.Text = "Medication";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            label2.Location = new System.Drawing.Point(3, 22);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(82, 20);
+            label2.Text = "Medication";
+            label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // medNameLabel
             // 
@@ -133,7 +147,8 @@ namespace COREMobileMedDemo
             // 
             this.medImagePB.Location = new System.Drawing.Point(91, 46);
             this.medImagePB.Name = "medImagePB";
-            this.medImagePB.Size = new System.Drawing.Size(100, 92);
+            this.medImagePB.Size = new System.Drawing.Size(137, 92);
+            this.medImagePB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             // 
             // label5
             // 
@@ -144,19 +159,19 @@ namespace COREMobileMedDemo
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(8, 158);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(95, 20);
-            this.label6.Text = "Dose";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            label6.Location = new System.Drawing.Point(8, 158);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(95, 20);
+            label6.Text = "Dose";
+            label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(3, 73);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 65);
-            this.label7.Text = "Medication Image";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            label7.Location = new System.Drawing.Point(3, 73);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(82, 65);
+            label7.Text = "Medication Image";
+            label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // noButton
             // 
@@ -187,10 +202,10 @@ namespace COREMobileMedDemo
             this.Controls.Add(this.patientNameLabel);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.medNameLabel);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(label6);
+            this.Controls.Add(label7);
+            this.Controls.Add(label2);
+            this.Controls.Add(label1);
             this.Location = new System.Drawing.Point(0, 0);
             this.Name = "medEntryForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

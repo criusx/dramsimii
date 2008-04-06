@@ -232,6 +232,7 @@
     <Content Include="Gentag Demo.exe.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="ClassDiagram1.cd" />
     <None Include="GentagKey.pfx" />
     <None Include="Resources\Gentag-logo.png" />
     <None Include="Web References\assayWS\assayInfo.datasource">

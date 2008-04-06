@@ -291,7 +291,6 @@ namespace GentagDemo.medWS {
         public string RFIDNum;
         
         /// <remarks/>
-<<<<<<< .mine
         public bool retryNeeded;
         
         /// <remarks/>
@@ -299,11 +298,6 @@ namespace GentagDemo.medWS {
         public byte[] picture;
         
         /// <remarks/>
-=======
-        public bool retryNeeded;
-        
-        /// <remarks/>
->>>>>>> .r563
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public string description;
         

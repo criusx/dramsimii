@@ -113,7 +113,7 @@
 			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
-			UseOfMFC="2"
+			UseOfMFC="1"
 			UseOfATL="0"
 			CharacterSet="1"
 			>
@@ -137,11 +137,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
+				Optimization="0"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="&quot;C:\Users\CriuS\Documents\Visual Studio 2005\Projects\KSW Dev Kit\Sirit\SDIO SDK\cd\include&quot;"
+				AdditionalIncludeDirectories="../Sirit Libs/"
 				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
 				ExceptionHandling="1"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
@@ -163,9 +164,9 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,5.01 /verbose:lib /INCLUDE:DllMain"
 				AdditionalDependencies="C1Lib_PPC.lib "
-				OutputFile="../GenTag Demo/$(ProjectName).dll"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Users\CriuS\Documents\Visual Studio 2005\Projects\KSW Dev Kit\Sirit\SDIO SDK\cd\bin\PPC&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)/Sirit Libs/&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				ModuleDefinitionFile=".\VarioSens Lib.def"
@@ -176,13 +177,14 @@
 				BaseAddress="0x000100000"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/VarioSens Lib.lib"
+				ImportLibrary=""
 			/>
 			<Tool
 				Name="VCALinkTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
+				ValidateIntelliSense="true"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
@@ -196,7 +198,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying DLL output"
-				CommandLine="Copy $(OutDir)\*.dll $(ProjectDir)\"
+				CommandLine=""
 			/>
 			<DeploymentTool
 				ForceDirty="-1"
@@ -326,6 +328,7 @@
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="../Sirit Libs/"
 				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
@@ -354,7 +357,7 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)/Sirit Libs/&quot;"
 				ModuleDefinitionFile=".\VarioSens Lib.def"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
 				LinkTimeCodeGeneration="1"
@@ -420,10 +423,6 @@
 				RelativePath=".\stdafx.h"
 				>
 			</File>
-			<File
-				RelativePath=".\VarioSens Lib.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -437,5 +436,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="Notes"
+			Value="&lt;Notes Project=&quot;7775ecf9-017e-489d-84b6-3bc6df166494&quot; xmlns=&quot;clr-namespace:StickyNotes.Model;assembly=StickyNotes&quot;&gt;&lt;Notes.StickyNotes&gt;&lt;Note FilePath=&quot;&quot; Content=&quot;&quot; Date=&quot;2008-04-01T12:27:32.4926-04:00&quot; /&gt;&lt;/Notes.StickyNotes&gt;&lt;/Notes&gt;"
+		/>
 	</Globals>
 </VisualStudioProject>

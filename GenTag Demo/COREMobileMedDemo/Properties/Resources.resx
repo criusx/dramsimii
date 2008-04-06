@@ -120,9 +120,6 @@
   <data name="DrugInteractionWarningMessage" xml:space="preserve">
     <value>Warning! </value>
   </data>
-  <data name="emptyString" xml:space="preserve">
-    <value />
-  </data>
   <data name="error1" xml:space="preserve">
     <value>Please ensure that the Sirit reader is completely inserted</value>
   </data>
@@ -168,9 +165,6 @@
   <data name="String" xml:space="preserve">
     <value>This drug should not be taken by this patient.</value>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-  </data>
   <data name="tab1String" xml:space="preserve">
     <value>VarioSens</value>
   </data>
@@ -184,6 +178,24 @@
     <value>VarioSens/W</value>
   </data>
   <data name="titleString" xml:space="preserve">
-    <value>Gentag Demo</value>
+    <value>Gentag/CORE Demo</value>
+  </data>
+  <data name="Alpha" xml:space="preserve">
+    <value>Alpha</value>
+  </data>
+  <data name="at" xml:space="preserve">
+    <value>@</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>error</value>
+  </data>
+  <data name="Unexpected" xml:space="preserve">
+    <value>Unexpected error</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Not found</value>
   </data>
 </root>

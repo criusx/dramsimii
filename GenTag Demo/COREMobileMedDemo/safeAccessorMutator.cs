@@ -8,10 +8,10 @@ using System.Windows.Forms;
 using Microsoft.WindowsMobile.Forms;
 using System.IO;
 using System.Net;
-using SiritReader;
 using System.Collections;
 using System.Net.Sockets;
 using System.Threading;
+using Microsoft.WindowsCE.Forms;
 
 namespace COREMobileMedDemo
 {
@@ -19,116 +19,103 @@ namespace COREMobileMedDemo
     {
         #region Safe Accessors and Mutators
 
+        private delegate void showMessageDelegate(string errorMessage);
+
+        private void showMessage(string errorMessage)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new showMessageDelegate(showMessage), new object[] { errorMessage });
+            }
+            else
+            {
+                MessageBox.Show(errorMessage);
+            }
+        }
+
+        private delegate string getComboBoxDelegate(ComboBox cb);
+
+        private string getComboBox(ComboBox cb)
+        {
+            if (this.InvokeRequired)
+            {
+                return (string)this.Invoke(new getComboBoxDelegate(getComboBox), new object[] { cb });
+            }
+            else
+            {
+                return cb.SelectedItem.ToString();
+            }
+        }
+
+        private delegate void setPhotoDelegateB(PictureBox pB, Image bA);
+
+        private void setPhoto(PictureBox pB, Image bA)
+        {
+            if (pB.InvokeRequired)
+            {
+                pB.BeginInvoke(new setPhotoDelegateB(setPhoto), new object[] { pB, bA });
+
+            }
+            else
+            {
+                try
+                {
+                    if (pB.Image != null)
+                        pB.Image.Dispose();
+                    pB.Image = bA;
+                    pB.Refresh();
+                }
+                catch (ArgumentException)
+                { }
+            }
+        }
+
+        private delegate void notifyDelegate(string caption, string text, bool critical);
+
+        private void notify(string caption, string text, bool critical)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new notifyDelegate(notify), new object[] { caption, text, critical });
+            }
+            else
+            {
+                try
+                {
+                    if (popupNotification != null)
+                        popupNotification.Dispose();
+                }
+                catch (Exception)
+                { }
+                popupNotification = new Notification();
+                popupNotification.Caption = caption;
+                popupNotification.Text = text;
+                popupNotification.Critical = critical;
+                popupNotification.InitialDuration = critical ? 60 : 5;
+
+                popupNotification.Visible = true;
+            }
+        }
+
         private delegate void setWaitCursorDelegate(bool set);
 
         private void setWaitCursor(bool set)
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new setWaitCursorDelegate(setWaitCursor), new object[] { set });
+                this.BeginInvoke(new setWaitCursorDelegate(setWaitCursor), new object[] { set });
             }
-            if (set == true)
-                Cursor.Current = Cursors.WaitCursor;
             else
-                Cursor.Current = Cursors.Default;
-        }
-
-        private delegate Color getPanelDelegate(Panel p);
-
-        private Color getPanel(Panel p)
-        {
-            if (this.InvokeRequired)
             {
-                return (Color)this.Invoke(new getPanelDelegate(getPanel), new object[] { p });
-            }
-            return p.BackColor;
-        }
-
-        private delegate Color getButtonColorDelegate(Button p);
-
-        private Color getButtonColor(Button p)
-        {
-            if (this.InvokeRequired)
-            {
-                return (Color)this.Invoke(new getButtonColorDelegate(getButtonColor), new object[] { p });
-            }
-            return p.BackColor;
-        }
-
-        private delegate void setPanelDelegate(Panel p, Color c);
-
-        private void setPanel(Panel p, Color c)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new setPanelDelegate(setPanel), new object[] { p, c });
-                return;
-            }
-            p.BackColor = c;
-        }
-
-        private delegate void setButtonColorDelegate(Button p, Color c);
-
-        private void setButtonColor(Button p, Color c)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new setButtonColorDelegate(setButtonColor), new object[] { p, c });
-                return;
-            }
-            p.BackColor = c;
-        }
-
-        private delegate void setCheckBoxDelegate(CheckBox cB, bool check);
-
-        private void setCheckBox(CheckBox cB, bool check)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new setCheckBoxDelegate(setCheckBox), new object[] { cB, check });
-                return;
-            }
-            cB.Checked = check;
-        }
-
-        private delegate bool getCheckBoxDelegate(CheckBox cB);
-
-        private bool getCheckBox(CheckBox cB)
-        {
-            if (this.InvokeRequired)
-            {
-                return (bool)this.Invoke(new getCheckBoxDelegate(getCheckBox), new object[] { cB });
-            }
-            return cB.Checked;
-        }
-
-        private delegate int getComboBoxIndexDelegate(ComboBox cB);
-
-        private int getComboBoxIndex(ComboBox cB)
-        {
-            if (this.InvokeRequired)
-            {
-                return (int)this.Invoke(new getComboBoxIndexDelegate(getComboBoxIndex), new object[] { cB });
-            }
-            return cB.SelectedIndex;
-        }
-
-        private delegate void setComboBoxIndexDelegate(ComboBox cB, int index);
-
-        private void setComboBoxIndex(ComboBox cB, int index)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new setComboBoxIndexDelegate(setComboBoxIndex), new object[] { cB, index });
-                return;
-            }
-            try
-            {
-                cB.SelectedIndex = index;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                cB.SelectedIndex = 0;
+                if (set == true)
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                }
+                else
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+                this.Refresh();
             }
         }
 
@@ -136,71 +123,41 @@ namespace COREMobileMedDemo
 
         private void setLabel(Label tB, string val)
         {
-            if (this.InvokeRequired)
+            if (tB.InvokeRequired)
             {
-                this.Invoke(new setLabelDelegate(setLabel), new object[] { tB, val });
-                return;
+                tB.Invoke(new setLabelDelegate(setLabel), new object[] { tB, val });
             }
-            tB.Text = val;
-        }
-
-        private delegate void setTextBoxDelegate(TextBox tB, string desc);
-
-        private void setTextBox(TextBox tB, string val)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new setTextBoxDelegate(setTextBox), new object[] { tB, val });
-                return;
-            }
-            tB.Text = val;
-        }
-
-        private delegate void setProgressBarDelegate(ProgressBar pB, int val);
-
-        private void setProgressBar(ProgressBar pB, int val)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new setProgressBarDelegate(setProgressBar), new object[] { pB, val });
-                return;
-            }
-            if (val > pB.Maximum)
-                pB.Value = pB.Maximum;
-            else if (val < pB.Minimum)
-                pB.Value = pB.Minimum;
             else
-                pB.Value = val;
+            {
+                tB.Text = val;
+            }
         }
 
-        private delegate string getTextBoxDelegate(TextBox tB);
+        private delegate DialogResult showDialogDelegate(Form dialogBox);
 
-        private string getTextBox(TextBox tB)
+        private DialogResult showDialog(Form dialogBox)
         {
-            if (this.InvokeRequired)
+            if (dialogBox.InvokeRequired)
             {
-                return (string)this.Invoke(new getTextBoxDelegate(getTextBox), new object[] { tB });
+                return (DialogResult)dialogBox.Invoke(new showDialogDelegate(showDialog), new object[] { dialogBox });
             }
-            return tB.Text;
+            else
+            {
+                return dialogBox.ShowDialog();
+            }
         }
 
-        private delegate void setPhotoDelegateB(PictureBox pB, Image bA);
+        private delegate decimal getNumericUpDownValueDelegate(NumericUpDown updown);
 
-        private void setPhoto(PictureBox pB, Image bA)
+        private decimal getNumericUpDownValue(NumericUpDown updown)
         {
-            if (this.InvokeRequired)
+            if (updown.InvokeRequired)
             {
-                this.Invoke(new setPhotoDelegateB(setPhoto), new object[] { pB, bA });
-                return;
+                return (decimal)updown.Invoke(new getNumericUpDownValueDelegate(getNumericUpDownValue), new object[] { updown });
             }
-            try
+            else
             {
-                pB.Image = bA;
-                pB.Refresh();
-            }
-            catch (ArgumentException)
-            {
-
+                return updown.Value;
             }
         }
 
@@ -208,13 +165,15 @@ namespace COREMobileMedDemo
 
         private void setPhoto(PictureBox pB, byte[] bA)
         {
-            if (this.InvokeRequired)
+            if (pB.InvokeRequired)
             {
-                this.Invoke(new setPhotoDelegate(setPhoto), new object[] { pB, bA });
+                pB.BeginInvoke(new setPhotoDelegate(setPhoto), new object[] { pB, bA });
                 return;
             }
             try
             {
+                if (pB.Image != null)
+                    pB.Image.Dispose();
                 pB.Image = new Bitmap(new MemoryStream(bA));
                 pB.Refresh();
             }
@@ -223,6 +182,146 @@ namespace COREMobileMedDemo
 
             }
         }
+
+        private delegate void setTextBoxDelegate(TextBox tb, string value);
+
+        private void setTextBox(TextBox tb, string value)
+        {
+            if (tb.InvokeRequired)
+            {
+                tb.BeginInvoke(new setTextBoxDelegate(setTextBox), new object[] { tb, value });
+            }
+            else
+                tb.Text = value;
+        }
+
+        private delegate void setProgressBarDelegate(ProgressBar pb, int value);
+
+        private void setProgressBar(ProgressBar pb, int value)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setProgressBarDelegate(setProgressBar), new object[] { pb, value });
+            }
+            else
+            {
+                if (pb.Maximum >= value)
+                    pb.Value = value;
+            }
+        }
+
+        private delegate void setProgressBarMaxDelegate(ProgressBar pb, int value);
+
+        private void setProgressBarMax(ProgressBar pb, int value)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setProgressBarMaxDelegate(setProgressBarMax), new object[] { pb, value });
+            }
+            else
+            {
+                pb.Maximum = value;
+            }
+        }
+
+        private delegate void setButtonColorDelegate(Button b, Color c);
+
+        private void setButtonColor(Button b, Color c)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setButtonColorDelegate(setButtonColor), new object[] { b, c });
+            }
+            else
+            {
+                b.BackColor = c;
+            }
+        }
+
+        private delegate void setButtonTextDelegate(Button b, string c);
+
+        private void setButtonText(Button b, string c)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setButtonTextDelegate(setButtonText), new object[] { b, c });
+            }
+            else
+            {
+                b.Text = c;
+            }
+        }
+
+        private delegate void setButtonEnabledDelegate(Button b, bool enabled);
+
+        private void setButtonEnabled(Button b, bool enabled)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setButtonEnabledDelegate(setButtonEnabled), new object[] { b, enabled });
+            }
+            else
+            {
+                b.Enabled = enabled;
+            }
+        }
+
+        private delegate Color getButtonColorDelegate(Button b);
+
+        private Color getButtonColor(Button b)
+        {
+            if (this.InvokeRequired)
+            {
+                return (Color)this.Invoke(new getButtonColorDelegate(getButtonColor), new object[] { b });
+            }
+            else
+            {
+                return b.BackColor;
+            }
+        }
+
+        private delegate Color getTabPageBackgroundDelegate(TabPage p);
+
+        private Color getTabPageBackground(TabPage p)
+        {
+            if (this.InvokeRequired)
+            {
+                return (Color)this.Invoke(new getTabPageBackgroundDelegate(getTabPageBackground), new object[] { p });
+            }
+            else
+            {
+                return p.BackColor;
+            }
+        }
+
+        private delegate void setTabPageBackgroundDelegate(TabPage p, Color c);
+
+        private void setTabPageBackground(TabPage p, Color c)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new setTabPageBackgroundDelegate(setTabPageBackground), new object[] { p, c });
+            }
+            else
+            {
+                p.BackColor = c;
+            }
+        }
+
+        private delegate string getTextBoxDelegate(TextBox tb);
+
+        private string getTextBox(TextBox tb)
+        {
+            if (this.InvokeRequired)
+            {
+                return (string)this.Invoke(new getTextBoxDelegate(getTextBox), new object[] { tb });
+            }
+            else
+            {
+                return tb.Text;
+            }
+        }
+
         #endregion
     }
 }

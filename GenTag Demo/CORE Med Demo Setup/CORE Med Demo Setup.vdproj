@@ -27,26 +27,26 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D69176B52F263E0898D515C007C55AD7"
-        "OwnerKey" = "8:_52C0437B59714A519B527A06D25DA728"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E5B22F5809C845C8A7BA8DD37BA98EA3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D69176B52F263E0898D515C007C55AD7"
+        "MsmKey" = "8:_F767422CF426D992B6A1438D20CC5BF8"
+        "OwnerKey" = "8:_52C0437B59714A519B527A06D25DA728"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_52C0437B59714A519B527A06D25DA728"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F767422CF426D992B6A1438D20CC5BF8"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -61,12 +61,20 @@
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:2"
+        "Compression" = "3:3"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -83,6 +91,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -132,14 +148,34 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D69176B52F263E0898D515C007C55AD7"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5B22F5809C845C8A7BA8DD37BA98EA3"
+            {
+            "SourcePath" = "8:..\\C1lib.dll"
+            "TargetName" = "8:C1lib.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_F78BE3349D2B4C0FA3A0040DB6C7BE83"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F767422CF426D992B6A1438D20CC5BF8"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:C1Lib_net, Version=1.0.2326.20996, Culture=neutral"
                 "ScatterAssemblies"
                 {
-                    "_D69176B52F263E0898D515C007C55AD7"
+                    "_F767422CF426D992B6A1438D20CC5BF8"
                     {
                     "Name" = "8:C1Lib_net.dll"
                     "Attributes" = "3:512"
@@ -161,26 +197,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5B22F5809C845C8A7BA8DD37BA98EA3"
-            {
-            "SourcePath" = "8:..\\C1lib.dll"
-            "TargetName" = "8:C1lib.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_F78BE3349D2B4C0FA3A0040DB6C7BE83"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -233,6 +249,7 @@
         "MsiBootstrapper"
         {
         "LangId" = "3:1033"
+        "RequiresElevation" = "11:FALSE"
         }
         "Product"
         {

@@ -5,6 +5,7 @@
       <xsd:complexType name="drugInfo">
         <xsd:sequence>
           <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+          <xsd:element name="retryNeeded" type="xsd:boolean" />
           <xsd:element name="picture" nillable="true" type="xsd:base64Binary" />
           <xsd:element name="description" nillable="true" type="xsd:string" />
           <xsd:element name="exists" type="xsd:boolean" />
@@ -13,6 +14,7 @@
       </xsd:complexType>
       <xsd:complexType name="patientRecord">
         <xsd:sequence>
+          <xsd:element name="retryNeeded" type="xsd:boolean" />
           <xsd:element name="image" nillable="true" type="xsd:base64Binary" />
           <xsd:element name="exists" type="xsd:boolean" />
           <xsd:element name="middleName" nillable="true" type="xsd:string" />
@@ -24,163 +26,183 @@
           <xsd:element name="DOB" type="xsd:long" />
         </xsd:sequence>
       </xsd:complexType>
-      <xsd:element name="checkInteraction" type="tns:checkInteraction" />
-      <xsd:complexType name="checkInteraction">
-        <xsd:sequence>
-          <xsd:element name="ID" nillable="true" type="xsd:string" />
-          <xsd:element name="drugID" nillable="true" type="xsd:string" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="checkInteractionResponse" type="tns:checkInteractionResponse" />
-      <xsd:complexType name="checkInteractionResponse">
-        <xsd:sequence>
-          <xsd:element name="return" type="xsd:boolean" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="enterDrugInfo" type="tns:enterDrugInfo" />
-      <xsd:complexType name="enterDrugInfo">
-        <xsd:sequence>
-          <xsd:element name="newDrug" nillable="true" type="tns:drugInfo" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="enterDrugInfoResponse" type="tns:enterDrugInfoResponse" />
-      <xsd:complexType name="enterDrugInfoResponse">
-        <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="tns:errorReport" />
-        </xsd:sequence>
-      </xsd:complexType>
+      <xsd:element name="checkInteractionElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ID" nillable="true" type="xsd:string" />
+            <xsd:element name="drugID" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="checkInteractionResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:errorReport" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
       <xsd:complexType name="errorReport">
         <xsd:sequence>
+          <xsd:element name="retryNeeded" type="xsd:boolean" />
           <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="success" type="xsd:boolean" />
           <xsd:element name="errorCode" type="xsd:int" />
         </xsd:sequence>
       </xsd:complexType>
-      <xsd:element name="enterPatientPhoto" type="tns:enterPatientPhoto" />
-      <xsd:complexType name="enterPatientPhoto">
-        <xsd:sequence>
-          <xsd:element name="newPatient" nillable="true" type="tns:patientRecord" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="enterPatientPhotoResponse" type="tns:enterPatientPhotoResponse" />
-      <xsd:complexType name="enterPatientPhotoResponse">
-        <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="tns:errorReport" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="enterPatientRecord" type="tns:enterPatientRecord" />
-      <xsd:complexType name="enterPatientRecord">
-        <xsd:sequence>
-          <xsd:element name="newPatient" nillable="true" type="tns:patientRecord" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="enterPatientRecordResponse" type="tns:enterPatientRecordResponse" />
-      <xsd:complexType name="enterPatientRecordResponse">
-        <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="tns:errorReport" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="getDrugInfo" type="tns:getDrugInfo" />
-      <xsd:complexType name="getDrugInfo">
-        <xsd:sequence>
-          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="getDrugInfoResponse" type="tns:getDrugInfoResponse" />
-      <xsd:complexType name="getDrugInfoResponse">
-        <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="tns:drugInfo" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="getPatientRecord" type="tns:getPatientRecord" />
-      <xsd:complexType name="getPatientRecord">
-        <xsd:sequence>
-          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="getPatientRecordResponse" type="tns:getPatientRecordResponse" />
-      <xsd:complexType name="getPatientRecordResponse">
-        <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="tns:patientRecord" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="logPatientVitals" type="tns:logPatientVitals" />
-      <xsd:complexType name="logPatientVitals">
-        <xsd:sequence>
-          <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
-          <xsd:element minOccurs="0" maxOccurs="unbounded" name="temperatures" type="xsd:float" />
-          <xsd:element name="periodicity" type="xsd:int" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="logPatientVitalsResponse" type="tns:logPatientVitalsResponse" />
-      <xsd:complexType name="logPatientVitalsResponse">
-        <xsd:sequence>
-          <xsd:element name="return" nillable="true" type="tns:errorReport" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="registerDoseGiven" type="tns:registerDoseGiven" />
-      <xsd:complexType name="registerDoseGiven">
-        <xsd:sequence>
-          <xsd:element name="patientRFIDNum" nillable="true" type="xsd:string" />
-          <xsd:element name="drugRFIDNum" nillable="true" type="xsd:string" />
-          <xsd:element name="nurseID" nillable="true" type="xsd:string" />
-          <xsd:element name="dose" type="xsd:int" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="registerDoseGivenResponse" type="tns:registerDoseGivenResponse" />
-      <xsd:complexType name="registerDoseGivenResponse">
-        <xsd:sequence>
-          <xsd:element name="return" type="xsd:boolean" />
-        </xsd:sequence>
-      </xsd:complexType>
+      <xsd:element name="enterDrugInfoElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="newDrug" nillable="true" type="tns:drugInfo" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="enterDrugInfoResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:errorReport" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="enterPatientPhotoElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="newPatient" nillable="true" type="tns:patientRecord" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="enterPatientPhotoResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:errorReport" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="enterPatientRecordElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="newPatient" nillable="true" type="tns:patientRecord" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="enterPatientRecordResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:errorReport" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getDrugInfoElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="String_1" nillable="true" type="xsd:string" />
+            <xsd:element name="String_2" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getDrugInfoResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:drugInfo" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPatientRecordElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+            <xsd:element name="String_2" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPatientRecordResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:patientRecord" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="logPatientVitalsElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="RFIDNum" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="temperatures" type="xsd:float" />
+            <xsd:element name="periodicity" type="xsd:int" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="logPatientVitalsResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" nillable="true" type="tns:errorReport" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="registerDoseGivenElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="patientRFIDNum" nillable="true" type="xsd:string" />
+            <xsd:element name="drugRFIDNum" nillable="true" type="xsd:string" />
+            <xsd:element name="nurseID" nillable="true" type="xsd:string" />
+            <xsd:element name="dose" type="xsd:int" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="registerDoseGivenResponseElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
     </xsd:schema>
   </types>
   <message name="COREMedDemoWS_checkInteraction">
-    <part name="parameters" element="tns:checkInteraction" />
+    <part name="parameters" element="tns:checkInteractionElement" />
   </message>
   <message name="COREMedDemoWS_checkInteractionResponse">
-    <part name="parameters" element="tns:checkInteractionResponse" />
+    <part name="parameters" element="tns:checkInteractionResponseElement" />
   </message>
   <message name="COREMedDemoWS_enterDrugInfo">
-    <part name="parameters" element="tns:enterDrugInfo" />
+    <part name="parameters" element="tns:enterDrugInfoElement" />
   </message>
   <message name="COREMedDemoWS_enterDrugInfoResponse">
-    <part name="parameters" element="tns:enterDrugInfoResponse" />
+    <part name="parameters" element="tns:enterDrugInfoResponseElement" />
   </message>
   <message name="COREMedDemoWS_enterPatientPhoto">
-    <part name="parameters" element="tns:enterPatientPhoto" />
+    <part name="parameters" element="tns:enterPatientPhotoElement" />
   </message>
   <message name="COREMedDemoWS_enterPatientPhotoResponse">
-    <part name="parameters" element="tns:enterPatientPhotoResponse" />
+    <part name="parameters" element="tns:enterPatientPhotoResponseElement" />
   </message>
   <message name="COREMedDemoWS_enterPatientRecord">
-    <part name="parameters" element="tns:enterPatientRecord" />
+    <part name="parameters" element="tns:enterPatientRecordElement" />
   </message>
   <message name="COREMedDemoWS_enterPatientRecordResponse">
-    <part name="parameters" element="tns:enterPatientRecordResponse" />
+    <part name="parameters" element="tns:enterPatientRecordResponseElement" />
   </message>
   <message name="COREMedDemoWS_getDrugInfo">
-    <part name="parameters" element="tns:getDrugInfo" />
+    <part name="parameters" element="tns:getDrugInfoElement" />
   </message>
   <message name="COREMedDemoWS_getDrugInfoResponse">
-    <part name="parameters" element="tns:getDrugInfoResponse" />
+    <part name="parameters" element="tns:getDrugInfoResponseElement" />
   </message>
   <message name="COREMedDemoWS_getPatientRecord">
-    <part name="parameters" element="tns:getPatientRecord" />
+    <part name="parameters" element="tns:getPatientRecordElement" />
   </message>
   <message name="COREMedDemoWS_getPatientRecordResponse">
-    <part name="parameters" element="tns:getPatientRecordResponse" />
+    <part name="parameters" element="tns:getPatientRecordResponseElement" />
   </message>
   <message name="COREMedDemoWS_logPatientVitals">
-    <part name="parameters" element="tns:logPatientVitals" />
+    <part name="parameters" element="tns:logPatientVitalsElement" />
   </message>
   <message name="COREMedDemoWS_logPatientVitalsResponse">
-    <part name="parameters" element="tns:logPatientVitalsResponse" />
+    <part name="parameters" element="tns:logPatientVitalsResponseElement" />
   </message>
   <message name="COREMedDemoWS_registerDoseGiven">
-    <part name="parameters" element="tns:registerDoseGiven" />
+    <part name="parameters" element="tns:registerDoseGivenElement" />
   </message>
   <message name="COREMedDemoWS_registerDoseGivenResponse">
-    <part name="parameters" element="tns:registerDoseGivenResponse" />
+    <part name="parameters" element="tns:registerDoseGivenResponseElement" />
   </message>
   <portType name="COREMedDemoWS">
     <operation name="checkInteraction">
@@ -216,10 +238,85 @@
       <output message="tns:COREMedDemoWS_registerDoseGivenResponse" />
     </operation>
   </portType>
+  <binding name="COREMedDemoWSSoap12Http" type="tns:COREMedDemoWS">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="checkInteraction">
+      <soap12:operation soapAction="http://COREMedDemo//checkInteraction" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+    <operation name="enterDrugInfo">
+      <soap12:operation soapAction="http://COREMedDemo//enterDrugInfo" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+    <operation name="enterPatientPhoto">
+      <soap12:operation soapAction="http://COREMedDemo//enterPatientPhoto" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+    <operation name="enterPatientRecord">
+      <soap12:operation soapAction="http://COREMedDemo//enterPatientRecord" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getDrugInfo">
+      <soap12:operation soapAction="http://COREMedDemo//getDrugInfo" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getPatientRecord">
+      <soap12:operation soapAction="http://COREMedDemo//getPatientRecord" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+    <operation name="logPatientVitals">
+      <soap12:operation soapAction="http://COREMedDemo//logPatientVitals" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+    <operation name="registerDoseGiven">
+      <soap12:operation soapAction="http://COREMedDemo//registerDoseGiven" />
+      <input>
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+    </operation>
+  </binding>
   <binding name="COREMedDemoWSSoapHttp" type="tns:COREMedDemoWS">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <operation name="checkInteraction">
-      <soap:operation soapAction="" />
+      <soap:operation soapAction="http://COREMedDemo//checkInteraction" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -228,7 +325,7 @@
       </output>
     </operation>
     <operation name="enterDrugInfo">
-      <soap:operation soapAction="" />
+      <soap:operation soapAction="http://COREMedDemo//enterDrugInfo" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -237,7 +334,7 @@
       </output>
     </operation>
     <operation name="enterPatientPhoto">
-      <soap:operation soapAction="" />
+      <soap:operation soapAction="http://COREMedDemo//enterPatientPhoto" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -246,7 +343,7 @@
       </output>
     </operation>
     <operation name="enterPatientRecord">
-      <soap:operation soapAction="" />
+      <soap:operation soapAction="http://COREMedDemo//enterPatientRecord" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -255,7 +352,7 @@
       </output>
     </operation>
     <operation name="getDrugInfo">
-      <soap:operation soapAction="" />
+      <soap:operation soapAction="http://COREMedDemo//getDrugInfo" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -264,7 +361,7 @@
       </output>
     </operation>
     <operation name="getPatientRecord">
-      <soap:operation soapAction="" />
+      <soap:operation soapAction="http://COREMedDemo//getPatientRecord" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -273,7 +370,7 @@
       </output>
     </operation>
     <operation name="logPatientVitals">
-      <soap:operation soapAction="" />
+      <soap:operation soapAction="http://COREMedDemo//logPatientVitals" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -282,7 +379,7 @@
       </output>
     </operation>
     <operation name="registerDoseGiven">
-      <soap:operation soapAction="" />
+      <soap:operation soapAction="http://COREMedDemo//registerDoseGiven" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -292,8 +389,11 @@
     </operation>
   </binding>
   <service name="COREMedDemoWS">
+    <port name="COREMedDemoWSSoap12HttpPort" binding="tns:COREMedDemoWSSoap12Http">
+      <soap12:address location="http://id1.gentag.com:7777/GentagDemo/COREMedDemoWSSoap12HttpPort" />
+    </port>
     <port name="COREMedDemoWSSoapHttpPort" binding="tns:COREMedDemoWSSoapHttp">
-      <soap:address location="http://crius.dyndns.org:8888/GentagDemo/COREMedDemoWSSoapHttpPort" />
+      <soap:address location="http://id1.gentag.com:7777/GentagDemo/COREMedDemoWSSoapHttpPort" />
     </port>
   </service>
 </definitions>
