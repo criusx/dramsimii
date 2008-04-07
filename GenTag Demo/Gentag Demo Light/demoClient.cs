@@ -385,7 +385,6 @@ namespace GentagDemo
             // setup event callbacks for tag reading events
             tagReader.TagReceived += new EventHandler<TagReceivedEventArgs>(receiveTag);
             tagReader.VarioSensSettingsReceived += new EventHandler<VarioSensSettingsEventArgs>(receiveVarioSensSettings);
-            tagReader.VarioSensLogReceived += new EventHandler<VarioSensLogEventArgs>(writeViolations);
             tagReader.ReturnTagContents += new EventHandler<TagContentsEventArgs>(receiveTagContents);
             tagReader.DoneWriting += new EventHandler<FinishedWritingStatusEventArgs>(doneWriting);
             tagReader.TagTypeDetected += new EventHandler<TagTypeEventArgs>(displayTagType);
