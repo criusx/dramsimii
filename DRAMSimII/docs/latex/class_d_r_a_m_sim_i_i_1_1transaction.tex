@@ -1,0 +1,76 @@
+\section{DRAMSimII::transaction Class Reference}
+\label{class_d_r_a_m_sim_i_i_1_1transaction}\index{DRAMSimII::transaction@{DRAMSimII::transaction}}
+a request to read or write some portion of memory, atomically  
+
+
+{\tt \#include $<$transaction.h$>$}
+
+Collaboration diagram for DRAMSimII::transaction:\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf transaction} ()\label{class_d_r_a_m_sim_i_i_1_1transaction_eee888a320f28a26fc74c4c8d8b0f8db}
+
+\begin{CompactList}\small\item\em constructor to make a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} with no values set \item\end{CompactList}\item 
+{\bf transaction} (const int, const tick\_\-t, const int, const unsigned long long, const void $\ast$)\label{class_d_r_a_m_sim_i_i_1_1transaction_e4ec728f81869353f190b052d4f3d81d}
+
+\begin{CompactList}\small\item\em constructor to create a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} with a certain size, enqueue time, attributes, and pointer to encapsulated external \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\item 
+{\bf transaction} (const {\bf transaction} $\ast$rs)\label{class_d_r_a_m_sim_i_i_1_1transaction_87df901a9b4612345aa822fb23f4d383}
+
+\begin{CompactList}\small\item\em copy constructor to duplicate a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\item 
+void $\ast$ {\bf operator new} (size\_\-t size)\label{class_d_r_a_m_sim_i_i_1_1transaction_647409af576a0af8a7cad0c918281ad7}
+
+\begin{CompactList}\small\item\em overrides the new operator to draw from the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} pool instead \item\end{CompactList}\item 
+void {\bf operator delete} (void $\ast$)\label{class_d_r_a_m_sim_i_i_1_1transaction_6e0d8d0e7c4c673896e85b7e4a7b87f8}
+
+\begin{CompactList}\small\item\em override the delete operator to send transactions back to the pool \item\end{CompactList}\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+unsigned {\bf event\_\-no}\label{class_d_r_a_m_sim_i_i_1_1transaction_228dd1e3ba384c12b2f5073ce0348a5f}
+
+\begin{CompactList}\small\item\em the nth event \item\end{CompactList}\item 
+transaction\_\-type\_\-t {\bf type}\label{class_d_r_a_m_sim_i_i_1_1transaction_c47637c203aae54d79b9d6cf0e114332}
+
+\begin{CompactList}\small\item\em \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} type \item\end{CompactList}\item 
+int {\bf status}\label{class_d_r_a_m_sim_i_i_1_1transaction_084aaf228f8318ab4953ade9fca4a045}
+
+\begin{CompactList}\small\item\em status of this \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\item 
+unsigned {\bf length}\label{class_d_r_a_m_sim_i_i_1_1transaction_be081d96a5ad37aecd5d6d539377c4e9}
+
+\begin{CompactList}\small\item\em the number of words requested \item\end{CompactList}\item 
+tick\_\-t {\bf enqueueTime}\label{class_d_r_a_m_sim_i_i_1_1transaction_c0a3d1c37d5eca344e39d7607a35afd3}
+
+\begin{CompactList}\small\item\em time when the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} enters the MC queue \item\end{CompactList}\item 
+tick\_\-t {\bf completionTime}\label{class_d_r_a_m_sim_i_i_1_1transaction_8c63eb176815891cb7080963fbe36a4a}
+
+\begin{CompactList}\small\item\em time when \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} has completed in DRAM ticks \item\end{CompactList}\item 
+tick\_\-t {\bf decodeTime}\label{class_d_r_a_m_sim_i_i_1_1transaction_8a3567c24cc851d38989b8ad09dbd775}
+
+\begin{CompactList}\small\item\em when the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} was split up into several commands \item\end{CompactList}\item 
+{\bf addresses} {\bf addr}\label{class_d_r_a_m_sim_i_i_1_1transaction_f06d2beaf419437d5e624b949ebe6cfc}
+
+\begin{CompactList}\small\item\em the physical, virtual, and mapped representations of the address for this \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\item 
+const void $\ast$ {\bf originalTransaction}\label{class_d_r_a_m_sim_i_i_1_1transaction_969d1e967cc81d169f5885e2cb1cd62b}
+
+\begin{CompactList}\small\item\em utility pointer in the event that this \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} represents another version of a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\end{CompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{CompactItemize}
+\item 
+static queue$<$ {\bf transaction} $>$ {\bf freeTransactionPool}\label{class_d_r_a_m_sim_i_i_1_1transaction_ed849afa6084090f8fcce3e820bf8d0e}
+
+\begin{CompactList}\small\item\em transactions are stored here to avoid allocating memory after initialization \item\end{CompactList}\end{CompactItemize}
+\subsection*{Friends}
+\begin{CompactItemize}
+\item 
+std::ostream \& {\bf operator$<$$<$} (std::ostream \&, const {\bf transaction} $\ast$)\label{class_d_r_a_m_sim_i_i_1_1transaction_bbc93329d6cfb5ea208af3c987c5c37b}
+
+\begin{CompactList}\small\item\em prints the key attributes of a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+a request to read or write some portion of memory, atomically 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/transaction.h\item 
+src/transaction.cpp\end{CompactItemize}

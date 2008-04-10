@@ -20,7 +20,8 @@ namespace DRAMSimII
 		tick_t lastPrechargeTime;	// the time of the last precharge
 		tick_t lastCASTime;			// the time of the last CAS
 		tick_t lastCASWTime;		// the time of the last CASW
-		tick_t prechargeTime;		// total time that all banks in this rank are precharged
+		tick_t prechargeTime;		// total time that all banks in this rank are precharged in this epoch
+		tick_t totalPrechargeTime;	// total time that all banks are precharged, all time
 		unsigned lastCASLength;		// the length of the last CAS
 		unsigned lastCASWLength;	// the length of the last CASW
 		unsigned rankID;			// the ordinal number of this rank
@@ -45,6 +46,8 @@ namespace DRAMSimII
 
 		// accessors
 		unsigned getRankID() const { return rankID; }
+		tick_t getTotalPrechargeTime() const { return totalPrechargeTime; }
+		tick_t getPrechargeTime() const { return prechargeTime; }
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
 	};

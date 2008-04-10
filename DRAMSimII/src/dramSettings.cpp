@@ -3,6 +3,7 @@
 #include <libxml/tree.h>
 #include <stdlib.h>
 #include <iostream>
+#include <fstream>
 #include <string>
 
 #include "dramSettings.h"
@@ -54,6 +55,7 @@ dramSettings::dramSettings(const int argc, const char **argv)
 		settingsFile.c_str(),
 		NULL,
 		XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);
+
 	if (reader == NULL)
 	{
 		cout << "Unable to open settings file \"" << settingsFile << "\"" << endl;
@@ -64,6 +66,25 @@ dramSettings::dramSettings(const int argc, const char **argv)
 		if (xmlTextReaderIsValid(reader) != 1)
 		{
 			cerr << "\"" << settingsFile << "\" does not validate." << endl;
+			exit(-2);
+		}
+
+		ifstream settingsInFile;
+		settingsInFile.open(settingsFile.c_str());		
+
+		if (settingsInFile.is_open())
+		{
+			char currentWord[8192];
+			while (!settingsInFile.eof())
+			{
+				settingsInFile.read(currentWord,8192);
+				int lengthRead = settingsInFile.gcount();
+				settingsOutputFile.append(currentWord,lengthRead);
+			}
+		}
+		else
+		{
+			cerr << "Could not create output for settings file" << endl;
 			exit(-2);
 		}
 
@@ -133,6 +154,9 @@ dramSettings::dramSettings(const int argc, const char **argv)
 					switch (dramTokenizer(nodeName))
 					{
 					case unknown_token:
+						break;
+					case cpu_to_memory_clock_ratio:
+						toNumeric<float>(cpuToMemoryClockRatio,nodeValue,std::dec);
 						break;
 					case input_file_token:
 						inFile = nodeValue;

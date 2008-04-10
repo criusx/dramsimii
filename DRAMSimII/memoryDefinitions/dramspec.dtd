@@ -18,6 +18,7 @@
 <!ELEMENT columns (#PCDATA)>
 <!ELEMENT commandOrderingAlgorithm (#PCDATA)>
 <!ELEMENT completionQueueDepth (#PCDATA)>
+<!ELEMENT cpuToMemoryClockRatio (#PCDATA) >
 <!ELEMENT datarate (#PCDATA)>
 <!ELEMENT DQperDRAM (#PCDATA)>
 <!ELEMENT DQSperDRAM (#PCDATA)>
@@ -55,7 +56,7 @@
 <!ELEMENT rows (#PCDATA)>
 <!ELEMENT seniorityAgeLimit (#PCDATA)>
 <!ELEMENT shortBurstRatio (#PCDATA)>
-<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, outFile, requestCount, inputFile)>
+<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, outFile, requestCount, inputFile, cpuToMemoryClockRatio)>
 <!ELEMENT systemConfigurationType (#PCDATA)>
 <!ELEMENT systemVDD (#PCDATA)>
 <!ELEMENT tAL (#PCDATA)>

@@ -12,6 +12,9 @@ namespace DRAMSimII
 	class dramSettings
 	{
 	public:
+		//////////////////////////////////////////////////////////////////////////
+		// output file
+		std::string settingsOutputFile;
 		//////////////////////////////////////////////////////////////////////////	
 		// command data
 		std::string inFile;
@@ -72,6 +75,7 @@ namespace DRAMSimII
 		unsigned tCMD;
 		unsigned tInternalBurst;
 		unsigned tBufferDelay;
+		float cpuToMemoryClockRatio;
 		//////////////////////////////////////////////////////////////////////////
 		// power data
 		float PdqRD;
@@ -136,6 +140,8 @@ namespace DRAMSimII
 				return output_file_token;
 			else if (input == "auto_refresh_policy" || input == "autoRefreshPolicy")
 				return refresh_policy_token;
+			else if (input == "cpuToMemoryClockRatio")
+				return cpu_to_memory_clock_ratio;
 			else if (input == "refresh_policy" || input == "refreshPolicy")
 				return refresh_policy_token;
 			else if (input == "refresh_time" || input == "refreshTime")

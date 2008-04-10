@@ -149,6 +149,7 @@ namespace DRAMSimII
 		command_ordering_algorithm_token,
 		comment_token,
 		completion_queue_depth_token,
+		cpu_to_memory_clock_ratio,
 		datarate_token,
 		debug_token,
 		deprecated_ignore_token,

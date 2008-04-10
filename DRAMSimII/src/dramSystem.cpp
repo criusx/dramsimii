@@ -659,44 +659,56 @@ channel(systemConfig.getChannelCount(),
 		int counter = 0;		
 		ifstream timingIn;
 		ifstream powerIn;
-		ifstream statsIn;		
+		ifstream statsIn;
+		ifstream settingsIn;
 		stringstream timingFilename;
 		stringstream powerFilename;
 		stringstream statsFilename;		
+		stringstream settingsFilename;
 		timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
 		powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
 		statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
+		statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
 		timingIn.open(timingFilename.str().c_str(),ifstream::in);
 		powerIn.open(powerFilename.str().c_str(),ifstream::in);
 		statsIn.open(statsFilename.str().c_str(),ifstream::in);				
+		settingsIn.open(settingsFilename.str().c_str(),ifstream::in);
 		
-		while (timingIn.is_open() || powerIn.is_open() || statsIn.is_open())
+		while (timingIn.is_open() || powerIn.is_open() || statsIn.is_open() || settingsIn.is_open())
 		{
 			timingIn.close();
 			powerIn.close();
 			statsIn.close();
+			settingsIn.close();
 			counter++;
 			timingIn.clear(ios::failbit);
 			powerIn.clear(ios::failbit);
-			statsIn.clear(ios::failbit);			
+			statsIn.clear(ios::failbit);
+			settingsIn.clear(ios::failbit);
 			timingFilename.str("");
 			powerFilename.str("");
 			statsFilename.str("");
+			settingsFilename.str("");
 			timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
 			powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
 			statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
+			settingsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
 			timingIn.open(timingFilename.str().c_str(),ifstream::in);
 			powerIn.open(powerFilename.str().c_str(),ifstream::in);
 			statsIn.open(statsFilename.str().c_str(),ifstream::in);							
+			settingsIn.open(settingsFilename.str().c_str(),iostream::in);
 		}
 
 		timingIn.close();
 		powerIn.close();
 		statsIn.close();
+		settingsIn.close();
 
 		timingOutStream.push(boost::iostreams::file_sink(timingFilename.str().c_str()));
 		powerOutStream.push(boost::iostreams::file_sink(powerFilename.str().c_str()));
 		statsOutStream.push(boost::iostreams::file_sink(statsFilename.str().c_str()));
+		ofstream settingsOutStream(settingsFilename.str().c_str());
+		
 
 		if (!timingOutStream.good())
 		{
@@ -712,6 +724,16 @@ channel(systemConfig.getChannelCount(),
 		{
 			cerr << "Error opening file \"" << statsFilename << "\" for writing" << endl;
 			exit(-12);
+		}
+		else if (!settingsOutStream.good())
+		{
+			cerr << "Error writing settings file" << settingsFilename << endl;
+			exit(-12);
+		}
+		else
+		{
+			settingsOutStream.write(settings.settingsOutputFile.c_str(),settings.settingsOutputFile.length());
+			settingsOutStream.close();
 		}
 	}
 	// else printing to these streams goes nowhere

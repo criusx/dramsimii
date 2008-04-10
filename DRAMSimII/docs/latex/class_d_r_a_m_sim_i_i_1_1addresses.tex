@@ -1,0 +1,51 @@
+\section{DRAMSimII::addresses Class Reference}
+\label{class_d_r_a_m_sim_i_i_1_1addresses}\index{DRAMSimII::addresses@{DRAMSimII::addresses}}
+This class logically represents several interpretations of a memory address.  
+
+
+{\tt \#include $<$addresses.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf addresses} ()\label{class_d_r_a_m_sim_i_i_1_1addresses_534fafe152268349b34aca5cb2c7e900}
+
+\begin{CompactList}\small\item\em the no-arg constructor \item\end{CompactList}\item 
+{\bf addresses} (unsigned long long pA)\label{class_d_r_a_m_sim_i_i_1_1addresses_04df36739f6b778fdac024184f353e60}
+
+\begin{CompactList}\small\item\em the constructor based on a physical address \item\end{CompactList}\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+unsigned {\bf virtualAddress}\label{class_d_r_a_m_sim_i_i_1_1addresses_92f5d89fcc4eb9d06713367ac5f66c06}
+
+\begin{CompactList}\small\item\em the virtual address \item\end{CompactList}\item 
+unsigned long long {\bf physicalAddress}\label{class_d_r_a_m_sim_i_i_1_1addresses_9cc57650e9fb4fc626421e3b4189291f}
+
+\begin{CompactList}\small\item\em the physical address \item\end{CompactList}\item 
+unsigned {\bf channel}\label{class_d_r_a_m_sim_i_i_1_1addresses_8927448a93ffdaf2822fcab2ed310cab}
+
+\begin{CompactList}\small\item\em the enumerated channel id \item\end{CompactList}\item 
+unsigned {\bf rank}\label{class_d_r_a_m_sim_i_i_1_1addresses_107119444351eb07b32d65104e8e52b0}
+
+\begin{CompactList}\small\item\em the rank id \item\end{CompactList}\item 
+unsigned {\bf bank}\label{class_d_r_a_m_sim_i_i_1_1addresses_2cc322f2bc822d52ebd9a4f680f92329}
+
+\begin{CompactList}\small\item\em the bank id \item\end{CompactList}\item 
+unsigned {\bf row}\label{class_d_r_a_m_sim_i_i_1_1addresses_ae39982bdc35afae14aee5d3192d61a3}
+
+\begin{CompactList}\small\item\em the row id \item\end{CompactList}\item 
+unsigned {\bf column}\label{class_d_r_a_m_sim_i_i_1_1addresses_b55d06fc2c46817d575ae74671013307}
+
+\begin{CompactList}\small\item\em the column id \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+This class logically represents several interpretations of a memory address. 
+
+A class to store various representations of an address The same address may be represented as a virtual address, physical address, or as channel, rank, bank, column and row identifiers 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/addresses.h\item 
+src/addresses.cpp\end{CompactItemize}

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="style2.xsl"?>
 <!DOCTYPE dramspec SYSTEM "dramspec.dtd">
-<dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="schema2.xsd">
+<dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema2.xsd">
 	<timing>
 		<datarate>800000000</datarate>
 		<clockGranularity>2</clockGranularity>
@@ -11,29 +10,29 @@
 		<!--burgerBase, closePageBaseline, intel845g, sdramBase, sdramClosePage, sdramHiperf-->
 		<physicalAddressMappingPolicy>closePageBaseline</physicalAddressMappingPolicy>
 		<rowBufferPolicy>openPage</rowBufferPolicy>
-		<ranks>4</ranks>
-		<banks>8</banks>
+		<ranks>2</ranks>
+		<banks>4</banks>
 		<rows>16384</rows>
 		<rowSize>16</rowSize>
 		<!-- columns * columnSize = pageSize -->
-		<columns>1024</columns>
+		<columns>2048</columns>
 		<columnSize>16</columnSize>
 		<tBufferDelay>6</tBufferDelay>
 		<tBurst>8</tBurst>
-		<tCAS>5</tCAS>
+		<tCAS>6</tCAS>
 		<tCMD>1</tCMD>
 		<tCWD>8</tCWD>
 		<tFAW>28</tFAW>
 		<!--time between a row access and data restoration in the data array-->
 		<tRAS>36</tRAS>
 		<!--minimum activate-to-activate timing (same bank), tRC = tRAS + tRP-->
-		<tRC>46</tRC>
-		<tRCD>10</tRCD>
+		<tRC>44</tRC>
+		<tRCD>12</tRCD>
 		<!--minimum refresh-to-refresh cycle time-->
 		<tRFC>102</tRFC>
 		<!--minimum activate-to-activate timing (different bank)-->
 		<tRRD>6</tRRD>
-		<tRP>10</tRP>
+		<tRP>12</tRP>
 		<tRTP>6</tRTP>
 		<tRTRS>2</tRTRS>
 		<tWR>12</tWR>
@@ -46,7 +45,7 @@
 		<!--given in us-->
 		<refreshTime>64000</refreshTime>
 		<!--average periodic refresh time, look at Micron app note TN-46-09 -->
-		<tREFI>6240</tREFI>
+		<tREFI>8000</tREFI>
 		<!--strict, bankRoundRobin, rankRoundRobin, wangHop, greedy-->
 		<commandOrderingAlgorithm>strict</commandOrderingAlgorithm>
 		<!--may be 'strict' or 'RIFF'-->
@@ -82,11 +81,11 @@
 		<systemVDD>1.8</systemVDD>
 		<!--all are in mA-->
 		<!--maximum active precharge current-->
-		<IDD0>150</IDD0>
+		<IDD0>100</IDD0>
 		<!--maximum precharge power-down standby current-->
 		<IDD2P>7</IDD2P>
 		<!--maximum precharge standby current-->
-		<IDD2N>80</IDD2N>
+		<IDD2N>55</IDD2N>
 		<!--maximum active power-down standby current-->
 		<IDD3P>10</IDD3P>
 		<!--maximum active standby current-->
@@ -106,5 +105,7 @@
 		<requestCount>990000000</requestCount>
 		<!--may be "mase","k6","mapped","random"-->
 		<inputFile type="mase">equake.trc</inputFile>
+		<!-- used in scaling CPU ticks to memory system ticks -->
+		<cpuToMemoryClockRatio>4.00</cpuToMemoryClockRatio>
 	</simulationParameters>
 </dramspec>

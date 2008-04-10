@@ -49,15 +49,24 @@ namespace DRAMSimII
 		tick_t getLastRASTime() const { return lastRASTime; }
 		tick_t getLastCASTime() const { return lastCASTime; }
 		tick_t getLastCASWTime() const {return lastCASWTime; }
+
 		tick_t getLastPrechargeTime() const { return lastPrechargeTime; }
 		tick_t getLastRefreshAllTime() const { return lastRefreshAllTime; }
+
 		unsigned getLastCASLength() const { return lastCASLength; }
 		unsigned getLastCASWLength() const { return lastCASWLength; }
+
 		unsigned getOpenRowID() const { return openRowID; }
 		bool isActivated() const { return activated; }
+
 		unsigned getRASCount() const { return RASCount; }
 		unsigned getCASCount() const { return CASCount; }
 		unsigned getCASWCount() const { return CASWCount; }
+
+		unsigned getTotalRASCount() const { return totalRASCount; }
+		unsigned getTotalCASCount() const { return totalCASCount; }
+		unsigned getTotalCASWCount() const { return totalCASWCount; }
+
 		queue<command> &getPerBankQueue() { return perBankQueue; }
 		const queue<command> &getPerBankQueue() const { return perBankQueue; }
 

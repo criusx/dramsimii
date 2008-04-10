@@ -359,7 +359,7 @@ enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const in
 		}
 	}
 
-	DEBUG_LOG("Rank[" << rank_id << "] Read[" << read_count << "] Write[" << write_count << "] Empty[" << empty_count << "]")
+	DEBUG_LOG("Rank[" << rank_id << "] Read[" << read_count << "] Write[" << write_count << "] Empty[" << empty_count << "]");
 
 		if (read_count >= write_count)
 			return READ_TRANSACTION;
@@ -368,16 +368,27 @@ enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const in
 }
 
 // calculate the power consumed by all channels during the last epoch
+//////////////////////////////////////////////////////////////////////
+/// @brief performs power calculations for this epoch and cumulative
+//////////////////////////////////////////////////////////////////////
 void dramChannel::doPowerCalculation()
 {
 	float factorA = (powerModel.VDD / powerModel.VDDmax) * (powerModel.VDD / powerModel.VDDmax);
 	float factorB = powerModel.frequency / powerModel.frequencySpec;
 
+	// the counts for the total number of operations
+	unsigned entireRAS = 1;
+	unsigned entireCAS = 1;
+	unsigned entireCASW = 1;
+
+	// the counts for the operations this epoch
 	unsigned totalRAS = 1;
 	unsigned totalCAS = 1;
 	unsigned totalCASW = 1; // ensure no div/0
 
 	float PsysACT = 0;
+
+	powerOutStream << "---------------------- epoch ----------------------" << endl;
 
 	for (std::vector<rank_c>::iterator k = rank.begin(); k != rank.end(); k++)
 	{
@@ -385,7 +396,8 @@ void dramChannel::doPowerCalculation()
 
 		for (std::vector<bank_c>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
-			totalRAS += l->getRASCount();
+			
+			totalRAS += l->getRASCount();			
 			perRankRASCount += l->getRASCount();
 			totalCAS += l->getCASCount();
 			totalCASW += l->getCASWCount();
@@ -401,18 +413,23 @@ void dramChannel::doPowerCalculation()
 		//assert(RDschPct + WRschPct < 1.0F);
 
 
-		powerOutStream << "Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
+		powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
 			factorA * factorB * powerModel.IDD3N * powerModel.VDDmax * percentActive << " mW P(" << k->prechargeTime << "/" << time - powerModel.lastCalculation << ")" << endl;
+
+		float tRRDsch = ((float)time - powerModel.lastCalculation) / perRankRASCount;
+
+
+		powerOutStream << "-Psys(ACT) ch[" << channelID << "] r[" << k->rankID << "] "<< setprecision(5) << 
+			((float)powerModel.tRC / (float)tRRDsch) * factorA * powerModel.PdsACT << " mW" << endl;
 
 		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 
-		float tRRDsch = ((float)time - powerModel.lastCalculation) / perRankRASCount;
 
 		PsysACT += ((float)powerModel.tRC / (float)tRRDsch) * factorA * powerModel.PdsACT;
 		//powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << powerModel.PdsACT * powerModel.tRC / (float)tRRDsch * factorA * 100 << "mW " <<
 		//	" A(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / ((float)systemConfig.Frequency() * 1.0E-9F) << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 		//	time << "]" << endl;
-
+		
 		k->prechargeTime = 1;
 	}
 
@@ -421,17 +438,60 @@ void dramChannel::doPowerCalculation()
 
 	//cerr << RDschPct * 100 << "%\t" << WRschPct * 100 << "%"<< endl;
 
-	powerOutStream << "Psys(ACT) ch[" << channelID << "] " << setprecision(5) << 
+	powerOutStream << "-Psys(ACT) ch[" << channelID << "] " << setprecision(5) << 
 		PsysACT << " mW" << endl;
 
-	powerOutStream << "Psys(RD) ch[" << channelID << "] " << setprecision(5) << 
+	powerOutStream << "-Psys(RD) ch[" << channelID << "] " << setprecision(5) << 
 		factorA * factorB * (powerModel.IDD4R - powerModel.IDD3N) * RDschPct << " mW" << endl;
 
-	powerOutStream << "Psys(WR) ch[" << channelID << "] " << setprecision(5) << 
+	powerOutStream << "-Psys(WR) ch[" << channelID << "] " << setprecision(5) << 
 		factorA * factorB * (powerModel.IDD4W - powerModel.IDD3N) * WRschPct << " mW" << endl;
 	powerModel.lastCalculation = time;
 
-	powerOutStream.flush();
+	powerOutStream << "++++++++++++++++++++++ total ++++++++++++++++++++++" << endl;
+
+	PsysACT = 0;
+
+	for (vector<rank_c>::const_iterator k = rank.begin(); k != rank.end(); k++)
+	{
+		unsigned perRankRASCount = 1;
+
+		for (vector<bank_c>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
+		{
+			entireRAS += l->getTotalRASCount();
+			entireCAS += l->getTotalCASCount();
+			entireCASW += l->getTotalCASWCount();
+			perRankRASCount += l->getTotalRASCount();
+		}
+
+		float percentActive = 1.0F - (float)(k->getTotalPrechargeTime())/(float)time;
+
+		powerOutStream << "+Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
+			factorA * factorB * powerModel.IDD3N * powerModel.VDDmax * percentActive << " mW P(" << k->getTotalPrechargeTime() << "/" << time  << ")" << endl;
+
+		float tRRDsch = ((float)time) / perRankRASCount;
+
+		powerOutStream << "+Psys(ACT) ch[" << channelID << "] r[" << k->rankID << "] "<< setprecision(5) << 
+			((float)powerModel.tRC / (float)tRRDsch) * factorA * powerModel.PdsACT << " mW" << endl;
+
+		PsysACT += ((float)powerModel.tRC / (float)tRRDsch) * factorA * powerModel.PdsACT;
+	}
+
+	 RDschPct = entireCAS * timingSpecification.tBurst() / (float)(time);
+	WRschPct = entireCAS * timingSpecification.tBurst() / (float)(time);
+
+	//cerr << RDschPct * 100 << "%\t" << WRschPct * 100 << "%"<< endl;
+
+	powerOutStream << "+Psys(ACT) ch[" << channelID << "] " << setprecision(5) << 
+		PsysACT << " mW" << endl;
+
+	powerOutStream << "+Psys(RD) ch[" << channelID << "] " << setprecision(5) << 
+		factorA * factorB * (powerModel.IDD4R - powerModel.IDD3N) * RDschPct << " mW" << endl;
+
+	powerOutStream << "+Psys(WR) ch[" << channelID << "] " << setprecision(5) << 
+		factorA * factorB * (powerModel.IDD4W - powerModel.IDD3N) * WRschPct << " mW" << endl;
+
+	//powerOutStream.flush();
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -50,7 +50,10 @@ void rank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
 
 	// for power modeling, if all banks were precharged and now one is being activated, record the interval that one was precharged	
 	if (banksPrecharged == bank.size())
+	{
 		prechargeTime += currentTime - lastPrechargeTime;
+		totalPrechargeTime += currentTime - lastPrechargeTime;
+	}
 	if (banksPrecharged == bank.size())
 		for (vector<bank_c>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
 		assert(!curBnk->isActivated());

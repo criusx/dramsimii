@@ -14,7 +14,7 @@ namespace DRAMSimII
 {
 	class inputStream
 	{
-	private:
+	protected:
 		
 		input_type_t type; // trace type or random number generator
 		float chan_locality;
@@ -25,6 +25,7 @@ namespace DRAMSimII
 		float read_percentage; // the percentage of accesses that are reads. should replace with access_distribution[]
 		float short_burst_ratio; // long burst or short burst?
 		float arrival_thresh_hold;
+		float cpuToMemoryRatio;
 		int average_interarrival_cycle_count; // used by random number generator
 		distribution_type_t interarrival_distribution_model;
 

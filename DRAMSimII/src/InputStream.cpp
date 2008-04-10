@@ -15,15 +15,17 @@ using namespace DRAMSimII;
 
 inputStream::inputStream(const dramSettings& settings):
 type(settings.inFileType),
+chan_locality(1 / static_cast<double>(settings.channelCount)),
+rank_locality(1 / settings.rankCount),
+bank_locality(1 / settings.bankCount),
 time(0),
 row_locality(0.2f),
-average_interarrival_cycle_count(10),
-interarrival_distribution_model(UNIFORM_DISTRIBUTION),
-chan_locality(1 / static_cast<double>(settings.channelCount)),
 read_percentage(settings.readPercentage),
 short_burst_ratio(settings.shortBurstRatio),
-rank_locality(1 / settings.rankCount),
-bank_locality(1 / settings.bankCount)
+arrival_thresh_hold(0.0F),
+cpuToMemoryRatio(settings.cpuToMemoryClockRatio),
+average_interarrival_cycle_count(10),
+interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 {
 	if (interarrival_distribution_model == UNIFORM_DISTRIBUTION)
 		arrival_thresh_hold = 1.0 - (1.0 / (double)average_interarrival_cycle_count);
@@ -221,6 +223,7 @@ bool inputStream::getNextBusEvent(busEvent &this_e)
 			trace_file >> std::hex >> this_e.address.physicalAddress >> input >> std::dec >> this_e.timestamp;
 
 			//this_e.timestamp /= 40000;
+			this_e.timestamp /= cpuToMemoryRatio;
 			if(!trace_file.good()) /// found starting Hex address 
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;

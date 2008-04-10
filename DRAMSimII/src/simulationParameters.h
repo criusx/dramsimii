@@ -10,7 +10,7 @@ namespace DRAMSimII
 {
 	class simulationParameters 
 	{
-	private:
+	protected:
 		int request_count;
 		int input_type;
 
