@@ -367,9 +367,11 @@ enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const in
 			return WRITE_TRANSACTION;
 }
 
-// calculate the power consumed by all channels during the last epoch
 //////////////////////////////////////////////////////////////////////
 /// @brief performs power calculations for this epoch and cumulative
+/// @details calculates the power according to Micron technical note TN-47-04\n
+/// also does breakdowns of power consumed per channel and per epoch as well as averaged over time
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
 void dramChannel::doPowerCalculation()
 {

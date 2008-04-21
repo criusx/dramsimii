@@ -19,11 +19,13 @@ unsigned {\bf getChannelID} () const \label{class_d_r_a_m_sim_i_i_1_1dram_channe
 
 \begin{CompactList}\small\item\em return the ordinal of this channel \item\end{CompactList}\item 
 bool {\bf checkForAvailableCommandSlots} (const {\bf transaction} $\ast$trans) const 
-\item 
+\begin{CompactList}\small\item\em determines if there are enough command slots for the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} to be decoded \item\end{CompactList}\item 
 bool {\bf transaction2commands} ({\bf transaction} $\ast$)
-\begin{CompactList}\small\item\em Converts a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} in a particular channel into commands, then inserts them in the bank queues. Functionality similar to that of the memory controller moving between the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} queue and the per bank command queues. \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em converts a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} into corresponding commands \item\end{CompactList}\item 
 command $\ast$ {\bf getNextCommand} ()
 \begin{CompactList}\small\item\em Chooses the command which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config Command returned has already been removed from the per\_\-bank\_\-command\_\-queue from which it was selected. \item\end{CompactList}\item 
+void {\bf doPowerCalculation} ()
+\begin{CompactList}\small\item\em performs power calculations for this epoch and cumulative \item\end{CompactList}\item 
 void {\bf executeCommand} (command $\ast$thisCommand, const int gap)
 \begin{CompactList}\small\item\em Updates the channel time to what it would be had this command been executed Updates the rank and bank records of the most recent RAS, CAS, etc. times Enqueues RAS times to allow t\_\-faw to be determined later Updates rank and bank records of CAS, RAS lengths for later calculations in min\_\-protocol\_\-gap(). \item\end{CompactList}\item 
 tick\_\-t {\bf nextTransactionDecodeTime} () const 
@@ -40,9 +42,9 @@ virtual tick\_\-t {\bf earliestExecuteTime} (const command $\ast$thisCommand) co
 \begin{CompactList}\small\item\em Returns the soonest time that this command may execute. \item\end{CompactList}\item 
 const {\bf transaction} $\ast$ {\bf readTransaction} (bool) const 
 \item 
-void {\bf setStatistics} (dramStatistics $\ast$value)\label{class_d_r_a_m_sim_i_i_1_1dram_channel_9a64bf05caefb16fbfb887088ff803c6}
+void {\bf setStatistics} ({\bf dramStatistics} $\ast$value)\label{class_d_r_a_m_sim_i_i_1_1dram_channel_9a64bf05caefb16fbfb887088ff803c6}
 
-\begin{CompactList}\small\item\em set the statistics pointer to a dramStatistics object \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em set the statistics pointer to a \doxyref{dramStatistics}{p.}{class_d_r_a_m_sim_i_i_1_1dram_statistics} object \item\end{CompactList}\item 
 void {\bf setTime} (tick\_\-t new\_\-time)\label{class_d_r_a_m_sim_i_i_1_1dram_channel_b95c52bf381fec1bad04a24a885ebe4a}
 
 \begin{CompactList}\small\item\em update the time for this channel \item\end{CompactList}\item 
@@ -86,7 +88,7 @@ queue$<$ {\bf transaction} $>$ {\bf completionQueue}\label{class_d_r_a_m_sim_i_i
 const dramSystemConfiguration \& {\bf systemConfig}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_d1262026f63598d2f81b269f0b2c9c82}
 
 \begin{CompactList}\small\item\em a pointer to common system config values \item\end{CompactList}\item 
-dramStatistics $\ast$ {\bf statistics}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_666ac5bdc34b2ecf7ef78d79bceed8da}
+{\bf dramStatistics} $\ast$ {\bf statistics}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_666ac5bdc34b2ecf7ef78d79bceed8da}
 
 \begin{CompactList}\small\item\em backward pointer to the stats engine \item\end{CompactList}\item 
 powerConfig {\bf powerModel}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_49959a2c6c76f5cd89d5e291b61ec66c}
@@ -161,13 +163,35 @@ enqueue the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} into
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool dramChannel::checkForAvailableCommandSlots (const {\bf transaction} $\ast$ {\em trans}) const}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_b944151b57e8b653d7c1a1d1be0c55ca}
 
 
-this will ensure that a given \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} can be broken into and inserted as commands in this channel if there is not room under a given scheme, then it will return false \index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!transaction2commands@{transaction2commands}}
+determines if there are enough command slots for the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} to be decoded 
+
+this will ensure that a given \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} can be broken into and inserted as commands in this channel if there is not enough room according to a given algorithm, then it will indicate that this is not possible \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em trans}]the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} to be considered \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]true if there is enough room, false otherwise \end{Desc}
+\index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!transaction2commands@{transaction2commands}}
 \index{transaction2commands@{transaction2commands}!DRAMSimII::dramChannel@{DRAMSimII::dramChannel}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool dramChannel::transaction2commands ({\bf transaction} $\ast$ {\em this\_\-t})}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_f0bfd23f2eaeeb89e8a0b7deb6f77b42}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool dramChannel::transaction2commands ({\bf transaction} $\ast$ {\em newTransaction})}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_f0bfd23f2eaeeb89e8a0b7deb6f77b42}
 
 
-Converts a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} in a particular channel into commands, then inserts them in the bank queues. Functionality similar to that of the memory controller moving between the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} queue and the per bank command queues. 
+converts a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} into corresponding commands 
 
+takes a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} and divides it into a number of commands, depending which row buffer management policy is chosen\par
+ currently will divide it into RAS, CAS, Pre or RAS, CAS+P and insert these commands into the per bank queues\par
+ the CAS command will contain a pointer to the host \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} to indicate that a read \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} has available data \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em newTransaction}]the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} which is divided up \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]true if the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} was able to be divided up and put into per bank queues \end{Desc}
 \index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!getNextCommand@{getNextCommand}}
 \index{getNextCommand@{getNextCommand}!DRAMSimII::dramChannel@{DRAMSimII::dramChannel}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}command $\ast$ dramChannel::getNextCommand ()}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_d3026d3d3f3a28d838dd84f14c968a31}
@@ -175,6 +199,16 @@ Converts a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} in a 
 
 Chooses the command which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config Command returned has already been removed from the per\_\-bank\_\-command\_\-queue from which it was selected. 
 
+\index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!doPowerCalculation@{doPowerCalculation}}
+\index{doPowerCalculation@{doPowerCalculation}!DRAMSimII::dramChannel@{DRAMSimII::dramChannel}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void dramChannel::doPowerCalculation ()}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_0c33c13c0b509b454689b26760e0799d}
+
+
+performs power calculations for this epoch and cumulative 
+
+calculates the power according to Micron technical note TN-47-04\par
+ also does breakdowns of power consumed per channel and per epoch as well as averaged over time \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
 \index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!executeCommand@{executeCommand}}
 \index{executeCommand@{executeCommand}!DRAMSimII::dramChannel@{DRAMSimII::dramChannel}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void dramChannel::executeCommand (command $\ast$ {\em thisCommand}, const int {\em gap})}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_858085111517b116cf4bbc0d83ffb5d5}

@@ -24,6 +24,12 @@
 
 namespace DRAMSimII
 {
+	//////////////////////////////////////////////////////////////////////
+	/// @brief represents a DRAM system, the memory controller(s) and associated channels
+	/// @details contains a representation for a DRAM system, with the memory controller(s), channels, ranks, banks
+	/// statistics, ability to read input streams, handle asynchronous requests, return requests at certain times
+	/// @author Joe Gross
+	//////////////////////////////////////////////////////////////////////
 	class dramSystem
 	{
 	protected:
@@ -40,7 +46,7 @@ namespace DRAMSimII
 		unsigned findOldestChannel() const;	
 		void updateSystemTime();
 		transaction *getNextIncomingTransaction();
-		void getNextRandomRequest(transaction *);
+		transaction *getNextRandomRequest();
 		bool convertAddress(addresses &) const;
 
 	public:		
@@ -56,11 +62,10 @@ namespace DRAMSimII
 		void runSimulations();
 		void runSimulations2();
 		void runSimulations3();
-		void runSimulations4();
 
 		// accessors
-		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); }
-		double Frequency() const { return systemConfig.Frequency(); }
+		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); } ///< returns true if this channel has no more room
+		double Frequency() const { return systemConfig.Frequency(); }	///< accessor to get the frequency of the DRAM system
 
 		// constructors	
 		explicit dramSystem(const dramSettings& settings);

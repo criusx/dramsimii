@@ -60,6 +60,7 @@ namespace DRAMSimII
 
 		// accessors
 		const dramTimingSpecification& getTimingSpecification() const { return timingSpecification; }
+		const dramTimingSpecification& getTiming() { return timingSpecification; }
 		rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }
 		const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }
 		std::vector<rank_c>& getRank() { return rank; }

@@ -11,22 +11,23 @@
 
 namespace DRAMSimII
 {
+	/// stores statistics about this memory system, primarily relating to counts of transactions/commands 
 	class dramStatistics
 	{
 
-	private:
+	protected:
 		unsigned valid_transaction_count;
 		unsigned start_no;
 		unsigned end_no;
 		unsigned bo8_count;
 		unsigned bo4_count;
 		unsigned columnDepth;
-		std::map<unsigned,unsigned> commandDelay;
-		std::map<unsigned,unsigned> commandExceution;
-		std::map<unsigned,unsigned> commandTurnaround;
-		std::map<unsigned,unsigned> transactionDecodeDelay;
-		std::map<unsigned,unsigned> transactionExecution;
-		std::map<unsigned long long, tick_t> workingSet;
+		std::map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
+		std::map<unsigned,unsigned> commandExceution;		///< stores the finish time - start time stats for commands
+		std::map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
+		std::map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
+		std::map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
+		std::map<unsigned long long, tick_t> workingSet;	///< stores all the addresses seen in an epoch to calculate the working set
 
 	public:
 
