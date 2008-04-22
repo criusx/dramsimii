@@ -32,7 +32,7 @@ DQperDRAM(settings.DQperDRAM),
 DQSperDRAM(settings.DQSperDRAM),
 DMperDRAM(settings.DMperDRAM),
 frequency(settings.dataRate),
-frequencySpec(settings.frequencySpec),
+specFrequency(settings.frequencySpec),
 tBurst(settings.tBurst),
 tRC(settings.tRC),
 lastCalculation(0)

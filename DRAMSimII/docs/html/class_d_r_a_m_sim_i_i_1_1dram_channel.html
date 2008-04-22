@@ -32,6 +32,8 @@ Inherited by DRAMSimII::fbdChannel<code> [private]</code>.
 Collaboration diagram for DRAMSimII::dramChannel:</div>
 <div class="dynsection">
 <p><center><img src="class_d_r_a_m_sim_i_i_1_1dram_channel__coll__graph.png" border="0" usemap="#_d_r_a_m_sim_i_i_1_1dram_channel__coll__map" alt="Collaboration graph"></center>
+<map name="_d_r_a_m_sim_i_i_1_1dram_channel__coll__map">
+<area shape="rect" href="class_d_r_a_m_sim_i_i_1_1power_config.html" title="stores power configuration parameters for this DRAM system necessary to calculate..." alt="" coords="277,5,443,32"><area shape="rect" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html" title="stores the system configuration options for a dramSystem" alt="" coords="237,56,483,83"><area shape="rect" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically" alt="" coords="280,107,440,133"><area shape="rect" href="class_d_r_a_m_sim_i_i_1_1addresses.html" title="This class logically represents several interpretations of a memory address." alt="" coords="7,107,161,133"><area shape="rect" href="class_d_r_a_m_sim_i_i_1_1dram_algorithm.html" title="Algorithm specific data structures should go in here." alt="" coords="271,157,449,184"><area shape="rect" href="class_d_r_a_m_sim_i_i_1_1dram_statistics.html" title="stores statistics about this memory system, primarily relating to counts of transactions/commands..." alt="" coords="271,208,449,235"></map>
 <center><font size="2">[<a target="top" href="graph_legend.html">legend</a>]</font></center></div>
 
 <p>
@@ -51,37 +53,53 @@ unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">return the ordinal of this channel <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#b944151b57e8b653d7c1a1d1be0c55ca">checkForAvailableCommandSlots</a> (const <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html">transaction</a> *trans) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">determines if there are enough command slots for the <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> to be decoded  <a href="#b944151b57e8b653d7c1a1d1be0c55ca"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">determines if there are enough <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> slots for the <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> to be decoded  <a href="#b944151b57e8b653d7c1a1d1be0c55ca"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#f0bfd23f2eaeeb89e8a0b7deb6f77b42">transaction2commands</a> (<a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html">transaction</a> *)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">converts a <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> into corresponding commands  <a href="#f0bfd23f2eaeeb89e8a0b7deb6f77b42"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">command *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#d3026d3d3f3a28d838dd84f14c968a31">getNextCommand</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#d3026d3d3f3a28d838dd84f14c968a31">getNextCommand</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Chooses the command which should be executed next from the given channel Choice is made based on command_ordering_algorithm from system config Command returned has already been removed from the per_bank_command_queue from which it was selected.  <a href="#d3026d3d3f3a28d838dd84f14c968a31"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Chooses the <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> which should be executed next from the given channel Choice is made based on command_ordering_algorithm from system config Command returned has already been removed from the per_bank_command_queue from which it was selected.  <a href="#d3026d3d3f3a28d838dd84f14c968a31"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#0c33c13c0b509b454689b26760e0799d">doPowerCalculation</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">performs power calculations for this epoch and cumulative  <a href="#0c33c13c0b509b454689b26760e0799d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#858085111517b116cf4bbc0d83ffb5d5">executeCommand</a> (command *thisCommand, const int gap)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#858085111517b116cf4bbc0d83ffb5d5">executeCommand</a> (<a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> *thisCommand, const int gap)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Updates the channel time to what it would be had this command been executed Updates the rank and bank records of the most recent RAS, CAS, etc. times Enqueues RAS times to allow t_faw to be determined later Updates rank and bank records of CAS, RAS lengths for later calculations in min_protocol_gap().  <a href="#858085111517b116cf4bbc0d83ffb5d5"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Updates the channel time to what it would be had this <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> been executed Updates the rank and bank records of the most recent RAS, CAS, etc. times Enqueues RAS times to allow t_faw to be determined later Updates rank and bank records of CAS, RAS lengths for later calculations in min_protocol_gap().  <a href="#858085111517b116cf4bbc0d83ffb5d5"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#e99f5571782e60957e4fa13f6c9a94e3">nextTransactionDecodeTime</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">determine when the next <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> in the queue will be decoded  <a href="#e99f5571782e60957e4fa13f6c9a94e3"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#ba42ea2ba7be4f39772072f565fa76fd">nextTick</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">determines when the next <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> is decoded, command ready to be executed or next refresh command arrives  <a href="#ba42ea2ba7be4f39772072f565fa76fd"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const command *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#d219df39009a854f2078c57a28ef569c">readNextCommand</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">determines when the next <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> is decoded, <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> ready to be executed or next refresh <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> arrives  <a href="#ba42ea2ba7be4f39772072f565fa76fd"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#d219df39009a854f2078c57a28ef569c">readNextCommand</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Chooses the command which should be executed next from the given channel Choice is made based on command_ordering_algorithm from system config Command returned is not yet removed from the per_bank_command_queue from which it was selected.  <a href="#d219df39009a854f2078c57a28ef569c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Chooses the <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> which should be executed next from the given channel Choice is made based on command_ordering_algorithm from system config Command returned is not yet removed from the per_bank_command_queue from which it was selected.  <a href="#d219df39009a854f2078c57a28ef569c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const void *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#0388ba607f4b4b26f3025090a69a7e89">moveChannelToTime</a> (const tick_t endTime, tick_t *transFinishTime)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Moves the specified channel to at least the time given.  <a href="#0388ba607f4b4b26f3025090a69a7e89"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#629da11d3f3af08daaefa01a3838baf7">minProtocolGap</a> (const command *thisCommand) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#629da11d3f3af08daaefa01a3838baf7">minProtocolGap</a> (const <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> *thisCommand) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">find the protocol gap between a command and current system state  <a href="#629da11d3f3af08daaefa01a3838baf7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#0dff30a96a252de8fb413f61d3de1384">earliestExecuteTime</a> (const command *thisCommand) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">find the protocol gap between a <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> and current system state  <a href="#629da11d3f3af08daaefa01a3838baf7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#0dff30a96a252de8fb413f61d3de1384">earliestExecuteTime</a> (const <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> *thisCommand) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the soonest time that this command may execute.  <a href="#0dff30a96a252de8fb413f61d3de1384"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the soonest time that this <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> may execute.  <a href="#0dff30a96a252de8fb413f61d3de1384"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a4ac4104d757a069a4bf66ee1666e1e9"></a><!-- doxytag: member="DRAMSimII::dramChannel::getTimingSpecification" ref="a4ac4104d757a069a4bf66ee1666e1e9" args="() const " -->
+const dramTimingSpecification &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#a4ac4104d757a069a4bf66ee1666e1e9">getTimingSpecification</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">returns a reference to access the timing specification <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="21f0220576bba0787b4f66c88b695011"></a><!-- doxytag: member="DRAMSimII::dramChannel::getRank" ref="21f0220576bba0787b4f66c88b695011" args="(const unsigned rankNum)" -->
+<a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html">rank_c</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#21f0220576bba0787b4f66c88b695011">getRank</a> (const unsigned rankNum)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">get a reference to this channel's rank n <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="700236322c377b9e5b584e8ebb7f4be0"></a><!-- doxytag: member="DRAMSimII::dramChannel::getRank" ref="700236322c377b9e5b584e8ebb7f4be0" args="(const unsigned rankNum) const " -->
+const <a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html">rank_c</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#700236322c377b9e5b584e8ebb7f4be0">getRank</a> (const unsigned rankNum) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">get a const reference to this channel's rank n <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="8d9145f1876ab899ab7aaa62e1812438"></a><!-- doxytag: member="DRAMSimII::dramChannel::getRank" ref="8d9145f1876ab899ab7aaa62e1812438" args="()" -->
+std::vector&lt; <a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html">rank_c</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#8d9145f1876ab899ab7aaa62e1812438">getRank</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">get a reference to this channel's ranks <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html">transaction</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#8601c0847f1b1710f17f7b9f6fc97574">readTransaction</a> (bool) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="9a64bf05caefb16fbfb887088ff803c6"></a><!-- doxytag: member="DRAMSimII::dramChannel::setStatistics" ref="9a64bf05caefb16fbfb887088ff803c6" args="(dramStatistics *value)" -->
@@ -100,9 +118,9 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 enum transaction_type_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#fe49f12bf3bbe52b0b34767d2e50fbb7">setReadWriteType</a> (const int, const int) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">determine whether a read or write <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> should be generated <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#cdaec331a7930937338e6d13b8a5fafa">dramChannel</a> (const dramSettings &amp;settings, const dramSystemConfiguration &amp;sysConfig)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#cdaec331a7930937338e6d13b8a5fafa">dramChannel</a> (const <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_settings.html">dramSettings</a> &amp;settings, const <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html">dramSystemConfiguration</a> &amp;sysConfig)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">constructs the <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html" title="represents a DRAM channel, has individual timing parameters, ranks, banks, clock...">dramChannel</a> using this settings reference, also makes a reference to the dramSystemConfiguration object  <a href="#cdaec331a7930937338e6d13b8a5fafa"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">constructs the <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html" title="represents a DRAM channel, has individual timing parameters, ranks, banks, clock...">dramChannel</a> using this settings reference, also makes a reference to the <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html" title="stores the system configuration options for a dramSystem">dramSystemConfiguration</a> object  <a href="#cdaec331a7930937338e6d13b8a5fafa"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#3723ed088ee0924079374d418a1c30d6">dramChannel</a> (const <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html">dramChannel</a> &amp;)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">copy constructor, reassigns the ordinal to each rank as they are duplicated  <a href="#3723ed088ee0924079374d418a1c30d6"></a><br></td></tr>
@@ -132,7 +150,7 @@ queue&lt; <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html">transac
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">holds the next refresh commands <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="c5a60b4ef57a6bf8b6d6b84974a1eeb6"></a><!-- doxytag: member="DRAMSimII::dramChannel::historyQueue" ref="c5a60b4ef57a6bf8b6d6b84974a1eeb6" args="" -->
-queue&lt; command &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#c5a60b4ef57a6bf8b6d6b84974a1eeb6">historyQueue</a></td></tr>
+queue&lt; <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#c5a60b4ef57a6bf8b6d6b84974a1eeb6">historyQueue</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">what were the last N commands to this channel? <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="e5ff742a1e3f170a56073fdf84af1804"></a><!-- doxytag: member="DRAMSimII::dramChannel::completionQueue" ref="e5ff742a1e3f170a56073fdf84af1804" args="" -->
@@ -140,7 +158,7 @@ queue&lt; <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html">transac
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">completed_q, can send status back to memory controller <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="d1262026f63598d2f81b269f0b2c9c82"></a><!-- doxytag: member="DRAMSimII::dramChannel::systemConfig" ref="d1262026f63598d2f81b269f0b2c9c82" args="" -->
-const dramSystemConfiguration &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#d1262026f63598d2f81b269f0b2c9c82">systemConfig</a></td></tr>
+const <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html">dramSystemConfiguration</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#d1262026f63598d2f81b269f0b2c9c82">systemConfig</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">a pointer to common system config values <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="666ac5bdc34b2ecf7ef78d79bceed8da"></a><!-- doxytag: member="DRAMSimII::dramChannel::statistics" ref="666ac5bdc34b2ecf7ef78d79bceed8da" args="" -->
@@ -148,19 +166,19 @@ const dramSystemConfiguration &amp;&nbsp;</td><td class="memItemRight" valign="b
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">backward pointer to the stats engine <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="49959a2c6c76f5cd89d5e291b61ec66c"></a><!-- doxytag: member="DRAMSimII::dramChannel::powerModel" ref="49959a2c6c76f5cd89d5e291b61ec66c" args="" -->
-powerConfig&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#49959a2c6c76f5cd89d5e291b61ec66c">powerModel</a></td></tr>
+<a class="el" href="class_d_r_a_m_sim_i_i_1_1power_config.html">powerConfig</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#49959a2c6c76f5cd89d5e291b61ec66c">powerModel</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">the power model for this channel, retains power stats <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="dd2db461af0f6acfe9c76648986b5d85"></a><!-- doxytag: member="DRAMSimII::dramChannel::algorithm" ref="dd2db461af0f6acfe9c76648986b5d85" args="" -->
-dramAlgorithm&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#dd2db461af0f6acfe9c76648986b5d85">algorithm</a></td></tr>
+<a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_algorithm.html">dramAlgorithm</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#dd2db461af0f6acfe9c76648986b5d85">algorithm</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">the algorithms used for <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a>, command, etc. ordering <br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">the algorithms used for <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a>, <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a>, etc. ordering <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="46dc0a846d3cbcbaae8708d3b1090d2c"></a><!-- doxytag: member="DRAMSimII::dramChannel::channelID" ref="46dc0a846d3cbcbaae8708d3b1090d2c" args="" -->
 unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#46dc0a846d3cbcbaae8708d3b1090d2c">channelID</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">the ordinal value of this channel (0..n) <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="74cb774fccff04075a4c6b53f334266f"></a><!-- doxytag: member="DRAMSimII::dramChannel::rank" ref="74cb774fccff04075a4c6b53f334266f" args="" -->
-std::vector&lt; rank_c &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#74cb774fccff04075a4c6b53f334266f">rank</a></td></tr>
+std::vector&lt; <a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html">rank_c</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#74cb774fccff04075a4c6b53f334266f">rank</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">vector of the array of ranks <br></td></tr>
 </table>
@@ -173,13 +191,13 @@ represents a DRAM channel, has individual timing parameters, ranks, banks, clock
         <tr>
           <td class="memname">dramChannel::dramChannel           </td>
           <td>(</td>
-          <td class="paramtype">const dramSettings &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_settings.html">dramSettings</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>settings</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const dramSystemConfiguration &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html">dramSystemConfiguration</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>sysConfig</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -192,7 +210,7 @@ represents a DRAM channel, has individual timing parameters, ranks, banks, clock
 <div class="memdoc">
 
 <p>
-constructs the <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html" title="represents a DRAM channel, has individual timing parameters, ranks, banks, clock...">dramChannel</a> using this settings reference, also makes a reference to the dramSystemConfiguration object 
+constructs the <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html" title="represents a DRAM channel, has individual timing parameters, ranks, banks, clock...">dramChannel</a> using this settings reference, also makes a reference to the <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html" title="stores the system configuration options for a dramSystem">dramSystemConfiguration</a> object 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -255,7 +273,7 @@ enqueue the <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title
     <tr><td valign="top"></td><td valign="top"><em>in</em>&nbsp;</td><td>the <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> to be put into the queue </td></tr>
   </table>
 </dl>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if there was room in the queue for this command and the algorithm allowed it, false otherwise </dd></dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if there was room in the queue for this <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> and the algorithm allowed it, false otherwise </dd></dl>
 
 <p>
 <dl compact><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>probably should set the enqueue time = time here </dd></dl>
@@ -281,7 +299,7 @@ enqueue the <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title
 <div class="memdoc">
 
 <p>
-determines if there are enough command slots for the <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> to be decoded 
+determines if there are enough <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> slots for the <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> to be decoded 
 <p>
 this will ensure that a given <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> can be broken into and inserted as commands in this channel if there is not enough room according to a given algorithm, then it will indicate that this is not possible <dl class="author" compact><dt><b>Author:</b></dt><dd>Joe Gross </dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -314,7 +332,7 @@ converts a <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title=
 <p>
 takes a <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> and divides it into a number of commands, depending which row buffer management policy is chosen<br>
  currently will divide it into RAS, CAS, Pre or RAS, CAS+P and insert these commands into the per bank queues<br>
- the CAS command will contain a pointer to the host <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> to indicate that a read <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> has available data <dl class="author" compact><dt><b>Author:</b></dt><dd>Joe Gross </dd></dl>
+ the CAS <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> will contain a pointer to the host <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> to indicate that a read <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> has available data <dl class="author" compact><dt><b>Author:</b></dt><dd>Joe Gross </dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>newTransaction</em>&nbsp;</td><td>the <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> which is divided up </td></tr>
@@ -329,7 +347,7 @@ takes a <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a 
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">command * dramChannel::getNextCommand           </td>
+          <td class="memname"><a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> * dramChannel::getNextCommand           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -340,7 +358,7 @@ takes a <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a 
 <div class="memdoc">
 
 <p>
-Chooses the command which should be executed next from the given channel Choice is made based on command_ordering_algorithm from system config Command returned has already been removed from the per_bank_command_queue from which it was selected. 
+Chooses the <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> which should be executed next from the given channel Choice is made based on command_ordering_algorithm from system config Command returned has already been removed from the per_bank_command_queue from which it was selected. 
 <p>
 
 </div>
@@ -375,7 +393,7 @@ calculates the power according to Micron technical note TN-47-04<br>
         <tr>
           <td class="memname">void dramChannel::executeCommand           </td>
           <td>(</td>
-          <td class="paramtype">command *&nbsp;</td>
+          <td class="paramtype"><a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> *&nbsp;</td>
           <td class="paramname"> <em>thisCommand</em>, </td>
         </tr>
         <tr>
@@ -394,12 +412,12 @@ calculates the power according to Micron technical note TN-47-04<br>
 <div class="memdoc">
 
 <p>
-Updates the channel time to what it would be had this command been executed Updates the rank and bank records of the most recent RAS, CAS, etc. times Enqueues RAS times to allow t_faw to be determined later Updates rank and bank records of CAS, RAS lengths for later calculations in min_protocol_gap(). 
+Updates the channel time to what it would be had this <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> been executed Updates the rank and bank records of the most recent RAS, CAS, etc. times Enqueues RAS times to allow t_faw to be determined later Updates rank and bank records of CAS, RAS lengths for later calculations in min_protocol_gap(). 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>this_command</em>&nbsp;</td><td>The command to execute against the current state</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>gap</em>&nbsp;</td><td>The minimum amount of time to delay before executing the command</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>this_command</em>&nbsp;</td><td>The <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> to execute against the current state</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>gap</em>&nbsp;</td><td>The minimum amount of time to delay before executing the <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a></td></tr>
   </table>
 </dl>
 
@@ -443,7 +461,7 @@ determine when the next <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction
 <div class="memdoc">
 
 <p>
-determines when the next <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> is decoded, command ready to be executed or next refresh command arrives 
+determines when the next <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically">transaction</a> is decoded, <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> ready to be executed or next refresh <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> arrives 
 <p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>the time when the next event happens </dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd>readTransactionSimple() <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#d219df39009a854f2078c57a28ef569c" title="Chooses the command which should be executed next from the given channel Choice is...">readNextCommand()</a> <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#0dff30a96a252de8fb413f61d3de1384" title="Returns the soonest time that this command may execute.">earliestExecuteTime()</a> <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#b944151b57e8b653d7c1a1d1be0c55ca" title="determines if there are enough command slots for the transaction to be decoded">checkForAvailableCommandSlots()</a> </dd></dl>
@@ -455,7 +473,7 @@ determines when the next <a class="el" href="class_d_r_a_m_sim_i_i_1_1transactio
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const command * dramChannel::readNextCommand           </td>
+          <td class="memname">const <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> * dramChannel::readNextCommand           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -466,7 +484,7 @@ determines when the next <a class="el" href="class_d_r_a_m_sim_i_i_1_1transactio
 <div class="memdoc">
 
 <p>
-Chooses the command which should be executed next from the given channel Choice is made based on command_ordering_algorithm from system config Command returned is not yet removed from the per_bank_command_queue from which it was selected. 
+Chooses the <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> which should be executed next from the given channel Choice is made based on command_ordering_algorithm from system config Command returned is not yet removed from the per_bank_command_queue from which it was selected. 
 <p>
 
 </div>
@@ -518,7 +536,7 @@ Moves the specified channel to at least the time given.
         <tr>
           <td class="memname">int dramChannel::minProtocolGap           </td>
           <td>(</td>
-          <td class="paramtype">const command *&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> *&nbsp;</td>
           <td class="paramname"> <em>this_c</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
@@ -528,7 +546,7 @@ Moves the specified channel to at least the time given.
 <div class="memdoc">
 
 <p>
-find the protocol gap between a command and current system state 
+find the protocol gap between a <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> and current system state 
 <p>
 
 </div>
@@ -540,7 +558,7 @@ find the protocol gap between a command and current system state
         <tr>
           <td class="memname">tick_t dramChannel::earliestExecuteTime           </td>
           <td>(</td>
-          <td class="paramtype">const command *&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html">command</a> *&nbsp;</td>
           <td class="paramname"> <em>currentCommand</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [virtual]</code></td>
@@ -550,9 +568,9 @@ find the protocol gap between a command and current system state
 <div class="memdoc">
 
 <p>
-Returns the soonest time that this command may execute. 
+Returns the soonest time that this <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> may execute. 
 <p>
-Looks at all of the timing parameters and decides when the this command may soonest execute 
+Looks at all of the timing parameters and decides when the this <a class="el" href="class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs">command</a> may soonest execute 
 </div>
 </div><p>
 <a class="anchor" name="8601c0847f1b1710f17f7b9f6fc97574"></a><!-- doxytag: member="DRAMSimII::dramChannel::readTransaction" ref="8601c0847f1b1710f17f7b9f6fc97574" args="(bool) const " -->
@@ -577,7 +595,7 @@ read the next available <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>src/dramChannel.h<li>src/dramChannel.cpp<li>src/executeCommand.cpp<li>src/getNextCommand.cpp<li>src/minProtocolGap.cpp<li>src/transaction2commands.cpp</ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Apr 21 00:44:05 2008 for DRAMSimII by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 22 02:10:59 2008 for DRAMSimII by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

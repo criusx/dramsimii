@@ -62,7 +62,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			}
 
 			// respect tRFC
-			int tRFCGap = (int)(currentRank.lastRefreshTime - time) + timingSpecification.tRFC();
+			int tRFCGap = (int)(currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC();
 
 			min_gap = max(max(max(tRFCGap,tRCGap) , tRPGap) , max(tRRDGap , tFAWGap));
 
@@ -92,15 +92,15 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			{
 				if (thisRank->getRankID() != currentRank.getRankID())
 				{
-					if (thisRank->lastCASTime > otherRankLastCASTime)
+					if (thisRank->getLastCASTime() > otherRankLastCASTime)
 					{
-						otherRankLastCASTime = thisRank->lastCASTime;
-						otherRankLastCASLength = thisRank->lastCASLength;
+						otherRankLastCASTime = thisRank->getLastCASTime();
+						otherRankLastCASLength = thisRank->getLastCASLength();
 					}
-					if (thisRank->lastCASWTime > otherRankLastCASWTime)
+					if (thisRank->getLastCASWTime() > otherRankLastCASWTime)
 					{
-						otherRankLastCASWTime = thisRank->lastCASWTime;
-						otherRankLastCASWLength = thisRank->lastCASWLength;
+						otherRankLastCASWTime = thisRank->getLastCASWTime();
+						otherRankLastCASWLength = thisRank->getLastCASLength();
 					}
 				}
 			}			
@@ -111,12 +111,12 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-			int t_cas_gap = (int)((currentRank.lastCASTime - time) + timingSpecification.tBurst());
+			int t_cas_gap = (int)((currentRank.getLastCASTime() - time) + timingSpecification.tBurst());
 
 			//respect last cas write of same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
-			t_cas_gap = max(t_cas_gap,(int)((currentRank.lastCASWTime - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
+			t_cas_gap = max(t_cas_gap,(int)((currentRank.getLastCASWTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
 
 			if (rank.size() > 1) 
 			{
@@ -153,15 +153,15 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			{
 				if (rank_id != this_rank)
 				{
-					if (rank[rank_id].lastCASTime > otherRankLastCASTime)
+					if (rank[rank_id].getLastCASTime() > otherRankLastCASTime)
 					{
-						otherRankLastCASTime = rank[rank_id].lastCASTime;
-						otherRankLastCASLength = rank[rank_id].lastCASLength;
+						otherRankLastCASTime = rank[rank_id].getLastCASTime();
+						otherRankLastCASLength = rank[rank_id].getLastCASLength();
 					}
-					if (rank[rank_id].lastCASWTime > otherRankLastCASWTime)
+					if (rank[rank_id].getLastCASWTime() > otherRankLastCASWTime)
 					{
-						otherRankLastCASWTime = rank[rank_id].lastCASWTime;
-						otherRankLastCASWLength = rank[rank_id].lastCASWLength;
+						otherRankLastCASWTime = rank[rank_id].getLastCASWTime();
+						otherRankLastCASWLength = rank[rank_id].getLastCASWLength();
 					}
 				}
 			}
@@ -172,7 +172,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-			int t_cas_gap = max(0,(int)(currentRank.lastCASTime - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
+			int t_cas_gap = max(0,(int)(currentRank.getLastCASTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
 
 			// respect last cas to different ranks
 			t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASTime - time) + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD());
@@ -180,7 +180,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			// respect last cas write to same rank
 			// DW 3/9/2006 replace the line after next with the next line			
 			// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
-			t_cas_gap = max(t_cas_gap,(int)(currentRank.lastCASWTime - time) + timingSpecification.tBurst());
+			t_cas_gap = max(t_cas_gap,(int)(currentRank.getLastCASWTime() - time) + timingSpecification.tBurst());
 
 			// respect last cas write to different ranks
 			t_cas_gap = max(t_cas_gap,(int)(otherRankLastCASWTime - time) + otherRankLastCASWLength);
@@ -224,7 +224,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 
 	case REFRESH_ALL_COMMAND:
 		// respect tRFC and tRP
-		min_gap = max((int)((currentRank.lastRefreshTime - time) + timingSpecification.tRFC()),(int)((currentRank.lastPrechargeTime - time) + timingSpecification.tRP()));
+		min_gap = max((int)((currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC()),(int)((currentRank.getLastPrechargeTime() - time) + timingSpecification.tRP()));
 		break;
 	}
 
@@ -285,7 +285,7 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			}
 
 			// respect tRFC
-			tick_t tRFCLimit = currentRank.lastRefreshTime + timingSpecification.tRFC();
+			tick_t tRFCLimit = currentRank.getLastRefreshTime() + timingSpecification.tRFC();
 
 			nextTime = max(max(max(tRFCLimit,tRCLimit) , tRPLimit) , max(tRRDLimit , tFAWLimit));
 
@@ -315,15 +315,15 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			{
 				if (thisRank->getRankID() != currentRank.getRankID())
 				{
-					if (thisRank->lastCASTime > otherRankLastCASTime)
+					if (thisRank->getLastCASTime() > otherRankLastCASTime)
 					{
-						otherRankLastCASTime = thisRank->lastCASTime;
-						otherRankLastCASLength = thisRank->lastCASLength;
+						otherRankLastCASTime = thisRank->getLastCASTime();
+						otherRankLastCASLength = thisRank->getLastCASLength();
 					}
-					if (thisRank->lastCASWTime > otherRankLastCASWTime)
+					if (thisRank->getLastCASWTime() > otherRankLastCASWTime)
 					{
-						otherRankLastCASWTime = thisRank->lastCASWTime;
-						otherRankLastCASWLength = thisRank->lastCASWLength;
+						otherRankLastCASWTime = thisRank->getLastCASWTime();
+						otherRankLastCASWLength = thisRank->getLastCASWLength();
 					}
 				}
 			}			
@@ -334,12 +334,12 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-			tick_t tCASLimit = currentRank.lastCASTime + timingSpecification.tBurst();
+			tick_t tCASLimit = currentRank.getLastCASTime() + timingSpecification.tBurst();
 
 			//respect last cas write of same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
-			tCASLimit = max(tCASLimit,currentRank.lastCASWTime + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR());
+			tCASLimit = max(tCASLimit,currentRank.getLastCASWTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR());
 
 			if (rank.size() > 1) 
 			{
@@ -377,15 +377,15 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			{
 				if (rank_id != this_rank)
 				{
-					if (rank[rank_id].lastCASTime > otherRankLastCASTime)
+					if (rank[rank_id].getLastCASTime() > otherRankLastCASTime)
 					{
-						otherRankLastCASTime = rank[rank_id].lastCASTime;
-						otherRankLastCASLength = rank[rank_id].lastCASLength;
+						otherRankLastCASTime = rank[rank_id].getLastCASTime();
+						otherRankLastCASLength = rank[rank_id].getLastCASLength();
 					}
-					if (rank[rank_id].lastCASWTime > otherRankLastCASWTime)
+					if (rank[rank_id].getLastCASWTime() > otherRankLastCASWTime)
 					{
-						otherRankLastCASWTime = rank[rank_id].lastCASWTime;
-						otherRankLastCASWLength = rank[rank_id].lastCASWLength;
+						otherRankLastCASWTime = rank[rank_id].getLastCASWTime();
+						otherRankLastCASWLength = rank[rank_id].getLastCASWLength();
 					}
 				}
 			}
@@ -396,7 +396,7 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-			tick_t tCASLimit = max(time,currentRank.lastCASTime + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
+			tick_t tCASLimit = max(time,currentRank.getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
 
 			// respect last cas to different ranks
 			tCASLimit = max(tCASLimit,otherRankLastCASTime + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD());
@@ -404,7 +404,7 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			// respect last cas write to same rank
 			// DW 3/9/2006 replace the line after next with the next line			
 			// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
-			tCASLimit = max(tCASLimit,currentRank.lastCASWTime + timingSpecification.tBurst());
+			tCASLimit = max(tCASLimit,currentRank.getLastCASWTime() + timingSpecification.tBurst());
 
 			// respect last cas write to different ranks
 			tCASLimit = max(tCASLimit,otherRankLastCASWTime + otherRankLastCASWLength);
@@ -448,7 +448,7 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 
 	case REFRESH_ALL_COMMAND:
 		// respect tRFC and tRP
-		nextTime = max(currentRank.lastRefreshTime + timingSpecification.tRFC(), currentRank.lastPrechargeTime + timingSpecification.tRP());
+		nextTime = max(currentRank.getLastRefreshTime() + timingSpecification.tRFC(), currentRank.getLastPrechargeTime() + timingSpecification.tRP());
 		break;
 	}
 

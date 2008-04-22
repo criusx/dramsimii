@@ -444,7 +444,8 @@ const command *dramChannel::readNextCommand() const
 		{
 			const command *candidateCommand = NULL;
 
-			int candidateGap = INT_MAX;
+			//int candidateGap = INT_MAX;
+			tick_t candidateExecuteTime = TICK_T_MAX;
 
 			for (vector<rank_c>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 			{
@@ -456,9 +457,11 @@ const command *dramChannel::readNextCommand() const
 
 					if (challengerCommand)
 					{
-						int challengerGap = minProtocolGap(challengerCommand);
+						tick_t challengerExecuteTime = earliestExecuteTime(challengerCommand);
+						assert(time + minProtocolGap(challengerCommand) == challengerExecuteTime);
 
-						if (challengerGap < candidateGap || (candidateGap == challengerGap && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
+						// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
+						if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
 						{
 							if (challengerCommand->getCommandType() == REFRESH_ALL_COMMAND)
 							{					
@@ -477,14 +480,14 @@ const command *dramChannel::readNextCommand() const
 									// are all the commands refreshes? if so then choose this
 									if (!notAllRefresh)
 									{
-										candidateGap = challengerGap;
+										candidateExecuteTime = challengerExecuteTime;
 										candidateCommand = challengerCommand;
 									}
 								}
 							}
 							else
 							{
-								candidateGap = challengerGap;
+								candidateExecuteTime = challengerExecuteTime;
 								candidateCommand = challengerCommand;
 							}							
 						}

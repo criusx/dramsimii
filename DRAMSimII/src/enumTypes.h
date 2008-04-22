@@ -52,17 +52,18 @@ namespace DRAMSimII
 
 	enum output_file_t
 	{
-		COUT, // print to stdout
-		GZ, // print to a gzip file
-		BZ, // print to a bzip2 file
-		UNCOMPRESSED, // just write to a normal file
-		NONE // don't print diagnostic messages
+		COUT, ///< print to stdout
+		GZ, ///< print to a gzip file
+		BZ, ///< print to a bzip2 file
+		UNCOMPRESSED, ///< just write to a normal file
+		NONE ///< don't print diagnostic messages
 	};
+
 
 	enum transaction_ordering_algorithm_t
 	{
-		RIFF,
-		STRICT
+		RIFF, ///< read and instruction fetch first
+		STRICT ///< FIFO
 	};
 
 	enum input_type_t

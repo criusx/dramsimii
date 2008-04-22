@@ -81,6 +81,7 @@ dramSettings::dramSettings(const int argc, const char **argv)
 				int lengthRead = settingsInFile.gcount();
 				settingsOutputFile.append(currentWord,lengthRead);
 			}
+			settingsInFile.close();
 		}
 		else
 		{

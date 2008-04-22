@@ -16,7 +16,7 @@
 
 namespace DRAMSimII
 {
-	/// represents a DRAM channel, has individual timing parameters, ranks, banks, clock, etc.
+	/// @brief represents a DRAM channel, has individual timing parameters, ranks, banks, clock, etc.
 	class dramChannel
 	{
 		// members
@@ -41,7 +41,7 @@ namespace DRAMSimII
 		bool enqueue(transaction *in);
 		bool isFull() const { return transactionQueue.freecount() == 0; }	///< determines whether there is room for more transactions
 		void recordCommand(command *);
-		unsigned getChannelID() const { return channelID; } ///< return the ordinal of this channel
+		unsigned getChannelID() const { return channelID; }					///< return the ordinal of this channel
 		bool checkForAvailableCommandSlots(const transaction *trans) const;	
 		bool transaction2commands(transaction *);
 		command *getNextCommand();		
@@ -59,11 +59,10 @@ namespace DRAMSimII
 		virtual tick_t earliestExecuteTime(const command *thisCommand) const;
 
 		// accessors
-		const dramTimingSpecification& getTimingSpecification() const { return timingSpecification; }
-		const dramTimingSpecification& getTiming() { return timingSpecification; }
-		rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }
-		const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }
-		std::vector<rank_c>& getRank() { return rank; }
+		const dramTimingSpecification& getTimingSpecification() const { return timingSpecification; }	///< returns a reference to access the timing specification
+		rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }								///< get a reference to this channel's rank n
+		const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }					///< get a const reference to this channel's rank n
+		std::vector<rank_c>& getRank() { return rank; }													///< get a reference to this channel's ranks
 		const std::vector<rank_c>& getRank() const { return rank; }
 		tick_t getTime() const { return time; }
 		unsigned getLastRankID() const { return lastRankID; }
@@ -78,9 +77,9 @@ namespace DRAMSimII
 		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
 
 		// mutators
-		void setStatistics(dramStatistics *value) { statistics = value; }	///< set the statistics pointer to a dramStatistics object
-		void setTime(tick_t new_time) { time = new_time; }	///< update the time for this channel
-		void setChannelID(const unsigned value) { channelID = value; }	///< set the channel ordinal
+		void setStatistics(dramStatistics *value) { statistics = value; }		///< set the statistics pointer to a dramStatistics object
+		void setTime(tick_t new_time) { time = new_time; }						///< update the time for this channel
+		void setChannelID(const unsigned value) { channelID = value; }			///< set the channel ordinal
 		enum transaction_type_t setReadWriteType(const int,const int) const;	///< determine whether a read or write transaction should be generated
 
 		// constructors

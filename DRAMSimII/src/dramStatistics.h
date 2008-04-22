@@ -11,7 +11,7 @@
 
 namespace DRAMSimII
 {
-	/// stores statistics about this memory system, primarily relating to counts of transactions/commands 
+	/// @brief stores statistics about this memory system, primarily relating to counts of transactions/commands 
 	class dramStatistics
 	{
 

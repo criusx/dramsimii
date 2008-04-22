@@ -67,7 +67,7 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 			}
 
 			// respect tRFC
-			int tRFCGap = (int)(currentRank.lastRefreshTime - time) + timingSpecification.tRFC();
+			int tRFCGap = (int)(currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC();
 
 			min_gap = max(max(max(tRFCGap,tRCGap) , tRPGap) , max(tRRDGap , tFAWGap));
 		}
@@ -114,12 +114,12 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-			int t_cas_gap = (int)((currentRank.lastCASTime - time) + timingSpecification.tBurst());
+			int t_cas_gap = (int)((currentRank.getLastCASTime() - time) + timingSpecification.tBurst());
 
 			//respect last cas write of same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
-			t_cas_gap = max(t_cas_gap,(int)((currentRank.lastCASWTime - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
+			t_cas_gap = max(t_cas_gap,(int)((currentRank.getLastCASWTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
 
 			//if (rank.size() > 1) 
 			//{
@@ -170,14 +170,14 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 			}*/
 
 			// respect last cas to same rank
-			int t_cas_gap = (int)(currentRank.lastCASTime - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
+			int t_cas_gap = (int)(currentRank.getLastCASTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
 
 			// respect last cas to different ranks
 			// not in FBD, each rank is on its own channel
 			//t_cas_gap = max(t_cas_gap,(int)(other_r_last_cas_time + timingSpecification.tCAS() + other_r_last_cas_length + timingSpecification.tRTRS() - timingSpecification.tCWD() - time));
 
 			// respect last cas write to same rank
-			t_cas_gap = max(t_cas_gap,(int)(currentRank.lastCASWTime - time) + timingSpecification.tBurst());
+			t_cas_gap = max(t_cas_gap,(int)(currentRank.getLastCASWTime() - time) + timingSpecification.tBurst());
 
 			// respect last cas write to different ranks
 			// not in FBD
@@ -222,7 +222,7 @@ int fbdChannel::minProtocolGap(const command *this_c) const
 
 	case REFRESH_ALL_COMMAND:
 		// respect tRFC and tRP
-		min_gap = max((int)((currentRank.lastRefreshTime - time) + timingSpecification.tRFC()),(int)((currentRank.lastPrechargeTime - time) + timingSpecification.tRP()));
+		min_gap = max((int)((currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC()),(int)((currentRank.getLastPrechargeTime() - time) + timingSpecification.tRP()));
 		break;
 	}
 

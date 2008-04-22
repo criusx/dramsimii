@@ -14,7 +14,7 @@ namespace DRAMSimII
 	{
 	private:
 		//std::vector<fbdChannel> ranks;
-		queue<fbdFrame> frameQueue;
+		queue<fbdFrame> frameQueue;	///< the queue of upcoming fbd frames
 	public:
 		explicit fbdChannel(const dramSettings& settings, const dramSystemConfiguration &sysConfig);
 

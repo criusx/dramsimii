@@ -4,11 +4,10 @@
 
 namespace DRAMSimII
 {
-	//! This class logically represents several interpretations of a memory address
-
-	//! A class to store various representations of an address
-	//! The same address may be represented as a virtual address, physical address, 
-	//! or as channel, rank, bank, column and row identifiers
+	/// @brief This class logically represents several interpretations of a memory address
+	/// @details A class to store various representations of an address
+	/// The same address may be represented as a virtual address, physical address, 
+	/// or as channel, rank, bank, column and row identifiers
 	class addresses
 	{
 	public:

@@ -8,36 +8,36 @@ this class logically represents a bank
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-void {\bf issueRAS} (const tick\_\-t currentTime, const command $\ast$currentCommand)\label{class_d_r_a_m_sim_i_i_1_1bank__c_e281749b11eb3f9301358e0efee4a337}
+void {\bf issueRAS} (const tick\_\-t currentTime, const {\bf command} $\ast$currentCommand)\label{class_d_r_a_m_sim_i_i_1_1bank__c_e281749b11eb3f9301358e0efee4a337}
 
-\begin{CompactList}\small\item\em this logically issues a RAS command and updates all variables to reflect this \item\end{CompactList}\end{CompactItemize}
+\begin{CompactList}\small\item\em this logically issues a RAS \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} and updates all variables to reflect this \item\end{CompactList}\end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
 \item 
-queue$<$ command $>$ {\bf perBankQueue}\label{class_d_r_a_m_sim_i_i_1_1bank__c_280594b2e337a689bcf77e18cb9705e8}
+queue$<$ {\bf command} $>$ {\bf perBankQueue}\label{class_d_r_a_m_sim_i_i_1_1bank__c_280594b2e337a689bcf77e18cb9705e8}
 
-\begin{CompactList}\small\item\em the command priority queue, stores the commands to be executed \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} priority queue, stores the commands to be executed \item\end{CompactList}\item 
 tick\_\-t {\bf lastRASTime}\label{class_d_r_a_m_sim_i_i_1_1bank__c_4173fcfc3213d56297ab14d989e82696}
 
-\begin{CompactList}\small\item\em when did last RAS command start? \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em when did last RAS \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} start? \item\end{CompactList}\item 
 tick\_\-t {\bf lastCASTime}\label{class_d_r_a_m_sim_i_i_1_1bank__c_ff351bc5e81de552fce6221be1a75bad}
 
-\begin{CompactList}\small\item\em when did last CAS command start? \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em when did last CAS \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} start? \item\end{CompactList}\item 
 tick\_\-t {\bf lastCASWTime}\label{class_d_r_a_m_sim_i_i_1_1bank__c_759da64105cd2d0206c3d9335a8c693a}
 
-\begin{CompactList}\small\item\em when did last CASW command start? \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em when did last CASW \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} start? \item\end{CompactList}\item 
 tick\_\-t {\bf lastPrechargeTime}\label{class_d_r_a_m_sim_i_i_1_1bank__c_142ca82233fdcfa625469fdc4d371f85}
 
-\begin{CompactList}\small\item\em when did last Precharge command start? \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em when did last Precharge \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} start? \item\end{CompactList}\item 
 tick\_\-t {\bf lastRefreshAllTime}\label{class_d_r_a_m_sim_i_i_1_1bank__c_77f60581dea9b312558966999e43a61d}
 
 \begin{CompactList}\small\item\em must respect t\_\-rfc. concurrent refresh takes time \item\end{CompactList}\item 
 unsigned {\bf lastCASLength}\label{class_d_r_a_m_sim_i_i_1_1bank__c_63f87f98895636889768d652cf36e5c0}
 
-\begin{CompactList}\small\item\em the length of the last CAS command issued \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em the length of the last CAS \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} issued \item\end{CompactList}\item 
 unsigned {\bf lastCASWLength}\label{class_d_r_a_m_sim_i_i_1_1bank__c_431058ac671c30ccf69181ff4e105887}
 
-\begin{CompactList}\small\item\em the length of the last CASW command issued \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em the length of the last CASW \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} issued \item\end{CompactList}\item 
 unsigned {\bf openRowID}\label{class_d_r_a_m_sim_i_i_1_1bank__c_20f9e12280bc906b67100bb60848c0c9}
 
 \begin{CompactList}\small\item\em if the bank is open, what is the row id? \item\end{CompactList}\item 
@@ -66,6 +66,8 @@ unsigned {\bf totalCASWCount}\label{class_d_r_a_m_sim_i_i_1_1bank__c_7d92b79b380
 
 \subsection{Detailed Description}
 this class logically represents a bank 
+
+contains per bank queues as well as stats about when events happened 
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 

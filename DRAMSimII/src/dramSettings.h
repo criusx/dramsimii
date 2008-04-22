@@ -9,6 +9,7 @@
 
 namespace DRAMSimII
 {
+	/// @brief stores the settings to be used to initialize a dramSystem object
 	class dramSettings
 	{
 	public:

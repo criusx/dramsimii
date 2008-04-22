@@ -10,34 +10,35 @@
 
 namespace DRAMSimII
 {
+	/// @brief stores the system configuration options for a dramSystem
 	class dramSystemConfiguration
 	{ 
-	private:
-		command_ordering_algorithm_t commandOrderingAlgorithm;	// strict or round robin 
-		transaction_ordering_algorithm_t transactionOrderingAlgorithm;
-		system_configuration_type_t configType;
-		unsigned refreshTime;								// loop time of refresh 
-		refresh_policy_t refreshPolicy;					// 
-		unsigned columnSize;
-		unsigned rowSize;									// bytes per row (across one rank) 
-		unsigned cachelineSize;							// 32/64/128 etc 
-		unsigned seniorityAgeLimit;
+	protected:
+		command_ordering_algorithm_t commandOrderingAlgorithm;			///< describes how to place commands into the per bank command queues
+		transaction_ordering_algorithm_t transactionOrderingAlgorithm;	///< the algorithm that describes how to place transactions into the queue
+		system_configuration_type_t configType;							///< whether the system is standard or FBD
+		unsigned refreshTime;											///< the frequency at which refresh commands are scheduled
+		refresh_policy_t refreshPolicy;									///< determines how refreshes are handled
+		unsigned columnSize;											///< the size of each column, in bytes
+		unsigned rowSize;												///< bytes per row (across one rank) 
+		unsigned cachelineSize;											///< 32/64/128 etc 
+		unsigned seniorityAgeLimit;										///< the oldest a command may be before it takes top priority
 		dram_type_t dram_type; 
-		row_buffer_policy_t rowBufferManagementPolicy;	// row buffer management policy? OPEN/CLOSE, etc 
-		address_mapping_scheme_t addressMappingScheme;		// addr mapping scheme for physical to DRAM addr 
-		double datarate;
-		bool postedCAS;									// TRUE/FALSE, so the CAS command may be stored and run later
-		bool readWriteGrouping;
-		bool autoPrecharge;								// is CAS+P an available command for close page
+		row_buffer_policy_t rowBufferManagementPolicy;					///< row buffer management policy? OPEN/CLOSE, etc 
+		address_mapping_scheme_t addressMappingScheme;					///< addr mapping scheme for physical to DRAM addr 
+		double datarate;												///< the operating frequency of the system
+		bool postedCAS;													///< TRUE/FALSE, so the CAS command may be stored and run later
+		bool readWriteGrouping;											///< whether or not reads and writes should be grouped closely
+		bool autoPrecharge;												///< is CAS+P an available command for close page
 		int clockGranularity; 
-		unsigned cachelinesPerRow;						// dependent variable 
-		unsigned channelCount;								// How many logical channels are there ? 
-		unsigned rankCount;								// How many ranks are there per channel ? 
-		unsigned bankCount;								// How many banks per device? 
-		unsigned rowCount;									// rows per bank
-		unsigned columnCount;									// columns per row
+		unsigned cachelinesPerRow;										///< dependent variable 
+		unsigned channelCount;											///< How many logical channels are there ? 
+		unsigned rankCount;												///< How many ranks are there per channel ? 
+		unsigned bankCount;												///< How many banks per device? 
+		unsigned rowCount;												///< rows per bank
+		unsigned columnCount;											///< columns per row
 		double shortBurstRatio;
-		double readPercentage;
+		double readPercentage;											///< the percentage of transactions that are reads
 
 	public:
 		// constructors

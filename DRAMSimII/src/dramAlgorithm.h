@@ -11,7 +11,7 @@
 
 namespace DRAMSimII
 {
-	// Algorithm specific data structures should go in here.
+	/// @brief Algorithm specific data structures should go in here.
 	class dramAlgorithm
 	{
 

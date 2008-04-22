@@ -45,10 +45,13 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 	srand48((long) (1010321 + 9763099));
 }
 
-///
-/// from the book "Numerical Recipes in C: The Art of Scientific Computing"///
-
-float inputStream::poisson_rng (float xm) const
+//////////////////////////////////////////////////////////////////////
+/// @brief generates a number using a Poisson random variable
+/// @details from the book "Numerical Recipes in C: The Art of Scientific Computing"
+/// @param xm the average inter arrival cycle count
+/// @return the time until the next transaction arrives
+//////////////////////////////////////////////////////////////////////
+float inputStream::Poisson (float xm) const
 {	
 	static float sq, alxm, g, oldm = -1.0F;
 	float em, t, y;
@@ -121,7 +124,7 @@ float inputStream::box_muller(const float m, const float s) const
 	static float y2;
 	static bool use_last = false;
 
-	if (use_last)		        /// use value from previous call
+	if (use_last) // use value from previous call
 	{
 		y1 = y2;
 		use_last = false;

@@ -7,35 +7,35 @@
 using namespace std;
 using namespace DRAMSimII;
 
-void dramSystem::runSimulations2()
-{
-	for (int i = simParameters.get_request_count(); i > 0; --i)
-	{
-		// see if it is time for the channel to arrive, if so, put in the channel
-		// queue
-		// if not, either make the channels wait and move time to the point where
-		// the transaction should arrive or execute commands until that time happens
-		// make sure not to overshoot the time by looking at when a transaction would end
-		// so that executing one more command doesn't go too far forward
-		// this only happens when there is the option to move time or execute commands
-		if (transaction *input_t = getNextIncomingTransaction())
-		{
-			// record stats
-			statistics.collectTransactionStats(input_t);
-
-			// first try to update the channel so that it is one command past this
-			// transaction's start time
-			tick_t finishTime;
-			while (channel[input_t->getAddresses().channel].moveChannelToTime(input_t->getEnqueueTime(),&finishTime)) {;}
-
-			// attempt to enqueue, if there is no room, move time forward until there is
-			enqueueTimeShift(input_t);
-		}	
-		else
-			// EOF reached, quit the loop
-			break;
-	}
-}
+//void dramSystem::runSimulations2()
+//{
+//	for (int i = simParameters.get_request_count(); i > 0; --i)
+//	{
+//		// see if it is time for the channel to arrive, if so, put in the channel
+//		// queue
+//		// if not, either make the channels wait and move time to the point where
+//		// the transaction should arrive or execute commands until that time happens
+//		// make sure not to overshoot the time by looking at when a transaction would end
+//		// so that executing one more command doesn't go too far forward
+//		// this only happens when there is the option to move time or execute commands
+//		if (transaction *input_t = getNextIncomingTransaction())
+//		{
+//			// record stats
+//			statistics.collectTransactionStats(input_t);
+//
+//			// first try to update the channel so that it is one command past this
+//			// transaction's start time
+//			tick_t finishTime;
+//			while (channel[input_t->getAddresses().channel].moveChannelToTime(input_t->getEnqueueTime(),&finishTime)) {;}
+//
+//			// attempt to enqueue, if there is no room, move time forward until there is
+//			enqueueTimeShift(input_t);
+//		}	
+//		else
+//			// EOF reached, quit the loop
+//			break;
+//	}
+//}
 
 #define STATSINTERVAL 1000000
 
@@ -101,8 +101,6 @@ void dramSystem::runSimulations3()
 	}
 }
 
-/// Attempt to enqueue the command
-/// Return true if there was room, else false
 //////////////////////////////////////////////////////////////////////
 /// @brief enqueue the transaction
 /// @details attempts to enqueue the transaction in the correct channel
@@ -140,59 +138,59 @@ bool dramSystem::enqueue(transaction *currentTransaction)
 }
 
 /// Move time forward to ensure that the command was successfully enqueued
-//void dramSystem::enqueueTimeShift(transaction* trans)
-//{
-//	const unsigned chan = trans->getAddresses().channel;
-//
-//	// as long 
-//	while (!channel[chan].enqueue(trans))
-//	{
-//		transaction *temp_t = channel[chan].getTransaction();
-//
-//		if(temp_t != NULL)
-//		{
-//			// if it can't fit in the transaction queue, drain the queue
-//			while (channel[temp_t->getAddresses().channel].transaction2commands(temp_t))
-//			{
-//				command *temp_c = channel[chan].getNextCommand();
-//
-//				int min_gap = channel[chan].minProtocolGap(temp_c);
-//
-//				channel[chan].executeCommand(temp_c, min_gap);
-//
-//				statistics.collectCommandStats(temp_c);
-//#ifdef DEBUG_COMMAND				
-//				timingOutStream << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
-//#endif
-//
-//				updateSystemTime(); 
-//
-//				transaction *completed_t = channel[chan].getOldestCompletedTransaction();
-//
-//				if(completed_t != NULL)
-//				{
-//					/*if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
-//					{
-//						completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
-//						channel[chan].enqueueRefresh(completed_t);
-//					}
-//					else*/
-//						delete completed_t;
-//
-//					statistics.collectTransactionStats(temp_t);
-//#ifdef DEBUG_TRANSACTION					
-//					timingOutStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
-//#endif
-//				}
-//
-//			}
-//		}
-//		else
-//			break;
-//
-//		trans->setEnqueueTime(channel[chan].getTime());
-//	}
-//}
+void dramSystem::enqueueTimeShift(transaction* trans)
+{
+	const unsigned chan = trans->getAddresses().channel;
+
+	// as long 
+	while (!channel[chan].enqueue(trans))
+	{
+		transaction *temp_t = channel[chan].getTransaction();
+
+		if(temp_t != NULL)
+		{
+			// if it can't fit in the transaction queue, drain the queue
+			while (channel[temp_t->getAddresses().channel].transaction2commands(temp_t))
+			{
+				command *temp_c = channel[chan].getNextCommand();
+
+				int min_gap = channel[chan].minProtocolGap(temp_c);
+
+				channel[chan].executeCommand(temp_c, min_gap);
+
+				statistics.collectCommandStats(temp_c);
+#ifdef DEBUG_COMMAND				
+				timingOutStream << "[" << std::hex << setw(8) << time << "] [" << setw(2) << min_gap << "] " << *temp_c << endl;
+#endif
+
+				updateSystemTime(); 
+
+				transaction *completed_t = channel[chan].getOldestCompletedTransaction();
+
+				if(completed_t != NULL)
+				{
+					/*if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
+					{
+						completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
+						channel[chan].enqueueRefresh(completed_t);
+					}
+					else*/
+						delete completed_t;
+
+					statistics.collectTransactionStats(temp_t);
+#ifdef DEBUG_TRANSACTION					
+					timingOutStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;
+#endif
+				}
+
+			}
+		}
+		else
+			break;
+
+		trans->setEnqueueTime(channel[chan].getTime());
+	}
+}
 
 //////////////////////////////////////////////////////////////////////
 /// @brief moves all channels to the specified time

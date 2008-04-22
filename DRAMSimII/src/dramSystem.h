@@ -34,13 +34,13 @@ namespace DRAMSimII
 	{
 	protected:
 		// members
-		dramSystemConfiguration systemConfig;
-		std::vector<dramChannel> channel;	
-		simulationParameters simParameters;
-		dramStatistics statistics;	
-		inputStream input_stream;
+		dramSystemConfiguration systemConfig;	///< stores the parameters for the DRAM system, including channel/rank/bank/row counts
+		std::vector<dramChannel> channel;		///< represents the independent channels
+		simulationParameters simParameters;		///< has all the necessary parameters for the simulation run
+		dramStatistics statistics;				///< keeps running statistics about the simulation
+		inputStream input_stream;				///< provides an interface to the input trace for the simulation
 
-		tick_t time;	// master clock	
+		tick_t time;							///< master clock, usually set to the oldest channel's time
 
 		//functions
 		unsigned findOldestChannel() const;	
@@ -53,14 +53,14 @@ namespace DRAMSimII
 		
 		// functions
 		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
-		bool enqueue(transaction* trans); // enqueue this transaction into the proper per-channel queue		
+		bool enqueue(transaction* trans);
 		void enqueueTimeShift(transaction* trans);
-		input_status_t waitForTransactionToFinish(transaction *trans);		
-		virtual tick_t nextTick() const;		
+		input_status_t waitForTransactionToFinish(transaction *trans);
+		virtual tick_t nextTick() const;
 		virtual void doPowerCalculation();
 		virtual void printStatistics();
-		void runSimulations();
-		void runSimulations2();
+		//void runSimulations();
+		//void runSimulations2();
 		void runSimulations3();
 
 		// accessors

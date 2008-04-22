@@ -504,7 +504,7 @@ transaction *dramSystem::getNextRandomRequest()
 			thisTransaction->getAddresses().rank = rank_id;
 		}
 
-		int bank_id = channel[thisTransaction->getAddresses().channel].getRank(rank_id).lastBankID;
+		int bank_id = channel[thisTransaction->getAddresses().channel].getRank(rank_id).getLastBankID();
 
 		rand_s(&j);
 
@@ -562,7 +562,7 @@ transaction *dramSystem::getNextRandomRequest()
 				// Poisson distribution function
 				else if (input_stream.getInterarrivalDistributionModel() == POISSON_DISTRIBUTION)
 				{
-					input_stream.setArrivalThreshhold(1.0F - (1.0F / input_stream.poisson_rng(input_stream.getAverageInterarrivalCycleCount())));
+					input_stream.setArrivalThreshhold(1.0F - (1.0F / input_stream.Poisson(input_stream.getAverageInterarrivalCycleCount())));
 				}
 				break;
 			}
@@ -614,7 +614,7 @@ transaction *dramSystem::getNextIncomingTransaction()
 				convertAddress(tempTransaction->getAddresses());
 				tempTransaction->setEventNumber(tempTransaction->getEventNumber() + 1);
 				tempTransaction->setType(this_e.attributes);
-				tempTransaction->setLength(channel[tempTransaction->getAddresses().channel].getTiming().tBurst());			// assume burst length of 8
+				tempTransaction->setLength(channel[tempTransaction->getAddresses().channel].getTimingSpecification().tBurst());
 				tempTransaction->setEnqueueTime(this_e.timestamp);
 				// need to adjust arrival time for K6 traces to cycles
 				return tempTransaction;
@@ -629,6 +629,11 @@ transaction *dramSystem::getNextIncomingTransaction()
 	}
 }
 
+//////////////////////////////////////////////////////////////////////
+/// @brief constructor for a dramSystem, based on dramSettings
+/// @author Joe Gross
+/// @param settings the settings that define what the system should look like
+//////////////////////////////////////////////////////////////////////
 dramSystem::dramSystem(const dramSettings &settings): 
 systemConfig(settings),
 channel(systemConfig.getChannelCount(),
@@ -783,7 +788,6 @@ channel(systemConfig.getChannelCount(),
 //////////////////////////////////////////////////////////////////////
 unsigned dramSystem::findOldestChannel() const
 {
-
 	vector<dramChannel>::const_iterator currentChan = channel.begin();
 	tick_t oldestTime = currentChan->getTime();
 	unsigned oldestChanID = currentChan->getChannelID();
@@ -799,10 +803,17 @@ unsigned dramSystem::findOldestChannel() const
 	return oldestChanID;
 }
 
-ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &this_a)
+//////////////////////////////////////////////////////////////////////
+/// @brief serializes the dramSystem and prints it to the given ostream
+/// @author Joe Gross
+/// @param os the ostream to print the dramSystem information to
+/// @param thisSystem the reference to the dramSystem to be printed
+/// @return reference to the ostream passed in with information appended
+//////////////////////////////////////////////////////////////////////
+ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &thisSystem)
 {
 	os << "SYS[";
-	switch(this_a.systemConfig.getConfigType())
+	switch(thisSystem.systemConfig.getConfigType())
 	{
 	case BASELINE_CONFIG:
 		os << "BASE] ";
@@ -811,10 +822,10 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &this_a)
 		os << "UNKN] ";
 		break;
 	}
-	os << "RC[" << this_a.systemConfig.getRankCount() << "] ";
-	os << "BC[" << this_a.systemConfig.getBankCount() << "] ";
+	os << "RC[" << thisSystem.systemConfig.getRankCount() << "] ";
+	os << "BC[" << thisSystem.systemConfig.getBankCount() << "] ";
 	os << "ALG[";
-	switch(this_a.systemConfig.getCommandOrderingAlgorithm())
+	switch(thisSystem.systemConfig.getCommandOrderingAlgorithm())
 	{
 	case STRICT_ORDER:
 		os << "STR ] ";
@@ -836,11 +847,11 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &this_a)
 		break;
 	}
 	//os << "BQD[" << this_a.systemConfig.getPerBankQueueDepth() << "] ";
-	os << "BLR[" << setprecision(0) << floor(100*(this_a.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] ";
-	os << "RP[" << (int)(100*this_a.systemConfig.getReadPercentage()) << "] ";
+	os << "BLR[" << setprecision(0) << floor(100*(thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] ";
+	os << "RP[" << (int)(100*thisSystem.systemConfig.getReadPercentage()) << "] ";
 
-	os << this_a.statistics;
-	os << this_a.systemConfig;
+	os << thisSystem.statistics;
+	os << thisSystem.systemConfig;
 
 	return os;
 }

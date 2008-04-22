@@ -10,7 +10,8 @@
 
 namespace DRAMSimII
 {
-	/// this class logically represents a bank
+	/// @brief this class logically represents a bank
+	/// @details contains per bank queues as well as stats about when events happened
 	class bank_c
 	{
 	private:

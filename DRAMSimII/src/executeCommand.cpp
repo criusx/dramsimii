@@ -20,7 +20,7 @@ void dramChannel::executeCommand(command *thisCommand,const int gap)
 
 	bank_c &currentBank = currentRank.bank[thisCommand->getAddress().bank];
 
-	currentRank.lastBankID = thisCommand->getAddress().bank;
+	currentRank.setLastBankID(thisCommand->getAddress().bank);
 
 	//int t_al = this_command->isPostedCAS() ? timingSpecification.tAL() : 0;
 
@@ -133,7 +133,7 @@ void dramChannel::executeCommand(command *thisCommand)
 
 	bank_c &currentBank = currentRank.bank[thisCommand->getAddress().bank];
 
-	currentRank.lastBankID = thisCommand->getAddress().bank;
+	currentRank.setLastBankID(thisCommand->getAddress().bank);
 
 	//int t_al = this_command->isPostedCAS() ? timingSpecification.tAL() : 0;
 

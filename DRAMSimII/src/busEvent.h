@@ -9,6 +9,7 @@ namespace DRAMSimII
 {
 	// bus_event_t is used with the file I/O interface to get bus events from input trace files
 
+	/// @brief represents an event that has happened on the memory bus
 	class busEvent /* 6 DWord per event */
 	{
 	public:
