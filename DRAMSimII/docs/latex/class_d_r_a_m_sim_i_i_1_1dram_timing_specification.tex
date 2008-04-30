@@ -1,0 +1,79 @@
+\section{DRAMSimII::dramTimingSpecification Class Reference}
+\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification}\index{DRAMSimII::dramTimingSpecification@{DRAMSimII::dramTimingSpecification}}
+contains all the specs for this channel's DIMMs  
+
+
+{\tt \#include $<$dramTimingSpecification.h$>$}
+
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+int {\bf t\_\-al}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_9d7579e4380e46e82037abaa4b66c23d}
+
+\begin{CompactList}\small\item\em additive latency, used with posted cas \item\end{CompactList}\item 
+int {\bf t\_\-burst}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_d614ab324c6403098ea38dfef74e7511}
+
+\begin{CompactList}\small\item\em number of cycles utilized per cacheline burst \item\end{CompactList}\item 
+int {\bf t\_\-cas}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_90fc28d880ecddb9dc38d06ec0e47b51}
+
+\begin{CompactList}\small\item\em delay between start of CAS and start of burst \item\end{CompactList}\item 
+int {\bf t\_\-ccd}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_36cd35bc4fe4011d2150369b5533b6f8}
+
+\begin{CompactList}\small\item\em column-to-column delay, the minimum column \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} timing, determined by internal burst (prefetch) length. \item\end{CompactList}\item 
+int {\bf t\_\-cmd}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_1e75936fa6cf1dd899b1ce418a5f03ed}
+
+\begin{CompactList}\small\item\em \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} bus duration... \item\end{CompactList}\item 
+int {\bf t\_\-cwd}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_4c48938c79b6a582f30d7bb08a7d3b1a}
+
+\begin{CompactList}\small\item\em delay between end of CASW and start of burst \item\end{CompactList}\item 
+int {\bf t\_\-faw}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_3374d0cc1cf81dcf78e15df33203a5f2}
+
+\begin{CompactList}\small\item\em four bank activation \item\end{CompactList}\item 
+int {\bf t\_\-ras}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_e1471717fcf27f364d6a965f1f6999c5}
+
+\begin{CompactList}\small\item\em interval between ACT and PRECHARGE to same bank \item\end{CompactList}\item 
+int {\bf t\_\-rc}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_3e2f6eba8bccf3565b9919e690ab2577}
+
+\begin{CompactList}\small\item\em t\_\-rc is simply t\_\-ras + t\_\-rp \item\end{CompactList}\item 
+int {\bf t\_\-rcd}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_5006a322521fc6b9b8efd2090d6347c8}
+
+\begin{CompactList}\small\item\em RAS to CAS delay of same bank. \item\end{CompactList}\item 
+int {\bf t\_\-rfc}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_32841c33ff02608e6f1d30185951d0fb}
+
+\begin{CompactList}\small\item\em refresh cycle time \item\end{CompactList}\item 
+int {\bf t\_\-rp}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_1eaa5da3e28c75ee163a2c22451a74ee}
+
+\begin{CompactList}\small\item\em interval between PRECHARGE and ACT to same bank \item\end{CompactList}\item 
+int {\bf t\_\-rrd}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_69e79d5b19032ccc5ae75d40603b5d68}
+
+\begin{CompactList}\small\item\em row to row activation delay \item\end{CompactList}\item 
+int {\bf t\_\-rtp}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_d6878b377da09e507c0b533c193e079a}
+
+\begin{CompactList}\small\item\em read to precharge delay \item\end{CompactList}\item 
+int {\bf t\_\-rtrs}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_39723c3b2fa584f2dc4df60edac1359b}
+
+\begin{CompactList}\small\item\em rank hand off penalty, also t\_\-dqs \item\end{CompactList}\item 
+int {\bf t\_\-wr}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_8144f3a0a89aec22d7a5b7e23cfabe70}
+
+\begin{CompactList}\small\item\em write recovery time , time to restore data \item\end{CompactList}\item 
+int {\bf t\_\-wtr}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_3c1516fbc19d0f70979446b1ded4078b}
+
+\begin{CompactList}\small\item\em write to read turnaround time \item\end{CompactList}\item 
+int {\bf t\_\-int\_\-burst}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_5a8733a0e73fd0e00a7cc6c81f20bbcc}
+
+\begin{CompactList}\small\item\em internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3 \item\end{CompactList}\item 
+int {\bf t\_\-buffer\_\-delay}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_e951805a7b6d01c0a9dc96d4f8c276a2}
+
+\begin{CompactList}\small\item\em the delay a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} experiences before it can be converted to a series of commands \item\end{CompactList}\item 
+int {\bf t\_\-refi}\label{class_d_r_a_m_sim_i_i_1_1dram_timing_specification_1716fcdcac908e9df8a38d7db1156e6a}
+
+\begin{CompactList}\small\item\em refresh interval, should send one refresh every n ticks to a rank \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+contains all the specs for this channel's DIMMs 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/dramTimingSpecification.h\item 
+src/dramTimingSpecification.cpp\end{CompactItemize}

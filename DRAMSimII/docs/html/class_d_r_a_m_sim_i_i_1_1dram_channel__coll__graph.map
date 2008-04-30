@@ -1,0 +1,7 @@
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1power_config.html" title="stores power configuration parameters for this DRAM system necessary to calculate..." alt="" coords="277,6,443,32">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html" title="stores the system configuration options for a dramSystem" alt="" coords="237,56,483,83">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically" alt="" coords="280,107,440,134">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1addresses.html" title="This class logically represents several interpretations of a memory address." alt="" coords="7,107,161,134">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html" title="contains all the specs for this channel&#39;s DIMMs" alt="" coords="241,158,479,184">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1dram_algorithm.html" title="Algorithm specific data structures should go in here." alt="" coords="271,208,449,235">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1dram_statistics.html" title="stores statistics about this memory system, primarily relating to counts of transactions/commands..." alt="" coords="271,259,449,286">

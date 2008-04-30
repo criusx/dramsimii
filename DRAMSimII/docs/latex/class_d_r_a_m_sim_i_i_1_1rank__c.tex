@@ -1,0 +1,71 @@
+\section{DRAMSimII::rank\_\-c Class Reference}
+\label{class_d_r_a_m_sim_i_i_1_1rank__c}\index{DRAMSimII::rank\_\-c@{DRAMSimII::rank\_\-c}}
+represents a logical rank and associated statistics  
+
+
+{\tt \#include $<$rank\_\-c.h$>$}
+
+Collaboration diagram for DRAMSimII::rank\_\-c:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{class_d_r_a_m_sim_i_i_1_1rank__c__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+{\bf queue}$<$ tick\_\-t $>$ {\bf lastRASTimes}\label{class_d_r_a_m_sim_i_i_1_1rank__c_35f2ea5f8c91f9d6205271bbde842f1c}
+
+\begin{CompactList}\small\item\em ras time \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue}. useful to determine if t\_\-faw is met \item\end{CompactList}\item 
+std::vector$<$ {\bf bank\_\-c} $>$ {\bf bank}\label{class_d_r_a_m_sim_i_i_1_1rank__c_c7d380bc9ad53635e0a7c54bb447e126}
+
+\begin{CompactList}\small\item\em the banks within this rank \item\end{CompactList}\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+const {\bf dramTimingSpecification} \& {\bf timing}\label{class_d_r_a_m_sim_i_i_1_1rank__c_fe6928b6b103bb6fba2f725310bdda50}
+
+\begin{CompactList}\small\item\em reference to the timing information, used in calculations \item\end{CompactList}\item 
+tick\_\-t {\bf lastRefreshTime}\label{class_d_r_a_m_sim_i_i_1_1rank__c_508bb85a042e4c21c66e07dfa5d0e315}
+
+\begin{CompactList}\small\item\em the time of the last refresh \item\end{CompactList}\item 
+tick\_\-t {\bf lastPrechargeTime}\label{class_d_r_a_m_sim_i_i_1_1rank__c_9ad7da80e09f4d87e2843ecb9128cd62}
+
+\begin{CompactList}\small\item\em the time of the last precharge \item\end{CompactList}\item 
+tick\_\-t {\bf lastCASTime}\label{class_d_r_a_m_sim_i_i_1_1rank__c_2aca337b792d929752b1c851eb171c91}
+
+\begin{CompactList}\small\item\em the time of the last CAS \item\end{CompactList}\item 
+tick\_\-t {\bf lastCASWTime}\label{class_d_r_a_m_sim_i_i_1_1rank__c_910c5d09632c458a3409dd2b2ca3b0ab}
+
+\begin{CompactList}\small\item\em the time of the last CASW \item\end{CompactList}\item 
+tick\_\-t {\bf prechargeTime}\label{class_d_r_a_m_sim_i_i_1_1rank__c_b8b4ee90f54d720f54dc8610fded4536}
+
+\begin{CompactList}\small\item\em total time that all banks in this rank are precharged in this epoch \item\end{CompactList}\item 
+tick\_\-t {\bf totalPrechargeTime}\label{class_d_r_a_m_sim_i_i_1_1rank__c_8a4f57c88402860d567718e0028b1b2f}
+
+\begin{CompactList}\small\item\em total time that all banks are precharged, all time \item\end{CompactList}\item 
+unsigned {\bf lastCASLength}\label{class_d_r_a_m_sim_i_i_1_1rank__c_61a2205bd995b9dd741767f8bba96ace}
+
+\begin{CompactList}\small\item\em the length of the last CAS \item\end{CompactList}\item 
+unsigned {\bf lastCASWLength}\label{class_d_r_a_m_sim_i_i_1_1rank__c_422627c294e43ddc2f7df1725a46098f}
+
+\begin{CompactList}\small\item\em the length of the last CASW \item\end{CompactList}\item 
+unsigned {\bf rankID}\label{class_d_r_a_m_sim_i_i_1_1rank__c_cf74925229d89061d9d8bdfc28e4ff6a}
+
+\begin{CompactList}\small\item\em the ordinal number of this rank \item\end{CompactList}\item 
+unsigned {\bf lastBankID}\label{class_d_r_a_m_sim_i_i_1_1rank__c_8c0a579ea565aab88aa916ed4a63eec5}
+
+\begin{CompactList}\small\item\em id of the last accessed bank of this rank \item\end{CompactList}\item 
+unsigned {\bf banksPrecharged}\label{class_d_r_a_m_sim_i_i_1_1rank__c_fd15a73c992889833a95339e640761cf}
+
+\begin{CompactList}\small\item\em the number of banks in the precharge state \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+represents a logical rank and associated statistics 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/rank\_\-c.h\item 
+src/rank\_\-c.cpp\end{CompactItemize}

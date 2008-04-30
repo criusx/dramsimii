@@ -1,0 +1,246 @@
+\section{DRAMSimII::dramSystem Class Reference}
+\label{class_d_r_a_m_sim_i_i_1_1dram_system}\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+represents a DRAM system, the memory controller(s) and associated channels  
+
+
+{\tt \#include $<$dramSystem.h$>$}
+
+Inheritance diagram for DRAMSimII::dramSystem:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=86pt]{class_d_r_a_m_sim_i_i_1_1dram_system__inherit__graph}
+\end{center}
+\end{figure}
+Collaboration diagram for DRAMSimII::dramSystem:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{class_d_r_a_m_sim_i_i_1_1dram_system__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+const void $\ast$ {\bf moveAllChannelsToTime} (const tick\_\-t endTime, tick\_\-t $\ast$transFinishTime)
+\begin{CompactList}\small\item\em moves all channels to the specified time \item\end{CompactList}\item 
+bool {\bf enqueue} ({\bf transaction} $\ast$trans)
+\begin{CompactList}\small\item\em enqueue the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\item 
+void {\bf enqueueTimeShift} ({\bf transaction} $\ast$trans)\label{class_d_r_a_m_sim_i_i_1_1dram_system_ad3d88160a3f7098be02b1de6ba81029}
+
+\begin{CompactList}\small\item\em Move time forward to ensure that the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} was successfully enqueued. \item\end{CompactList}\item 
+virtual tick\_\-t {\bf nextTick} () const 
+\begin{CompactList}\small\item\em returns the time at which the next \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event} happens \item\end{CompactList}\item 
+virtual void {\bf doPowerCalculation} ()
+\begin{CompactList}\small\item\em calculate and print the power consumption for each channel \item\end{CompactList}\item 
+virtual void {\bf printStatistics} ()
+\begin{CompactList}\small\item\em prints out the statistics accumulated so far and about the current epoch \item\end{CompactList}\item 
+void {\bf runSimulations3} ()
+\begin{CompactList}\small\item\em automatically runs the simulations according to the set parameters \item\end{CompactList}\item 
+bool {\bf isFull} (const unsigned channelNumber) const \label{class_d_r_a_m_sim_i_i_1_1dram_system_affcc40c5796fda3a199ea77fbdd47c5}
+
+\begin{CompactList}\small\item\em returns true if this channel has no more room \item\end{CompactList}\item 
+double {\bf Frequency} () const \label{class_d_r_a_m_sim_i_i_1_1dram_system_b5a454645cfb6b4fbd5f4b605445e9de}
+
+\begin{CompactList}\small\item\em accessor to get the frequency of the DRAM system \item\end{CompactList}\item 
+{\bf dramSystem} (const {\bf dramSettings} \&settings)
+\begin{CompactList}\small\item\em constructor for a \doxyref{dramSystem}{p.}{class_d_r_a_m_sim_i_i_1_1dram_system}, based on \doxyref{dramSettings}{p.}{class_d_r_a_m_sim_i_i_1_1dram_settings} \item\end{CompactList}\end{CompactItemize}
+\subsection*{Protected Member Functions}
+\begin{CompactItemize}
+\item 
+unsigned {\bf findOldestChannel} () const 
+\begin{CompactList}\small\item\em goes through each channel to find the channel whose time is the least \item\end{CompactList}\item 
+void {\bf updateSystemTime} ()
+\begin{CompactList}\small\item\em updates the system time to be the same as that of the oldest channel \item\end{CompactList}\item 
+{\bf transaction} $\ast$ {\bf getNextIncomingTransaction} ()
+\begin{CompactList}\small\item\em get the next logical \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\item 
+{\bf transaction} $\ast$ {\bf getNextRandomRequest} ()
+\begin{CompactList}\small\item\em get a random request \item\end{CompactList}\item 
+bool {\bf convertAddress} ({\bf addresses} \&) const 
+\begin{CompactList}\small\item\em converts a given memory request from a physical address to a rank/bank/row/column representation \item\end{CompactList}\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+{\bf dramSystemConfiguration} {\bf systemConfig}\label{class_d_r_a_m_sim_i_i_1_1dram_system_a846ad864b7aa441d155def443c68792}
+
+\begin{CompactList}\small\item\em stores the parameters for the DRAM system, including channel/rank/bank/row counts \item\end{CompactList}\item 
+std::vector$<$ {\bf dramChannel} $>$ {\bf channel}\label{class_d_r_a_m_sim_i_i_1_1dram_system_146090aae1d381b2d3efd827570708f2}
+
+\begin{CompactList}\small\item\em represents the independent channels \item\end{CompactList}\item 
+{\bf simulationParameters} {\bf simParameters}\label{class_d_r_a_m_sim_i_i_1_1dram_system_fcf1e5e74613638268cb39b0ed43b79e}
+
+\begin{CompactList}\small\item\em has all the necessary parameters for the simulation run \item\end{CompactList}\item 
+{\bf dramStatistics} {\bf statistics}\label{class_d_r_a_m_sim_i_i_1_1dram_system_3ea2c63bc54dcd0bbc75ceec5db2dc8f}
+
+\begin{CompactList}\small\item\em keeps running statistics about the simulation \item\end{CompactList}\item 
+{\bf inputStream} {\bf input\_\-stream}\label{class_d_r_a_m_sim_i_i_1_1dram_system_b4b232968ff2ff9410c6f657bb790183}
+
+\begin{CompactList}\small\item\em provides an interface to the input trace for the simulation \item\end{CompactList}\item 
+tick\_\-t {\bf time}\label{class_d_r_a_m_sim_i_i_1_1dram_system_40f83b6d2a3b72bfb472114e292f1dd8}
+
+\begin{CompactList}\small\item\em master clock, usually set to the oldest channel's time \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+represents a DRAM system, the memory controller(s) and associated channels 
+
+contains a representation for a DRAM system, with the memory controller(s), channels, ranks, banks statistics, ability to read input streams, handle asynchronous requests, return requests at certain times \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!dramSystem@{dramSystem}}
+\index{dramSystem@{dramSystem}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}dramSystem::dramSystem (const {\bf dramSettings} \& {\em settings})\hspace{0.3cm}{\tt  [explicit]}}\label{class_d_r_a_m_sim_i_i_1_1dram_system_7a6c24ea86a253888232e167a5c39374}
+
+
+constructor for a \doxyref{dramSystem}{p.}{class_d_r_a_m_sim_i_i_1_1dram_system}, based on \doxyref{dramSettings}{p.}{class_d_r_a_m_sim_i_i_1_1dram_settings} 
+
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em settings}]the settings that define what the system should look like \end{description}
+\end{Desc}
+
+
+\subsection{Member Function Documentation}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!findOldestChannel@{findOldestChannel}}
+\index{findOldestChannel@{findOldestChannel}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned dramSystem::findOldestChannel () const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_m_sim_i_i_1_1dram_system_c733db92b8653cf3e20875c0a45a744a}
+
+
+goes through each channel to find the channel whose time is the least 
+
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Returns:]the ordinal of the oldest channel \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!updateSystemTime@{updateSystemTime}}
+\index{updateSystemTime@{updateSystemTime}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void dramSystem::updateSystemTime ()\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_m_sim_i_i_1_1dram_system_b19c53507a247dfae400d3e0f169e2c5}
+
+
+updates the system time to be the same as that of the oldest channel 
+
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!getNextIncomingTransaction@{getNextIncomingTransaction}}
+\index{getNextIncomingTransaction@{getNextIncomingTransaction}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf transaction} $\ast$ dramSystem::getNextIncomingTransaction ()\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_m_sim_i_i_1_1dram_system_17dea597983f32180edb61570a50385b}
+
+
+get the next logical \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} 
+
+get the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} from whichever source is currently being used whether a random input, mase, k6 or mapped trace file \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Returns:]the next \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction}, NULL if there are no more available transactions \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!getNextRandomRequest@{getNextRandomRequest}}
+\index{getNextRandomRequest@{getNextRandomRequest}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf transaction} $\ast$ dramSystem::getNextRandomRequest ()\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_m_sim_i_i_1_1dram_system_452bf5ef7997ee4f00d1f07810646fdc}
+
+
+get a random request 
+
+create a random \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} according to the parameters in systemConfig use the probabilities specified to generate a mapped request \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Returns:]a pointer to the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} that was generated \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!convertAddress@{convertAddress}}
+\index{convertAddress@{convertAddress}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool dramSystem::convertAddress ({\bf addresses} \& {\em thisAddress}) const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_m_sim_i_i_1_1dram_system_390c9fadb5b84dd7b345205bf8a66f3d}
+
+
+converts a given memory request from a physical address to a rank/bank/row/column representation 
+
+converts according to the address mapping scheme in systemConfig \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em thisAddress}]the \doxyref{addresses}{p.}{class_d_r_a_m_sim_i_i_1_1addresses} representation to be decoded in-place \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]true if the conversion was successful, false if there was some problem \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!moveAllChannelsToTime@{moveAllChannelsToTime}}
+\index{moveAllChannelsToTime@{moveAllChannelsToTime}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const void $\ast$ dramSystem::moveAllChannelsToTime (const tick\_\-t {\em endTime}, tick\_\-t $\ast$ {\em transFinishTime})}\label{class_d_r_a_m_sim_i_i_1_1dram_system_5f00e8ecf7e3e07fad8a7cb78e7dea21}
+
+
+moves all channels to the specified time 
+
+if a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} completes before the end time is reached, it is returned and transFinishTime variable is set \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em endTime}]the time which the channels should be moved to, assuming no transactions finish \item[{\em transFinishTime}]the time at which the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} finished, less than the endTime \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} which finished somewhere before the end time \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!enqueue@{enqueue}}
+\index{enqueue@{enqueue}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool dramSystem::enqueue ({\bf transaction} $\ast$ {\em currentTransaction})}\label{class_d_r_a_m_sim_i_i_1_1dram_system_d2692408a7a47d2d1abe0ca84c40d83a}
+
+
+enqueue the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} 
+
+attempts to enqueue the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} in the correct channel also sets the enqueue time to the current time \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em currentTransaction}]the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} to be added to the per-channel queues \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]true if the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} was able to be enqueued \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!nextTick@{nextTick}}
+\index{nextTick@{nextTick}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}tick\_\-t dramSystem::nextTick () const\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_m_sim_i_i_1_1dram_system_fefdf76984f62afe0e7d2e6b2baadc12}
+
+
+returns the time at which the next \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event} happens 
+
+returns the time when the memory system next has an \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event}\par
+ the \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event} may either be a conversion of a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} into commands or it may be the the next time a \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} may be issued \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Returns:]the time of the next \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event}, or TICK\_\-T\_\-MAX if there was no next \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event} found \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!doPowerCalculation@{doPowerCalculation}}
+\index{doPowerCalculation@{doPowerCalculation}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void dramSystem::doPowerCalculation ()\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_m_sim_i_i_1_1dram_system_358d27c228105d0cd67f0282d5569278}
+
+
+calculate and print the power consumption for each channel 
+
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!printStatistics@{printStatistics}}
+\index{printStatistics@{printStatistics}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void dramSystem::printStatistics ()\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_m_sim_i_i_1_1dram_system_3564ed52eeb1d84ba2d03424226559cd}
+
+
+prints out the statistics accumulated so far and about the current epoch 
+
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMSimII::dramSystem@{DRAMSimII::dramSystem}!runSimulations3@{runSimulations3}}
+\index{runSimulations3@{runSimulations3}!DRAMSimII::dramSystem@{DRAMSimII::dramSystem}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void dramSystem::runSimulations3 ()}\label{class_d_r_a_m_sim_i_i_1_1dram_system_4a60c8850fca7d722c6c157f6b47fd31}
+
+
+automatically runs the simulations according to the set parameters 
+
+runs either until the trace file runs out or the request count reaches zero\par
+ will print power and general stats at regular intervals\par
+ pulls data from either a trace file or generates random requests according to parameters \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/dramSystem.h\item 
+src/dramSystem.cpp\item 
+src/runSimulations.cpp\end{CompactItemize}

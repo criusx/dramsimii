@@ -1,0 +1,85 @@
+\section{DRAMSimII::dramSystemConfiguration Class Reference}
+\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration}\index{DRAMSimII::dramSystemConfiguration@{DRAMSimII::dramSystemConfiguration}}
+stores the system configuration options for a \doxyref{dramSystem}{p.}{class_d_r_a_m_sim_i_i_1_1dram_system}  
+
+
+{\tt \#include $<$dramSystemConfiguration.h$>$}
+
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+command\_\-ordering\_\-algorithm\_\-t {\bf commandOrderingAlgorithm}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_9b9ae68924513af97ca2a7afb87a2b40}
+
+\begin{CompactList}\small\item\em describes how to place commands into the per bank \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} queues \item\end{CompactList}\item 
+transaction\_\-ordering\_\-algorithm\_\-t {\bf transactionOrderingAlgorithm}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_9ff01d9c1bea31840995608b4d76a7d1}
+
+\begin{CompactList}\small\item\em the algorithm that describes how to place transactions into the \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue} \item\end{CompactList}\item 
+system\_\-configuration\_\-type\_\-t {\bf configType}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_4de4f549a8a15e525abb90f476d86767}
+
+\begin{CompactList}\small\item\em whether the system is standard or FBD \item\end{CompactList}\item 
+unsigned {\bf refreshTime}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_40ca3d40908f71b3aa3b47fbee2889bc}
+
+\begin{CompactList}\small\item\em the frequency at which refresh commands are scheduled \item\end{CompactList}\item 
+refresh\_\-policy\_\-t {\bf refreshPolicy}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_0e59f29ed5e740d24df6a3b5abce5175}
+
+\begin{CompactList}\small\item\em determines how refreshes are handled \item\end{CompactList}\item 
+unsigned {\bf columnSize}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_011f65f4c37d888091e865930147f82a}
+
+\begin{CompactList}\small\item\em the size of each column, in bytes \item\end{CompactList}\item 
+unsigned {\bf rowSize}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_f63d95d61b2a3c2e1ccb495b6f0dc3d5}
+
+\begin{CompactList}\small\item\em bytes per row (across one rank) \item\end{CompactList}\item 
+unsigned {\bf cachelineSize}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_cce0aa44e003544b714f67b83bb88e13}
+
+\begin{CompactList}\small\item\em 32/64/128 etc \item\end{CompactList}\item 
+unsigned {\bf seniorityAgeLimit}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_e8a40dd75688b521fb2d6cd99d5d1d2d}
+
+\begin{CompactList}\small\item\em the oldest a \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} may be before it takes top priority \item\end{CompactList}\item 
+row\_\-buffer\_\-policy\_\-t {\bf rowBufferManagementPolicy}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_515daaa0fccd417bfeb2fd00f81a953b}
+
+\begin{CompactList}\small\item\em row buffer management policy? OPEN/CLOSE, etc \item\end{CompactList}\item 
+address\_\-mapping\_\-scheme\_\-t {\bf addressMappingScheme}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_57c44fda455c2650b725be5a8015dfb9}
+
+\begin{CompactList}\small\item\em addr mapping scheme for physical to DRAM addr \item\end{CompactList}\item 
+double {\bf datarate}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_fc00034618e676b8b8e9ce2b515f6dd2}
+
+\begin{CompactList}\small\item\em the operating frequency of the system \item\end{CompactList}\item 
+bool {\bf postedCAS}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_8f08371cf577662cb77e67b0910fd54c}
+
+\begin{CompactList}\small\item\em TRUE/FALSE, so the CAS \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} may be stored and run later. \item\end{CompactList}\item 
+bool {\bf readWriteGrouping}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_305df549bf2ee1586b17fa1b9c18eba3}
+
+\begin{CompactList}\small\item\em whether or not reads and writes should be grouped closely \item\end{CompactList}\item 
+bool {\bf autoPrecharge}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_424f4c7694e564f1e5913d1884a0263c}
+
+\begin{CompactList}\small\item\em is CAS+P an available \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} for close page \item\end{CompactList}\item 
+unsigned {\bf cachelinesPerRow}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_9501da3d667f05ca15203ff44d0375be}
+
+\begin{CompactList}\small\item\em dependent variable \item\end{CompactList}\item 
+unsigned {\bf channelCount}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_ec3d85e3a01e3fde67ddc24174d33355}
+
+\begin{CompactList}\small\item\em How many logical channels are there ? \item\end{CompactList}\item 
+unsigned {\bf rankCount}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_e39d7248e44a560e906f5d723659066c}
+
+\begin{CompactList}\small\item\em How many ranks are there per channel ? \item\end{CompactList}\item 
+unsigned {\bf bankCount}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_7c3efb104bf9383ebea3c768d4b166b2}
+
+\begin{CompactList}\small\item\em How many banks per device? \item\end{CompactList}\item 
+unsigned {\bf rowCount}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_9e3a4f6c2c211533f50f249bed021460}
+
+\begin{CompactList}\small\item\em rows per bank \item\end{CompactList}\item 
+unsigned {\bf columnCount}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_e4fa8655e55c9111a29c41ee80fdff19}
+
+\begin{CompactList}\small\item\em columns per row \item\end{CompactList}\item 
+double {\bf readPercentage}\label{class_d_r_a_m_sim_i_i_1_1dram_system_configuration_1cbc01da576f4a985b49912015e61898}
+
+\begin{CompactList}\small\item\em the percentage of transactions that are reads \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+stores the system configuration options for a \doxyref{dramSystem}{p.}{class_d_r_a_m_sim_i_i_1_1dram_system} 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/dramSystemConfiguration.h\item 
+src/dramSystemConfiguration.cpp\end{CompactItemize}

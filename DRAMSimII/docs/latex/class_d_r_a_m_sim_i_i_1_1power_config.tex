@@ -1,0 +1,104 @@
+\section{DRAMSimII::powerConfig Class Reference}
+\label{class_d_r_a_m_sim_i_i_1_1power_config}\index{DRAMSimII::powerConfig@{DRAMSimII::powerConfig}}
+stores power configuration parameters for this DRAM system necessary to calculate power consumed  
+
+
+{\tt \#include $<$powerConfig.h$>$}
+
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+float {\bf VDD}\label{class_d_r_a_m_sim_i_i_1_1power_config_433ca6e2272af43b62095c7971353340}
+
+\begin{CompactList}\small\item\em the current voltage \item\end{CompactList}\item 
+float {\bf VDDmax}\label{class_d_r_a_m_sim_i_i_1_1power_config_98828aef2c6ca9ae7f3339f3f4529e9e}
+
+\begin{CompactList}\small\item\em the maximum voltage as specified by the manufacturer's datasheets \item\end{CompactList}\item 
+int {\bf IDD0}\label{class_d_r_a_m_sim_i_i_1_1power_config_e91778aee97a5655b472fa2201ffd125}
+
+\begin{CompactList}\small\item\em Operating Current: One Bank Active-Precharge in mA. \item\end{CompactList}\item 
+int {\bf IDD2P}\label{class_d_r_a_m_sim_i_i_1_1power_config_090eecdc0cc0a7bd0a6ca5ccec15f2a3}
+
+\begin{CompactList}\small\item\em Precharge Power-Down Current (CKE=0), in mA. \item\end{CompactList}\item 
+int {\bf IDD2N}\label{class_d_r_a_m_sim_i_i_1_1power_config_90a01ad954886dca067db2c8c2afd6ab}
+
+\begin{CompactList}\small\item\em Precharge Standby Current (CKE=1), in mA. \item\end{CompactList}\item 
+int {\bf IDD3P}\label{class_d_r_a_m_sim_i_i_1_1power_config_35a88f76aaa58c8479d41f9f5a890a8b}
+
+\begin{CompactList}\small\item\em Active Power-Down Current (CKE=0), in mA. \item\end{CompactList}\item 
+int {\bf IDD3N}\label{class_d_r_a_m_sim_i_i_1_1power_config_5fbdde87ce233c502f09b646fe4dd877}
+
+\begin{CompactList}\small\item\em Active Standby Current (CKE=1), in mA. \item\end{CompactList}\item 
+int {\bf IDD4R}\label{class_d_r_a_m_sim_i_i_1_1power_config_541b87c794dabfd4ae37c32f4e2c6dcc}
+
+\begin{CompactList}\small\item\em Operating Burst Read Current in mA. \item\end{CompactList}\item 
+int {\bf IDD4W}\label{class_d_r_a_m_sim_i_i_1_1power_config_1bb2659718e5b241a085c1f5e8d4e1db}
+
+\begin{CompactList}\small\item\em Operating Burst Write Current in mA. \item\end{CompactList}\item 
+int {\bf IDD5}\label{class_d_r_a_m_sim_i_i_1_1power_config_9a622eb9fcdba3172a510687c09cba08}
+
+\begin{CompactList}\small\item\em Burst Refresh Current in mA. \item\end{CompactList}\item 
+double {\bf PdsACT}\label{class_d_r_a_m_sim_i_i_1_1power_config_d52824a6e3fc8750e42ef522a4be55b2}
+
+\begin{CompactList}\small\item\em power for ACT/PRE commands \item\end{CompactList}\item 
+double {\bf PdsACT\_\-STBY}\label{class_d_r_a_m_sim_i_i_1_1power_config_31e44c4cbb79fc4b8ff0aacd4b998088}
+
+\begin{CompactList}\small\item\em background power for active standby \item\end{CompactList}\item 
+double {\bf PdsRD}\label{class_d_r_a_m_sim_i_i_1_1power_config_82781dad79187c3b5d646e63ffcfd510}
+
+\begin{CompactList}\small\item\em read power \item\end{CompactList}\item 
+double {\bf PdsWR}\label{class_d_r_a_m_sim_i_i_1_1power_config_8e752ebe416c9d8cf624586d5d0ed38c}
+
+\begin{CompactList}\small\item\em write power \item\end{CompactList}\item 
+double {\bf PdstermW}\label{class_d_r_a_m_sim_i_i_1_1power_config_e0a71110e8ec4f65f7d05bce4807c6a3}
+
+\begin{CompactList}\small\item\em termination power for writes \item\end{CompactList}\item 
+double {\bf PdqRD}\label{class_d_r_a_m_sim_i_i_1_1power_config_1de1ab1e4b661793a4801d0c7df44eff}
+
+\begin{CompactList}\small\item\em power per DQ, determined by system design \item\end{CompactList}\item 
+double {\bf PdqWR}\label{class_d_r_a_m_sim_i_i_1_1power_config_a7d40dd445661ca47a3c0afec71465a9}
+
+\begin{CompactList}\small\item\em power per DQ write \item\end{CompactList}\item 
+double {\bf PdqRDoth}\label{class_d_r_a_m_sim_i_i_1_1power_config_db4beb624ac1a5cf8e98b0119d9f7915}
+
+\begin{CompactList}\small\item\em power per other DQ, read \item\end{CompactList}\item 
+double {\bf PdqWRoth}\label{class_d_r_a_m_sim_i_i_1_1power_config_a0e1cab1d30dfc58e0547a5cf8185e17}
+
+\begin{CompactList}\small\item\em power per other DQ, write \item\end{CompactList}\item 
+unsigned {\bf DQperDRAM}\label{class_d_r_a_m_sim_i_i_1_1power_config_4a9173ab68d56ed6b7a95ea7aa826e0b}
+
+\begin{CompactList}\small\item\em number of DQ per DRAM \item\end{CompactList}\item 
+unsigned {\bf DQSperDRAM}\label{class_d_r_a_m_sim_i_i_1_1power_config_3fb6658eace901067026f6cfc4520d33}
+
+\begin{CompactList}\small\item\em number of DQS per DRAM \item\end{CompactList}\item 
+unsigned {\bf DMperDRAM}\label{class_d_r_a_m_sim_i_i_1_1power_config_3748787d7cd11c1828833ad8611ace40}
+
+\begin{CompactList}\small\item\em number of DM per DRAM \item\end{CompactList}\item 
+unsigned {\bf frequency}\label{class_d_r_a_m_sim_i_i_1_1power_config_a5279ed2087738a8b993878bf0e2c021}
+
+\begin{CompactList}\small\item\em frequency of the system \item\end{CompactList}\item 
+unsigned {\bf specFrequency}\label{class_d_r_a_m_sim_i_i_1_1power_config_0a098fab1b2bbcc242ed71cd37a2cb5c}
+
+\begin{CompactList}\small\item\em frequency specified in the data sheets \item\end{CompactList}\item 
+unsigned {\bf tBurst}\label{class_d_r_a_m_sim_i_i_1_1power_config_db5c4ef7e8fba33e95cca5894ecab395}
+
+\begin{CompactList}\small\item\em burst length in cycles \item\end{CompactList}\item 
+unsigned {\bf tRC}\label{class_d_r_a_m_sim_i_i_1_1power_config_83cf733c89b32de09bceb01b2e9a9bc7}
+
+\begin{CompactList}\small\item\em tRC according to the datasheet, in cycles \item\end{CompactList}\item 
+tick\_\-t {\bf lastCalculation}\label{class_d_r_a_m_sim_i_i_1_1power_config_33f90476523ec72691f1cb01b1aeb825}
+
+\begin{CompactList}\small\item\em the last time at which a power calculation was made \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+stores power configuration parameters for this DRAM system necessary to calculate power consumed 
+
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/powerConfig.h\item 
+src/powerConfig.cpp\end{CompactItemize}
