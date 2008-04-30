@@ -8,11 +8,12 @@
 
 namespace DRAMSimII
 {
+	/// @brief the parameters for the simulation, including where the requests come from and how many requests to simulate
 	class simulationParameters 
 	{
 	protected:
-		int request_count;
-		int input_type;
+		int request_count;	///< the number of requests to simulate
+		int input_type;		///< the input type
 
 	public:
 		// constructors

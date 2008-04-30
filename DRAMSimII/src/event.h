@@ -9,7 +9,7 @@
 
 namespace DRAMSimII
 {
-	// pending event queue
+	/// @brief pending event queue
 	class event
 	{
 	private:

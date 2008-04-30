@@ -7,20 +7,24 @@
 
 namespace DRAMSimII
 {
+	/// @brief the queue template class, a circular queue
+	/// @detail push/pop are O(1) operations, while random insertions are O(n) operations
 	template <class T>
 	class queue
 	{
 	private:
-		unsigned depth; // how big is this queue
-		unsigned count; // how many elements are in the queue now
-		unsigned head; // the point where items will be inserted
-		unsigned tail; // the point where items will be removed
-		T **entry; // the circular queue
+		unsigned depth;	///< how big is this queue
+		unsigned count;	///< how many elements are in the queue now
+		unsigned head;	///< the point where items will be inserted
+		unsigned tail;	///< the point where items will be removed
+		T **entry;		///< the circular queue
 
 	public:
 		explicit queue(): depth(0),count(0), head(0), tail(0), entry(NULL)
 		{}
 
+		/// @brief copy constructor
+		/// @detail copy the existing queue, making copies of each element
 		explicit queue(const queue<T>& a):
 			depth(a.depth),
 			count(0),
@@ -36,6 +40,10 @@ namespace DRAMSimII
 				}
 			}	
 
+		/// @brief constructor
+		/// @detail create a queue of a certain size and optionally fill it with empty elements
+		/// @param size the depth of the circular queue
+		/// @preallocate whether or not to fill the queue with blank elements, defaults to false
 		explicit queue(const unsigned size, const bool preallocate = false):
 		depth(size),
 			count(0),
@@ -54,6 +62,8 @@ namespace DRAMSimII
 			}
 		}
 
+		/// @brief destructor
+		/// @detail remove the elements and delete them before removing the rest of the queue
 		~queue()
 		{
 			while (count > 0)
@@ -67,7 +77,11 @@ namespace DRAMSimII
 			}
 		}
 
-		void init(unsigned size, bool preallocate = false)
+		/// @brief change the size of the queue
+		/// @detail remove all existing elements and create a new queue of a different size
+		/// @param size the depth to set the queue to
+		/// @param preallocate whether or not to fill the queue with blank elements, defaults to false
+		void resize(unsigned size, bool preallocate = false)
 		{
 			depth = size;
 			count = 0;
@@ -89,8 +103,9 @@ namespace DRAMSimII
 			}
 		}	
 
-		// queue: When you add stuff, tail pointer increments, if full, return false
-		// I'm adding to the tail and removing from the head
+		/// @brief add an item to the back of the queue
+		/// @detail issue a warning if the element is null\nreturn false if the queue is already full\nadd to the tail pointer position and remove from the head
+		/// @param item the item to be inserted into the queue
 		bool push(T *item)
 		{
 			assert(item != NULL);
@@ -110,8 +125,9 @@ namespace DRAMSimII
 			}
 		}
 
-
-		// acquire an item from the pool, same as new, but does not involve allocating new memory
+		/// @brief treat this queue like an object pool and retrieve an item
+		/// @detail if there is no available object, then create one
+		/// @return a new item which may or may not be initialized
 		T *acquire_item()
 		{
 			if (count == 0)
@@ -120,6 +136,8 @@ namespace DRAMSimII
 				return pop();
 		}
 
+		/// @brief remove the item at the front of the queue
+		/// @return the item at the head of the queue, NULL if the queue is empty
 		T *pop()
 		{
 			if (count == 0)
@@ -136,29 +154,33 @@ namespace DRAMSimII
 			}
 		}
 
-		// to get a pointer to the item at the head of the queue to view only
+		/// @brief get a pointer to the item at the head of the queue
+		/// @detail similar to peek()
+		/// @return a pointer to the item at the front of the queue, or NULL if the queue is empty
 		const T *front() const
 		{
 			return count ? entry[head] : NULL;
 		}
 
-		// to get a pointer to the item most recently inserted into the queue
+		/// @brief to get a pointer to the item most recently inserted into the queue
 		const T* back() const
 		{
 			return count ? entry[(head + count - 1) % depth] : NULL;
 		}
 
+		/// @brief get the number of entries currently in this queue
 		inline unsigned size() const
 		{
 			return count;
 		}
 
+		/// @brief get the number of entries this queue can hold
 		inline unsigned get_depth() const
 		{
 			return depth;
 		}
 
-		// get a pointer to the item at this offset without removing it
+		/// @brief get a pointer to the item at this offset without removing it
 		T *read(const unsigned offset) const
 		{
 			if((offset >= count) || (offset < 0))
@@ -167,17 +189,17 @@ namespace DRAMSimII
 				return entry[(head + offset) % depth];
 		}
 
-		// release item into pool
-		// This is useful for when the queue holds preallocated pieces of memory
-		// and one would like to store them when they are not in use
+		/// @brief release item into pool
+		/// @detail This is useful for when the queue holds preallocated pieces of memory
+		/// and one would like to store them when they are not in use
 		void release_item(T *item)
 		{
 			if(!push(item))
 				::delete item;
 		}
 
-		// this function makes this queue a non-FIFO queue.  
-		// Allows insertion into the middle or at any end
+		/// @brief this function makes this queue a non-FIFO queue.  
+		/// @detail Allows insertion into the middle or at any end
 		bool insert(T *item, const int offset)
 		{
 			assert(offset <= count - 1);
@@ -205,22 +227,26 @@ namespace DRAMSimII
 			}
 		}
 
+		/// @brief the number of entries still available in this queue
 		unsigned freecount() const
 		{
 			return depth - count;
 		}
 
+		/// @brief whether or not there is room for any more entries in this queue
 		bool isFull() const
 		{
 			return (depth - count) == 0;
 		}
 
+		/// @brief whether or not this queue has no entries in it
 		bool isEmpty() const
 		{
 			return count == 0;
 		}
 		
-
+		/// @brief assignment operator overload
+		/// @detail moves all the objects from the rhs object to the lhs object
 		queue<T> &operator=(const queue<T> &right)
 		{
 			if (&right == this)

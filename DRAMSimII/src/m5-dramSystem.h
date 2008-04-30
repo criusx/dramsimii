@@ -12,43 +12,39 @@
 #include "dramSettings.h"
 #include "globals.h"
 
-// this is a wrapper class to allow DRAMSimII
-// to integrate with M5
+
+/// @brief wrapper class to allow M5 to work with DRAMSimII
 class M5dramSystem: public PhysicalMemory
 {
 	// taken from m5 interface
 private:
 
-	// allows event-based simulation, scheduling wake ups for the simulator
+	/// allows event-based simulation, scheduling wake ups for the simulator
+	/// @details derived class that allows the wrapper class to interact with the event model
 	class TickEvent : public Event
 	{
 
 	private:
-
-		// backward pointer to the memory system
-		M5dramSystem *memory;
+		
+		M5dramSystem *memory;	///< pointer to the wrapper class so static functions may see the single instance
 
 	public:
-
 		// constructor
 		TickEvent(M5dramSystem *c);
+		
+		void process();			///< process to call when a tick event happens
 
-		// process to call when a tick event happens
-		void process();
-
-
-		/**
-		* Return a string description of this event.
-		*/
-		const char *description();
+		const char *description();	///< return a string that describes this event
 	};
 
-	// allows this to receive packets and attach to a bus
+	/// allows this to receive packets and attach to a bus
 	class MemoryPort : public SimpleTimingPort
 	{
-		// backward pointer to the memory system
-		M5dramSystem *memory;
-		Random randomGen;
+	private:
+
+		M5dramSystem *memory;	///< pointer to the wrapper class so static functions may see the single instance
+
+		Random randomGen;		///< random number generator to help when simulating delays
 
 	public:	
 
@@ -79,18 +75,17 @@ private:
 
 
 protected:
-	TickEvent tickEvent;
+	TickEvent tickEvent;				///< instance of TickEvent to allow the wrapper to receive/send events to the global queue
+	std::vector<MemoryPort*> ports;		///< ports to send/recv data to other simulator components
 
-	int lastPortIndex;
-	std::vector<MemoryPort*> ports;
+	int lastPortIndex;					///< the last port accessed
 	typedef std::vector<MemoryPort*>::iterator PortIterator;
-	// the whole point of the wrapper class
-	DRAMSimII::dramSystem *ds;
-	bool needRetry; // if the memory system needs to issue a retry statement before any more requests will come in
-	unsigned mostRecentChannel; // the most recent channel that a request was sent to
-	int cpuRatio;
-	float invCpuRatio;
-	tick_t nextStats;
+	DRAMSimII::dramSystem *ds;			///< pointer to the DRAMSimII class
+	bool needRetry;						///< if the memory system needs to issue a retry statement before any more requests will come in
+	unsigned mostRecentChannel;			///< the most recent channel that a request was sent to
+	int cpuRatio;						///< the ratio of the cpu frequency to the memory frequency
+	float invCpuRatio;					///< the ratio of the memory frequency to the cpu frequency
+	tick_t nextStats;					///< the next time at which stats should be collected
 
 	//virtual Tick calculateLatency(Packet *);
 	//virtual Tick recvTiming(PacketPtr pkt);
@@ -98,18 +93,18 @@ protected:
 
 
 public:
-	typedef M5dramSystemParams Params;
+	typedef M5dramSystemParams Params;	///< the parameters used to initialize the memory sytem object
 
-	M5dramSystem(const Params *);
+	M5dramSystem(const Params *);		///< constructor
 
 	// allows other components to get a port which they can send packets to
 	virtual Port *getPort(const std::string &if_name, int idx = -1);
 
 	void getAddressRanges(AddrRangeList &resp, bool &snoop);
 
-	int getCpuRatio() const { return cpuRatio; }
+	int getCpuRatio() const { return cpuRatio; }	///< returns the ratio of the cpu frequency to the memory frequency
 
-	float getInvCPURatio() const { return invCpuRatio; }
+	float getInvCPURatio() const { return invCpuRatio; }	///< returns the ratio of the memory frequency to the cpu frequency
 
 	void moveToTime(tick_t now);
 

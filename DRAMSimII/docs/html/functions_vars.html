@@ -24,6 +24,7 @@
     <li><a href="functions.html"><span>All</span></a></li>
     <li><a href="functions_func.html"><span>Functions</span></a></li>
     <li class="current"><a href="functions_vars.html"><span>Variables</span></a></li>
+    <li><a href="functions_type.html"><span>Typedefs</span></a></li>
     <li><a href="functions_rela.html"><span>Related&nbsp;Functions</span></a></li>
   </ul>
 </div>
@@ -38,6 +39,8 @@
     <li><a href="#index_h"><span>h</span></a></li>
     <li><a href="#index_i"><span>i</span></a></li>
     <li><a href="#index_l"><span>l</span></a></li>
+    <li><a href="#index_m"><span>m</span></a></li>
+    <li><a href="#index_n"><span>n</span></a></li>
     <li><a href="#index_o"><span>o</span></a></li>
     <li><a href="#index_p"><span>p</span></a></li>
     <li><a href="#index_r"><span>r</span></a></li>
@@ -114,6 +117,8 @@
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html#8c63eb176815891cb7080963fbe36a4a">DRAMSimII::transaction</a>
 <li>configType
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html#4de4f549a8a15e525abb90f476d86767">DRAMSimII::dramSystemConfiguration</a>
+<li>cpuRatio
+: <a class="el" href="class_m5dram_system.html#2fbee1e022242e218e235df762bcd82a">M5dramSystem</a>
 <li>cpuToMemoryRatio
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1input_stream.html#30699109a5296e4a4a5aac76f51d9f0b">DRAMSimII::inputStream</a>
 </ul>
@@ -128,6 +133,8 @@
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1power_config.html#4a9173ab68d56ed6b7a95ea7aa826e0b">DRAMSimII::powerConfig</a>
 <li>DQSperDRAM
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1power_config.html#3fb6658eace901067026f6cfc4520d33">DRAMSimII::powerConfig</a>
+<li>ds
+: <a class="el" href="class_m5dram_system.html#229ff297f8ab207f6d122a13fa2ecc6a">M5dramSystem</a>
 </ul>
 <h3><a class="anchor" name="index_e">- e -</a></h3><ul>
 <li>enqueueTime
@@ -164,8 +171,12 @@
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1power_config.html#9a622eb9fcdba3172a510687c09cba08">DRAMSimII::powerConfig</a>
 <li>input_stream
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system.html#b4b232968ff2ff9410c6f657bb790183">DRAMSimII::dramSystem</a>
+<li>input_type
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1simulation_parameters.html#c24b41d1985f4336f6bb07d92b19bd11">DRAMSimII::simulationParameters</a>
 <li>interarrival_distribution_model
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1input_stream.html#f3c2903935453409880fe6ef151df93f">DRAMSimII::inputStream</a>
+<li>invCpuRatio
+: <a class="el" href="class_m5dram_system.html#1411a566b736381786dc016cd805f323">M5dramSystem</a>
 </ul>
 <h3><a class="anchor" name="index_l">- l -</a></h3><ul>
 <li>lastBankID
@@ -184,6 +195,8 @@
 <li>lastCASWTime
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1bank__c.html#759da64105cd2d0206c3d9335a8c693a">DRAMSimII::bank_c</a>
 , <a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#910c5d09632c458a3409dd2b2ca3b0ab">DRAMSimII::rank_c</a>
+<li>lastPortIndex
+: <a class="el" href="class_m5dram_system.html#8dec460f8036d2885f730687e207624c">M5dramSystem</a>
 <li>lastPrechargeTime
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1bank__c.html#142ca82233fdcfa625469fdc4d371f85">DRAMSimII::bank_c</a>
 , <a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#9ad7da80e09f4d87e2843ecb9128cd62">DRAMSimII::rank_c</a>
@@ -196,10 +209,20 @@
 <li>lastRefreshAllTime
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1bank__c.html#77f60581dea9b312558966999e43a61d">DRAMSimII::bank_c</a>
 <li>lastRefreshTime
-: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#7b58c17eaa96327002b14325ce9e14f2">DRAMSimII::dramChannel</a>
-, <a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#508bb85a042e4c21c66e07dfa5d0e315">DRAMSimII::rank_c</a>
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#508bb85a042e4c21c66e07dfa5d0e315">DRAMSimII::rank_c</a>
+, <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#7b58c17eaa96327002b14325ce9e14f2">DRAMSimII::dramChannel</a>
 <li>length
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html#be081d96a5ad37aecd5d6d539377c4e9">DRAMSimII::transaction</a>
+</ul>
+<h3><a class="anchor" name="index_m">- m -</a></h3><ul>
+<li>mostRecentChannel
+: <a class="el" href="class_m5dram_system.html#8f2613214d10b04b640bc26db979484b">M5dramSystem</a>
+</ul>
+<h3><a class="anchor" name="index_n">- n -</a></h3><ul>
+<li>needRetry
+: <a class="el" href="class_m5dram_system.html#b1c16d57a7d7a3a07c8c0250be821432">M5dramSystem</a>
+<li>nextStats
+: <a class="el" href="class_m5dram_system.html#9d339378e2fedd6579c6ea8649f34d30">M5dramSystem</a>
 </ul>
 <h3><a class="anchor" name="index_o">- o -</a></h3><ul>
 <li>openRowID
@@ -230,6 +253,8 @@
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1bank__c.html#280594b2e337a689bcf77e18cb9705e8">DRAMSimII::bank_c</a>
 <li>physicalAddress
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1addresses.html#9cc57650e9fb4fc626421e3b4189291f">DRAMSimII::addresses</a>
+<li>ports
+: <a class="el" href="class_m5dram_system.html#c74ac86e7c7390068a33e60dfb352427">M5dramSystem</a>
 <li>postedCAS
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html#8f08371cf577662cb77e67b0910fd54c">DRAMSimII::dramSystemConfiguration</a>
 <li>powerModel
@@ -261,6 +286,8 @@
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html#0e59f29ed5e740d24df6a3b5abce5175">DRAMSimII::dramSystemConfiguration</a>
 <li>refreshTime
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html#40ca3d40908f71b3aa3b47fbee2889bc">DRAMSimII::dramSystemConfiguration</a>
+<li>request_count
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1simulation_parameters.html#58f20558fba37b854c90af82640cf9c1">DRAMSimII::simulationParameters</a>
 <li>row
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1addresses.html#ae39982bdc35afae14aee5d3192d61a3">DRAMSimII::addresses</a>
 <li>row_locality
@@ -291,12 +318,54 @@
 , <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system.html#a846ad864b7aa441d155def443c68792">DRAMSimII::dramSystem</a>
 </ul>
 <h3><a class="anchor" name="index_t">- t -</a></h3><ul>
+<li>t_al
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#9d7579e4380e46e82037abaa4b66c23d">DRAMSimII::dramTimingSpecification</a>
+<li>t_buffer_delay
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#e951805a7b6d01c0a9dc96d4f8c276a2">DRAMSimII::dramTimingSpecification</a>
+<li>t_burst
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#d614ab324c6403098ea38dfef74e7511">DRAMSimII::dramTimingSpecification</a>
+<li>t_cas
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#90fc28d880ecddb9dc38d06ec0e47b51">DRAMSimII::dramTimingSpecification</a>
+<li>t_ccd
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#36cd35bc4fe4011d2150369b5533b6f8">DRAMSimII::dramTimingSpecification</a>
+<li>t_cmd
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#1e75936fa6cf1dd899b1ce418a5f03ed">DRAMSimII::dramTimingSpecification</a>
+<li>t_cwd
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#4c48938c79b6a582f30d7bb08a7d3b1a">DRAMSimII::dramTimingSpecification</a>
+<li>t_faw
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#3374d0cc1cf81dcf78e15df33203a5f2">DRAMSimII::dramTimingSpecification</a>
+<li>t_int_burst
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#5a8733a0e73fd0e00a7cc6c81f20bbcc">DRAMSimII::dramTimingSpecification</a>
+<li>t_ras
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#e1471717fcf27f364d6a965f1f6999c5">DRAMSimII::dramTimingSpecification</a>
+<li>t_rc
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#3e2f6eba8bccf3565b9919e690ab2577">DRAMSimII::dramTimingSpecification</a>
+<li>t_rcd
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#5006a322521fc6b9b8efd2090d6347c8">DRAMSimII::dramTimingSpecification</a>
+<li>t_refi
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#1716fcdcac908e9df8a38d7db1156e6a">DRAMSimII::dramTimingSpecification</a>
+<li>t_rfc
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#32841c33ff02608e6f1d30185951d0fb">DRAMSimII::dramTimingSpecification</a>
+<li>t_rp
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#1eaa5da3e28c75ee163a2c22451a74ee">DRAMSimII::dramTimingSpecification</a>
+<li>t_rrd
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#69e79d5b19032ccc5ae75d40603b5d68">DRAMSimII::dramTimingSpecification</a>
+<li>t_rtp
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#d6878b377da09e507c0b533c193e079a">DRAMSimII::dramTimingSpecification</a>
+<li>t_rtrs
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#39723c3b2fa584f2dc4df60edac1359b">DRAMSimII::dramTimingSpecification</a>
+<li>t_wr
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#8144f3a0a89aec22d7a5b7e23cfabe70">DRAMSimII::dramTimingSpecification</a>
+<li>t_wtr
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html#3c1516fbc19d0f70979446b1ded4078b">DRAMSimII::dramTimingSpecification</a>
 <li>tBurst
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1power_config.html#db5c4ef7e8fba33e95cca5894ecab395">DRAMSimII::powerConfig</a>
+<li>tickEvent
+: <a class="el" href="class_m5dram_system.html#2c1df40ac4ba1b6ee79a89c36717e6b5">M5dramSystem</a>
 <li>time
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_channel.html#d5ea207e8f6ca775f08b738779178b9f">DRAMSimII::dramChannel</a>
-, <a class="el" href="class_d_r_a_m_sim_i_i_1_1input_stream.html#77832c2f922f4dc1a570df2a0ac3f261">DRAMSimII::inputStream</a>
 , <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_system.html#40f83b6d2a3b72bfb472114e292f1dd8">DRAMSimII::dramSystem</a>
+, <a class="el" href="class_d_r_a_m_sim_i_i_1_1input_stream.html#77832c2f922f4dc1a570df2a0ac3f261">DRAMSimII::inputStream</a>
 <li>timing
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#fe6928b6b103bb6fba2f725310bdda50">DRAMSimII::rank_c</a>
 <li>timingSpecification
@@ -322,8 +391,8 @@
 <li>tRC
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1power_config.html#83cf733c89b32de09bceb01b2e9a9bc7">DRAMSimII::powerConfig</a>
 <li>type
-: <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html#c47637c203aae54d79b9d6cf0e114332">DRAMSimII::transaction</a>
-, <a class="el" href="class_d_r_a_m_sim_i_i_1_1input_stream.html#a8adb151c41f324d0c71eb1fe48cdcc1">DRAMSimII::inputStream</a>
+: <a class="el" href="class_d_r_a_m_sim_i_i_1_1input_stream.html#a8adb151c41f324d0c71eb1fe48cdcc1">DRAMSimII::inputStream</a>
+, <a class="el" href="class_d_r_a_m_sim_i_i_1_1transaction.html#c47637c203aae54d79b9d6cf0e114332">DRAMSimII::transaction</a>
 </ul>
 <h3><a class="anchor" name="index_v">- v -</a></h3><ul>
 <li>VDD
@@ -339,7 +408,7 @@
 <li>workingSet
 : <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_statistics.html#9838ec349aad1bdc7760cfad02326cc7">DRAMSimII::dramStatistics</a>
 </ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 22 02:10:55 2008 for DRAMSimII by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 30 01:03:56 2008 for DRAMSimII by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

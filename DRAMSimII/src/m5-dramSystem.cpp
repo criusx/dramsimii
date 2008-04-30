@@ -13,9 +13,13 @@ using namespace DRAMSimII;
 
 //#define TESTNEW
 
-//////////////////////////////////////////////////////////////////////////
-// recvTiming, override from MemoryPort
-//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/// @brief receive a packet and do something with it
+/// @details receive a packet, check it to make sure it's valid, then try to enqueue it in DS2
+/// @author Joe Gross
+/// @param pkt the pointer to the memory transaction packet
+/// @return true if the packet is accepted, false otherwise
+//////////////////////////////////////////////////////////////////////
 bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 { 	
 #ifdef TESTNEW
@@ -192,11 +196,12 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////
-// process()
-// runs whenever a tick event happens, essentially allows the system to be
-// woken at certain times to process commands, retrieve results, etc.
-//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/// @brief wake up via the global event queue
+/// @details wake up and perform some action at this time, then determine when the next wakeup time should be
+/// inserts the memory system into the event queue and handles being woken by it
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////
 void M5dramSystem::TickEvent::process()
 {	
 	tick_t currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
@@ -209,7 +214,7 @@ void M5dramSystem::TickEvent::process()
 	while (currentMemCycle >= memory->nextStats)
 		memory->nextStats += STATS_INTERVAL;
 
-	M5_TIMING_LOG("intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]")
+	M5_TIMING_LOG("intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]");
 
 		// move memory channels to the current time
 		memory->moveToTime(currentMemCycle);
@@ -229,15 +234,15 @@ void M5dramSystem::TickEvent::process()
 	schedule(static_cast<Tick>(next * memory->getCpuRatio()));
 }
 
-//////////////////////////////////////////////////////////////////////////
-// moveToTime()
-// tells the channels that nothing has arrived since the last wakeup and
-// now, so go ahead and do whatever would have been done if running in real 
-// time
-// note that this should be called and should process about one event each 
-// time it is called per channel, else things start getting sent back in
-// the past
-//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/// @brief move all channels in this system to the specified time
+/// @details tells the channels that nothing arrived since the last wakeup and
+/// now, so go do whatever would have happened during this time and return finished transactions
+/// note that this should probably only process one event per channel at most so that
+/// finished transactions can be returned in a timely fashion
+/// @author Joe Gross
+/// @param now the current time
+//////////////////////////////////////////////////////////////////////
 void M5dramSystem::moveToTime(const tick_t now)
 {
 	tick_t finishTime;	
@@ -283,9 +288,13 @@ void M5dramSystem::moveToTime(const tick_t now)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////
-// the constructor
-//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/// @brief builds a M5dramSystem object
+/// @details looks for the settings file and constructs a dramSystem object from that
+/// @author Joe Gross
+/// @param p the M5 parameters object to extract parameters from
+/// @return a new M5dramSystem object
+//////////////////////////////////////////////////////////////////////
 M5dramSystem::M5dramSystem(const Params *p):
 PhysicalMemory(p), 
 tickEvent(this), 
@@ -318,15 +327,19 @@ needRetry(false)
 
 
 //////////////////////////////////////////////////////////////////////////
-// stuff taken from PhysicalMemory.cc
+/// @brief stuff taken from PhysicalMemory.cc
 //////////////////////////////////////////////////////////////////////////
-
 M5dramSystem *M5dramSystemParams::create()
 {
 	return new M5dramSystem(this);
 }
 
-
+//////////////////////////////////////////////////////////////////////
+/// @brief builds a memory port to interact with other components
+/// @param _name the friendly name of this object
+/// @param _memory the pointer to the M5dramSystem object that will be backing this object
+/// @return a new memoryPort object associated with a dramSystem object
+//////////////////////////////////////////////////////////////////////
 M5dramSystem::MemoryPort::MemoryPort(const std::string &_name, M5dramSystem *_memory):
 SimpleTimingPort(_name),
 memory(_memory)
@@ -405,20 +418,37 @@ void M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////
+/// @brief receive a read/write request to be handled without a timing model
+/// @author Joe Gross
+/// @param pkt a packet containing a transaction
+/// @return
+//////////////////////////////////////////////////////////////////////
 Tick M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
 { 
-	M5_TIMING_LOG("M5dramSystem recvAtomic()")
+	M5_TIMING_LOG("M5dramSystem recvAtomic()");
 
-		return memory->doAtomicAccess(pkt);
+	// because this is simply a read or write, go to the M5 memory object exclusively
+	// and ignore the timing from DRAMSimII
+	/// @todo have DS2 also account for this but avoid doing timing calculations
+	return memory->doAtomicAccess(pkt);
 }
 
+//////////////////////////////////////////////////////////////////////
+/// @brief receive a change of status
+/// @param status the new status for this port
+//////////////////////////////////////////////////////////////////////
 void M5dramSystem::MemoryPort::recvStatusChange(Port::Status status)
 {
 	memory->recvStatusChange(status);
 }
 
-void M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp,
-													  bool &snoop)
+//////////////////////////////////////////////////////////////////////
+/// @brief get the range of addresses that this device will accept
+/// @param resp the range reference to be completed
+/// @param snoop whether this is snooped
+//////////////////////////////////////////////////////////////////////
+void M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp, bool &snoop)
 {
 	memory->getAddressRanges(resp, snoop);
 }

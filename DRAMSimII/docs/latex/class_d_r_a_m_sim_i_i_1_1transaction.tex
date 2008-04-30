@@ -8,6 +8,33 @@ a request to read or write some portion of memory, atomically
 Collaboration diagram for DRAMSimII::transaction:\subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
+{\bf addresses} \& {\bf getAddresses} ()\label{class_d_r_a_m_sim_i_i_1_1transaction_dc5f456329f7fad964b267aca04149d0}
+
+\begin{CompactList}\small\item\em get the address of this \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\item 
+const {\bf addresses} \& {\bf getAddresses} () const \label{class_d_r_a_m_sim_i_i_1_1transaction_b9657809d7a288bcf72b703af2c29a11}
+
+\begin{CompactList}\small\item\em get the address of this \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\item 
+tick\_\-t {\bf getEnqueueTime} () const \label{class_d_r_a_m_sim_i_i_1_1transaction_9a41fdfcca4e9ef4d9be87ae0c90d597}
+
+\begin{CompactList}\small\item\em get its enqueue time \item\end{CompactList}\item 
+tick\_\-t {\bf getDecodeTime} () const \label{class_d_r_a_m_sim_i_i_1_1transaction_a48ad2d2b2f2c19ac1d57e94b19cb4b7}
+
+\begin{CompactList}\small\item\em get its decode time \item\end{CompactList}\item 
+tick\_\-t {\bf getCompletionTime} () const \label{class_d_r_a_m_sim_i_i_1_1transaction_cc09f343344ad869e5278f51e67352e8}
+
+\begin{CompactList}\small\item\em get the completion time \item\end{CompactList}\item 
+unsigned {\bf getLength} () const \label{class_d_r_a_m_sim_i_i_1_1transaction_96ca30cdb52383435a716cf81cd7225a}
+
+\begin{CompactList}\small\item\em get the number of bytes requested \item\end{CompactList}\item 
+transaction\_\-type\_\-t {\bf getType} () const \label{class_d_r_a_m_sim_i_i_1_1transaction_a652315d3457bb1e55aaa8886b490902}
+
+\begin{CompactList}\small\item\em get what type of \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} this is \item\end{CompactList}\item 
+unsigned {\bf getEventNumber} () const \label{class_d_r_a_m_sim_i_i_1_1transaction_d5c3b462f139c47f7905e8ab6c1057e2}
+
+\begin{CompactList}\small\item\em which \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event} number this is \item\end{CompactList}\item 
+const void $\ast$ {\bf getOriginalTransaction} () const \label{class_d_r_a_m_sim_i_i_1_1transaction_a6d6e82e88168af1dfdc46b8db2ddd45}
+
+\begin{CompactList}\small\item\em get the external \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} that this is a representation for \item\end{CompactList}\item 
 {\bf transaction} ()\label{class_d_r_a_m_sim_i_i_1_1transaction_eee888a320f28a26fc74c4c8d8b0f8db}
 
 \begin{CompactList}\small\item\em constructor to make a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} with no values set \item\end{CompactList}\item 
@@ -28,7 +55,7 @@ void {\bf operator delete} (void $\ast$)\label{class_d_r_a_m_sim_i_i_1_1transact
 \item 
 unsigned {\bf event\_\-no}\label{class_d_r_a_m_sim_i_i_1_1transaction_228dd1e3ba384c12b2f5073ce0348a5f}
 
-\begin{CompactList}\small\item\em the nth event \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em the nth \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event} \item\end{CompactList}\item 
 transaction\_\-type\_\-t {\bf type}\label{class_d_r_a_m_sim_i_i_1_1transaction_c47637c203aae54d79b9d6cf0e114332}
 
 \begin{CompactList}\small\item\em \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} type \item\end{CompactList}\item 
@@ -40,7 +67,7 @@ unsigned {\bf length}\label{class_d_r_a_m_sim_i_i_1_1transaction_be081d96a5ad37a
 \begin{CompactList}\small\item\em the number of words requested \item\end{CompactList}\item 
 tick\_\-t {\bf enqueueTime}\label{class_d_r_a_m_sim_i_i_1_1transaction_c0a3d1c37d5eca344e39d7607a35afd3}
 
-\begin{CompactList}\small\item\em time when the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} enters the MC queue \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em time when the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} enters the MC \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue} \item\end{CompactList}\item 
 tick\_\-t {\bf completionTime}\label{class_d_r_a_m_sim_i_i_1_1transaction_8c63eb176815891cb7080963fbe36a4a}
 
 \begin{CompactList}\small\item\em time when \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} has completed in DRAM ticks \item\end{CompactList}\item 
@@ -52,11 +79,11 @@ tick\_\-t {\bf decodeTime}\label{class_d_r_a_m_sim_i_i_1_1transaction_8a3567c24c
 \begin{CompactList}\small\item\em the physical, virtual, and mapped representations of the address for this \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\item 
 const void $\ast$ {\bf originalTransaction}\label{class_d_r_a_m_sim_i_i_1_1transaction_969d1e967cc81d169f5885e2cb1cd62b}
 
-\begin{CompactList}\small\item\em utility pointer in the event that this \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} represents another version of a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\end{CompactItemize}
+\begin{CompactList}\small\item\em utility pointer in the \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event} that this \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} represents another version of a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \item\end{CompactList}\end{CompactItemize}
 \subsection*{Static Protected Attributes}
 \begin{CompactItemize}
 \item 
-static queue$<$ {\bf transaction} $>$ {\bf freeTransactionPool}\label{class_d_r_a_m_sim_i_i_1_1transaction_ed849afa6084090f8fcce3e820bf8d0e}
+static {\bf queue}$<$ {\bf transaction} $>$ {\bf freeTransactionPool}\label{class_d_r_a_m_sim_i_i_1_1transaction_ed849afa6084090f8fcce3e820bf8d0e}
 
 \begin{CompactList}\small\item\em transactions are stored here to avoid allocating memory after initialization \item\end{CompactList}\end{CompactItemize}
 \subsection*{Friends}

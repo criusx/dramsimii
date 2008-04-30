@@ -67,27 +67,7 @@ dramSettings::dramSettings(const int argc, const char **argv)
 		{
 			cerr << "\"" << settingsFile << "\" does not validate." << endl;
 			exit(-2);
-		}
-
-		ifstream settingsInFile;
-		settingsInFile.open(settingsFile.c_str());		
-
-		if (settingsInFile.is_open())
-		{
-			char currentWord[8192];
-			while (!settingsInFile.eof())
-			{
-				settingsInFile.read(currentWord,8192);
-				int lengthRead = settingsInFile.gcount();
-				settingsOutputFile.append(currentWord,lengthRead);
-			}
-			settingsInFile.close();
-		}
-		else
-		{
-			cerr << "Could not create output for settings file" << endl;
-			exit(-2);
-		}
+		}		
 
 		int ret;		
 		string nodeName;
@@ -428,6 +408,28 @@ dramSettings::dramSettings(const int argc, const char **argv)
 		{
 			cerr << "There was an error reading/parsing " << settingsFile << "." << endl;
 			exit(-2);
+		}
+		else
+		{
+			ifstream settingsInFile;
+			settingsInFile.open(settingsFile.c_str());		
+
+			if (settingsInFile.is_open())
+			{
+				char currentWord[8192];
+				while (!settingsInFile.eof())
+				{
+					settingsInFile.read(currentWord,8192);
+					int lengthRead = settingsInFile.gcount();
+					settingsOutputFile.append(currentWord,lengthRead);
+				}
+				settingsInFile.close();
+			}
+			else
+			{
+				cerr << "Could not create output for settings file" << endl;
+				exit(-2);
+			}
 		}
 		// close the reader
 		xmlFreeTextReader(reader);

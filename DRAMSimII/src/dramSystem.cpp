@@ -698,7 +698,7 @@ channel(systemConfig.getChannelCount(),
 		timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
 		powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
 		statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-		statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
+		settingsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
 		timingIn.open(timingFilename.str().c_str(),ifstream::in);
 		powerIn.open(powerFilename.str().c_str(),ifstream::in);
 		statsIn.open(statsFilename.str().c_str(),ifstream::in);				

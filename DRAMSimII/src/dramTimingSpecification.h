@@ -10,6 +10,7 @@
 namespace DRAMSimII
 {
 	// t_pp (min prec to prec of any bank) ignored
+	/// @brief contains all the specs for this channel's DIMMs
 	class dramTimingSpecification
 	{
 	protected:

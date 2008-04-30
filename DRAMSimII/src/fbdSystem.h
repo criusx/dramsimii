@@ -28,7 +28,7 @@
 
 namespace DRAMSimII
 {
-	// a specialty type of dramSystem
+	/// @brief a specialty type of dramSystem
 	class fbdSystem: public dramSystem
 	{
 	private:

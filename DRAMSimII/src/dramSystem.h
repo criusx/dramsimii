@@ -24,12 +24,10 @@
 
 namespace DRAMSimII
 {
-	//////////////////////////////////////////////////////////////////////
 	/// @brief represents a DRAM system, the memory controller(s) and associated channels
 	/// @details contains a representation for a DRAM system, with the memory controller(s), channels, ranks, banks
 	/// statistics, ability to read input streams, handle asynchronous requests, return requests at certain times
 	/// @author Joe Gross
-	//////////////////////////////////////////////////////////////////////
 	class dramSystem
 	{
 	protected:

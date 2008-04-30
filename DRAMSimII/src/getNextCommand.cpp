@@ -5,17 +5,18 @@
 using namespace std;
 using namespace DRAMSimII;
 
-/// <summary>
-/// Chooses the command which should be executed next from the given channel
+//////////////////////////////////////////////////////////////////////
+/// @brief chooses and dequeues the next command to execute
+/// @details Chooses the command which should be executed next from the given channel
 /// Choice is made based on command_ordering_algorithm from system config
 /// Command returned has already been removed from the per_bank_command_queue
 /// from which it was selected
-/// </summary>
+/// @author Joe Gross
+/// @return a pointer to the next command
+//////////////////////////////////////////////////////////////////////
 command *dramChannel::getNextCommand()
 {
-	const command *nextCommand = readNextCommand();
-
-	if (nextCommand)
+	if (const command *nextCommand = readNextCommand())
 	{
 		rank_c &currentRank = rank[nextCommand->getAddress().rank];
 		
@@ -36,8 +37,7 @@ command *dramChannel::getNextCommand()
 
 		}
 		else
-		{
-			//bank_c &currentBank = currentRank.bank[nextCommand->getAddress().bank_id];
+		{			
 			assert(currentRank.bank[nextCommand->getAddress().bank].getPerBankQueue().front() == nextCommand);
 			return currentRank.bank[nextCommand->getAddress().bank].getPerBankQueue().pop();
 		}
@@ -48,13 +48,13 @@ command *dramChannel::getNextCommand()
 	}
 }
 
-
-/// <summary>
-/// Chooses the command which should be executed next from the given channel
-/// Choice is made based on command_ordering_algorithm from system config
-/// Command returned is not yet removed from the per_bank_command_queue
-/// from which it was selected
-/// </summary>
+//////////////////////////////////////////////////////////////////////
+/// @brief returns a pointer to the command which would be chosen to be executed next
+/// @details chooses a command according to the command ordering algorithm, tries to choose a command which can execute
+/// command is not actually removed from the per bank queues
+/// @author Joe Gross
+/// @return a const pointer to the next available command
+//////////////////////////////////////////////////////////////////////
 const command *dramChannel::readNextCommand() const
 {
 	// look at the most recently retired command in this channel's history

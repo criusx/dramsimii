@@ -5,8 +5,13 @@ represents a DRAM channel, has individual timing parameters, ranks, banks, clock
 
 {\tt \#include $<$dramChannel.h$>$}
 
-Inherited by DRAMSimII::fbdChannel{\tt  [private]}.
-
+Inheritance diagram for DRAMSimII::dramChannel:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=86pt]{class_d_r_a_m_sim_i_i_1_1dram_channel__inherit__graph}
+\end{center}
+\end{figure}
 Collaboration diagram for DRAMSimII::dramChannel:\nopagebreak
 \begin{figure}[H]
 \begin{center}
@@ -30,24 +35,24 @@ bool {\bf checkForAvailableCommandSlots} (const {\bf transaction} $\ast$trans) c
 bool {\bf transaction2commands} ({\bf transaction} $\ast$)
 \begin{CompactList}\small\item\em converts a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} into corresponding commands \item\end{CompactList}\item 
 {\bf command} $\ast$ {\bf getNextCommand} ()
-\begin{CompactList}\small\item\em Chooses the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config Command returned has already been removed from the per\_\-bank\_\-command\_\-queue from which it was selected. \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em chooses and dequeues the next \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} to execute \item\end{CompactList}\item 
 void {\bf doPowerCalculation} ()
 \begin{CompactList}\small\item\em performs power calculations for this epoch and cumulative \item\end{CompactList}\item 
 void {\bf executeCommand} ({\bf command} $\ast$thisCommand, const int gap)
 \begin{CompactList}\small\item\em Updates the channel time to what it would be had this \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} been executed Updates the rank and bank records of the most recent RAS, CAS, etc. times Enqueues RAS times to allow t\_\-faw to be determined later Updates rank and bank records of CAS, RAS lengths for later calculations in min\_\-protocol\_\-gap(). \item\end{CompactList}\item 
 tick\_\-t {\bf nextTransactionDecodeTime} () const 
-\begin{CompactList}\small\item\em determine when the next \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} in the queue will be decoded \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em determine when the next \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} in the \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue} will be decoded \item\end{CompactList}\item 
 virtual tick\_\-t {\bf nextTick} () const 
 \begin{CompactList}\small\item\em determines when the next \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} is decoded, \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} ready to be executed or next refresh \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} arrives \item\end{CompactList}\item 
 virtual const {\bf command} $\ast$ {\bf readNextCommand} () const 
-\begin{CompactList}\small\item\em Chooses the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config Command returned is not yet removed from the per\_\-bank\_\-command\_\-queue from which it was selected. \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em returns a pointer to the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} which would be chosen to be executed next \item\end{CompactList}\item 
 virtual const void $\ast$ {\bf moveChannelToTime} (const tick\_\-t endTime, tick\_\-t $\ast$transFinishTime)
 \begin{CompactList}\small\item\em Moves the specified channel to at least the time given. \item\end{CompactList}\item 
 virtual int {\bf minProtocolGap} (const {\bf command} $\ast$thisCommand) const 
 \begin{CompactList}\small\item\em find the protocol gap between a \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} and current system state \item\end{CompactList}\item 
 virtual tick\_\-t {\bf earliestExecuteTime} (const {\bf command} $\ast$thisCommand) const 
 \begin{CompactList}\small\item\em Returns the soonest time that this \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} may execute. \item\end{CompactList}\item 
-const dramTimingSpecification \& {\bf getTimingSpecification} () const \label{class_d_r_a_m_sim_i_i_1_1dram_channel_a4ac4104d757a069a4bf66ee1666e1e9}
+const {\bf dramTimingSpecification} \& {\bf getTimingSpecification} () const \label{class_d_r_a_m_sim_i_i_1_1dram_channel_a4ac4104d757a069a4bf66ee1666e1e9}
 
 \begin{CompactList}\small\item\em returns a reference to access the timing specification \item\end{CompactList}\item 
 {\bf rank\_\-c} \& {\bf getRank} (const unsigned rankNum)\label{class_d_r_a_m_sim_i_i_1_1dram_channel_21f0220576bba0787b4f66c88b695011}
@@ -89,19 +94,19 @@ tick\_\-t {\bf lastRefreshTime}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_7b58
 unsigned {\bf lastRankID}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_d42b6872d9f1c74087c3fd6e0ece60af}
 
 \begin{CompactList}\small\item\em id of the last accessed rank of this channel \item\end{CompactList}\item 
-dramTimingSpecification {\bf timingSpecification}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_ca5241f728fec14593390cc04f4d89b5}
+{\bf dramTimingSpecification} {\bf timingSpecification}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_ca5241f728fec14593390cc04f4d89b5}
 
 \begin{CompactList}\small\item\em the timing specs for this channel \item\end{CompactList}\item 
-queue$<$ {\bf transaction} $>$ {\bf transactionQueue}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_fde025b97580f33ab6a7249eefce3111}
+{\bf queue}$<$ {\bf transaction} $>$ {\bf transactionQueue}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_fde025b97580f33ab6a7249eefce3111}
 
-\begin{CompactList}\small\item\em \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} queue for the channel \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue} for the channel \item\end{CompactList}\item 
 {\bf transaction} $\ast$$\ast$ {\bf refreshCounter}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_2e6f993837a79b013c8b69844fdefe49}
 
 \begin{CompactList}\small\item\em holds the next refresh commands \item\end{CompactList}\item 
-queue$<$ {\bf command} $>$ {\bf historyQueue}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_c5a60b4ef57a6bf8b6d6b84974a1eeb6}
+{\bf queue}$<$ {\bf command} $>$ {\bf historyQueue}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_c5a60b4ef57a6bf8b6d6b84974a1eeb6}
 
 \begin{CompactList}\small\item\em what were the last N commands to this channel? \item\end{CompactList}\item 
-queue$<$ {\bf transaction} $>$ {\bf completionQueue}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_e5ff742a1e3f170a56073fdf84af1804}
+{\bf queue}$<$ {\bf transaction} $>$ {\bf completionQueue}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_e5ff742a1e3f170a56073fdf84af1804}
 
 \begin{CompactList}\small\item\em completed\_\-q, can send status back to memory controller \item\end{CompactList}\item 
 const {\bf dramSystemConfiguration} \& {\bf systemConfig}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_d1262026f63598d2f81b269f0b2c9c82}
@@ -165,10 +170,10 @@ enqueue the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} into
 \begin{Desc}
 \item[Parameters:]
 \begin{description}
-\item[{\em in}]the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} to be put into the queue \end{description}
+\item[{\em in}]the \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} to be put into the \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue} \end{description}
 \end{Desc}
 \begin{Desc}
-\item[Returns:]true if there was room in the queue for this \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} and the algorithm allowed it, false otherwise \end{Desc}
+\item[Returns:]true if there was room in the \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue} for this \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} and the algorithm allowed it, false otherwise \end{Desc}
 
 
 \begin{Desc}
@@ -216,8 +221,12 @@ takes a \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} and divi
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf command} $\ast$ dramChannel::getNextCommand ()}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_d3026d3d3f3a28d838dd84f14c968a31}
 
 
-Chooses the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config Command returned has already been removed from the per\_\-bank\_\-command\_\-queue from which it was selected. 
+chooses and dequeues the next \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} to execute 
 
+Chooses the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config Command returned has already been removed from the per\_\-bank\_\-command\_\-queue from which it was selected \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Returns:]a pointer to the next \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} \end{Desc}
 \index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!doPowerCalculation@{doPowerCalculation}}
 \index{doPowerCalculation@{doPowerCalculation}!DRAMSimII::dramChannel@{DRAMSimII::dramChannel}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void dramChannel::doPowerCalculation ()}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_0c33c13c0b509b454689b26760e0799d}
@@ -245,7 +254,7 @@ Updates the channel time to what it would be had this \doxyref{command}{p.}{clas
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}tick\_\-t dramChannel::nextTransactionDecodeTime () const}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_e99f5571782e60957e4fa13f6c9a94e3}
 
 
-determine when the next \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} in the queue will be decoded 
+determine when the next \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} in the \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue} will be decoded 
 
 \begin{Desc}
 \item[Returns:]the time when the decoding will be complete \end{Desc}
@@ -257,7 +266,7 @@ determine when the next \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1trans
 determines when the next \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} is decoded, \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} ready to be executed or next refresh \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} arrives 
 
 \begin{Desc}
-\item[Returns:]the time when the next event happens \end{Desc}
+\item[Returns:]the time when the next \doxyref{event}{p.}{class_d_r_a_m_sim_i_i_1_1event} happens \end{Desc}
 \begin{Desc}
 \item[See also:]readTransactionSimple() \doxyref{readNextCommand()}{p.}{class_d_r_a_m_sim_i_i_1_1dram_channel_d219df39009a854f2078c57a28ef569c} \doxyref{earliestExecuteTime()}{p.}{class_d_r_a_m_sim_i_i_1_1dram_channel_0dff30a96a252de8fb413f61d3de1384} \doxyref{checkForAvailableCommandSlots()}{p.}{class_d_r_a_m_sim_i_i_1_1dram_channel_b944151b57e8b653d7c1a1d1be0c55ca} \end{Desc}
 \index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!readNextCommand@{readNextCommand}}
@@ -265,8 +274,12 @@ determines when the next \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1tran
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}const {\bf command} $\ast$ dramChannel::readNextCommand () const\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_d219df39009a854f2078c57a28ef569c}
 
 
-Chooses the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config Command returned is not yet removed from the per\_\-bank\_\-command\_\-queue from which it was selected. 
+returns a pointer to the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} which would be chosen to be executed next 
 
+chooses a \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} according to the \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} ordering algorithm, tries to choose a \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} which can execute \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} is not actually removed from the per bank queues \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Returns:]a const pointer to the next available \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} \end{Desc}
 \index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!moveChannelToTime@{moveChannelToTime}}
 \index{moveChannelToTime@{moveChannelToTime}!DRAMSimII::dramChannel@{DRAMSimII::dramChannel}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}const void $\ast$ dramChannel::moveChannelToTime (const tick\_\-t {\em endTime}, tick\_\-t $\ast$ {\em transFinishTime})\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_0388ba607f4b4b26f3025090a69a7e89}
@@ -283,14 +296,18 @@ Moves the specified channel to at least the time given.
 
 \begin{Desc}
 \item[{\bf Todo}]should this switch to use \doxyref{nextTransactionDecodeTime()}{p.}{class_d_r_a_m_sim_i_i_1_1dram_channel_e99f5571782e60957e4fa13f6c9a94e3} ? \end{Desc}
-\index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!minProtocolGap@{minProtocolGap}}
+
+
+Reimplemented in {\bf DRAMSimII::fbdChannel} \doxyref{}{p.}{class_d_r_a_m_sim_i_i_1_1fbd_channel_00c50e85c0b23eefa8fb69319d66d72e}.\index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!minProtocolGap@{minProtocolGap}}
 \index{minProtocolGap@{minProtocolGap}!DRAMSimII::dramChannel@{DRAMSimII::dramChannel}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int dramChannel::minProtocolGap (const {\bf command} $\ast$ {\em this\_\-c}) const\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_629da11d3f3af08daaefa01a3838baf7}
 
 
 find the protocol gap between a \doxyref{command}{p.}{class_d_r_a_m_sim_i_i_1_1command} and current system state 
 
-\index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!earliestExecuteTime@{earliestExecuteTime}}
+
+
+Reimplemented in {\bf DRAMSimII::fbdChannel} \doxyref{}{p.}{class_d_r_a_m_sim_i_i_1_1fbd_channel_d24e63bfb96f77bc0c9457a39d32081f}.\index{DRAMSimII::dramChannel@{DRAMSimII::dramChannel}!earliestExecuteTime@{earliestExecuteTime}}
 \index{earliestExecuteTime@{earliestExecuteTime}!DRAMSimII::dramChannel@{DRAMSimII::dramChannel}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}tick\_\-t dramChannel::earliestExecuteTime (const {\bf command} $\ast$ {\em currentCommand}) const\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_0dff30a96a252de8fb413f61d3de1384}
 
@@ -302,7 +319,7 @@ Looks at all of the timing parameters and decides when the this \doxyref{command
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}const {\bf transaction} $\ast$ dramChannel::readTransaction (bool {\em bufferDelay}) const}\label{class_d_r_a_m_sim_i_i_1_1dram_channel_8601c0847f1b1710f17f7b9f6fc97574}
 
 
-read the next available \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} for this channel without actually removing it from the queue if bufferDelay is set, then only transactions that have been in the queue long enough to decode are considered 
+read the next available \doxyref{transaction}{p.}{class_d_r_a_m_sim_i_i_1_1transaction} for this channel without actually removing it from the \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue} if bufferDelay is set, then only transactions that have been in the \doxyref{queue}{p.}{class_d_r_a_m_sim_i_i_1_1queue} long enough to decode are considered 
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 

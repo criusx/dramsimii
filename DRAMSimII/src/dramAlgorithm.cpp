@@ -22,7 +22,7 @@ dramAlgorithm::dramAlgorithm(const dramSettings& settings)
 	transaction_type[3] = READ_TRANSACTION;
 
 
-	WHCC.init(settings.rankCount * settings.bankCount * 2);
+	WHCC.resize(settings.rankCount * settings.bankCount * 2);
 
 	command *temp_c;
 
@@ -222,7 +222,7 @@ dramAlgorithm::dramAlgorithm(int rank_count,
 	transaction_type[3] = READ_TRANSACTION;
 
 
-	WHCC.init(rank_count * bank_count * 2);
+	WHCC.resize(rank_count * bank_count * 2);
 
 	command *temp_c;
 
@@ -423,7 +423,7 @@ void dramAlgorithm::init(int rank_count,
 						 int bank_count,
 						 int config_type)
 {
-	WHCC.init(rank_count * bank_count * 2);
+	WHCC.resize(rank_count * bank_count * 2);
 
 	command *temp_c;
 

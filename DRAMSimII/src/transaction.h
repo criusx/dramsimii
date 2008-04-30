@@ -10,7 +10,7 @@
 
 namespace DRAMSimII
 {
-	/// a request to read or write some portion of memory, atomically
+	/// @brief a request to read or write some portion of memory, atomically
 	class transaction
 	{
 	protected:
@@ -29,15 +29,15 @@ namespace DRAMSimII
 	public:
 		
 		// accessors		
-		addresses &getAddresses() { return addr; }
-		const addresses &getAddresses() const { return addr; }
-		tick_t getEnqueueTime() const { return enqueueTime; }
-		tick_t getDecodeTime() const { return decodeTime; }
-		tick_t getCompletionTime() const { return completionTime; }
-		unsigned getLength() const { return length; }
-		transaction_type_t getType() const { return type; }
-		unsigned getEventNumber() const { return event_no; }
-		const void *getOriginalTransaction() const { return originalTransaction; }		
+		addresses &getAddresses() { return addr; }									///< get the address of this transaction
+		const addresses &getAddresses() const { return addr; }						///< get the address of this transaction
+		tick_t getEnqueueTime() const { return enqueueTime; }						///< get its enqueue time
+		tick_t getDecodeTime() const { return decodeTime; }							///< get its decode time
+		tick_t getCompletionTime() const { return completionTime; }					///< get the completion time
+		unsigned getLength() const { return length; }								///< get the number of bytes requested
+		transaction_type_t getType() const { return type; }							///< get what type of transaction this is
+		unsigned getEventNumber() const { return event_no; }						///< which event number this is
+		const void *getOriginalTransaction() const { return originalTransaction; }	///< get the external transaction that this is a representation for
 
 		// mutators
 		void setEnqueueTime(const tick_t value) { enqueueTime = value; }

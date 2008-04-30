@@ -9,6 +9,7 @@
 
 namespace DRAMSimII
 {
+	/// @brief represents a fully buffered DIMM frame, containing 3x commands or 1x command + 1x data
 	class fbdFrame
 	{
 	private:

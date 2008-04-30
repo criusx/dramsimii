@@ -9,7 +9,7 @@
 
 namespace DRAMSimII
 {
-
+	/// @brief a fully buffered DIMM channel
 	class fbdChannel: dramChannel
 	{
 	private:
