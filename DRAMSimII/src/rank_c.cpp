@@ -4,7 +4,7 @@
 using namespace DRAMSimII;
 using namespace std;
 
-rank_c::rank_c(const dramSettings& settings, const dramTimingSpecification &timingVal):
+rank_c::rank_c(const Settings& settings, const TimingSpecification &timingVal):
 timing(timingVal),
 lastRefreshTime(0),
 lastPrechargeTime(0),
@@ -17,10 +17,10 @@ rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
 banksPrecharged(settings.bankCount),
 lastRASTimes(4), // make the queue hold four (tFAW)
-bank(settings.bankCount,bank_c(settings, timingVal))
+bank(settings.bankCount,Bank(settings, timingVal))
 {}
 
-rank_c::rank_c(const rank_c &r, const dramTimingSpecification &timingVal):
+rank_c::rank_c(const rank_c &r, const TimingSpecification &timingVal):
 timing(timingVal),
 lastRefreshTime(r.lastRefreshTime),
 lastPrechargeTime(0),
@@ -33,15 +33,15 @@ rankID(r.rankID),
 lastBankID(r.lastBankID),
 lastRASTimes(r.lastRASTimes),
 banksPrecharged(r.banksPrecharged),
-bank((unsigned)r.bank.size(), bank_c(r.bank[0], timingVal))
+bank((unsigned)r.bank.size(), Bank(r.bank[0], timingVal))
 {}
 
-void rank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
+void rank_c::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	
 
 	// RAS time history queue, per rank
-	tick_t *this_ras_time = lastRASTimes.acquire_item();
+	tick *this_ras_time = lastRASTimes.acquire_item();
 
 	*this_ras_time = currentTime;
 
@@ -55,20 +55,20 @@ void rank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
 		totalPrechargeTime += currentTime - lastPrechargeTime;
 	}
 	if (banksPrecharged == bank.size())
-		for (vector<bank_c>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
+		for (vector<Bank>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
 		assert(!curBnk->isActivated());
 	banksPrecharged--;
 	assert(banksPrecharged > 0);
 	assert(banksPrecharged < bank.size());
 	// update the bank to reflect this change also
-	bank_c &currentBank = bank[currentCommand->getAddress().bank];
+	Bank &currentBank = bank[currentCommand->getAddress().bank];
 	currentBank.issueRAS(currentTime, currentCommand);
 }
 
-void rank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
+void rank_c::issuePRE(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
-	bank_c &currentBank = bank[currentCommand->getAddress().bank];
+	Bank &currentBank = bank[currentCommand->getAddress().bank];
 	currentBank.issuePRE(currentTime, currentCommand);
 
 	switch (currentCommand->getCommandType())
@@ -92,7 +92,7 @@ void rank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 	assert(banksPrecharged <= bank.size());
 }
 
-void rank_c::issueCAS(const tick_t currentTime, const command *currentCommand)
+void rank_c::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().bank].issueCAS(currentTime, currentCommand);
@@ -103,7 +103,7 @@ void rank_c::issueCAS(const tick_t currentTime, const command *currentCommand)
 	lastBankID = currentCommand->getAddress().bank;
 }
 
-void rank_c::issueCASW(const tick_t currentTime, const command *currentCommand)
+void rank_c::issueCASW(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().bank].issueCASW(currentTime, currentCommand);
@@ -114,9 +114,9 @@ void rank_c::issueCASW(const tick_t currentTime, const command *currentCommand)
 	lastBankID = currentCommand->getAddress().bank;
 }
 
-void rank_c::issueREF(const tick_t currentTime, const command *currentCommand)
+void rank_c::issueREF(const tick currentTime, const Command *currentCommand)
 {
 	// FIXME: should this not count as a RAS + PRE command to all banks?
-	for (vector<bank_c>::iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
+	for (vector<Bank>::iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
 		currentBank->issueREF(currentTime, currentCommand);
 }

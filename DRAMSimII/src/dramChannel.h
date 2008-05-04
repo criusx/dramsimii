@@ -17,75 +17,77 @@
 namespace DRAMSimII
 {
 	/// @brief represents a DRAM channel, has individual timing parameters, ranks, banks, clock, etc.
-	class dramChannel
+	class Channel
 	{
 		// members
 	protected:
-		tick_t time;									///< channel time, allow for channel concurrency			
-		tick_t lastRefreshTime;							///< tells me when last refresh was done
+		tick time;									///< channel time, allow for channel concurrency			
+		tick lastRefreshTime;							///< tells me when last refresh was done
 		unsigned lastRankID;							///< id of the last accessed rank of this channel
-		dramTimingSpecification timingSpecification;	///< the timing specs for this channel
-		queue<transaction> transactionQueue;			///< transaction queue for the channel
-		transaction **refreshCounter;					///< holds the next refresh commands
-		queue<command> historyQueue;					///< what were the last N commands to this channel?
-		queue<transaction> completionQueue;				///< completed_q, can send status back to memory controller
-		const dramSystemConfiguration& systemConfig;	///< a pointer to common system config values
-		dramStatistics *statistics;						///< backward pointer to the stats engine
-		powerConfig powerModel;							///< the power model for this channel, retains power stats
-		dramAlgorithm algorithm;						///< the algorithms used for transaction, command, etc. ordering
+		TimingSpecification timingSpecification;	///< the timing specs for this channel
+		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
+		Transaction **refreshCounter;					///< holds the next refresh commands
+		Queue<Command> historyQueue;					///< what were the last N commands to this channel?
+		Queue<Transaction> completionQueue;				///< completed_q, can send status back to memory controller
+		const SystemConfiguration& systemConfig;	///< a pointer to common system config values
+		Statistics *statistics;						///< backward pointer to the stats engine
+		PowerConfig powerModel;							///< the power model for this channel, retains power stats
+		Algorithm algorithm;						///< the algorithms used for transaction, command, etc. ordering
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
 		std::vector<rank_c> rank;						///< vector of the array of ranks
 
 	public:
 		// functions
-		bool enqueue(transaction *in);
+		bool enqueue(Transaction *in);
 		bool isFull() const { return transactionQueue.freecount() == 0; }	///< determines whether there is room for more transactions
-		void recordCommand(command *);
+		void recordCommand(Command *);
 		unsigned getChannelID() const { return channelID; }					///< return the ordinal of this channel
-		bool checkForAvailableCommandSlots(const transaction *trans) const;	
-		bool transaction2commands(transaction *);
-		command *getNextCommand();		
+		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
+		bool transaction2commands(Transaction *);
+		Command *getNextCommand();		
 		void doPowerCalculation();
-		void executeCommand(command *thisCommand,const int gap);
-		void dramChannel::executeCommand(command *thisCommand);
-		tick_t nextTransactionDecodeTime() const;
-		virtual tick_t nextTick() const;
+		void executeCommand(Command *thisCommand,const int gap);
+		void Channel::executeCommand(Command *thisCommand);
+		tick nextTransactionDecodeTime() const;
+		virtual tick nextTick() const;
 		
 
 		// functions that may differ for architectures that inherit this		
-		virtual const command *readNextCommand() const;
-		virtual const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
-		virtual int minProtocolGap(const command *thisCommand) const;
-		virtual tick_t earliestExecuteTime(const command *thisCommand) const;
+		virtual const Command *readNextCommand() const;
+		virtual const void *moveChannelToTime(const tick endTime, tick *transFinishTime);
+		virtual int minProtocolGap(const Command *thisCommand) const;
+		virtual tick earliestExecuteTime(const Command *thisCommand) const;
 
 		// accessors
-		const dramTimingSpecification& getTimingSpecification() const { return timingSpecification; }	///< returns a reference to access the timing specification
+		const TimingSpecification& getTimingSpecification() const { return timingSpecification; }	///< returns a reference to access the timing specification
 		rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }								///< get a reference to this channel's rank n
 		const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }					///< get a const reference to this channel's rank n
 		std::vector<rank_c>& getRank() { return rank; }													///< get a reference to this channel's ranks
 		const std::vector<rank_c>& getRank() const { return rank; }
-		tick_t getTime() const { return time; }
+		tick getTime() const { return time; }
 		unsigned getLastRankID() const { return lastRankID; }
-		transaction *getTransaction();			// remove and return the oldest transaction
-		const transaction *readTransaction(bool) const;	// read the oldest transaction without affecting the queue
-		const transaction *readTransactionSimple() const { return transactionQueue.front(); }
-		transaction *getRefresh();
-		const transaction *readRefresh() const;
-		transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }
+		Transaction *getTransaction();			// remove and return the oldest transaction
+		const Transaction *readTransaction(bool) const;	// read the oldest transaction without affecting the queue
+		const Transaction *readTransactionSimple() const { return transactionQueue.front(); }
+		Transaction *getRefresh();
+		const Transaction *readRefresh() const;
+		Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }
 		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }
 		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
 
 		// mutators
-		void setStatistics(dramStatistics *value) { statistics = value; }		///< set the statistics pointer to a dramStatistics object
-		void setTime(tick_t new_time) { time = new_time; }						///< update the time for this channel
+		void setStatistics(Statistics *value) { statistics = value; }		///< set the statistics pointer to a dramStatistics object
+		void setTime(tick new_time) { time = new_time; }						///< update the time for this channel
 		void setChannelID(const unsigned value) { channelID = value; }			///< set the channel ordinal
-		enum transaction_type_t setReadWriteType(const int,const int) const;	///< determine whether a read or write transaction should be generated
+		TransactionType setReadWriteType(const int,const int) const;	///< determine whether a read or write transaction should be generated
 
 		// constructors
-		explicit dramChannel();	
-		explicit dramChannel(const dramSettings& settings, const dramSystemConfiguration &sysConfig);
-		dramChannel(const dramChannel &);
+		explicit Channel();	
+		explicit Channel(const Settings& settings, const SystemConfiguration &sysConfig);
+		Channel(const Channel&);
+
+		Channel& operator =(const Channel& rs);
 	};
 }
 

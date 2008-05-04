@@ -52,7 +52,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	}
 	//////////////////////////////////////////////////////////////////////////
 
-	tick_t currentMemCycle = curTick/memory->getCpuRatio();
+	tick currentMemCycle = curTick/memory->getCpuRatio();
 
 	if (currentMemCycle >= memory->nextStats)
 	{		
@@ -133,7 +133,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		else if (pkt->isWrite())
 			packetType = 2;
 
-		transaction *trans = new transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
+		Transaction *trans = new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
 		assert((pkt->isRead() && pkt->needsResponse()) || (!pkt->isRead() && !pkt->needsResponse()));
 
@@ -151,7 +151,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		if (!memory->ds->enqueue(trans))
 		{
 #ifdef M5DEBUG						
-			static tick_t numberOfDelays = 0;
+			static tick numberOfDelays = 0;
 			if (++numberOfDelays % 100000 == 0)
 				cerr << "\r" << numberOfDelays;
 #endif
@@ -182,8 +182,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			if (memory->tickEvent.scheduled())
 				memory->tickEvent.deschedule();
 
-			tick_t next = min(memory->nextStats,memory->ds->nextTick());
-			assert(next < TICK_T_MAX);
+			tick next = min(memory->nextStats,memory->ds->nextTick());
+			assert(next < TICK_MAX);
 
 
 			M5_TIMING_LOG("schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]")
@@ -204,7 +204,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 //////////////////////////////////////////////////////////////////////
 void M5dramSystem::TickEvent::process()
 {	
-	tick_t currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
+	tick currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
 
 	if (currentMemCycle >= memory->nextStats)
 	{		
@@ -225,8 +225,8 @@ void M5dramSystem::TickEvent::process()
 		memory->tickEvent.deschedule();
 
 	// determine the next time to wake up
-	tick_t next = min(memory->nextStats,memory->ds->nextTick());	
-	assert(next < TICK_T_MAX);
+	tick next = min(memory->nextStats,memory->ds->nextTick());	
+	assert(next < TICK_MAX);
 
 	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]")
 
@@ -243,9 +243,9 @@ void M5dramSystem::TickEvent::process()
 /// @author Joe Gross
 /// @param now the current time
 //////////////////////////////////////////////////////////////////////
-void M5dramSystem::moveToTime(const tick_t now)
+void M5dramSystem::moveToTime(const tick now)
 {
-	tick_t finishTime;	
+	tick finishTime;	
 
 	Packet *packet;
 	// if transactions are returned, then send them back,
@@ -307,13 +307,13 @@ needRetry(false)
 	settingsMap[0] = "--settings";
 	settingsMap[1] = p->settingsFile.c_str();
 
-	dramSettings settings(2,settingsMap);
+	Settings settings(2,settingsMap);
 
 	settings.inFile = "";
 
 	// if this is a normal system or a fbd system
 	if (settings.systemType == BASELINE_CONFIG)
-		ds = new dramSystem(settings);
+		ds = new System(settings);
 	else
 		ds = new fbdSystem(settings);	
 

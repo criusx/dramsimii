@@ -12,11 +12,11 @@
 namespace DRAMSimII
 {
 	/// @brief Algorithm specific data structures should go in here.
-	class dramAlgorithm
+	class Algorithm
 	{
 
 	protected:
-		queue<command> WHCC; /// Wang Hop Command Chain 
+		Queue<Command> WHCC; /// Wang Hop Command Chain 
 		int WHCC_offset[2];
 		int transaction_type[4];
 		int rank_id[2];
@@ -25,13 +25,13 @@ namespace DRAMSimII
 
 	public:
 		// constructors
-		dramAlgorithm(int, int, int);
-		dramAlgorithm(const dramAlgorithm &);
-		dramAlgorithm(const dramSettings& settings);
+		Algorithm(int, int, int);
+		Algorithm(const Algorithm&);
+		Algorithm(const Settings& settings);
 
 		// functions
 		void init(int, int, int); 
-		queue<command> &getWHCC() { return WHCC; }
+		Queue<Command> &getWHCC() { return WHCC; }
 		int *WHCCOffset() { return WHCC_offset; }
 		int *getTransactionType() { return transaction_type; }
 	};

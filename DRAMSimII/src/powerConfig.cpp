@@ -8,7 +8,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
-powerConfig::powerConfig(const dramSettings& settings):
+PowerConfig::PowerConfig(const Settings& settings):
 VDD(settings.VDD),
 VDDmax(settings.maxVCC),
 IDD0(settings.IDD0),
@@ -38,7 +38,7 @@ tRC(settings.tRC),
 lastCalculation(0)
 {}
 
-powerConfig::~powerConfig()
+PowerConfig::~PowerConfig()
 {}
 
 

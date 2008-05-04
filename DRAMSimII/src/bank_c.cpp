@@ -3,7 +3,7 @@
 using namespace DRAMSimII;
 using namespace std;
 
-bank_c::bank_c(const dramSettings& settings, const dramTimingSpecification &timingVal):
+Bank::Bank(const Settings& settings, const TimingSpecification &timingVal):
 timing(timingVal),
 perBankQueue(settings.perBankQueueDepth),
 lastRASTime(-100),
@@ -23,7 +23,7 @@ CASWCount(0),
 totalCASWCount(0)
 {}
 
-bank_c::bank_c(const bank_c &b, const dramTimingSpecification &timingVal):
+Bank::Bank(const Bank &b, const TimingSpecification &timingVal):
 timing(timingVal),
 perBankQueue(b.perBankQueue),
 lastRASTime(b.lastRASTime),
@@ -44,7 +44,7 @@ totalCASWCount(b.totalCASWCount)
 {}
 
 /// this logically issues a RAS command and updates all variables to reflect this
-void bank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
+void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	assert(activated == false);
 	activated = true;
@@ -53,7 +53,7 @@ void bank_c::issueRAS(const tick_t currentTime, const command *currentCommand)
 	RASCount++;
 }
 
-void bank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
+void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 {
 	switch (currentCommand->getCommandType())
 	{
@@ -74,21 +74,21 @@ void bank_c::issuePRE(const tick_t currentTime, const command *currentCommand)
 	activated = false;
 }
 
-void bank_c::issueCAS(const tick_t currentTime, const command *currentCommand)
+void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	lastCASTime = currentTime;
 	lastCASLength = currentCommand->getLength();
 	CASCount++;
 }
 
-void bank_c::issueCASW(const tick_t currentTime, const command *currentCommand)
+void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
 	lastCASWTime = currentTime;
 	lastCASWLength = currentCommand->getLength();
 	CASWCount++;
 }
 
-void bank_c::issueREF(const tick_t currentTime, const command *currentCommand)
+void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 {
 
 }

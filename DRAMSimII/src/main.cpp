@@ -13,9 +13,9 @@ using namespace DRAMSimII;
 
 int main(int argc,const char **argv, char *envp[])
 {
-	map<enum file_io_token_t,string> parameters;
+	map<enum FileIOToken,string> parameters;
 
-	const dramSettings settings(argc, argv);
+	const Settings settings(argc, argv);
 	//create_input_map(argc, argv, parameters);
 	//simulation_parameters_t	*simulation_parameters;
 	//dram_statistics_t	*dram_stats;
@@ -27,7 +27,7 @@ int main(int argc,const char **argv, char *envp[])
 	}
 	else
 	{
-		dramSystem ds(settings); // combines read_command line and other inits
+		System ds(settings); // combines read_command line and other inits
 		//ds.run_simulations2();
 		ds.runSimulations3();
 		timingOutStream << ds << endl;

@@ -13,11 +13,11 @@ namespace DRAMSimII
 	class event
 	{
 	private:
-		static queue<event> freeEventPool;
+		static Queue<event> freeEventPool;
 
 	public:
 		int event_type; // what kind of event is this?
-		tick_t time;
+		tick time;
 		void *event_ptr; // point to a transaction or command to be enqueued or executed
 
 		event();

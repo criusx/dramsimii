@@ -14,11 +14,11 @@ using namespace DRAMSimII;
 /// </summary>
 /// <param name="this_command">The command to execute against the current state</param>
 /// <param name="gap">The minimum amount of time to delay before executing the command</param>
-void dramChannel::executeCommand(command *thisCommand,const int gap)
+void Channel::executeCommand(Command *thisCommand,const int gap)
 {
 	rank_c &currentRank = rank[thisCommand->getAddress().rank];
 
-	bank_c &currentBank = currentRank.bank[thisCommand->getAddress().bank];
+	Bank &currentBank = currentRank.bank[thisCommand->getAddress().bank];
 
 	currentRank.setLastBankID(thisCommand->getAddress().bank);
 
@@ -127,11 +127,11 @@ void dramChannel::executeCommand(command *thisCommand,const int gap)
 }
 
 
-void dramChannel::executeCommand(command *thisCommand)
+void Channel::executeCommand(Command *thisCommand)
 {
 	rank_c &currentRank = rank[thisCommand->getAddress().rank];
 
-	bank_c &currentBank = currentRank.bank[thisCommand->getAddress().bank];
+	Bank &currentBank = currentRank.bank[thisCommand->getAddress().bank];
 
 	currentRank.setLastBankID(thisCommand->getAddress().bank);
 

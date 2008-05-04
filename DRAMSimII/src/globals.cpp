@@ -25,7 +25,7 @@ boost::iostreams::filtering_ostream DRAMSimII::statsOutStream;
 
 double DRAMSimII::ascii2multiplier(const string &input)
 {
-	switch(dramSettings::dramTokenizer(input))
+	switch(Settings::dramTokenizer(input))
 	{
 	case PICOSECOND:
 		return 0.001;

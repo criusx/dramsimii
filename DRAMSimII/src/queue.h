@@ -10,7 +10,7 @@ namespace DRAMSimII
 	/// @brief the queue template class, a circular queue
 	/// @detail push/pop are O(1) operations, while random insertions are O(n) operations
 	template <class T>
-	class queue
+	class Queue
 	{
 	private:
 		unsigned depth;	///< how big is this queue
@@ -20,12 +20,12 @@ namespace DRAMSimII
 		T **entry;		///< the circular queue
 
 	public:
-		explicit queue(): depth(0),count(0), head(0), tail(0), entry(NULL)
+		explicit Queue(): depth(0),count(0), head(0), tail(0), entry(NULL)
 		{}
 
 		/// @brief copy constructor
 		/// @detail copy the existing queue, making copies of each element
-		explicit queue(const queue<T>& a):
+		explicit Queue(const Queue<T>& a):
 			depth(a.depth),
 			count(0),
 			head(0),
@@ -44,7 +44,7 @@ namespace DRAMSimII
 		/// @detail create a queue of a certain size and optionally fill it with empty elements
 		/// @param size the depth of the circular queue
 		/// @preallocate whether or not to fill the queue with blank elements, defaults to false
-		explicit queue(const unsigned size, const bool preallocate = false):
+		explicit Queue(const unsigned size, const bool preallocate = false):
 		depth(size),
 			count(0),
 			head(0),
@@ -64,7 +64,7 @@ namespace DRAMSimII
 
 		/// @brief destructor
 		/// @detail remove the elements and delete them before removing the rest of the queue
-		~queue()
+		~Queue()
 		{
 			while (count > 0)
 			{
@@ -131,7 +131,11 @@ namespace DRAMSimII
 		T *acquire_item()
 		{
 			if (count == 0)
-				return ::new T;
+			{
+				T* item = ::new T;
+				assert(item != NULL);
+				return item;
+			}
 			else
 				return pop();
 		}
@@ -183,7 +187,7 @@ namespace DRAMSimII
 		/// @brief get a pointer to the item at this offset without removing it
 		T *read(const unsigned offset) const
 		{
-			if((offset >= count) || (offset < 0))
+			if ((offset >= count) || (offset < 0))
 				return NULL;
 			else
 				return entry[(head + offset) % depth];
@@ -247,7 +251,7 @@ namespace DRAMSimII
 		
 		/// @brief assignment operator overload
 		/// @detail moves all the objects from the rhs object to the lhs object
-		queue<T> &operator=(const queue<T> &right)
+		Queue<T> &operator=(const Queue<T> &right)
 		{
 			if (&right == this)
 				return *this;

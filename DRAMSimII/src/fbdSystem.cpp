@@ -2,7 +2,7 @@
 
 using namespace DRAMSimII;
 
-fbdSystem::fbdSystem(const dramSettings& settings):
-dramSystem(settings), // inherited class
+fbdSystem::fbdSystem(const Settings& settings):
+System(settings), // inherited class
 channel(systemConfig.getChannelCount(),fbdChannel(settings, systemConfig))
 {}

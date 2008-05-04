@@ -10,7 +10,7 @@
 namespace DRAMSimII
 {
 	/// @brief stores the settings to be used to initialize a dramSystem object
-	class dramSettings
+	class Settings
 	{
 	public:
 		//////////////////////////////////////////////////////////////////////////
@@ -19,16 +19,16 @@ namespace DRAMSimII
 		//////////////////////////////////////////////////////////////////////////	
 		// command data
 		std::string inFile;
-		input_type_t inFileType;
+		InputType inFileType;
 		std::string outFile;
-		output_file_t outFileType;
+		OutputFileType outFileType;
 		unsigned requestCount;
-		refresh_policy_t refreshPolicy;
-		dram_type_t dramType;
+		RefreshPolicy refreshPolicy;
+		DRAMType dramType;
 		unsigned dataRate; // frequency
-		command_ordering_algorithm_t commandOrderingAlgorithm;
-		transaction_ordering_algorithm_t transactionOrderingAlgorithm;
-		system_configuration_type_t systemType;
+		CommandOrderingAlgorithm commandOrderingAlgorithm;
+		TransactionOrderingAlgorithm transactionOrderingAlgorithm;
+		SystemConfigurationType systemType;
 		unsigned perBankQueueDepth;
 		unsigned columnSize;
 		unsigned rowSize;
@@ -43,8 +43,8 @@ namespace DRAMSimII
 		unsigned refreshQueueDepth;
 		unsigned refreshTime;
 		unsigned seniorityAgeLimit;
-		row_buffer_policy_t rowBufferManagementPolicy;
-		address_mapping_scheme_t addressMappingScheme;
+		RowBufferPolicy rowBufferManagementPolicy;
+		AddressMappingScheme addressMappingScheme;
 		bool postedCAS;
 		bool readWriteGrouping;
 		bool autoPrecharge;
@@ -99,7 +99,7 @@ namespace DRAMSimII
 		unsigned IDD5;
 
 		// converts a string to a file_io_token
-		static file_io_token_t dramTokenizer(const std::string &input)
+		static FileIOToken dramTokenizer(const std::string &input)
 		{
 			if (input.length() == 0)
 				return unknown_token;
@@ -324,7 +324,7 @@ namespace DRAMSimII
 		}
 
 		
-		static file_io_token_t fileIOToken(const unsigned char *input)
+		static FileIOToken fileIOToken(const unsigned char *input)
 		{
 			const std::string inputS((const char *)input);
 			return dramTokenizer(inputS);
@@ -332,7 +332,7 @@ namespace DRAMSimII
 
 
 		// create a dramSettings from command line arguments
-		explicit dramSettings(const int, const char **);
+		explicit Settings(const int, const char **);
 	};
 }
 #endif

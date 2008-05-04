@@ -20,8 +20,8 @@ To do list:
 
 #include <limits>
 
-#define tick_t long long
-#define TICK_T_MAX LLONG_MAX
+#define tick long long
+#define TICK_MAX LLONG_MAX
 
 #include <iostream>
 #include <sstream>
@@ -71,20 +71,20 @@ To do list:
 namespace DRAMSimII
 {
 	// class forward declarations
-	class command;
-	class addresses;
-	class transaction;
-	class dramSystem;
-	class dramChannel;
+	class Command;
+	class Address;
+	class Transaction;
+	class System;
+	class Channel;
 	class fbdFrame;
 
 	// overloaded insertion operator functions for printing various aspects of the dram system
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::command_type_t &);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::command &);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::addresses &);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::transaction *);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::address_mapping_scheme_t &);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::transaction_type_t );
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::CommandType &);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::Command &);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::Address &);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::Transaction *);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::AddressMappingScheme &);
+	std::ostream &operator<<(std::ostream &, const DRAMSimII::TransactionType );
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::fbdFrame &);	
 
 	// will compute log2(n)=x for any n, where n=2**x

@@ -28,33 +28,33 @@ namespace DRAMSimII
 	/// @details contains a representation for a DRAM system, with the memory controller(s), channels, ranks, banks
 	/// statistics, ability to read input streams, handle asynchronous requests, return requests at certain times
 	/// @author Joe Gross
-	class dramSystem
+	class System
 	{
 	protected:
 		// members
-		dramSystemConfiguration systemConfig;	///< stores the parameters for the DRAM system, including channel/rank/bank/row counts
-		std::vector<dramChannel> channel;		///< represents the independent channels
+		SystemConfiguration systemConfig;	///< stores the parameters for the DRAM system, including channel/rank/bank/row counts
+		std::vector<Channel> channel;		///< represents the independent channels
 		simulationParameters simParameters;		///< has all the necessary parameters for the simulation run
-		dramStatistics statistics;				///< keeps running statistics about the simulation
-		inputStream input_stream;				///< provides an interface to the input trace for the simulation
+		Statistics statistics;				///< keeps running statistics about the simulation
+		InputStream input_stream;				///< provides an interface to the input trace for the simulation
 
-		tick_t time;							///< master clock, usually set to the oldest channel's time
+		tick time;							///< master clock, usually set to the oldest channel's time
 
 		//functions
 		unsigned findOldestChannel() const;	
 		void updateSystemTime();
-		transaction *getNextIncomingTransaction();
-		transaction *getNextRandomRequest();
-		bool convertAddress(addresses &) const;
+		Transaction *getNextIncomingTransaction();
+		Transaction *getNextRandomRequest();
+		bool convertAddress(Address &) const;
 
 	public:		
 		
 		// functions
-		const void *moveAllChannelsToTime(const tick_t endTime, tick_t *transFinishTime);
-		bool enqueue(transaction* trans);
-		void enqueueTimeShift(transaction* trans);
-		input_status_t waitForTransactionToFinish(transaction *trans);
-		virtual tick_t nextTick() const;
+		const void *moveAllChannelsToTime(const tick endTime, tick *transFinishTime);
+		bool enqueue(Transaction* trans);
+		void enqueueTimeShift(Transaction* trans);
+		InputStatus waitForTransactionToFinish(Transaction *trans);
+		virtual tick nextTick() const;
 		virtual void doPowerCalculation();
 		virtual void printStatistics();
 		//void runSimulations();
@@ -66,10 +66,10 @@ namespace DRAMSimII
 		double Frequency() const { return systemConfig.Frequency(); }	///< accessor to get the frequency of the DRAM system
 
 		// constructors	
-		explicit dramSystem(const dramSettings& settings);
+		explicit System(const Settings& settings);
 		
 		// friends
-		friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
+		friend std::ostream &operator<<(std::ostream &, const System &);	
 	};
 }
 #endif

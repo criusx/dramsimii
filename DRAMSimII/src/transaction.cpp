@@ -6,10 +6,10 @@ using namespace std;
 using namespace DRAMSimII;
 
 // initialize the static members
-queue<transaction> transaction::freeTransactionPool(4*COMMAND_QUEUE_SIZE,true);
+Queue<Transaction> Transaction::freeTransactionPool(4*COMMAND_QUEUE_SIZE,true);
 
 /// constructor to make a transaction with no values set
-transaction::transaction():
+Transaction::Transaction():
 event_no(0),
 type(CONTROL_TRANSACTION),
 status(0),
@@ -22,7 +22,7 @@ originalTransaction(0)
 {}
 
 /// copy constructor to duplicate a transaction
-transaction::transaction(const transaction *rs):
+Transaction::Transaction(const Transaction *rs):
 event_no(rs->event_no),
 type(rs->type),
 status(rs->status),
@@ -35,7 +35,7 @@ originalTransaction(rs->originalTransaction)
 {}
 
 /// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
-transaction::transaction(const int attribute,const tick_t enqueueTime,const int Size,const unsigned long long address, const void *originalTrans):
+Transaction::Transaction(const int attribute,const tick enqueueTime,const int Size,const unsigned long long address, const void *originalTrans):
 event_no(0),
 status(0),
 length(Size),
@@ -56,23 +56,23 @@ originalTransaction(originalTrans)
 }
 
 /// overrides the new operator to draw from the transaction pool instead
-void * transaction::operator new(size_t size)
+void * Transaction::operator new(size_t size)
 {
-	assert(size == sizeof(transaction));
-	transaction *newTrans = freeTransactionPool.acquire_item();
+	assert(size == sizeof(Transaction));
+	Transaction *newTrans = freeTransactionPool.acquire_item();
 	newTrans->getAddresses().physicalAddress = ULLONG_MAX;
 	return newTrans;
 }
 
 /// override the delete operator to send transactions back to the pool
-void transaction::operator delete(void *mem)
+void Transaction::operator delete(void *mem)
 {
-	transaction *trans = static_cast<transaction*>(mem);
+	Transaction *trans = static_cast<Transaction*>(mem);
 	freeTransactionPool.release_item(trans);
 }
 
 /// prints the key attributes of a transaction
-std::ostream &DRAMSimII::operator<<(std::ostream &os, const transaction *this_t)
+std::ostream &DRAMSimII::operator<<(std::ostream &os, const Transaction *this_t)
 {	
 	os << "Q[" << std::setw(8) << std::dec << this_t->getEnqueueTime() << "] ";
 	os << "D[" << std::setw(8) << std::dec << this_t->getDecodeTime() << "] ";
@@ -86,7 +86,7 @@ std::ostream &DRAMSimII::operator<<(std::ostream &os, const transaction *this_t)
 }
 
 /// decodes and prints the transaction type
-ostream &DRAMSimII::operator<<(ostream &os, const transaction_type_t type)
+ostream &DRAMSimII::operator<<(ostream &os, const TransactionType type)
 {
 	switch (type)
 	{

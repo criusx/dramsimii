@@ -44,7 +44,7 @@
 				Optimization="0"
 				FavorSizeOrSpeed="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -485,6 +485,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\SSTdramSystem.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\transaction.cpp"
 				>
 			</File>
@@ -499,11 +503,107 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\src\bank_c.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\busEvent.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\command.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dramAlgorithm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dramChannel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dramSettings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dramStatistics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dramSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dramSystemConfiguration.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dramTimingSpecification.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\enumTypes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\event.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\fbdAMB.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\fbdChannel.h"
+				>
+			</File>
+			<File
 				RelativePath=".\fbdFrame.h"
 				>
 			</File>
 			<File
+				RelativePath=".\src\fbdFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\fbdSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\globals.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\InputStream.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\m5-dramSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\powerConfig.h"
+				>
+			</File>
+			<File
 				RelativePath=".\powerConfig.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\queue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\rank_c.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\simulationParameters.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\SSTdramSystem.h"
 				>
 			</File>
 		</Filter>
@@ -523,5 +623,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="Notes"
+			Value="&lt;Notes Project=&quot;65a5b23b-7f7d-4848-82be-b9155e072660&quot; xmlns=&quot;clr-namespace:StickyNotes.Model;assembly=StickyNotes&quot;&gt;&lt;Notes.StickyNotes&gt;&lt;Note FilePath=&quot;&quot; Content=&quot;&quot; Date=&quot;2008-05-01T19:58:01.157-04:00&quot; /&gt;&lt;/Notes.StickyNotes&gt;&lt;/Notes&gt;"
+		/>
 	</Globals>
 </VisualStudioProject>

@@ -13,24 +13,24 @@
 using namespace std;
 using namespace DRAMSimII;
 
-inputStream::inputStream(const dramSettings& settings):
+InputStream::InputStream(const Settings& settings):
 type(settings.inFileType),
-chan_locality(1 / static_cast<double>(settings.channelCount)),
-rank_locality(1 / settings.rankCount),
-bank_locality(1 / settings.bankCount),
+channelLocality(1 / static_cast<double>(settings.channelCount)),
+rankLocality(1 / settings.rankCount),
+BankLocality(1 / settings.bankCount),
 time(0),
-row_locality(0.2f),
-read_percentage(settings.readPercentage),
-short_burst_ratio(settings.shortBurstRatio),
-arrival_thresh_hold(0.0F),
+rowLocality(0.2f),
+readPercentage(settings.readPercentage),
+shortBurstRatio(settings.shortBurstRatio),
+arrivalThreshold(0.0F),
 cpuToMemoryRatio(settings.cpuToMemoryClockRatio),
-average_interarrival_cycle_count(10),
-interarrival_distribution_model(UNIFORM_DISTRIBUTION)
+averageInterarrivalCycleCount(10),
+interarrivalDistributionModel(UNIFORM_DISTRIBUTION)
 {
-	if (interarrival_distribution_model == UNIFORM_DISTRIBUTION)
-		arrival_thresh_hold = 1.0 - (1.0 / (double)average_interarrival_cycle_count);
-	else if (interarrival_distribution_model == GAUSSIAN_DISTRIBUTION)
-		arrival_thresh_hold = 1.0 - (1.0 / box_muller((double)average_interarrival_cycle_count, 10));
+	if (interarrivalDistributionModel == UNIFORM_DISTRIBUTION)
+		arrivalThreshold = 1.0 - (1.0 / (double)averageInterarrivalCycleCount);
+	else if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
+		arrivalThreshold = 1.0 - (1.0 / boxMuller((double)averageInterarrivalCycleCount, 10));
 
 	if (settings.inFile.length() > 2)
 	{
@@ -51,7 +51,7 @@ interarrival_distribution_model(UNIFORM_DISTRIBUTION)
 /// @param xm the average inter arrival cycle count
 /// @return the time until the next transaction arrives
 //////////////////////////////////////////////////////////////////////
-float inputStream::Poisson (float xm) const
+float InputStream::Poisson (float xm) const
 {	
 	static float sq, alxm, g, oldm = -1.0F;
 	float em, t, y;
@@ -80,7 +80,7 @@ float inputStream::Poisson (float xm) const
 			oldm = xm;
 			sq = sqrt(2.0 * xm);
 			alxm = log(xm);
-			g = xm * alxm-gammaln(xm + 1.0);
+			g = xm * alxm-gammaLn(xm + 1.0);
 		}
 		unsigned int j;
 		do
@@ -93,32 +93,32 @@ float inputStream::Poisson (float xm) const
 
 			} while (em < 0.0);
 			em = floor(em);
-			t = 0.9 * (1.0 + y*y) * exp(em * alxm - gammaln(em+1.0) -g);
+			t = 0.9 * (1.0 + y*y) * exp(em * alxm - gammaLn(em+1.0) -g);
 			rand_s(&j);
 		} while ((float)j/(float)UINT_MAX > t);
 	}
 	return em;
 }
 
-float inputStream::gammaln(const float xx) const
+float InputStream::gammaLn(const float xx) const
 {
-	static float cof[6] = 
+	static float coefficients[6] = 
 	{76.18009172947146F, -86.50532032941677F,
 	24.01409824083091F, -1.231739572450155F,
 	0.1208650973866179e-2F, -0.5395239384953e-5F};
 
 	float y = xx;
 	float x = xx;
-	float tmp = x + 5.5;
-	tmp -= (x+0.5) * log(tmp);
+	float tmp = x + 5.5F;
+	tmp -= (x+0.5F) * log(tmp);
 	float ser = 1.000000000190015F;
-	for (int j=0; j<=5; j++)
-		ser += cof[j]/++y;
+	for (unsigned j = 0; j <= 5; j++)
+		ser += coefficients[j]/++y;
 	return -tmp + log(2.5066282746310005F * ser/x);
 
 }
 
-float inputStream::box_muller(const float m, const float s) const
+float InputStream::boxMuller(const float m, const float s) const
 {
 	float w, y1;
 	static float y2;
@@ -151,9 +151,9 @@ float inputStream::box_muller(const float m, const float s) const
 }
 
 
-bool inputStream::getNextBusEvent(busEvent &this_e)
+bool InputStream::getNextBusEvent(busEvent &this_e)
 {	
-	enum file_io_token_t control;	
+	enum FileIOToken control;	
 	string input;	
 
 	switch (type)
@@ -161,12 +161,12 @@ bool inputStream::getNextBusEvent(busEvent &this_e)
 	case K6_TRACE:	
 		{
 			//int base_control;
-			enum transaction_type_t attributes;
+			enum TransactionType attributes;
 			int burst_length = 4; // Socket 7 cachelines are 32 byte long, burst of 4
 			int burst_count;
 			bool bursting = true;
 			//double multiplier;
-			tick_t timestamp = TICK_T_MAX;
+			tick timestamp = TICK_MAX;
 			unsigned address = UINT_MAX;
 
 			while((bursting == true) && trace_file.good())
@@ -179,7 +179,7 @@ bool inputStream::getNextBusEvent(busEvent &this_e)
 					return false;
 				}
 
-				control = dramSettings::dramTokenizer(input);
+				control = Settings::dramTokenizer(input);
 
 				if(control == unknown_token)
 				{
@@ -206,7 +206,7 @@ bool inputStream::getNextBusEvent(busEvent &this_e)
 					(((this_e.address.physicalAddress ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
 				{
 					bursting = false;
-					timestamp = static_cast<tick_t>(static_cast<double>(timestamp) * ascii2multiplier(input));
+					timestamp = static_cast<tick>(static_cast<double>(timestamp) * ascii2multiplier(input));
 					this_e.address.physicalAddress = 0x3FFFFFFF & address; // mask out top addr bit
 					this_e.attributes = CONTROL_TRANSACTION;
 					this_e.timestamp = timestamp;
@@ -233,7 +233,7 @@ bool inputStream::getNextBusEvent(busEvent &this_e)
 				return false;
 			}
 
-			control = dramSettings::dramTokenizer(input);
+			control = Settings::dramTokenizer(input);
 
 			switch (control)
 			{
@@ -267,7 +267,7 @@ bool inputStream::getNextBusEvent(busEvent &this_e)
 				return false;
 			}
 
-			control = dramSettings::dramTokenizer(input);
+			control = Settings::dramTokenizer(input);
 
 			switch (control)
 			{
@@ -300,7 +300,7 @@ bool inputStream::getNextBusEvent(busEvent &this_e)
 	return true;
 }
 
-enum input_type_t inputStream::toInputToken(const string &input) const
+enum InputType InputStream::toInputToken(const string &input) const
 {
 	if (input == "k6" || input == "K6")
 		return K6_TRACE;

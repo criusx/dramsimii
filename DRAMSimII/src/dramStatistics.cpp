@@ -6,28 +6,28 @@
 using namespace DRAMSimII;
 using namespace std;
 
-dramStatistics::dramStatistics(const dramSettings& settings):
-valid_transaction_count(0),
-start_no(0),
-end_no(0),
-bo8_count(0),
-bo4_count(0),
+Statistics::Statistics(const Settings& settings):
+validTransactionCount(0),
+startNumber(0),
+endNumber(0),
+burstOf8Count(0),
+burstOf4Count(0),
 columnDepth(log2(settings.columnSize)),
 commandDelay(),
 commandExceution()
 {}
 
-void dramStatistics::collectTransactionStats(const transaction *currentTransaction)
+void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 {
 	if (currentTransaction->getType() != AUTO_REFRESH_TRANSACTION)
 	{
 		if (currentTransaction->getLength() == 8)
 		{
-			++bo8_count;
+			++burstOf8Count;
 		}
 		else
 		{
-			++bo4_count;
+			++burstOf4Count;
 		}
 		transactionExecution[currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime()]++;
 		transactionDecodeDelay[currentTransaction->getDecodeTime() - currentTransaction->getEnqueueTime()]++;
@@ -37,7 +37,7 @@ void dramStatistics::collectTransactionStats(const transaction *currentTransacti
 	}
 }
 
-void dramStatistics::collectCommandStats(const command *currentCommand)
+void Statistics::collectCommandStats(const Command *currentCommand)
 {
 	if (currentCommand->getCommandType() != REFRESH_ALL_COMMAND)
 	{
@@ -47,10 +47,10 @@ void dramStatistics::collectCommandStats(const command *currentCommand)
 	}
 }
 
-ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
+ostream &DRAMSimII::operator<<(ostream &os, const Statistics &this_a)
 {
 	//os << "RR[" << setw(6) << setprecision(6) << (double)this_a.end_time/max(1,this_a.bo4_count + this_a.bo8_count) << "] ";
-	//os << "BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick_t)1) << "]" << endl;
+	//os << "BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick)1) << "]" << endl;
 	
 	os << "----Delay----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionDecodeDelay.begin(); currentValue != this_a.transactionDecodeDelay.end(); currentValue++)
@@ -73,7 +73,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramStatistics &this_a)
 	return os;
 }
 
-void dramStatistics::clear()
+void Statistics::clear()
 {
 	commandTurnaround.clear();
 	commandDelay.clear();	

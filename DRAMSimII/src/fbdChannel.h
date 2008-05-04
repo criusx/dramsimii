@@ -10,26 +10,28 @@
 namespace DRAMSimII
 {
 	/// @brief a fully buffered DIMM channel
-	class fbdChannel: dramChannel
+	class fbdChannel: Channel
 	{
 	private:
 		//std::vector<fbdChannel> ranks;
-		queue<fbdFrame> frameQueue;	///< the queue of upcoming fbd frames
+		Queue<fbdFrame> frameQueue;	///< the queue of upcoming fbd frames
 	public:
-		explicit fbdChannel(const dramSettings& settings, const dramSystemConfiguration &sysConfig);
+		explicit fbdChannel(const Settings& settings, const SystemConfiguration &sysConfig);
 
 	protected:
 		// overridden virtual functions
-		int minProtocolGap(const command *this_c) const;
-		const void *moveChannelToTime(const tick_t endTime, tick_t *transFinishTime);
-		const command *readNextCommand(const command *slotAFrame, const command *slotBFrame) const;
-		command *getNextCommand(const command *slotAFrame, const command *slotBFrame);
+		int minProtocolGap(const Command *this_c) const;
+		const void *moveChannelToTime(const tick endTime, tick *transFinishTime);
+		const Command *readNextCommand(const Command *slotAFrame, const Command *slotBFrame) const;
+		Command *getNextCommand(const Command *slotAFrame, const Command *slotBFrame);
 		fbdFrame *getNextFrame();
-		tick_t nextFrameExecuteTime() const;
+		tick nextFrameExecuteTime() const;
 
 		// functions
-		bool makeFrame(const tick_t currentTime);
-		bool executeFrame(const tick_t currentTime);
+		bool makeFrame(const tick currentTime);
+		bool executeFrame(const tick currentTime);
+
+		fbdChannel& operator=(const fbdChannel& rs);
 	};
 }
 

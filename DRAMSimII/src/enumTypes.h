@@ -5,7 +5,7 @@
 namespace DRAMSimII
 {
 	// This section defines the refresh policy
-	enum refresh_policy_t
+	enum RefreshPolicy
 	{
 		NO_REFRESH, 
 		BANK_CONCURRENT, 
@@ -13,7 +13,7 @@ namespace DRAMSimII
 		ONE_CHANNEL_ALL_RANK_ALL_BANK
 	};
 
-	enum row_buffer_policy_t
+	enum RowBufferPolicy
 	{
 		AUTO_PAGE, // same as OPEN PAGE, but close page after timer expires
 		OPEN_PAGE, // keep page open indefinitely
@@ -23,7 +23,7 @@ namespace DRAMSimII
 	// This section defines the address mapping scheme
 	// The scheme dictates how a memory address is converted
 	// to rank, bank, row, col, byte
-	enum address_mapping_scheme_t
+	enum AddressMappingScheme
 	{
 		BURGER_BASE_MAP,
 		CLOSE_PAGE_BASELINE,
@@ -34,14 +34,14 @@ namespace DRAMSimII
 		SDRAM_HIPERF_MAP
 	};
 
-	enum system_configuration_type_t
+	enum SystemConfigurationType
 	{
 		BASELINE_CONFIG, // direct control. 1 or 2 ranks in DDR3
 		FBD_CONFIG // fully buffered DIMMS
 	};
 
 	// we can define various algorithms previously explored by Rixner, McKee et al. here.
-	enum command_ordering_algorithm_t
+	enum CommandOrderingAlgorithm
 	{
 		STRICT_ORDER, // maintains original ordering
 		RANK_ROUND_ROBIN, // alternate ranks 
@@ -50,7 +50,7 @@ namespace DRAMSimII
 		WANG_RANK_HOP // Patented stuff. davewang202@yahoo.com ;)
 	};
 
-	enum output_file_t
+	enum OutputFileType
 	{
 		COUT, ///< print to stdout
 		GZ, ///< print to a gzip file
@@ -60,13 +60,13 @@ namespace DRAMSimII
 	};
 
 
-	enum transaction_ordering_algorithm_t
+	enum TransactionOrderingAlgorithm
 	{
 		RIFF, ///< read and instruction fetch first
 		STRICT ///< FIFO
 	};
 
-	enum input_type_t
+	enum InputType
 	{
 		K6_TRACE,
 		MASE_TRACE,
@@ -76,13 +76,13 @@ namespace DRAMSimII
 		GEMS
 	};
 
-	enum input_status_t
+	enum InputStatus
 	{
 		FAILURE,
 		SUCCESS
 	};
 
-	enum dram_type_t
+	enum DRAMType
 	{
 		DDR,
 		DDR2,
@@ -91,7 +91,7 @@ namespace DRAMSimII
 		SDRAM
 	};
 
-	enum transaction_type_t
+	enum TransactionType
 	{
 		IFETCH_TRANSACTION,
 		WRITE_TRANSACTION,
@@ -103,7 +103,7 @@ namespace DRAMSimII
 		CONTROL_TRANSACTION
 	};
 
-	enum command_type_t
+	enum CommandType
 	{
 		RAS_COMMAND,
 		CAS_COMMAND,
@@ -121,7 +121,7 @@ namespace DRAMSimII
 		EMPTY_COMMAND
 	};
 
-	enum file_io_token_t
+	enum FileIOToken
 	{
 		BOFF,
 		FETCH,
@@ -222,7 +222,7 @@ namespace DRAMSimII
 		idd5_token
 	};
 
-	enum distribution_type_t
+	enum DistributionType
 	{
 		UNIFORM_DISTRIBUTION,
 		GAUSSIAN_DISTRIBUTION,
@@ -230,14 +230,14 @@ namespace DRAMSimII
 		NORMAL_DISTRIBUTION
 	};
 
-	enum event_type_t
+	enum EventType
 	{
 		TRANSACTION_ENQUEUE,	// put transaction into channel queue
 		DRAM_COMMAND_ENQUEUE,	// put DRAM command into per-bank queue
 		DRAM_COMMAND_EXECUTE	// schedule DRAM command for execution
 	};
 
-	enum frame_type_t
+	enum FrameType
 	{
 		COMMAND,				// contains only commands, A, B, C
 		COMMAND_AND_DATA,		// contains a command in the A slot and data in the B, C slots

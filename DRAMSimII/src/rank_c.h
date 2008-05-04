@@ -16,13 +16,13 @@ namespace DRAMSimII
 	{
 	protected:
 
-		const dramTimingSpecification& timing;	///< reference to the timing information, used in calculations	
-		tick_t lastRefreshTime;		///< the time of the last refresh
-		tick_t lastPrechargeTime;	///< the time of the last precharge
-		tick_t lastCASTime;			///< the time of the last CAS
-		tick_t lastCASWTime;		///< the time of the last CASW
-		tick_t prechargeTime;		///< total time that all banks in this rank are precharged in this epoch
-		tick_t totalPrechargeTime;	///< total time that all banks are precharged, all time
+		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
+		tick lastRefreshTime;		///< the time of the last refresh
+		tick lastPrechargeTime;	///< the time of the last precharge
+		tick lastCASTime;			///< the time of the last CAS
+		tick lastCASWTime;		///< the time of the last CASW
+		tick prechargeTime;		///< total time that all banks in this rank are precharged in this epoch
+		tick totalPrechargeTime;	///< total time that all banks are precharged, all time
 		unsigned lastCASLength;		///< the length of the last CAS
 		unsigned lastCASWLength;	///< the length of the last CASW
 		unsigned rankID;			///< the ordinal number of this rank
@@ -31,28 +31,28 @@ namespace DRAMSimII
 
 	public:
 
-		queue<tick_t> lastRASTimes; ///< ras time queue. useful to determine if t_faw is met
-		std::vector<bank_c> bank;	///< the banks within this rank
+		Queue<tick> lastRASTimes; ///< ras time queue. useful to determine if t_faw is met
+		std::vector<Bank> bank;	///< the banks within this rank
 
 		// functions
-		void issueRAS(const tick_t currentTime, const command *currentCommand);
-		void issuePRE(const tick_t currentTime, const command *currentCommand);
-		void issueCAS(const tick_t currentTime, const command *currentCommand);
-		void issueCASW(const tick_t currentTime, const command *currentCommand);
-		void issueREF(const tick_t currentTime, const command *currentCommand);
+		void issueRAS(const tick currentTime, const Command *currentCommand);
+		void issuePRE(const tick currentTime, const Command *currentCommand);
+		void issueCAS(const tick currentTime, const Command *currentCommand);
+		void issueCASW(const tick currentTime, const Command *currentCommand);
+		void issueREF(const tick currentTime, const Command *currentCommand);
 		
 		// constructors
-		rank_c(const rank_c &, const dramTimingSpecification &timingVal);
-		explicit rank_c(const dramSettings& settings, const dramTimingSpecification &timingVal);
+		rank_c(const rank_c &, const TimingSpecification &timingVal);
+		explicit rank_c(const Settings& settings, const TimingSpecification &timingVal);
 
 		// accessors
 		unsigned getRankID() const { return rankID; }		
-		tick_t getTotalPrechargeTime() const { return totalPrechargeTime; }
-		tick_t getPrechargeTime() const { return prechargeTime; }
-		tick_t getLastRefreshTime() const { return lastRefreshTime; }
-		tick_t getLastCASTime() const { return lastCASTime; }
-		tick_t getLastCASWTime() const { return lastCASWTime; }
-		tick_t getLastPrechargeTime() const { return lastPrechargeTime; }
+		tick getTotalPrechargeTime() const { return totalPrechargeTime; }
+		tick getPrechargeTime() const { return prechargeTime; }
+		tick getLastRefreshTime() const { return lastRefreshTime; }
+		tick getLastCASTime() const { return lastCASTime; }
+		tick getLastCASWTime() const { return lastCASWTime; }
+		tick getLastPrechargeTime() const { return lastPrechargeTime; }
 		unsigned getLastBankID() const { return lastBankID; }
 		unsigned getLastCASLength() const { return lastCASLength; }
 		unsigned getLastCASWLength() const { return lastCASWLength; }
@@ -61,7 +61,9 @@ namespace DRAMSimII
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
 		void setLastBankID(const unsigned value) { lastBankID = value; }
-		void setPrechargeTime(const tick_t value) { prechargeTime = value; }
+		void setPrechargeTime(const tick value) { prechargeTime = value; }
+
+		rank_c& operator =(const rank_c &rs);
 	};
 }
 #endif

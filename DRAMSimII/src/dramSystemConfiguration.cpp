@@ -6,7 +6,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
-dramSystemConfiguration::dramSystemConfiguration(const dramSettings& settings):
+SystemConfiguration::SystemConfiguration(const Settings& settings):
 commandOrderingAlgorithm(settings.commandOrderingAlgorithm),
 transactionOrderingAlgorithm(settings.transactionOrderingAlgorithm),
 configType(settings.systemType),
@@ -35,7 +35,7 @@ readPercentage(settings.readPercentage)
 {}
 
 
-dramSystemConfiguration::dramSystemConfiguration(const dramSystemConfiguration *rhs):
+SystemConfiguration::SystemConfiguration(const SystemConfiguration *rhs):
 commandOrderingAlgorithm(rhs->commandOrderingAlgorithm),
 transactionOrderingAlgorithm(rhs->transactionOrderingAlgorithm),
 configType(rhs->configType),
@@ -65,7 +65,7 @@ readPercentage(rhs->readPercentage)
 
 
 
-ostream &DRAMSimII::operator<<(ostream &os, const dramSystemConfiguration &this_a)
+ostream &DRAMSimII::operator<<(ostream &os, const SystemConfiguration &this_a)
 {
 	//os << "PerBankQ[" << this_a.perBankQueueDepth << "] ";
 	os << "CH[" << this_a.channelCount << "] ";
@@ -75,7 +75,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramSystemConfiguration &this_
 	return os;
 }
 
-dramSystemConfiguration& dramSystemConfiguration::operator =(const DRAMSimII::dramSystemConfiguration &rs)
+SystemConfiguration& SystemConfiguration::operator =(const DRAMSimII::SystemConfiguration &rs)
 {
 	if (this == &rs)
 	{
@@ -111,7 +111,7 @@ dramSystemConfiguration& dramSystemConfiguration::operator =(const DRAMSimII::dr
 
 
 #ifdef M5
-dramSystemConfiguration::dramSystemConfiguration(dramSystem::Params *parameter)
+SystemConfiguration::SystemConfiguration(System::Params *parameter)
 {
 	if (parameter->dramType == "sdram")
 		dram_type = SDRAM;

@@ -11,21 +11,21 @@
 namespace DRAMSimII
 {
 	/// @brief stores the system configuration options for a dramSystem
-	class dramSystemConfiguration
+	class SystemConfiguration
 	{ 
 	protected:
-		command_ordering_algorithm_t commandOrderingAlgorithm;			///< describes how to place commands into the per bank command queues
-		transaction_ordering_algorithm_t transactionOrderingAlgorithm;	///< the algorithm that describes how to place transactions into the queue
-		system_configuration_type_t configType;							///< whether the system is standard or FBD
+		CommandOrderingAlgorithm commandOrderingAlgorithm;			///< describes how to place commands into the per bank command queues
+		TransactionOrderingAlgorithm transactionOrderingAlgorithm;	///< the algorithm that describes how to place transactions into the queue
+		SystemConfigurationType configType;							///< whether the system is standard or FBD
 		unsigned refreshTime;											///< the frequency at which refresh commands are scheduled
-		refresh_policy_t refreshPolicy;									///< determines how refreshes are handled
+		RefreshPolicy refreshPolicy;									///< determines how refreshes are handled
 		unsigned columnSize;											///< the size of each column, in bytes
 		unsigned rowSize;												///< bytes per row (across one rank) 
 		unsigned cachelineSize;											///< 32/64/128 etc 
 		unsigned seniorityAgeLimit;										///< the oldest a command may be before it takes top priority
-		dram_type_t dram_type; 
-		row_buffer_policy_t rowBufferManagementPolicy;					///< row buffer management policy? OPEN/CLOSE, etc 
-		address_mapping_scheme_t addressMappingScheme;					///< addr mapping scheme for physical to DRAM addr 
+		DRAMType dram_type; 
+		RowBufferPolicy rowBufferManagementPolicy;					///< row buffer management policy? OPEN/CLOSE, etc 
+		AddressMappingScheme addressMappingScheme;					///< addr mapping scheme for physical to DRAM addr 
 		double datarate;												///< the operating frequency of the system
 		bool postedCAS;													///< TRUE/FALSE, so the CAS command may be stored and run later
 		bool readWriteGrouping;											///< whether or not reads and writes should be grouped closely
@@ -42,15 +42,15 @@ namespace DRAMSimII
 
 	public:
 		// constructors
-		explicit dramSystemConfiguration(const dramSettings& settings);
-		explicit dramSystemConfiguration(const dramSystemConfiguration *rhs);
+		explicit SystemConfiguration(const Settings& settings);
+		explicit SystemConfiguration(const SystemConfiguration *rhs);
 
 		// accessors
-		row_buffer_policy_t getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }
-		address_mapping_scheme_t getAddressMappingScheme() const { return addressMappingScheme; }
-		command_ordering_algorithm_t getCommandOrderingAlgorithm() const { return commandOrderingAlgorithm; }
-		transaction_ordering_algorithm_t getTransactionOrderingAlgorithm() const { return transactionOrderingAlgorithm; }
-		system_configuration_type_t getConfigType() const { return configType; }
+		RowBufferPolicy getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }
+		AddressMappingScheme getAddressMappingScheme() const { return addressMappingScheme; }
+		CommandOrderingAlgorithm getCommandOrderingAlgorithm() const { return commandOrderingAlgorithm; }
+		TransactionOrderingAlgorithm getTransactionOrderingAlgorithm() const { return transactionOrderingAlgorithm; }
+		SystemConfigurationType getConfigType() const { return configType; }
 		unsigned getRankCount() const { return rankCount; }
 		unsigned getBankCount() const { return bankCount; }
 		unsigned getChannelCount() const { return channelCount; }
@@ -60,8 +60,8 @@ namespace DRAMSimII
 		unsigned getCachelineSize() const { return cachelineSize; }
 		unsigned getRefreshTime() const { return refreshTime; }
 		unsigned getSeniorityAgeLimit() const { return seniorityAgeLimit; }
-		refresh_policy_t getRefreshPolicy() const { return refreshPolicy; }
-		dram_type_t getDRAMType() const { return dram_type; }
+		RefreshPolicy getRefreshPolicy() const { return refreshPolicy; }
+		DRAMType getDRAMType() const { return dram_type; }
 		bool isAutoPrecharge() const { return autoPrecharge; }
 		bool isReadWriteGrouping() const { return readWriteGrouping; }
 		bool isPostedCAS() const { return postedCAS; }
@@ -70,11 +70,11 @@ namespace DRAMSimII
 		double Frequency() const { return datarate; }
 
 		// operator overloads
-		dramSystemConfiguration& operator =(const dramSystemConfiguration &rs);
+		SystemConfiguration& operator =(const SystemConfiguration &rs);
 
 		// friends
-		friend std::ostream &operator<<(std::ostream &, const dramSystem &);	
-		friend std::ostream &operator<<(std::ostream &, const dramSystemConfiguration &);		
+		friend std::ostream &operator<<(std::ostream &, const System &);	
+		friend std::ostream &operator<<(std::ostream &, const SystemConfiguration &);		
 	};
 }
 #endif

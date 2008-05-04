@@ -13,7 +13,7 @@ namespace DRAMSimII
 {	
 	/// @brief stores power configuration parameters for this DRAM system necessary to calculate power consumed
 	/// @author Joe Gross
-	class powerConfig
+	class PowerConfig
 	{
 	protected:
 		float VDD;			///< the current voltage
@@ -50,17 +50,17 @@ namespace DRAMSimII
 		unsigned tBurst;	///< burst length in cycles
 		unsigned tRC;		///< tRC according to the datasheet, in cycles
 
-		tick_t lastCalculation;	///< the last time at which a power calculation was made
+		tick lastCalculation;	///< the last time at which a power calculation was made
 
-		//tick_t allBanksPrecharged;
-		//tick_t RDsch; // number of clock cycles spent sending data
-		//tick_t WRsch; // number of clock cycles spent receiving data
+		//tick allBanksPrecharged;
+		//tick RDsch; // number of clock cycles spent sending data
+		//tick WRsch; // number of clock cycles spent receiving data
 
 
 	public:
 		// constructors
-		powerConfig();
-		powerConfig(const dramSettings& settings);
+		PowerConfig();
+		PowerConfig(const Settings& settings);
 		//void recordCommand(const command *, const dramChannel &channel, const dramTimingSpecification &timing);
 		//void doPowerCalculation(dramChannel * const chan);
 
@@ -78,12 +78,12 @@ namespace DRAMSimII
 		unsigned gettBurst() const { return tBurst; }
 
 		// mutators
-		void setLastCalculation(const tick_t lastTime) { lastCalculation = lastTime; }
+		void setLastCalculation(const tick lastTime) { lastCalculation = lastTime; }
 		
 
 
 	public:
-		~powerConfig();
+		~PowerConfig();
 	};
 }
 #endif

@@ -29,7 +29,7 @@
 namespace DRAMSimII
 {
 	/// @brief a specialty type of dramSystem
-	class fbdSystem: public dramSystem
+	class fbdSystem: public System
 	{
 	private:
 		// members
@@ -37,7 +37,7 @@ namespace DRAMSimII
 		
 	public:
 		// constructors
-		explicit fbdSystem(const dramSettings& settings);		
+		explicit fbdSystem(const Settings& settings);		
 
 		
 	};

@@ -14,7 +14,7 @@ using namespace DRAMSimII;
 /// @param trans the transaction to be considered
 /// @return true if there is enough room, false otherwise
 //////////////////////////////////////////////////////////////////////
-bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
+bool Channel::checkForAvailableCommandSlots(const Transaction *trans) const
 {
 	if (trans == NULL)
 	{
@@ -23,7 +23,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 	// ensure that this transaction belongs on this channel
 	assert (trans->getAddresses().channel == channelID || trans->getType() == AUTO_REFRESH_TRANSACTION);
 
-	const queue<command> &bank_q = rank[trans->getAddresses().rank].bank[trans->getAddresses().bank].getPerBankQueue();
+	const Queue<Command> &bank_q = rank[trans->getAddresses().rank].bank[trans->getAddresses().bank].getPerBankQueue();
 	int availableCommandSlots = (trans->getType() == AUTO_REFRESH_TRANSACTION) ? 0 : bank_q.freecount();
 
 	// with closed page, all transactions convert into one of the following:
@@ -39,7 +39,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
-			for (vector<bank_c>::const_iterator i = rank[trans->getAddresses().rank].bank.begin();
+			for (vector<Bank>::const_iterator i = rank[trans->getAddresses().rank].bank.begin();
 				i != rank[trans->getAddresses().rank].bank.end();
 				i++)
 			{
@@ -72,7 +72,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 				// refresh commands refresh a row, but kill everything currently in the sense amps
 				// therefore, we need to make sure that the refresh commands happen when all banks
 				// are available
-				for (vector<bank_c>::const_iterator i = rank[trans->getAddresses().rank].bank.begin();
+				for (vector<Bank>::const_iterator i = rank[trans->getAddresses().rank].bank.begin();
 					i != rank[trans->getAddresses().rank].bank.end();
 					i++)
 				{					
@@ -86,7 +86,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 			// go from tail to head
 			for (int tail_offset = bank_q.size() - 1 ;(tail_offset >= 0) && (bypass_allowed == true); --tail_offset)
 			{	
-				command *temp_c = bank_q.read(tail_offset);
+				Command *temp_c = bank_q.read(tail_offset);
 
 				// goes right before the PRE command to ensure that the original order is preserved
 				if ((temp_c->getCommandType() == PRECHARGE_COMMAND) &&
@@ -134,7 +134,7 @@ bool dramChannel::checkForAvailableCommandSlots(const transaction *trans) const
 /// @param newTransaction the transaction which is divided up
 /// @return true if the transaction was able to be divided up and put into per bank queues
 //////////////////////////////////////////////////////////////////////
-bool dramChannel::transaction2commands(transaction *newTransaction) 
+bool Channel::transaction2commands(Transaction *newTransaction) 
 {
 	if (newTransaction == NULL)
 	{
@@ -143,7 +143,7 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 	// ensure that this transaction belongs on this channel
 	assert (newTransaction->getAddresses().channel == channelID || newTransaction->getType() == AUTO_REFRESH_TRANSACTION);
 
-	queue<command> &bank_q = rank[newTransaction->getAddresses().rank].bank[newTransaction->getAddresses().bank].getPerBankQueue();
+	Queue<Command> &bank_q = rank[newTransaction->getAddresses().rank].bank[newTransaction->getAddresses().bank].getPerBankQueue();
 
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
@@ -161,15 +161,15 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
-			for (vector<bank_c>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
 				if (i->getPerBankQueue().freecount() < 1)
 					return false;
 			}
 			// then add the command to all queues
-			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			for (vector<Bank>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				bool result = i->getPerBankQueue().push(new command(newTransaction->getAddresses(), REFRESH_ALL_COMMAND, time, newTransaction, systemConfig.isPostedCAS()));
+				bool result = i->getPerBankQueue().push(new Command(newTransaction->getAddresses(), REFRESH_ALL_COMMAND, time, newTransaction, systemConfig.isPostedCAS()));
 				assert (result);
 			}
 		}
@@ -187,7 +187,7 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 		else
 		{
 			// command one, the RAS command to activate the row
-			bank_q.push(new command(newTransaction->getAddresses(),RAS_COMMAND,time,NULL,systemConfig.isPostedCAS()));
+			bank_q.push(new Command(newTransaction->getAddresses(),RAS_COMMAND,time,NULL,systemConfig.isPostedCAS()));
 
 			// command two, CAS or CAS+Precharge
 
@@ -197,11 +197,11 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 				switch (newTransaction->getType())
 				{
 				case WRITE_TRANSACTION:					
-					bank_q.push(new command(newTransaction->getAddresses(),CAS_WRITE_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
+					bank_q.push(new Command(newTransaction->getAddresses(),CAS_WRITE_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					bank_q.push(new command(newTransaction->getAddresses(),CAS_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
+					bank_q.push(new Command(newTransaction->getAddresses(),CAS_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << newTransaction->getType();
@@ -211,21 +211,21 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 
 				// command three, the Precharge command
 				// only one of these commands has a pointer to the original transaction, thus NULL
-				bank_q.push(new command(newTransaction->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig.isPostedCAS()));
+				bank_q.push(new Command(newTransaction->getAddresses(),PRECHARGE_COMMAND,time,NULL,systemConfig.isPostedCAS()));
 			}
 			else // precharge is implied, only need two commands
 			{
 				switch(newTransaction->getType())
 				{
 				case WRITE_TRANSACTION:
-					bank_q.push(new command(newTransaction->getAddresses(),CAS_WRITE_AND_PRECHARGE_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
+					bank_q.push(new Command(newTransaction->getAddresses(),CAS_WRITE_AND_PRECHARGE_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
 					break;
 				case READ_TRANSACTION:
 				case IFETCH_TRANSACTION:
-					bank_q.push(new command(newTransaction->getAddresses(),CAS_AND_PRECHARGE_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
+					bank_q.push(new Command(newTransaction->getAddresses(),CAS_AND_PRECHARGE_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
 					break;
 				case PER_BANK_REFRESH_TRANSACTION:
-					bank_q.push(new command(newTransaction->getAddresses(),PRECHARGE_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
+					bank_q.push(new Command(newTransaction->getAddresses(),PRECHARGE_COMMAND,time,newTransaction,systemConfig.isPostedCAS()));
 					break;
 				default:
 					cerr << "Unhandled transaction type: " << newTransaction->getType();
@@ -249,15 +249,15 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
-			for (vector<bank_c>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
 				if (i->getPerBankQueue().freecount() < 1)
 					return false;
 			}
 			// then add the command to all queues
-			for (vector<bank_c>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			for (vector<Bank>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				bool result = i->getPerBankQueue().push(new command(newTransaction->getAddresses(), REFRESH_ALL_COMMAND, time, newTransaction, false));
+				bool result = i->getPerBankQueue().push(new Command(newTransaction->getAddresses(), REFRESH_ALL_COMMAND, time, newTransaction, false));
 				assert (result);
 			}
 		}
@@ -271,7 +271,7 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 			// go from tail to head
 			for (int tail_offset = bank_q.size() - 1; tail_offset >= 0; --tail_offset)
 			{	
-				command *temp_c = bank_q.read(tail_offset);
+				Command *temp_c = bank_q.read(tail_offset);
 
 				if (temp_c->getCommandType() == PRECHARGE_COMMAND) // found a precharge command
 				{
@@ -280,11 +280,11 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 						switch (newTransaction->getType())
 						{
 						case WRITE_TRANSACTION:
-							bank_q.insert(new command(newTransaction->getAddresses(),CAS_WRITE_COMMAND,time,newTransaction,false,newTransaction->getLength()), tail_offset);	/* insert at this location */						
+							bank_q.insert(new Command(newTransaction->getAddresses(),CAS_WRITE_COMMAND,time,newTransaction,false,newTransaction->getLength()), tail_offset);	/* insert at this location */						
 							break;
 						case IFETCH_TRANSACTION:
 						case READ_TRANSACTION:
-							bank_q.insert(new command(newTransaction->getAddresses(),CAS_COMMAND,time,newTransaction,false,newTransaction->getLength()), tail_offset);	/* insert at this location */
+							bank_q.insert(new Command(newTransaction->getAddresses(),CAS_COMMAND,time,newTransaction,false,newTransaction->getLength()), tail_offset);	/* insert at this location */
 							break;
 						default:
 							cerr << "Unrecognized transaction type." << endl;
@@ -313,16 +313,16 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 				return false;
 			}
 
-			bank_q.push(new command(newTransaction->getAddresses(),RAS_COMMAND,time,NULL,false,newTransaction->getLength()));
+			bank_q.push(new Command(newTransaction->getAddresses(),RAS_COMMAND,time,NULL,false,newTransaction->getLength()));
 
 			switch (newTransaction->getType())
 			{
 			case WRITE_TRANSACTION:
-				bank_q.push(new command(newTransaction->getAddresses(),CAS_WRITE_COMMAND,time,newTransaction,false,newTransaction->getLength()));
+				bank_q.push(new Command(newTransaction->getAddresses(),CAS_WRITE_COMMAND,time,newTransaction,false,newTransaction->getLength()));
 				break;
 			case READ_TRANSACTION:
 			case IFETCH_TRANSACTION:
-				bank_q.push(new command(newTransaction->getAddresses(),CAS_COMMAND,time,newTransaction,false,newTransaction->getLength()));
+				bank_q.push(new Command(newTransaction->getAddresses(),CAS_COMMAND,time,newTransaction,false,newTransaction->getLength()));
 				break;
 			default:
 				cerr << "Unhandled transaction type: " << newTransaction->getType();
@@ -331,7 +331,7 @@ bool dramChannel::transaction2commands(transaction *newTransaction)
 			}
 
 			// last, the precharge command
-			bank_q.push(new command(newTransaction->getAddresses(),PRECHARGE_COMMAND,time,NULL,false,newTransaction->getLength()));
+			bank_q.push(new Command(newTransaction->getAddresses(),PRECHARGE_COMMAND,time,NULL,false,newTransaction->getLength()));
 		}
 		break;
 

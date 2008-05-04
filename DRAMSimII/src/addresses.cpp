@@ -8,7 +8,7 @@
 using namespace DRAMSimII;
 using namespace std;
 
-addresses::addresses():
+Address::Address():
 virtualAddress(UINT_MAX),
 physicalAddress(ULLONG_MAX),
 channel(UINT_MAX),
@@ -18,7 +18,7 @@ row(UINT_MAX),
 column(UINT_MAX)
 {}
 
-addresses::addresses(unsigned long long pA):
+Address::Address(unsigned long long pA):
 virtualAddress(0),
 physicalAddress(pA),
 channel(0),
@@ -28,7 +28,7 @@ row(0),
 column(0)
 {}
 
-std::ostream &DRAMSimII::operator <<(std::ostream &os, const addresses &this_a)
+std::ostream &DRAMSimII::operator <<(std::ostream &os, const Address &this_a)
 {
 	os << "addr[0x" << setbase(16) << this_a.physicalAddress <<
 		"] chan[" << setbase(16) << this_a.channel << "] rank[" <<
@@ -38,7 +38,7 @@ std::ostream &DRAMSimII::operator <<(std::ostream &os, const addresses &this_a)
 	return os;
 }
 
-std::ostream &DRAMSimII::operator <<(std::ostream &os, const address_mapping_scheme_t &this_ams)
+std::ostream &DRAMSimII::operator <<(std::ostream &os, const AddressMappingScheme &this_ams)
 {
 	switch (this_ams)
 	{

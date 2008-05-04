@@ -17,7 +17,7 @@ using namespace DRAMSimII;
 /// @param settings the settings file that defines the number of ranks, refresh policy, etc.
 /// @param sysConfig a const reference is made to this for some functions to grab parameters from
 //////////////////////////////////////////////////////////////////////////
-dramChannel::dramChannel(const dramSettings& settings, const dramSystemConfiguration &sysConfig):
+Channel::Channel(const Settings& settings, const SystemConfiguration &sysConfig):
 time(0),
 lastRefreshTime(0),
 lastRankID(0),
@@ -40,14 +40,14 @@ rank(settings.rankCount, rank_c(settings, timingSpecification))
 	// initialize the refresh counters per rank
 	if (settings.refreshPolicy != NO_REFRESH)
 	{
-		refreshCounter = new transaction *[settings.rankCount];
+		refreshCounter = new Transaction *[settings.rankCount];
 
 		// stagger the times that each rank will be refreshed so they don't all arrive in a burst
 		unsigned step = settings.tREFI / settings.rankCount;
 
 		for (unsigned j = 0; j < settings.rankCount; ++j)
 		{
-			transaction *newTrans = new transaction();
+			Transaction *newTrans = new Transaction();
 			newTrans->setType(AUTO_REFRESH_TRANSACTION);
 			newTrans->getAddresses().rank = j;
 			newTrans->getAddresses().bank = 0;
@@ -61,7 +61,7 @@ rank(settings.rankCount, rank_c(settings, timingSpecification))
 /// @brief copy constructor, reassigns the ordinal to each rank as they are duplicated
 /// @param dc the dramChannel object to be copied
 //////////////////////////////////////////////////////////////////////////
-dramChannel::dramChannel(const dramChannel &dc):
+Channel::Channel(const Channel &dc):
 time(dc.time),
 lastRefreshTime(dc.lastRefreshTime),
 lastRankID(dc.lastRankID),
@@ -98,7 +98,7 @@ rank((unsigned)dc.rank.size(), rank_c(dc.rank[0],timingSpecification))
 /// @param endTime move the channel until it is at this time
 /// @param transFinishTime the time that this transaction finished
 //////////////////////////////////////////////////////////////////////////
-const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFinishTime)
+const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime)
 {
 	while (time < endTime)
 	{	
@@ -107,7 +107,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 		if (checkForAvailableCommandSlots(readTransaction(true)))
 		{
 			// actually remove it from the queue now
-			transaction *decodedTransaction = getTransaction();
+			Transaction *decodedTransaction = getTransaction();
 
 			// then break into commands and insert into per bank command queues			
 			bool t2cResult = transaction2commands(decodedTransaction);
@@ -121,15 +121,15 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 			M5_TIMING_LOG("!T2C " << decodedTransaction);
 
 			// move time up by executing commands
-			if (const command *temp_c = readNextCommand())
+			if (const Command *temp_c = readNextCommand())
 			{
-				tick_t nextExecuteTime = earliestExecuteTime(temp_c);
+				tick nextExecuteTime = earliestExecuteTime(temp_c);
 				assert(nextExecuteTime == time + minProtocolGap(temp_c));
 
 				//M5_TIMING_LOG("mg: " << min_gap);
 
 				// move time to either when the next command executes or the next transaction decodes, whichever is earlier
-				tick_t nextDecodeTime = nextTransactionDecodeTime();
+				tick nextDecodeTime = nextTransactionDecodeTime();
 
 				if (nextDecodeTime < min(nextExecuteTime, endTime))
 				{
@@ -138,7 +138,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				// allow system to overrun so that it may send a command				
 				else if (nextExecuteTime <= endTime + timingSpecification.tCMD())
 				{
-					command *nextCommand = getNextCommand();
+					Command *nextCommand = getNextCommand();
 
 					executeCommand(nextCommand);
 
@@ -147,7 +147,7 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << nextExecuteTime - time << "] " << *nextCommand);
 
 					// only get completed commands if they have finished
-					transaction *completed_t = completionQueue.pop();
+					Transaction *completed_t = completionQueue.pop();
 
 					if (completed_t)
 					{
@@ -190,10 +190,10 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 				// the transaction queue and all the per bank queues are empty,
 				// so just move time forward to the point where the transaction starts
 				// or move time forward until the transaction is ready to be decoded
-				const transaction *nextTrans = readTransaction(false);
+				const Transaction *nextTrans = readTransaction(false);
 				if ((nextTrans) && (nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay() + 1 <= endTime) && checkForAvailableCommandSlots(nextTrans))
 				{
-					tick_t oldTime = time;
+					tick oldTime = time;
 					assert(nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay() + 1 <= endTime);
 
 					time = timingSpecification.tBufferDelay() + nextTrans->getEnqueueTime() + 1;
@@ -223,15 +223,15 @@ const void *dramChannel::moveChannelToTime(const tick_t endTime, tick_t *transFi
 /// @return the time when the next event happens
 /// @sa readTransactionSimple() readNextCommand() earliestExecuteTime() checkForAvailableCommandSlots()
 //////////////////////////////////////////////////////////////////////////
-tick_t dramChannel::nextTick() const
+tick Channel::nextTick() const
 {
-	tick_t nextWake = TICK_T_MAX;
+	tick nextWake = TICK_MAX;
 
 	// first look for transactions
-	if (const transaction *nextTrans = readTransactionSimple())
+	if (const Transaction *nextTrans = readTransactionSimple())
 	{
 		// make sure it can finish
-		tick_t tempWake = nextTrans->getEnqueueTime() + getTimingSpecification().tBufferDelay() + 1; 
+		tick tempWake = nextTrans->getEnqueueTime() + getTimingSpecification().tBufferDelay() + 1; 
 
 		assert(nextTrans->getEnqueueTime() <= time);
 		assert(tempWake <= time + timingSpecification.tBufferDelay() + 1);
@@ -244,10 +244,10 @@ tick_t dramChannel::nextTick() const
 	}
 
 	// then check to see when the next command occurs
-	if (const command *tempCommand = readNextCommand())
+	if (const Command *tempCommand = readNextCommand())
 	{
 		int tempGap = minProtocolGap(tempCommand);
-		tick_t tempCommandExecuteTime = earliestExecuteTime(tempCommand);
+		tick tempCommandExecuteTime = earliestExecuteTime(tempCommand);
 		assert(time + tempGap == tempCommandExecuteTime);
 
 		if (tempCommandExecuteTime < nextWake)
@@ -259,10 +259,10 @@ tick_t dramChannel::nextTick() const
 	// check the refresh queue
 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
 	{
-		if (const transaction *refresh_t = readRefresh())
+		if (const Transaction *refresh_t = readRefresh())
 		{
 			// add one because the transaction actually finishes halfway through the tick
-			tick_t tempWake = refresh_t->getEnqueueTime() + timingSpecification.tBufferDelay() + 1;
+			tick tempWake = refresh_t->getEnqueueTime() + timingSpecification.tBufferDelay() + 1;
 
 			//assert(refresh_t->getEnqueueTime() <= currentChan->getTime());
 			//assert(tempWake <= currentChan->getTime() + currentChan->getTimingSpecification().tBufferDelay());
@@ -286,7 +286,7 @@ tick_t dramChannel::nextTick() const
 	return nextWake;
 }
 
-void dramChannel::recordCommand(command *latest_command)
+void Channel::recordCommand(Command *latest_command)
 {
 	while (!historyQueue.push(latest_command))
 	{
@@ -299,7 +299,7 @@ void dramChannel::recordCommand(command *latest_command)
 /// @param in the transaction to be put into the queue
 /// @return true if there was room in the queue for this command and the algorithm allowed it, false otherwise
 //////////////////////////////////////////////////////////////////////////
-bool dramChannel::enqueue(transaction *in)
+bool Channel::enqueue(Transaction *in)
 {
 	/// @todo probably should set the enqueue time = time here
 	if (systemConfig.getTransactionOrderingAlgorithm() == STRICT)
@@ -317,11 +317,11 @@ bool dramChannel::enqueue(transaction *in)
 /// @brief determine when the next transaction in the queue will be decoded
 /// @return the time when the decoding will be complete
 //////////////////////////////////////////////////////////////////////////
-tick_t dramChannel::nextTransactionDecodeTime() const
+tick Channel::nextTransactionDecodeTime() const
 {
-	tick_t nextTime = TICK_T_MAX;
+	tick nextTime = TICK_MAX;
 
-	if (const transaction *nextTrans = readTransaction(false))
+	if (const Transaction *nextTrans = readTransaction(false))
 	{
 		if (checkForAvailableCommandSlots(nextTrans))
 		{
@@ -332,7 +332,7 @@ tick_t dramChannel::nextTransactionDecodeTime() const
 }
 
 
-enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const int bank_count) const
+TransactionType Channel::setReadWriteType(const int rank_id,const int bank_count) const
 {
 	int read_count = 0;
 	int write_count = 0;
@@ -340,7 +340,7 @@ enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const in
 
 	for(int i = 0; i < bank_count; ++i)
 	{
-		command *temp_c = rank[rank_id].bank[i].getPerBankQueue().read(1);
+		Command *temp_c = rank[rank_id].bank[i].getPerBankQueue().read(1);
 
 		if(temp_c != NULL)
 		{
@@ -373,7 +373,7 @@ enum transaction_type_t	dramChannel::setReadWriteType(const int rank_id,const in
 /// also does breakdowns of power consumed per channel and per epoch as well as averaged over time
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
-void dramChannel::doPowerCalculation()
+void Channel::doPowerCalculation()
 {
 	float factorA = (powerModel.getVDD() / powerModel.getVDDmax()) * (powerModel.getVDD() / powerModel.getVDDmax());
 	float factorB = powerModel.getFrequency() / powerModel.getSpecFrequency();
@@ -396,7 +396,7 @@ void dramChannel::doPowerCalculation()
 	{
 		unsigned perRankRASCount = 1;
 
-		for (std::vector<bank_c>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
+		for (std::vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
 
 			totalRAS += l->getRASCount();			
@@ -424,7 +424,7 @@ void dramChannel::doPowerCalculation()
 		powerOutStream << "-Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] "<< setprecision(5) << 
 			((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT() << " mW" << endl;
 
-		//tick_t tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
+		//tick tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 
 
 		PsysACT += ((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT();
@@ -458,7 +458,7 @@ void dramChannel::doPowerCalculation()
 	{
 		unsigned perRankRASCount = 1;
 
-		for (vector<bank_c>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
+		for (vector<Bank>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
 			entireRAS += l->getTotalRASCount();
 			entireCAS += l->getTotalCASCount();
@@ -499,11 +499,11 @@ void dramChannel::doPowerCalculation()
 //////////////////////////////////////////////////////////////////////////
 // get the next refresh command and remove it from the queue
 //////////////////////////////////////////////////////////////////////////
-transaction *dramChannel::getRefresh()
+Transaction *Channel::getRefresh()
 {
 	assert(rank.size() >= 1);
 
-	transaction *earliestTransaction = refreshCounter[0];
+	Transaction *earliestTransaction = refreshCounter[0];
 
 	unsigned earliestRank = 0;
 
@@ -517,7 +517,7 @@ transaction *dramChannel::getRefresh()
 		}
 	}
 
-	refreshCounter[earliestRank] = new transaction();
+	refreshCounter[earliestRank] = new Transaction();
 	refreshCounter[earliestRank]->setEnqueueTime(earliestTransaction->getEnqueueTime() + timingSpecification.tREFI());
 	refreshCounter[earliestRank]->setType(AUTO_REFRESH_TRANSACTION);
 	refreshCounter[earliestRank]->getAddresses().rank = earliestRank;
@@ -529,10 +529,10 @@ transaction *dramChannel::getRefresh()
 //////////////////////////////////////////////////////////////////////////
 // read the next occurring refresh transaction without removing it
 //////////////////////////////////////////////////////////////////////////
-const transaction *dramChannel::readRefresh() const
+const Transaction *Channel::readRefresh() const
 {
 	assert(rank.size() >= 1);
-	transaction *earliestTransaction = refreshCounter[0];
+	Transaction *earliestTransaction = refreshCounter[0];
 	for (unsigned i = 1; i < rank.size(); ++i)
 	{
 		assert(refreshCounter[i]);
@@ -547,11 +547,11 @@ const transaction *dramChannel::readRefresh() const
 
 /// read the next available transaction for this channel without actually removing it from the queue
 /// if bufferDelay is set, then only transactions that have been in the queue long enough to decode are considered
-const transaction *dramChannel::readTransaction(const bool bufferDelay) const
+const Transaction *Channel::readTransaction(const bool bufferDelay) const
 {
 	const unsigned delay = bufferDelay ? timingSpecification.tBufferDelay() : 0;
 
-	const transaction *tempTrans = transactionQueue.front(); 
+	const Transaction *tempTrans = transactionQueue.front(); 
 
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{
@@ -567,7 +567,7 @@ const transaction *dramChannel::readTransaction(const bool bufferDelay) const
 	}
 	else
 	{
-		const transaction *refreshTrans = readRefresh();
+		const Transaction *refreshTrans = readRefresh();
 		assert(refreshTrans != NULL);
 
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
@@ -601,9 +601,9 @@ const transaction *dramChannel::readTransaction(const bool bufferDelay) const
 }
 
 // get the next transaction, whether a refresh transaction or a normal R/W transaction
-transaction *dramChannel::getTransaction()
+Transaction *Channel::getTransaction()
 {
-	const transaction *tempTrans = transactionQueue.front(); 
+	const Transaction *tempTrans = transactionQueue.front(); 
 
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{
@@ -616,7 +616,7 @@ transaction *dramChannel::getTransaction()
 	}
 	else
 	{
-		const transaction *refreshTrans = readRefresh();
+		const Transaction *refreshTrans = readRefresh();
 		assert(refreshTrans != NULL); // should always be refresh transactions coming
 
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig.getSeniorityAgeLimit()))

@@ -12,18 +12,18 @@ namespace DRAMSimII
 {
 	/// @brief this class logically represents a bank
 	/// @details contains per bank queues as well as stats about when events happened
-	class bank_c
+	class Bank
 	{
 	private:
-		const dramTimingSpecification& timing;	///< a reference to the timing specification
+		const TimingSpecification& timing;	///< a reference to the timing specification
 	protected:	
 		// members
-		queue<command> perBankQueue;	///< the command priority queue, stores the commands to be executed
-		tick_t lastRASTime;				///< when did last RAS command start?
-		tick_t lastCASTime;				///< when did last CAS command start?
-		tick_t lastCASWTime;			///< when did last CASW command start?
-		tick_t lastPrechargeTime;		///< when did last Precharge command start?
-		tick_t lastRefreshAllTime;		///< must respect t_rfc. concurrent refresh takes time
+		Queue<Command> perBankQueue;	///< the command priority queue, stores the commands to be executed
+		tick lastRASTime;				///< when did last RAS command start?
+		tick lastCASTime;				///< when did last CAS command start?
+		tick lastCASWTime;			///< when did last CASW command start?
+		tick lastPrechargeTime;		///< when did last Precharge command start?
+		tick lastRefreshAllTime;		///< must respect t_rfc. concurrent refresh takes time
 		unsigned lastCASLength;			///< the length of the last CAS command issued
 		unsigned lastCASWLength;		///< the length of the last CASW command issued
 		unsigned openRowID;				///< if the bank is open, what is the row id?
@@ -39,20 +39,20 @@ namespace DRAMSimII
 
 	public:
 		// functions
-		void issueRAS(const tick_t currentTime, const command *currentCommand);
-		void issuePRE(const tick_t currentTime, const command *currentCommand);
-		void issueCAS(const tick_t currentTime, const command *currentCommand);
-		void issueCASW(const tick_t currentTime, const command *currentCommand);
-		void issueREF(const tick_t currentTime, const command *currentCommand);
+		void issueRAS(const tick currentTime, const Command *currentCommand);
+		void issuePRE(const tick currentTime, const Command *currentCommand);
+		void issueCAS(const tick currentTime, const Command *currentCommand);
+		void issueCASW(const tick currentTime, const Command *currentCommand);
+		void issueREF(const tick currentTime, const Command *currentCommand);
 		void accumulateAndResetCounts() { totalRASCount += RASCount; totalCASCount += CASCount; totalCASWCount += CASWCount; RASCount = CASWCount = CASCount = 0; }
 
 		// accessors
-		tick_t getLastRASTime() const { return lastRASTime; }
-		tick_t getLastCASTime() const { return lastCASTime; }
-		tick_t getLastCASWTime() const {return lastCASWTime; }
+		tick getLastRASTime() const { return lastRASTime; }
+		tick getLastCASTime() const { return lastCASTime; }
+		tick getLastCASWTime() const {return lastCASWTime; }
 
-		tick_t getLastPrechargeTime() const { return lastPrechargeTime; }
-		tick_t getLastRefreshAllTime() const { return lastRefreshAllTime; }
+		tick getLastPrechargeTime() const { return lastPrechargeTime; }
+		tick getLastRefreshAllTime() const { return lastRefreshAllTime; }
 
 		unsigned getLastCASLength() const { return lastCASLength; }
 		unsigned getLastCASWLength() const { return lastCASWLength; }
@@ -68,15 +68,15 @@ namespace DRAMSimII
 		unsigned getTotalCASCount() const { return totalCASCount; }
 		unsigned getTotalCASWCount() const { return totalCASWCount; }
 
-		queue<command> &getPerBankQueue() { return perBankQueue; }
-		const queue<command> &getPerBankQueue() const { return perBankQueue; }
+		Queue<Command> &getPerBankQueue() { return perBankQueue; }
+		const Queue<Command> &getPerBankQueue() const { return perBankQueue; }
 
 		// mutators
-		void setLastRASTime(const tick_t value) { lastRASTime = value; }
-		void setLastCASTime(const tick_t value) { lastCASTime = value; }
-		void setLastCASWTime(const tick_t value) { lastCASWTime = value; }
-		void setLastPrechargeTime(const tick_t value) { lastPrechargeTime = value; }
-		void setLastRefreshAllTime(const tick_t value) { lastRefreshAllTime = value; }
+		void setLastRASTime(const tick value) { lastRASTime = value; }
+		void setLastCASTime(const tick value) { lastCASTime = value; }
+		void setLastCASWTime(const tick value) { lastCASWTime = value; }
+		void setLastPrechargeTime(const tick value) { lastPrechargeTime = value; }
+		void setLastRefreshAllTime(const tick value) { lastRefreshAllTime = value; }
 		void setLastCASLength(const unsigned value) { lastCASLength = value; }
 		void setLastCASWLength(const unsigned value) { lastCASWLength = value; }
 		void setActivated(const bool value) { activated = value; }
@@ -88,8 +88,10 @@ namespace DRAMSimII
 		void clrCASWCount() { CASWCount = 0; }
 
 		// constructors
-		explicit bank_c(const dramSettings& settings, const dramTimingSpecification &timingVal);
-		bank_c(const bank_c &, const dramTimingSpecification &timingVal);	
+		explicit Bank(const Settings& settings, const TimingSpecification &timingVal);
+		Bank(const Bank&, const TimingSpecification &timingVal);	
+
+		Bank& operator=(const Bank& rs);
 	};
 }
 #endif

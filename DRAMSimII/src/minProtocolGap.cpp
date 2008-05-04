@@ -8,7 +8,7 @@ using namespace DRAMSimII;
 /// <summary>
 /// find the protocol gap between a command and current system state
 /// </summary>
-int dramChannel::minProtocolGap(const command *this_c) const
+int Channel::minProtocolGap(const Command *this_c) const
 { 
 	int min_gap = 0;
 
@@ -16,7 +16,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 
 	const rank_c &currentRank = rank[this_rank];
 
-	const bank_c &currentBank = currentRank.bank[this_c->getAddress().bank];
+	const Bank &currentBank = currentRank.bank[this_c->getAddress().bank];
 
 	switch(this_c->getCommandType())
 	{
@@ -39,7 +39,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			else 
 			{
 				// read tail end of ras history
-				tick_t *lastRASTime = currentRank.lastRASTimes.read(ras_q_count - 1); 
+				tick *lastRASTime = currentRank.lastRASTimes.read(ras_q_count - 1); 
 				// respect the row-to-row activation delay
 				tRRDGap = (int)(*lastRASTime - time) + timingSpecification.tRRD();				
 			}
@@ -57,7 +57,7 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			else
 			{
 				// read head of ras history
-				const tick_t *fourthRASTime = currentRank.lastRASTimes.front(); 
+				const tick *fourthRASTime = currentRank.lastRASTimes.front(); 
 				tFAWGap = (int)(*fourthRASTime - time) + timingSpecification.tFAW();
 			}
 
@@ -82,9 +82,9 @@ int dramChannel::minProtocolGap(const command *this_c) const
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
-			tick_t otherRankLastCASTime = time - 1000;
+			tick otherRankLastCASTime = time - 1000;
 			int otherRankLastCASLength = timingSpecification.tBurst();
-			tick_t otherRankLastCASWTime = time - 1000;
+			tick otherRankLastCASWTime = time - 1000;
 			int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent cas(w) time and length
@@ -142,9 +142,9 @@ int dramChannel::minProtocolGap(const command *this_c) const
 			//respect last ras of same rank
 			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
 
-			tick_t otherRankLastCASTime = time - 1000;
+			tick otherRankLastCASTime = time - 1000;
 			int otherRankLastCASLength = timingSpecification.tBurst();
-			tick_t otherRankLastCASWTime = time - 1000;
+			tick otherRankLastCASWTime = time - 1000;
 			int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent CAS/CASW time and length
@@ -233,15 +233,15 @@ int dramChannel::minProtocolGap(const command *this_c) const
 
 //! Returns the soonest time that this command may execute
 /*! Looks at all of the timing parameters and decides when the this command may soonest execute */
-tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
+tick Channel::earliestExecuteTime(const Command *currentCommand) const
 { 
-	tick_t nextTime;
+	tick nextTime;
 
 	const unsigned this_rank = currentCommand->getAddress().rank;
 
 	const rank_c &currentRank = rank[this_rank];
 
-	const bank_c &currentBank = currentRank.bank[currentCommand->getAddress().bank];
+	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().bank];
 
 	switch(currentCommand->getCommandType())
 	{
@@ -250,10 +250,10 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			// refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk
 
 			// respect the row cycle time limitation
-			tick_t tRCLimit = currentBank.getLastRASTime() + timingSpecification.tRC();
+			tick tRCLimit = currentBank.getLastRASTime() + timingSpecification.tRC();
 
 			// respect tRRD and tRC of all other banks of same rank
-			tick_t tRRDLimit;
+			tick tRRDLimit;
 
 			if (currentRank.lastRASTimes.isEmpty())
 			{
@@ -262,21 +262,21 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			else 
 			{
 				// read tail end of RAS history
-				const tick_t *lastRASTime = currentRank.lastRASTimes.back(); 
+				const tick *lastRASTime = currentRank.lastRASTimes.back(); 
 				// respect the row-to-row activation delay
 				tRRDLimit = *lastRASTime + timingSpecification.tRRD();				
 			}
 
 			// respect tRP of same bank
-			tick_t tRPLimit = currentBank.getLastPrechargeTime() + timingSpecification.tRP();
+			tick tRPLimit = currentBank.getLastPrechargeTime() + timingSpecification.tRP();
 
 			// respect the t_faw value for DDR2 and beyond
-			tick_t tFAWLimit;
+			tick tFAWLimit;
 
 			if (currentRank.lastRASTimes.isFull())
 			{
 				// read head of ras history
-				const tick_t *fourthRASTime = currentRank.lastRASTimes.front(); 
+				const tick *fourthRASTime = currentRank.lastRASTimes.front(); 
 				tFAWLimit = (int)(*fourthRASTime - time) + timingSpecification.tFAW();
 			}
 			else
@@ -285,7 +285,7 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			}
 
 			// respect tRFC
-			tick_t tRFCLimit = currentRank.getLastRefreshTime() + timingSpecification.tRFC();
+			tick tRFCLimit = currentRank.getLastRefreshTime() + timingSpecification.tRFC();
 
 			nextTime = max(max(max(tRFCLimit,tRCLimit) , tRPLimit) , max(tRRDLimit , tFAWLimit));
 
@@ -301,13 +301,13 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 	case CAS_COMMAND:
 		{
 			//respect last RAS of same rank
-			tick_t tRCDLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
+			tick tRCDLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
-			tick_t otherRankLastCASTime = time - 1000;
+			tick otherRankLastCASTime = time - 1000;
 			int otherRankLastCASLength = timingSpecification.tBurst();
-			tick_t otherRankLastCASWTime = time - 1000;
+			tick otherRankLastCASWTime = time - 1000;
 			int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent cas(w) time and length
@@ -334,7 +334,7 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-			tick_t tCASLimit = currentRank.getLastCASTime() + timingSpecification.tBurst();
+			tick tCASLimit = currentRank.getLastCASTime() + timingSpecification.tBurst();
 
 			//respect last cas write of same rank
 			// DW 3/9/2006 replace the line after next with the next line
@@ -364,11 +364,11 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 	case CAS_WRITE_COMMAND:
 		{
 			//respect last RAS of same rank
-			tick_t tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
+			tick tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
 
-			tick_t otherRankLastCASTime = time - 1000;
+			tick otherRankLastCASTime = time - 1000;
 			int otherRankLastCASLength = timingSpecification.tBurst();
-			tick_t otherRankLastCASWTime = time - 1000;
+			tick otherRankLastCASWTime = time - 1000;
 			int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent CAS/CASW time and length
@@ -396,7 +396,7 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-			tick_t tCASLimit = max(time,currentRank.getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
+			tick tCASLimit = max(time,currentRank.getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
 
 			// respect last cas to different ranks
 			tCASLimit = max(tCASLimit,otherRankLastCASTime + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD());
@@ -419,10 +419,10 @@ tick_t dramChannel::earliestExecuteTime(const command *currentCommand) const
 	case PRECHARGE_COMMAND:
 		{
 			// respect t_ras of same bank
-			tick_t tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRAS();
+			tick tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			tick_t tCASLimit = max(time,currentBank.getLastCASTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
+			tick tCASLimit = max(time,currentBank.getLastCASTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
 
 			// respect t_casw of same bank
 			tCASLimit = max(tCASLimit,currentBank.getLastCASWTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());

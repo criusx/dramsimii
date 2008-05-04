@@ -28,16 +28,16 @@ using namespace DRAMSimII;
 /// the event may either be a conversion of a transaction into commands or it may be the the 
 /// next time a command may be issued
 /// @author Joe Gross
-/// @return the time of the next event, or TICK_T_MAX if there was no next event found
+/// @return the time of the next event, or TICK_MAX if there was no next event found
 //////////////////////////////////////////////////////////////////////
-tick_t dramSystem::nextTick() const
+tick System::nextTick() const
 {
-	tick_t nextWake = TICK_T_MAX;
+	tick nextWake = TICK_MAX;
 
 	// find the next time to wake from among all the channels
-	for (vector<dramChannel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
+	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
-		tick_t channelNextWake = currentChan->nextTick();
+		tick channelNextWake = currentChan->nextTick();
 		if (channelNextWake < nextWake)
 		{
 			nextWake = channelNextWake;
@@ -54,7 +54,7 @@ tick_t dramSystem::nextTick() const
 /// @param thisAddress the addresses representation to be decoded in-place
 /// @return true if the conversion was successful, false if there was some problem
 //////////////////////////////////////////////////////////////////////
-bool dramSystem::convertAddress(addresses &thisAddress) const
+bool System::convertAddress(Address &thisAddress) const
 {
 	unsigned temp_a, temp_b;
 	unsigned bit_15,bit_27,bits_26_to_16;
@@ -450,11 +450,11 @@ bool dramSystem::convertAddress(addresses &thisAddress) const
 /// @brief updates the system time to be the same as that of the oldest channel
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
-void dramSystem::updateSystemTime()
+void System::updateSystemTime()
 {
-	time = TICK_T_MAX;
+	time = TICK_MAX;
 
-	for (vector<dramChannel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
+	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
 		if (currentChan->getTime() < time)
 			time = currentChan->getTime();
@@ -468,12 +468,12 @@ void dramSystem::updateSystemTime()
 /// @author Joe Gross
 /// @return a pointer to the transaction that was generated
 //////////////////////////////////////////////////////////////////////
-transaction *dramSystem::getNextRandomRequest()
+Transaction *System::getNextRandomRequest()
 {
 	if (input_stream.getType() == RANDOM)
 	{
 		unsigned int j;
-		transaction *thisTransaction = new transaction();
+		Transaction *thisTransaction = new Transaction();
 
 		rand_s(&j);
 
@@ -557,7 +557,7 @@ transaction *dramSystem::getNextRandomRequest()
 				// Gaussian distribution function
 				if (input_stream.getInterarrivalDistributionModel() == GAUSSIAN_DISTRIBUTION)
 				{
-					input_stream.setArrivalThreshhold(1.0F - (1.0F / input_stream.box_muller(input_stream.getAverageInterarrivalCycleCount(), 10)));
+					input_stream.setArrivalThreshhold(1.0F - (1.0F / input_stream.boxMuller(input_stream.getAverageInterarrivalCycleCount(), 10)));
 				}
 				// Poisson distribution function
 				else if (input_stream.getInterarrivalDistributionModel() == POISSON_DISTRIBUTION)
@@ -588,7 +588,7 @@ transaction *dramSystem::getNextRandomRequest()
 /// @author Joe Gross
 /// @return the next transaction, NULL if there are no more available transactions
 //////////////////////////////////////////////////////////////////////
-transaction *dramSystem::getNextIncomingTransaction()
+Transaction *System::getNextIncomingTransaction()
 {
 	switch (input_stream.getType())
 	{
@@ -608,7 +608,7 @@ transaction *dramSystem::getNextIncomingTransaction()
 			} 
 			else
 			{
-				transaction *tempTransaction = new transaction;
+				Transaction *tempTransaction = new Transaction;
 				tempTransaction->getAddresses() = this_e.address;
 				// FIXME: ignores return type
 				convertAddress(tempTransaction->getAddresses());
@@ -634,10 +634,10 @@ transaction *dramSystem::getNextIncomingTransaction()
 /// @author Joe Gross
 /// @param settings the settings that define what the system should look like
 //////////////////////////////////////////////////////////////////////
-dramSystem::dramSystem(const dramSettings &settings): 
+System::System(const Settings &settings): 
 systemConfig(settings),
 channel(systemConfig.getChannelCount(),
-		dramChannel(settings, systemConfig)),
+		Channel(settings, systemConfig)),
 		simParameters(settings),
 		statistics(settings),
 		input_stream(settings),
@@ -769,7 +769,7 @@ channel(systemConfig.getChannelCount(),
 	// else printing to these streams goes nowhere
 
 	// set backward pointers to the system config and the statistics for each channel
-	for (vector<dramChannel>::iterator i = channel.begin(); i != channel.end(); i++)
+	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
 		//i->setSystemConfig(&systemConfig);
 		i->setStatistics(&statistics);
@@ -786,10 +786,10 @@ channel(systemConfig.getChannelCount(),
 /// @author Joe Gross
 /// @return the ordinal of the oldest channel
 //////////////////////////////////////////////////////////////////////
-unsigned dramSystem::findOldestChannel() const
+unsigned System::findOldestChannel() const
 {
-	vector<dramChannel>::const_iterator currentChan = channel.begin();
-	tick_t oldestTime = currentChan->getTime();
+	vector<Channel>::const_iterator currentChan = channel.begin();
+	tick oldestTime = currentChan->getTime();
 	unsigned oldestChanID = currentChan->getChannelID();
 	for (; currentChan != channel.end(); currentChan++)
 	{
@@ -810,7 +810,7 @@ unsigned dramSystem::findOldestChannel() const
 /// @param thisSystem the reference to the dramSystem to be printed
 /// @return reference to the ostream passed in with information appended
 //////////////////////////////////////////////////////////////////////
-ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &thisSystem)
+ostream &DRAMSimII::operator<<(ostream &os, const System &thisSystem)
 {
 	os << "SYS[";
 	switch(thisSystem.systemConfig.getConfigType())
@@ -860,7 +860,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const dramSystem &thisSystem)
 /// @brief prints out the statistics accumulated so far and about the current epoch
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
-void dramSystem::printStatistics()
+void System::printStatistics()
 {
 	statsOutStream << statistics << endl;
 	statistics.clear();
@@ -871,9 +871,9 @@ void dramSystem::printStatistics()
 /// @brief calculate and print the power consumption for each channel
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
-void dramSystem::doPowerCalculation()
+void System::doPowerCalculation()
 {
-	for (vector<dramChannel>::iterator currentChannel = channel.begin(); currentChannel != channel.end(); currentChannel++)
+	for (vector<Channel>::iterator currentChannel = channel.begin(); currentChannel != channel.end(); currentChannel++)
 	{
 		currentChannel->doPowerCalculation();
 	}

@@ -13,17 +13,17 @@ namespace DRAMSimII
 	class fbdFrame
 	{
 	private:
-		static queue<fbdFrame> freeFramePool; // frame objects are stored here to avoid allocating memory after initialization
+		static Queue<fbdFrame> freeFramePool; // frame objects are stored here to avoid allocating memory after initialization
 
-		enum frame_type_t frameType;
-		const command *slots[3];
-		enum command_type_t commandSlotType[3];
-		tick_t arrivalTime;
-		tick_t executeTime;			// the time that the A command of this frame should arrive at the every DIMM
+		enum FrameType frameType;
+		const Command *slots[3];
+		enum CommandType commandSlotType[3];
+		tick arrivalTime;
+		tick executeTime;			// the time that the A command of this frame should arrive at the every DIMM
 
 	public:
 		// constructor and destructor
-		explicit fbdFrame(tick_t time = 0);
+		explicit fbdFrame(tick time = 0);
 		~fbdFrame();
 
 		// operator overloads
@@ -31,7 +31,7 @@ namespace DRAMSimII
 		void operator delete(void *);
 
 		// mutators
-		void setCommandA(const command *value)
+		void setCommandA(const Command *value)
 		{
 			slots[0] = value;
 			if (!value)
@@ -40,7 +40,7 @@ namespace DRAMSimII
 			else
 				commandSlotType[0] = value->getCommandType();
 		}
-		void setCommandB(const command *value)
+		void setCommandB(const Command *value)
 		{
 			slots[1] = value; 
 			if (!value)
@@ -49,7 +49,7 @@ namespace DRAMSimII
 			else
 				commandSlotType[1] = value->getCommandType();
 		}
-		void setCommandC(const command *value)
+		void setCommandC(const Command *value)
 		{
 			slots[2] = value;
 			if (!value)
@@ -59,19 +59,19 @@ namespace DRAMSimII
 		}
 
 		// accessors
-		tick_t getExecuteTime() const { return executeTime; }
+		tick getExecuteTime() const { return executeTime; }
 		
-		command* getCommandA() const { return (command*)slots[0]; }
-		command* getCommandB() const { return (command*)slots[1]; }
-		command* getCommandC() const { return (command*)slots[2]; }
+		Command* getCommandA() const { return (Command*)slots[0]; }
+		Command* getCommandB() const { return (Command*)slots[1]; }
+		Command* getCommandC() const { return (Command*)slots[2]; }
 
-		const command* readCommandA() const { return slots[0]; }
-		const command* readCommandB() const { return slots[1]; }
-		const command* readCommandC() const { return slots[2]; }
+		const Command* readCommandA() const { return slots[0]; }
+		const Command* readCommandB() const { return slots[1]; }
+		const Command* readCommandC() const { return slots[2]; }
 
-		enum command_type_t getCommandAType() const { return commandSlotType[0]; }
-		enum command_type_t getCommandBType() const { return commandSlotType[1]; }
-		enum command_type_t getCommandCType() const { return commandSlotType[2]; }
+		enum CommandType getCommandAType() const { return commandSlotType[0]; }
+		enum CommandType getCommandBType() const { return commandSlotType[1]; }
+		enum CommandType getCommandCType() const { return commandSlotType[2]; }
 
 
 		// friends

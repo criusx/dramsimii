@@ -80,12 +80,12 @@ protected:
 
 	int lastPortIndex;					///< the last port accessed
 	typedef std::vector<MemoryPort*>::iterator PortIterator;
-	DRAMSimII::dramSystem *ds;			///< pointer to the DRAMSimII class
+	DRAMSimII::System *ds;			///< pointer to the DRAMSimII class
 	bool needRetry;						///< if the memory system needs to issue a retry statement before any more requests will come in
 	unsigned mostRecentChannel;			///< the most recent channel that a request was sent to
 	int cpuRatio;						///< the ratio of the cpu frequency to the memory frequency
 	float invCpuRatio;					///< the ratio of the memory frequency to the cpu frequency
-	tick_t nextStats;					///< the next time at which stats should be collected
+	tick nextStats;					///< the next time at which stats should be collected
 
 	//virtual Tick calculateLatency(Packet *);
 	//virtual Tick recvTiming(PacketPtr pkt);
@@ -106,7 +106,7 @@ public:
 
 	float getInvCPURatio() const { return invCpuRatio; }	///< returns the ratio of the memory frequency to the cpu frequency
 
-	void moveToTime(tick_t now);
+	void moveToTime(tick now);
 
 	virtual ~M5dramSystem();
 };

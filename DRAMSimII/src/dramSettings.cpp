@@ -11,7 +11,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
-dramSettings::dramSettings(const int argc, const char **argv)
+Settings::Settings(const int argc, const char **argv)
 {
 	// if there are not enough arguments or one is for help, print the help msg and quit
 	bool printHelp = false;

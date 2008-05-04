@@ -5,7 +5,7 @@ using namespace std;
 using namespace DRAMSimII;
 
 // initialize the static member
-queue<event> event::freeEventPool(4*COMMAND_QUEUE_SIZE,true);
+Queue<event> event::freeEventPool(4*COMMAND_QUEUE_SIZE,true);
 
 
 event::event()
@@ -18,7 +18,7 @@ event::event()
 
 void * event::operator new(size_t size)
 {
-	assert(size == sizeof(command));
+	assert(size == sizeof(Command));
 	return freeEventPool.acquire_item();
 }
 

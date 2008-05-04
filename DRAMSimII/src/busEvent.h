@@ -13,10 +13,10 @@ namespace DRAMSimII
 	class busEvent /* 6 DWord per event */
 	{
 	public:
-		transaction_type_t attributes;
+		TransactionType attributes;
 		// read/write/Fetch type stuff. Not overloaded with other stuff
-		addresses address; // assume to be <= 32 bits for now
-		tick_t timestamp; // time stamp will now have a large dynamic range, but only 53 bit precision
+		Address address; // assume to be <= 32 bits for now
+		tick timestamp; // time stamp will now have a large dynamic range, but only 53 bit precision
 		busEvent();
 	};
 }

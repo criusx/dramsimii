@@ -11,7 +11,7 @@ namespace DRAMSimII
 {
 	// t_pp (min prec to prec of any bank) ignored
 	/// @brief contains all the specs for this channel's DIMMs
-	class dramTimingSpecification
+	class TimingSpecification
 	{
 	protected:
 		
@@ -39,7 +39,7 @@ namespace DRAMSimII
 
 	public:
 		// constructors		
-		explicit dramTimingSpecification(const dramSettings& settings);
+		explicit TimingSpecification(const Settings& settings);
 
 		// accessors
 		int tAL() const { return t_al; }
@@ -62,7 +62,7 @@ namespace DRAMSimII
 		int tRC() const { return t_rc; }
 
 		// friends
-		friend std::ostream &operator<<( std::ostream&, const dramTimingSpecification &);
+		friend std::ostream &operator<<( std::ostream&, const TimingSpecification&);
 	};
 }
 #endif

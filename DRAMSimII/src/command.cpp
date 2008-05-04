@@ -5,9 +5,9 @@ using namespace std;
 using namespace DRAMSimII;
 
 // initialize the static member
-queue<command> command::freeCommandPool(4*COMMAND_QUEUE_SIZE,true);
+Queue<Command> Command::freeCommandPool(4*COMMAND_QUEUE_SIZE,true);
 
-command::command():
+Command::Command():
 commandType(RETIRE_COMMAND),
 startTime(0),
 enqueueTime(0),
@@ -30,7 +30,7 @@ postedCAS(false),
 length(0)
 {}
 
-command::command(const addresses address, const command_type_t commandType, const tick_t enqueueTime, transaction *hostTransaction, const bool postedCAS):
+Command::Command(const Address address, const CommandType commandType, const tick enqueueTime, Transaction *hostTransaction, const bool postedCAS):
 commandType(commandType),
 startTime(-1),
 enqueueTime(enqueueTime),
@@ -53,7 +53,7 @@ postedCAS(postedCAS),
 length(0)
 {}
 
-command::command(const addresses address, const command_type_t commandType, const tick_t enqueueTime, transaction *hostTransaction, const bool postedCAS, const int _length):
+Command::Command(const Address address, const CommandType commandType, const tick enqueueTime, Transaction *hostTransaction, const bool postedCAS, const int _length):
 commandType(commandType),
 startTime(-1),
 enqueueTime(enqueueTime),
@@ -76,7 +76,7 @@ postedCAS(postedCAS),
 length(_length)
 {}
 
-ostream &DRAMSimII::operator<<(ostream &os, const command_type_t &command)
+ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 {
 	switch(command)
 	{
@@ -123,13 +123,13 @@ ostream &DRAMSimII::operator<<(ostream &os, const command_type_t &command)
 	return os;
 }
 
-ostream &DRAMSimII::operator<<(ostream &os, const command &this_c)
+ostream &DRAMSimII::operator<<(ostream &os, const Command &this_c)
 {
 	os << this_c.commandType << this_c.addr << " S[" << std::dec << this_c.startTime << "] Q[" << std::dec << this_c.enqueueTime << "] E[" << std::dec << this_c.completionTime << std::dec << "] T[" << this_c.completionTime - this_c.startTime << "] DLY[" << std::dec << this_c.startTime - this_c.enqueueTime << "]";
 	return os;
 }
 
-command::command(const command &rhs):
+Command::Command(const Command &rhs):
 commandType(rhs.commandType),
 startTime(rhs.startTime),
 enqueueTime(rhs.enqueueTime),
@@ -175,14 +175,14 @@ length(rhs.length)
 //length(rhs->length)
 //{}
 
-void *command::operator new(size_t size)
+void *Command::operator new(size_t size)
 {
-	assert(size == sizeof(command));
+	assert(size == sizeof(Command));
 	return freeCommandPool.acquire_item();
 }
 
-void command::operator delete(void *mem)
+void Command::operator delete(void *mem)
 {
-	command *cmd(static_cast<command*>(mem));
+	Command *cmd(static_cast<Command*>(mem));
 	freeCommandPool.release_item(cmd);
 }
