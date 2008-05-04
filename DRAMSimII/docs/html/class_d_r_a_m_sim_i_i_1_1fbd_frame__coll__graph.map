@@ -1,3 +1,3 @@
-<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1command.html" title="represents a DRAM command from the memory controller to the DRAMs" alt="" coords="7,186,159,213">
-<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1transaction.html" title="a request to read or write some portion of memory, atomically" alt="" coords="89,96,249,122">
-<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1addresses.html" title="This class logically represents several interpretations of a memory address." alt="" coords="5,5,160,32">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1_command.html" title="represents a DRAM command from the memory controller to the DRAMs" alt="" coords="5,186,160,213">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1_address.html" title="This class logically represents several interpretations of a memory address." alt="" coords="32,5,176,32">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1_transaction.html" title="a request to read or write some portion of memory, atomically" alt="" coords="111,96,273,122">

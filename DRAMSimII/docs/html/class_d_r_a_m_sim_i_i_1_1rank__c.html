@@ -31,48 +31,48 @@ Collaboration diagram for DRAMSimII::rank_c:</div>
 <div class="dynsection">
 <p><center><img src="class_d_r_a_m_sim_i_i_1_1rank__c__coll__graph.png" border="0" usemap="#_d_r_a_m_sim_i_i_1_1rank__c__coll__map" alt="Collaboration graph"></center>
 <map name="_d_r_a_m_sim_i_i_1_1rank__c__coll__map">
-<area shape="rect" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html" title="contains all the specs for this channel&#39;s DIMMs" alt="" coords="5,5,243,32"><area shape="rect" href="class_d_r_a_m_sim_i_i_1_1queue.html" title="DRAMSimII::queue\&lt; tick_t \&gt;" alt="" coords="267,5,453,32"></map>
+<area shape="rect" href="class_d_r_a_m_sim_i_i_1_1_queue.html" title="DRAMSimII::Queue\&lt; tick \&gt;" alt="" coords="5,5,184,32"><area shape="rect" href="class_d_r_a_m_sim_i_i_1_1_timing_specification.html" title="contains all the specs for this channel&#39;s DIMMs" alt="" coords="208,5,416,32"></map>
 <center><font size="2">[<a target="top" href="graph_legend.html">legend</a>]</font></center></div>
 
 <p>
 <a href="class_d_r_a_m_sim_i_i_1_1rank__c-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="35f2ea5f8c91f9d6205271bbde842f1c"></a><!-- doxytag: member="DRAMSimII::rank_c::lastRASTimes" ref="35f2ea5f8c91f9d6205271bbde842f1c" args="" -->
-<a class="el" href="class_d_r_a_m_sim_i_i_1_1queue.html">queue</a>&lt; tick_t &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#35f2ea5f8c91f9d6205271bbde842f1c">lastRASTimes</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="8e8a12fb199828a742e3467b0dd669d3"></a><!-- doxytag: member="DRAMSimII::rank_c::lastRASTimes" ref="8e8a12fb199828a742e3467b0dd669d3" args="" -->
+<a class="el" href="class_d_r_a_m_sim_i_i_1_1_queue.html">Queue</a>&lt; tick &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#8e8a12fb199828a742e3467b0dd669d3">lastRASTimes</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">ras time <a class="el" href="class_d_r_a_m_sim_i_i_1_1queue.html" title="the queue template class, a circular queue  push/pop are O(1) operations, while random...">queue</a>. useful to determine if t_faw is met <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="c7d380bc9ad53635e0a7c54bb447e126"></a><!-- doxytag: member="DRAMSimII::rank_c::bank" ref="c7d380bc9ad53635e0a7c54bb447e126" args="" -->
-std::vector&lt; <a class="el" href="class_d_r_a_m_sim_i_i_1_1bank__c.html">bank_c</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#c7d380bc9ad53635e0a7c54bb447e126">bank</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">ras time queue. useful to determine if t_faw is met <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="0672c9ecd620fdb22502c4421a9d4bee"></a><!-- doxytag: member="DRAMSimII::rank_c::bank" ref="0672c9ecd620fdb22502c4421a9d4bee" args="" -->
+std::vector&lt; <a class="el" href="class_d_r_a_m_sim_i_i_1_1_bank.html">Bank</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#0672c9ecd620fdb22502c4421a9d4bee">bank</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">the banks within this rank <br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="fe6928b6b103bb6fba2f725310bdda50"></a><!-- doxytag: member="DRAMSimII::rank_c::timing" ref="fe6928b6b103bb6fba2f725310bdda50" args="" -->
-const <a class="el" href="class_d_r_a_m_sim_i_i_1_1dram_timing_specification.html">dramTimingSpecification</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#fe6928b6b103bb6fba2f725310bdda50">timing</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="81850e42370a24ffd6e15596acfa4513"></a><!-- doxytag: member="DRAMSimII::rank_c::timing" ref="81850e42370a24ffd6e15596acfa4513" args="" -->
+const <a class="el" href="class_d_r_a_m_sim_i_i_1_1_timing_specification.html">TimingSpecification</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#81850e42370a24ffd6e15596acfa4513">timing</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">reference to the timing information, used in calculations <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="508bb85a042e4c21c66e07dfa5d0e315"></a><!-- doxytag: member="DRAMSimII::rank_c::lastRefreshTime" ref="508bb85a042e4c21c66e07dfa5d0e315" args="" -->
-tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#508bb85a042e4c21c66e07dfa5d0e315">lastRefreshTime</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="28a562e3ec3098f99ccc800cc2da6c25"></a><!-- doxytag: member="DRAMSimII::rank_c::lastRefreshTime" ref="28a562e3ec3098f99ccc800cc2da6c25" args="" -->
+tick&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#28a562e3ec3098f99ccc800cc2da6c25">lastRefreshTime</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">the time of the last refresh <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="9ad7da80e09f4d87e2843ecb9128cd62"></a><!-- doxytag: member="DRAMSimII::rank_c::lastPrechargeTime" ref="9ad7da80e09f4d87e2843ecb9128cd62" args="" -->
-tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#9ad7da80e09f4d87e2843ecb9128cd62">lastPrechargeTime</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ab68d9fabe3d7b731b1bea48b6d8c53e"></a><!-- doxytag: member="DRAMSimII::rank_c::lastPrechargeTime" ref="ab68d9fabe3d7b731b1bea48b6d8c53e" args="" -->
+tick&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#ab68d9fabe3d7b731b1bea48b6d8c53e">lastPrechargeTime</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">the time of the last precharge <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="2aca337b792d929752b1c851eb171c91"></a><!-- doxytag: member="DRAMSimII::rank_c::lastCASTime" ref="2aca337b792d929752b1c851eb171c91" args="" -->
-tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#2aca337b792d929752b1c851eb171c91">lastCASTime</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="3a17ac65cd53992061dbe35ead21525a"></a><!-- doxytag: member="DRAMSimII::rank_c::lastCASTime" ref="3a17ac65cd53992061dbe35ead21525a" args="" -->
+tick&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#3a17ac65cd53992061dbe35ead21525a">lastCASTime</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">the time of the last CAS <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="910c5d09632c458a3409dd2b2ca3b0ab"></a><!-- doxytag: member="DRAMSimII::rank_c::lastCASWTime" ref="910c5d09632c458a3409dd2b2ca3b0ab" args="" -->
-tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#910c5d09632c458a3409dd2b2ca3b0ab">lastCASWTime</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b1a330954ee62b3116e97fc160afa281"></a><!-- doxytag: member="DRAMSimII::rank_c::lastCASWTime" ref="b1a330954ee62b3116e97fc160afa281" args="" -->
+tick&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#b1a330954ee62b3116e97fc160afa281">lastCASWTime</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">the time of the last CASW <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b8b4ee90f54d720f54dc8610fded4536"></a><!-- doxytag: member="DRAMSimII::rank_c::prechargeTime" ref="b8b4ee90f54d720f54dc8610fded4536" args="" -->
-tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#b8b4ee90f54d720f54dc8610fded4536">prechargeTime</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="9a04b59ee6315f8800c39eaf2a5fa6c5"></a><!-- doxytag: member="DRAMSimII::rank_c::prechargeTime" ref="9a04b59ee6315f8800c39eaf2a5fa6c5" args="" -->
+tick&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#9a04b59ee6315f8800c39eaf2a5fa6c5">prechargeTime</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">total time that all banks in this rank are precharged in this epoch <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="8a4f57c88402860d567718e0028b1b2f"></a><!-- doxytag: member="DRAMSimII::rank_c::totalPrechargeTime" ref="8a4f57c88402860d567718e0028b1b2f" args="" -->
-tick_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#8a4f57c88402860d567718e0028b1b2f">totalPrechargeTime</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="4df03aec075a730b93e091e5aae47c7b"></a><!-- doxytag: member="DRAMSimII::rank_c::totalPrechargeTime" ref="4df03aec075a730b93e091e5aae47c7b" args="" -->
+tick&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_r_a_m_sim_i_i_1_1rank__c.html#4df03aec075a730b93e091e5aae47c7b">totalPrechargeTime</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">total time that all banks are precharged, all time <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="61a2205bd995b9dd741767f8bba96ace"></a><!-- doxytag: member="DRAMSimII::rank_c::lastCASLength" ref="61a2205bd995b9dd741767f8bba96ace" args="" -->
@@ -99,7 +99,7 @@ unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 represents a logical rank and associated statistics <hr>The documentation for this class was generated from the following files:<ul>
 <li>src/rank_c.h<li>src/rank_c.cpp</ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 30 01:03:56 2008 for DRAMSimII by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun May 4 17:29:06 2008 for DRAMSimII by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

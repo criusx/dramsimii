@@ -1,1 +1,2 @@
-<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1dram_algorithm.html" title="Algorithm specific data structures should go in here." alt="" coords="7,5,185,32">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1_channel.html" title="represents a DRAM channel, has individual timing parameters, ranks, banks, clock..." alt="" coords="5,5,149,32">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1fbd_channel.html" title="a fully buffered DIMM channel" alt="" coords="197,5,357,32">

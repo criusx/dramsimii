@@ -1,5 +1,5 @@
-<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1dram_system.html" title="represents a DRAM system, the memory controller(s) and associated channels" alt="" coords="387,81,557,108">
-<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1dram_system_configuration.html" title="stores the system configuration options for a dramSystem" alt="" coords="5,5,251,32">
-<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1input_stream.html" title="creates transactions in standalone mode, whether random or from a trace file" alt="" coords="45,56,211,82">
-<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1dram_statistics.html" title="stores statistics about this memory system, primarily relating to counts of transactions/commands..." alt="" coords="39,106,217,133">
-<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1simulation_parameters.html" title="the parameters for the simulation, including where the requests come from and how..." alt="" coords="17,157,239,184">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1_system.html" title="represents a DRAM system, the memory controller(s) and associated channels" alt="" coords="365,81,507,108">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1_input_stream.html" title="creates transactions in standalone mode, whether random or from a trace file" alt="" coords="35,5,200,32">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1_statistics.html" title="stores statistics about this memory system, primarily relating to counts of transactions/commands..." alt="" coords="41,56,193,82">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1_system_configuration.html" title="stores the system configuration options for a dramSystem" alt="" coords="9,106,225,133">
+<area shape="rect" href="$class_d_r_a_m_sim_i_i_1_1simulation_parameters.html" title="the parameters for the simulation, including where the requests come from and how..." alt="" coords="7,157,228,184">

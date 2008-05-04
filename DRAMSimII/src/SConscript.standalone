@@ -3,17 +3,17 @@ import sys
 #Import(`env`)
 
 sources = Split("""
-			addresses.cpp
-			bank_c.cpp
+			Address.cpp
+			Bank.cpp
 			busEvent.cpp
 			command.cpp
-			dramAlgorithm.cpp
-			dramChannel.cpp			
-			dramStatistics.cpp
-			dramSystem.cpp
-			dramSettings.cpp
-			dramSystemConfiguration.cpp
-			dramTimingSpecification.cpp
+			Algorithm.cpp
+			Channel.cpp			
+			Statistics.cpp
+			System.cpp
+			Settings.cpp
+			SystemConfiguration.cpp
+			TimingSpecification.cpp
 			event.cpp
 			executeCommand.cpp
 			fbdAMB.cpp
