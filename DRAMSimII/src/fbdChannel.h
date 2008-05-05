@@ -5,7 +5,7 @@
 #include "queue.h"
 #include "fbdAMB.h"
 #include "fbdFrame.h"
-#include "dramChannel.h"
+#include "Channel.h"
 
 namespace DRAMSimII
 {

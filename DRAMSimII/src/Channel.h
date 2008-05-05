@@ -3,16 +3,16 @@
 #pragma once
 
 #include "globals.h"
-#include "rank_c.h"
+#include "Rank.h"
 #include "powerConfig.h"
-#include "dramTimingSpecification.h"
-#include "dramSystemConfiguration.h"
-#include "dramStatistics.h"
+#include "TimingSpecification.h"
+#include "SystemConfiguration.h"
+#include "Statistics.h"
 #include "queue.h"
 #include "powerConfig.h"
 #include "transaction.h"
 #include "command.h"
-#include "dramAlgorithm.h"
+#include "Algorithm.h"
 
 namespace DRAMSimII
 {
@@ -21,20 +21,20 @@ namespace DRAMSimII
 	{
 		// members
 	protected:
-		tick time;									///< channel time, allow for channel concurrency			
+		tick time;										///< channel time, allow for channel concurrency			
 		tick lastRefreshTime;							///< tells me when last refresh was done
 		unsigned lastRankID;							///< id of the last accessed rank of this channel
-		TimingSpecification timingSpecification;	///< the timing specs for this channel
+		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
 		Transaction **refreshCounter;					///< holds the next refresh commands
 		Queue<Command> historyQueue;					///< what were the last N commands to this channel?
 		Queue<Transaction> completionQueue;				///< completed_q, can send status back to memory controller
-		const SystemConfiguration& systemConfig;	///< a pointer to common system config values
-		Statistics *statistics;						///< backward pointer to the stats engine
+		const SystemConfiguration& systemConfig;		///< a pointer to common system config values
+		Statistics *statistics;							///< backward pointer to the stats engine
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
-		Algorithm algorithm;						///< the algorithms used for transaction, command, etc. ordering
+		Algorithm algorithm;							///< the algorithms used for transaction, command, etc. ordering
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
-		std::vector<rank_c> rank;						///< vector of the array of ranks
+		std::vector<Rank> rank;							///< vector of the array of ranks
 
 	public:
 		// functions
@@ -60,10 +60,10 @@ namespace DRAMSimII
 
 		// accessors
 		const TimingSpecification& getTimingSpecification() const { return timingSpecification; }	///< returns a reference to access the timing specification
-		rank_c& getRank(const unsigned rankNum) { return rank[rankNum]; }								///< get a reference to this channel's rank n
-		const rank_c& getRank(const unsigned rankNum) const { return rank[rankNum]; }					///< get a const reference to this channel's rank n
-		std::vector<rank_c>& getRank() { return rank; }													///< get a reference to this channel's ranks
-		const std::vector<rank_c>& getRank() const { return rank; }
+		Rank& getRank(const unsigned rankNum) { return rank[rankNum]; }								///< get a reference to this channel's rank n
+		const Rank& getRank(const unsigned rankNum) const { return rank[rankNum]; }					///< get a const reference to this channel's rank n
+		std::vector<Rank>& getRank() { return rank; }													///< get a reference to this channel's ranks
+		const std::vector<Rank>& getRank() const { return rank; }
 		tick getTime() const { return time; }
 		unsigned getLastRankID() const { return lastRankID; }
 		Transaction *getTransaction();			// remove and return the oldest transaction
@@ -74,7 +74,7 @@ namespace DRAMSimII
 		Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }
 		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }
-		rank_c& operator[](unsigned rank_num) { return rank[rank_num]; }
+		Rank& operator[](unsigned rank_num) { return rank[rank_num]; }
 
 		// mutators
 		void setStatistics(Statistics *value) { statistics = value; }		///< set the statistics pointer to a dramStatistics object

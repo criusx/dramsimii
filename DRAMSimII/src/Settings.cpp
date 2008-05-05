@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 
-#include "dramSettings.h"
+#include "Settings.h"
 
 using namespace std;
 using namespace DRAMSimII;

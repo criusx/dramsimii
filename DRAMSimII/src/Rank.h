@@ -3,11 +3,11 @@
 #pragma once
 
 #include <vector>
-#include "bank_c.h"
+#include "Bank.h"
 #include "globals.h"
 #include "queue.h"
-#include "dramSettings.h"
-#include "dramTimingSpecification.h"
+#include "Settings.h"
+#include "TimingSpecification.h"
 
 namespace DRAMSimII
 {

@@ -1,7 +1,7 @@
 #include <map>
 #include <string>
 #include <sstream>
-#include "dramSystemConfiguration.h"
+#include "SystemConfiguration.h"
 
 using namespace std;
 using namespace DRAMSimII;

@@ -3,7 +3,7 @@
 #pragma once
 
 #include <map>
-#include "dramSettings.h"
+#include "Settings.h"
 #include "globals.h"
 
 namespace DRAMSimII

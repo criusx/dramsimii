@@ -5,22 +5,22 @@
 #include <vector>
 #include <ostream>
 #include <iostream>
-#include "dramSystemConfiguration.h"
-#include "dramTimingSpecification.h"
-#include "addresses.h"
+#include "SystemConfiguration.h"
+#include "TimingSpecification.h"
+#include "Address.h"
 #include "command.h"
 #include "simulationParameters.h"
-#include "dramStatistics.h"
-#include "dramAlgorithm.h"
+#include "Statistics.h"
+#include "Algorithm.h"
 #include "InputStream.h"
 #include "event.h"
-#include "dramChannel.h"
+#include "Channel.h"
 #include "enumTypes.h"
-#include "rank_c.h"
-#include "dramSettings.h"
+#include "Rank.h"
+#include "Settings.h"
 #include "powerConfig.h"
 #include "globals.h"
-#include "dramSystemConfiguration.h"
+#include "SystemConfiguration.h"
 
 namespace DRAMSimII
 {

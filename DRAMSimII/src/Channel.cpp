@@ -7,7 +7,7 @@
 #include <fstream>
 #include <vector>
 
-#include "dramChannel.h"
+#include "Channel.h"
 
 using namespace std;
 using namespace DRAMSimII;
@@ -29,7 +29,7 @@ completionQueue(settings.completionQueueDepth),
 systemConfig(sysConfig),
 powerModel(settings),
 algorithm(settings),
-rank(settings.rankCount, rank_c(settings, timingSpecification))
+rank(settings.rankCount, Rank(settings, timingSpecification))
 {
 	// assign an id to each channel (normally done with commands)
 	for (unsigned i = 0; i < settings.rankCount; i++)
@@ -73,7 +73,7 @@ completionQueue(dc.completionQueue),
 systemConfig(dc.systemConfig),
 powerModel(dc.powerModel),
 algorithm(dc.algorithm),
-rank((unsigned)dc.rank.size(), rank_c(dc.rank[0],timingSpecification))
+rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification))
 {
 	// assign an id to each channel (normally done with commands)
 	for (unsigned i = 0; i < rank.size(); i++)
@@ -392,7 +392,7 @@ void Channel::doPowerCalculation()
 
 	powerOutStream << "---------------------- epoch ----------------------" << endl;
 
-	for (std::vector<rank_c>::iterator k = rank.begin(); k != rank.end(); k++)
+	for (std::vector<Rank>::iterator k = rank.begin(); k != rank.end(); k++)
 	{
 		unsigned perRankRASCount = 1;
 
@@ -454,7 +454,7 @@ void Channel::doPowerCalculation()
 
 	PsysACT = 0;
 
-	for (vector<rank_c>::const_iterator k = rank.begin(); k != rank.end(); k++)
+	for (vector<Rank>::const_iterator k = rank.begin(); k != rank.end(); k++)
 	{
 		unsigned perRankRASCount = 1;
 

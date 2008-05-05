@@ -6,7 +6,7 @@
 
 #include "enumTypes.h"
 #include "globals.h"
-#include "dramSettings.h"
+#include "Settings.h"
 
 namespace DRAMSimII
 {

@@ -4,7 +4,7 @@
 
 #include <map>
 #include "enumTypes.h"
-#include "dramSettings.h"
+#include "Settings.h"
 #include "globals.h"
 
 namespace DRAMSimII

@@ -7,7 +7,7 @@
 #include <map>
 #include "transaction.h"
 #include "command.h"
-#include "dramSettings.h"
+#include "Settings.h"
 
 namespace DRAMSimII
 {

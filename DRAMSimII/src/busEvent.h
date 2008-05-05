@@ -3,7 +3,7 @@
 #pragma once
 
 #include "globals.h"
-#include "addresses.h"
+#include "Address.h"
 
 namespace DRAMSimII
 {

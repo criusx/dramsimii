@@ -1,4 +1,4 @@
-#include "dramAlgorithm.h"
+#include "Algorithm.h"
 
 using namespace DRAMSimII;
 

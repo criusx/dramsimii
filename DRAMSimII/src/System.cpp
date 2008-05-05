@@ -17,7 +17,7 @@
 #include <boost/iostreams/filter/bzip2.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 #endif
-#include "dramSystem.h"
+#include "System.h"
 
 using namespace std;
 using namespace DRAMSimII;

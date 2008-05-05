@@ -5,8 +5,8 @@
 #include "queue.h"
 #include "globals.h"
 #include "command.h"
-#include "dramSettings.h"
-#include "dramTimingSpecification.h"
+#include "Settings.h"
+#include "TimingSpecification.h"
 
 namespace DRAMSimII
 {

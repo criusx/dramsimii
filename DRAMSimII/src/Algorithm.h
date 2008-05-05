@@ -5,7 +5,7 @@
 #include "command.h"
 #include "globals.h"
 #include "queue.h"
-#include "dramSettings.h"
+#include "Settings.h"
 #include "transaction.h"
 #include "command.h"
 

@@ -299,11 +299,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\addresses.cpp"
+				RelativePath=".\src\Address.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\bank_c.cpp"
+				RelativePath=".\src\Algorithm.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Bank.cpp"
 				>
 			</File>
 			<File
@@ -311,35 +315,11 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Channel.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\command.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramAlgorithm.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramChannel.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramSettings.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramStatistics.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramSystem.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramSystemConfiguration.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramTimingSpecification.cpp"
 				>
 			</File>
 			<File
@@ -473,11 +453,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\rank_c.cpp"
+				RelativePath=".\src\Rank.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\runSimulations.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Settings.cpp"
 				>
 			</File>
 			<File
@@ -486,6 +470,22 @@
 			</File>
 			<File
 				RelativePath=".\src\SSTdramSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Statistics.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\System.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\SystemConfiguration.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TimingSpecification.cpp"
 				>
 			</File>
 			<File

@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 
-#include "dramTimingSpecification.h"
+#include "TimingSpecification.h"
 
 using namespace std;
 using namespace DRAMSimII;

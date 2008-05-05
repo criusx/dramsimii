@@ -1,4 +1,4 @@
-#include "bank_c.h"
+#include "Bank.h"
 
 using namespace DRAMSimII;
 using namespace std;

@@ -8,7 +8,7 @@
 #include "enumTypes.h"
 #include "busEvent.h"
 #include "globals.h"
-#include "dramSettings.h"
+#include "Settings.h"
 
 namespace DRAMSimII
 {
