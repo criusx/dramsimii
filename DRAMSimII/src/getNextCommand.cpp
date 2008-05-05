@@ -18,7 +18,7 @@ Command *Channel::getNextCommand()
 {
 	if (const Command *nextCommand = readNextCommand())
 	{
-		rank_c &currentRank = rank[nextCommand->getAddress().rank];
+		Rank &currentRank = rank[nextCommand->getAddress().rank];
 		
 		// if it was a refresh all command, then dequeue all n banks worth of commands
 		if (nextCommand->getCommandType() == REFRESH_ALL_COMMAND)
@@ -77,7 +77,7 @@ const Command *Channel::readNextCommand() const
 			vector<Bank>::const_iterator oldestBank;
 			vector<Bank>::const_iterator oldestExecutableBank;
 
-			for (vector<rank_c>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
+			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 			{
 				bool notAllRefresh = false;
 
@@ -238,7 +238,7 @@ const Command *Channel::readNextCommand() const
 					if (!noPendingRefreshes)
 					{
 						// before switching to the next bank, see if all the queues are refreshes in any rank
-						for (vector<rank_c>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
+						for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 						{
 							bool notAllRefresh = false;
 							for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
@@ -369,7 +369,7 @@ const Command *Channel::readNextCommand() const
 					if (!noPendingRefreshes)
 					{
 						// before switching to the next bank, see if all the queues are refreshes in any rank
-						for (vector<rank_c>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
+						for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 						{
 							bool notAllRefresh = false;
 							for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
@@ -447,7 +447,7 @@ const Command *Channel::readNextCommand() const
 			//int candidateGap = INT_MAX;
 			tick candidateExecuteTime = TICK_MAX;
 
-			for (vector<rank_c>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
+			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 			{
 				bool notAllRefresh = false;
 

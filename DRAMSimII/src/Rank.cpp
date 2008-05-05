@@ -4,7 +4,7 @@
 using namespace DRAMSimII;
 using namespace std;
 
-rank_c::rank_c(const Settings& settings, const TimingSpecification &timingVal):
+Rank::Rank(const Settings& settings, const TimingSpecification &timingVal):
 timing(timingVal),
 lastRefreshTime(0),
 lastPrechargeTime(0),
@@ -20,7 +20,7 @@ lastRASTimes(4), // make the queue hold four (tFAW)
 bank(settings.bankCount,Bank(settings, timingVal))
 {}
 
-rank_c::rank_c(const rank_c &r, const TimingSpecification &timingVal):
+Rank::Rank(const Rank &r, const TimingSpecification &timingVal):
 timing(timingVal),
 lastRefreshTime(r.lastRefreshTime),
 lastPrechargeTime(0),
@@ -36,7 +36,7 @@ banksPrecharged(r.banksPrecharged),
 bank((unsigned)r.bank.size(), Bank(r.bank[0], timingVal))
 {}
 
-void rank_c::issueRAS(const tick currentTime, const Command *currentCommand)
+void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	
 
@@ -65,7 +65,7 @@ void rank_c::issueRAS(const tick currentTime, const Command *currentCommand)
 	currentBank.issueRAS(currentTime, currentCommand);
 }
 
-void rank_c::issuePRE(const tick currentTime, const Command *currentCommand)
+void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
 	Bank &currentBank = bank[currentCommand->getAddress().bank];
@@ -92,7 +92,7 @@ void rank_c::issuePRE(const tick currentTime, const Command *currentCommand)
 	assert(banksPrecharged <= bank.size());
 }
 
-void rank_c::issueCAS(const tick currentTime, const Command *currentCommand)
+void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().bank].issueCAS(currentTime, currentCommand);
@@ -103,7 +103,7 @@ void rank_c::issueCAS(const tick currentTime, const Command *currentCommand)
 	lastBankID = currentCommand->getAddress().bank;
 }
 
-void rank_c::issueCASW(const tick currentTime, const Command *currentCommand)
+void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().bank].issueCASW(currentTime, currentCommand);
@@ -114,7 +114,7 @@ void rank_c::issueCASW(const tick currentTime, const Command *currentCommand)
 	lastBankID = currentCommand->getAddress().bank;
 }
 
-void rank_c::issueREF(const tick currentTime, const Command *currentCommand)
+void Rank::issueREF(const tick currentTime, const Command *currentCommand)
 {
 	// FIXME: should this not count as a RAS + PRE command to all banks?
 	for (vector<Bank>::iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)

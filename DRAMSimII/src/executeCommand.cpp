@@ -16,7 +16,7 @@ using namespace DRAMSimII;
 /// <param name="gap">The minimum amount of time to delay before executing the command</param>
 void Channel::executeCommand(Command *thisCommand,const int gap)
 {
-	rank_c &currentRank = rank[thisCommand->getAddress().rank];
+	Rank &currentRank = rank[thisCommand->getAddress().rank];
 
 	Bank &currentBank = currentRank.bank[thisCommand->getAddress().bank];
 
@@ -129,7 +129,7 @@ void Channel::executeCommand(Command *thisCommand,const int gap)
 
 void Channel::executeCommand(Command *thisCommand)
 {
-	rank_c &currentRank = rank[thisCommand->getAddress().rank];
+	Rank &currentRank = rank[thisCommand->getAddress().rank];
 
 	Bank &currentBank = currentRank.bank[thisCommand->getAddress().bank];
 

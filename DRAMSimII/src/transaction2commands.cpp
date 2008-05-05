@@ -156,7 +156,7 @@ bool Channel::transaction2commands(Transaction *newTransaction)
 		if (newTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 		{
 			// check to see if every per bank command queue has room for one command
-			rank_c &currentRank = rank[newTransaction->getAddresses().rank];
+			Rank &currentRank = rank[newTransaction->getAddresses().rank];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
@@ -244,7 +244,7 @@ bool Channel::transaction2commands(Transaction *newTransaction)
 		if (newTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 		{
 			// check to see if every per bank command queue has room for one command
-			rank_c &currentRank = rank[newTransaction->getAddresses().rank];
+			Rank &currentRank = rank[newTransaction->getAddresses().rank];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks

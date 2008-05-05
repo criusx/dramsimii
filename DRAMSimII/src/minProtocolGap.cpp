@@ -14,7 +14,7 @@ int Channel::minProtocolGap(const Command *this_c) const
 
 	const unsigned this_rank = this_c->getAddress().rank;
 
-	const rank_c &currentRank = rank[this_rank];
+	const Rank &currentRank = rank[this_rank];
 
 	const Bank &currentBank = currentRank.bank[this_c->getAddress().bank];
 
@@ -88,7 +88,7 @@ int Channel::minProtocolGap(const Command *this_c) const
 			int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent cas(w) time and length
-			for (vector<rank_c>::const_iterator thisRank = rank.begin(); thisRank != rank.end(); thisRank++)
+			for (vector<Rank>::const_iterator thisRank = rank.begin(); thisRank != rank.end(); thisRank++)
 			{
 				if (thisRank->getRankID() != currentRank.getRankID())
 				{
@@ -239,7 +239,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 	const unsigned this_rank = currentCommand->getAddress().rank;
 
-	const rank_c &currentRank = rank[this_rank];
+	const Rank &currentRank = rank[this_rank];
 
 	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().bank];
 
@@ -311,7 +311,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent cas(w) time and length
-			for (vector<rank_c>::const_iterator thisRank = rank.begin(); thisRank != rank.end(); thisRank++)
+			for (vector<Rank>::const_iterator thisRank = rank.begin(); thisRank != rank.end(); thisRank++)
 			{
 				if (thisRank->getRankID() != currentRank.getRankID())
 				{

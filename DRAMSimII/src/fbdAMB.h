@@ -8,13 +8,13 @@
 namespace DRAMSimII
 {
 	/// @brief the fully buffered DIMM advanced memory buffer
-	class fbdAMB
+	class AMB
 	{
 	private:
 		//queue<
 	public:
-		fbdAMB(void);
-		~fbdAMB(void);
+		AMB(void);
+		~AMB(void);
 	};
 }
 

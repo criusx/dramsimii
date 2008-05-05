@@ -12,7 +12,7 @@
 namespace DRAMSimII
 {
 	/// @brief represents a logical rank and associated statistics
-	class rank_c
+	class Rank
 	{
 	protected:
 
@@ -42,8 +42,8 @@ namespace DRAMSimII
 		void issueREF(const tick currentTime, const Command *currentCommand);
 		
 		// constructors
-		rank_c(const rank_c &, const TimingSpecification &timingVal);
-		explicit rank_c(const Settings& settings, const TimingSpecification &timingVal);
+		Rank(const Rank&, const TimingSpecification &timingVal);
+		explicit Rank(const Settings& settings, const TimingSpecification &timingVal);
 
 		// accessors
 		unsigned getRankID() const { return rankID; }		
@@ -63,7 +63,7 @@ namespace DRAMSimII
 		void setLastBankID(const unsigned value) { lastBankID = value; }
 		void setPrechargeTime(const tick value) { prechargeTime = value; }
 
-		rank_c& operator =(const rank_c &rs);
+		Rank& operator =(const Rank &rs);
 	};
 }
 #endif

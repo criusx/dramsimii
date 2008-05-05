@@ -2,10 +2,10 @@
 
 using namespace DRAMSimII;
 
-fbdAMB::fbdAMB(void)
+AMB::AMB(void)
 {
 }
 
-fbdAMB::~fbdAMB(void)
+AMB::~AMB(void)
 {
 }
