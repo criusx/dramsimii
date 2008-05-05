@@ -2,11 +2,11 @@
 #include <iostream>
 #include <fstream>
 
-#include "dramSystem.h"
+#include "System.h"
 #include "fbdSystem.h"
-#include "rank_c.h"
+#include "Rank.h"
 #include "globals.h"
-#include "dramSettings.h"
+#include "Settings.h"
 
 using namespace std;
 using namespace DRAMSimII;

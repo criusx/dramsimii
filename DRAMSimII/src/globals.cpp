@@ -7,11 +7,11 @@
 #include <fstream>
 #include <boost/iostreams/filtering_stream.hpp>
 
-#include "dramSystem.h"
-#include "rank_c.h"
+#include "System.h"
+#include "Rank.h"
 #include "globals.h"
-#include "dramTimingSpecification.h"
-#include "dramStatistics.h"
+#include "TimingSpecification.h"
+#include "Statistics.h"
 
 
 using namespace std;

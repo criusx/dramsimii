@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <cassert>
 
-#include "dramSystem.h"
+#include "System.h"
 
 using namespace std;
 using namespace DRAMSimII;

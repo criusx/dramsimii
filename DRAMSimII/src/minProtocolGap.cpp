@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "dramChannel.h"
+#include "Channel.h"
 
 using namespace std;
 using namespace DRAMSimII;
