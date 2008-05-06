@@ -16,7 +16,7 @@ namespace DRAMSimII
 		static Queue<Command> freeCommandPool; ///< command objects are stored here to avoid allocating memory after initialization
 
 		CommandType commandType;		///< what type of command this is
-		tick startTime;				///< the time at which the command started
+		tick startTime;					///< the time at which the command started
 		tick enqueueTime;				///< the time when this command was placed into the per bank queues
 		tick completionTime;			///< the time when this command completed
 		Address addr;					///< the addresses where this command is targeted

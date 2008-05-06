@@ -10,12 +10,16 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
+#define STATS_INTERVAL 1000000
+
+#define TESTNEW
+
 
 class SSTdramSystem : public component
 {
 protected:
-	DRAMSimII::System ds;			///< the DRAMSimII object
-	tick nextStats;					///< the next time at which stats should be collected
+	DRAMSimII::System ds;				///< the DRAMSimII object
+	tick nextStats;						///< the next time at which stats should be collected
 
 	// random number stuff
 	base_generator_type generator;		///< the random generator base type
@@ -23,6 +27,7 @@ protected:
 	boost::variate_generator<base_generator_type&, boost::uniform_int<> > uni;	///< the actual generator
 
 	bool doAtomicAccess(parcel *p);
+	void moveToTime(const tick now);
 
 public:
 	SSTdramSystem();

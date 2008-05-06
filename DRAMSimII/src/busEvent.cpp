@@ -2,7 +2,7 @@
 
 using namespace DRAMSimII;
 
-busEvent::busEvent():
+BusEvent::BusEvent():
 attributes(CONTROL_TRANSACTION),
 address(),
 timestamp(0)

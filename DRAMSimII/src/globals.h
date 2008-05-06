@@ -107,7 +107,6 @@ namespace DRAMSimII
 	}	
 
 	// global var forward
-	//extern boost::iostreams::filtering_ostream outStream;
 	extern boost::iostreams::filtering_ostream timingOutStream;
 	extern boost::iostreams::filtering_ostream powerOutStream;
 	extern boost::iostreams::filtering_ostream statsOutStream;

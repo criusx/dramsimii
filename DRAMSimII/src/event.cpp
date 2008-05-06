@@ -10,7 +10,7 @@ Queue<event> event::freeEventPool(4*COMMAND_QUEUE_SIZE,true);
 
 event::event()
 {
-	event_type = 0;
+	eventType = 0;
 	time = 0;
 	event_ptr = NULL;
 }

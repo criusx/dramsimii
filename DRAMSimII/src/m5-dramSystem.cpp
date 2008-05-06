@@ -216,8 +216,8 @@ void M5dramSystem::TickEvent::process()
 
 	M5_TIMING_LOG("intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]");
 
-		// move memory channels to the current time
-		memory->moveToTime(currentMemCycle);
+	// move memory channels to the current time
+	memory->moveToTime(currentMemCycle);
 
 
 	// deschedule yourself
@@ -228,9 +228,9 @@ void M5dramSystem::TickEvent::process()
 	tick next = min(memory->nextStats,memory->ds->nextTick());	
 	assert(next < TICK_MAX);
 
-	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]")
+	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]");
 
-		assert(next * memory->getCpuRatio() > curTick);
+	assert(next * memory->getCpuRatio() > curTick);
 	schedule(static_cast<Tick>(next * memory->getCpuRatio()));
 }
 

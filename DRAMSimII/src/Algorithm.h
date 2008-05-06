@@ -17,11 +17,11 @@ namespace DRAMSimII
 
 	protected:
 		Queue<Command> WHCC; /// Wang Hop Command Chain 
-		int WHCC_offset[2];
-		int transaction_type[4];
-		int rank_id[2];
-		int ras_bank_id[4];
-		int cas_count[4];
+		int WHCCOffset[2];
+		int transactionType[4];
+		int rankID[2];
+		int rasBankID[4];
+		int casCount[4];
 
 	public:
 		// constructors
@@ -32,8 +32,8 @@ namespace DRAMSimII
 		// functions
 		void init(int, int, int); 
 		Queue<Command> &getWHCC() { return WHCC; }
-		int *WHCCOffset() { return WHCC_offset; }
-		int *getTransactionType() { return transaction_type; }
+		int *WHCCOffset() { return WHCCOffset; }
+		int *getTransactionType() { return transactionType; }
 	};
 }
 #endif

@@ -10,17 +10,17 @@
 namespace DRAMSimII
 {
 	/// @brief pending event queue
-	class event
+	class Event
 	{
 	private:
-		static Queue<event> freeEventPool;
+		static Queue<Event> freeEventPool;
 
 	public:
-		int event_type; // what kind of event is this?
-		tick time;
-		void *event_ptr; // point to a transaction or command to be enqueued or executed
+		EventType eventType;	///< what kind of event is this?
+		tick time;				///< the time that this event happens
+		void *eventPointer;		///< point to a transaction or command to be enqueued or executed
 
-		event();
+		Event();
 		void *operator new(size_t size);
 		void operator delete(void *);
 	};

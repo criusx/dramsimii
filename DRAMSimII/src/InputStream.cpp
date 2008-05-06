@@ -35,8 +35,8 @@ interarrivalDistributionModel(UNIFORM_DISTRIBUTION)
 	if (settings.inFile.length() > 2)
 	{
 		string inFileWithPath = "./traceFiles/" + settings.inFile;
-		trace_file.open(inFileWithPath.c_str());
-		if (!trace_file.good())
+		traceFile.open(inFileWithPath.c_str());
+		if (!traceFile.good())
 		{
 			cerr << "Unable to open trace file \"" << settings.inFile << "\"" << endl;
 			exit(-9);
@@ -151,7 +151,7 @@ float InputStream::boxMuller(const float m, const float s) const
 }
 
 
-bool InputStream::getNextBusEvent(busEvent &this_e)
+bool InputStream::getNextBusEvent(BusEvent &this_e)
 {	
 	enum FileIOToken control;	
 	string input;	
@@ -169,11 +169,11 @@ bool InputStream::getNextBusEvent(busEvent &this_e)
 			tick timestamp = TICK_MAX;
 			unsigned address = UINT_MAX;
 
-			while((bursting == true) && trace_file.good())
+			while((bursting == true) && traceFile.good())
 			{
-				trace_file >> std::hex >> address >> input >> timestamp;
+				traceFile >> std::hex >> address >> input >> timestamp;
 
-				if(trace_file.good())
+				if(traceFile.good())
 				{
 					cout << "Unexpected EOF, Please fix input trace file" << endl;
 					return false;
@@ -196,8 +196,8 @@ bool InputStream::getNextBusEvent(busEvent &this_e)
 					attributes = READ_TRANSACTION;
 				}
 
-				trace_file >> input;
-				if(trace_file.eof())
+				traceFile >> input;
+				if(traceFile.eof())
 				{
 					cout << "Unexpected EOF, Please fix input trace file" << endl;
 					return false;
@@ -223,11 +223,11 @@ bool InputStream::getNextBusEvent(busEvent &this_e)
 		break;
 	case MASE_TRACE:
 		{
-			trace_file >> std::hex >> this_e.address.physicalAddress >> input >> std::dec >> this_e.timestamp;
+			traceFile >> std::hex >> this_e.address.physicalAddress >> input >> std::dec >> this_e.timestamp;
 
 			//this_e.timestamp /= 40000;
 			this_e.timestamp /= cpuToMemoryRatio;
-			if(!trace_file.good()) /// found starting Hex address 
+			if(!traceFile.good()) /// found starting Hex address 
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;
 				return false;
@@ -259,9 +259,9 @@ bool InputStream::getNextBusEvent(busEvent &this_e)
 		break;
 	case MAPPED:
 		{
-			trace_file >> std::dec >> this_e.timestamp >> input >> std::dec >> this_e.address.channel >> this_e.address.rank >> this_e.address.bank >> this_e.address.row >> this_e.address.column;
+			traceFile >> std::dec >> this_e.timestamp >> input >> std::dec >> this_e.address.channel >> this_e.address.rank >> this_e.address.bank >> this_e.address.row >> this_e.address.column;
 
-			if(!trace_file.good()) /// found starting Hex address 
+			if(!traceFile.good()) /// found starting Hex address 
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;
 				return false;

@@ -503,7 +503,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\src\bank_c.h"
+				RelativePath=".\src\Algorithm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Bank.h"
 				>
 			</File>
 			<File
@@ -511,35 +515,11 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Channel.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\command.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramAlgorithm.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramChannel.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramSettings.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramStatistics.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramSystem.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramSystemConfiguration.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dramTimingSpecification.h"
 				>
 			</File>
 			<File
@@ -563,10 +543,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\fbdFrame.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\fbdSystem.h"
 				>
 			</File>
@@ -583,10 +559,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\powerConfig.h"
-				>
-			</File>
-			<File
 				RelativePath=".\powerConfig.h"
 				>
 			</File>
@@ -595,7 +567,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\rank_c.h"
+				RelativePath=".\src\Rank.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Settings.h"
 				>
 			</File>
 			<File
@@ -604,6 +580,26 @@
 			</File>
 			<File
 				RelativePath=".\src\SSTdramSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Statistics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\System.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\SystemConfiguration.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TimingSpecification.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\transaction.h"
 				>
 			</File>
 		</Filter>
@@ -619,6 +615,10 @@
 		</File>
 		<File
 			RelativePath=".\ClassDiagram2.cd"
+			>
+		</File>
+		<File
+			RelativePath=".\ClassDiagram3.cd"
 			>
 		</File>
 	</Files>

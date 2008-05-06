@@ -599,7 +599,7 @@ Transaction *System::getNextIncomingTransaction()
 	case MASE_TRACE:
 	case MAPPED:
 		{
-			static busEvent this_e;
+			static BusEvent this_e;
 
 			if (!input_stream.getNextBusEvent(this_e))
 			{

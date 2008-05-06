@@ -3,7 +3,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
-simulationParameters::simulationParameters(const Settings& settings):
-input_type(RANDOM),
-request_count(settings.requestCount)
+SimulationParameters::SimulationParameters(const Settings& settings):
+inputType(RANDOM),
+requestCount(settings.requestCount)
 {}

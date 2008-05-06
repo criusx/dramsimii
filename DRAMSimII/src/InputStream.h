@@ -32,9 +32,10 @@ namespace DRAMSimII
 		DistributionType interarrivalDistributionModel;	///< the model used to predict and determine when the next arrival will happen
 
 		//enum input_status_t get_next_input_transaction(transaction*);
-		std::ifstream trace_file;	///< the trace file that contains transactions, addresses and times
+		std::ifstream traceFile;	///< the trace file that contains transactions, addresses and times
 
 	public: 
+
 		// constructors	
 		InputStream(const Settings& settings);
 
@@ -43,7 +44,7 @@ namespace DRAMSimII
 		float boxMuller(float, float) const;
 		float Poisson (float) const;
 		float gammaLn(float) const;
-		bool getNextBusEvent(busEvent &);
+		bool getNextBusEvent(BusEvent &);
 
 		// accessors
 		InputType getType() const { return type; }

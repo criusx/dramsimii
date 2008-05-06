@@ -51,7 +51,7 @@ void System::runSimulations3()
 	Transaction *input_t = NULL;
 	tick nextStats = STATSINTERVAL;
 
-	for (unsigned i = simParameters.get_request_count(); i > 0; )
+	for (unsigned i = simParameters.getRequestCount(); i > 0; )
 	{
 		// print stats periodically
 		if (time >= nextStats)

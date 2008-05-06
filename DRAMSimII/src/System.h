@@ -34,7 +34,7 @@ namespace DRAMSimII
 		// members
 		SystemConfiguration systemConfig;	///< stores the parameters for the DRAM system, including channel/rank/bank/row counts
 		std::vector<Channel> channel;		///< represents the independent channels
-		simulationParameters simParameters;		///< has all the necessary parameters for the simulation run
+		SimulationParameters simParameters;		///< has all the necessary parameters for the simulation run
 		Statistics statistics;				///< keeps running statistics about the simulation
 		InputStream input_stream;				///< provides an interface to the input trace for the simulation
 

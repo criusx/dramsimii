@@ -9,19 +9,19 @@
 namespace DRAMSimII
 {
 	/// @brief the parameters for the simulation, including where the requests come from and how many requests to simulate
-	class simulationParameters 
+	class SimulationParameters 
 	{
 	protected:
-		int request_count;	///< the number of requests to simulate
-		int input_type;		///< the input type
+		unsigned requestCount;		///< the number of requests to simulate
+		InputType inputType;		///< the input type
 
 	public:
 		// constructors
-		simulationParameters(std::map<FileIOToken,std::string> &);
-		simulationParameters(const Settings& settings);
+		SimulationParameters(std::map<FileIOToken,std::string> &);
+		SimulationParameters(const Settings& settings);
 
 		// functions
-		int get_request_count() {return request_count;}
+		unsigned getRequestCount() {return requestCount;}
 	};
 }
 #endif

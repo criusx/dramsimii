@@ -4,22 +4,22 @@ using namespace DRAMSimII;
 
 Algorithm::Algorithm(const Settings& settings)
 {
-	rank_id[0] = 0;
-	rank_id[1] = 3;
-	ras_bank_id[0] = 0;
-	ras_bank_id[1] = 0;
-	ras_bank_id[2] = 0;
-	ras_bank_id[3] = 0;
-	cas_count[0] = 0;
-	cas_count[1] = 0;
-	cas_count[2] = 0;
-	cas_count[3] = 0;
-	WHCC_offset[0] = 0;
-	WHCC_offset[1] = 0;
-	transaction_type[0] = READ_TRANSACTION;
-	transaction_type[1] = READ_TRANSACTION;
-	transaction_type[2] = READ_TRANSACTION;
-	transaction_type[3] = READ_TRANSACTION;
+	rankID[0] = 0;
+	rankID[1] = 3;
+	rasBankID[0] = 0;
+	rasBankID[1] = 0;
+	rasBankID[2] = 0;
+	rasBankID[3] = 0;
+	casCount[0] = 0;
+	casCount[1] = 0;
+	casCount[2] = 0;
+	casCount[3] = 0;
+	WHCCOffset[0] = 0;
+	WHCCOffset[1] = 0;
+	transactionType[0] = READ_TRANSACTION;
+	transactionType[1] = READ_TRANSACTION;
+	transactionType[2] = READ_TRANSACTION;
+	transactionType[3] = READ_TRANSACTION;
 
 
 	WHCC.resize(settings.rankCount * settings.bankCount * 2);
@@ -204,22 +204,22 @@ Algorithm::Algorithm(int rank_count,
 							 int bank_count,
 							 int config_type)
 {
-	rank_id[0] = 0;
-	rank_id[1] = 3;
-	ras_bank_id[0] = 0;
-	ras_bank_id[1] = 0;
-	ras_bank_id[2] = 0;
-	ras_bank_id[3] = 0;
-	cas_count[0] = 0;
-	cas_count[1] = 0;
-	cas_count[2] = 0;
-	cas_count[3] = 0;
-	WHCC_offset[0] = 0;
-	WHCC_offset[1] = 0;
-	transaction_type[0] = READ_TRANSACTION;
-	transaction_type[1] = READ_TRANSACTION;
-	transaction_type[2] = READ_TRANSACTION;
-	transaction_type[3] = READ_TRANSACTION;
+	rankID[0] = 0;
+	rankID[1] = 3;
+	rasBankID[0] = 0;
+	rasBankID[1] = 0;
+	rasBankID[2] = 0;
+	rasBankID[3] = 0;
+	casCount[0] = 0;
+	casCount[1] = 0;
+	casCount[2] = 0;
+	casCount[3] = 0;
+	WHCCOffset[0] = 0;
+	WHCCOffset[1] = 0;
+	transactionType[0] = READ_TRANSACTION;
+	transactionType[1] = READ_TRANSACTION;
+	transactionType[2] = READ_TRANSACTION;
+	transactionType[3] = READ_TRANSACTION;
 
 
 	WHCC.resize(rank_count * bank_count * 2);
@@ -402,22 +402,22 @@ Algorithm::Algorithm(int rank_count,
 
 Algorithm::Algorithm(const Algorithm &a)
 {
-	rank_id[0] = a.rank_id[0];
-	rank_id[1] = a.rank_id[1];
-	ras_bank_id[0] = a.ras_bank_id[0];
-	ras_bank_id[1] = a.ras_bank_id[1];
-	ras_bank_id[2] = a.ras_bank_id[2];
-	ras_bank_id[3] = a.ras_bank_id[3];
-	cas_count[0] = a.cas_count[0];
-	cas_count[1] = a.cas_count[1];
-	cas_count[2] = a.cas_count[2];
-	cas_count[3] = a.cas_count[3];
-	WHCC_offset[0] = a.WHCC_offset[0];
-	WHCC_offset[1] = a.WHCC_offset[1];
-	transaction_type[0] = a.transaction_type[0];
-	transaction_type[1] = a.transaction_type[1];
-	transaction_type[2] = a.transaction_type[2];
-	transaction_type[3] = a.transaction_type[3];
+	rankID[0] = a.rankID[0];
+	rankID[1] = a.rankID[1];
+	rasBankID[0] = a.rasBankID[0];
+	rasBankID[1] = a.rasBankID[1];
+	rasBankID[2] = a.rasBankID[2];
+	rasBankID[3] = a.rasBankID[3];
+	casCount[0] = a.casCount[0];
+	casCount[1] = a.casCount[1];
+	casCount[2] = a.casCount[2];
+	casCount[3] = a.casCount[3];
+	WHCCOffset[0] = a.WHCCOffset[0];
+	WHCCOffset[1] = a.WHCCOffset[1];
+	transactionType[0] = a.transactionType[0];
+	transactionType[1] = a.transactionType[1];
+	transactionType[2] = a.transactionType[2];
+	transactionType[3] = a.transactionType[3];
 }
 void Algorithm::init(int rank_count,
 						 int bank_count,
