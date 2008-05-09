@@ -265,19 +265,19 @@ const void *fbdChannel::moveChannelToTime(const tick endTime, tick *transFinishT
 			if (nextFrame)
 			{
 				// execute any commands in this frame
-				if (nextFrame->getCommandAType() != EMPTY_COMMAND)
+				if (nextFrame->getCommandAType() != NO_COMMAND)
 				{
 					statistics->collectCommandStats(nextFrame->getCommandA());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandA());
 					executeCommand(nextFrame->getCommandA(),0);
 				}
-				if (nextFrame->getCommandBType() != EMPTY_COMMAND && nextFrame->getCommandBType() != DATA_COMMAND)
+				if (nextFrame->getCommandBType() != NO_COMMAND && nextFrame->getCommandBType() != DATA_COMMAND)
 				{
 					statistics->collectCommandStats(nextFrame->getCommandB());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandB());
 					executeCommand(nextFrame->getCommandB(),0);
 				}
-				if (nextFrame->getCommandCType() != EMPTY_COMMAND && nextFrame->getCommandCType() != DATA_COMMAND)
+				if (nextFrame->getCommandCType() != NO_COMMAND && nextFrame->getCommandCType() != DATA_COMMAND)
 				{
 					statistics->collectCommandStats(nextFrame->getCommandC());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandC());
@@ -601,7 +601,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 			// if any executable command was found, prioritize it over those which must wait
 			if (oldestExecutableCommandTime < TICK_MAX)
 			{
-				assert(oldestExecutableBank->getPerBankQueue().front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestExecutableBank->getPerBankQueue().front()->getAddress().rank].bank[oldestExecutableBank->getPerBankQueue().front()->getAddress().bank].getPerBankQueue().front() == oldestExecutableBank->getPerBankQueue().front());
+				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL_COMMAND || rank[oldestExecutableBank->front()->getAddress().rank].bank[oldestExecutableBank->getPerBankQueue().front()->getAddress().bank].getPerBankQueue().front() == oldestExecutableBank->getPerBankQueue().front());
 
 				return oldestExecutableBank->getPerBankQueue().front();
 			}

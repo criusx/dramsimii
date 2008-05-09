@@ -3,8 +3,9 @@
 using namespace DRAMSimII;
 using namespace std;
 
-Bank::Bank(const Settings& settings, const TimingSpecification &timingVal):
+Bank::Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
+systemConfig(systemConfigVal),
 perBankQueue(settings.perBankQueueDepth),
 lastRASTime(-100),
 lastCASTime(-100),
@@ -91,4 +92,81 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 {
 
+}
+
+//////////////////////////////////////////////////////////////////////
+/// @brief attempts to insert a transaction as a single CAS command, taking advantage of existing RAS-PRE commands
+/// @details goes through the entire per bank queue to find a matching precharge command\n
+/// if one is found, then the transaction is converted into the appropriate CAS command and inserted
+/// @author Joe Gross
+/// @param value the transaction to be inserted
+/// @return true if the transaction was converted and inserted successfully, false otherwise
+//////////////////////////////////////////////////////////////////////
+bool Bank::openPageInsert(const DRAMSimII::Transaction *value)
+{
+	if (!perBankQueue.isFull())
+	{
+		// look in the bank_q and see if there's a precharge for this row to insert before		
+		// go from tail to head
+		for (int currentIndex = perBankQueue.size() - 1; currentIndex >= 0; --currentIndex)
+		{	
+			const Command *currentCommand = perBankQueue.read(currentIndex);
+
+			// channel, rank, bank, row all match, insert just before this precharge command
+			if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().row == value->getAddresses().row)) 
+			{
+				bool result;
+				switch (value->getType())
+				{
+				case WRITE_TRANSACTION:
+					result = perBankQueue.insert(new Command(value->getAddresses(),CAS_WRITE_COMMAND,time,value,false,value->getLength()), currentIndex);	
+					break;
+				case IFETCH_TRANSACTION:
+				case READ_TRANSACTION:
+					result = perBankQueue.insert(new Command(value->getAddresses(),CAS_COMMAND,time,value,false,value->getLength()), currentIndex);
+					break;
+				default:
+					cerr << "Unrecognized transaction type." << endl;
+					break;
+				}
+				assert(result);
+
+				return true;
+			}
+		}
+	}
+	else
+	{
+		// no place to insert it
+		return false;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+/// @brief check to see if this transaction can be inserted successfully via the open page insert mechanism
+/// @details goes through the per bank queue to see that there is a slot to insert into and that
+/// there is a precharge command to the same row that it can insert before
+/// @author Joe Gross
+/// @param value the transaction to test
+/// @return true if it is able to be inserted, false otherwise
+//////////////////////////////////////////////////////////////////////
+bool Bank::openPageInsertCheck(const DRAMSimII::Transaction *value)
+{
+	if (perBankQueue.isFull())
+		return false;
+	// look in the bank_q and see if there's a precharge for this row to insert before		
+	// go from tail to head
+	for (int currentIndex = perBankQueue.size() - 1; currentIndex >= 0; --currentIndex)
+	{	
+		const Command *currentCommand = perBankQueue.read(currentIndex);
+
+		// channel, rank, bank, row all match, insert just before this precharge command
+		if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().row == value->getAddresses().row)) 
+		{
+			return true;
+		}
+	}
+
+	// no place to insert it
+	return false;
 }

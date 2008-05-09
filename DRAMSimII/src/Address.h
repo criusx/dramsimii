@@ -2,6 +2,8 @@
 #define ADDRESSES_H
 #pragma once
 
+#include <limits>
+
 namespace DRAMSimII
 {
 	/// @brief This class logically represents several interpretations of a memory address
@@ -11,6 +13,7 @@ namespace DRAMSimII
 	class Address
 	{
 	public:
+		static const unsigned long long ADDR_MAX = ULLONG_MAX;	///< the largest possible address value
 		unsigned virtualAddress;			///< the virtual address
 		unsigned long long physicalAddress; ///< the physical address
 		unsigned channel;					///< the enumerated channel id

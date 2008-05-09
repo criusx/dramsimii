@@ -231,8 +231,8 @@ int Channel::minProtocolGap(const Command *this_c) const
 	return max(min_gap,timingSpecification.tCMD());
 }
 
-//! Returns the soonest time that this command may execute
-/*! Looks at all of the timing parameters and decides when the this command may soonest execute */
+/// @brief Returns the soonest time that this command may execute
+/// @details Looks at all of the timing parameters and decides when the this command may soonest execute
 tick Channel::earliestExecuteTime(const Command *currentCommand) const
 { 
 	tick nextTime;

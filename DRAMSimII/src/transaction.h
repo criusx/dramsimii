@@ -3,6 +3,8 @@
 #pragma once
 
 #include <fstream>
+#include <assert.h>
+#include <iomanip>
 #include "globals.h"
 #include "Address.h"
 #include "enumTypes.h"
@@ -15,8 +17,9 @@ namespace DRAMSimII
 	{
 	protected:
 		static Queue<Transaction> freeTransactionPool;	///< transactions are stored here to avoid allocating memory after initialization
+		static unsigned eventCounter;		///< keeps track of how many transactions are created
 
-		unsigned event_no;					///< the nth event
+		unsigned eventNumber;				///< the nth event
 		TransactionType type;				///< transaction type
 		int status;							///< status of this transaction
 		unsigned length;					///< the number of words requested
@@ -36,7 +39,7 @@ namespace DRAMSimII
 		tick getCompletionTime() const { return completionTime; }					///< get the completion time
 		unsigned getLength() const { return length; }								///< get the number of bytes requested
 		TransactionType getType() const { return type; }							///< get what type of transaction this is
-		unsigned getEventNumber() const { return event_no; }						///< which event number this is
+		unsigned getEventNumber() const { return eventNumber; }						///< which event number this is
 		const void *getOriginalTransaction() const { return originalTransaction; }	///< get the external transaction that this is a representation for
 
 		// mutators
@@ -45,7 +48,7 @@ namespace DRAMSimII
 		void setCompletionTime(const tick value) { completionTime = value; }
 		void setType(const TransactionType value) { type = value; }
 		void setLength(const unsigned value) { length = value; }
-		void setEventNumber(const unsigned value) { event_no = value; }
+		void setEventNumber(const unsigned value) { eventNumber = value; }
 		void setOriginalTransaction(const unsigned *value) { originalTransaction = value; }
 
 		// constructors

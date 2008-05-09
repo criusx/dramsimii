@@ -1,5 +1,4 @@
-#include <assert.h>
-#include <iomanip>
+
 #include "transaction.h"
 
 using namespace std;
@@ -7,10 +6,11 @@ using namespace DRAMSimII;
 
 // initialize the static members
 Queue<Transaction> Transaction::freeTransactionPool(4*COMMAND_QUEUE_SIZE,true);
+unsigned Transaction::eventCounter(0);
 
 /// constructor to make a transaction with no values set
 Transaction::Transaction():
-event_no(0),
+eventNumber(eventNumber++),
 type(CONTROL_TRANSACTION),
 status(0),
 length(0),
@@ -23,7 +23,7 @@ originalTransaction(0)
 
 /// copy constructor to duplicate a transaction
 Transaction::Transaction(const Transaction *rs):
-event_no(rs->event_no),
+eventNumber(rs->eventNumber),
 type(rs->type),
 status(rs->status),
 length(rs->length),
@@ -36,7 +36,7 @@ originalTransaction(rs->originalTransaction)
 
 /// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
 Transaction::Transaction(const int attribute,const tick enqueueTime,const int Size,const unsigned long long address, const void *originalTrans):
-event_no(0),
+eventNumber(eventNumber++),
 status(0),
 length(Size),
 enqueueTime(enqueueTime),
@@ -59,8 +59,8 @@ originalTransaction(originalTrans)
 void * Transaction::operator new(size_t size)
 {
 	assert(size == sizeof(Transaction));
-	Transaction *newTrans = freeTransactionPool.acquire_item();
-	newTrans->getAddresses().physicalAddress = ULLONG_MAX;
+	Transaction *newTrans = freeTransactionPool.acquireItem();
+	newTrans->getAddresses().physicalAddress = Address::ADDR_MAX;
 	return newTrans;
 }
 
@@ -68,7 +68,7 @@ void * Transaction::operator new(size_t size)
 void Transaction::operator delete(void *mem)
 {
 	Transaction *trans = static_cast<Transaction*>(mem);
-	freeTransactionPool.release_item(trans);
+	freeTransactionPool.releaseItem(trans);
 }
 
 /// prints the key attributes of a transaction

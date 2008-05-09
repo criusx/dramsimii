@@ -152,37 +152,14 @@ postedCAS(rhs.postedCAS),
 length(rhs.length)
 {}
 
-//command::command(const command *rhs):
-//commandType(rhs->commandType),
-//startTime(rhs->startTime),
-//enqueueTime(rhs->enqueueTime),
-//completionTime(rhs->completionTime),
-//addr(rhs->addr),
-//hostTransaction(rhs->hostTransaction),
-//link_comm_tran_comp_time(rhs->link_comm_tran_comp_time),
-//amb_proc_comp_time(rhs->amb_down_proc_comp_time),
-//dimm_comm_tran_comp_time(rhs->dimm_comm_tran_comp_time),
-//dram_proc_comp_time(rhs->dram_proc_comp_time),
-//dimm_data_tran_comp_time(rhs->dimm_data_tran_comp_time),
-//amb_down_proc_comp_time(rhs->amb_down_proc_comp_time),
-//link_data_tran_comp_time(rhs->link_data_tran_comp_time),
-//bundle_id(rhs->bundle_id),
-//tran_id(rhs->tran_id),
-//data_word(rhs->data_word),
-//data_word_position(rhs->data_word_position),
-//refresh(rhs->refresh),
-//postedCAS(rhs->postedCAS),
-//length(rhs->length)
-//{}
-
 void *Command::operator new(size_t size)
 {
 	assert(size == sizeof(Command));
-	return freeCommandPool.acquire_item();
+	return freeCommandPool.acquireItem();
 }
 
 void Command::operator delete(void *mem)
 {
 	Command *cmd(static_cast<Command*>(mem));
-	freeCommandPool.release_item(cmd);
+	freeCommandPool.releaseItem(cmd);
 }

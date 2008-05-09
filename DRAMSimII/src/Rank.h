@@ -18,10 +18,10 @@ namespace DRAMSimII
 
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
 		tick lastRefreshTime;		///< the time of the last refresh
-		tick lastPrechargeTime;	///< the time of the last precharge
+		tick lastPrechargeTime;		///< the time of the last precharge
 		tick lastCASTime;			///< the time of the last CAS
-		tick lastCASWTime;		///< the time of the last CASW
-		tick prechargeTime;		///< total time that all banks in this rank are precharged in this epoch
+		tick lastCASWTime;			///< the time of the last CASW
+		tick prechargeTime;			///< total time that all banks in this rank are precharged in this epoch
 		tick totalPrechargeTime;	///< total time that all banks are precharged, all time
 		unsigned lastCASLength;		///< the length of the last CAS
 		unsigned lastCASWLength;	///< the length of the last CASW
@@ -31,10 +31,12 @@ namespace DRAMSimII
 
 	public:
 
-		Queue<tick> lastRASTimes; ///< ras time queue. useful to determine if t_faw is met
-		std::vector<Bank> bank;	///< the banks within this rank
+		Queue<tick> lastRASTimes;	///< ras time queue. useful to determine if t_faw is met
+		std::vector<Bank> bank;		///< the banks within this rank
 
 		// functions
+		bool refreshAllReady() const;
+		Command *getCommand(const unsigned bank);
 		void issueRAS(const tick currentTime, const Command *currentCommand);
 		void issuePRE(const tick currentTime, const Command *currentCommand);
 		void issueCAS(const tick currentTime, const Command *currentCommand);
@@ -42,8 +44,8 @@ namespace DRAMSimII
 		void issueREF(const tick currentTime, const Command *currentCommand);
 		
 		// constructors
-		Rank(const Rank&, const TimingSpecification &timingVal);
-		explicit Rank(const Settings& settings, const TimingSpecification &timingVal);
+		Rank(const Rank&, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
+		explicit Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
 
 		// accessors
 		unsigned getRankID() const { return rankID; }		

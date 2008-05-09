@@ -17,7 +17,7 @@ namespace DRAMSimII
 
 	protected:
 		Queue<Command> WHCC; /// Wang Hop Command Chain 
-		int WHCCOffset[2];
+		unsigned WHCCOffset[2];
 		int transactionType[4];
 		int rankID[2];
 		int rasBankID[4];
@@ -25,14 +25,14 @@ namespace DRAMSimII
 
 	public:
 		// constructors
-		Algorithm(int, int, int);
+		Algorithm(int, int, SystemConfigurationType);
 		Algorithm(const Algorithm&);
 		Algorithm(const Settings& settings);
 
 		// functions
 		void init(int, int, int); 
 		Queue<Command> &getWHCC() { return WHCC; }
-		int *WHCCOffset() { return WHCCOffset; }
+		unsigned getWHCCOffset(const unsigned value) const { return WHCCOffset[value]; }
 		int *getTransactionType() { return transactionType; }
 	};
 }

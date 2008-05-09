@@ -15,14 +15,16 @@ namespace DRAMSimII
 	class Bank
 	{
 	private:
-		const TimingSpecification& timing;	///< a reference to the timing specification
+		const TimingSpecification& timing;		///< a reference to the timing specification
+		const SystemConfiguration& systemConfig;	///< reference to the system config to obtain specs
 	protected:	
+
 		// members
 		Queue<Command> perBankQueue;	///< the command priority queue, stores the commands to be executed
 		tick lastRASTime;				///< when did last RAS command start?
 		tick lastCASTime;				///< when did last CAS command start?
-		tick lastCASWTime;			///< when did last CASW command start?
-		tick lastPrechargeTime;		///< when did last Precharge command start?
+		tick lastCASWTime;				///< when did last CASW command start?
+		tick lastPrechargeTime;			///< when did last Precharge command start?
 		tick lastRefreshAllTime;		///< must respect t_rfc. concurrent refresh takes time
 		unsigned lastCASLength;			///< the length of the last CAS command issued
 		unsigned lastCASWLength;		///< the length of the last CASW command issued
@@ -68,8 +70,19 @@ namespace DRAMSimII
 		unsigned getTotalCASCount() const { return totalCASCount; }
 		unsigned getTotalCASWCount() const { return totalCASWCount; }
 
-		Queue<Command> &getPerBankQueue() { return perBankQueue; }
-		const Queue<Command> &getPerBankQueue() const { return perBankQueue; }
+		Command *pop() { return perBankQueue.pop(); }
+		bool push(Command *value) { return perBankQueue.push(value); }
+		const Command *read(const unsigned value) const { return perBankQueue.read(value); }
+		const Command *front() const { return perBankQueue.front(); }
+		const Command *back() const { return perBankQueue.back(); }
+		unsigned size() const { return perBankQueue.size(); }
+		CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : NO_COMMAND; }
+		unsigned freeCommandSlots() const { return perBankQueue.freecount(); }
+		bool openPageInsert(const Transaction *value);
+		bool openPageInsertCheck(const Transaction *value) const;
+		bool isFull() const { return perBankQueue.isFull(); }
+		//Queue<Command> &getPerBankQueue() { return perBankQueue; }
+		//const Queue<Command> &getPerBankQueue() const { return perBankQueue; }
 
 		// mutators
 		void setLastRASTime(const tick value) { lastRASTime = value; }
@@ -88,7 +101,7 @@ namespace DRAMSimII
 		void clrCASWCount() { CASWCount = 0; }
 
 		// constructors
-		explicit Bank(const Settings& settings, const TimingSpecification &timingVal);
+		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
 		Bank(const Bank&, const TimingSpecification &timingVal);	
 
 		Bank& operator=(const Bank& rs);

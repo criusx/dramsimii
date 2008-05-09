@@ -1,10 +1,10 @@
 #include <iostream>
-#include "rank_c.h"
+#include "Rank.h"
 
 using namespace DRAMSimII;
 using namespace std;
 
-Rank::Rank(const Settings& settings, const TimingSpecification &timingVal):
+Rank::Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
 lastRefreshTime(0),
 lastPrechargeTime(0),
@@ -17,10 +17,10 @@ rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
 banksPrecharged(settings.bankCount),
 lastRASTimes(4), // make the queue hold four (tFAW)
-bank(settings.bankCount,Bank(settings, timingVal))
+bank(settings.bankCount,Bank(settings, timingVal, systemConfigVal))
 {}
 
-Rank::Rank(const Rank &r, const TimingSpecification &timingVal):
+Rank::Rank(const Rank &r, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
 lastRefreshTime(r.lastRefreshTime),
 lastPrechargeTime(0),
@@ -33,19 +33,17 @@ rankID(r.rankID),
 lastBankID(r.lastBankID),
 lastRASTimes(r.lastRASTimes),
 banksPrecharged(r.banksPrecharged),
-bank((unsigned)r.bank.size(), Bank(r.bank[0], timingVal))
+bank((unsigned)r.bank.size(), Bank(r.bank[0], timingVal, systemConfigVal))
 {}
 
 void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
-	
-
 	// RAS time history queue, per rank
-	tick *this_ras_time = lastRASTimes.acquire_item();
+	tick *thisRASTime = lastRASTimes.acquireItem();
 
-	*this_ras_time = currentTime;
+	*thisRASTime = currentTime;
 
-	lastRASTimes.push(this_ras_time);
+	lastRASTimes.push(thisRASTime);
 	lastBankID = currentCommand->getAddress().bank;
 
 	// for power modeling, if all banks were precharged and now one is being activated, record the interval that one was precharged	
@@ -119,4 +117,69 @@ void Rank::issueREF(const tick currentTime, const Command *currentCommand)
 	// FIXME: should this not count as a RAS + PRE command to all banks?
 	for (vector<Bank>::iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
 		currentBank->issueREF(currentTime, currentCommand);
+}
+
+//////////////////////////////////////////////////////////////////////
+/// @brief get the next command in the queue for this bank
+/// @details simply return the command for this bank if it is not a refresh all command
+/// otherwise remove the refresh all commands from all the other queues, assuming there is
+/// a refresh all command at the head of each, else return null
+/// @author Joe Gross
+/// @param thisBank the ordinal of the bank to get the next command for (0..n)
+/// @return the next command to be issued for this bank
+//////////////////////////////////////////////////////////////////////
+Command *Rank::getCommand(const unsigned thisBank)
+{
+	if (bank[thisBank].nextCommandType() == REFRESH_ALL_COMMAND)
+	{
+		if (refreshAllReady())
+		{
+			Command *tempCommand = NULL;
+
+			for (vector<Bank>::iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
+			{
+				if (tempCommand)
+					delete tempCommand;
+
+				tempCommand = currentBank->pop();
+
+				assert(tempCommand->getCommandType() == REFRESH_ALL_COMMAND);
+			}
+
+			return tempCommand;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	else
+	{
+		return bank[thisBank].pop();
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+/// @brief is there a refresh command ready at each per bank queue
+/// @details if there is a refresh all command at the head of each per
+/// bank queue, then the next command for this rank is a refresh all banks 
+/// command\n
+/// this is signified by inserting a refresh all command into the tail of each
+/// queue and removing them when they all reach the front\n
+/// this is done to ensure that a refresh command will never disturb an open
+/// row that has a waiting CAS, as the refresh command will ruin the row
+/// @author Joe Gross
+/// @return true if all queue heads have refresh all commands
+//////////////////////////////////////////////////////////////////////
+bool Rank::refreshAllReady() const
+{
+	for (vector<Bank>::const_iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
+	{
+		// if any queue is empty or the head of any queue isn't a refresh command, then the rank isn't ready for a refresh all command
+		if (currentBank->nextCommandType() != REFRESH_ALL_COMMAND)
+		{
+			return false;
+		}
+	}
+	return true;
 }

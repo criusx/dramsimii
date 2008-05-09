@@ -105,20 +105,20 @@ namespace DRAMSimII
 
 	enum CommandType
 	{
-		RAS_COMMAND,
-		CAS_COMMAND,
-		CAS_AND_PRECHARGE_COMMAND,
-		CAS_WRITE_COMMAND,
-		CAS_WRITE_AND_PRECHARGE_COMMAND,
-		RETIRE_COMMAND, /* ?? */
-		PRECHARGE_COMMAND,
-		PRECHARGE_ALL_COMMAND, /* ?? */
-		RAS_ALL_COMMAND, /* ?? */
-		DRIVE_COMMAND, /* ?? */
-		DATA_COMMAND,					// for FBD, holds data instead of a command
-		CAS_WITH_DRIVE_COMMAND, /* ?? */
-		REFRESH_ALL_COMMAND,
-		EMPTY_COMMAND
+		RAS_COMMAND,						///< open this row
+		CAS_COMMAND,						///< read from the open row
+		CAS_AND_PRECHARGE_COMMAND,			///< read from the open row and then close it
+		CAS_WRITE_COMMAND,					///< write this value to the open row
+		CAS_WRITE_AND_PRECHARGE_COMMAND,	///< write this value and then close the row
+		RETIRE_COMMAND,						///< ?
+		PRECHARGE_COMMAND,					///< close this open row
+		PRECHARGE_ALL_COMMAND,				///< precharge each bank in the rank, end of a refresh
+		RAS_ALL_COMMAND,					///< activate a row in each bank in the rank, half of a refresh
+		DRIVE_COMMAND,						///< ?
+		DATA_COMMAND,						///< for FBD, holds data instead of a command
+		CAS_WITH_DRIVE_COMMAND,				///< ?
+		REFRESH_ALL_COMMAND,				///< refresh all banks in the rank
+		NO_COMMAND							///< no command, or not a valid command at this time
 	};
 
 	enum FileIOToken
@@ -234,7 +234,8 @@ namespace DRAMSimII
 	{
 		TRANSACTION_ENQUEUE,	// put transaction into channel queue
 		DRAM_COMMAND_ENQUEUE,	// put DRAM command into per-bank queue
-		DRAM_COMMAND_EXECUTE	// schedule DRAM command for execution
+		DRAM_COMMAND_EXECUTE,	// schedule DRAM command for execution
+		NO_EVENT
 	};
 
 	enum FrameType

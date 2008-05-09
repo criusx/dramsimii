@@ -18,8 +18,8 @@ using namespace DRAMSimII;
 /// @param sysConfig a const reference is made to this for some functions to grab parameters from
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings& settings, const SystemConfiguration &sysConfig):
-time(0),
-lastRefreshTime(0),
+time(0ll),
+lastRefreshTime(0ll),
 lastRankID(0),
 timingSpecification(settings),
 transactionQueue(settings.transactionQueueDepth),
@@ -29,7 +29,7 @@ completionQueue(settings.completionQueueDepth),
 systemConfig(sysConfig),
 powerModel(settings),
 algorithm(settings),
-rank(settings.rankCount, Rank(settings, timingSpecification))
+rank(settings.rankCount, Rank(settings, timingSpecification, systemConfig))
 {
 	// assign an id to each channel (normally done with commands)
 	for (unsigned i = 0; i < settings.rankCount; i++)
@@ -286,9 +286,11 @@ tick Channel::nextTick() const
 	return nextWake;
 }
 
-void Channel::recordCommand(Command *latest_command)
+/// @brief adds this command to the history queue
+/// @details this allows other groups to view a recent history of commands that were issued to decide what to execute next
+void Channel::recordCommand(Command *newestCommand)
 {
-	while (!historyQueue.push(latest_command))
+	while (!historyQueue.push(newestCommand))
 	{
 		delete historyQueue.pop();
 	}
@@ -340,7 +342,7 @@ TransactionType Channel::setReadWriteType(const int rank_id,const int bank_count
 
 	for(int i = 0; i < bank_count; ++i)
 	{
-		Command *temp_c = rank[rank_id].bank[i].getPerBankQueue().read(1);
+		const Command *temp_c = rank[rank_id].bank[i].read(1);
 
 		if(temp_c != NULL)
 		{

@@ -200,9 +200,9 @@ Algorithm::Algorithm(const Settings& settings)
 	}
 }
 
-Algorithm::Algorithm(int rank_count,
-							 int bank_count,
-							 int config_type)
+Algorithm::Algorithm(int rankCount,
+							 int bankCount,
+							 SystemConfigurationType config_type)
 {
 	rankID[0] = 0;
 	rankID[1] = 3;
@@ -222,13 +222,13 @@ Algorithm::Algorithm(int rank_count,
 	transactionType[3] = READ_TRANSACTION;
 
 
-	WHCC.resize(rank_count * bank_count * 2);
+	WHCC.resize(rankCount * bankCount * 2);
 
 	Command *temp_c;
 
-	if((config_type == BASELINE_CONFIG) && (rank_count == 2))
+	if((config_type == BASELINE_CONFIG) && (rankCount == 2))
 	{
-		if(bank_count == 8)
+		if(bankCount == 8)
 		{
 			temp_c = new Command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
 			temp_c = new Command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 1; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
@@ -263,7 +263,7 @@ Algorithm::Algorithm(int rank_count,
 			temp_c = new Command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 1; temp_c->getAddress().bank =  3; WHCC.push(temp_c);
 			temp_c = new Command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  7; WHCC.push(temp_c);
 		}
-		else if (bank_count == 16)
+		else if (bankCount == 16)
 		{
 			temp_c = new Command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
 			temp_c = new Command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 1; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
@@ -331,7 +331,7 @@ Algorithm::Algorithm(int rank_count,
 			temp_c = new Command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank = 15; WHCC.push(temp_c);
 		}
 	}
-	else if((config_type == BASELINE_CONFIG) && (rank_count == 4))
+	else if((config_type == BASELINE_CONFIG) && (rankCount == 4))
 	{
 		temp_c = new Command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
 		temp_c = new Command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 1; temp_c->getAddress().bank =  0; WHCC.push(temp_c);
@@ -412,13 +412,14 @@ Algorithm::Algorithm(const Algorithm &a)
 	casCount[1] = a.casCount[1];
 	casCount[2] = a.casCount[2];
 	casCount[3] = a.casCount[3];
-	WHCCOffset[0] = a.WHCCOffset[0];
-	WHCCOffset[1] = a.WHCCOffset[1];
+	WHCCOffset[0] = a.getWHCCOffset(0);
+	WHCCOffset[1] = a.getWHCCOffset(1);
 	transactionType[0] = a.transactionType[0];
 	transactionType[1] = a.transactionType[1];
 	transactionType[2] = a.transactionType[2];
 	transactionType[3] = a.transactionType[3];
 }
+
 void Algorithm::init(int rank_count,
 						 int bank_count,
 						 int config_type)

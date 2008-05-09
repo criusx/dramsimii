@@ -128,7 +128,7 @@ namespace DRAMSimII
 		/// @brief treat this queue like an object pool and retrieve an item
 		/// @detail if there is no available object, then create one
 		/// @return a new item which may or may not be initialized
-		T *acquire_item()
+		T *acquireItem()
 		{
 			if (count == 0)
 			{
@@ -196,7 +196,7 @@ namespace DRAMSimII
 		/// @brief release item into pool
 		/// @detail This is useful for when the queue holds preallocated pieces of memory
 		/// and one would like to store them when they are not in use
-		void release_item(T *item)
+		void releaseItem(T *item)
 		{
 			if(!push(item))
 				::delete item;
@@ -207,8 +207,10 @@ namespace DRAMSimII
 		bool insert(T *item, const int offset)
 		{
 			assert(offset <= count - 1);
+
 			if (count == depth)
 				return false;
+
 			else if (item == NULL)
 			{
 				std::cerr << "Attempting to insert NULL into queue" << std::endl;
