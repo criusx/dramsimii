@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
-    <value>wineTabPage</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>121, 542</value>
+  </data>
   <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
     <value>156, 88</value>
   </data>
@@ -128,14 +128,14 @@
   <data name="tabControl1.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
   </data>
+  <data name="&gt;&gt;authImageButton.Parent" xml:space="preserve">
+    <value>authTabPage</value>
+  </data>
   <data name="descriptionTextBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>85, 6</value>
   </data>
-  <data name="&gt;&gt;wineBrowseButton.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="wineTypeComboBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>54, 6</value>
+  <data name="&gt;&gt;authSaveButton.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="&gt;&gt;tabControl1.Parent" xml:space="preserve">
     <value>groupBox1</value>
@@ -143,17 +143,23 @@
   <data name="&gt;&gt;wineClearButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="wineTypeComboBox.Items18" xml:space="preserve">
-    <value>Shiraz</value>
+  <data name="yearUpDown.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 20</value>
   </data>
-  <data name="button2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
-  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 13</value>
+  <data name="&gt;&gt;statusLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;statusLabel.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;authPB.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;authClearButton.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
   <data name="&gt;&gt;wineTypeComboBox.Parent" xml:space="preserve">
     <value>wineTabPage</value>
@@ -161,11 +167,8 @@
   <data name="&gt;&gt;groupBox1.Type" xml:space="preserve">
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="label10.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="&gt;&gt;winePB.ZOrder" xml:space="preserve">
+    <value>10</value>
   </data>
   <data name="passwordBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 20</value>
@@ -176,26 +179,41 @@
   <data name="wineTypeComboBox.Items19" xml:space="preserve">
     <value>Zinfandel</value>
   </data>
+  <data name="authPB.Location" type="System.Drawing.Point, System.Drawing">
+    <value>86, 85</value>
+  </data>
   <data name="&gt;&gt;countryBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="yearUpDown.Location" type="System.Drawing.Point, System.Drawing">
     <value>212, 8</value>
   </data>
+  <data name="wineLoadButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 208</value>
+  </data>
   <data name="countryBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>54, 31</value>
   </data>
-  <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
-    <value>14</value>
+  <data name="&gt;&gt;base64TextBox.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
   <data name="&gt;&gt;wineBrowseButton.Name" xml:space="preserve">
     <value>wineBrowseButton</value>
   </data>
-  <data name="wineTabPage.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+  <data name="wineTypeComboBox.Items5" xml:space="preserve">
+    <value>Dolcetto</value>
+  </data>
+  <data name="&gt;&gt;label6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="countryBox.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
+  </data>
+  <data name="authSaveButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 263</value>
+  </data>
+  <data name="&gt;&gt;authLoadButton.Parent" xml:space="preserve">
+    <value>authTabPage</value>
   </data>
   <data name="wineTypeComboBox.Items15" xml:space="preserve">
     <value>Rotberger</value>
@@ -227,20 +245,26 @@
   <data name="&gt;&gt;label6.Parent" xml:space="preserve">
     <value>wineTabPage</value>
   </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="statusLabel.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
   </data>
   <data name="&gt;&gt;groupBox1.Name" xml:space="preserve">
     <value>groupBox1</value>
   </data>
-  <data name="wineSaveButton.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
+  <data name="authPB.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
   </data>
   <data name="&gt;&gt;descriptionTextBox.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>6</value>
   </data>
   <data name="label4.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
+  </data>
+  <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 31</value>
   </data>
   <data name="button2.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
@@ -255,11 +279,17 @@
   <data name="idBox.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
+  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
+    <value>wineTabPage</value>
+  </data>
   <data name="&gt;&gt;reviewBox.Parent" xml:space="preserve">
     <value>wineTabPage</value>
   </data>
-  <data name="usernameBox.Text" xml:space="preserve">
-    <value>rfid</value>
+  <data name="label9.Text" xml:space="preserve">
+    <value>Vineyard</value>
+  </data>
+  <data name="authSaveButton.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
   </data>
   <data name="&gt;&gt;authCheckBox.Parent" xml:space="preserve">
     <value>authTabPage</value>
@@ -270,11 +300,8 @@
   <data name="&gt;&gt;label1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;countryBox.Parent" xml:space="preserve">
-    <value>wineTabPage</value>
-  </data>
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 22</value>
+  <data name="wineTypeComboBox.Items18" xml:space="preserve">
+    <value>Shiraz</value>
   </data>
   <data name="label4.Text" xml:space="preserve">
     <value>Year</value>
@@ -282,17 +309,20 @@
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
     <value>2, 9</value>
   </data>
-  <data name="wineClearButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
   <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
     <value>34, 23</value>
+  </data>
+  <data name="&gt;&gt;statusLabel.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 13</value>
   </data>
   <data name="wineLoadButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
+  </data>
+  <data name="&gt;&gt;authImageButton.Name" xml:space="preserve">
+    <value>authImageButton</value>
   </data>
   <data name="&gt;&gt;base64TextBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -309,8 +339,11 @@
   <data name="&gt;&gt;button2.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;usernameBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;label11.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;authPB.Name" xml:space="preserve">
+    <value>authPB</value>
   </data>
   <data name="tabControl1.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 71</value>
@@ -321,14 +354,14 @@
   <data name="&gt;&gt;authTabPage.Parent" xml:space="preserve">
     <value>tabControl1</value>
   </data>
-  <data name="&gt;&gt;usernameBox.Name" xml:space="preserve">
-    <value>usernameBox</value>
+  <data name="authClearButton.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
   </data>
   <data name="usernameBox.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
   </data>
-  <data name="&gt;&gt;descriptionTextBox.Parent" xml:space="preserve">
-    <value>authTabPage</value>
+  <data name="&gt;&gt;button1.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;label8.Name" xml:space="preserve">
     <value>label8</value>
@@ -336,16 +369,10 @@
   <data name="&gt;&gt;button2.Name" xml:space="preserve">
     <value>button2</value>
   </data>
-  <data name="winePB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 50</value>
-  </data>
   <data name="label1.Text" xml:space="preserve">
     <value>Login:</value>
   </data>
   <data name="countryBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 21</value>
-  </data>
-  <data name="wineTypeComboBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 21</value>
   </data>
   <data name="button1.Text" xml:space="preserve">
@@ -353,6 +380,9 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Gentag Wine Client</value>
+  </data>
+  <data name="&gt;&gt;authSaveButton.Parent" xml:space="preserve">
+    <value>authTabPage</value>
   </data>
   <data name="&gt;&gt;label4.Name" xml:space="preserve">
     <value>label4</value>
@@ -369,6 +399,9 @@
   <data name="reviewBox.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
     <value>Vertical</value>
   </data>
+  <data name="&gt;&gt;authLoadButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;yearUpDown.Type" xml:space="preserve">
     <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -377,6 +410,9 @@
   </data>
   <data name="vineyardBox.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
+  </data>
+  <data name="&gt;&gt;passwordBox.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="label8.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopRight</value>
@@ -390,29 +426,26 @@
   <data name="wineClearButton.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
-  <data name="&gt;&gt;label6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;authPB.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="&gt;&gt;tabControl1.Name" xml:space="preserve">
     <value>tabControl1</value>
   </data>
-  <data name="&gt;&gt;passwordBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;button1.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
-  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 13</value>
+  <data name="&gt;&gt;usernameBox.Name" xml:space="preserve">
+    <value>usernameBox</value>
   </data>
   <data name="&gt;&gt;authTabPage.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="wineTypeComboBox.Items6" xml:space="preserve">
-    <value>Merlot</value>
   </data>
   <data name="usernameBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>44, 5</value>
@@ -425,6 +458,12 @@
   </data>
   <data name="&gt;&gt;label7.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label10.Parent" xml:space="preserve">
+    <value>authTabPage</value>
+  </data>
+  <data name="wineSaveButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 179</value>
   </data>
   <data name="&gt;&gt;wineLoadButton.Name" xml:space="preserve">
     <value>wineLoadButton</value>
@@ -450,9 +489,6 @@
   <data name="&gt;&gt;wineClearButton.Name" xml:space="preserve">
     <value>wineClearButton</value>
   </data>
-  <data name="passwordBox.Text" xml:space="preserve">
-    <value>rfid2006</value>
-  </data>
   <data name="wineBrowseButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 121</value>
   </data>
@@ -462,8 +498,8 @@
   <data name="&gt;&gt;wineTabPage.Parent" xml:space="preserve">
     <value>tabControl1</value>
   </data>
-  <data name="&gt;&gt;label10.Parent" xml:space="preserve">
-    <value>authTabPage</value>
+  <data name="button2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
   </data>
   <data name="authCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>
@@ -471,14 +507,14 @@
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
   <data name="wineTypeComboBox.Items17" xml:space="preserve">
     <value>Sauvignon Blanc</value>
   </data>
   <data name="passwordBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>154, 5</value>
+  </data>
+  <data name="countryBox.Items4" xml:space="preserve">
+    <value>Italy</value>
   </data>
   <data name="&gt;&gt;label2.Name" xml:space="preserve">
     <value>label2</value>
@@ -510,8 +546,8 @@
   <data name="wineBrowseButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
   </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="authClearButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 232</value>
   </data>
   <data name="label9.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -525,14 +561,8 @@
   <data name="label10.Text" xml:space="preserve">
     <value>Authenticated</value>
   </data>
-  <data name="&gt;&gt;authCheckBox.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="&gt;&gt;wineTabPage.Name" xml:space="preserve">
     <value>wineTabPage</value>
-  </data>
-  <data name="&gt;&gt;wineTabPage.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="label11.Text" xml:space="preserve">
     <value>Encoded</value>
@@ -546,14 +576,14 @@
   <data name="countryBox.Items9" xml:space="preserve">
     <value>United States</value>
   </data>
-  <data name="&gt;&gt;winePB.ZOrder" xml:space="preserve">
-    <value>10</value>
+  <data name="countryBox.Items6" xml:space="preserve">
+    <value>Portugal</value>
   </data>
   <data name="countryBox.Items7" xml:space="preserve">
     <value>South Africa</value>
   </data>
-  <data name="countryBox.Items4" xml:space="preserve">
-    <value>Italy</value>
+  <data name="&gt;&gt;authClearButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="countryBox.Items5" xml:space="preserve">
     <value>Portugal</value>
@@ -576,11 +606,11 @@
   <data name="authTabPage.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
-  <data name="&gt;&gt;vineyardBox.Parent" xml:space="preserve">
-    <value>wineTabPage</value>
+  <data name="&gt;&gt;label9.Name" xml:space="preserve">
+    <value>label9</value>
   </data>
-  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>8</value>
+  <data name="wineTypeComboBox.Items11" xml:space="preserve">
+    <value>Pinot Meunier</value>
   </data>
   <data name="label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -588,8 +618,8 @@
   <data name="authTabPage.Size" type="System.Drawing.Size, System.Drawing">
     <value>371, 399</value>
   </data>
-  <data name="&gt;&gt;statusLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;authClearButton.Name" xml:space="preserve">
+    <value>authClearButton</value>
   </data>
   <data name="&gt;&gt;label10.Name" xml:space="preserve">
     <value>label10</value>
@@ -606,7 +636,16 @@
   <data name="label10.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
   </data>
-  <data name="&gt;&gt;authTabPage.Name" xml:space="preserve">
+  <data name="&gt;&gt;countryBox.Name" xml:space="preserve">
+    <value>countryBox</value>
+  </data>
+  <data name="&gt;&gt;passwordBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="authImageButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="&gt;&gt;descriptionTextBox.Parent" xml:space="preserve">
     <value>authTabPage</value>
   </data>
   <data name="&gt;&gt;label10.Type" xml:space="preserve">
@@ -615,8 +654,8 @@
   <data name="&gt;&gt;groupBox1.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="authCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>15, 14</value>
+  <data name="authLoadButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
   </data>
   <data name="&gt;&gt;vineyardBox.Name" xml:space="preserve">
     <value>vineyardBox</value>
@@ -631,31 +670,31 @@
     <value>label3</value>
   </data>
   <data name="&gt;&gt;idBox.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>6</value>
   </data>
-  <data name="&gt;&gt;button1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 13</value>
+  <data name="&gt;&gt;authCheckBox.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="&gt;&gt;descriptionTextBox.Name" xml:space="preserve">
     <value>descriptionTextBox</value>
   </data>
-  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 56</value>
+  <data name="wineTypeComboBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 21</value>
   </data>
-  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 6</value>
+  <data name="&gt;&gt;wineBrowseButton.Parent" xml:space="preserve">
+    <value>wineTabPage</value>
   </data>
-  <data name="wineTypeComboBox.Items5" xml:space="preserve">
-    <value>Dolcetto</value>
+  <data name="passwordBox.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
   </data>
-  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 65</value>
+  <data name="&gt;&gt;wineSaveButton.Parent" xml:space="preserve">
+    <value>wineTabPage</value>
   </data>
   <data name="&gt;&gt;label5.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label5.Name" xml:space="preserve">
+    <value>label5</value>
   </data>
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
     <value>9</value>
@@ -663,20 +702,29 @@
   <data name="authTabPage.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
+  <data name="wineTabPage.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;label9.Parent" xml:space="preserve">
+    <value>wineTabPage</value>
+  </data>
   <data name="wineClearButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 150</value>
+  </data>
+  <data name="&gt;&gt;reviewBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="winePB.Location" type="System.Drawing.Point, System.Drawing">
     <value>87, 121</value>
   </data>
-  <data name="authTabPage.Text" xml:space="preserve">
-    <value>Auth</value>
+  <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
   </data>
   <data name="descriptionTextBox.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;label11.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>31, 13</value>
   </data>
   <data name="label11.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -684,8 +732,8 @@
   <data name="&gt;&gt;unneededTextBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;base64TextBox.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="&gt;&gt;authPB.Parent" xml:space="preserve">
+    <value>authTabPage</value>
   </data>
   <data name="&gt;&gt;wineSaveButton.ZOrder" xml:space="preserve">
     <value>12</value>
@@ -702,14 +750,14 @@
   <data name="&gt;&gt;passwordBox.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="wineTabPage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
+  <data name="authSaveButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>entry</value>
+  <data name="authTabPage.Text" xml:space="preserve">
+    <value>Auth</value>
   </data>
-  <data name="&gt;&gt;wineSaveButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="&gt;&gt;usernameBox.Parent" xml:space="preserve">
     <value>$this</value>
@@ -717,23 +765,29 @@
   <data name="&gt;&gt;label5.Parent" xml:space="preserve">
     <value>groupBox1</value>
   </data>
-  <data name="passwordBox.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+  <data name="&gt;&gt;vineyardBox.Parent" xml:space="preserve">
+    <value>wineTabPage</value>
   </data>
-  <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 31</value>
+  <data name="winePB.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 50</value>
   </data>
   <data name="label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="&gt;&gt;usernameBox.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
-  <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>121, 542</value>
+  <data name="wineClearButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
   </data>
-  <data name="wineTabPage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>371, 399</value>
+  <data name="wineTabPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="&gt;&gt;wineSaveButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 13</value>
   </data>
   <data name="wineTypeComboBox.Items8" xml:space="preserve">
     <value>Petit Verdot</value>
@@ -741,17 +795,23 @@
   <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
     <value>342, 17</value>
   </data>
+  <data name="base64TextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 20</value>
+  </data>
   <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
     <value>pictureBox1</value>
   </data>
-  <data name="wineTypeComboBox.Items11" xml:space="preserve">
-    <value>Pinot Meunier</value>
+  <data name="&gt;&gt;authTabPage.Name" xml:space="preserve">
+    <value>authTabPage</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 13</value>
   </data>
   <data name="label8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 6</value>
   </data>
   <data name="label2.Text" xml:space="preserve">
     <value>Password:</value>
@@ -766,22 +826,25 @@
     <value>0, 13</value>
   </data>
   <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
     <value>5, 34</value>
   </data>
-  <data name="label4.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="&gt;&gt;authImageButton.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
-  <data name="reviewBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>311, 56</value>
+  <data name="authCheckBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
   </data>
   <data name="&gt;&gt;base64TextBox.Parent" xml:space="preserve">
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;descriptionTextBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;authLoadButton.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;wineLoadButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -798,20 +861,32 @@
   <data name="&gt;&gt;authCheckBox.Name" xml:space="preserve">
     <value>authCheckBox</value>
   </data>
+  <data name="wineSaveButton.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
+  </data>
+  <data name="&gt;&gt;authClearButton.Parent" xml:space="preserve">
+    <value>authTabPage</value>
   </data>
   <data name="wineTypeComboBox.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="&gt;&gt;wineTypeComboBox.Name" xml:space="preserve">
-    <value>wineTypeComboBox</value>
+  <data name="wineTypeComboBox.Items13" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="authImageButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 203</value>
   </data>
   <data name="descriptionTextBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>281, 56</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>8</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Type</value>
   </data>
   <data name="&gt;&gt;vineyardBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -828,8 +903,8 @@
   <data name="&gt;&gt;wineClearButton.Parent" xml:space="preserve">
     <value>wineTabPage</value>
   </data>
-  <data name="wineTypeComboBox.Items4" xml:space="preserve">
-    <value>Chardonnay</value>
+  <data name="&gt;&gt;wineTypeComboBox.Name" xml:space="preserve">
+    <value>wineTypeComboBox</value>
   </data>
   <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
     <value>42, 13</value>
@@ -840,17 +915,17 @@
   <data name="&gt;&gt;label3.Parent" xml:space="preserve">
     <value>authTabPage</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="wineLoadButton.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
   </data>
-  <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
+  <data name="&gt;&gt;authImageButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
     <value>73, 13</value>
   </data>
   <data name="&gt;&gt;unneededTextBox.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="label5.Text" xml:space="preserve">
     <value>RFID #</value>
@@ -858,23 +933,17 @@
   <data name="&gt;&gt;wineTabPage.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="vineyardBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>234, 34</value>
+  <data name="wineTabPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>371, 399</value>
   </data>
-  <data name="&gt;&gt;passwordBox.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 65</value>
   </data>
-  <data name="label11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 56</value>
   </data>
-  <data name="label7.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;wineLoadButton.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;button1.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>entry</value>
   </data>
   <data name="&gt;&gt;winePB.Name" xml:space="preserve">
     <value>winePB</value>
@@ -885,20 +954,23 @@
   <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="countryBox.Items6" xml:space="preserve">
-    <value>Portugal</value>
+  <data name="authClearButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
   </data>
   <data name="wineTypeComboBox.Items10" xml:space="preserve">
     <value>Pinot Grigio</value>
   </data>
+  <data name="authLoadButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 292</value>
+  </data>
   <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>7</value>
   </data>
   <data name="&gt;&gt;base64TextBox.Name" xml:space="preserve">
     <value>base64TextBox</value>
   </data>
-  <data name="label6.Text" xml:space="preserve">
-    <value>Type</value>
+  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 13</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -912,6 +984,9 @@
   <data name="&gt;&gt;authTabPage.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="wineTypeComboBox.Items16" xml:space="preserve">
+    <value>Ruby Cabernet</value>
+  </data>
   <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
     <value>11</value>
   </data>
@@ -921,8 +996,11 @@
   <data name="&gt;&gt;wineTypeComboBox.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>4</value>
+  <data name="authLoadButton.TabIndex" type="System.Int32, mscorlib">
+    <value>27</value>
+  </data>
+  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 22</value>
   </data>
   <data name="&gt;&gt;wineSaveButton.Name" xml:space="preserve">
     <value>wineSaveButton</value>
@@ -930,26 +1008,32 @@
   <data name="wineTypeComboBox.Items2" xml:space="preserve">
     <value>Chablis</value>
   </data>
+  <data name="&gt;&gt;authSaveButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="label5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="idBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>54, 19</value>
+  <data name="label11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="usernameBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>42, 20</value>
   </data>
+  <data name="authImageButton.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
   <data name="label8.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>36, 13</value>
+  <data name="&gt;&gt;wineBrowseButton.ZOrder" xml:space="preserve">
+    <value>7</value>
   </data>
   <data name="&gt;&gt;reviewBox.Name" xml:space="preserve">
     <value>reviewBox</value>
   </data>
-  <data name="&gt;&gt;statusLabel.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;statusLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -957,14 +1041,14 @@
   <data name="&gt;&gt;yearUpDown.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="wineTypeComboBox.Items9" xml:space="preserve">
-    <value>Pinot Blanc</value>
+  <data name="&gt;&gt;authLoadButton.Name" xml:space="preserve">
+    <value>authLoadButton</value>
   </data>
   <data name="&gt;&gt;label11.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
-  <data name="&gt;&gt;wineSaveButton.Parent" xml:space="preserve">
-    <value>wineTabPage</value>
+  <data name="passwordBox.Text" xml:space="preserve">
+    <value>rfid2006</value>
   </data>
   <data name="label9.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopRight</value>
@@ -972,7 +1056,10 @@
   <data name="&gt;&gt;vineyardBox.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="&gt;&gt;label9.Parent" xml:space="preserve">
+  <data name="label10.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;countryBox.Parent" xml:space="preserve">
     <value>wineTabPage</value>
   </data>
   <data name="&gt;&gt;label2.Parent" xml:space="preserve">
@@ -984,26 +1071,23 @@
   <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
     <value>379, 425</value>
   </data>
-  <data name="&gt;&gt;wineBrowseButton.Parent" xml:space="preserve">
-    <value>wineTabPage</value>
-  </data>
   <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 10</value>
   </data>
   <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
     <value>180, 37</value>
   </data>
-  <data name="label9.Text" xml:space="preserve">
-    <value>Vineyard</value>
+  <data name="wineTypeComboBox.Items4" xml:space="preserve">
+    <value>Chardonnay</value>
   </data>
-  <data name="&gt;&gt;reviewBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;wineTabPage.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="label6.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
-  <data name="&gt;&gt;label9.Name" xml:space="preserve">
-    <value>label9</value>
+  <data name="&gt;&gt;usernameBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>408, 642</value>
@@ -1017,14 +1101,17 @@
   <data name="base64TextBox.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="wineTypeComboBox.Items13" xml:space="preserve">
-    <value>Port</value>
+  <data name="&gt;&gt;authCheckBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label7.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
   </data>
   <data name="&gt;&gt;reviewBox.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;button1.Parent" xml:space="preserve">
+    <value>groupBox1</value>
   </data>
   <data name="button1.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -1035,14 +1122,17 @@
   <data name="&gt;&gt;idBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="yearUpDown.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 20</value>
+  <data name="wineTypeComboBox.Items9" xml:space="preserve">
+    <value>Pinot Blanc</value>
   </data>
   <data name="&gt;&gt;yearUpDown.Parent" xml:space="preserve">
     <value>wineTabPage</value>
   </data>
-  <data name="&gt;&gt;label5.Name" xml:space="preserve">
-    <value>label5</value>
+  <data name="usernameBox.Text" xml:space="preserve">
+    <value>rfid</value>
+  </data>
+  <data name="wineTypeComboBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>54, 6</value>
   </data>
   <data name="&gt;&gt;label9.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1050,8 +1140,8 @@
   <data name="&gt;&gt;button2.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="base64TextBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 20</value>
+  <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
+    <value>14</value>
   </data>
   <data name="groupBox1.Text" xml:space="preserve">
     <value>Wine Data</value>
@@ -1059,8 +1149,8 @@
   <data name="base64TextBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>87, 42</value>
   </data>
-  <data name="wineSaveButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 179</value>
+  <data name="reviewBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>311, 56</value>
   </data>
   <data name="idBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>282, 20</value>
@@ -1068,11 +1158,17 @@
   <data name="label11.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
   </data>
+  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <data name="&gt;&gt;label1.Name" xml:space="preserve">
     <value>label1</value>
   </data>
-  <data name="wineTypeComboBox.Items16" xml:space="preserve">
-    <value>Ruby Cabernet</value>
+  <data name="wineTypeComboBox.Items6" xml:space="preserve">
+    <value>Merlot</value>
+  </data>
+  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 13</value>
   </data>
   <data name="&gt;&gt;statusLabel.Name" xml:space="preserve">
     <value>statusLabel</value>
@@ -1086,23 +1182,29 @@
   <data name="unneededTextBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 20</value>
   </data>
-  <data name="wineLoadButton.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+  <data name="&gt;&gt;authSaveButton.Name" xml:space="preserve">
+    <value>authSaveButton</value>
   </data>
   <data name="&gt;&gt;idBox.Parent" xml:space="preserve">
     <value>groupBox1</value>
   </data>
-  <data name="&gt;&gt;countryBox.Name" xml:space="preserve">
-    <value>countryBox</value>
+  <data name="&gt;&gt;button1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="idBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>54, 19</value>
+  </data>
+  <data name="vineyardBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>234, 34</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 13</value>
   </data>
-  <data name="&gt;&gt;authCheckBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;wineLoadButton.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
-  <data name="wineLoadButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 208</value>
+  <data name="label4.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="unneededTextBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>54, 42</value>

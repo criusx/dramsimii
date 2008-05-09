@@ -26,7 +26,7 @@ namespace WineEntryClient.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://id1.gentag.com:7777/GentagDemo/wineWSSoapHttpPort")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://id2.gentag.com:7777/GentagDemo/wineWSSoapHttpPort")]
         public string WineEntryClient_org_dyndns_crius_wineWS {
             get {
                 return ((string)(this["WineEntryClient_org_dyndns_crius_wineWS"]));
@@ -36,7 +36,7 @@ namespace WineEntryClient.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://id1.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://id2.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort")]
         public string WineEntryClient_authenticationWebService_AuthenticationWebService {
             get {
                 return ((string)(this["WineEntryClient_authenticationWebService_AuthenticationWebService"]));

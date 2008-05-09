@@ -55,7 +55,11 @@ namespace WineEntryClient
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.authTabPage = new System.Windows.Forms.TabPage();
-            this.button2 = new System.Windows.Forms.Button();
+            this.authLoadButton = new System.Windows.Forms.Button();
+            this.authImageButton = new System.Windows.Forms.Button();
+            this.authPB = new System.Windows.Forms.PictureBox();
+            this.authSaveButton = new System.Windows.Forms.Button();
+            this.authClearButton = new System.Windows.Forms.Button();
             this.authCheckBox = new System.Windows.Forms.CheckBox();
             this.descriptionTextBox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -73,6 +77,7 @@ namespace WineEntryClient
             this.wineTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.yearUpDown)).BeginInit();
             this.authTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.authPB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -211,7 +216,7 @@ namespace WineEntryClient
             this.wineClearButton.Font = null;
             this.wineClearButton.Name = "wineClearButton";
             this.wineClearButton.UseVisualStyleBackColor = false;
-            this.wineClearButton.Click += new System.EventHandler(this.clearButton_Click);
+            this.wineClearButton.Click += new System.EventHandler(this.clear);
             // 
             // wineLoadButton
             // 
@@ -233,7 +238,6 @@ namespace WineEntryClient
             this.groupBox1.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.groupBox1.BackgroundImage = null;
             this.groupBox1.Controls.Add(this.tabControl1);
-            this.groupBox1.Controls.Add(this.statusLabel);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(label11);
             this.groupBox1.Controls.Add(label5);
@@ -255,6 +259,7 @@ namespace WineEntryClient
             this.tabControl1.Font = null;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Click += new System.EventHandler(this.browseButton_Click);
             // 
             // wineTabPage
             // 
@@ -402,7 +407,11 @@ namespace WineEntryClient
             resources.ApplyResources(this.authTabPage, "authTabPage");
             this.authTabPage.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.authTabPage.BackgroundImage = null;
-            this.authTabPage.Controls.Add(this.button2);
+            this.authTabPage.Controls.Add(this.authLoadButton);
+            this.authTabPage.Controls.Add(this.authImageButton);
+            this.authTabPage.Controls.Add(this.authPB);
+            this.authTabPage.Controls.Add(this.authSaveButton);
+            this.authTabPage.Controls.Add(this.authClearButton);
             this.authTabPage.Controls.Add(this.authCheckBox);
             this.authTabPage.Controls.Add(this.descriptionTextBox);
             this.authTabPage.Controls.Add(this.label10);
@@ -410,17 +419,63 @@ namespace WineEntryClient
             this.authTabPage.Font = null;
             this.authTabPage.Name = "authTabPage";
             // 
-            // button2
+            // authLoadButton
             // 
-            this.button2.AccessibleDescription = null;
-            this.button2.AccessibleName = null;
-            resources.ApplyResources(this.button2, "button2");
-            this.button2.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.button2.BackgroundImage = null;
-            this.button2.Font = null;
-            this.button2.Name = "button2";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.authLoadButton.AccessibleDescription = null;
+            this.authLoadButton.AccessibleName = null;
+            resources.ApplyResources(this.authLoadButton, "authLoadButton");
+            this.authLoadButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.authLoadButton.BackgroundImage = null;
+            this.authLoadButton.Font = null;
+            this.authLoadButton.Name = "authLoadButton";
+            this.authLoadButton.UseVisualStyleBackColor = false;
+            // 
+            // authImageButton
+            // 
+            this.authImageButton.AccessibleDescription = null;
+            this.authImageButton.AccessibleName = null;
+            resources.ApplyResources(this.authImageButton, "authImageButton");
+            this.authImageButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.authImageButton.BackgroundImage = null;
+            this.authImageButton.Font = null;
+            this.authImageButton.Name = "authImageButton";
+            this.authImageButton.UseVisualStyleBackColor = false;
+            this.authImageButton.Click += new System.EventHandler(this.browseButton_Click);
+            // 
+            // authPB
+            // 
+            this.authPB.AccessibleDescription = null;
+            this.authPB.AccessibleName = null;
+            resources.ApplyResources(this.authPB, "authPB");
+            this.authPB.BackgroundImage = null;
+            this.authPB.Font = null;
+            this.authPB.ImageLocation = null;
+            this.authPB.Name = "authPB";
+            this.authPB.TabStop = false;
+            // 
+            // authSaveButton
+            // 
+            this.authSaveButton.AccessibleDescription = null;
+            this.authSaveButton.AccessibleName = null;
+            resources.ApplyResources(this.authSaveButton, "authSaveButton");
+            this.authSaveButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.authSaveButton.BackgroundImage = null;
+            this.authSaveButton.Font = null;
+            this.authSaveButton.Name = "authSaveButton";
+            this.authSaveButton.UseVisualStyleBackColor = false;
+            this.authSaveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
+            // authClearButton
+            // 
+            this.authClearButton.AccessibleDescription = null;
+            this.authClearButton.AccessibleName = null;
+            resources.ApplyResources(this.authClearButton, "authClearButton");
+            this.authClearButton.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.authClearButton.BackgroundImage = null;
+            this.authClearButton.Font = null;
+            this.authClearButton.Name = "authClearButton";
+            this.authClearButton.UseVisualStyleBackColor = false;
+            this.authClearButton.Click += new System.EventHandler(this.clear);
             // 
             // authCheckBox
             // 
@@ -521,6 +576,7 @@ namespace WineEntryClient
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.BackgroundImage = null;
             this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.passwordBox);
             this.Controls.Add(this.usernameBox);
@@ -540,6 +596,7 @@ namespace WineEntryClient
             ((System.ComponentModel.ISupportInitialize)(this.yearUpDown)).EndInit();
             this.authTabPage.ResumeLayout(false);
             this.authTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.authPB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -581,7 +638,11 @@ namespace WineEntryClient
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox authCheckBox;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button authLoadButton;
+        private System.Windows.Forms.Button authImageButton;
+        private System.Windows.Forms.PictureBox authPB;
+        private System.Windows.Forms.Button authSaveButton;
+        private System.Windows.Forms.Button authClearButton;
     }
 }
 

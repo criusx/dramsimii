@@ -19,7 +19,8 @@
     <FormFactorID>
     </FormFactorID>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>nmeaInterpreterKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -96,9 +97,6 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
-    <None Include="nmeaInterpreterKey.pfx" />
     <None Include="Web References\AuthenticationWebService\AuthenticationWebService.wsdl" />
     <None Include="Web References\AuthenticationWebService\itemInfo1.datasource">
       <DependentUpon>Reference.map</DependentUpon>

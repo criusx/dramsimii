@@ -27,13 +27,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8AD431BF9A7442279424B8CAE8901595"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_3438713FDA734A7ED12B618FA60D9F4F"
+        "OwnerKey" = "8:_8AD431BF9A7442279424B8CAE8901595"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9ECFF0D314D742638419B7F976018573"
+        "MsmKey" = "8:_8AD431BF9A7442279424B8CAE8901595"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -45,12 +45,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F46E7D68FA25A1AA8617F5277A61E21E"
-        "OwnerKey" = "8:_8AD431BF9A7442279424B8CAE8901595"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_8AD431BF9A7442279424B8CAE8901595"
         "MsmSig" = "8:_UNDEFINED"
@@ -58,7 +52,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F46E7D68FA25A1AA8617F5277A61E21E"
+        "OwnerKey" = "8:_3438713FDA734A7ED12B618FA60D9F4F"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -186,54 +180,14 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9ECFF0D314D742638419B7F976018573"
-            {
-            "SourcePath" = "8:..\\..\\AIT\\RFID Client\\msnms.ico"
-            "TargetName" = "8:msnms.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_D1FA0312A82043AF843F47992A254F89"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D7921CE431394426A23D7EA61E88CFA9"
-            {
-            "SourcePath" = "8:..\\C1lib.dll"
-            "TargetName" = "8:C1lib.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_5392590BC36C44AABE1AE6EEFD538FA9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F46E7D68FA25A1AA8617F5277A61E21E"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3438713FDA734A7ED12B618FA60D9F4F"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:C1Lib_net, Version=1.0.2326.20996, Culture=neutral"
                 "ScatterAssemblies"
                 {
-                    "_F46E7D68FA25A1AA8617F5277A61E21E"
+                    "_3438713FDA734A7ED12B618FA60D9F4F"
                     {
                     "Name" = "8:C1Lib_net.dll"
                     "Attributes" = "3:512"
@@ -255,6 +209,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D7921CE431394426A23D7EA61E88CFA9"
+            {
+            "SourcePath" = "8:..\\C1lib.dll"
+            "TargetName" = "8:C1lib.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_5392590BC36C44AABE1AE6EEFD538FA9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -318,6 +292,7 @@
         "MsiBootstrapper"
         {
         "LangId" = "3:1033"
+        "RequiresElevation" = "11:FALSE"
         }
         "Product"
         {
@@ -886,7 +861,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8AD431BF9A7442279424B8CAE8901595"
             {
-            "SourcePath" = "8:..\\WineEntryClient\\obj\\Release\\WineEntryClient.exe"
+            "SourcePath" = "8:..\\WineEntryClient\\obj\\Debug\\WineEntryClient.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5392590BC36C44AABE1AE6EEFD538FA9"

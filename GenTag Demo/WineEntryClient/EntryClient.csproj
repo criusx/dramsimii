@@ -131,10 +131,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://id2.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\authenticationWebService\</RelPath>
-      <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://id2.gentag.com:7777/GentagDemo/AuthenticationWebServiceSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -142,10 +142,10 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>WineEntryClient_authenticationWebService_AuthenticationWebService</CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://id1.gentag.com:7777/GentagDemo/wineWSSoapHttpPort%3fWSDL">
+    <WebReferenceUrl Include="http://id2.gentag.com:7777/GentagDemo/wineWSSoapHttpPort%3fWSDL">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\wineWS\</RelPath>
-      <UpdateFromURL>http://id1.gentag.com:7777/GentagDemo/wineWSSoapHttpPort%3fWSDL</UpdateFromURL>
+      <UpdateFromURL>http://id2.gentag.com:7777/GentagDemo/wineWSSoapHttpPort%3fWSDL</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

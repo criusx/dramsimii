@@ -20,6 +20,9 @@ namespace WineEntryClient
 {
     public partial class entry : Form
     {
+        authenticationWebService.AuthenticationWebService ws = new authenticationWebService.AuthenticationWebService();
+        authenticationWebService.itemInfo newItem = new authenticationWebService.itemInfo();
+
         private string DeviceUID = "FFFFFFFFFFFFFFFFFFFF";
 
         public entry()
@@ -82,14 +85,24 @@ namespace WineEntryClient
             //throw new IOException(@"Unable to read tag");
         }
 
-        private string imagename;
+        byte[] authImageArray = null;
+        byte[] wineImageArray = null;
+
 
         private void browseButton_Click(object sender, EventArgs e)
         {
             PictureBox pictureBox;
+            byte[] imageArray;
+
             if (sender == wineBrowseButton)
             {
                 pictureBox = winePB;
+                imageArray = wineImageArray;
+            }
+            else if (sender == authImageButton)
+            {
+                pictureBox = authPB;
+                imageArray = authImageArray;
             }
             else
             {
@@ -97,31 +110,45 @@ namespace WineEntryClient
             }
             try
             {
-                FileDialog fldlg = new OpenFileDialog();
+                FileDialog fileDialog = new OpenFileDialog();
 
-                fldlg.Filter = "Image File (*.jpg;*.bmp;*.gif;*.png)|*.jpg;*.bmp;*.gif;*.png";
+                fileDialog.Filter = "Image File (*.jpg;*.bmp;*.gif;*.png)|*.jpg;*.bmp;*.gif;*.png";
 
-                if (fldlg.ShowDialog() == DialogResult.OK)
+                if (fileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    imagename = fldlg.FileName;
+                    if (!string.IsNullOrEmpty(fileDialog.FileName))
+                    {
+                        FileStream fileStream = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read);
 
-                    Bitmap newimg = new Bitmap(imagename);
+                        imageArray = new byte[fileStream.Length];
+
+                        fileStream.Read(imageArray, 0, System.Convert.ToInt32(fileStream.Length));
+
+                        fileStream.Close();
+                    }
 
                     pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
 
-                    pictureBox.Image = (Image)newimg;
+                    pictureBox.Image = (Image)(new Bitmap(fileDialog.FileName));
                 }
 
-                fldlg = null;
+                fileDialog = null;
             }
             catch (System.ArgumentException ex)
             {
-                imagename = " ";
                 MessageBox.Show(ex.Message.ToString());
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString());
+            }
+            if (sender == wineBrowseButton)
+            {
+                wineImageArray = imageArray;
+            }
+            else if (sender == authImageButton)
+            {
+                authImageArray = imageArray;
             }
         }
 
@@ -170,31 +197,36 @@ namespace WineEntryClient
             {
                 try
                 {
-                    //proceed only when the image has a valid path
+                    bool status = false;
 
-                    if (!string.IsNullOrEmpty(imagename))
+                    if (sender == wineSaveButton)
                     {
-                        FileStream fls = new FileStream(@imagename, FileMode.Open, FileAccess.Read);
-
-                        byte[] blob = new byte[fls.Length];
-
-                        fls.Read(blob, 0, System.Convert.ToInt32(fls.Length));
-
-                        fls.Close();
-
-                        bool status = false;
-                       if (sender == wineSaveButton)
-                        {
-                            wineWS.wineWS ws = new wineWS.wineWS();
-                            status = ws.enterBottleInformation(new string[] { tagID }, wineTypeComboBox.Text, Convert.ToInt32(yearUpDown.Value), countryBox.Text, vineyardBox.Text, reviewBox.Text, blob);
-                            ws.Dispose();
-                        }
-                        if (status)
-                            statusLabel.Text = Properties.Resources.Success;
-                        else
-                            statusLabel.Text = Properties.Resources.failedWithReason;
-                        return;
+                        wineWS.wineWS ws = new wineWS.wineWS();
+                        status = ws.enterBottleInformation(new string[] { tagID }, wineTypeComboBox.Text, Convert.ToInt32(yearUpDown.Value), countryBox.Text, vineyardBox.Text, reviewBox.Text, wineImageArray);
+                        //ws.Dispose();
                     }
+                    else if (sender == authSaveButton)
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+
+                        newItem.authenticated = authCheckBox.Checked;
+                        newItem.description = descriptionTextBox.Text;
+                        newItem.RFIDNum = idBox.Text;
+                        newItem.image = authImageArray;
+                        newItem.ownerGUID = DeviceUID;
+
+                        if (!ws.setItem(newItem, DeviceUID))
+                            MessageBox.Show(Properties.Resources.unableToSendAuth);
+                        Cursor.Current = Cursors.Default;
+                        break;
+                    }
+
+                    if (status)
+                        statusLabel.Text = Properties.Resources.Success;
+                    else
+                        statusLabel.Text = Properties.Resources.failedWithReason;
+                    return;
+
                 }
                 catch (Exception ex)
                 {
@@ -203,25 +235,33 @@ namespace WineEntryClient
             }
         }
 
-        private void clearButton_Click(object sender, EventArgs e)
+        private void clear(object sender, EventArgs e)
         {
             idBox.Clear();
-           if (sender == wineClearButton)
-            {             
+            if (sender == wineClearButton)
+            {
                 wineTypeComboBox.SelectedIndex = 0;
                 yearUpDown.Value = DateTime.Now.Year;
                 countryBox.SelectedIndex = 0;
                 vineyardBox.Clear();
                 reviewBox.Clear();
                 winePB.Image = null;
+                wineImageArray = null;
+            }
+            else if (sender == authClearButton)
+            {
+                descriptionTextBox.Clear();
+                authCheckBox.Checked = false;
+                authPB.Image = null;
+                authImageArray = null;
             }
         }
 
         private void loadButton_Click(object sender, EventArgs e)
         {
             statusLabel.Text = null;
-            int triesLeft = 5;
-            while (triesLeft > 0)
+
+            for (int triesLeft = 5; triesLeft > 0; )
             {
                 try
                 {
@@ -242,7 +282,7 @@ namespace WineEntryClient
                     {
                         statusLabel.Text = Properties.Resources.InvalidRFID;
                     }
-                    return;
+                    break;
                 }
                 catch (Exception ex)
                 {
@@ -275,7 +315,7 @@ namespace WineEntryClient
                     stringAsBytes[i / 2] = byte.Parse(remiainingBytes.Substring(i, 2), System.Globalization.NumberStyles.HexNumber);
                 }
 
-                
+
                 byte[] buffer = new byte[8];
                 buffer[0] = (byte)((stringAsBytes[0] & 0xFC) >> 2);
                 buffer[4] = (byte)((stringAsBytes[3] & 0xFC) >> 2);
@@ -310,7 +350,7 @@ namespace WineEntryClient
                 'n','o','p','q','r','s','t','u','v','w','x','y','z',
                 '0','1','2','3','4','5','6','7','8','9','+','/'
             };
-            
+
             if ((b >= 0) && (b <= 63))
             {
                 return lookupTable[(int)b];
@@ -328,49 +368,5 @@ namespace WineEntryClient
             ((TextBox)sender).SelectionLength = ((TextBox)sender).Text.Length;
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (idBox.Text.Length < 16)
-            {
-                MessageBox.Show(Properties.Resources.rfidTagLengthError);
-                return;
-            }
-            if (descriptionTextBox.Text.Length < 1)
-            {
-                MessageBox.Show(Properties.Resources.emptyDescriptionError);
-                return;
-            }
-            int retryCount = 5;
-            while (retryCount > 0)
-            {
-                try
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-                    authenticationWebService.AuthenticationWebService ws = new authenticationWebService.AuthenticationWebService();
-                    authenticationWebService.itemInfo newItem = new authenticationWebService.itemInfo();
-                    newItem.authenticated = authCheckBox.Checked;
-                    newItem.description = descriptionTextBox.Text;
-                    newItem.RFIDNum = idBox.Text;
-                    
-                    if (!ws.setItem(newItem,DeviceUID))
-                        MessageBox.Show(Properties.Resources.unableToSendAuth);
-                    Cursor.Current = Cursors.Default;
-                    break;
-                }
-                catch (WebException ex)
-                {
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message.ToString());
-                }
-                finally
-                {
-                    retryCount--;
-                }                
-            }
-        }
-        
     }
 }
