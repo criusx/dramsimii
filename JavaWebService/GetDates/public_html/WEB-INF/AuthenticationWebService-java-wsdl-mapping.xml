@@ -10,12 +10,43 @@
         <namespaceURI>http://authenticationPackage/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_getItem_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getItemResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_sendError_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}sendErrorResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_getUniqueUIDs_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getUniqueUIDsResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>authenticationPackage.itemInfo</java-type>
         <anonymous-type-qname>{http://authenticationPackage/}itemInfo</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>RFIDNum</java-variable-name>
             <xml-element-name>RFIDNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>ownerGUID</java-variable-name>
+            <xml-element-name>ownerGUID</xml-element-name>
         </variable-mapping>
         <variable-mapping>
             <java-variable-name>retryNeeded</java-variable-name>
@@ -28,6 +59,23 @@
         <variable-mapping>
             <java-variable-name>authenticated</java-variable-name>
             <xml-element-name>authenticated</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>image</java-variable-name>
+            <xml-element-name>image</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>exists</java-variable-name>
+            <xml-element-name>exists</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_getSince_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getSinceResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
@@ -48,42 +96,6 @@
             <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_callHome_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}callHomeResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getItem_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getItemResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getUniqueUIDs_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getUniqueUIDsResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getSince_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getSinceResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
     <service-interface-mapping>
         <service-interface>authenticationPackage.authenticationServiceService</service-interface>
         <wsdl-service-name xmlns:serviceNS="http://authenticationPackage/">serviceNS:AuthenticationWebService</wsdl-service-name>
@@ -96,88 +108,6 @@
         <service-endpoint-interface>authenticationPackage.AuthenticationWebService</service-endpoint-interface>
         <wsdl-port-type xmlns:portTypeNS="http://authenticationPackage/">portTypeNS:AuthenticationWebService</wsdl-port-type>
         <wsdl-binding xmlns:bindingNS="http://authenticationPackage/">bindingNS:AuthenticationWebServiceSoapHttp</wsdl-binding>
-        <service-endpoint-method-mapping>
-            <java-method-name>callHome</java-method-name>
-            <wsdl-operation>callHome</wsdl-operation>
-            <wrapped-element />
-            <method-param-parts-mapping>
-                <param-position>0</param-position>
-                <param-type>java.lang.String</param-type>
-                <wsdl-message-mapping>
-                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHome</wsdl-message>
-                    <wsdl-message-part-name>UID</wsdl-message-part-name>
-                    <parameter-mode>IN</parameter-mode>
-                </wsdl-message-mapping>
-            </method-param-parts-mapping>
-            <method-param-parts-mapping>
-                <param-position>1</param-position>
-                <param-type>float[]</param-type>
-                <wsdl-message-mapping>
-                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHome</wsdl-message>
-                    <wsdl-message-part-name>lat</wsdl-message-part-name>
-                    <parameter-mode>IN</parameter-mode>
-                </wsdl-message-mapping>
-            </method-param-parts-mapping>
-            <method-param-parts-mapping>
-                <param-position>2</param-position>
-                <param-type>float[]</param-type>
-                <wsdl-message-mapping>
-                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHome</wsdl-message>
-                    <wsdl-message-part-name>longit</wsdl-message-part-name>
-                    <parameter-mode>IN</parameter-mode>
-                </wsdl-message-mapping>
-            </method-param-parts-mapping>
-            <method-param-parts-mapping>
-                <param-position>3</param-position>
-                <param-type>long[]</param-type>
-                <wsdl-message-mapping>
-                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHome</wsdl-message>
-                    <wsdl-message-part-name>timeSinceLastReading</wsdl-message-part-name>
-                    <parameter-mode>IN</parameter-mode>
-                </wsdl-message-mapping>
-            </method-param-parts-mapping>
-            <method-param-parts-mapping>
-                <param-position>4</param-position>
-                <param-type>long[]</param-type>
-                <wsdl-message-mapping>
-                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHome</wsdl-message>
-                    <wsdl-message-part-name>reportedTime</wsdl-message-part-name>
-                    <parameter-mode>IN</parameter-mode>
-                </wsdl-message-mapping>
-            </method-param-parts-mapping>
-            <method-param-parts-mapping>
-                <param-position>5</param-position>
-                <param-type>float[]</param-type>
-                <wsdl-message-mapping>
-                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHome</wsdl-message>
-                    <wsdl-message-part-name>bearing</wsdl-message-part-name>
-                    <parameter-mode>IN</parameter-mode>
-                </wsdl-message-mapping>
-            </method-param-parts-mapping>
-            <method-param-parts-mapping>
-                <param-position>6</param-position>
-                <param-type>float[]</param-type>
-                <wsdl-message-mapping>
-                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHome</wsdl-message>
-                    <wsdl-message-part-name>speed</wsdl-message-part-name>
-                    <parameter-mode>IN</parameter-mode>
-                </wsdl-message-mapping>
-            </method-param-parts-mapping>
-            <method-param-parts-mapping>
-                <param-position>7</param-position>
-                <param-type>int[]</param-type>
-                <wsdl-message-mapping>
-                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHome</wsdl-message>
-                    <wsdl-message-part-name>elevation</wsdl-message-part-name>
-                    <parameter-mode>IN</parameter-mode>
-                </wsdl-message-mapping>
-            </method-param-parts-mapping>
-            <wsdl-return-value-mapping>
-                <method-return-value>boolean</method-return-value>
-                <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_callHomeResponse</wsdl-message>
-                <wsdl-message-part-name>return</wsdl-message-part-name>
-            </wsdl-return-value-mapping>
-        </service-endpoint-method-mapping>
         <service-endpoint-method-mapping>
             <java-method-name>getItem</java-method-name>
             <wsdl-operation>getItem</wsdl-operation>
@@ -278,6 +208,43 @@
             <wsdl-return-value-mapping>
                 <method-return-value>java.lang.String[]</method-return-value>
                 <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_getUniqueUIDsResponse</wsdl-message>
+                <wsdl-message-part-name>return</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>sendError</java-method-name>
+            <wsdl-operation>sendError</wsdl-operation>
+            <wrapped-element />
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_sendError</wsdl-message>
+                    <wsdl-message-part-name>exception</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_sendError</wsdl-message>
+                    <wsdl-message-part-name>stackTrace</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>2</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_sendError</wsdl-message>
+                    <wsdl-message-part-name>message</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>boolean</method-return-value>
+                <wsdl-message xmlns:wsdlMsgNS="http://authenticationPackage/">wsdlMsgNS:AuthenticationWebService_sendErrorResponse</wsdl-message>
                 <wsdl-message-part-name>return</wsdl-message-part-name>
             </wsdl-return-value-mapping>
         </service-endpoint-method-mapping>

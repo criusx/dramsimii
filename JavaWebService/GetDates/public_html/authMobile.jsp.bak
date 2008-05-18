@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<%@ page import="authenticationPackage.image"%>
+<%@ page import="authenticationPackage.image.*"%>
+<%@ page import="dBInfo.dbConnectInfo"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.io.*"%>
+<%@ page import="oracle.jdbc.OracleConnection"%>
+<%@ page errorPage="ExceptionHandler.jsp" %>
+
+
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.3//EN" "http://www.wapforum.org/DTD/wml13.dtd">
+
+<% response.setContentType("text/vnd.wap.wml"); %>
+
+<wml>
+    <card id="card1" title="WML Form">
+        <p>            
+            Code: <%= request.getParameter("code") %><br/>
+            Description:
+            <%
+            String RFIDNum = request.getParameter("code");
+            
+            String lookupType = "";
+            
+            // ignore blank requests
+            if (RFIDNum == null)
+            {
+            System.out.println("Null value.");
+            return;
+            }
+            // sanitize to help prevent sql injection
+            RFIDNum = RFIDNum.replaceAll("\\s+", "");
+            // if they can't be real tags anyway
+            if (RFIDNum.length() > 16)
+            {
+            System.out.println("Value too long.");
+            return;
+            }
+            OracleConnection conn = null;
+            try
+            { 
+            // only accept ids in hex
+            for (int i = 0; i < RFIDNum.length(); i++)
+            {
+            if (!("0123456789abcdefABCDEF".indexOf(RFIDNum.charAt(i)) >= 0))
+            {
+            System.out.println("Non-hex character encountered");
+            return;
+            }
+            }
+            
+            // get the image from the database
+            conn = dbConnectInfo.getConnection();
+            String desc;
+            if (lookupType != null) 
+            desc = image.getDescription(conn,RFIDNum,authenticationPackage.image.lookupType.pet);
+            else
+            desc = image.getDescription( conn, RFIDNum,image.lookupType.normal  ) ;
+            
+            out.println(desc);
+            }
+            catch (Exception e)
+            {
+            e.printStackTrace();
+            throw e;
+            }
+            finally
+            {
+            // close up the connection
+            try
+            {
+            if (conn != null)
+            {
+            conn.close();
+            }
+            }
+            catch (SQLException ex)
+            {
+            ex.printStackTrace();
+            try
+            {
+            if (conn != null)
+            conn.close();
+            }
+            catch (SQLException exc)
+            {
+            exc.printStackTrace();
+            }
+            }
+            }
+            %>
+            Image:<br/>
+            <% out.println("<img alt=\"Missing Image\" src=\"http://id2.gentag.com/GentagDemo/tagImage.jsp?RFIDNum=" + request.getParameter("code") + "\">");  %>
+            
+        </p>
+    </card>
+</wml>

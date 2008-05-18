@@ -80,7 +80,6 @@
             <list n="OP_">
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
-                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_getWineAccessesSince"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -97,14 +96,12 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="java.lang.String[]"/>
                   <value n="OP_NAME" v="getWineAccessesSince"/>
-                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_getWineAccessesSinceResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
-                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_enterBottleInformation"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -169,14 +166,12 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
                   <value n="OP_NAME" v="enterBottleInformation"/>
-                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_enterBottleInformationResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
-                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_retrieveBottleInformation"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -217,7 +212,6 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="winepackage.wineBottle"/>
                   <value n="OP_NAME" v="retrieveBottleInformation"/>
-                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}WineWS_retrieveBottleInformationResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>

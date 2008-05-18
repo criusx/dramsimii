@@ -3,11 +3,10 @@ package authenticationPackage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+
 public interface AuthenticationWebService
   extends Remote
 {
-  public boolean callHome(String UID, float[] lat, float[] longit, long[] timeSinceLastReading, long[] reportedTime, float[] bearing, float[] speed, int[] elevation)
-    throws RemoteException;
 
   public String[] getSince(long timestamp)
     throws RemoteException;
@@ -23,5 +22,9 @@ public interface AuthenticationWebService
     throws RemoteException;
 
   public String[] getUniqueUIDs()
+    throws RemoteException;
+
+  public boolean sendError(String exception, String stackTrace, 
+                           String message)
     throws RemoteException;
 }

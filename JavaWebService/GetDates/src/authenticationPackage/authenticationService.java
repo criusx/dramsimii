@@ -1,38 +1,34 @@
 package authenticationPackage;
 
+import dBInfo.dbConnectInfo;
+
+import java.io.IOException;
+import java.io.OutputStream;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
+import java.sql.Blob;
 import java.sql.Connection;
-
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import java.sql.*;
-
+import oracle.jdbc.driver.OracleConnection;
+import oracle.jdbc.driver.OracleResultSet;
+import oracle.jdbc.driver.OracleStatement;
 import oracle.jdbc.pool.OracleDataSource;
-import oracle.jdbc.driver.*;
 
-import java.io.*;
-
-import oracle.sql.*;
-
-import org.xml.sax.SAXException;
-
-import com.keithpower.gekmlib.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.digester.Digester;
-
-import winepackage.wineBottle;
-
-import dBInfo;
-
-import dBInfo.dbConnectInfo;
+import oracle.sql.BLOB;
 
 
 @WebService(name = "AuthenticationWebService", 
@@ -104,11 +100,12 @@ public class authenticationService
   public boolean setItem(itemInfo newItem, String UID)
   {
     OracleDataSource ods;
+    OracleConnection conn = null;
     try
     {
       ods = new OracleDataSource();
       ods.setURL(dbConnectInfo.getConnectInfo());
-      Connection conn = ods.getConnection();
+      conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
       // make the matches case insensitive
       OracleStatement psC = (OracleStatement) conn.createStatement();
@@ -117,40 +114,102 @@ public class authenticationService
 
       psC.close();
 
-      // first insert the ID
-      PreparedStatement ps = 
-        conn.prepareStatement("INSERT INTO AUTHENTICATED VALUES (?, ?)");
+      SecureRandom rng = SecureRandom.getInstance("SHA1PRNG");
 
-      ps.setString(1, newItem.getRFIDNum());
-      if (newItem.isAuthenticated())
-        ps.setString(2, UID);
-      else
-        ps.setString(2, "");
-      ps.execute();
+      int randomID = rng.nextInt();
 
       // then add authentication and tell who authorized it
-      ps = conn.prepareStatement("INSERT INTO DESCRIPTIONS VALUES (?, ?)");
+      PreparedStatement ps = 
+        conn.prepareStatement("INSERT INTO DESCRIPTIONS (ID, DESCRIPTION, AUTHENTICATED, IMAGE) VALUES (?, ?, ?, ?)");
 
       ps.setString(1, newItem.getRFIDNum());
       ps.setString(2, newItem.getDescription());
+      ps.setInt(3, 1);
+      ps.setInt(4, randomID);
 
       ps.execute();
 
-      conn.commit();
-      return true;
+      ps = 
+          conn.prepareStatement("INSERT INTO PRODUCTIMAGES (PRODUCTID, PHOTO) VALUES (?, empty_blob())");
+
+      ps.setInt(1, randomID);
+      ps.execute();
+
+      ps = 
+          conn.prepareStatement("SELECT PHOTO FROM PRODUCTIMAGES WHERE PRODUCTID = ? FOR UPDATE");
+      ps.setInt(1, randomID);
+      ResultSet rs = ps.executeQuery();
+      if (rs.next())
+      {
+        Blob b = rs.getBlob("PHOTO");
+
+        OutputStream out = b.setBinaryStream(0L);
+        out.write(newItem.getImage(), 0, newItem.getImage().length);
+        out.flush();
+
+        conn.commit();
+        System.out.println("work");
+        return true;
+      }
+      else
+      {
+        System.out.println("error updating image");
+        conn.rollback();
+        return false;
+      }
     }
     catch (SQLException e)
     {
-      System.out.println("Exception" + e.toString());
+      e.printStackTrace();
       return false;
       // TODO
     }
+    catch (NoSuchAlgorithmException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
+    finally
+    {
+      // close up the connection
+      try
+      {
+        if (conn != null)
+        {
+          conn.close();
+        }
+      }
+      catch (SQLException ex)
+      {
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
+    }
   }
-
 
   @WebMethod
   public itemInfo getItem(String RFIDNum, String UID, float lat, 
                           float longit)
+  {
+    return getItem(RFIDNum, UID, lat, longit, true);
+  }
+
+
+  public itemInfo getItem(String RFIDNum, String UID, float lat, 
+                          float longit, boolean logThis)
   {
     // ignore blank requests
     if (RFIDNum == null || UID == null)
@@ -159,6 +218,12 @@ public class authenticationService
       return new itemInfo();
     }
     // if they can't be real tags anyway
+    if (RFIDNum.length() < 1)
+    {
+      System.out.println("Value too short.");
+      return new itemInfo();
+
+    }
     if (RFIDNum.length() > 16 || UID.length() > 128)
     {
       System.out.println("Value too long.");
@@ -181,55 +246,73 @@ public class authenticationService
       conn = (OracleConnection) ods.getConnection();
       conn.setAutoCommit(false);
 
-      try
-      {
-        // first record this
-        PreparedStatement ps = 
-          conn.prepareStatement("INSERT INTO AUTHENTICATIONLOOKUPS VALUES (?, ?, ?, ?, ?)");
+      // set case insensitivity
+      OracleStatement psC = (OracleStatement) conn.createStatement();
+      psC.execute("alter session set NLS_COMP=ANSI");
+      psC.execute("alter session set NLS_SORT=BINARY_CI");
 
-        java.util.Date today = new java.util.Date();
-        ps.setString(1, UID);
-        ps.setString(2, RFIDNum);
-        ps.setFloat(3, lat);
-        ps.setFloat(4, longit);
-        ps.setTimestamp(5, new Timestamp(today.getTime()));
-
-        ps.execute();
-        ps.close();
-      }
-      catch (SQLException e)
+      psC.close();
+      
+      if (logThis)
       {
-        System.out.println("Insert lookup failed." + e.getErrorCode());
+        try
+        {
+          // first record this
+          PreparedStatement ps = 
+            conn.prepareStatement("INSERT INTO AUTHENTICATIONLOOKUPS VALUES (?, ?, ?, ?, ?)");
+
+          ps.setString(1, UID);
+          ps.setString(2, RFIDNum);
+          ps.setFloat(3, lat);
+          ps.setFloat(4, longit);
+          ps.setTimestamp(5, 
+                          new Timestamp((new java.util.Date()).getTime()));
+
+          ps.execute();
+          ps.close();
+        }
+        catch (SQLException e)
+        {
+          System.out.println("Insert lookup failed." + e.getErrorCode());
+        }
       }
+
       // then see if it's authenticated
       PreparedStatement ps = 
-        conn.prepareStatement("SELECT * FROM DESCRIPTIONS WHERE ID = ?");
+        conn.prepareStatement("SELECT * FROM DESCRIPTIONS DES, PRODUCTIMAGES PI WHERE DES.IMAGE = PI.PRODUCTID AND ID = ?");
       ps.setString(1, RFIDNum);
 
-      ResultSet result = ps.executeQuery();      
+      ResultSet result = ps.executeQuery();
 
-      boolean authenticated;
-      String description;
+      itemInfo newItem = new itemInfo();
+
+      // get the authentication status and description
       if (result.next())
       {
-        description = result.getString("DESCRIPTION");
-        if (result.getInt("AUTHENTICATED") == 1)
-          authenticated = true;
-        else
-          authenticated = false;
+        newItem.setDescription(result.getString("DESCRIPTION"));
+        newItem.setAuthenticated(result.getInt("AUTHENTICATED") == 1);
+        newItem.setExists(true);
+
+        Blob b = result.getBlob("PHOTO");
+
+        if (b != null)
+          newItem.setImage(b.getBytes((long) 1, (int) b.length()));
       }
       else
       {
-        authenticated = false;
-        description = "No description found.";
+        newItem.setAuthenticated(false);
+        newItem.setExists(false);
+        newItem.setDescription("No description found.");
       }
 
       result.close();
+
       ps.close();
 
       conn.commit();
-      System.out.println("Lookup: " + RFIDNum + " " + authenticated);
-      return new itemInfo(RFIDNum, description, authenticated, false);
+      System.out.println("Lookup: " + RFIDNum + " " + 
+                         newItem.isAuthenticated());
+      return newItem;
     }
     catch (SQLException e)
     {
@@ -238,6 +321,76 @@ public class authenticationService
         conn.rollback();
 
       return new itemInfo();
+    }
+    finally
+    {
+      // close up the connection
+      try
+      {
+        if (conn != null)
+        {
+          conn.close();
+        }
+      }
+      catch (SQLException ex)
+      {
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
+    }
+  }
+
+  @WebMethod
+  public boolean sendError(String exception, String stackTrace, 
+                           String message)
+  {
+    // ignore blank requests
+    if (exception == null || stackTrace == null)
+    {
+      System.out.println("Null value.");
+      return false;
+    }
+    // if they can't be real tags anyway
+    if (exception.length() < 8 || stackTrace.length() < 16)
+    {
+      System.out.println("Value too short.");
+      return false;
+    }
+    OracleDataSource ods;
+    OracleConnection conn = null;
+
+    try
+    {
+      ods = new OracleDataSource();
+      ods.setURL(dbConnectInfo.getConnectInfo());
+      conn = (OracleConnection) ods.getConnection();
+      conn.setAutoCommit(false);
+
+      // first record this
+      PreparedStatement ps = 
+        conn.prepareStatement("INSERT INTO ERRORREPORTS (EXCEPTION, STACKTRACE, MESSAGE, SUBMITTIME) VALUES (?, ?, ?, ?)");
+      ps.setString(1, exception);
+      ps.setString(2, stackTrace);
+      ps.setString(3, message);
+      ps.setTimestamp(4, new Timestamp((new java.util.Date()).getTime()));
+      ps.execute();
+      ps.close();
+      conn.commit();
+      return true;
+    }
+    catch (SQLException e)
+    {
+      System.out.println("Error report failed." + e.getErrorCode());
+      conn.rollback();
+      return false;
     }
     finally
     {
@@ -323,7 +476,6 @@ public class authenticationService
    * @param elevation
    * @return
    */
-  @WebMethod
   public boolean callHome(String UID, float[] lat, float[] longit, 
                           long[] timeSinceLastReading, long[] reportedTime, 
                           float[] bearing, float[] speed, int[] elevation)
@@ -376,21 +528,19 @@ public class authenticationService
   public String[] getSince(long timestamp)
   {
     OracleDataSource ods;
+    OracleConnection conn = null;
     ArrayList results = new ArrayList();
+
     try
     {
       ods = new OracleDataSource();
       ods.setURL(dbConnectInfo.getConnectInfo());
-      System.out.println(dbConnectInfo.getConnectInfo());
-      Connection conn = ods.getConnection();
-      System.out.println("Connected to " + dbConnectInfo.getConnectInfo());
-      Timestamp ts = new Timestamp(timestamp);
-      String query = 
-        "SELECT * FROM AUTHENTICATIONLOOKUPS WHERE" + "(TIME > timestamp'" + 
-        ts.toString() + "') " + "ORDER BY TIME ASC";
-      Statement stmt = conn.createStatement();
-      System.out.println(query);
-      ResultSet result = stmt.executeQuery(query);
+      conn = (OracleConnection) ods.getConnection();
+
+      PreparedStatement ps = 
+        conn.prepareStatement("SELECT * FROM (SELECT * FROM AUTHENTICATIONLOOKUPS WHERE (TIME > ?) ORDER BY TIME ASC) WHERE ROWNUM <=200");
+      ps.setTimestamp(1, new Timestamp(timestamp));
+      OracleResultSet result = (OracleResultSet) ps.executeQuery();
 
       while (result.next())
       {
@@ -409,17 +559,41 @@ public class authenticationService
         results.add(result.getString("LATITUDE"));
         results.add(result.getString("LONGITUDE"));
       }
+
+      System.out.println("GetSince: " + timestamp);
+      return (String[]) results.toArray(new String[results.size()]);
     }
     catch (SQLException e)
     {
-      System.out.println("Exception" + e.toString());
-      // TODO
+      System.out.println(e.toString());
+      e.printStackTrace();
+      return new String[1];
     }
-    //    String [] results2 = new String[] (results.size());
-    //    for (int j = 0; j < results.size(); j++)
-    //      results2[j] = results[j].
+    finally
+    {
+      // close up the connection
+      try
+      {
+        if (conn != null)
+        {
+          conn.close();
+        }
+      }
+      catch (SQLException ex)
+      {
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
+    }
 
-    return (String[]) results.toArray(new String[results.size()]);
   }
 
 }

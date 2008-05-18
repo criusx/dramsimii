@@ -23,7 +23,7 @@
       <mainClass/>
    </archiveOptions>
    <contextRoot>GentagDemo</contextRoot>
-   <defaultConnection>GentagAS</defaultConnection>
+   <defaultConnection>GentagAS2</defaultConnection>
    <deployClientMaxHeapSize/>
    <earURL path="deploy/WS.ear"/>
    <enterpriseAppName>GentagWebApp</enterpriseAppName>
@@ -40,6 +40,15 @@
             <displayName>Web Files</displayName>
             <filters>
                <rules>
+                  <Item type="0" pattern="petImage.jsp"/>
+                  <Item type="1" pattern="dBInfo/.svn/"/>
+                  <Item type="1" pattern="assayPackage/.svn/"/>
+                  <Item type="0" pattern="authMobile.jsp"/>
+                  <Item type="0" pattern="authMobile.wml"/>
+                  <Item type="0" pattern="images/"/>
+                  <Item type="0" pattern="lib/"/>
+                  <Item type="0" pattern="ExceptionHandler.jsp"/>
+                  <Item type="0" pattern="tagImage.jsp"/>
                   <Item type="0" pattern="WEB-INF/AuthenticationSecureWS-java-wsdl-mapping.xml"/>
                   <Item type="0" pattern="WEB-INF/wsdl/AuthenticationSecureWS.wsdl"/>
                   <Item type="0" pattern="WEB-INF/AssayWS-java-wsdl-mapping.xml"/>
@@ -110,6 +119,17 @@
             <displayName>WEB-INF/classes</displayName>
             <filters>
                <rules>
+                  <Item type="1" pattern="assayPackage/.svn/"/>
+                  <Item type="0" pattern=".jsps/_petImage.java"/>
+                  <Item type="0" pattern=".jsps/_petImage.class"/>
+                  <Item type="0" pattern=".jsps/_ExceptionHandler.java"/>
+                  <Item type="0" pattern=".jsps/_ExceptionHandler.class"/>
+                  <Item type="0" pattern=".jsps/_authMobile.class"/>
+                  <Item type="0" pattern=".jsps/_authMobile.java"/>
+                  <Item type="0" pattern="authenticationPackage/image$lookupType.class"/>
+                  <Item type="0" pattern="authenticationPackage/image.class"/>
+                  <Item type="0" pattern=".jsps/_tagImage.java"/>
+                  <Item type="0" pattern=".jsps/_tagImage.class"/>
                   <Item type="0" pattern="assayPackage/assayResultResponse.class"/>
                   <Item type="0" pattern="authenticationPackage/ConnectionFailureException.class"/>
                   <Item type="0" pattern="authenticationPackage/AuthenticationSecureWS*.class"/>
@@ -187,6 +207,9 @@
             <displayName>WEB-INF/lib</displayName>
             <filters>
                <rules>
+                  <Item type="1" pattern="commons-digester-1.8.jar"/>
+                  <Item type="1" pattern="gekmllib.jar"/>
+                  <Item type="1" pattern="ojdbc14.jar"/>
                   <Item type="0" pattern="**"/>
                </rules>
             </filters>

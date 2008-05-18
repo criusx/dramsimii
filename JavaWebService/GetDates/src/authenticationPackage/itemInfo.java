@@ -9,13 +9,17 @@ public class itemInfo
   private String description;
   private boolean authenticated;
   private boolean retryNeeded;
+  private byte[] image;
+  private boolean exists;
+  private String ownerGUID;
 
   public itemInfo()
   {
     authenticated = false;
     RFIDNum = "";
-    description = "";
+    description = "No description found";
     retryNeeded = false;
+    exists = false;
   }
 
   public itemInfo(String _RFIDNum, String _description, 
@@ -65,5 +69,35 @@ public class itemInfo
   public boolean isRetryNeeded()
   {
     return retryNeeded;
+  }
+
+  public void setOwnerGUID(String ownerGUID)
+  {
+    this.ownerGUID = ownerGUID;
+  }
+
+  public String getOwnerGUID()
+  {
+    return ownerGUID;
+  }
+
+  public void setImage(byte[] image)
+  {
+    this.image = image;
+  }
+
+  public byte[] getImage()
+  {
+    return image;
+  }
+
+  public void setExists(boolean exists)
+  {
+    this.exists = exists;
+  }
+
+  public boolean isExists()
+  {
+    return exists;
   }
 }

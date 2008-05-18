@@ -1,122 +1,192 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    
 <html>
   <head>
     <title>Transaction Monitoring</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
-    <link href="css/format.css" rel="stylesheet" type="text/css" media="screen"></link>
-    <script type="text/javascript"
-            src="AuthenticationWebServiceSoapHttpPort?AuthenticationWebServiceSoapHttpPortstub.js"></script>
-    <meta name="keywords"
-          content="cell phones, RFID, reader, disposable sensors, diagnostics, wireless skin patch, consumer, sensor, sensor networks, passive, temperature, homeland security, immunoassay, radiation"></meta>
-    <meta name="description"
-          content="Empowering Consumers With Vital Information"></meta>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <link href="css/format.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="AuthenticationWebServiceSoapHttpPort?AuthenticationWebServiceSoapHttpPortstub.js" type="text/javascript"> </script>
+    <script src="lib/jquery-1.2.3.min.js" type="text/javascript"> </script>
+    <script src="lib/jquery.tablesorter.js" type="text/javascript"> </script>
+
+    <meta content="cell phones, RFID, reader, disposable sensors, diagnostics, wireless skin patch, consumer, sensor, sensor networks, passive, temperature, homeland security, immunoassay, radiation" name="keywords" />
+    <meta content="Empowering Consumers With Vital Information" name="description" />
     <script type="text/javascript">
-    // globals
-    var lastLookup = new Date(0);
-    var rows = 0;
-
-    function init()
-    {
-    update();
-    setInterval("update()", 30000);
-    }
-
-    function update()
-    {
-    //alert(lastLookup.toGMTString());
-    AuthenticationWebServiceSoapHttpPort_getSinceAsync(lastLookup.getTime(), addResults);    
-    }
-
-    function addResults(reqObject)
-    {
-    var divHandle = document.getElementById("theTableBody");
-
-    var currentRow = document.createElement("tr");
-    //currentRow.style.display = "table-row";
-    
-    if (rows == 0)
-      currentRow.className = "odd";
-
-    if (divHandle)
-    {      
-      for (x in reqObject)
-      {
-        var currentCell = document.createElement("td");
-        //currentCell.style.display = "table-cell";
-        
-        // grab the time
-        if (x % 5 == 2)
-        {          
-          var comparison = new Date(Date.parse(reqObject[x]));          
-          if (comparison > lastLookup)
-            lastLookup = comparison;
-          currentText = document.createTextNode(comparison.toGMTString());
-        }
-        else
-        {
-          currentText = document.createTextNode(reqObject[x]);
-        }
-        currentCell.appendChild(currentText);
-        
-        currentRow.appendChild(currentCell);
-
-        if (x % 5 == 4)
-        { 
-          if (divHandle.firstChild)
-            divHandle.insertBefore(currentRow, divHandle.firstChild);
-          else
-            divHandle.appendChild(currentRow);
+            // globals
+            var lastLookup = new Date(0);
+            var rows = 0;
+            var month = new Array(12);
+            month[0] = "January";
+            month[1] = "February";
+            month[2] = "March";
+            month[3] = "April";
+            month[4] = "May";
+            month[5] = "June";
+            month[6] = "July";
+            month[7] = "August";
+            month[8] = "Sepember";
+            month[9] = "October";
+            month[10] = "November";
+            month[11] = "December";
+            var intervalID = null;
             
-          currentRow = document.createElement("tr");
-          
-          if (rows == 0)
-          {
-            rows = 1;
-            currentRow.className = "odd";
-          }
-          else
-          {
-            rows = 0;            
-          }
-        }
-        
-      }
-    }
-    divHandle = document.getElementById("updatedTime");
-    if (divHandle)
-    {
-      var presentTime = new Date();
-      
-      divHandle.nodeValue = presentTime.toUTCString();
-    }
-    }
-  </script>
+            $(document) .ready(function ()
+            {
+                $("#theTable") .tablesorter(
+                {
+                    widgets: [ 'zebra' ]
+                });
+            });
+            
+            function toggle()
+            {
+                if (intervalID == null)
+                {
+                    intervalID = setInterval("update()", 30000);
+                    update();
+                    document.getElementById("toggleButton") .value = "Updating";
+                }
+                else
+                {
+                    clearInterval(intervalID);
+                    intervalID = null;
+                    document.getElementById("toggleButton") .value = "Stopped";
+                }
+            }
+            
+            function update()
+            {
+                //alert(lastLookup.toGMTString());
+                document.actionForm.updateButton.enabled = false;
+                AuthenticationWebServiceSoapHttpPort_getSinceAsync(lastLookup.getTime(), addResults);
+            }
+            
+            function addResults(reqObject)
+            {
+                var divHandle = document.getElementById("theTableBody");
+                
+                var currentRow = document.createElement("tr");
+                //currentRow.style.display = "table-row";
+                
+                if (rows == 0)
+                currentRow.className = "odd";
+                
+                if (divHandle)
+                {
+                    var count = 0;
+                    var currentID;
+                    for (x in reqObject)
+                    {
+                        count++;
+                        var currentCell = document.createElement("td");
+                        //currentCell.style.display = "table-cell";
+                        
+                        // grab the time
+                        if (x % 5 == 2)
+                        {
+                            var comparison = new Date(Date.parse(reqObject[x]));
+                            if (comparison > lastLookup)
+                            lastLookup = comparison;
+                            AMorPM = comparison.getUTCHours() >= 11 ? "PM" : "AM";
+                            hours = comparison.getUTCHours() % 12 + 1;
+                            minutes = comparison.getUTCMinutes();
+                            if (minutes >= 10);
+                            else
+                            minutes = "0" + minutes;
+                            
+                            currentText = document.createTextNode(month[comparison.getUTCMonth() ] + " " + comparison.getUTCDate() + ", " + comparison.getFullYear() + " " + hours + ":" + minutes + " " + AMorPM);
+                        }                        
+                        else
+                        {
+                          if (x % 5 == 1)
+                          {
+                            currentID = reqObject[x];
+                          }
+                          else if (x % 5 == 3)
+                          {
+                            var current = document.createElement("td");
+                            var currentImg = document.createElement("img");
+                            current.appendChild(currentImg);
+                            currentImg.src = "http://id2.gentag.com/GentagDemo/tagImage.jsp?RFIDNum=" + currentID;
+                            currentImg.alt = "Missing Image";
+                            currentRow.appendChild(current);
+                          }
+                          currentText = document.createTextNode(reqObject[x]);
+                        }
+                        currentCell.appendChild(currentText);
+                        
+                        currentRow.appendChild(currentCell);
+                        
+                        if (x % 5 == 4)
+                        {
+                            if (divHandle.firstChild)
+                            divHandle.insertBefore(currentRow, divHandle.firstChild);
+                            else
+                            divHandle.appendChild(currentRow);
+                            
+                            currentRow = document.createElement("tr");
+                            
+                            if (rows == 0)
+                            {
+                                rows = 1;
+                                currentRow.className = "odd";
+                            }
+                            else
+                            {
+                                rows = 0;
+                            }
+                        }                        
+                    }
+                }
+                
+                var presentTime = new Date();
+                document.getElementById("updatedTime").removeChild(document.getElementById("updatedTime") .childNodes[0]);
+                document.getElementById("updatedTime").appendChild(document.createTextNode(presentTime.toUTCString()));
+                document.actionForm.updateButton.enabled = true;
+                
+                // resort the table only if some elements were added
+                if (count > 0)
+                {
+                    // let the plugin know that we made a update
+                    $("table") .trigger("update");
+                    // set sorting column and direction, this will sort on the third column
+                    var sorting = [[2, 1]];
+                    // sort on the first column
+                    $("theTable") .trigger("sorton", [sorting]);
+                }
+            }</script>
   </head>
-  <body onload="init()"><div id="content-container" class="wineLookup2">
+  <body onload="javascript:toggle();">
+    <div class="wineLookup2" id="content-container">
       <div id="logo">
-        <img src="http://www.gentag.com/images/Gentag-logo.png" alt="Gentag"
-             id="main-logo"></img>
-         
-        <br></br>
+        <img alt="Gentag" id="main-logo" src="http://www.gentag.com/images/Gentag-logo-original.png" />
+
+        <br />
       </div>
-       
-      <form name="form1" action="">
-        <input type="button" value="Refresh Now" onclick="update();"/>
+
+      <form name="actionForm" id="actionForm" action="">
+        <p>
+          <input onclick="update();" name="updateButton" id="updateButton" type="button" value="Refresh Now" />
+          <input id="toggleButton" onclick="javascript:toggle();" type="button" value="Updating" />
+        </p>
       </form>
       <div>Last updated at: <div id="updatedTime"> </div></div>
-       
-      <table id="theTable" style="display:table">
+
+      <table class="tablesorter" id="theTable" style="display:table">
         <caption>All scans so far</caption>
         <thead>
           <tr>
-            <th>Scanner UID</th>
+            <th>Cell Phone GUID</th>
             <th>Item's RFID #</th>
-            <th>Time scan received</th>
+            <th>Tag Read Time</th>
+            <th>Image</th>
             <th>Latitude</th>
             <th>Longitude</th>
           </tr>
         </thead>
-        <tbody id="theTableBody"></tbody>
+        <tbody id="theTableBody" />
       </table>
-    </div></body>
+    </div>
+  </body>
 </html>

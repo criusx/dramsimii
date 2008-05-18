@@ -3,7 +3,6 @@ package datespackage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import java.util.Calendar;
 
 public interface GetDatesWS
   extends Remote
@@ -40,5 +39,11 @@ public interface GetDatesWS
 
   public boolean setItem(String RFIDNum, String UID, String description, 
                          boolean authenticated)
+    throws RemoteException;
+
+  public String getDesc()
+    throws RemoteException;
+
+  public String getName()
     throws RemoteException;
 }

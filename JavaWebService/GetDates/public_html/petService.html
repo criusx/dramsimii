@@ -49,7 +49,7 @@
             function receivePetInfo(reqObject) {
                 if (reqObject.exists) {
                     document.getElementById("petImage") .src = "data:image/png;base64," + reqObject.image;
-                    document.getElementById("ownerBox") .value = reqObject.owner;
+                    //document.getElementById("petImage").src = "http://id2.gentag.com:7777/GentagDemo/tagImage.jsp?RFIDNum=" +document.getElementById("ownerBox") .value = reqObject.owner;
                     document.getElementById("breedBox") .value = reqObject.breed;
                     document.getElementById("nameBox") .value = reqObject.name;
                     document.getElementById("homePhoneBox") .value = reqObject.homePhone;
@@ -122,6 +122,7 @@
                 
                 // TODO: image
                 //document.getElementById("petImage") .src = "data:image/png;base64," + reqObject.image;
+                 
                 newPet.image = "ASDFASDFASDF";
                 
                 newPet.owner = document.getElementById("ownerBox") .value;

@@ -1,35 +1,14 @@
 package evDemo;
 
-import COREMedDemo.drugInfo;
-import COREMedDemo.errorReport;
+import dBInfo.dbConnectInfo;
 
-import dhlDemo.packageInfo;
-import dhlDemo.packageScan;
-
-import java.io.IOException;
-import java.io.OutputStream;
-
-import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.sql.Timestamp;
-
-import javax.jws.WebMethod;
-import javax.jws.WebService;
-
-import javax.mail.MessagingException;
-
 import oracle.jdbc.driver.OracleConnection;
 import oracle.jdbc.pool.OracleDataSource;
 
-import java.util.Random;
-
-import javax.mail.internet.AddressException;
-import dBInfo;
-
-import dBInfo.dbConnectInfo;
 
 public class evDemoService
 {

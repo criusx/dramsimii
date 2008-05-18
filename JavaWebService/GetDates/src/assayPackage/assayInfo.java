@@ -1,6 +1,5 @@
 package assayPackage;
 
-import java.lang.reflect.Array;
 
 public class assayInfo
 {

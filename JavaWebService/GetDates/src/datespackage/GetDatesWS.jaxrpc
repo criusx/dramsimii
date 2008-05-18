@@ -69,6 +69,18 @@
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="java.lang.String.getDesc"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="java.lang.String.getName"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
             </list>
             <hash n="PROPERTY_GROUPS"/>
          </hash>
@@ -124,6 +136,16 @@
                </hash>
                <hash>
                   <value n="EXPOSED_BD_OPERATION" v="boolean.setItem.java.lang.String.java.lang.String.java.lang.String.boolean"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="java.lang.String.getDesc"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="java.lang.String.getName"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -474,6 +496,34 @@
                   <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
                   <value n="OP_NAME" v="setItem"/>
                   <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}GetDatesWS_setItemResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}GetDatesWS_getDesc"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="getDesc"/>
+                  <value n="OP_JAVA_RETURN_TYPE" v="java.lang.String"/>
+                  <value n="OP_NAME" v="getDesc"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}GetDatesWS_getDescResponse"/>
+                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
+                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}GetDatesWS_getName"/>
+                  <list n="OP_JAVA_EXCEPTIONS">
+                     <string v="java.rmi.RemoteException"/>
+                  </list>
+                  <value n="OP_JAVA_NAME" v="getName"/>
+                  <value n="OP_JAVA_RETURN_TYPE" v="java.lang.String"/>
+                  <value n="OP_NAME" v="getName"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}GetDatesWS_getNameResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>

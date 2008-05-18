@@ -6,6 +6,7 @@ public class drugInfo
   private String description;
   private byte[] picture;
   private String name;
+  private boolean authenticated;
   private boolean exists;
   private boolean retryNeeded;
 
@@ -87,5 +88,15 @@ public class drugInfo
   public boolean isRetryNeeded()
   {
     return retryNeeded;
+  }
+
+  public void setAuthenticated(boolean authenticated)
+  {
+    this.authenticated = authenticated;
+  }
+
+  public boolean isAuthenticated()
+  {
+    return authenticated;
   }
 }

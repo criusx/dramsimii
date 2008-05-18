@@ -3,7 +3,6 @@ package petPackage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import winepackage.wineBottle;
 
 public interface PetWS
   extends Remote

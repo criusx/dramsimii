@@ -2,6 +2,7 @@ package authenticationPackage;
 
 import java.sql.SQLException;
 
+
 public class ConnectionFailureException
   extends SQLException
 {

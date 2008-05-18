@@ -1,6 +1,5 @@
 package winepackage;
 
-
 import dBInfo.dbConnectInfo;
 
 import java.awt.Graphics2D;
@@ -17,7 +16,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.sql.Statement;
 import java.sql.Timestamp;
 
@@ -27,18 +25,14 @@ import java.util.GregorianCalendar;
 
 import javax.imageio.ImageIO;
 
-import javax.jws.WebService;
-
-import oracle.jdbc.OracleParameterMetaData;
 import oracle.jdbc.driver.OracleConnection;
+import oracle.jdbc.driver.OraclePreparedStatement;
 import oracle.jdbc.driver.OracleResultSet;
 import oracle.jdbc.driver.OracleStatement;
 import oracle.jdbc.pool.OracleDataSource;
-import oracle.jdbc.driver.*;
 
 import oracle.sql.BLOB;
 
-import oracle.webservices.annotations.Deployment;
 
 public class wineService
 {

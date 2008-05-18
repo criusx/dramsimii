@@ -1,7 +1,5 @@
 package assayPackage;
 
-import authenticationPackage.itemInfo;
-
 import dBInfo.dbConnectInfo;
 
 import java.io.IOException;
@@ -10,9 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import java.sql.SQLException;
-
 import java.sql.SQLWarning;
-
 import java.sql.Timestamp;
 
 import java.util.ArrayList;
@@ -339,6 +335,6 @@ public class assayService
   private static final boolean isBase64Char(char c)
   {
     return (Character.isDigit(c) || Character.isLetter(c) || 
-            "+=".indexOf(c) >= 0);
+            "+=/".indexOf(c) >= 0);
   }
 }
