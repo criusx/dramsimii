@@ -102,7 +102,7 @@ void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 /// @param value the transaction to be inserted
 /// @return true if the transaction was converted and inserted successfully, false otherwise
 //////////////////////////////////////////////////////////////////////
-bool Bank::openPageInsert(const DRAMSimII::Transaction *value)
+bool Bank::openPageInsert(const DRAMSimII::Transaction *value, tick time)
 {
 	if (!perBankQueue.isFull())
 	{
@@ -112,8 +112,14 @@ bool Bank::openPageInsert(const DRAMSimII::Transaction *value)
 		{	
 			const Command *currentCommand = perBankQueue.read(currentIndex);
 
+			// then this command has been delayed by too many times and no more
+			// commands can preempt it
+			if (time - currentCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+			{
+				return false;
+			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-			if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().row == value->getAddresses().row)) 
+			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().row == value->getAddresses().row)) 
 			{
 				bool result;
 				switch (value->getType())
@@ -133,6 +139,12 @@ bool Bank::openPageInsert(const DRAMSimII::Transaction *value)
 
 				return true;
 			}
+			// strict order may add to the end of the queue only
+			// if this has not happened already then this method of insertion fails
+			else if (systemConfig.getCommandOrderingAlgorithm() == STRICT_ORDER)
+			{
+				return false;
+			}
 		}
 	}
 	else
@@ -150,23 +162,38 @@ bool Bank::openPageInsert(const DRAMSimII::Transaction *value)
 /// @param value the transaction to test
 /// @return true if it is able to be inserted, false otherwise
 //////////////////////////////////////////////////////////////////////
-bool Bank::openPageInsertCheck(const DRAMSimII::Transaction *value)
+bool Bank::openPageInsertCheck(const DRAMSimII::Transaction *value, const tick time)
 {
-	if (perBankQueue.isFull())
-		return false;
-	// look in the bank_q and see if there's a precharge for this row to insert before		
-	// go from tail to head
-	for (int currentIndex = perBankQueue.size() - 1; currentIndex >= 0; --currentIndex)
-	{	
-		const Command *currentCommand = perBankQueue.read(currentIndex);
+	if (!perBankQueue.isFull())
+	{
+		// look in the bank_q and see if there's a precharge for this row to insert before		
+		// go from tail to head
+		for (int currentIndex = perBankQueue.size() - 1; currentIndex >= 0; --currentIndex)
+		{	
+			const Command *currentCommand = perBankQueue.read(currentIndex);
 
-		// channel, rank, bank, row all match, insert just before this precharge command
-		if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().row == value->getAddresses().row)) 
-		{
-			return true;
+			// then this command has been delayed by too many times and no more
+			// commands can preempt it
+			if (time - currentCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+			{
+				return false;
+			}
+			// channel, rank, bank, row all match, insert just before this precharge command
+			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().row == value->getAddresses().row)) 
+			{
+				return true;
+			}
+			// strict order may add to the end of the queue only
+			// if this has not happened already then this method of insertion fails
+			else if (systemConfig.getCommandOrderingAlgorithm() == STRICT_ORDER)
+			{
+				return false;
+			}
 		}
 	}
-
-	// no place to insert it
-	return false;
+	else
+	{
+		// no place to insert it
+		return false;
+	}
 }
