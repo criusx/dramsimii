@@ -64,10 +64,10 @@ namespace WineEntryClient
             this.descriptionTextBox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.statusLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.base64TextBox = new System.Windows.Forms.TextBox();
             this.unneededTextBox = new System.Windows.Forms.TextBox();
+            this.statusLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             label5 = new System.Windows.Forms.Label();
             label11 = new System.Windows.Forms.Label();
@@ -285,6 +285,7 @@ namespace WineEntryClient
             this.wineTabPage.Controls.Add(this.label9);
             this.wineTabPage.Font = null;
             this.wineTabPage.Name = "wineTabPage";
+            this.wineTabPage.UseVisualStyleBackColor = true;
             // 
             // wineTypeComboBox
             // 
@@ -418,6 +419,7 @@ namespace WineEntryClient
             this.authTabPage.Controls.Add(this.label3);
             this.authTabPage.Font = null;
             this.authTabPage.Name = "authTabPage";
+            this.authTabPage.UseVisualStyleBackColor = true;
             // 
             // authLoadButton
             // 
@@ -514,14 +516,6 @@ namespace WineEntryClient
             this.label3.Font = null;
             this.label3.Name = "label3";
             // 
-            // statusLabel
-            // 
-            this.statusLabel.AccessibleDescription = null;
-            this.statusLabel.AccessibleName = null;
-            resources.ApplyResources(this.statusLabel, "statusLabel");
-            this.statusLabel.Font = null;
-            this.statusLabel.Name = "statusLabel";
-            // 
             // button1
             // 
             this.button1.AccessibleDescription = null;
@@ -552,6 +546,14 @@ namespace WineEntryClient
             this.unneededTextBox.Font = null;
             this.unneededTextBox.Name = "unneededTextBox";
             this.unneededTextBox.Click += new System.EventHandler(this.textBox_Click);
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.AccessibleDescription = null;
+            this.statusLabel.AccessibleName = null;
+            resources.ApplyResources(this.statusLabel, "statusLabel");
+            this.statusLabel.Font = null;
+            this.statusLabel.Name = "statusLabel";
             // 
             // pictureBox1
             // 

@@ -99,6 +99,14 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="assayResultsChooser.pt-BR.resx">
+      <DependentUpon>assayResultsChooser.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="assayResultsChooser.pt-PT.resx">
+      <DependentUpon>assayResultsChooser.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="assayResultsChooser.resx">
       <DependentUpon>assayResultsChooser.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -113,9 +121,25 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>demoClient.nl-NL.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="demoClient.pt-BR.resx">
+      <DependentUpon>demoClient.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="demoClient.pt-PT.resx">
+      <DependentUpon>demoClient.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="demoClient.resx">
       <SubType>Designer</SubType>
       <DependentUpon>demoClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="manualTag.pt-BR.resx">
+      <DependentUpon>manualTag.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="manualTag.pt-PT.resx">
+      <DependentUpon>manualTag.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="manualTag.resx">
       <DependentUpon>manualTag.cs</DependentUpon>
@@ -131,6 +155,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Properties\Resources.pt-BR.resx">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

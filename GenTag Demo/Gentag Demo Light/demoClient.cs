@@ -892,7 +892,12 @@ namespace GentagDemo
                                     throw new WebException();
 
                                 if (er.errorCode > 0)
+                                {
+                                    string name = er.errorMessage.Replace("Warning: ", "\n");
+                                    name = name.Replace(" has an allergy to ", "\n");
+                                    string[] values = name.Split('\n');
                                     notify(Properties.Resources.Alert, er.errorMessage, true);
+                                }
                             }
                             break;
 

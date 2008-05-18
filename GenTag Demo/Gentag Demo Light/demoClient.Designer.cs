@@ -193,6 +193,7 @@ namespace GentagDemo
             // 
             // mainTabControl
             // 
+            resources.ApplyResources(this.mainTabControl, "mainTabControl");
             this.mainTabControl.Controls.Add(this.introPage);
             this.mainTabControl.Controls.Add(this.authPage);
             this.mainTabControl.Controls.Add(this.detectPage);
@@ -201,13 +202,13 @@ namespace GentagDemo
             this.mainTabControl.Controls.Add(this.gpsPage);
             this.mainTabControl.Controls.Add(this.readWritePage);
             this.mainTabControl.Controls.Add(this.statusPage);
-            resources.ApplyResources(this.mainTabControl, "mainTabControl");
             this.mainTabControl.Name = "mainTabControl";
             this.mainTabControl.SelectedIndex = 0;
             this.mainTabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // introPage
             // 
+            resources.ApplyResources(this.introPage, "introPage");
             this.introPage.Controls.Add(label29);
             this.introPage.Controls.Add(label28);
             this.introPage.Controls.Add(this.versionLabel);
@@ -215,7 +216,6 @@ namespace GentagDemo
             this.introPage.Controls.Add(this.pictureBox2);
             this.introPage.Controls.Add(this.mainClearButton);
             this.introPage.Controls.Add(this.exitButton);
-            resources.ApplyResources(this.introPage, "introPage");
             this.introPage.Name = "introPage";
             // 
             // versionLabel
@@ -247,6 +247,7 @@ namespace GentagDemo
             // 
             // authPage
             // 
+            resources.ApplyResources(this.authPage, "authPage");
             this.authPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.authPage.Controls.Add(this.pendingLookupsLabel);
             this.authPage.Controls.Add(this.queuedLookupsLabel);
@@ -256,7 +257,6 @@ namespace GentagDemo
             this.authPage.Controls.Add(this.manualLookupButton);
             this.authPage.Controls.Add(this.readIDButton);
             this.authPage.Controls.Add(this.authTreeView);
-            resources.ApplyResources(this.authPage, "authPage");
             this.authPage.Name = "authPage";
             // 
             // pendingLookupsLabel
@@ -298,11 +298,11 @@ namespace GentagDemo
             // 
             // detectPage
             // 
+            resources.ApplyResources(this.detectPage, "detectPage");
             this.detectPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.detectPage.Controls.Add(this.detectTagIDLabel);
             this.detectPage.Controls.Add(this.detectTagTypeLabel);
             this.detectPage.Controls.Add(this.detectTagTypeButton);
-            resources.ApplyResources(this.detectPage, "detectPage");
             this.detectPage.Name = "detectPage";
             // 
             // detectTagIDLabel
@@ -323,6 +323,7 @@ namespace GentagDemo
             // 
             // patientPage
             // 
+            resources.ApplyResources(this.patientPage, "patientPage");
             this.patientPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.patientPage.Controls.Add(this.medicationButton);
             this.patientPage.Controls.Add(this.readPatientButton);
@@ -334,7 +335,6 @@ namespace GentagDemo
             this.patientPage.Controls.Add(this.patientDescriptionBox);
             this.patientPage.Controls.Add(this.drugNameBox);
             this.patientPage.Controls.Add(this.patientNameBox);
-            resources.ApplyResources(this.patientPage, "patientPage");
             this.patientPage.Name = "patientPage";
             // 
             // medicationButton
@@ -389,6 +389,7 @@ namespace GentagDemo
             // 
             // assayPage
             // 
+            resources.ApplyResources(this.assayPage, "assayPage");
             this.assayPage.Controls.Add(this.assayImagePictureBox);
             this.assayPage.Controls.Add(this.assayTimerLabel);
             this.assayPage.Controls.Add(this.assayMessageLabel);
@@ -397,7 +398,6 @@ namespace GentagDemo
             this.assayPage.Controls.Add(this.assayRecordButton);
             this.assayPage.Controls.Add(this.assayBeginButton);
             this.assayPage.Controls.Add(this.assayReadButton);
-            resources.ApplyResources(this.assayPage, "assayPage");
             this.assayPage.Name = "assayPage";
             // 
             // assayImagePictureBox
@@ -441,6 +441,7 @@ namespace GentagDemo
             // 
             // gpsPage
             // 
+            resources.ApplyResources(this.gpsPage, "gpsPage");
             this.gpsPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.gpsPage.Controls.Add(this.trackingCheckBox);
             this.gpsPage.Controls.Add(this.satellitesUsedTextBox);
@@ -483,7 +484,6 @@ namespace GentagDemo
             this.gpsPage.Controls.Add(this.progressBar1);
             this.gpsPage.Controls.Add(this.queueSizeBar);
             this.gpsPage.Controls.Add(this.satLabel1);
-            resources.ApplyResources(this.gpsPage, "gpsPage");
             this.gpsPage.Name = "gpsPage";
             // 
             // trackingCheckBox
@@ -715,13 +715,13 @@ namespace GentagDemo
             // 
             // readWritePage
             // 
+            resources.ApplyResources(this.readWritePage, "readWritePage");
             this.readWritePage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
             this.readWritePage.Controls.Add(this.readWriteTB);
             this.readWritePage.Controls.Add(this.readWriteStatusLabel);
             this.readWritePage.Controls.Add(this.label25);
             this.readWritePage.Controls.Add(this.writeButton);
             this.readWritePage.Controls.Add(this.readButton);
-            resources.ApplyResources(this.readWritePage, "readWritePage");
             this.readWritePage.Name = "readWritePage";
             // 
             // readWriteTB
@@ -753,25 +753,35 @@ namespace GentagDemo
             // 
             // statusPage
             // 
-            this.statusPage.Controls.Add(this.statusListView);
             resources.ApplyResources(this.statusPage, "statusPage");
+            this.statusPage.Controls.Add(this.statusListView);
             this.statusPage.Name = "statusPage";
             // 
             // statusListView
             // 
+            resources.ApplyResources(this.statusListView, "statusListView");
             this.statusListView.Columns.Add(this.columnHeader1);
             this.statusListView.Columns.Add(this.columnHeader2);
+            resources.ApplyResources(listViewItem1, "listViewItem1");
             listViewItem1.Text = resources.GetString("statusListView.Items");
-            listViewItem1.SubItems.Add(resources.GetString("statusListView.Items1"));
-            listViewItem2.Text = resources.GetString("statusListView.Items2");
-            listViewItem3.Text = resources.GetString("statusListView.Items3");
-            listViewItem4.Text = resources.GetString("statusListView.Items4");
-            listViewItem5.Text = resources.GetString("statusListView.Items5");
-            listViewItem6.Text = resources.GetString("statusListView.Items6");
-            listViewItem7.Text = resources.GetString("statusListView.Items7");
-            listViewItem8.Text = resources.GetString("statusListView.Items8");
-            listViewItem9.Text = resources.GetString("statusListView.Items9");
-            listViewItem10.Text = resources.GetString("statusListView.Items10");
+            resources.ApplyResources(listViewItem2, "listViewItem2");
+            listViewItem2.Text = resources.GetString("statusListView.Items1");
+            resources.ApplyResources(listViewItem3, "listViewItem3");
+            listViewItem3.Text = resources.GetString("statusListView.Items2");
+            resources.ApplyResources(listViewItem4, "listViewItem4");
+            listViewItem4.Text = resources.GetString("statusListView.Items3");
+            resources.ApplyResources(listViewItem5, "listViewItem5");
+            listViewItem5.Text = resources.GetString("statusListView.Items4");
+            resources.ApplyResources(listViewItem6, "listViewItem6");
+            listViewItem6.Text = resources.GetString("statusListView.Items5");
+            resources.ApplyResources(listViewItem7, "listViewItem7");
+            listViewItem7.Text = resources.GetString("statusListView.Items6");
+            resources.ApplyResources(listViewItem8, "listViewItem8");
+            listViewItem8.Text = resources.GetString("statusListView.Items7");
+            resources.ApplyResources(listViewItem9, "listViewItem9");
+            listViewItem9.Text = resources.GetString("statusListView.Items8");
+            resources.ApplyResources(listViewItem10, "listViewItem10");
+            listViewItem10.Text = resources.GetString("statusListView.Items9");
             this.statusListView.Items.Add(listViewItem1);
             this.statusListView.Items.Add(listViewItem2);
             this.statusListView.Items.Add(listViewItem3);
@@ -782,7 +792,6 @@ namespace GentagDemo
             this.statusListView.Items.Add(listViewItem8);
             this.statusListView.Items.Add(listViewItem9);
             this.statusListView.Items.Add(listViewItem10);
-            resources.ApplyResources(this.statusListView, "statusListView");
             this.statusListView.Name = "statusListView";
             this.statusListView.View = System.Windows.Forms.View.Details;
             // 
