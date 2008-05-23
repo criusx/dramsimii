@@ -354,7 +354,7 @@ C1LIB_API int PR_send_recieve(unsigned char *cmd_in, unsigned char *data_in, uns
 /********************************End PICO READ*************************/
 
 
-/********************************INSIDE Contactless Tags*************************/
+/********************************INSIDE Sirit Tags*************************/
 #define IC_15693		0x01
 #define IC_14443B		0x02
 #define ISO_14443B3		0x03
@@ -427,10 +427,10 @@ C1LIB_API int IC_set_no_key_access(tag_IC *tag);
 C1LIB_API int IC_set_iso_coding(tag_IC *tag, unsigned char proto);
 C1LIB_API int IC_set_lock_keys(tag_IC *tag);
 C1LIB_API int IC_set_app_mode(tag_IC *tag);
-/********************************End INSIDE Contactless Tags*************************/
+/********************************End INSIDE Sirit Tags*************************/
 
 
-/********************************ContactlessONE Reader*************************/
+/********************************Sirit Reader*************************/
 #define LONG_WAIT	1
 #define SHORT_WAIT	0
 
@@ -451,4 +451,4 @@ C1LIB_API int C1_config_14443B3();
 C1LIB_API int C1_config_FeliCa();
 C1LIB_API int C1_config_FeliCa_old();
 C1LIB_API unsigned int C1_transmit(unsigned char *in, int in_length, unsigned char *out, int out_length, bool wait, bool send_sig);
-/********************************End ContactlessONE Reader*************************/
+/********************************End Sirit Reader*************************/

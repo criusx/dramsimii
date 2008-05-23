@@ -42,10 +42,10 @@ namespace COREMobileMedDemo
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.mainClearButton = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.entryPage = new System.Windows.Forms.TabPage();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.nursePage = new System.Windows.Forms.TabPage();
             this.patientVitalsListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -55,15 +55,15 @@ namespace COREMobileMedDemo
             this.patientPhotoPB = new System.Windows.Forms.PictureBox();
             this.readMedButton = new System.Windows.Forms.Button();
             this.readPatientButton = new System.Windows.Forms.Button();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tagFunctionsPage = new System.Windows.Forms.TabPage();
             this.disableLoggingButton = new System.Windows.Forms.Button();
             label29 = new System.Windows.Forms.Label();
             label28 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.mainPage.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.entryPage.SuspendLayout();
+            this.nursePage.SuspendLayout();
+            this.tagFunctionsPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // label29
@@ -112,15 +112,15 @@ namespace COREMobileMedDemo
             // 
             this.newPatientPhotoPB.Location = new System.Drawing.Point(6, 31);
             this.newPatientPhotoPB.Name = "newPatientPhotoPB";
-            this.newPatientPhotoPB.Size = new System.Drawing.Size(228, 152);
+            this.newPatientPhotoPB.Size = new System.Drawing.Size(228, 161);
             this.newPatientPhotoPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.mainPage);
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.nursePage);
+            this.tabControl1.Controls.Add(this.entryPage);
+            this.tabControl1.Controls.Add(this.tagFunctionsPage);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -180,55 +180,55 @@ namespace COREMobileMedDemo
             this.exitButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.exitButton.Location = new System.Drawing.Point(78, 196);
             this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(72, 15);
+            this.exitButton.Size = new System.Drawing.Size(74, 18);
             this.exitButton.TabIndex = 5;
             this.exitButton.Text = "Exit";
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
             // 
-            // tabPage1
+            // entryPage
             // 
-            this.tabPage1.Controls.Add(this.button3);
-            this.tabPage1.Controls.Add(this.button2);
-            this.tabPage1.Controls.Add(this.newPatientRFIDNumTB);
-            this.tabPage1.Controls.Add(this.newPatientPhotoPB);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.readPatientBraceletButton);
-            this.tabPage1.Location = new System.Drawing.Point(0, 0);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(240, 217);
-            this.tabPage1.Text = "Entry";
+            this.entryPage.Controls.Add(this.button3);
+            this.entryPage.Controls.Add(this.button2);
+            this.entryPage.Controls.Add(this.newPatientRFIDNumTB);
+            this.entryPage.Controls.Add(this.newPatientPhotoPB);
+            this.entryPage.Controls.Add(this.label1);
+            this.entryPage.Controls.Add(this.readPatientBraceletButton);
+            this.entryPage.Location = new System.Drawing.Point(0, 0);
+            this.entryPage.Name = "entryPage";
+            this.entryPage.Size = new System.Drawing.Size(232, 214);
+            this.entryPage.Text = "Photo Entry";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(145, 189);
+            this.button3.Location = new System.Drawing.Point(145, 198);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(95, 25);
+            this.button3.Size = new System.Drawing.Size(95, 16);
             this.button3.TabIndex = 4;
             this.button3.Text = "Submit";
             this.button3.Click += new System.EventHandler(this.submitPatientPhoto);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(7, 189);
+            this.button2.Location = new System.Drawing.Point(6, 198);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(95, 15);
+            this.button2.Size = new System.Drawing.Size(95, 16);
             this.button2.TabIndex = 4;
             this.button2.Text = "Acquire Photo";
             this.button2.Click += new System.EventHandler(this.takePhoto);
             // 
-            // tabPage2
+            // nursePage
             // 
-            this.tabPage2.Controls.Add(this.patientVitalsListView);
-            this.tabPage2.Controls.Add(this.DOBLabel);
-            this.tabPage2.Controls.Add(this.patientNameLabel);
-            this.tabPage2.Controls.Add(this.medPB);
-            this.tabPage2.Controls.Add(this.patientPhotoPB);
-            this.tabPage2.Controls.Add(this.readMedButton);
-            this.tabPage2.Controls.Add(this.readPatientButton);
-            this.tabPage2.Location = new System.Drawing.Point(0, 0);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(232, 214);
-            this.tabPage2.Text = "Nurse";
+            this.nursePage.Controls.Add(this.patientVitalsListView);
+            this.nursePage.Controls.Add(this.DOBLabel);
+            this.nursePage.Controls.Add(this.patientNameLabel);
+            this.nursePage.Controls.Add(this.medPB);
+            this.nursePage.Controls.Add(this.patientPhotoPB);
+            this.nursePage.Controls.Add(this.readMedButton);
+            this.nursePage.Controls.Add(this.readPatientButton);
+            this.nursePage.Location = new System.Drawing.Point(0, 0);
+            this.nursePage.Name = "nursePage";
+            this.nursePage.Size = new System.Drawing.Size(232, 214);
+            this.nursePage.Text = "Nurse";
             // 
             // patientVitalsListView
             // 
@@ -303,13 +303,13 @@ namespace COREMobileMedDemo
             this.readPatientButton.Text = "Read";
             this.readPatientButton.Click += new System.EventHandler(this.readPatientTagClick);
             // 
-            // tabPage3
+            // tagFunctionsPage
             // 
-            this.tabPage3.Controls.Add(this.disableLoggingButton);
-            this.tabPage3.Location = new System.Drawing.Point(0, 0);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(232, 214);
-            this.tabPage3.Text = "Tag";
+            this.tagFunctionsPage.Controls.Add(this.disableLoggingButton);
+            this.tagFunctionsPage.Location = new System.Drawing.Point(0, 0);
+            this.tagFunctionsPage.Name = "tagFunctionsPage";
+            this.tagFunctionsPage.Size = new System.Drawing.Size(232, 214);
+            this.tagFunctionsPage.Text = "Tag";
             // 
             // disableLoggingButton
             // 
@@ -334,9 +334,9 @@ namespace COREMobileMedDemo
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.tabControl1.ResumeLayout(false);
             this.mainPage.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
+            this.entryPage.ResumeLayout(false);
+            this.nursePage.ResumeLayout(false);
+            this.tagFunctionsPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -348,8 +348,8 @@ namespace COREMobileMedDemo
         private System.Windows.Forms.Button readPatientBraceletButton;
         private System.Windows.Forms.PictureBox newPatientPhotoPB;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage entryPage;
+        private System.Windows.Forms.TabPage nursePage;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.PictureBox patientPhotoPB;
@@ -367,7 +367,7 @@ namespace COREMobileMedDemo
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button mainClearButton;
         private System.Windows.Forms.Button exitButton;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tagFunctionsPage;
         private System.Windows.Forms.Button disableLoggingButton;
     }
 }

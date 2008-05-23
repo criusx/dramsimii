@@ -222,7 +222,7 @@ namespace COREMobileMedDemo
             DOBLabel.Text = string.Empty;
 
             // set the version
-            versionLabel.Text = Properties.Resources.Version + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + Properties.Resources.Alpha;
+            versionLabel.Text = Properties.Resources.Version + " " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + " " + Properties.Resources.Alpha;
 
             try
             {
@@ -581,9 +581,21 @@ namespace COREMobileMedDemo
         /// <param name="e"></param>
         private void getPatientBraceletID(object sender, EventArgs e)
         {
+            ((Button)sender).Enabled = false;
+
             patientVitalsListView.Items.Clear();
-            // only want VS tags so we can grab temp data            
-            newPatientRFIDNum = newPatientRFIDNumTB.Text = RFIDReader.Reader.readOneVSTagID();
+            
+            // only want VS tags so we can grab temp data       
+            try
+            {
+                newPatientRFIDNum = newPatientRFIDNumTB.Text = RFIDReader.Reader.readOneVSTagID();
+            }
+            catch (NullReferenceException ex)
+            {
+                notify("Warning", ex.Message,true);
+            }
+
+            ((Button)sender).Enabled = true;
         }
 
         /// <summary>
@@ -597,10 +609,16 @@ namespace COREMobileMedDemo
         {
             try
             {
+                ((Button)sender).Enabled = false;
+
                 setWaitCursor(true);
+
                 VarioSensLogEventArgs result = tagReader.readLog(true, periodicity);
+
                 newPatientRFIDNum = result.tagID;
+
                 scheduleLookup(new lookupInfo(newPatientRFIDNum, loopType.patientLookup));
+
                 if (result.Temperature.Length > 0)
                 {
                     scheduleLookup(new lookupInfo(result.tagID, loopType.submitPatientTemps, result.Temperature));
@@ -638,10 +656,9 @@ namespace COREMobileMedDemo
 
                         }
                     }
-                }
-                patientVitalsListView.EndUpdate();
-                
 
+                    patientVitalsListView.EndUpdate();
+                }
             }
             catch (NullReferenceException ex)
             {
@@ -650,6 +667,7 @@ namespace COREMobileMedDemo
             finally
             {
                 setWaitCursor(false);
+                ((Button)sender).Enabled = true;
             }            
         }
        
@@ -675,6 +693,7 @@ namespace COREMobileMedDemo
             try
             {
                 setWaitCursor(true);
+                ((Button)sender).Enabled = false;
                 medicationRFIDNum = Reader.readOneTagIDDLL();
                 setWaitCursor(false);
                 scheduleLookup(new lookupInfo(medicationRFIDNum, loopType.drugLookup));
@@ -684,7 +703,8 @@ namespace COREMobileMedDemo
             { }
             finally
             {
-                setWaitCursor(false);
+                setWaitCursor(false); 
+                ((Button)sender).Enabled = true;
             }
         }
 
@@ -705,6 +725,5 @@ namespace COREMobileMedDemo
                 notify("Error",ex.Message,true);
             }
         }
-
     }
 }

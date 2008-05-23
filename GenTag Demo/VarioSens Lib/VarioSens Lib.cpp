@@ -4,10 +4,10 @@
 #include "C1lib.h"
 #include <stdio.h>
 
-
-#define MAXTRIES 1
-
 #define DEFAULTARRAYSIZE 1
+
+
+#define TIMEOUT 7
 
 //////////////////////////////////////////////////////////////////////////
 // setVarioSensSettings
@@ -36,9 +36,9 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 
 		variosens_log varioSensLog = new_variosens_log();
 
-		int failures = MAXTRIES;
+		__time64_t startTime = CTime::GetCurrentTime().GetTime();
 
-		while (failures > 0)
+		while (CTime::GetCurrentTime().GetTime() - startTime < TIMEOUT)
 		{
 			// make sure it isn't doing a spin-wait
 			Sleep(10);
@@ -47,13 +47,11 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 			{
 				if (!VS_init(&myVarioSensTag))
 				{
-					errorCode = -3;
-					--failures;
+					errorCode = -3;					
 				}
 				else if (!VS_getLogState(&myVarioSensTag, &varioSensLog))
 				{
 					errorCode = -4;
-					--failures;
 				}				
 				else
 				{
@@ -63,7 +61,6 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 					if (!VS_setLogTimer(&myVarioSensTag,&varioSensLog))
 					{
 						errorCode = -5;
-						--failures;
 					}
 					else
 					{
@@ -74,7 +71,6 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 						if (!VS_setLogMode(&myVarioSensTag,&varioSensLog))
 						{
 							errorCode = -6;
-							--failures;
 						}
 						else
 						{
@@ -87,7 +83,6 @@ extern "C" __declspec(dllexport) int setVarioSensSettings(float lowTemp,
 							if (!VS_startLog(&myVarioSensTag,osBinaryTime))
 							{
 								errorCode = -7;
-								--failures;
 							}
 							else
 							{								
@@ -128,9 +123,9 @@ extern "C" __declspec(dllexport) LPWSTR getVarioSensTagID()
 	{
 		tag_15693 myVarioSensTag = new_15693();
 
-		int failures = MAXTRIES + 50;
+		__time64_t startTime = CTime::GetCurrentTime().GetTime();
 
-		while (failures > 0)
+		while (CTime::GetCurrentTime().GetTime() - startTime < TIMEOUT)
 		{
 			// make sure it isn't doing a spin-wait
 			Sleep(50);
@@ -147,7 +142,6 @@ extern "C" __declspec(dllexport) LPWSTR getVarioSensTagID()
 
 				break;
 			}
-			failures--;
 		}
 	}
 	C1_disable();
@@ -172,7 +166,9 @@ extern "C" __declspec(dllexport) LPWSTR getOneTagID()
 	{
 		tag_15693 myTag = new_15693();
 
-		for (int failures = MAXTRIES + 50; failures > 0; failures--)
+		__time64_t startTime = CTime::GetCurrentTime().GetTime();
+
+		while (CTime::GetCurrentTime().GetTime() - startTime < TIMEOUT)
 		{
 			// make sure it isn't doing a spin-wait
 			Sleep(50);
@@ -227,9 +223,9 @@ extern "C" __declspec(dllexport) int getVarioSensSettings(ARRAYCB2 callbackFunc)
 
 		variosens_log varioSensLog = new_variosens_log();
 
-		int failures = MAXTRIES;
+		__time64_t startTime = CTime::GetCurrentTime().GetTime();
 
-		while (failures > 0)
+		while (CTime::GetCurrentTime().GetTime() - startTime < TIMEOUT)
 		{
 			// make sure it isn't doing a spin-wait
 			Sleep(10);
@@ -248,7 +244,6 @@ extern "C" __declspec(dllexport) int getVarioSensSettings(ARRAYCB2 callbackFunc)
 				if (!VS_getLogState(&myVarioSensTag, &varioSensLog))
 				{
 					errorCode = -4;
-					--failures;
 				}				
 				else
 				{
@@ -322,17 +317,16 @@ extern "C" __declspec(dllexport) int getVarioSensLog(ARRAYCB callbackFunc, bool 
 	else if (!C1_enable()) 
 	{
 		C1_close_comm();
-		return -1;
+		return -2;
 	}
 	else
 	{
 		tag_15693 myVarioSensTag = new_15693();
 
-		variosens_log varioSensLog = new_variosens_log();
+		variosens_log varioSensLog = new_variosens_log();		
 
-		__time64_t startTime = CTime::GetCurrentTime().GetTime();
-
-		while (CTime::GetCurrentTime().GetTime() - startTime < 7)
+		for  (__time64_t startTime = CTime::GetCurrentTime().GetTime();
+			CTime::GetCurrentTime().GetTime() - startTime < TIMEOUT;)
 		{
 			// make sure it isn't doing a spin-wait
 			Sleep(10);
@@ -364,11 +358,9 @@ extern "C" __declspec(dllexport) int getVarioSensLog(ARRAYCB callbackFunc, bool 
 						upperTempLimit = varioSensLog.upperTemp;
 						recordPeriod = varioSensLog.logIntval; 
 
-
 						if (varioSensLog.numDownloadMeas == 0) 
 						{
-							errorCode = -6;	
-							//break;
+							errorCode = -6;
 						}
 						else
 						{
@@ -421,6 +413,7 @@ extern "C" __declspec(dllexport) int getVarioSensLog(ARRAYCB callbackFunc, bool 
 						}
 						// then get the tag ID
 						LPWSTR tagID = new WCHAR[17];
+
 						for (int j = 0; j < 8; j++)
 						{
 							wsprintf(&(tagID[2*j]),L"%02x",myVarioSensTag.tag_id[j]);
@@ -455,7 +448,6 @@ extern "C" __declspec(dllexport) int getVarioSensLog(ARRAYCB callbackFunc, bool 
 	return errorCode;
 }
 
-#define TIMEOUT 7
 
 ///////////////////////////////////////////////////////////////////////////////
 //// resetVS
