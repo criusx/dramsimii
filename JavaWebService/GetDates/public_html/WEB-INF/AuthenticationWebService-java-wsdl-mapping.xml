@@ -19,6 +19,33 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_getUniqueUIDs_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getUniqueUIDsResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_setItem_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}setItemResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.AuthenticationWebService_getRoute_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getRouteResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>authenticationPackage.AuthenticationWebService_sendError_ResponseStruct</java-type>
         <anonymous-type-qname>{http://authenticationPackage/}sendErrorResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -28,8 +55,8 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getUniqueUIDs_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getUniqueUIDsResponse</anonymous-type-qname>
+        <java-type>authenticationPackage.AuthenticationWebService_getSince_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getSinceResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -67,33 +94,6 @@
         <variable-mapping>
             <java-variable-name>exists</java-variable-name>
             <xml-element-name>exists</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getSince_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getSinceResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_setItem_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}setItemResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getRoute_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getRouteResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>return</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <service-interface-mapping>

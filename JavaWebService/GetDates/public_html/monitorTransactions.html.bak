@@ -45,19 +45,20 @@
                 {
                     intervalID = setInterval("update()", 30000);
                     update();
-                    document.getElementById("toggleButton") .value = "Stop Updates";
+                    document.getElementById("toggleButton") .value = "Updating";
                 }
                 else
                 {
                     clearInterval(intervalID);
                     intervalID = null;
-                    document.getElementById("toggleButton") .value = "Start Updates";
+                    document.getElementById("toggleButton") .value = "Stopped";
                 }
             }
             
             function update()
             {
                 //alert(lastLookup.toGMTString());
+                document.actionForm.updateButton.enabled = false;
                 AuthenticationWebServiceSoapHttpPort_getSinceAsync(lastLookup.getTime(), addResults);
             }
             
@@ -74,6 +75,7 @@
                 if (divHandle)
                 {
                     var count = 0;
+                    var currentID;
                     for (x in reqObject)
                     {
                         count++;
@@ -89,15 +91,40 @@
                             AMorPM = comparison.getUTCHours() >= 11 ? "PM" : "AM";
                             hours = comparison.getUTCHours() % 12 + 1;
                             minutes = comparison.getUTCMinutes();
-                            if (minutes > 10);
+                            if (minutes >= 10);
                             else
                             minutes = "0" + minutes;
                             
                             currentText = document.createTextNode(month[comparison.getUTCMonth() ] + " " + comparison.getUTCDate() + ", " + comparison.getFullYear() + " " + hours + ":" + minutes + " " + AMorPM);
-                        }
+                        }                        
                         else
                         {
+                          if (x % 5 == 1)
+                          {
+                            currentID = reqObject[x];
+                          }
+                          else if (x % 5 == 3)
+                          {
+                            var current = document.createElement("td");
+                            var currentImg = document.createElement("img");
+                            current.appendChild(currentImg);
+                            currentImg.src = "http://id2.gentag.com/GentagDemo/tagImage.jsp?RFIDNum=" + currentID;
+                            currentImg.alt = "Missing Image";
+                            currentRow.appendChild(current);
+                          }
+                          if ((x % 5 == 0) && (reqObject[x] == "FFFFFFFFFF"))
+                          {
+                            currentText = document.createTextNode("Web Client");
+                          }
+                          else if ((x % 5 == 0) && (reqObject[x] == "FFFFFFFA"))
+                          {
+                            currentText = document.createTextNode("Mobile Client");
+                          }
+                          else
+                          {
                             currentText = document.createTextNode(reqObject[x]);
+                          }
+                          
                         }
                         currentCell.appendChild(currentText);
                         
@@ -121,14 +148,14 @@
                             {
                                 rows = 0;
                             }
-                        }
-                        
+                        }                        
                     }
                 }
                 
                 var presentTime = new Date();
-                document.getElementById("updatedTime") .removeChild(document.getElementById("updatedTime") .childNodes[0]);
-                document.getElementById("updatedTime") .appendChild(document.createTextNode(presentTime.toUTCString()));
+                document.getElementById("updatedTime").removeChild(document.getElementById("updatedTime") .childNodes[0]);
+                document.getElementById("updatedTime").appendChild(document.createTextNode(presentTime.toUTCString()));
+                document.actionForm.updateButton.enabled = true;
                 
                 // resort the table only if some elements were added
                 if (count > 0)
@@ -150,10 +177,10 @@
         <br />
       </div>
 
-      <form action="">
+      <form name="actionForm" id="actionForm" action="">
         <p>
-          <input onclick="update();" type="button" value="Refresh Now" />
-          <input id="toggleButton" onclick="javascript:toggle();" type="button" value="Stop Updates" />
+          <input onclick="update();" name="updateButton" id="updateButton" type="button" value="Refresh Now" />
+          <input id="toggleButton" onclick="javascript:toggle();" type="button" value="Updating" />
         </p>
       </form>
       <div>Last updated at: <div id="updatedTime"> </div></div>
@@ -165,6 +192,7 @@
             <th>Cell Phone GUID</th>
             <th>Item's RFID #</th>
             <th>Tag Read Time</th>
+            <th>Image</th>
             <th>Latitude</th>
             <th>Longitude</th>
           </tr>

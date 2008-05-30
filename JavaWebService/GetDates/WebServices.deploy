@@ -40,6 +40,17 @@
             <displayName>Web Files</displayName>
             <filters>
                <rules>
+                  <Item type="0" pattern="medImage.jsp"/>
+                  <Item type="0" pattern="css/medReminder.css"/>
+                  <Item type="0" pattern="medReminder.html"/>
+                  <Item type="0" pattern="WEB-INF/MedReminderWebService-java-wsdl-mapping.xml"/>
+                  <Item type="0" pattern="WEB-INF/wsdl/MedReminderWebService.wsdl"/>
+                  <Item type="0" pattern="shoeImage.jsp"/>
+                  <Item type="0" pattern="shoeMobile.wml"/>
+                  <Item type="0" pattern="shoeMobile.jsp"/>
+                  <Item type="0" pattern="WEB-INF/webservices.xml"/>
+                  <Item type="0" pattern="WEB-INF/oracle-webservices.xml"/>
+                  <Item type="0" pattern="WEB-INF/web.xml"/>
                   <Item type="0" pattern="petImage.jsp"/>
                   <Item type="1" pattern="dBInfo/.svn/"/>
                   <Item type="1" pattern="assayPackage/.svn/"/>
@@ -49,8 +60,6 @@
                   <Item type="0" pattern="lib/"/>
                   <Item type="0" pattern="ExceptionHandler.jsp"/>
                   <Item type="0" pattern="tagImage.jsp"/>
-                  <Item type="0" pattern="WEB-INF/AuthenticationSecureWS-java-wsdl-mapping.xml"/>
-                  <Item type="0" pattern="WEB-INF/wsdl/AuthenticationSecureWS.wsdl"/>
                   <Item type="0" pattern="WEB-INF/AssayWS-java-wsdl-mapping.xml"/>
                   <Item type="0" pattern="WEB-INF/wsdl/AssayWS.wsdl"/>
                   <Item type="1" pattern="winepackage/.svn/"/>
@@ -84,9 +93,6 @@
                   <Item type="0" pattern="tr.png"/>
                   <Item type="0" pattern="tl.png"/>
                   <Item type="0" pattern="wineLookup.html"/>
-                  <Item type="0" pattern="WEB-INF/webservices.xml"/>
-                  <Item type="0" pattern="WEB-INF/oracle-webservices.xml"/>
-                  <Item type="0" pattern="WEB-INF/web.xml"/>
                   <Item type="0" pattern="wineAccesses.html"/>
                   <Item type="0" pattern="WEB-INF/wineWS-java-wsdl-mapping.xml"/>
                   <Item type="0" pattern="WEB-INF/wsdl/wineWS.wsdl"/>
@@ -119,6 +125,25 @@
             <displayName>WEB-INF/classes</displayName>
             <filters>
                <rules>
+                  <Item type="0" pattern="MedReminder/errorMessage.class"/>
+                  <Item type="0" pattern="MedReminder/drugInfo.class"/>
+                  <Item type="0" pattern=".jsps/_medImage.java"/>
+                  <Item type="0" pattern=".jsps/_medImage.class"/>
+                  <Item type="0" pattern="MedReminder/userInfo*.class"/>
+                  <Item type="0" pattern="MedReminder/medReminders*.class"/>
+                  <Item type="0" pattern="MedReminder/MedReminderWebService*.class"/>
+                  <Item type="0" pattern="MedReminder/medReminderService*.class"/>
+                  <Item type="0" pattern="authenticationPackage/itemInfo*.class"/>
+                  <Item type="0" pattern="assayPackage/assayResultResponse*.class"/>
+                  <Item type="1" pattern="authenticationPackage/itemInfo*.class"/>
+                  <Item type="1" pattern="authenticationPackage/AuthenticationSecureWS*.class"/>
+                  <Item type="1" pattern="authenticationPackage/authenticationSecureService*.class"/>
+                  <Item type="0" pattern="ShoePackage/shoeService.class"/>
+                  <Item type="0" pattern="ShoePackage/shoePair.class"/>
+                  <Item type="0" pattern=".jsps/_shoeMobile.java"/>
+                  <Item type="0" pattern=".jsps/_shoeMobile.class"/>
+                  <Item type="0" pattern=".jsps/_shoeImage.java"/>
+                  <Item type="0" pattern=".jsps/_shoeImage.class"/>
                   <Item type="1" pattern="assayPackage/.svn/"/>
                   <Item type="0" pattern=".jsps/_petImage.java"/>
                   <Item type="0" pattern=".jsps/_petImage.class"/>

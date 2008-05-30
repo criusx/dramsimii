@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.3//EN" "http://www.wapforum.org/DTD/wml13.dtd">
 
-<%@ page import="authenticationPackage.authenticationService.*"%>
-<%@ page import="COREMedDemo.COREMedDemoService.*"%>
-<%@ page import="dBInfo.dbConnectInfo"%>
-<%@ page import="java.sql.*"%>
+<%@ page import="ShoePackage.shoePair"%>
+<%@ page import="ShoePackage.shoeService"%>
 <%@ page import="java.io.*"%>
-<%@ page import="oracle.jdbc.*"%>
 <%@ page errorPage="ExceptionHandler.jsp"%>
 
 <wml>
@@ -19,77 +16,29 @@
             Product Description: <br />
             <%
             String RFIDNumA = request.getParameter("codeA");
+            RFIDNumA = RFIDNumA.trim();
             String RFIDNumB = request.getParameter("codeB");
+            RFIDNumB = RFIDNumB.trim();
             
-            String lookupType = null;
-            
-            boolean validCode = true;
-            
-            // ignore blank requests
-            if (RFIDNumA == null || RFIDNumB == null)
-            {
-              System.out.println("Null value.");
-              validCode = false;
-            }
-            // sanitize to help prevent sql injection
-            RFIDNumA = RFIDNumA.replaceAll("\\s+", "");
-            RFIDNumB = RFIDNumB.replaceAll("\\s+", "");
-            // if they can't be real tags anyway
-            if (RFIDNumA.length() > 16 || RFIDNumB.length() > 16)
-            {
-              System.out.println("Value too long.");
-              validCode = false;
-            }
             try
             { 
-              // only accept ids in hex
-              for (int i = 0; i < RFIDNumA.length(); i++)
-              {
-                if (!("0123456789abcdefABCDEF".indexOf(RFIDNumA.charAt(i)) >= 0))
-                {
-                  System.out.println("Non-hex character encountered");
-                  validCode = false;
-                }
-              }
-              for (int i = 0; i < RFIDNumB.length(); i++)
-              {
-                if (!("0123456789abcdefABCDEF".indexOf(RFIDNumB.charAt(i)) >= 0))
-                {
-                  System.out.println("Non-hex character encountered");
-                  validCode = false;
-                }
-              }
-              
               String description = null;
               boolean authenticated = false;
-              
-              if (validCode)
-              { 
-                authenticationPackage.authenticationService as = new authenticationPackage.authenticationService();
-                authenticationPackage.itemInfo info = as.getItem(RFIDNum, "FFFFFFFA", 20F, 20F);
-                
-                if (info.isExists())
-                {
-                  description = info.getDescription().replaceAll("\n","<br />");
-                  authenticated = true;
-                }              
-                else
-                {
-                  COREMedDemo.COREMedDemoService ds = new COREMedDemo.COREMedDemoService();
-                  COREMedDemo.drugInfo drugInfo = ds.getDrugInfo(RFIDNum,"FFFFFFFA");
-                  
-                  if (drugInfo.isExists())
-                  {
-                    description = drugInfo.getDescription().replaceAll("\n","<br />");
-                    authenticated = drugInfo.isAuthenticated();
-                  }
-                }
-              }
+
+
+              shoeService ss = new shoeService();
+              shoePair info = ss.getItem(RFIDNumA, RFIDNumB, "FFFFFFFA", 20F, 20F);
+
+              if (info.isExists())
+              {
+                description = info.getDescription().replaceAll("\n","<br />");
+                authenticated = true;
+              }              
               
               if (description != null)
               {
                 out.println(description);
-                out.println("<br/>Image:<br/><img alt=\"Missing Image\" src=\"http://id2.gentag.com/GentagDemo/tagImage.jsp?RFIDNum=" + RFIDNum + "\"/>");
+                out.println("<br/>Image:<br/><img alt=\"Missing Image\" src=\"http://id2.gentag.com/GentagDemo/shoeImage.jsp?RFIDNumA=" + RFIDNumA + "&amp;RFIDNumB=" + RFIDNumB + "\"/>");
               }
               else
                 out.println("No description found.");
@@ -107,11 +56,13 @@
             %>
         </p>
         <p>
-          <br /> Please enter another authentication code.<br />
-            <input name="authCode" /><br />
-            <anchor><go href="authMobile.jsp" method="post">
-            <postfield name="code" value="$(authCode)" />
-            </go>Submit</anchor>
+          <br /> Please enter the authentication codes.<br />
+            <input name="authCodeA" /><br />
+            <input name="authCodeB" /><br />
+            <anchor><go href="shoeMobile.jsp" method="post">
+                    <postfield name="codeA" value="$(authCodeA)" />
+                    <postfield name="codeB" value="$(authCodeB)" />
+                </go>Submit</anchor>
         </p>
     </card>
 </wml>

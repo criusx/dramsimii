@@ -96,23 +96,35 @@
                             minutes = "0" + minutes;
                             
                             currentText = document.createTextNode(month[comparison.getUTCMonth() ] + " " + comparison.getUTCDate() + ", " + comparison.getFullYear() + " " + hours + ":" + minutes + " " + AMorPM);
-                        }                        
+                        }
                         else
                         {
-                          if (x % 5 == 1)
-                          {
-                            currentID = reqObject[x];
-                          }
-                          else if (x % 5 == 3)
-                          {
-                            var current = document.createElement("td");
-                            var currentImg = document.createElement("img");
-                            current.appendChild(currentImg);
-                            currentImg.src = "http://id2.gentag.com/GentagDemo/tagImage.jsp?RFIDNum=" + currentID;
-                            currentImg.alt = "Missing Image";
-                            currentRow.appendChild(current);
-                          }
-                          currentText = document.createTextNode(reqObject[x]);
+                            if (x % 5 == 1)
+                            {
+                                currentID = reqObject[x];
+                            }
+                            else if (x % 5 == 3)
+                            {
+                                var current = document.createElement("td");
+                                var currentImg = document.createElement("img");
+                                current.appendChild(currentImg);
+                                currentImg.src = "http://id2.gentag.com/GentagDemo/tagImage.jsp?RFIDNum=" + currentID;
+                                currentImg.alt = "Missing Image";
+                                currentRow.appendChild(current);
+                            }
+                            if ((x % 5 == 0) && (reqObject[x] == "FFFFFFFFFF"))
+                            {
+                                currentText = document.createTextNode("Web Client");
+                            }
+                            else if ((x % 5 == 0) && (reqObject[x] == "FFFFFFFA"))
+                            {
+                                currentText = document.createTextNode("Mobile Client");
+                            }
+                            else
+                            {
+                                currentText = document.createTextNode(reqObject[x]);
+                            }
+                            
                         }
                         currentCell.appendChild(currentText);
                         
@@ -136,13 +148,13 @@
                             {
                                 rows = 0;
                             }
-                        }                        
+                        }
                     }
                 }
                 
                 var presentTime = new Date();
-                document.getElementById("updatedTime").removeChild(document.getElementById("updatedTime") .childNodes[0]);
-                document.getElementById("updatedTime").appendChild(document.createTextNode(presentTime.toUTCString()));
+                document.getElementById("updatedTime") .removeChild(document.getElementById("updatedTime") .childNodes[0]);
+                document.getElementById("updatedTime") .appendChild(document.createTextNode(presentTime.toUTCString()));
                 document.actionForm.updateButton.enabled = true;
                 
                 // resort the table only if some elements were added
@@ -165,9 +177,9 @@
         <br />
       </div>
 
-      <form name="actionForm" id="actionForm" action="">
+      <form action="" id="actionForm" name="actionForm">
         <p>
-          <input onclick="update();" name="updateButton" id="updateButton" type="button" value="Refresh Now" />
+          <input id="updateButton" name="updateButton" onclick="update();" type="button" value="Refresh Now" />
           <input id="toggleButton" onclick="javascript:toggle();" type="button" value="Updating" />
         </p>
       </form>

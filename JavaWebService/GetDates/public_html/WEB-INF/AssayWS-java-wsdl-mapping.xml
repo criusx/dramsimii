@@ -14,6 +14,24 @@
         <namespaceURI>http://assayPackage/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
+        <java-type>assayPackage.assayImage</java-type>
+        <anonymous-type-qname>{http://assayPackage/}assayImage</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>image</java-variable-name>
+            <xml-element-name>image</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>assayPackage.AssayWS_retrieveAssayInformation_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://assayPackage/}retrieveAssayInformationResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>assayPackage.assayInfo</java-type>
         <anonymous-type-qname>{http://assayPackage/}assayInfo</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -55,17 +73,8 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>assayPackage.assayImage</java-type>
-        <anonymous-type-qname>{http://assayPackage/}assayImage</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>image</java-variable-name>
-            <xml-element-name>image</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>assayPackage.AssayWS_retrieveAssayInformation_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://assayPackage/}retrieveAssayInformationResponse</anonymous-type-qname>
+        <java-type>assayPackage.AssayWS_submitAssayResult_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://assayPackage/}submitAssayResultResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -83,15 +92,6 @@
         <variable-mapping>
             <java-variable-name>needRetry</java-variable-name>
             <xml-element-name>needRetry</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>assayPackage.AssayWS_submitAssayResult_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://assayPackage/}submitAssayResultResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>

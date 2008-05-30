@@ -1,205 +1,9 @@
-<oracle-webservices xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/oracle-webservices-10_0.xsd">
-    <webservice-description name="AuthenticationSecureWS">
-        <port-component name="AuthenticationSecureWSSoapHttpPort">
-            <runtime enabled="security">
-                <security>
-                    <key-store name="" store-pass="" path="META-INF/.keystore"/>
-                    <signature-key alias="user1" key-pass=""/>
-                    <encryption-key alias="user1" key-pass=""/>
-                    <inbound>
-                        <verify-username-token require-nonce="true"
-                                               require-created="true"
-                                               password-type="PLAINTEXT"/>
-                        <verify-x509-token>
-                            <property name="mapping-attribute" value="CN"/>
-                        </verify-x509-token>
-                        <verify-signature>
-                            <signature-methods>
-                                <signature-method>DSA-SHA1</signature-method>
-                                <signature-method>RSA-MD5</signature-method>
-                                <signature-method>RSA-SHA1</signature-method>
-                            </signature-methods>
-                            <tbs-elements>
-                                <tbs-element local-part="Body"
-                                             name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
-                            </tbs-elements>
-                            <verify-timestamp created="false" expiry="28800"/>
-                        </verify-signature>
-                        <decrypt>
-                            <encryption-methods>
-                                <encryption-method>AES-128</encryption-method>
-                                <encryption-method>AES-256</encryption-method>
-                                <encryption-method>3DES</encryption-method>
-                            </encryption-methods>
-                            <tbe-elements>
-                                <tbe-element local-part="Body"
-                                             name-space="http://schemas.xmlsoap.org/soap/envelope/"
-                                             mode="CONTENT"/>
-                            </tbe-elements>
-                        </decrypt>
-                    </inbound>
-                    <outbound>
-                        <signature>
-                            <signature-method>RSA-SHA1</signature-method>
-                            <tbs-elements>
-                                <tbs-element local-part="Body"
-                                             name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
-                            </tbs-elements>
-                            <add-timestamp created="false" expiry="28800"/>
-                        </signature>
-                        <encrypt>
-                            <use-request-cert>true</use-request-cert>
-                            <encryption-method>AES-256</encryption-method>
-                            <keytransport-method>RSA-1_5</keytransport-method>
-                            <tbe-elements>
-                                <tbe-element local-part="Body"
-                                             name-space="http://schemas.xmlsoap.org/soap/envelope/"
-                                             mode="CONTENT"/>
-                            </tbe-elements>
-                        </encrypt>
-                    </outbound>
-                </security>
-            </runtime>
-            <operations>
-                <operation name="setItem"
-                           input="{http://authenticationPackage/types/}setItemElement"/>
-            </operations>
-        </port-component>
-    </webservice-description>
+<oracle-webservices xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/oracle-webservices-10_0.xsd">
     <webservice-description name="AssayWS">
         <port-component name="AssayWSSoapHttpPort">
             <operations>
-                <operation name="retrieveAssayInformation"
-                           input="{http://assayPackage/}retrieveAssayInformationElement"/>
-                <operation name="submitAssayResult"
-                           input="{http://assayPackage/}submitAssayResultElement"/>
-            </operations>
-        </port-component>
-    </webservice-description>
-    <webservice-description name="COREMedDemoWS">
-        <port-component name="COREMedDemoWSSoap12HttpPort">
-            <operations>
-                <operation name="checkInteraction"
-                           input="{http://COREMedDemo/}checkInteractionElement"/>
-                <operation name="enterDrugInfo"
-                           input="{http://COREMedDemo/}enterDrugInfoElement"/>
-                <operation name="enterPatientPhoto"
-                           input="{http://COREMedDemo/}enterPatientPhotoElement"/>
-                <operation name="enterPatientRecord"
-                           input="{http://COREMedDemo/}enterPatientRecordElement"/>
-                <operation name="getDrugInfo"
-                           input="{http://COREMedDemo/}getDrugInfoElement"/>
-                <operation name="getPatientRecord"
-                           input="{http://COREMedDemo/}getPatientRecordElement"/>
-                <operation name="logPatientVitals"
-                           input="{http://COREMedDemo/}logPatientVitalsElement"/>
-                <operation name="registerDoseGiven"
-                           input="{http://COREMedDemo/}registerDoseGivenElement"/>
-            </operations>
-        </port-component>
-        <port-component name="COREMedDemoWSSoapHttpPort">
-            <operations>
-                <operation name="checkInteraction"
-                           input="{http://COREMedDemo/}checkInteractionElement"/>
-                <operation name="enterDrugInfo"
-                           input="{http://COREMedDemo/}enterDrugInfoElement"/>
-                <operation name="enterPatientPhoto"
-                           input="{http://COREMedDemo/}enterPatientPhotoElement"/>
-                <operation name="enterPatientRecord"
-                           input="{http://COREMedDemo/}enterPatientRecordElement"/>
-                <operation name="getDrugInfo"
-                           input="{http://COREMedDemo/}getDrugInfoElement"/>
-                <operation name="getPatientRecord"
-                           input="{http://COREMedDemo/}getPatientRecordElement"/>
-                <operation name="logPatientVitals"
-                           input="{http://COREMedDemo/}logPatientVitalsElement"/>
-                <operation name="registerDoseGiven"
-                           input="{http://COREMedDemo/}registerDoseGivenElement"/>
-            </operations>
-        </port-component>
-    </webservice-description>
-    <webservice-description name="GetDatesWS">
-        <port-component name="GetDatesWSSoapHttpPort">
-            <rest-support>true</rest-support>
-            <operations>
-                <operation name="callHome"
-                           input="{http://datespackage/}callHomeElement"/>
-                <operation name="checkInteraction"
-                           input="{http://datespackage/}checkInteractionElement"/>
-                <operation name="getDesc"
-                           input="{http://datespackage/}getDescElement"/>
-                <operation name="getItem"
-                           input="{http://datespackage/}getItemElement"/>
-                <operation name="getName"
-                           input="{http://datespackage/}getNameElement"/>
-                <operation name="getPatientInfo"
-                           input="{http://datespackage/}getPatientInfoElement"/>
-                <operation name="getPicture"
-                           input="{http://datespackage/}getPictureElement"/>
-                <operation name="getRoute"
-                           input="{http://datespackage/}getRouteElement"/>
-                <operation name="getSince"
-                           input="{http://datespackage/}getSinceElement"/>
-                <operation name="getUniqueUIDs"
-                           input="{http://datespackage/}getUniqueUIDsElement"/>
-                <operation name="setItem"
-                           input="{http://datespackage/}setItemElement"/>
-            </operations>
-        </port-component>
-    </webservice-description>
-    <webservice-description name="DhlDemoWS">
-        <port-component name="DhlDemoWSSoapHttpPort">
-            <operations>
-                <operation name="getPackageInfo"
-                           input="{http://dhlDemo/}getPackageInfo"/>
-                <operation name="scanPackage"
-                           input="{http://dhlDemo/}scanPackage"/>
-                <operation name="setPackageInfo"
-                           input="{http://dhlDemo/}setPackageInfo"/>
-            </operations>
-        </port-component>
-    </webservice-description>
-    <webservice-description name="EvDemoWS">
-        <port-component name="EvDemoWSSoapHttpPort">
-            <operations>
-                <operation name="addSpectrum"
-                           input="{http://evDemo/}addSpectrumElement"/>
-                <operation name="getSpectrum"
-                           input="{http://evDemo/}getSpectrumElement"/>
-            </operations>
-        </port-component>
-    </webservice-description>
-    <webservice-description name="petWS">
-        <port-component name="petWSSoapHttpPort">
-            <operations>
-                <operation name="authorize"
-                           input="{http://petPackage/types/}authorizeElement"/>
-                <operation name="changePassword"
-                           input="{http://petPackage/types/}changePasswordElement"/>
-                <operation name="changePasswordTagCode"
-                           input="{http://petPackage/types/}changePasswordTagCodeElement"/>
-                <operation name="retrievePetInformation"
-                           input="{http://petPackage/types/}retrievePetInformationElement"/>
-                <operation name="retrievePetInformationTagCode"
-                           input="{http://petPackage/types/}retrievePetInformationTagCodeElement"/>
-                <operation name="updatePetInformation"
-                           input="{http://petPackage/types/}updatePetInformationElement"/>
-                <operation name="updatePetInformationTagCode"
-                           input="{http://petPackage/types/}updatePetInformationTagCodeElement"/>
-            </operations>
-        </port-component>
-    </webservice-description>
-    <webservice-description name="wineWS">
-        <port-component name="wineWSSoapHttpPort">
-            <rest-support>true</rest-support>
-            <operations>
-                <operation name="enterBottleInformation"
-                           input="{http://winePackage/}enterBottleInformationElement"/>
-                <operation name="getWineAccessesSince"
-                           input="{http://winePackage/}getWineAccessesSinceElement"/>
-                <operation name="retrieveBottleInformation"
-                           input="{http://winePackage/}retrieveBottleInformationElement"/>
+                <operation name="retrieveAssayInformation" input="{http://assayPackage/}retrieveAssayInformationElement"/>
+                <operation name="submitAssayResult" input="{http://assayPackage/}submitAssayResultElement"/>
             </operations>
         </port-component>
     </webservice-description>
@@ -211,9 +15,7 @@
                     <signature-key alias="user1" key-pass=""/>
                     <encryption-key alias="user1" key-pass=""/>
                     <inbound>
-                        <verify-username-token require-nonce="true"
-                                               require-created="true"
-                                               password-type="PLAINTEXT"/>
+                        <verify-username-token require-nonce="true" require-created="true" password-type="PLAINTEXT"/>
                         <verify-signature>
                             <signature-methods>
                                 <signature-method>DSA-SHA1</signature-method>
@@ -221,8 +23,7 @@
                                 <signature-method>RSA-SHA1</signature-method>
                             </signature-methods>
                             <tbs-elements>
-                                <tbs-element local-part="Body"
-                                             name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                                <tbs-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
                             </tbs-elements>
                             <verify-timestamp created="false" expiry="28800"/>
                         </verify-signature>
@@ -233,9 +34,8 @@
                                 <encryption-method>3DES</encryption-method>
                             </encryption-methods>
                             <tbe-elements>
-                                <tbe-element local-part="Body"
-                                             name-space="http://schemas.xmlsoap.org/soap/envelope/"
-                                             mode="CONTENT"/>
+                                <tbe-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"
+                                     mode="CONTENT"/>
                             </tbe-elements>
                         </decrypt>
                     </inbound>
@@ -243,8 +43,7 @@
                         <signature>
                             <signature-method>RSA-SHA1</signature-method>
                             <tbs-elements>
-                                <tbs-element local-part="Body"
-                                             name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                                <tbs-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
                             </tbs-elements>
                             <add-timestamp created="false" expiry="28800"/>
                         </signature>
@@ -252,8 +51,7 @@
                 </security>
             </runtime>
             <operations>
-                <operation name="getItem"
-                           input="{http://authenticationPackage/}getItem">
+                <operation name="getItem" input="{http://authenticationPackage/}getItem">
                     <runtime>
                         <security>
                             <inbound/>
@@ -261,8 +59,7 @@
                         </security>
                     </runtime>
                 </operation>
-                <operation name="getRoute"
-                           input="{http://authenticationPackage/}getRoute">
+                <operation name="getRoute" input="{http://authenticationPackage/}getRoute">
                     <runtime>
                         <security>
                             <inbound/>
@@ -270,8 +67,7 @@
                         </security>
                     </runtime>
                 </operation>
-                <operation name="getSince"
-                           input="{http://authenticationPackage/}getSince">
+                <operation name="getSince" input="{http://authenticationPackage/}getSince">
                     <runtime>
                         <security>
                             <inbound/>
@@ -279,8 +75,7 @@
                         </security>
                     </runtime>
                 </operation>
-                <operation name="getUniqueUIDs"
-                           input="{http://authenticationPackage/}getUniqueUIDs">
+                <operation name="getUniqueUIDs" input="{http://authenticationPackage/}getUniqueUIDs">
                     <runtime>
                         <security>
                             <inbound/>
@@ -288,16 +83,12 @@
                         </security>
                     </runtime>
                 </operation>
-                <operation name="sendError"
-                           input="{http://authenticationPackage/}sendError"/>
-                <operation name="setItem"
-                           input="{http://authenticationPackage/}setItem">
+                <operation name="sendError" input="{http://authenticationPackage/}sendError"/>
+                <operation name="setItem" input="{http://authenticationPackage/}setItem">
                     <runtime>
                         <security>
                             <inbound>
-                                <verify-username-token require-nonce="true"
-                                                       require-created="true"
-                                                       password-type="PLAINTEXT"/>
+                                <verify-username-token require-nonce="true" require-created="true" password-type="PLAINTEXT"/>
                                 <decrypt>
                                     <encryption-methods>
                                         <encryption-method>AES-128</encryption-method>
@@ -305,9 +96,8 @@
                                         <encryption-method>3DES</encryption-method>
                                     </encryption-methods>
                                     <tbe-elements>
-                                        <tbe-element local-part="Body"
-                                                     name-space="http://schemas.xmlsoap.org/soap/envelope/"
-                                                     mode="CONTENT"/>
+                                        <tbe-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"
+                                             mode="CONTENT"/>
                                     </tbe-elements>
                                 </decrypt>
                             </inbound>
@@ -315,21 +105,109 @@
                                 <signature>
                                     <signature-method>RSA-SHA1</signature-method>
                                     <tbs-elements>
-                                        <tbs-element local-part="Body"
-                                                     name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
+                                        <tbs-element local-part="Body" name-space="http://schemas.xmlsoap.org/soap/envelope/"/>
                                     </tbs-elements>
-                                    <add-timestamp created="false"
-                                                   expiry="28800"/>
+                                    <add-timestamp created="false" expiry="28800"/>
                                 </signature>
                             </outbound>
                         </security>
                     </runtime>
                 </operation>
-                <operation>
-                    <runtime/>
-                </operation>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="COREMedDemoWS">
+        <port-component name="COREMedDemoWSSoap12HttpPort">
+            <operations>
+                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
+                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
+                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
+                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
+                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
+                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
+                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
+                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
+            </operations>
+        </port-component>
+        <port-component name="COREMedDemoWSSoapHttpPort">
+            <operations>
+                <operation name="checkInteraction" input="{http://COREMedDemo/}checkInteractionElement"/>
+                <operation name="enterDrugInfo" input="{http://COREMedDemo/}enterDrugInfoElement"/>
+                <operation name="enterPatientPhoto" input="{http://COREMedDemo/}enterPatientPhotoElement"/>
+                <operation name="enterPatientRecord" input="{http://COREMedDemo/}enterPatientRecordElement"/>
+                <operation name="getDrugInfo" input="{http://COREMedDemo/}getDrugInfoElement"/>
+                <operation name="getPatientRecord" input="{http://COREMedDemo/}getPatientRecordElement"/>
+                <operation name="logPatientVitals" input="{http://COREMedDemo/}logPatientVitalsElement"/>
+                <operation name="registerDoseGiven" input="{http://COREMedDemo/}registerDoseGivenElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="GetDatesWS">
+        <port-component name="GetDatesWSSoapHttpPort">
+            <rest-support>true</rest-support>
+            <operations>
+                <operation name="callHome" input="{http://datespackage/}callHomeElement"/>
+                <operation name="checkInteraction" input="{http://datespackage/}checkInteractionElement"/>
+                <operation name="getDesc" input="{http://datespackage/}getDescElement"/>
+                <operation name="getItem" input="{http://datespackage/}getItemElement"/>
+                <operation name="getName" input="{http://datespackage/}getNameElement"/>
+                <operation name="getPatientInfo" input="{http://datespackage/}getPatientInfoElement"/>
+                <operation name="getPicture" input="{http://datespackage/}getPictureElement"/>
+                <operation name="getRoute" input="{http://datespackage/}getRouteElement"/>
+                <operation name="getSince" input="{http://datespackage/}getSinceElement"/>
+                <operation name="getUniqueUIDs" input="{http://datespackage/}getUniqueUIDsElement"/>
+                <operation name="setItem" input="{http://datespackage/}setItemElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="DhlDemoWS">
+        <port-component name="DhlDemoWSSoapHttpPort">
+            <operations>
+                <operation name="getPackageInfo" input="{http://dhlDemo/}getPackageInfo"/>
+                <operation name="scanPackage" input="{http://dhlDemo/}scanPackage"/>
+                <operation name="setPackageInfo" input="{http://dhlDemo/}setPackageInfo"/>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="EvDemoWS">
+        <port-component name="EvDemoWSSoapHttpPort">
+            <operations>
+                <operation name="addSpectrum" input="{http://evDemo/}addSpectrumElement"/>
+                <operation name="getSpectrum" input="{http://evDemo/}getSpectrumElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="petWS">
+        <port-component name="petWSSoapHttpPort">
+            <operations>
+                <operation name="authorize" input="{http://petPackage/types/}authorizeElement"/>
+                <operation name="changePassword" input="{http://petPackage/types/}changePasswordElement"/>
+                <operation name="changePasswordTagCode" input="{http://petPackage/types/}changePasswordTagCodeElement"/>
+                <operation name="retrievePetInformation" input="{http://petPackage/types/}retrievePetInformationElement"/>
+                <operation name="retrievePetInformationTagCode" input="{http://petPackage/types/}retrievePetInformationTagCodeElement"/>
+                <operation name="updatePetInformation" input="{http://petPackage/types/}updatePetInformationElement"/>
+                <operation name="updatePetInformationTagCode" input="{http://petPackage/types/}updatePetInformationTagCodeElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="wineWS">
+        <port-component name="wineWSSoapHttpPort">
+            <rest-support>true</rest-support>
+            <operations>
+                <operation name="enterBottleInformation" input="{http://winePackage/}enterBottleInformationElement"/>
+                <operation name="getWineAccessesSince" input="{http://winePackage/}getWineAccessesSinceElement"/>
+                <operation name="retrieveBottleInformation" input="{http://winePackage/}retrieveBottleInformationElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
+    <webservice-description name="MedReminderWebService">
+        <port-component name="MedReminderWebServiceSoapHttpPort">
+            <operations>
+                <operation name="authorize" input="{http://MedReminder/}authorizeElement"/>
+                <operation name="changePassword" input="{http://MedReminder/}changePasswordElement"/>
+                <operation name="getReminders" input="{http://MedReminder/}getRemindersElement"/>
+                <operation name="updateUserInformation" input="{http://MedReminder/}updateUserInformationElement"/>
             </operations>
         </port-component>
     </webservice-description>
 </oracle-webservices>
-

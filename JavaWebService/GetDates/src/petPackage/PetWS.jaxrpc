@@ -120,6 +120,7 @@
             <list n="OP_">
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_changePassword"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -152,12 +153,14 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
                   <value n="OP_NAME" v="changePassword"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_changePasswordResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_retrievePetInformation"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -198,12 +201,14 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="petPackage.petInfo"/>
                   <value n="OP_NAME" v="retrievePetInformation"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_retrievePetInformationResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_changePasswordTagCode"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -236,12 +241,14 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
                   <value n="OP_NAME" v="changePasswordTagCode"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_changePasswordTagCodeResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_retrievePetInformationTagCode"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -282,12 +289,14 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="petPackage.petInfo"/>
                   <value n="OP_NAME" v="retrievePetInformationTagCode"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_retrievePetInformationTagCodeResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_updatePetInformationTagCode"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -304,12 +313,14 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="petPackage.errorMessage"/>
                   <value n="OP_NAME" v="updatePetInformationTagCode"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_updatePetInformationTagCodeResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_updatePetInformation"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -326,12 +337,14 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="petPackage.errorMessage"/>
                   <value n="OP_NAME" v="updatePetInformation"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_updatePetInformationResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
+                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_authorize"/>
                   <list n="OP_JAVA_EXCEPTIONS">
                      <string v="java.rmi.RemoteException"/>
                   </list>
@@ -348,6 +361,7 @@
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="petPackage.errorMessage"/>
                   <value n="OP_NAME" v="authorize"/>
+                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}PetWS_authorizeResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>

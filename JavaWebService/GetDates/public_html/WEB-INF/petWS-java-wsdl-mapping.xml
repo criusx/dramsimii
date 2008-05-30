@@ -14,83 +14,8 @@
         <namespaceURI>http://petPackage/types/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_authorize_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}authorizeResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_retrievePetInformation_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}retrievePetInformationResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_changePasswordTagCode_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}changePasswordTagCodeResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>petPackage.PetWS_retrievePetInformationTagCode_ResponseStruct</java-type>
         <anonymous-type-qname>{http://petPackage/types/}retrievePetInformationTagCodeResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_changePassword_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}changePasswordResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>petPackage.errorMessage</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}errorMessage</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>attribute1</java-variable-name>
-            <xml-element-name>attribute1</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>errorMessage</java-variable-name>
-            <xml-element-name>errorMessage</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>attribute2</java-variable-name>
-            <xml-element-name>attribute2</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>success</java-variable-name>
-            <xml-element-name>success</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_updatePetInformation_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}updatePetInformationResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_updatePetInformationTagCode_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}updatePetInformationTagCodeResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -180,6 +105,81 @@
         <variable-mapping>
             <java-variable-name>tagCode</java-variable-name>
             <xml-element-name>tagCode</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.PetWS_updatePetInformation_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}updatePetInformationResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.PetWS_retrievePetInformation_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}retrievePetInformationResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.PetWS_changePasswordTagCode_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}changePasswordTagCodeResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.errorMessage</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}errorMessage</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>attribute1</java-variable-name>
+            <xml-element-name>attribute1</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>errorMessage</java-variable-name>
+            <xml-element-name>errorMessage</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>attribute2</java-variable-name>
+            <xml-element-name>attribute2</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>success</java-variable-name>
+            <xml-element-name>success</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.PetWS_authorize_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}authorizeResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.PetWS_changePassword_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}changePasswordResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.PetWS_updatePetInformationTagCode_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}updatePetInformationTagCodeResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>

@@ -400,7 +400,7 @@ public class COREMedDemoService
 
       OracleStatement stmt = (OracleStatement) conn.createStatement();
       PreparedStatement lookupStatement = 
-        conn.prepareStatement("SELECT PICTURE FROM patientdata WHERE id = ? FOR UPDATE");
+        conn.prepareStatement("SELECT PICTURE FROM patientdata WHERE id = (SELECT PATIENTRFID FROM PATIENTLOOKUP WHERE PATIENTRFID = ?) FOR UPDATE");
       lookupStatement.setString(1, newPatient.getRFIDnum());
 
       ResultSet rs = lookupStatement.executeQuery();

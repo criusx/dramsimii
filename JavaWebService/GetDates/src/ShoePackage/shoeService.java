@@ -16,40 +16,48 @@ import oracle.jdbc.pool.OracleDataSource;
 
 public class shoeService
 {
-  public itemInfo getItem(String RFIDNum, String UID, float lat, 
-                          float longit)
+  public shoePair getItem(String RFIDNumA, String RFIDNumB, String UID, 
+                          float lat, float longit)
   {
-    return getItem(RFIDNum, UID, lat, longit, true);
+    return getItem(RFIDNumA, RFIDNumB, UID, lat, longit, true);
   }
 
 
-  public itemInfo getItem(String RFIDNumA, String RFIDNumB, String UID, 
+  public shoePair getItem(String RFIDNumA, String RFIDNumB, String UID, 
                           float lat, float longit, boolean logThis)
   {
     // ignore blank requests
-    if (RFIDNum == null || UID == null)
+    if (RFIDNumA == null || RFIDNumB == null || UID == null)
     {
       System.out.println("Null value.");
-      return new itemInfo();
+      return new shoePair();
     }
+
     // if they can't be real tags anyway
-    if (RFIDNum.length() < 1)
+    if (RFIDNumA.length() < 1 || RFIDNumB.length() < 1)
     {
       System.out.println("Value too short.");
-      return new itemInfo();
-
+      return new shoePair();
     }
-    if (RFIDNum.length() > 16 || UID.length() > 128)
+
+    if (RFIDNumA.length() > 16 || RFIDNumB.length() > 16 || 
+        UID.length() > 128)
     {
       System.out.println("Value too long.");
-      return new itemInfo();
+      return new shoePair();
     }
+
     // sanitize to help prevent sql injection
-    RFIDNum = RFIDNum.replaceAll("\\s+", "");
+    RFIDNumA = RFIDNumA.replaceAll("\\s+", "");
+    RFIDNumB = RFIDNumB.replaceAll("\\s+", "");
+
     // only accept ids in hex
-    for (int i = 0; i < RFIDNum.length(); i++)
-      if (!isHexStringChar(RFIDNum.charAt(i)))
-        return new itemInfo();
+    for (int i = 0; i < RFIDNumA.length(); i++)
+      if (!isHexChar(RFIDNumA.charAt(i)))
+        return new shoePair();
+    for (int i = 0; i < RFIDNumB.length(); i++)
+      if (!isHexChar(RFIDNumB.charAt(i)))
+        return new shoePair();
 
     OracleDataSource ods;
     OracleConnection conn = null;
@@ -74,32 +82,37 @@ public class shoeService
         {
           // first record this
           PreparedStatement ps = 
-            conn.prepareStatement("INSERT INTO AUTHENTICATIONLOOKUPS VALUES (?, ?, ?, ?, ?)");
+            conn.prepareStatement("INSERT INTO SHOESLOOKUPS VALUES (?, ?, ?, ?, ?, ?)");
 
           ps.setString(1, UID);
-          ps.setString(2, RFIDNum);
+          ps.setString(2, RFIDNumA);
           ps.setFloat(3, lat);
           ps.setFloat(4, longit);
           ps.setTimestamp(5, 
                           new Timestamp((new java.util.Date()).getTime()));
+          ps.setString(6, RFIDNumB);
 
           ps.execute();
           ps.close();
         }
         catch (SQLException e)
         {
-          System.out.println("Insert lookup failed." + e.getErrorCode());
+          System.out.println("Insert lookup failed." + e.getErrorCode() + e.getMessage());
+          e.printStackTrace();
         }
       }
 
       // then see if it's authenticated
       PreparedStatement ps = 
-        conn.prepareStatement("SELECT * FROM DESCRIPTIONS DES, PRODUCTIMAGES PI WHERE DES.IMAGE = PI.PRODUCTID AND ID = ?");
-      ps.setString(1, RFIDNum);
+        conn.prepareStatement("SELECT * FROM SHOES DES, SHOESIMAGES PI WHERE DES.IMAGE = PI.IMAGE AND ((ID1 = ? AND ID2 = ?) OR (ID2 = ? AND ID1 = ?))");
+      ps.setString(1, RFIDNumA);
+      ps.setString(2, RFIDNumB);
+      ps.setString(3, RFIDNumA);
+      ps.setString(4, RFIDNumB);      
 
       ResultSet result = ps.executeQuery();
 
-      itemInfo newItem = new itemInfo();
+      shoePair newItem = new shoePair();
 
       // get the authentication status and description
       if (result.next())
@@ -125,7 +138,7 @@ public class shoeService
       ps.close();
 
       conn.commit();
-      System.out.println("Lookup: " + RFIDNum + " " + 
+      System.out.println("Shoe Lookup: " + RFIDNumA + " " + RFIDNumB + " " + 
                          newItem.isAuthenticated());
       return newItem;
     }
@@ -135,7 +148,7 @@ public class shoeService
       if (conn != null)
         conn.rollback();
 
-      return new itemInfo();
+      return new shoePair();
     }
     finally
     {
@@ -162,4 +175,16 @@ public class shoeService
       }
     }
   }
+
+  /**
+   * Checks the character to see if it is hexadecimal
+   * @param c
+   * @return
+   */
+  private static final boolean isHexChar(char c)
+  {
+    return (Character.isDigit(c) || 
+            (("0123456789abcdefABCDEF".indexOf(c)) >= 0));
+  }
+
 }

@@ -29,6 +29,12 @@
                </hash>
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="authenticationPackage.itemInfo.getItem.java.lang.String.java.lang.String.float.float"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
                   <value n="BOUND_OPERATION" v="boolean.sendError.java.lang.String.java.lang.String.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
@@ -42,12 +48,6 @@
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
                   <value n="BOUND_OPERATION" v="java.lang.String[].getSince.long"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="authenticationPackage.itemInfo.getItem.java.lang.String.java.lang.String.float.float"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -75,6 +75,11 @@
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="authenticationPackage.itemInfo.getItem.java.lang.String.java.lang.String.float.float"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
                   <value n="EXPOSED_BD_OPERATION" v="boolean.sendError.java.lang.String.java.lang.String.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
@@ -86,11 +91,6 @@
                </hash>
                <hash>
                   <value n="EXPOSED_BD_OPERATION" v="java.lang.String[].getSince.long"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="authenticationPackage.itemInfo.getItem.java.lang.String.java.lang.String.float.float"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -208,14 +208,6 @@
                         <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
                         <value n="TYPE" v="float"/>
                      </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="logThis"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="logThis"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="boolean"/>
-                     </hash>
                   </list>
                   <value n="OP_JAVA_RETURN_TYPE" v="authenticationPackage.itemInfo"/>
                   <value n="OP_NAME" v="getItem"/>
@@ -268,83 +260,6 @@
                   <value n="OP_JAVA_RETURN_TYPE" v="java.lang.String[]"/>
                   <value n="OP_NAME" v="getUniqueUIDs"/>
                   <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_getUniqueUIDsResponse"/>
-                  <value n="OP_WSDL_RETURN_NAME" v="return"/>
-                  <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaOperation"/>
-                  <value n="OP_INPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_callHome"/>
-                  <value n="OP_JAVA_NAME" v="callHome"/>
-                  <list n="OP_JAVA_PARAMETERS">
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="UID"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="UID"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="java.lang.String"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="lat"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="lat"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="float[]"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="longit"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="longit"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="float[]"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="timeSinceLastReading"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="timeSinceLastReading"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="long[]"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="reportedTime"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="reportedTime"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="long[]"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="bearing"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="bearing"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="float[]"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="speed"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="speed"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="float[]"/>
-                     </hash>
-                     <hash>
-                        <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaParameter"/>
-                        <value n="NAME" v="elevation"/>
-                        <value n="PA_MODE" v="0"/>
-                        <value n="PA_WSDL_NAME" v="elevation"/>
-                        <value n="TARGET_NAMESPACE" v="USE_OWNER_TNS"/>
-                        <value n="TYPE" v="int[]"/>
-                     </hash>
-                  </list>
-                  <value n="OP_JAVA_RETURN_TYPE" v="boolean"/>
-                  <value n="OP_NAME" v="callHome"/>
-                  <value n="OP_OUTPUT_MESSAGE" v="{USE_OWNER_TNS}AuthenticationWebService_callHomeResponse"/>
                   <value n="OP_WSDL_RETURN_NAME" v="return"/>
                   <value n="OP_WSDL_RETURN_TNS" v="USE_OWNER_TNS"/>
                   <hash n="PROPERTY_GROUPS"/>

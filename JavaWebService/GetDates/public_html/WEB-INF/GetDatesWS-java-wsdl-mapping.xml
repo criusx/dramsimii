@@ -10,6 +10,24 @@
         <namespaceURI>http://datespackage/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
+        <java-type>datespackage.GetDatesWS_checkInteraction_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}checkInteractionResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>datespackage.GetDatesWS_getName_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}getNameResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>datespackage.GetDatesWS_getSince_ResponseStruct</java-type>
         <anonymous-type-qname>{http://datespackage/}getSinceResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -40,17 +58,8 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_callHome_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}callHomeResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_checkInteraction_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}checkInteractionResponse</anonymous-type-qname>
+        <java-type>datespackage.GetDatesWS_getItem_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}getItemResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -67,15 +76,6 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_getPicture_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}getPictureResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>datespackage.GetDatesWS_getUniqueUIDs_ResponseStruct</java-type>
         <anonymous-type-qname>{http://datespackage/}getUniqueUIDsResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -85,8 +85,17 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_getDesc_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}getDescResponse</anonymous-type-qname>
+        <java-type>datespackage.GetDatesWS_callHome_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}callHomeResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>datespackage.GetDatesWS_getPicture_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}getPictureResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -111,15 +120,6 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_getName_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}getNameResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>datespackage.GetDatesWS_getRoute_ResponseStruct</java-type>
         <anonymous-type-qname>{http://datespackage/}getRouteResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -129,8 +129,8 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_setItem_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}setItemResponse</anonymous-type-qname>
+        <java-type>datespackage.GetDatesWS_getDesc_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}getDescResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -138,8 +138,8 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>datespackage.GetDatesWS_getItem_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://datespackage/}getItemResponse</anonymous-type-qname>
+        <java-type>datespackage.GetDatesWS_setItem_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://datespackage/}setItemResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>

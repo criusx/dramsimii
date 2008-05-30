@@ -2,19 +2,6 @@
      xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
      version="1.1">
     <webservice-description>
-        <webservice-description-name>AuthenticationSecureWS</webservice-description-name>
-        <wsdl-file>WEB-INF/wsdl/AuthenticationSecureWS.wsdl</wsdl-file>
-        <jaxrpc-mapping-file>WEB-INF/AuthenticationSecureWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
-        <port-component>
-            <port-component-name>AuthenticationSecureWSSoapHttpPort</port-component-name>
-            <wsdl-port xmlns:wsa0="http://authenticationPackage/">wsa0:AuthenticationSecureWSSoapHttpPort</wsdl-port>
-            <service-endpoint-interface>authenticationPackage.AuthenticationSecureWS</service-endpoint-interface>
-            <service-impl-bean>
-                <servlet-link>AuthenticationSecureWSSoapHttpPort</servlet-link>
-            </service-impl-bean>
-        </port-component>
-    </webservice-description>
-    <webservice-description>
         <webservice-description-name>AssayWS</webservice-description-name>
         <wsdl-file>WEB-INF/wsdl/AssayWS.wsdl</wsdl-file>
         <jaxrpc-mapping-file>WEB-INF/AssayWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
@@ -24,6 +11,19 @@
             <service-endpoint-interface>assayPackage.AssayWS</service-endpoint-interface>
             <service-impl-bean>
                 <servlet-link>AssayWSSoapHttpPort</servlet-link>
+            </service-impl-bean>
+        </port-component>
+    </webservice-description>
+    <webservice-description>
+        <webservice-description-name>AuthenticationWebService</webservice-description-name>
+        <wsdl-file>WEB-INF/wsdl/AuthenticationWebService.wsdl</wsdl-file>
+        <jaxrpc-mapping-file>WEB-INF/AuthenticationWebService-java-wsdl-mapping.xml</jaxrpc-mapping-file>
+        <port-component>
+            <port-component-name>AuthenticationWebServiceSoapHttpPort</port-component-name>
+            <wsdl-port xmlns:wsa0="http://authenticationPackage/">wsa0:AuthenticationWebServiceSoapHttpPort</wsdl-port>
+            <service-endpoint-interface>authenticationPackage.AuthenticationWebService</service-endpoint-interface>
+            <service-impl-bean>
+                <servlet-link>AuthenticationWebServiceSoapHttpPort</servlet-link>
             </service-impl-bean>
         </port-component>
     </webservice-description>
@@ -114,15 +114,15 @@
         </port-component>
     </webservice-description>
     <webservice-description>
-        <webservice-description-name>AuthenticationWebService</webservice-description-name>
-        <wsdl-file>WEB-INF/wsdl/AuthenticationWebService.wsdl</wsdl-file>
-        <jaxrpc-mapping-file>WEB-INF/AuthenticationWebService-java-wsdl-mapping.xml</jaxrpc-mapping-file>
+        <webservice-description-name>MedReminderWebService</webservice-description-name>
+        <wsdl-file>WEB-INF/wsdl/MedReminderWebService.wsdl</wsdl-file>
+        <jaxrpc-mapping-file>WEB-INF/MedReminderWebService-java-wsdl-mapping.xml</jaxrpc-mapping-file>
         <port-component>
-            <port-component-name>AuthenticationWebServiceSoapHttpPort</port-component-name>
-            <wsdl-port xmlns:wsa0="http://authenticationPackage/">wsa0:AuthenticationWebServiceSoapHttpPort</wsdl-port>
-            <service-endpoint-interface>authenticationPackage.AuthenticationWebService</service-endpoint-interface>
+            <port-component-name>MedReminderWebServiceSoapHttpPort</port-component-name>
+            <wsdl-port xmlns:wsa0="http://MedReminder/">wsa0:MedReminderWebServiceSoapHttpPort</wsdl-port>
+            <service-endpoint-interface>MedReminder.MedReminderWebService</service-endpoint-interface>
             <service-impl-bean>
-                <servlet-link>AuthenticationWebServiceSoapHttpPort</servlet-link>
+                <servlet-link>MedReminderWebServiceSoapHttpPort</servlet-link>
             </service-impl-bean>
         </port-component>
     </webservice-description>

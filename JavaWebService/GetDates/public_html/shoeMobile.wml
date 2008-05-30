@@ -8,7 +8,7 @@
         Please enter the authentication codes.<br />
             <input name="authCodeA" /><br />
             <input name="authCodeB" /><br />
-            <anchor><go href="authMobile.jsp" method="post">
+            <anchor><go href="shoeMobile.jsp" method="post">
                     <postfield name="codeA" value="$(authCodeA)" />
                     <postfield name="codeB" value="$(authCodeB)" />
                 </go>Submit</anchor>

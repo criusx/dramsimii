@@ -13,6 +13,8 @@ public class shoePair
   
   public shoePair()
   {
+    exists = false;
+    retryNeeded = true;
   }
 
   public void setRFIDNumA(String rFIDNumA)
