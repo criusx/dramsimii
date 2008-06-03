@@ -41,7 +41,7 @@ img.corner
     width: 15px;
     height: 15px;
     border: none;
-    display: block !important;
+    display: block;
 }
 
 fieldset

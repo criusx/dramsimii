@@ -13,6 +13,44 @@
   </head>
   <body>
     <div id="contentContainer">
+      <div id="newMedBox" style="display:none;">
+        <strong id="medName"> </strong>
+        <br />
+        <em id="medDescription"> </em>
+        <br />
+        <form id="newMedForm" action="">
+          <fieldset>
+            <input type="hidden" name="newMedID" id="newMedID" />
+            <input type="hidden" name="storedName" id="storedName" />
+            <input type="hidden" id="storedEmail" name="storedEmail"/>
+            <input type="hidden" id="storedPassword" name="storedPassword"/>
+            <label>Reminder period (min)</label>
+            <select id="reminderFrequencySelect" name="reminderFrequencySelect">
+              <option>a</option>
+            </select>
+            <br />
+            <label>Dose (mg)</label>
+            <select id="reminderDoseSelect" name="reminderDoseSelect">
+              <option>b</option>
+            </select>
+            <br />
+            <img id="newMedPic" src="" alt="new med" />
+            <br />
+            <input id="newMedOK" type="submit" value="OK" />
+            <input id="newMedCancel" type="button" onclick="javascript:$.unblockUI" value="Cancel" />
+          </fieldset>
+        </form>
+      </div>
+      <div id="newReminderBox" style="display:none;">
+        <form action="" id="newReminderForm">
+          <fieldset>
+            <label for="medID">Med ID</label>
+            <input id="medID" name="medID" type="text" value="" />
+            <br />
+            <input id="submitNewMed" type="submit" value="Lookup" />
+          </fieldset>
+        </form>
+      </div>
       <div id="loginPasswordBox" style="display:none;">
         <form action="" id="loginPasswordForm">
           <fieldset>
@@ -80,6 +118,7 @@
               </tr>
             </tbody>
           </table>
+          <a href="#" onclick="javascript:addReminderClick();">Add</a>
         </div>
         <div class="roundbottom">
           <img alt="missing" class="corner" height="15" src="images/bottomLeft.png" width="15" />

@@ -203,10 +203,10 @@
     <webservice-description name="MedReminderWebService">
         <port-component name="MedReminderWebServiceSoapHttpPort">
             <operations>
-                <operation name="authorize" input="{http://MedReminder/}authorizeElement"/>
+                <operation name="addReminder" input="{http://MedReminder/}addReminderElement"/>
                 <operation name="changePassword" input="{http://MedReminder/}changePasswordElement"/>
+                <operation name="getDrug" input="{http://MedReminder/}getDrugElement"/>
                 <operation name="getReminders" input="{http://MedReminder/}getRemindersElement"/>
-                <operation name="updateUserInformation" input="{http://MedReminder/}updateUserInformationElement"/>
             </operations>
         </port-component>
     </webservice-description>

@@ -2,6 +2,8 @@ package MedReminder;
 
 import dBInfo.dbConnectInfo;
 
+import MedReminder.errorMessage;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -35,9 +37,6 @@ import oracle.jdbc.driver.OracleStatement;
 import oracle.jdbc.pool.OracleDataSource;
 
 import oracle.sql.BLOB;
-
-import petPackage.errorMessage;
-import petPackage.petInfo;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -154,13 +153,20 @@ public class medReminderService
           frequencies.add(result.getString("FREQUENCY"));
 
           cal.setTime(result.getTimestamp("LASTDOSE"));
-
-          lastSents.add(months[cal.get(Calendar.MONTH)] + ", " + 
-                        cal.get(Calendar.DAY_OF_MONTH) + " " + 
-                        cal.get(Calendar.YEAR) + " " + 
-                        cal.get(Calendar.HOUR_OF_DAY) + ":" + 
-                        cal.get(Calendar.MINUTE) + ":" + 
-                        cal.get(Calendar.SECOND));
+          
+          if (cal.get(Calendar.YEAR) < 2000)
+          {
+            lastSents.add("Never");
+          }
+          else
+          {
+            lastSents.add(months[cal.get(Calendar.MONTH)] + ", " + 
+                          cal.get(Calendar.DAY_OF_MONTH) + " " + 
+                          cal.get(Calendar.YEAR) + " " + 
+                          cal.get(Calendar.HOUR_OF_DAY) + ":" + 
+                          cal.get(Calendar.MINUTE) + ":" + 
+                          cal.get(Calendar.SECOND));
+          }
         }
         result.close();
         ps.close();
@@ -219,27 +225,165 @@ public class medReminderService
     }
   }
 
-
-  public drugInfo getDrug(String RFIDNum, String UID)
+  public errorMessage addReminder(String login, String password, 
+                                  medReminders newReminder)
   {
     // ignore blank requests
-    if (RFIDNum == null || UID == null)
+    if (login == null || password == null)
+    {
+      System.out.println("Null value.");
+      return new errorMessage("Null value.");
+    }
+
+    // if they can't be real tags anyway
+    else if (login.length() < 1 || password.length() < 1)
+    {
+      System.out.println("Value too short.");
+      return new errorMessage("Value too short.");
+    }
+
+    if (!login.toUpperCase().matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.(?:[A-Z]{2}|COM|ORG|NET|GOV|MIL|BIZ|INFO|MOBI|NAME|AERO|JOBS|MUSEUM)$"))
+    {
+      System.out.println("Not a valid email address: " + login);
+      return new errorMessage("Not a valid email address.");
+    }
+
+    OracleDataSource ods;
+    OracleConnection conn = null;
+
+    try
+    {
+      ods = new OracleDataSource();
+      ods.setURL(dbConnectInfo.getConnectInfo());
+      conn = (OracleConnection) ods.getConnection();
+      conn.setAutoCommit(false);
+
+      // set case insensitivity
+      OracleStatement psC = (OracleStatement) conn.createStatement();
+      psC.execute("alter session set NLS_COMP=ANSI");
+      psC.execute("alter session set NLS_SORT=BINARY_CI");
+
+      psC.close();
+
+      //      if (logThis)
+      //      {
+      //        try
+      //        {
+      //          // first record this
+      //          PreparedStatement ps = 
+      //            conn.prepareStatement("INSERT INTO SHOESLOOKUPS VALUES (?, ?, ?, ?, ?, ?)");
+      //
+      //          ps.setString(1, UID);
+      //          ps.setString(2, RFIDNumA);
+      //          ps.setFloat(3, lat);
+      //          ps.setFloat(4, longit);
+      //          ps.setTimestamp(5, 
+      //                          new Timestamp((new java.util.Date()).getTime()));
+      //          ps.setString(6, RFIDNumB);
+      //
+      //          ps.execute();
+      //          ps.close();
+      //        }
+      //        catch (SQLException e)
+      //        {
+      //          System.out.println("Insert lookup failed." + e.getErrorCode() + 
+      //                             e.getMessage());
+      //          e.printStackTrace();
+      //        }
+      //      }
+
+      userInfo newUser = null;
+      // make sure these are the correct credentials
+      if ((newUser = checkPassword(login, password, conn)) == null)
+      {
+        return new errorMessage("Invalid login/password.");
+      }
+      else
+      {
+        PreparedStatement ps = 
+          conn.prepareStatement("INSERT INTO MEDREMINDERS (MED, DOSE, LASTDOSE, EMAIL, FREQUENCY) VALUES (?, ?, ?, ?, ?)");
+        System.out.println(newReminder.getID()[0]);
+        ps.setString(1, newReminder.getID()[0]);
+        ps.setString(2, newReminder.getDoses()[0]);
+        ps.setTimestamp(3, new Timestamp(0));
+        ps.setString(4, login);
+        ps.setString(5, newReminder.getReminderFrequency()[0]);
+
+        ps.execute();
+
+        ps.close();
+        conn.commit();
+        System.out.println("Added reminder " + newReminder.getID()[0] + 
+                           " to " + login);
+        return new errorMessage();
+      }
+
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+
+      return new errorMessage();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+
+      return new errorMessage();
+    }
+    catch (NoSuchAlgorithmException e)
+    {
+      e.printStackTrace();
+
+      return new errorMessage();
+    }
+    finally
+    {
+      // close up the connection
+      try
+      {
+        if (conn != null)
+        {
+          conn.close();
+        }
+      }
+      catch (SQLException ex)
+      {
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
+    }
+  }
+
+
+  public drugInfo getDrug(String drugCode, String UID)
+  {
+    // ignore blank requests
+    if (drugCode == null)
     {
       System.out.println("Null value.");
       return new drugInfo();
     }
     // if they can't be real tags anyway
-    if (RFIDNum.length() > 16 || UID.length() > 128)
+    if (drugCode.length() > 16)
     {
       System.out.println("Value too long.");
       return new drugInfo();
     }
     // sanitize to help prevent sql injection
-    RFIDNum = RFIDNum.replaceAll("\\s+", "");
+    drugCode = drugCode.replaceAll("\\s+", "");
     // only accept ids in hex
-    for (int i = 0; i < RFIDNum.length(); i++)
+    for (int i = 0; i < drugCode.length(); i++)
     {
-      if (!isHexChar(RFIDNum.charAt(i)))
+      if (!isHexChar(drugCode.charAt(i)))
       {
         System.out.println("Non-hex character encountered.");
         return new drugInfo();
@@ -263,23 +407,24 @@ public class medReminderService
 
       psC.close();
 
+      // collect information on the meds
       PreparedStatement ps = 
         conn.prepareStatement("SELECT * FROM DRUGDATA WHERE (DRUGID = (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?) OR DRUGID = ?)");
-      ps.setString(1, RFIDNum);
-      ps.setString(2, RFIDNum);
+      ps.setString(1, drugCode);
+      ps.setString(2, drugCode);
 
       ResultSet rs = ps.executeQuery();
 
       // if there is no patient by this id
       if (!rs.next())
       {
-        System.out.println("Drug Lookup (failure):" + RFIDNum);
-        return new drugInfo(false);
+        System.out.println("Drug Lookup (failure):" + drugCode);
+        return new drugInfo();
       }
       else
       {
         drugInfo pR = new drugInfo();
-        pR.setRFIDNum(RFIDNum);
+        pR.setRFIDNum(drugCode);
         pR.setRetryNeeded(false);
         pR.setDescription(rs.getString("DESCRIPTION"));
         pR.setExists(true);
@@ -293,7 +438,61 @@ public class medReminderService
 
         ps.close();
 
-        System.out.println("Drug Lookup (success):" + RFIDNum);
+        // get the available intervals
+        ps = 
+            conn.prepareStatement("SELECT INTERVAL FROM DRUGREMINDERINTERVALS WHERE DRUGID = (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?) OR DRUGID = ? ORDER BY INTERVAL ASC");
+
+        ps.setString(1, drugCode);
+        ps.setString(2, drugCode);
+
+        rs = ps.executeQuery();
+
+        ArrayList al = new ArrayList();
+
+        while (rs.next())
+        {
+          al.add("" + rs.getInt("INTERVAL"));
+        }
+
+        if (al.isEmpty())
+        {
+          System.out.println("Drug Lookup (failure, no reminder intervals found):" + 
+                             drugCode);
+          // return new drugInfo();
+        }
+        else
+        {
+          pR.setReminderIntervals((String[]) al.toArray(new String[al.size()]));
+        }
+
+        // get the available doses
+        ps = 
+            conn.prepareStatement("SELECT DOSE FROM DRUGDOSES WHERE DRUGID = (SELECT DRUGID FROM DRUGLOOKUP WHERE DRUGRFID = ?) OR DRUGID = ? ORDER BY DOSE ASC");
+
+        ps.setString(1, drugCode);
+        ps.setString(2, drugCode);
+
+        rs = ps.executeQuery();
+
+        al.clear();
+
+        while (rs.next())
+        {
+          al.add("" + rs.getInt("DOSE"));
+        }
+
+        if (al.isEmpty())
+        {
+          System.out.println("Drug Lookup (failure, no doses found):" + 
+                             drugCode);
+          //return new drugInfo();
+        }
+        else
+        {
+          pR.setDoses((String[]) al.toArray(new String[al.size()]));
+        }
+
+        System.out.println("Drug Lookup (success):" + drugCode);
 
         return pR;
       }
@@ -301,7 +500,7 @@ public class medReminderService
     catch (SQLException e)
     {
       e.printStackTrace();
-      return new drugInfo(RFIDNum, true);
+      return new drugInfo(drugCode, true);
     }
     finally
     {
@@ -498,7 +697,7 @@ public class medReminderService
 
         conn.commit();
 
-        return new errorMessage("Success", tagCode, newUser.getPassword());
+        return new errorMessage();
       }
     }
     catch (SQLException e)
@@ -888,131 +1087,6 @@ public class medReminderService
   {
     return (Character.isDigit(c) || 
             (("0123456789abcdefABCDEF".indexOf(c)) >= 0));
-  }
-
-  /**
-   * 
-   * @param rfidNum needed to identify the tag's ID
-   * @param phoneID recorded, the unique ID of the phone
-   * @param latitude current latitude
-   * @param longitude current longitude
-   * @return a petInfo object with relevant fields retrieved if successful
-   */
-  public petInfo retrievePetInformation(String rfidNum, String phoneID, 
-                                        float latitude, float longitude)
-  {
-    if (rfidNum == null || phoneID == null)
-      return new petInfo();
-
-    rfidNum = rfidNum.replaceAll("\\s+", "");
-    phoneID = phoneID.replaceAll("\\s+", "");
-
-    // if a non hex string is entered, don't try any db stuff on it
-    for (int i = 0; i < phoneID.length(); i++)
-      if (!isHexChar(phoneID.charAt(i)))
-        return new petInfo();
-
-    for (int i = 0; i < rfidNum.length(); i++)
-      if (!isHexChar(rfidNum.charAt(i)))
-        return new petInfo();
-
-    OracleDataSource ods;
-    OracleConnection conn = null;
-
-    try
-    {
-      ods = new OracleDataSource();
-      ods.setURL(dbConnectInfo.getConnectInfo());
-      conn = (OracleConnection) ods.getConnection();
-      conn.setAutoCommit(false);
-
-      // enter this information into the db
-      java.util.Date today = new java.util.Date();
-      Timestamp ts = new Timestamp(today.getTime());
-      // TODO: mark whether the lookup was successful or not
-      OraclePreparedStatement ps = 
-        (OraclePreparedStatement) conn.prepareStatement("INSERT INTO PETAUTHENTICATIONLOOKUPS VALUES (?, ?, ?, ?, ?)");
-      ps.setString(1, phoneID);
-      ps.setString(2, rfidNum);
-      ps.setFloat(3, latitude);
-      ps.setFloat(4, longitude);
-      ps.setTimestamp(5, ts);
-      ps.execute();
-
-      ps = 
-          (OraclePreparedStatement) conn.prepareStatement("SELECT * from PETDESCRIPTIONS where ID = ?");
-      System.out.println("Pet lookup: " + rfidNum);
-      ps.setString(1, rfidNum);
-      OracleResultSet rs = (OracleResultSet) ps.executeQuery();
-
-
-      if (rs.next())
-      {
-        conn.commit();
-        BLOB b = rs.getBLOB("picture");
-        byte[] image;
-        if (b != null)
-          image = b.getBytes((long) 1, (int) b.length());
-        else
-          image = null;
-
-        petInfo pet = 
-          new petInfo(image, rs.getString("contactinfo"), rs.getString("owner"), 
-                      rs.getString("workphone"), rfidNum, 
-                      rs.getString("homephone"), rs.getString("cellphone"), 
-                      rs.getString("email"), rs.getString("breed"), 
-                      rs.getString("tagcode"), rs.getString("name"), 
-                      rs.getString("preferredfood"), 
-                      rs.getString("medicalneeds"), 
-                      rs.getString("medications"), rs.getString("vetname"), 
-                      rs.getString("vetaddress"), rs.getString("vetphone"), 
-                      rs.getInt("reward"));
-        conn.close();
-        return pet;
-      }
-      else
-      {
-        conn.rollback();
-        return new petInfo(rfidNum);
-      }
-    }
-    catch (SQLException e)
-    {
-      System.out.println(e.toString());
-      e.printStackTrace();
-      try
-      {
-        if (conn != null)
-          conn.rollback();
-      }
-      catch (SQLException ex)
-      {
-        System.out.println(ex.toString());
-      }
-      finally
-      {
-        return new petInfo(rfidNum);
-      }
-    }
-    catch (NullPointerException e)
-    {
-      System.out.println(e.toString());
-      e.printStackTrace();
-      try
-      {
-        if (conn != null)
-          conn.rollback();
-      }
-      catch (SQLException ex)
-      {
-        ex.printStackTrace();
-        System.out.println(ex.toString());
-      }
-      finally
-      {
-        return new petInfo(rfidNum);
-      }
-    }
   }
 
   /**

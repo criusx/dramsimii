@@ -10,8 +10,6 @@ public interface MedReminderWebService
   extends Remote
 {
 
-  public errorMessage updateUserInformation(userInfo newUser)
-    throws RemoteException;
 
   public boolean changePassword(String userID, String oldPassword, 
                                 String newPassword)
@@ -20,6 +18,11 @@ public interface MedReminderWebService
   public medReminders getReminders(String login, String password)
     throws RemoteException;
 
-  public errorMessage authorize(userInfo newUser)
+  public drugInfo getDrug(String drugCode, String UID)
+    throws RemoteException;
+
+  public MedReminder.errorMessage addReminder(String login, 
+                                              String password, 
+                                              medReminders newReminder)
     throws RemoteException;
 }
