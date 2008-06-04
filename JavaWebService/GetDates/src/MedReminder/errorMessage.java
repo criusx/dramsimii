@@ -23,7 +23,7 @@ public class errorMessage
     retryNeeded = RetryNeeded;
     errorCode = ErrorCode;
   }
-  
+
   /**
    * When there is an error
    * @param message
@@ -36,7 +36,7 @@ public class errorMessage
     this.retryNeeded = false;
   }
 
-/**
+  /**
    * When there is an error with a specific code
    * @param message
    * @param errorCode
@@ -46,10 +46,9 @@ public class errorMessage
     this.errorMessage = message;
     this.errorCode = errorCode;
     this.success = (errorCode == 0);
-    
+
     this.retryNeeded = false;
   }
-  
 
 
   public void setErrorCode(int errorCode)

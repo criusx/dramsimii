@@ -1,28 +1,36 @@
 package MedReminder;
 
-import java.sql.Timestamp;
-
 /**
  * Used to create an initial account
  */
 public class userInfo
 {
-  boolean exists;
-  String email;
-  String password;
-  String name;
-  byte[] image;
-  String phoneNumber;
-  String provider;
+  private boolean exists;
+  private String email;
+  private String password;
+  private String name;
+  private byte[] image;
+  private String phoneNumber;
+  private String provider;
 
 
   public userInfo()
   {
   }
-  
+
   public userInfo(boolean exists)
   {
     this.exists = exists;
+  }
+
+  public void setExists(boolean exists)
+  {
+    this.exists = exists;
+  }
+
+  public boolean isExists()
+  {
+    return exists;
   }
 
   public void setEmail(String email)
@@ -83,15 +91,5 @@ public class userInfo
   public String getProvider()
   {
     return provider;
-  }
-
-  public void setExists(boolean exists)
-  {
-    this.exists = exists;
-  }
-
-  public boolean isExists()
-  {
-    return exists;
   }
 }

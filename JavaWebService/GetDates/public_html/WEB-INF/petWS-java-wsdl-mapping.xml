@@ -14,111 +14,8 @@
         <namespaceURI>http://petPackage/types/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_retrievePetInformationTagCode_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}retrievePetInformationTagCodeResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>petPackage.petInfo</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}petInfo</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>password</java-variable-name>
-            <xml-element-name>password</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>workPhone</java-variable-name>
-            <xml-element-name>workPhone</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>vetName</java-variable-name>
-            <xml-element-name>vetName</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>owner</java-variable-name>
-            <xml-element-name>owner</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>breed</java-variable-name>
-            <xml-element-name>breed</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>exists</java-variable-name>
-            <xml-element-name>exists</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>homePhone</java-variable-name>
-            <xml-element-name>homePhone</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>rfidNum</java-variable-name>
-            <xml-element-name>rfidNum</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>cellPhone</java-variable-name>
-            <xml-element-name>cellPhone</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>medicalNeeds</java-variable-name>
-            <xml-element-name>medicalNeeds</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>contactInfo</java-variable-name>
-            <xml-element-name>contactInfo</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>vetPhone</java-variable-name>
-            <xml-element-name>vetPhone</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>reward</java-variable-name>
-            <xml-element-name>reward</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>image</java-variable-name>
-            <xml-element-name>image</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>email</java-variable-name>
-            <xml-element-name>email</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>vetAddress</java-variable-name>
-            <xml-element-name>vetAddress</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>name</java-variable-name>
-            <xml-element-name>name</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>medications</java-variable-name>
-            <xml-element-name>medications</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>preferredFood</java-variable-name>
-            <xml-element-name>preferredFood</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>tagCode</java-variable-name>
-            <xml-element-name>tagCode</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_updatePetInformation_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}updatePetInformationResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_retrievePetInformation_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}retrievePetInformationResponse</anonymous-type-qname>
+        <java-type>petPackage.PetWS_updatePetInformationTagCode_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}updatePetInformationTagCodeResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -135,29 +32,120 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>petPackage.errorMessage</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}errorMessage</anonymous-type-qname>
+        <java-type>petPackage.petInfo</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}petInfo</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
-            <java-variable-name>attribute1</java-variable-name>
-            <xml-element-name>attribute1</xml-element-name>
+            <java-variable-name>breed</java-variable-name>
+            <xml-element-name>breed</xml-element-name>
         </variable-mapping>
         <variable-mapping>
-            <java-variable-name>errorMessage</java-variable-name>
-            <xml-element-name>errorMessage</xml-element-name>
+            <java-variable-name>vetPhone</java-variable-name>
+            <xml-element-name>vetPhone</xml-element-name>
         </variable-mapping>
         <variable-mapping>
-            <java-variable-name>attribute2</java-variable-name>
-            <xml-element-name>attribute2</xml-element-name>
+            <java-variable-name>medications</java-variable-name>
+            <xml-element-name>medications</xml-element-name>
         </variable-mapping>
         <variable-mapping>
-            <java-variable-name>success</java-variable-name>
-            <xml-element-name>success</xml-element-name>
+            <java-variable-name>reward</java-variable-name>
+            <xml-element-name>reward</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>cellPhone</java-variable-name>
+            <xml-element-name>cellPhone</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>image</java-variable-name>
+            <xml-element-name>image</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>homePhone</java-variable-name>
+            <xml-element-name>homePhone</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>password</java-variable-name>
+            <xml-element-name>password</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>vetAddress</java-variable-name>
+            <xml-element-name>vetAddress</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>medicalNeeds</java-variable-name>
+            <xml-element-name>medicalNeeds</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>preferredFood</java-variable-name>
+            <xml-element-name>preferredFood</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>tagCode</java-variable-name>
+            <xml-element-name>tagCode</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>contactInfo</java-variable-name>
+            <xml-element-name>contactInfo</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>email</java-variable-name>
+            <xml-element-name>email</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>rfidNum</java-variable-name>
+            <xml-element-name>rfidNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>name</java-variable-name>
+            <xml-element-name>name</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>vetName</java-variable-name>
+            <xml-element-name>vetName</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>exists</java-variable-name>
+            <xml-element-name>exists</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>owner</java-variable-name>
+            <xml-element-name>owner</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>workPhone</java-variable-name>
+            <xml-element-name>workPhone</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.PetWS_updatePetInformation_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}updatePetInformationResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.PetWS_retrievePetInformationTagCode_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}retrievePetInformationTagCodeResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
         <java-type>petPackage.PetWS_authorize_ResponseStruct</java-type>
         <anonymous-type-qname>{http://petPackage/types/}authorizeResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>petPackage.PetWS_retrievePetInformation_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}retrievePetInformationResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -174,12 +162,24 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>petPackage.PetWS_updatePetInformationTagCode_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://petPackage/types/}updatePetInformationTagCodeResponse</anonymous-type-qname>
+        <java-type>petPackage.errorMessage</java-type>
+        <anonymous-type-qname>{http://petPackage/types/}errorMessage</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
+            <java-variable-name>errorMessage</java-variable-name>
+            <xml-element-name>errorMessage</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>success</java-variable-name>
+            <xml-element-name>success</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>attribute1</java-variable-name>
+            <xml-element-name>attribute1</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>attribute2</java-variable-name>
+            <xml-element-name>attribute2</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>

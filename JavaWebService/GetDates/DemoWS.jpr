@@ -49,6 +49,14 @@
          <list n="constituent-sets">
             <hash>
                <list n="pattern-filters">
+                  <string v="+*"/>
+               </list>
+               <list n="url-path">
+                  <url path="."/>
+               </list>
+            </hash>
+            <hash>
+               <list n="pattern-filters">
                   <string v="+ExceptionHandler.jsp"/>
                   <string v="+tagImage.jsp"/>
                </list>
@@ -57,12 +65,7 @@
                </list>
             </hash>
          </list>
-         <list n="pattern-filters">
-            <string v="+*"/>
-         </list>
-         <list n="url-path">
-            <url path="."/>
-         </list>
+         <list n="url-path"/>
       </hash>
    </hash>
    <hash n="oracle.jdeveloper.compiler.OjcConfiguration">

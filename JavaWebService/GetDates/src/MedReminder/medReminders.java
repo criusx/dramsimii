@@ -2,22 +2,22 @@ package MedReminder;
 
 public class medReminders
 {
-  boolean exists;
-  boolean retryNeeded;
-  String name;
-  String email;
-  String phoneNumber;
-  String provider;
-  String[] medicationName;
-  String[] reminderFrequency;
-  String[] doses;
-  String[] lastSent;
-  String[] ID;
+  private boolean exists;
+  private boolean retryNeeded;
+  private String name;
+  private String email;
+  private String phoneNumber;
+  private String provider;
+  private String[] medicationName;
+  private int[] reminderFrequency;
+  private int[] doses;
+  private String[] lastSent;
+  private String[] ID;
 
   public medReminders()
   {
   }
-  
+
   public medReminders(userInfo newUser)
   {
     exists = true;
@@ -31,21 +31,6 @@ public class medReminders
   public void setMedicationName(String[] medicationName)
   {
     this.medicationName = medicationName;
-  }
-
-  public String[] getMedicationName()
-  {
-    return medicationName;
-  }
-
-  public void setReminderFrequency(String[] reminderFrequency)
-  {
-    this.reminderFrequency = reminderFrequency;
-  }
-
-  public String[] getReminderFrequency()
-  {
-    return reminderFrequency;
   }
 
   public void setExists(boolean exists)
@@ -78,24 +63,57 @@ public class medReminders
     return name;
   }
 
- 
-
-  public void setID(String[] iD)
+  public void setEmail(String email)
   {
-    this.ID = iD;
+    this.email = email;
   }
 
-  public String[] getID()
+  public String getEmail()
   {
-    return ID;
+    return email;
   }
 
-  public void setDoses(String[] doses)
+  public void setPhoneNumber(String phoneNumber)
+  {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getPhoneNumber()
+  {
+    return phoneNumber;
+  }
+
+  public void setProvider(String provider)
+  {
+    this.provider = provider;
+  }
+
+  public String getProvider()
+  {
+    return provider;
+  }
+
+  public String[] getMedicationName()
+  {
+    return medicationName;
+  }
+
+  public void setReminderFrequency(int[] reminderFrequency)
+  {
+    this.reminderFrequency = reminderFrequency;
+  }
+
+  public int[] getReminderFrequency()
+  {
+    return reminderFrequency;
+  }
+
+  public void setDoses(int[] doses)
   {
     this.doses = doses;
   }
 
-  public String[] getDoses()
+  public int[] getDoses()
   {
     return doses;
   }
@@ -108,5 +126,15 @@ public class medReminders
   public String[] getLastSent()
   {
     return lastSent;
+  }
+
+  public void setID(String[] iD)
+  {
+    this.ID = iD;
+  }
+
+  public String[] getID()
+  {
+    return ID;
   }
 }

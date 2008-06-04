@@ -19,12 +19,85 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
+        <java-type>dhlDemo.packageScan</java-type>
+        <anonymous-type-qname>{http://dhlDemo/}packageScan</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>actionTaken</java-variable-name>
+            <xml-element-name>actionTaken</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>scanTime</java-variable-name>
+            <xml-element-name>scanTime</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>RFIDNum</java-variable-name>
+            <xml-element-name>RFIDNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>longitude</java-variable-name>
+            <xml-element-name>longitude</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>latitude</java-variable-name>
+            <xml-element-name>latitude</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>scannerID</java-variable-name>
+            <xml-element-name>scannerID</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
         <java-type>dhlDemo.packageInfo</java-type>
         <anonymous-type-qname>{http://dhlDemo/}packageInfo</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
+            <java-variable-name>zip</java-variable-name>
+            <xml-element-name>zip</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>state</java-variable-name>
+            <xml-element-name>state</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
             <java-variable-name>RFIDNum</java-variable-name>
             <xml-element-name>RFIDNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>recipientEmail</java-variable-name>
+            <xml-element-name>recipientEmail</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>recipient</java-variable-name>
+            <xml-element-name>recipient</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>city</java-variable-name>
+            <xml-element-name>city</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>country</java-variable-name>
+            <xml-element-name>country</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>recipientPager</java-variable-name>
+            <xml-element-name>recipientPager</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>trackingNumber</java-variable-name>
+            <xml-element-name>trackingNumber</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>exists</java-variable-name>
+            <xml-element-name>exists</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>longitude</java-variable-name>
+            <xml-element-name>longitude</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>latitude</java-variable-name>
+            <xml-element-name>latitude</xml-element-name>
         </variable-mapping>
         <variable-mapping>
             <java-variable-name>deliveryAddress2</java-variable-name>
@@ -34,50 +107,6 @@
             <java-variable-name>deliveryAddress</java-variable-name>
             <xml-element-name>deliveryAddress</xml-element-name>
         </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>recipientPager</java-variable-name>
-            <xml-element-name>recipientPager</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>exists</java-variable-name>
-            <xml-element-name>exists</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>recipientEmail</java-variable-name>
-            <xml-element-name>recipientEmail</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>trackingNumber</java-variable-name>
-            <xml-element-name>trackingNumber</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>longitude</java-variable-name>
-            <xml-element-name>longitude</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>country</java-variable-name>
-            <xml-element-name>country</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>state</java-variable-name>
-            <xml-element-name>state</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>zip</java-variable-name>
-            <xml-element-name>zip</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>latitude</java-variable-name>
-            <xml-element-name>latitude</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>city</java-variable-name>
-            <xml-element-name>city</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>recipient</java-variable-name>
-            <xml-element-name>recipient</xml-element-name>
-        </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
         <java-type>dhlDemo.DhlDemoWS_scanPackage_ResponseStruct</java-type>
@@ -86,35 +115,6 @@
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
             <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>dhlDemo.packageScan</java-type>
-        <anonymous-type-qname>{http://dhlDemo/}packageScan</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>RFIDNum</java-variable-name>
-            <xml-element-name>RFIDNum</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>longitude</java-variable-name>
-            <xml-element-name>longitude</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>actionTaken</java-variable-name>
-            <xml-element-name>actionTaken</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>scannerID</java-variable-name>
-            <xml-element-name>scannerID</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>scanTime</java-variable-name>
-            <xml-element-name>scanTime</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>latitude</java-variable-name>
-            <xml-element-name>latitude</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>

@@ -2,19 +2,6 @@
      xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
      version="1.1">
     <webservice-description>
-        <webservice-description-name>AssayWS</webservice-description-name>
-        <wsdl-file>WEB-INF/wsdl/AssayWS.wsdl</wsdl-file>
-        <jaxrpc-mapping-file>WEB-INF/AssayWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
-        <port-component>
-            <port-component-name>AssayWSSoapHttpPort</port-component-name>
-            <wsdl-port xmlns:wsa0="http://assayPackage/">wsa0:AssayWSSoapHttpPort</wsdl-port>
-            <service-endpoint-interface>assayPackage.AssayWS</service-endpoint-interface>
-            <service-impl-bean>
-                <servlet-link>AssayWSSoapHttpPort</servlet-link>
-            </service-impl-bean>
-        </port-component>
-    </webservice-description>
-    <webservice-description>
         <webservice-description-name>AuthenticationWebService</webservice-description-name>
         <wsdl-file>WEB-INF/wsdl/AuthenticationWebService.wsdl</wsdl-file>
         <jaxrpc-mapping-file>WEB-INF/AuthenticationWebService-java-wsdl-mapping.xml</jaxrpc-mapping-file>
@@ -24,6 +11,19 @@
             <service-endpoint-interface>authenticationPackage.AuthenticationWebService</service-endpoint-interface>
             <service-impl-bean>
                 <servlet-link>AuthenticationWebServiceSoapHttpPort</servlet-link>
+            </service-impl-bean>
+        </port-component>
+    </webservice-description>
+    <webservice-description>
+        <webservice-description-name>AssayWS</webservice-description-name>
+        <wsdl-file>WEB-INF/wsdl/AssayWS.wsdl</wsdl-file>
+        <jaxrpc-mapping-file>WEB-INF/AssayWS-java-wsdl-mapping.xml</jaxrpc-mapping-file>
+        <port-component>
+            <port-component-name>AssayWSSoapHttpPort</port-component-name>
+            <wsdl-port xmlns:wsa0="http://assayPackage/">wsa0:AssayWSSoapHttpPort</wsdl-port>
+            <service-endpoint-interface>assayPackage.AssayWS</service-endpoint-interface>
+            <service-impl-bean>
+                <servlet-link>AssayWSSoapHttpPort</servlet-link>
             </service-impl-bean>
         </port-component>
     </webservice-description>

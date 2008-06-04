@@ -10,50 +10,8 @@
         <namespaceURI>http://COREMedDemo/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>COREMedDemo.drugInfo</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}drugInfo</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>RFIDNum</java-variable-name>
-            <xml-element-name>RFIDNum</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>retryNeeded</java-variable-name>
-            <xml-element-name>retryNeeded</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>picture</java-variable-name>
-            <xml-element-name>picture</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>description</java-variable-name>
-            <xml-element-name>description</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>authenticated</java-variable-name>
-            <xml-element-name>authenticated</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>exists</java-variable-name>
-            <xml-element-name>exists</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>name</java-variable-name>
-            <xml-element-name>name</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_checkInteraction_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}checkInteractionResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_getPatientRecord_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}getPatientRecordResponse</anonymous-type-qname>
+        <java-type>COREMedDemo.COREMedDemoWS_enterPatientPhoto_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}enterPatientPhotoResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -70,8 +28,8 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_enterPatientPhoto_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}enterPatientPhotoResponse</anonymous-type-qname>
+        <java-type>COREMedDemo.COREMedDemoWS_getDrugInfo_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}getDrugInfoResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -79,57 +37,75 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_logPatientVitals_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}logPatientVitalsResponse</anonymous-type-qname>
+        <java-type>COREMedDemo.drugInfo</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}drugInfo</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
+            <java-variable-name>picture</java-variable-name>
+            <xml-element-name>picture</xml-element-name>
         </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.patientRecord</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}patientRecord</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>description</java-variable-name>
+            <xml-element-name>description</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>authenticated</java-variable-name>
+            <xml-element-name>authenticated</xml-element-name>
+        </variable-mapping>
         <variable-mapping>
             <java-variable-name>retryNeeded</java-variable-name>
             <xml-element-name>retryNeeded</xml-element-name>
         </variable-mapping>
         <variable-mapping>
-            <java-variable-name>image</java-variable-name>
-            <xml-element-name>image</xml-element-name>
+            <java-variable-name>name</java-variable-name>
+            <xml-element-name>name</xml-element-name>
         </variable-mapping>
         <variable-mapping>
             <java-variable-name>exists</java-variable-name>
             <xml-element-name>exists</xml-element-name>
         </variable-mapping>
         <variable-mapping>
-            <java-variable-name>middleName</java-variable-name>
-            <xml-element-name>middleName</xml-element-name>
+            <java-variable-name>RFIDNum</java-variable-name>
+            <xml-element-name>RFIDNum</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.COREMedDemoWS_getPatientRecord_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}getPatientRecordResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.errorReport</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}errorReport</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>errorMessage</java-variable-name>
+            <xml-element-name>errorMessage</xml-element-name>
         </variable-mapping>
         <variable-mapping>
-            <java-variable-name>allergies</java-variable-name>
-            <xml-element-name>allergies</xml-element-name>
+            <java-variable-name>retryNeeded</java-variable-name>
+            <xml-element-name>retryNeeded</xml-element-name>
         </variable-mapping>
         <variable-mapping>
-            <java-variable-name>medications</java-variable-name>
-            <xml-element-name>medications</xml-element-name>
+            <java-variable-name>errorCode</java-variable-name>
+            <xml-element-name>errorCode</xml-element-name>
         </variable-mapping>
         <variable-mapping>
-            <java-variable-name>firstName</java-variable-name>
-            <xml-element-name>firstName</xml-element-name>
+            <java-variable-name>success</java-variable-name>
+            <xml-element-name>success</xml-element-name>
         </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.COREMedDemoWS_registerDoseGiven_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}registerDoseGivenResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
         <variable-mapping>
-            <java-variable-name>lastName</java-variable-name>
-            <xml-element-name>lastName</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>RFIDnum</java-variable-name>
-            <xml-element-name>RFIDnum</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>DOB</java-variable-name>
-            <xml-element-name>DOB</xml-element-name>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
@@ -142,29 +118,8 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>COREMedDemo.errorReport</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}errorReport</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>retryNeeded</java-variable-name>
-            <xml-element-name>retryNeeded</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>errorMessage</java-variable-name>
-            <xml-element-name>errorMessage</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>success</java-variable-name>
-            <xml-element-name>success</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>errorCode</java-variable-name>
-            <xml-element-name>errorCode</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_getDrugInfo_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}getDrugInfoResponse</anonymous-type-qname>
+        <java-type>COREMedDemo.COREMedDemoWS_checkInteraction_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}checkInteractionResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -172,8 +127,53 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>COREMedDemo.COREMedDemoWS_registerDoseGiven_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://COREMedDemo/}registerDoseGivenResponse</anonymous-type-qname>
+        <java-type>COREMedDemo.patientRecord</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}patientRecord</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>middleName</java-variable-name>
+            <xml-element-name>middleName</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>lastName</java-variable-name>
+            <xml-element-name>lastName</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>medications</java-variable-name>
+            <xml-element-name>medications</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>DOB</java-variable-name>
+            <xml-element-name>DOB</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>retryNeeded</java-variable-name>
+            <xml-element-name>retryNeeded</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>exists</java-variable-name>
+            <xml-element-name>exists</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>RFIDnum</java-variable-name>
+            <xml-element-name>RFIDnum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>image</java-variable-name>
+            <xml-element-name>image</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>firstName</java-variable-name>
+            <xml-element-name>firstName</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>allergies</java-variable-name>
+            <xml-element-name>allergies</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>COREMedDemo.COREMedDemoWS_logPatientVitals_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://COREMedDemo/}logPatientVitalsResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>

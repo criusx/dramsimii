@@ -1,8 +1,8 @@
 package MedReminder;
 
-import dBInfo.dbConnectInfo;
-
 import MedReminder.errorMessage;
+
+import dBInfo.dbConnectInfo;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -31,8 +31,6 @@ import java.util.GregorianCalendar;
 import javax.imageio.ImageIO;
 
 import oracle.jdbc.driver.OracleConnection;
-import oracle.jdbc.driver.OraclePreparedStatement;
-import oracle.jdbc.driver.OracleResultSet;
 import oracle.jdbc.driver.OracleStatement;
 import oracle.jdbc.pool.OracleDataSource;
 
@@ -133,34 +131,35 @@ public class medReminderService
 
         ResultSet result = ps.executeQuery();
 
-        ArrayList medicines = new ArrayList();
-        ArrayList doses = new ArrayList();
-        ArrayList lastSents = new ArrayList();
-        ArrayList IDs = new ArrayList();
-        ArrayList frequencies = new ArrayList();
+        ArrayList<String> medicineNames = new ArrayList<String>();
+        ArrayList<Integer> doses = new ArrayList<Integer>();
+        ArrayList<String> lastNotification = new ArrayList<String>();
+        ArrayList<String> IDs = new ArrayList<String>();
+        ArrayList<Integer> notificationPeriod = new ArrayList<Integer>();
+        
         GregorianCalendar cal = new GregorianCalendar();
 
         while (result.next())
         {
           newItem.setName(result.getString("NAME"));
 
-          medicines.add(result.getString("NAME"));
+          medicineNames.add(result.getString("NAME"));
 
-          doses.add(result.getString("DOSE"));
+          doses.add(result.getInt("DOSE"));
 
           IDs.add(result.getString("DRUGID"));
 
-          frequencies.add(result.getString("FREQUENCY"));
+          notificationPeriod.add(result.getInt("FREQUENCY"));
 
           cal.setTime(result.getTimestamp("LASTDOSE"));
-          
+
           if (cal.get(Calendar.YEAR) < 2000)
           {
-            lastSents.add("Never");
+            lastNotification.add("Never");
           }
           else
           {
-            lastSents.add(months[cal.get(Calendar.MONTH)] + ", " + 
+            lastNotification.add(months[cal.get(Calendar.MONTH)] + ", " + 
                           cal.get(Calendar.DAY_OF_MONTH) + " " + 
                           cal.get(Calendar.YEAR) + " " + 
                           cal.get(Calendar.HOUR_OF_DAY) + ":" + 
@@ -171,12 +170,22 @@ public class medReminderService
         result.close();
         ps.close();
 
-        newItem.setMedicationName((String[]) medicines.toArray(new String[medicines.size()]));
-        newItem.setDoses((String[]) doses.toArray(new String[doses.size()]));
-        newItem.setLastSent((String[]) lastSents.toArray(new String[lastSents.size()]));
-        newItem.setID((String[]) IDs.toArray(new String[IDs.size()]));
-        newItem.setReminderFrequency((String[]) frequencies.toArray(new String[frequencies.size()]));
+        newItem.setMedicationName((String[]) medicineNames.toArray(new String[medicineNames.size()]));
 
+        int[] doseArray = new int[doses.size()];
+        for (int i = 0; i < doseArray.length; i++)
+          doseArray[i] = ((Integer) doses.get(i)).intValue();
+        newItem.setDoses(doseArray);
+
+        newItem.setLastSent((String[]) lastNotification.toArray(new String[lastNotification.size()]));
+
+        newItem.setID((String[]) IDs.toArray(new String[IDs.size()]));
+
+        int[] reminderArray = new int[notificationPeriod.size()];
+        for (int i = 0; i < reminderArray.length; i++)
+          reminderArray[i] = ((Integer) notificationPeriod.get(i)).intValue();
+        newItem.setReminderFrequency(reminderArray);
+        System.out.println("Successful getReminders" + login);
         return newItem;
       }
 
@@ -304,11 +313,146 @@ public class medReminderService
           conn.prepareStatement("INSERT INTO MEDREMINDERS (MED, DOSE, LASTDOSE, EMAIL, FREQUENCY) VALUES (?, ?, ?, ?, ?)");
         System.out.println(newReminder.getID()[0]);
         ps.setString(1, newReminder.getID()[0]);
-        ps.setString(2, newReminder.getDoses()[0]);
+        ps.setInt(2, newReminder.getDoses()[0]);
         ps.setTimestamp(3, new Timestamp(0));
         ps.setString(4, login);
-        ps.setString(5, newReminder.getReminderFrequency()[0]);
+        ps.setInt(5, newReminder.getReminderFrequency()[0]);
 
+        ps.execute();
+
+        ps.close();
+        conn.commit();
+        System.out.println("Added reminder " + newReminder.getID()[0] + 
+                           " to " + login);
+        return new errorMessage();
+      }
+
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+
+      return new errorMessage();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+
+      return new errorMessage();
+    }
+    catch (NoSuchAlgorithmException e)
+    {
+      e.printStackTrace();
+
+      return new errorMessage();
+    }
+    finally
+    {
+      // close up the connection
+      try
+      {
+        if (conn != null)
+        {
+          conn.close();
+        }
+      }
+      catch (SQLException ex)
+      {
+        ex.printStackTrace();
+        try
+        {
+          if (conn != null)
+            conn.close();
+        }
+        catch (SQLException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
+    }
+  }
+
+  public errorMessage delReminder(String login, String password, 
+                                  medReminders newReminder)
+  {
+    // ignore blank requests
+    if (login == null || password == null)
+    {
+      System.out.println("Null value.");
+      return new errorMessage("Null value.");
+    }
+
+    // if they can't be real tags anyway
+    else if (login.length() < 1 || password.length() < 1)
+    {
+      System.out.println("Value too short.");
+      return new errorMessage("Value too short.");
+    }
+
+    if (!login.toUpperCase().matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.(?:[A-Z]{2}|COM|ORG|NET|GOV|MIL|BIZ|INFO|MOBI|NAME|AERO|JOBS|MUSEUM)$"))
+    {
+      System.out.println("Not a valid email address: " + login);
+      return new errorMessage("Not a valid email address.");
+    }
+
+    OracleDataSource ods;
+    OracleConnection conn = null;
+
+    try
+    {
+      ods = new OracleDataSource();
+      ods.setURL(dbConnectInfo.getConnectInfo());
+      conn = (OracleConnection) ods.getConnection();
+      conn.setAutoCommit(false);
+
+      // set case insensitivity
+      OracleStatement psC = (OracleStatement) conn.createStatement();
+      psC.execute("alter session set NLS_COMP=ANSI");
+      psC.execute("alter session set NLS_SORT=BINARY_CI");
+
+      psC.close();
+
+      //      if (logThis)
+      //      {
+      //        try
+      //        {
+      //          // first record this
+      //          PreparedStatement ps = 
+      //            conn.prepareStatement("INSERT INTO SHOESLOOKUPS VALUES (?, ?, ?, ?, ?, ?)");
+      //
+      //          ps.setString(1, UID);
+      //          ps.setString(2, RFIDNumA);
+      //          ps.setFloat(3, lat);
+      //          ps.setFloat(4, longit);
+      //          ps.setTimestamp(5, 
+      //                          new Timestamp((new java.util.Date()).getTime()));
+      //          ps.setString(6, RFIDNumB);
+      //
+      //          ps.execute();
+      //          ps.close();
+      //        }
+      //        catch (SQLException e)
+      //        {
+      //          System.out.println("Insert lookup failed." + e.getErrorCode() + 
+      //                             e.getMessage());
+      //          e.printStackTrace();
+      //        }
+      //      }
+
+      userInfo newUser = null;
+      // make sure these are the correct credentials
+      if ((newUser = checkPassword(login, password, conn)) == null)
+      {
+        return new errorMessage("Invalid login/password.");
+      }
+      else
+      {
+        // TODO:
+        PreparedStatement ps = 
+          conn.prepareStatement("DELETE FROM MEDREMINDERS WHERE ID = ? AND DOSE = ?");
+
+        ps.setString(1, newReminder.getID()[0]);
+        ps.setInt(2, newReminder.getDoses()[0]);
         ps.execute();
 
         ps.close();
@@ -462,7 +606,10 @@ public class medReminderService
         }
         else
         {
-          pR.setReminderIntervals((String[]) al.toArray(new String[al.size()]));
+          int[] reminderArray = new int[al.size()];
+          for (int i = 0; i < reminderArray.length; i++)
+            reminderArray[i] = ((Integer) al.get(i)).intValue();
+          pR.setReminderIntervals(reminderArray);
         }
 
         // get the available doses
@@ -478,7 +625,7 @@ public class medReminderService
 
         while (rs.next())
         {
-          al.add("" + rs.getInt("DOSE"));
+          al.add(rs.getInt("DOSE"));
         }
 
         if (al.isEmpty())
@@ -489,7 +636,10 @@ public class medReminderService
         }
         else
         {
-          pR.setDoses((String[]) al.toArray(new String[al.size()]));
+          int[] ints = new int[al.size()];
+          for (int i = 0; i < ints.length; i++)
+            ints[i] = ((Integer) al.get(i)).intValue();
+          pR.setDoses(ints);
         }
 
         System.out.println("Drug Lookup (success):" + drugCode);
@@ -954,9 +1104,6 @@ public class medReminderService
         //Blob b = rs.getBlob("PICTURE");
         BLOB b = BLOB.createTemporary(conn, true, BLOB.DURATION_SESSION);
 
-        //b.truncate(0);
-        //OutputStream out = b.setBinaryStream(0L);
-        //out.write(newPet.getImage(), 0, newPet.getImage().length);
         if (newUser.getImage() != null)
         {
           b.setBytes(1L, newUser.getImage());

@@ -19,8 +19,8 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getUniqueUIDs_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getUniqueUIDsResponse</anonymous-type-qname>
+        <java-type>authenticationPackage.AuthenticationWebService_getSince_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getSinceResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
@@ -37,12 +37,45 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getRoute_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getRouteResponse</anonymous-type-qname>
+        <java-type>authenticationPackage.AuthenticationWebService_getUniqueUIDs_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getUniqueUIDsResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
             <xml-element-name>return</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>authenticationPackage.itemInfo</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}itemInfo</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>ownerGUID</java-variable-name>
+            <xml-element-name>ownerGUID</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>description</java-variable-name>
+            <xml-element-name>description</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>authenticated</java-variable-name>
+            <xml-element-name>authenticated</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>retryNeeded</java-variable-name>
+            <xml-element-name>retryNeeded</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>exists</java-variable-name>
+            <xml-element-name>exists</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>image</java-variable-name>
+            <xml-element-name>image</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>RFIDNum</java-variable-name>
+            <xml-element-name>RFIDNum</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
@@ -55,45 +88,12 @@
         </variable-mapping>
     </java-xml-type-mapping>
     <java-xml-type-mapping>
-        <java-type>authenticationPackage.AuthenticationWebService_getSince_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}getSinceResponse</anonymous-type-qname>
+        <java-type>authenticationPackage.AuthenticationWebService_getRoute_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://authenticationPackage/}getRouteResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>
             <xml-element-name>return</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>authenticationPackage.itemInfo</java-type>
-        <anonymous-type-qname>{http://authenticationPackage/}itemInfo</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>RFIDNum</java-variable-name>
-            <xml-element-name>RFIDNum</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>ownerGUID</java-variable-name>
-            <xml-element-name>ownerGUID</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>retryNeeded</java-variable-name>
-            <xml-element-name>retryNeeded</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>description</java-variable-name>
-            <xml-element-name>description</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>authenticated</java-variable-name>
-            <xml-element-name>authenticated</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>image</java-variable-name>
-            <xml-element-name>image</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>exists</java-variable-name>
-            <xml-element-name>exists</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
     <service-interface-mapping>

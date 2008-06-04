@@ -14,64 +14,6 @@
         <namespaceURI>http://winePackage/</namespaceURI>
     </package-mapping>
     <java-xml-type-mapping>
-        <java-type>winepackage.wineBottle</java-type>
-        <anonymous-type-qname>{http://winePackage/}wineBottle</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>year</java-variable-name>
-            <xml-element-name>year</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>type</java-variable-name>
-            <xml-element-name>type</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>retryNeeded</java-variable-name>
-            <xml-element-name>retryNeeded</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>authenticated</java-variable-name>
-            <xml-element-name>authenticated</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>image</java-variable-name>
-            <xml-element-name>image</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>lookedUpTimes</java-variable-name>
-            <xml-element-name>lookedUpTimes</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>exists</java-variable-name>
-            <xml-element-name>exists</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>vineyard</java-variable-name>
-            <xml-element-name>vineyard</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>origin</java-variable-name>
-            <xml-element-name>origin</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>rfidNum</java-variable-name>
-            <xml-element-name>rfidNum</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>review</java-variable-name>
-            <xml-element-name>review</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>winepackage.WineWS_getWineAccessesSince_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://winePackage/}getWineAccessesSinceResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
         <java-type>winepackage.WineWS_enterBottleInformation_ResponseStruct</java-type>
         <anonymous-type-qname>{http://winePackage/}enterBottleInformationResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
@@ -83,6 +25,64 @@
     <java-xml-type-mapping>
         <java-type>winepackage.WineWS_retrieveBottleInformation_ResponseStruct</java-type>
         <anonymous-type-qname>{http://winePackage/}retrieveBottleInformationResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>winepackage.wineBottle</java-type>
+        <anonymous-type-qname>{http://winePackage/}wineBottle</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>lookedUpTimes</java-variable-name>
+            <xml-element-name>lookedUpTimes</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>vineyard</java-variable-name>
+            <xml-element-name>vineyard</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>authenticated</java-variable-name>
+            <xml-element-name>authenticated</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>rfidNum</java-variable-name>
+            <xml-element-name>rfidNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>retryNeeded</java-variable-name>
+            <xml-element-name>retryNeeded</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>origin</java-variable-name>
+            <xml-element-name>origin</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>exists</java-variable-name>
+            <xml-element-name>exists</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>image</java-variable-name>
+            <xml-element-name>image</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>year</java-variable-name>
+            <xml-element-name>year</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>type</java-variable-name>
+            <xml-element-name>type</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>review</java-variable-name>
+            <xml-element-name>review</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>winepackage.WineWS_getWineAccessesSince_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://winePackage/}getWineAccessesSinceResponse</anonymous-type-qname>
         <qname-scope>complexType</qname-scope>
         <variable-mapping>
             <java-variable-name>result</java-variable-name>

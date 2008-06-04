@@ -5,8 +5,8 @@ public class drugInfo
   private String RFIDNum;
   private String description;
   private byte[] picture;
-  private String[] reminderIntervals;
-  private String[] doses;
+  private int[] reminderIntervals;
+  private int[] doses;
   private String name;
   private boolean authenticated;
   private boolean exists;
@@ -62,6 +62,26 @@ public class drugInfo
     return picture;
   }
 
+  public void setReminderIntervals(int[] reminderIntervals)
+  {
+    this.reminderIntervals = reminderIntervals;
+  }
+
+  public int[] getReminderIntervals()
+  {
+    return reminderIntervals;
+  }
+
+  public void setDoses(int[] doses)
+  {
+    this.doses = doses;
+  }
+
+  public int[] getDoses()
+  {
+    return doses;
+  }
+
   public void setName(String name)
   {
     this.name = name;
@@ -100,25 +120,5 @@ public class drugInfo
   public boolean isRetryNeeded()
   {
     return retryNeeded;
-  }
-
-  public void setReminderIntervals(String[] reminderIntervals)
-  {
-    this.reminderIntervals = reminderIntervals;
-  }
-
-  public String[] getReminderIntervals()
-  {
-    return reminderIntervals;
-  }
-
-  public void setDoses(String[] doses)
-  {
-    this.doses = doses;
-  }
-
-  public String[] getDoses()
-  {
-    return doses;
   }
 }

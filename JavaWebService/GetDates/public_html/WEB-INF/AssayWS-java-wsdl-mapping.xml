@@ -7,12 +7,93 @@
 
     <package-mapping>
         <package-type>assayPackage</package-type>
-        <namespaceURI>http://assayPackage/types/</namespaceURI>
+        <namespaceURI>http://assayPackage/</namespaceURI>
     </package-mapping>
     <package-mapping>
         <package-type>assayPackage</package-type>
-        <namespaceURI>http://assayPackage/</namespaceURI>
+        <namespaceURI>http://assayPackage/types/</namespaceURI>
     </package-mapping>
+    <java-xml-type-mapping>
+        <java-type>assayPackage.assayResultResponse</java-type>
+        <anonymous-type-qname>{http://assayPackage/types/}assayResultResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>needRetry</java-variable-name>
+            <xml-element-name>needRetry</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>success</java-variable-name>
+            <xml-element-name>success</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>assayPackage.AssayWS_submitAssayResult_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://assayPackage/types/}submitAssayResultResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>assayPackage.assayInfo</java-type>
+        <anonymous-type-qname>{http://assayPackage/types/}assayInfo</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>sessionID</java-variable-name>
+            <xml-element-name>sessionID</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>timer</java-variable-name>
+            <xml-element-name>timer</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>afterMessage</java-variable-name>
+            <xml-element-name>afterMessage</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>rfidNum</java-variable-name>
+            <xml-element-name>rfidNum</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>needRetry</java-variable-name>
+            <xml-element-name>needRetry</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>exists</java-variable-name>
+            <xml-element-name>exists</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>beforeMessage</java-variable-name>
+            <xml-element-name>beforeMessage</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>descriptionImage</java-variable-name>
+            <xml-element-name>descriptionImage</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>resultImages</java-variable-name>
+            <xml-element-name>resultImages</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>assayPackage.AssayWS_retrieveAssayInformation_ResponseStruct</java-type>
+        <anonymous-type-qname>{http://assayPackage/types/}retrieveAssayInformationResponse</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>result</java-variable-name>
+            <xml-element-name>result</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>assayPackage.assayImage</java-type>
+        <anonymous-type-qname>{http://assayPackage/types/}assayImage</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>image</java-variable-name>
+            <xml-element-name>image</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
     <java-xml-type-mapping>
         <java-type>assayPackage.assayImage</java-type>
         <anonymous-type-qname>{http://assayPackage/}assayImage</anonymous-type-qname>
@@ -22,6 +103,7 @@
             <xml-element-name>image</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
+
     <java-xml-type-mapping>
         <java-type>assayPackage.AssayWS_retrieveAssayInformation_ResponseStruct</java-type>
         <anonymous-type-qname>{http://assayPackage/}retrieveAssayInformationResponse</anonymous-type-qname>
@@ -31,6 +113,7 @@
             <xml-element-name>result</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
+
     <java-xml-type-mapping>
         <java-type>assayPackage.assayInfo</java-type>
         <anonymous-type-qname>{http://assayPackage/}assayInfo</anonymous-type-qname>
@@ -72,6 +155,7 @@
             <xml-element-name>needRetry</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
+
     <java-xml-type-mapping>
         <java-type>assayPackage.AssayWS_submitAssayResult_ResponseStruct</java-type>
         <anonymous-type-qname>{http://assayPackage/}submitAssayResultResponse</anonymous-type-qname>
@@ -81,6 +165,7 @@
             <xml-element-name>result</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
+
     <java-xml-type-mapping>
         <java-type>assayPackage.assayResultResponse</java-type>
         <anonymous-type-qname>{http://assayPackage/}assayResultResponse</anonymous-type-qname>
@@ -92,59 +177,6 @@
         <variable-mapping>
             <java-variable-name>needRetry</java-variable-name>
             <xml-element-name>needRetry</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-    <java-xml-type-mapping>
-        <java-type>assayPackage.assayImage</java-type>
-        <anonymous-type-qname>{http://assayPackage/types/}assayImage</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>image</java-variable-name>
-            <xml-element-name>image</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-
-    <java-xml-type-mapping>
-        <java-type>assayPackage.AssayWS_retrieveAssayInformation_ResponseStruct</java-type>
-        <anonymous-type-qname>{http://assayPackage/types/}retrieveAssayInformationResponse</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>result</java-variable-name>
-            <xml-element-name>result</xml-element-name>
-        </variable-mapping>
-    </java-xml-type-mapping>
-
-    <java-xml-type-mapping>
-        <java-type>assayPackage.assayInfo</java-type>
-        <anonymous-type-qname>{http://assayPackage/types/}assayInfo</anonymous-type-qname>
-        <qname-scope>complexType</qname-scope>
-        <variable-mapping>
-            <java-variable-name>timer</java-variable-name>
-            <xml-element-name>timer</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>afterMessage</java-variable-name>
-            <xml-element-name>afterMessage</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>descriptionImage</java-variable-name>
-            <xml-element-name>descriptionImage</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>exists</java-variable-name>
-            <xml-element-name>exists</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>sessionID</java-variable-name>
-            <xml-element-name>sessionID</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>resultImages</java-variable-name>
-            <xml-element-name>resultImages</xml-element-name>
-        </variable-mapping>
-        <variable-mapping>
-            <java-variable-name>beforeMessage</java-variable-name>
-            <xml-element-name>beforeMessage</xml-element-name>
         </variable-mapping>
     </java-xml-type-mapping>
 

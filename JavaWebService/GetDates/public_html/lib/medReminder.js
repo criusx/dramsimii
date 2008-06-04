@@ -12,11 +12,13 @@ $(document) .ready(function ()
     });
     $("#newReminderForm") .ajaxForm(
     {
-        beforeSubmit: addNewReminder
+        beforeSubmit: addNewReminder,
+        clearForm: true
     });
     $("#newMedForm") .ajaxForm(
     {
-        beforeSubmit:addMed
+        beforeSubmit:addMed,
+        clearForm: true
     });
 });
 // pre-submit callback
@@ -70,7 +72,7 @@ function getReminderData(login, password)
         var newCell;
         for (var i = 0; i < results.medicationName.length; i++)
         {
-            addReminderToTable(results.medicationName[i], results.doses[i] + " mg", results.lastSent[i], results.reminderFrequency[i], results.ID[i]);
+            addReminderToTable(results.medicationName[i], results.doses[i] , results.lastSent[i], results.reminderFrequency[i], results.ID[i]);
         }
         // remove the block on the screen
         jQuery.unblockUI();
@@ -222,7 +224,7 @@ function addReminderToTable(medicationName, dose, lastSent, frequency, ID)
     newRow.appendChild(newCell);
     
     newCell = document.createElement("td");
-    newCell.appendChild(document.createTextNode(dose));
+    newCell.appendChild(document.createTextNode(dose + " mg"));
     newRow.appendChild(newCell);
     
     newCell = document.createElement("td");
@@ -243,12 +245,19 @@ function addReminderToTable(medicationName, dose, lastSent, frequency, ID)
     newCell = document.createElement("td");
     var newImage = document.createElement("img");
     newImage.setAttribute("src", "images/deleteSmall.png");
+    newImage.setAttribute("onclick", "javascript:deleteReminder(" + ID + "," + dose + ");");
     newImage.setAttribute("alt", "Delete this reminder.");
     newCell.appendChild(newImage);
     newRow.appendChild(newCell);
     
-    document.getElementById("tableBody") .appendChild(newRow);
+    newRow.setAttribute("id", ID + dose);
     
+    document.getElementById("tableBody") .appendChild(newRow);
+}
+
+function deleteReminder(ID, dose)
+{
+    $("#" + ID + dose) .remove();
 }
 
 function addMed(formData, jqForm, options)

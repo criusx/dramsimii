@@ -2,17 +2,17 @@
      xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
      version="2.4">
     <servlet>
-        <description>Web Service AssayWSSoapHttpPort</description>
-        <display-name>Web Service AssayWSSoapHttpPort</display-name>
-        <servlet-name>AssayWSSoapHttpPort</servlet-name>
-        <servlet-class>assayPackage.assayService</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
         <description>Web Service AuthenticationWebServiceSoapHttpPort</description>
         <display-name>Web Service AuthenticationWebServiceSoapHttpPort</display-name>
         <servlet-name>AuthenticationWebServiceSoapHttpPort</servlet-name>
         <servlet-class>authenticationPackage.authenticationService</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <description>Web Service AssayWSSoapHttpPort</description>
+        <display-name>Web Service AssayWSSoapHttpPort</display-name>
+        <servlet-name>AssayWSSoapHttpPort</servlet-name>
+        <servlet-class>assayPackage.assayService</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
@@ -72,12 +72,12 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AssayWSSoapHttpPort</servlet-name>
-        <url-pattern>AssayWSSoapHttpPort</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>AuthenticationWebServiceSoapHttpPort</servlet-name>
         <url-pattern>AuthenticationWebServiceSoapHttpPort</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssayWSSoapHttpPort</servlet-name>
+        <url-pattern>AssayWSSoapHttpPort</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>COREMedDemoWSSoap12HttpPort</servlet-name>

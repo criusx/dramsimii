@@ -1,12 +1,4 @@
 <oracle-webservices xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/oracle-webservices-10_0.xsd">
-    <webservice-description name="AssayWS">
-        <port-component name="AssayWSSoapHttpPort">
-            <operations>
-                <operation name="retrieveAssayInformation" input="{http://assayPackage/}retrieveAssayInformationElement"/>
-                <operation name="submitAssayResult" input="{http://assayPackage/}submitAssayResultElement"/>
-            </operations>
-        </port-component>
-    </webservice-description>
     <webservice-description name="AuthenticationWebService">
         <port-component name="AuthenticationWebServiceSoapHttpPort">
             <runtime enabled="">
@@ -116,6 +108,14 @@
             </operations>
         </port-component>
     </webservice-description>
+    <webservice-description name="AssayWS">
+        <port-component name="AssayWSSoapHttpPort">
+            <operations>
+                <operation name="retrieveAssayInformation" input="{http://assayPackage/types/}retrieveAssayInformationElement"/>
+                <operation name="submitAssayResult" input="{http://assayPackage/types/}submitAssayResultElement"/>
+            </operations>
+        </port-component>
+    </webservice-description>
     <webservice-description name="COREMedDemoWS">
         <port-component name="COREMedDemoWSSoap12HttpPort">
             <operations>
@@ -204,7 +204,9 @@
         <port-component name="MedReminderWebServiceSoapHttpPort">
             <operations>
                 <operation name="addReminder" input="{http://MedReminder/}addReminderElement"/>
+                <operation name="authorize" input="{http://MedReminder/}authorizeElement"/>
                 <operation name="changePassword" input="{http://MedReminder/}changePasswordElement"/>
+                <operation name="delReminder" input="{http://MedReminder/}delReminderElement"/>
                 <operation name="getDrug" input="{http://MedReminder/}getDrugElement"/>
                 <operation name="getReminders" input="{http://MedReminder/}getRemindersElement"/>
             </operations>
