@@ -1,4 +1,5 @@
-
+var storedLogin = null;
+var storedPassword = null;
 // initialize the document
 $(document) .ready(function ()
 {
@@ -21,6 +22,7 @@ $(document) .ready(function ()
         clearForm: true
     });
 });
+
 // pre-submit callback
 function showRequest(formData, jqForm, options)
 {
@@ -38,16 +40,41 @@ function showRequest(formData, jqForm, options)
     getReminderData(form.login.value, form.password.value);
     return false;
 }
+
+
+function showLogin()
+{
+    if (storedLogin == null)
+    {
+        // then try to log the user in
+        $("#loginPasswordForm") [0].reset();
+        jQuery.blockUI(
+        {
+            message: $("#loginPasswordBox")
+        });
+    }
+    else
+    {
+        // else do logout stuff
+        $("#loginText") .children("a") .empty();
+        $("#loginText") .children("a") [0].appendChild(document.createTextNode("Login"));
+        $("#signupText") .fadeIn("slow");
+        // store login/password for future ops
+        storedLogin = null;
+        storedPassword = null;
+        $("#remindersDiv") .slideUp("slow");
+    }
+}
+
 function getReminderData(login, password)
 {
     $.blockUI(
     {
         message: "Please wait..."
     });
-    $("#storedEmail") [0] .value = login;
-    $("#storedPassword") [0] .value = password;
-    var results = MedReminderWebServiceSoapHttpPort_getReminders(login, password);
-    if (results.retryNeeded == true)
+    
+    var reminderRecord = MedReminderWebServiceSoapHttpPort_getReminders(login, password);
+    if (reminderRecord.retryNeeded == true)
     {
         jQuery.blockUI(
         {
@@ -55,7 +82,7 @@ function getReminderData(login, password)
         });
         setTimeout(jQuery.unblockUI, 4000);
     }
-    else if (results.exists == "false")
+    else if (reminderRecord.exists == "false")
     {
         jQuery.blockUI(
         {
@@ -65,14 +92,20 @@ function getReminderData(login, password)
     }
     else
     {
+        $("#loginText") .children("a") .empty();
+        $("#loginText") .children("a") [0].appendChild(document.createTextNode("Sign out"));
+        $("#signupText") .fadeOut("slow");
+        // store login/password for future ops
+        storedLogin = login;
+        storedPassword = password;
         // clear existing elements from the table
         $("tbody#tableBody") .children("tr") .remove();
         // add the results to the table
         var newRow;
         var newCell;
-        for (var i = 0; i < results.medicationName.length; i++)
+        for (var i = 0; i < reminderRecord.reminders.length; i++)
         {
-            addReminderToTable(results.medicationName[i], results.doses[i] , results.lastSent[i], results.reminderFrequency[i], results.ID[i]);
+            addReminderToTable(reminderRecord.reminders[i].medicationName, reminderRecord.reminders[i].doses, reminderRecord.reminders[i].lastSent, reminderRecord.reminders[i].reminderFrequency, reminderRecord.reminders[i].ID, "fast");
         }
         // remove the block on the screen
         jQuery.unblockUI();
@@ -86,6 +119,7 @@ function getReminderData(login, password)
     //setTimeout(jQuery.unblockUI,4000);
     return true;
 }
+
 function processSignup(formData, jqForm, options)
 {
     var form = jqForm[0];
@@ -111,15 +145,17 @@ function processSignup(formData, jqForm, options)
     {
     };
     newUser.name = form.signupName.value;
+    
     newUser.email = form.email.value;
     
-    newUser.password = form.password.value;
-    
     newUser.phoneNumber = form.phoneNumber.value;
+    
     newUser.provider = form.provider.value;
-    newUser.exists = true;
+    
     newUser.image = [];
-    var returnValue = MedReminderWebServiceSoapHttpPort_authorize(newUser);
+    
+    var returnValue = MedReminderWebServiceSoapHttpPort_authorize(newUser, form.password.value);
+    
     if (returnValue.success == "true")
     {
         // display reminders page
@@ -131,10 +167,11 @@ function processSignup(formData, jqForm, options)
         {
             message: returnValue.errorMessage
         });
-        setTimeout($.unblockUI(), 4000);
+        setTimeout($.unblockUI, 4000);
     }
     return false;
 }
+
 function toggle()
 {
     if ($("#remindersDiv") .is(":hidden"))
@@ -145,6 +182,7 @@ function toggle()
         $("#remindersDiv") .slideUp("slow");
     }
 }
+
 function showSignup()
 {
     if ($("#remindersDiv") .is(":visible"))
@@ -153,14 +191,8 @@ function showSignup()
     }
     $("#signupDiv") .slideDown("slow");
 }
-function showLogin()
-{
-    $("#loginPasswordForm") [0].reset();
-    jQuery.blockUI(
-    {
-        message: $("#loginPasswordBox")
-    });
-}
+
+
 function addReminderClick()
 {
     $.blockUI(
@@ -168,50 +200,65 @@ function addReminderClick()
         message: $("#newReminderBox")
     });
 }
+
 function addNewReminder(formData, jqForm, options)
 {
     $.blockUI(
     {
         message: "Please wait..."
     });
+    
     var medInfo = MedReminderWebServiceSoapHttpPort_getDrug(jqForm[0].medID.value, "FFFFFFFB");
     
-    $("#medName") .empty();
-    $("#medName") .append(document.createTextNode(medInfo.name));
-    
-    $("#reminderDoseSelect") .empty();
-    $("#reminderFrequencySelect") .empty();
-    
-    for each(x in medInfo.reminderIntervals)
+    if (medInfo.exists == "true")
     {
-        var newOption = document.createElement("option");
-        newOption.appendChild(document.createTextNode(x));
-        $("#reminderFrequencySelect") .append(newOption);
+        $("#medName") .empty();
+        $("#reminderDoseSelect") .empty();
+        $("#reminderFrequencySelect") .empty();
+        $("#medDescription") .empty();
+        
+        $("#medName") .append(document.createTextNode(medInfo.name));
+        
+        for each(x in medInfo.reminderIntervals)
+        {
+            var newOption = document.createElement("option");
+            newOption.appendChild(document.createTextNode(x));
+            $("#reminderFrequencySelect") .append(newOption);
+        }
+        
+        for each(x in medInfo.doses)
+        {
+            var newOption = document.createElement("option");
+            newOption.appendChild(document.createTextNode(x));
+            $("#reminderDoseSelect") .append(newOption);
+        }
+        
+        $("#newMedPic") [0].setAttribute("src", "medImage.jsp?ID=" + medInfo.RFIDNum);
+        
+        $("#newMedID") [0] .value = medInfo.RFIDNum;
+        
+        $("#storedName") [0].value = medInfo.name;
+        
+        $("#medDescription") .append(document.createTextNode(medInfo.description));
+        
+        $.blockUI(
+        {
+            message: $("#newMedBox")
+        });
+    }
+    else
+    {
+        $.blockUI(
+        {
+            message: "Med ID not found."
+        });
+        setTimeout($.unblockUI, 3000);
     }
     
-    for each(x in medInfo.doses)
-    {
-        var newOption = document.createElement("option");
-        newOption.appendChild(document.createTextNode(x));
-        $("#reminderDoseSelect") .append(newOption);
-    }
-    
-    $("#newMedPic") [0].setAttribute("src", "medImage.jsp?ID=" + medInfo.RFIDNum);
-    
-    $("#newMedID") [0] .value = medInfo.RFIDNum;
-    $("#storedName") [0].value = medInfo.name;
-    
-    $("medDescription") .empty();
-    $("#medDescription") .append(document.createTextNode(medInfo.description));
-    
-    $.blockUI(
-    {
-        message: $("#newMedBox")
-    });
     return false;
 }
 
-function addReminderToTable(medicationName, dose, lastSent, frequency, ID)
+function addReminderToTable(medicationName, dose, lastSent, frequency, ID, speed)
 {
     // add the results to the table
     var newRow;
@@ -252,12 +299,44 @@ function addReminderToTable(medicationName, dose, lastSent, frequency, ID)
     
     newRow.setAttribute("id", ID + dose);
     
+    newRow.setAttribute("style", "display:none;");
+    
     document.getElementById("tableBody") .appendChild(newRow);
+    
+    $("#" + ID + dose) .fadeIn(speed);
 }
 
 function deleteReminder(ID, dose)
 {
-    $("#" + ID + dose) .remove();
+    var reminderToDelete =
+    {
+    };
+    reminderToDelete.reminderPeriod = "0";
+    
+    reminderToDelete.medicationName = " ";
+    
+    reminderToDelete.ID = ID;
+    
+    reminderToDelete.lastSent = "0";
+    
+    reminderToDelete.doses = dose;
+    
+    var result = MedReminderWebServiceSoapHttpPort_delReminder(storedLogin, storedPassword, reminderToDelete);
+    
+    if (result.success == "true")
+    {
+        $("#" + ID + dose) .fadeOut(1500, function ()
+        {
+            $(this) .remove();
+        });
+    }
+    else
+    {
+        $.blockUI(
+        {
+            message : "Could not delete reminder, please notify the sysadmin"
+        });
+    }
 }
 
 function addMed(formData, jqForm, options)
@@ -266,20 +345,27 @@ function addMed(formData, jqForm, options)
     var newReminder =
     {
     };
-    newReminder.retryNeeded = "false";
-    newReminder.name = " ";
-    newReminder.exists = "true";
-    newReminder.lastSent = [0];
-    newReminder.ID = [form.newMedID.value];
-    newReminder.medicationName = [ "" ];
-    newReminder.doses = [form.reminderDoseSelect.value];
-    newReminder.reminderFrequency = [form.reminderFrequencySelect.value];
-    var errorCode = MedReminderWebServiceSoapHttpPort_addReminder(form.storedEmail.value, form.storedPassword.value, newReminder);
+    newReminder.medicationName = " ";
+    newReminder.lastSent = "0";
+    newReminder.ID = form.newMedID.value;
+    newReminder.dose = form.reminderDoseSelect.value;
+    newReminder.reminderPeriod = form.reminderFrequencySelect.value;
+    
+    var errorCode = MedReminderWebServiceSoapHttpPort_addReminder(storedLogin, storedPassword, newReminder);
+    
     if (errorCode.success == "true")
     {
-        addReminderToTable(form.storedName.value, form.reminderDoseSelect.value, "Never", form.reminderFrequencySelect.value, form.newMedID.value);
+        setTimeout($.unblockUI, 1000);
+        addReminderToTable(form.storedName.value, form.reminderDoseSelect.value, "Never", form.reminderFrequencySelect.value, form.newMedID.value, "slow");
+    }
+    else
+    {
+        $.blockUI(
+        {
+            message: "Error adding reminder, please tell the sysadmin."
+        });
+        setTimeout($.unblockUI, 3000);
     }
     
-    setTimeout($.unblockUI, 1000);
     return false;
 }

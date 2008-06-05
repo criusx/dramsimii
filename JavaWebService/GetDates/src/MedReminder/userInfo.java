@@ -5,32 +5,23 @@ package MedReminder;
  */
 public class userInfo
 {
-  private boolean exists;
   private String email;
-  private String password;
   private String name;
   private byte[] image;
   private String phoneNumber;
   private String provider;
 
-
   public userInfo()
   {
-  }
-
-  public userInfo(boolean exists)
+  }  
+  
+  public userInfo(String email, String name, byte[] image, String phoneNumber, String provider)
   {
-    this.exists = exists;
-  }
-
-  public void setExists(boolean exists)
-  {
-    this.exists = exists;
-  }
-
-  public boolean isExists()
-  {
-    return exists;
+    this.email = email;
+    this.name = name;
+    this.image = image;
+    this.phoneNumber = phoneNumber;
+    this.provider = provider;
   }
 
   public void setEmail(String email)
@@ -43,15 +34,6 @@ public class userInfo
     return email;
   }
 
-  public void setPassword(String password)
-  {
-    this.password = password;
-  }
-
-  public String getPassword()
-  {
-    return password;
-  }
 
   public void setName(String name)
   {

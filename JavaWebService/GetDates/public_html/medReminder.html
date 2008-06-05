@@ -22,8 +22,6 @@
           <fieldset>
             <input type="hidden" name="newMedID" id="newMedID" />
             <input type="hidden" name="storedName" id="storedName" />
-            <input type="hidden" id="storedEmail" name="storedEmail"/>
-            <input type="hidden" id="storedPassword" name="storedPassword"/>
             <label>Reminder period (min)</label>
             <select id="reminderFrequencySelect" name="reminderFrequencySelect">
               <option>a</option>
@@ -79,10 +77,10 @@
           <img alt="missing" class="corner" height="15" src="images/topLeft.png" width="15" />
         </div>
         <p style="display:block; height:1em; margin:5px 15px;">
-          <strong onclick="javascript:showLogin();" style="float:left; width: 33%;">
-            <a href="#">Login</a>
+          <strong id="loginText" onclick="javascript:showLogin();" style="float:left; width: 33%;">
+            <a href="#" >Login</a>
           </strong>
-          <strong onclick="javascript:showSignup();" style="text-align:right; float:right; width: 33%">
+          <strong id="signupText" onclick="javascript:showSignup();" style="text-align:right; float:right; width: 33%">
             <a href="#">Sign Up</a>
           </strong>
         </p>

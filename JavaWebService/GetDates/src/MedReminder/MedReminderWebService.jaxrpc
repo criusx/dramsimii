@@ -17,19 +17,7 @@
             <list n="OP_BINDINGS">
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="MedReminder.errorMessage.addReminder.java.lang.String.java.lang.String.MedReminder.medReminders"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="BD_SOAP_ACTION" v=""/>
                   <value n="BOUND_OPERATION" v="boolean.changePassword.java.lang.String.java.lang.String.java.lang.String"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="MedReminder.medReminders.getReminders.java.lang.String.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -41,13 +29,25 @@
                </hash>
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="MedReminder.errorMessage.delReminder.java.lang.String.java.lang.String.MedReminder.medReminders"/>
+                  <value n="BOUND_OPERATION" v="MedReminder.errorMessage.authorize.MedReminder.userInfo.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
                   <value n="BD_SOAP_ACTION" v=""/>
-                  <value n="BOUND_OPERATION" v="MedReminder.errorMessage.authorize.MedReminder.userInfo"/>
+                  <value n="BOUND_OPERATION" v="MedReminder.errorMessage.addReminder.java.lang.String.java.lang.String.MedReminder.Reminder"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="MedReminder.errorMessage.delReminder.java.lang.String.java.lang.String.MedReminder.Reminder"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="BD_SOAP_ACTION" v=""/>
+                  <value n="BOUND_OPERATION" v="MedReminder.ReminderRecord.getReminders.java.lang.String.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -65,17 +65,7 @@
             <value n="PORT_BINDING_NAME" v="{USE_OWNER_TNS}MedReminderWebServiceSoapHttp"/>
             <list n="PORT_OPS">
                <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="MedReminder.errorMessage.addReminder.java.lang.String.java.lang.String.MedReminder.medReminders"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
                   <value n="EXPOSED_BD_OPERATION" v="boolean.changePassword.java.lang.String.java.lang.String.java.lang.String"/>
-                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
-                  <hash n="PROPERTY_GROUPS"/>
-               </hash>
-               <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="MedReminder.medReminders.getReminders.java.lang.String.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
@@ -85,12 +75,22 @@
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="MedReminder.errorMessage.delReminder.java.lang.String.java.lang.String.MedReminder.medReminders"/>
+                  <value n="EXPOSED_BD_OPERATION" v="MedReminder.errorMessage.authorize.MedReminder.userInfo.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>
                <hash>
-                  <value n="EXPOSED_BD_OPERATION" v="MedReminder.errorMessage.authorize.MedReminder.userInfo"/>
+                  <value n="EXPOSED_BD_OPERATION" v="MedReminder.errorMessage.addReminder.java.lang.String.java.lang.String.MedReminder.Reminder"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="MedReminder.errorMessage.delReminder.java.lang.String.java.lang.String.MedReminder.Reminder"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash>
+                  <value n="EXPOSED_BD_OPERATION" v="MedReminder.ReminderRecord.getReminders.java.lang.String.java.lang.String"/>
                   <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
                   <hash n="PROPERTY_GROUPS"/>
                </hash>

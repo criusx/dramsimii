@@ -125,6 +125,10 @@
             <displayName>WEB-INF/classes</displayName>
             <filters>
                <rules>
+                  <Item type="0" pattern="MedReminder/ReminderRecord.class"/>
+                  <Item type="0" pattern="MedReminder/Reminder.class"/>
+                  <Item type="0" pattern="MedReminder/drugInfo*.class"/>
+                  <Item type="0" pattern="MedReminder/errorMessage*.class"/>
                   <Item type="0" pattern="MedReminder/errorMessage.class"/>
                   <Item type="0" pattern="MedReminder/drugInfo.class"/>
                   <Item type="0" pattern=".jsps/_medImage.java"/>
