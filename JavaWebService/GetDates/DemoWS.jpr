@@ -137,6 +137,10 @@
    <hash n="oracle.jdevimpl.config.JProjectLibraries">
       <list n="exportedReferences">
          <hash>
+            <value n="id" v="Oracle JDBC"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
             <value n="id" v="JSR-181 Web Services"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -146,10 +150,6 @@
          </hash>
          <hash>
             <value n="id" v="JSP Runtime"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
-            <value n="id" v="Oracle JDBC"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
@@ -158,6 +158,10 @@
       </hash>
       <list n="libraryReferences">
          <hash>
+            <value n="id" v="Oracle JDBC"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
             <value n="id" v="JSR-181 Web Services"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -167,10 +171,6 @@
          </hash>
          <hash>
             <value n="id" v="JSP Runtime"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
-            <value n="id" v="Oracle JDBC"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>

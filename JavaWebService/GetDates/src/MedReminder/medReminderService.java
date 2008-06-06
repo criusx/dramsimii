@@ -924,7 +924,6 @@ public class medReminderService
           rs.close();
           ps.close();
           conn.commit();
-          conn.close();
           return true;
         }
       }
@@ -935,7 +934,6 @@ public class medReminderService
         ps.close();
         rs.close();
         conn.rollback();
-        conn.close();
         return false;
       }
     }
@@ -1205,7 +1203,7 @@ public class medReminderService
    * @return
    * @throws NoSuchAlgorithmException
    */
-  private byte[] getHash(int iterationNb, String password, byte[] salt)
+  private static byte[] getHash(int iterationNb, String password, byte[] salt)
     throws NoSuchAlgorithmException
   {
     MessageDigest digest = MessageDigest.getInstance("SHA-256");
