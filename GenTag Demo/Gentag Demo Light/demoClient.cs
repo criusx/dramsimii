@@ -1753,5 +1753,16 @@ namespace GentagDemo
         }
         #endregion
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ((Button)sender).Text = String.Empty;
+            float temp = 0.0F;
+            RFIDReader.Reader.errorCode code = tagReader.getTemperature(ref temp);
+            if (code == RFIDReader.Reader.errorCode.success)
+                ((Button)sender).Text = temp.ToString();
+            else
+                ((Button)sender).Text = "?";
+        }
+
     }
 }

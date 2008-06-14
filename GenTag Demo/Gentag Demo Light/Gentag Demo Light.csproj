@@ -18,7 +18,7 @@
     <FormFactorID>
     </FormFactorID>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>GentagKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>GentagKey0608.pfx</AssemblyOriginatorKeyFile>
     <StartupObject>GentagDemo.Program</StartupObject>
     <ApplicationIcon>application-download.ico</ApplicationIcon>
     <FileUpgradeFlags>
@@ -261,6 +261,7 @@
     </Content>
     <None Include="ClassDiagram1.cd" />
     <None Include="GentagKey.pfx" />
+    <None Include="GentagKey0608.pfx" />
     <None Include="Resources\Gentag-logo.png" />
     <None Include="Web References\assayWS\assayInfo.datasource">
       <DependentUpon>Reference.map</DependentUpon>

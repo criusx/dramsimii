@@ -138,6 +138,7 @@
     <BaseApplicationManifest Include="Properties\app.manifest" />
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
+    <None Include="ClassDiagram3.cd" />
     <None Include="Resources\Gentag-logo.png" />
     <None Include="Web References\org.dyndns.crius\InfoPacket.datasource">
       <DependentUpon>Reference.map</DependentUpon>
