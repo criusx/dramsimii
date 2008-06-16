@@ -104,6 +104,9 @@ postedCAS(postedCAS)
 {
 	switch (hostTransaction->getType())
 	{
+	case AUTO_REFRESH_TRANSACTION:
+		commandType = REFRESH_ALL_COMMAND;
+		break;
 	case WRITE_TRANSACTION:
 		commandType = autoPrecharge ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_WRITE_COMMAND;
 		break;

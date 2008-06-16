@@ -23,7 +23,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 	// ensure that this transaction belongs on this channel
 	assert (incomingTransaction->getAddresses().channel == channelID || incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION);
 
-	//const Bank &destinationBank = rank[incomingTransaction->getAddresses().rank].bank[incomingTransaction->getAddresses().bank];
+	const Bank &destinationBank = rank[incomingTransaction->getAddresses().rank].bank[incomingTransaction->getAddresses().bank];
 
 	unsigned availableCommandSlots = (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION) ? 0 : rank[incomingTransaction->getAddresses().rank].bank[incomingTransaction->getAddresses().bank].freeCommandSlots();
 
@@ -59,6 +59,41 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 		}
 		break;
 	case CLOSE_PAGE_OPTIMIZED:
+		// refresh transactions become only one command and are handled differently
+		if (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION)
+		{
+			const Rank &destinationRank = rank[incomingTransaction->getAddresses().rank];
+			// make sure that there is room in all the queues for one command
+			// refresh commands refresh a row, but kill everything currently in the sense amps
+			// therefore, we need to make sure that the refresh commands happen when all banks
+			// are available
+			for (vector<Bank>::const_iterator currentBank = destinationRank.bank.begin(); currentBank != destinationRank.bank.end(); currentBank++)
+			{
+				if (currentBank->isFull())
+					return false;
+			}
+		}
+		// need at least one free command slot
+		else if (destinationBank.isFull())			
+		{
+			return false;
+		}
+		else if (destinationBank.back()->getAddress().row == incomingTransaction->getAddresses().row // rows match
+			&& (time - destinationBank.back()->getEnqueueTime() < systemConfig.getSeniorityAgeLimit()) // not starving the last command
+			&& destinationBank.back()->getCommandType() != REFRESH_ALL_COMMAND) // ends with CAS+P or PRE
+		{
+			return true;
+		}		
+		else if ((!systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 3) ||
+			(systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 2))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+
 		break;
 
 		// open page systems may, in the best case, add a CAS command to an already open row
@@ -91,7 +126,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 			// go from tail to head
 			for (int tail_offset = rank[incomingTransaction->getAddresses().rank].bank[incomingTransaction->getAddresses().bank].size() - 1; (tail_offset >= 0) && (bypass_allowed == true); --tail_offset)
 			{	
-				const Command *currentCommand = rank[incomingTransaction->getAddresses().rank].bank[incomingTransaction->getAddresses().bank].read(tail_offset);
+				const Command *currentCommand = destinationBank.read(tail_offset);
 
 				if (time - currentCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
 				{
@@ -270,7 +305,8 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			}
 		}
 		// need at least one free command slot
-		else if (destinationBank.isFull())
+		// or three commands if the CAS+Precharge command is not available
+		else if (destinationBank.isFull())			
 		{
 			return false;
 		}
@@ -301,8 +337,8 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 
 			}
 		}
-		// or three commands if the CAS+Precharge command is not available
-		else if (!systemConfig.isAutoPrecharge() && (destinationBank.freeCommandSlots() < 3))
+		else if ((!systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 3) ||
+			(systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 2))
 		{
 			return false;
 		}
@@ -320,7 +356,6 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			{				
 				destinationBank.push(new Command(incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()));
 			}
-
 		}		
 		break;
 
@@ -345,7 +380,8 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// then add the command to all queues
 			for (vector<Bank>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				bool result = i->push(new Command(incomingTransaction->getAddresses(), REFRESH_ALL_COMMAND, time, incomingTransaction, false));
+				bool result = i->push(new Command(incomingTransaction, time, systemConfig.isPostedCAS(),systemConfig.isAutoPrecharge()));
+				//bool result = i->push(new Command(incomingTransaction->getAddresses(), REFRESH_ALL_COMMAND, time, incomingTransaction, false));
 				assert (result);
 			}
 		}
