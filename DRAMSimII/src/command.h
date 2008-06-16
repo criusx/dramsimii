@@ -15,7 +15,7 @@ namespace DRAMSimII
 	private:
 		static Queue<Command> freeCommandPool; ///< command objects are stored here to avoid allocating memory after initialization
 
-		CommandType commandType;		///< what type of command this is
+		mutable CommandType commandType;///< what type of command this is
 		tick startTime;					///< the time at which the command started
 		tick enqueueTime;				///< the time when this command was placed into the per bank queues
 		tick completionTime;			///< the time when this command completed
@@ -44,6 +44,7 @@ namespace DRAMSimII
 		explicit Command(const Command&);
 		explicit Command(const Address address, const CommandType commandType, const tick enqueueTime, Transaction *hostTransaction, const bool postedCAS);
 		explicit Command(const Address address, const CommandType commandType, const tick enqueueTime, Transaction *hostTransaction, const bool postedCAS, const int length);
+		explicit Command(Transaction *hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge);
 		void *operator new(size_t size);
 		void operator delete(void *);
 
@@ -62,6 +63,7 @@ namespace DRAMSimII
 		void setStartTime(const tick st) { startTime = st; }
 		void setCompletionTime(const tick ct) { completionTime = ct; }
 		void setCommandType(const CommandType ct) { commandType = ct; }
+		void setAutoPrecharge(const bool autoPrecharge) const;
 
 		// friends
 		friend std::ostream &DRAMSimII::operator<<(std::ostream &, const DRAMSimII::Command &);	

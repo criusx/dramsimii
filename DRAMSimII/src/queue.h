@@ -158,6 +158,23 @@ namespace DRAMSimII
 			}
 		}
 
+		/// @brief remove the item from the tail of the queue
+		/// @return the item formerly at the tail of the queue, or NULL if the queue is empty
+		/// TODO untested
+		T* popback()
+		{
+			if (count == 0)
+				return NULL;
+			else
+			{
+				T* theItem = entry[tail];
+				count--;
+				tail = tail - 1 >= 0 ? tail - 1 : depth - 1; // decrease the tail pointer
+				return theItem;
+
+			}
+		}
+
 		/// @brief get a pointer to the item at the head of the queue
 		/// @detail similar to peek()
 		/// @return a pointer to the item at the front of the queue, or NULL if the queue is empty
@@ -206,7 +223,7 @@ namespace DRAMSimII
 		/// @detail Allows insertion into the middle or at any end
 		bool insert(T *item, const int offset)
 		{
-			assert(offset <= count - 1);
+			assert(offset <= (((int)count) - 1));
 
 			if (count == depth)
 				return false;

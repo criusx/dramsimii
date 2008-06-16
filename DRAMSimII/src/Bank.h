@@ -6,7 +6,9 @@
 #include "globals.h"
 #include "command.h"
 #include "Settings.h"
+#include "transaction.h"
 #include "TimingSpecification.h"
+#include "SystemConfiguration.h"
 
 namespace DRAMSimII
 {
@@ -72,14 +74,15 @@ namespace DRAMSimII
 
 		Command *pop() { return perBankQueue.pop(); }
 		bool push(Command *value) { return perBankQueue.push(value); }
+		bool insert(Command *value, const int index) { return perBankQueue.insert(value, index); }
 		const Command *read(const unsigned value) const { return perBankQueue.read(value); }
 		const Command *front() const { return perBankQueue.front(); }
 		const Command *back() const { return perBankQueue.back(); }
 		unsigned size() const { return perBankQueue.size(); }
 		CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : NO_COMMAND; }
 		unsigned freeCommandSlots() const { return perBankQueue.freecount(); }
-		bool openPageInsert(const Transaction *value);
-		bool openPageInsertCheck(const Transaction *value) const;
+		bool openPageInsert(Transaction *value, const tick time);
+		bool openPageInsertCheck(const Transaction *value, const tick time) const;
 		bool isFull() const { return perBankQueue.isFull(); }
 		//Queue<Command> &getPerBankQueue() { return perBankQueue; }
 		//const Queue<Command> &getPerBankQueue() const { return perBankQueue; }
@@ -102,7 +105,7 @@ namespace DRAMSimII
 
 		// constructors
 		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
-		Bank(const Bank&, const TimingSpecification &timingVal);	
+		Bank(const Bank&, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);	
 
 		Bank& operator=(const Bank& rs);
 	};

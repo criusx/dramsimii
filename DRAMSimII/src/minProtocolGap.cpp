@@ -345,7 +345,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			{
 				//respect most recent CAS of different rank
 				tCASLimit = max(tCASLimit,otherRankLastCASTime + otherRankLastCASLength + timingSpecification.tRTRS());
-				//respect timing of READ follow WRITE, different ranks
+				//respect timingc of READ follow WRITE, different ranks
 				tCASLimit = max(tCASLimit,otherRankLastCASWTime + timingSpecification.tCWD() + otherRankLastCASWLength + timingSpecification.tRTRS() - timingSpecification.tCAS());
 			}
 			

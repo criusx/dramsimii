@@ -97,10 +97,10 @@ const Command *Channel::readNextCommand() const
 								if (!notAllRefresh)
 								{
 									// try to show that at the head of each queue isn't a refresh command
-									for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+									for (vector<Bank>::const_iterator thisBank = currentRank->bank.begin(); thisBank != currentRank->bank.end(); thisBank++)
 									{
 										// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-										if (currentBank->nextCommandType() != REFRESH_ALL_COMMAND)
+										if (thisBank->nextCommandType() != REFRESH_ALL_COMMAND)
 										{
 											notAllRefresh = true;
 											break;
@@ -124,10 +124,10 @@ const Command *Channel::readNextCommand() const
 								if (!notAllRefresh)
 								{
 									// try to show that at the head of each queue isn't a refresh command
-									for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+									for (vector<Bank>::const_iterator thisBank = currentRank->bank.begin(); thisBank != currentRank->bank.end(); thisBank++)
 									{
 										// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-										if (currentBank->nextCommandType() != REFRESH_ALL_COMMAND)
+										if (thisBank->nextCommandType() != REFRESH_ALL_COMMAND)
 										{
 											notAllRefresh = true;
 											break;

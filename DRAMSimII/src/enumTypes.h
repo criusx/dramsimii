@@ -17,7 +17,8 @@ namespace DRAMSimII
 	{
 		AUTO_PAGE, // same as OPEN PAGE, but close page after timer expires
 		OPEN_PAGE, // keep page open indefinitely
-		CLOSE_PAGE
+		CLOSE_PAGE,
+		CLOSE_PAGE_OPTIMIZED
 	};
 
 	// This section defines the address mapping scheme

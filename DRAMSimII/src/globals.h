@@ -77,6 +77,8 @@ namespace DRAMSimII
 	class System;
 	class Channel;
 	class fbdFrame;
+	class SystemConfiguration;
+	class TimingSpecification;
 
 	// overloaded insertion operator functions for printing various aspects of the dram system
 	std::ostream &operator<<(std::ostream &, const DRAMSimII::CommandType &);

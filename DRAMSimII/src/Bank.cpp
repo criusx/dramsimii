@@ -24,8 +24,9 @@ CASWCount(0),
 totalCASWCount(0)
 {}
 
-Bank::Bank(const Bank &b, const TimingSpecification &timingVal):
+Bank::Bank(const Bank &b, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
+systemConfig(systemConfigVal),
 perBankQueue(b.perBankQueue),
 lastRASTime(b.lastRASTime),
 lastCASTime(b.lastCASTime),
@@ -47,8 +48,11 @@ totalCASWCount(b.totalCASWCount)
 /// this logically issues a RAS command and updates all variables to reflect this
 void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
+	// make sure activates follow precharges
 	assert(activated == false);
+
 	activated = true;
+
 	lastRASTime = currentTime;
 	openRowID = currentCommand->getAddress().row;
 	RASCount++;
@@ -71,7 +75,10 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 		cerr << "Unhandled CAS variant" << endl;
 		break;
 	}
+
+	// make sure precharges follow activates
 	assert(activated == true);
+
 	activated = false;
 }
 
@@ -102,7 +109,7 @@ void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 /// @param value the transaction to be inserted
 /// @return true if the transaction was converted and inserted successfully, false otherwise
 //////////////////////////////////////////////////////////////////////
-bool Bank::openPageInsert(const DRAMSimII::Transaction *value, tick time)
+bool Bank::openPageInsert(DRAMSimII::Transaction *value, tick time)
 {
 	if (!perBankQueue.isFull())
 	{
@@ -138,7 +145,7 @@ bool Bank::openPageInsert(const DRAMSimII::Transaction *value, tick time)
 				assert(result);
 
 				return true;
-			}
+			}			
 			// strict order may add to the end of the queue only
 			// if this has not happened already then this method of insertion fails
 			else if (systemConfig.getCommandOrderingAlgorithm() == STRICT_ORDER)
@@ -146,6 +153,7 @@ bool Bank::openPageInsert(const DRAMSimII::Transaction *value, tick time)
 				return false;
 			}
 		}
+		return false;
 	}
 	else
 	{
@@ -162,7 +170,7 @@ bool Bank::openPageInsert(const DRAMSimII::Transaction *value, tick time)
 /// @param value the transaction to test
 /// @return true if it is able to be inserted, false otherwise
 //////////////////////////////////////////////////////////////////////
-bool Bank::openPageInsertCheck(const DRAMSimII::Transaction *value, const tick time)
+bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 {
 	if (!perBankQueue.isFull())
 	{
@@ -190,6 +198,7 @@ bool Bank::openPageInsertCheck(const DRAMSimII::Transaction *value, const tick t
 				return false;
 			}
 		}
+		return false;
 	}
 	else
 	{

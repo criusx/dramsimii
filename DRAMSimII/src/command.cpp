@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "command.h"
+#include "transaction.h"
 
 using namespace std;
 using namespace DRAMSimII;
@@ -75,6 +76,43 @@ hostTransaction(hostTransaction),
 postedCAS(postedCAS),
 length(_length)
 {}
+
+/// @brief to convert CAS(W)+P <=> CAS(W)
+void Command::setAutoPrecharge(const bool autoPrecharge) const
+{
+	switch (commandType)
+	{
+	case CAS_AND_PRECHARGE_COMMAND:
+	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+		if (!autoPrecharge)
+			commandType = commandType == CAS_WRITE_AND_PRECHARGE_COMMAND ? CAS_WRITE_COMMAND : CAS_COMMAND;
+		break;
+	case CAS_COMMAND:
+	case CAS_WRITE_COMMAND:
+		if (autoPrecharge)
+			commandType = commandType == CAS_WRITE_COMMAND ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_AND_PRECHARGE_COMMAND;
+	}
+}
+
+Command::Command(Transaction *hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge):
+startTime(-1),
+enqueueTime(enqueueTime),
+completionTime(-1),
+addr(hostTransaction->getAddresses()),
+hostTransaction(hostTransaction),
+postedCAS(postedCAS)
+{
+	switch (hostTransaction->getType())
+	{
+	case WRITE_TRANSACTION:
+		commandType = autoPrecharge ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_WRITE_COMMAND;
+		break;
+	case READ_TRANSACTION:
+	case IFETCH_TRANSACTION:
+		commandType = autoPrecharge ? CAS_AND_PRECHARGE_COMMAND : CAS_COMMAND;
+		break;
+	}
+}
 
 ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 {

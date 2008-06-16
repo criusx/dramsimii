@@ -73,7 +73,7 @@ completionQueue(dc.completionQueue),
 systemConfig(dc.systemConfig),
 powerModel(dc.powerModel),
 algorithm(dc.algorithm),
-rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification))
+rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification, systemConfig))
 {
 	// assign an id to each channel (normally done with commands)
 	for (unsigned i = 0; i < rank.size(); i++)
