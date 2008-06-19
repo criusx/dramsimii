@@ -31,51 +31,6 @@ postedCAS(false),
 length(0)
 {}
 
-Command::Command(const Address address, const CommandType commandType, const tick enqueueTime, Transaction *hostTransaction, const bool postedCAS):
-commandType(commandType),
-startTime(-1),
-enqueueTime(enqueueTime),
-completionTime(-1),
-addr(address),
-hostTransaction(hostTransaction),
-//link_comm_tran_comp_time(0),
-//amb_proc_comp_time(0),
-//dimm_comm_tran_comp_time(0),
-//dram_proc_comp_time(0),
-//dimm_data_tran_comp_time(0),
-//amb_down_proc_comp_time(0),
-//link_data_tran_comp_time(0),
-//bundle_id(0),
-//tran_id(0),
-//data_word(0),
-//data_word_position(0),
-//refresh(0),
-postedCAS(postedCAS),
-length(0)
-{}
-
-Command::Command(const Address address, const CommandType commandType, const tick enqueueTime, Transaction *hostTransaction, const bool postedCAS, const int _length):
-commandType(commandType),
-startTime(-1),
-enqueueTime(enqueueTime),
-completionTime(-1),
-addr(address),
-hostTransaction(hostTransaction),
-//link_comm_tran_comp_time(0),
-//amb_proc_comp_time(0),
-//dimm_comm_tran_comp_time(0),
-//dram_proc_comp_time(0),
-//dimm_data_tran_comp_time(0),
-//amb_down_proc_comp_time(0),
-//link_data_tran_comp_time(0),
-//bundle_id(0),
-//tran_id(0),
-//data_word(0),
-//data_word_position(0),
-//refresh(0),
-postedCAS(postedCAS),
-length(_length)
-{}
 
 /// @brief to convert CAS(W)+P <=> CAS(W)
 void Command::setAutoPrecharge(const bool autoPrecharge) const
@@ -94,26 +49,37 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 	}
 }
 
-Command::Command(Transaction *hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge):
+Command::Command(Transaction *hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const CommandType type):
 startTime(-1),
 enqueueTime(enqueueTime),
 completionTime(-1),
 addr(hostTransaction->getAddresses()),
-hostTransaction(hostTransaction),
+hostTransaction(type == CAS_COMMAND ? hostTransaction : NULL), // this link is only needed for CAS commands
 postedCAS(postedCAS)
 {
-	switch (hostTransaction->getType())
+	if (type == CAS_COMMAND)
 	{
-	case AUTO_REFRESH_TRANSACTION:
-		commandType = REFRESH_ALL_COMMAND;
-		break;
-	case WRITE_TRANSACTION:
-		commandType = autoPrecharge ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_WRITE_COMMAND;
-		break;
-	case READ_TRANSACTION:
-	case IFETCH_TRANSACTION:
-		commandType = autoPrecharge ? CAS_AND_PRECHARGE_COMMAND : CAS_COMMAND;
-		break;
+		switch (hostTransaction->getType())
+		{
+		case AUTO_REFRESH_TRANSACTION:
+			commandType = REFRESH_ALL_COMMAND;
+			break;
+		case WRITE_TRANSACTION:
+			commandType = autoPrecharge ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_WRITE_COMMAND;
+			break;
+		case READ_TRANSACTION:
+		case IFETCH_TRANSACTION:
+			commandType = autoPrecharge ? CAS_AND_PRECHARGE_COMMAND : CAS_COMMAND;
+			break;
+		default:
+			cerr << "Unknown transaction type, quitting." << endl;
+			exit(-21);
+			break;
+		}
+	}
+	else
+	{
+		commandType = type;
 	}
 }
 

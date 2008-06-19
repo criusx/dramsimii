@@ -8,6 +8,8 @@
 #include <vector>
 
 #include "Channel.h"
+#include "reporting/soapDRAMsimWSSoapHttpProxy.h"
+#include "reporting/DRAMsimWSSoapHttp.nsmap"
 
 using namespace std;
 using namespace DRAMSimII;
@@ -153,7 +155,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 					{
 						statistics->collectTransactionStats(completed_t);
 
-						DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completed_t)
+						DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completed_t);
 
 							// reuse the refresh transactions
 							if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
@@ -369,6 +371,8 @@ TransactionType Channel::setReadWriteType(const int rank_id,const int bank_count
 		return WRITE_TRANSACTION;
 }
 
+using namespace std;
+
 //////////////////////////////////////////////////////////////////////
 /// @brief performs power calculations for this epoch and cumulative
 /// @details calculates the power according to Micron technical note TN-47-04\n
@@ -390,15 +394,20 @@ void Channel::doPowerCalculation()
 	unsigned totalCAS = 1;
 	unsigned totalCASW = 1; // ensure no div/0
 
-	float PsysACT = 0;
+	float PsysACTTotal = 0;
 
 	powerOutStream << "---------------------- epoch ----------------------" << endl;
 
-	for (std::vector<Rank>::iterator k = rank.begin(); k != rank.end(); k++)
+	vector<int> rankArray;
+	vector<float> PsysACTSTBYArray, PsysACTArray;
+
+	for (vector<Rank>::iterator k = rank.begin(); k != rank.end(); k++)
 	{
 		unsigned perRankRASCount = 1;
 
-		for (std::vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
+		rankArray.push_back(k->getRankID());
+
+		for (vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
 
 			totalRAS += l->getRASCount();			
@@ -416,20 +425,26 @@ void Channel::doPowerCalculation()
 
 		//assert(RDschPct + WRschPct < 1.0F);
 
+		float PsysACTSTBY = factorA * factorB * powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive;
+
+		PsysACTSTBYArray.push_back(PsysACTSTBY);
 
 		powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
-			factorA * factorB * powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive << " mW P(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
+			PsysACTSTBY << " mW P(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
 
 		float tRRDsch = ((float)time - powerModel.getLastCalculation()) / perRankRASCount;
 
+		float PsysACT = ((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT();
+
+		PsysACTArray.push_back(PsysACT);
 
 		powerOutStream << "-Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] "<< setprecision(5) << 
-			((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT() << " mW" << endl;
+			PsysACT << " mW" << endl;
 
 		//tick tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 
 
-		PsysACT += ((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT();
+		PsysACTTotal += ((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT();
 		//powerOutStream << "Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << powerModel.PdsACT * powerModel.tRC / (float)tRRDsch * factorA * 100 << "mW " <<
 		//	" A(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / ((float)systemConfig.Frequency() * 1.0E-9F) << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 		//	time << "]" << endl;
@@ -443,18 +458,53 @@ void Channel::doPowerCalculation()
 	//cerr << RDschPct * 100 << "%\t" << WRschPct * 100 << "%"<< endl;
 
 	powerOutStream << "-Psys(ACT) ch[" << channelID << "] " << setprecision(5) << 
-		PsysACT << " mW" << endl;
+		PsysACTTotal << " mW" << endl;
+
+	float PsysRD = factorA * factorB * (powerModel.getIDD4R() - powerModel.getIDD3N()) * RDschPct;
 
 	powerOutStream << "-Psys(RD) ch[" << channelID << "] " << setprecision(5) << 
-		factorA * factorB * (powerModel.getIDD4R() - powerModel.getIDD3N()) * RDschPct << " mW" << endl;
+		PsysRD << " mW" << endl;
+
+	float PsysWR = factorA * factorB * (powerModel.getIDD4W() - powerModel.getIDD3N()) * WRschPct; 
 
 	powerOutStream << "-Psys(WR) ch[" << channelID << "] " << setprecision(5) << 
-		factorA * factorB * (powerModel.getIDD4W() - powerModel.getIDD3N()) * WRschPct << " mW" << endl;
+		PsysWR << " mW" << endl;
 	powerModel.setLastCalculation(time);
+
+	// report these results
+	DRAMsimWSSoapHttp service;
+	_ns2__submitEpochResultElement submit;
+
+	stringstream ss;
+	clock_t now = clock();
+	srand(now);
+	ss << rand();	
+	char * s = new char[ss.str().length()+1];
+	strncpy(s,ss.str().c_str(), ss.str().length());
+	s[ss.str().length()] = '\0';
+	submit.sessionID = s;
+
+	submit.epoch = time;
+
+	vector<int> channelArray(rank.size(),channelID);	
+	submit.channel = &channelArray[0];
+	submit.__sizechannel = channelArray.size();
+
+	submit.rank = &rankArray[0];
+	submit.__sizerank = rankArray.size();
+	
+	submit.PsysACTSTBY = &PsysACTSTBYArray[0];
+	submit.__sizePsysACTSTBY = PsysACTSTBYArray.size();
+	submit.PsysACT = &PsysACTArray[0];
+	submit.__sizePsysACT = PsysACTArray.size();
+	submit.PsysRD = PsysRD;
+	submit.PsysWR = PsysWR;
+	_ns2__submitEpochResultResponseElement response;
+	int retVal = service.__ns1__submitEpochResult(&submit,&response);
 
 	powerOutStream << "++++++++++++++++++++++ total ++++++++++++++++++++++" << endl;
 
-	PsysACT = 0;
+	PsysACTTotal = 0;
 
 	for (vector<Rank>::const_iterator k = rank.begin(); k != rank.end(); k++)
 	{
@@ -478,7 +528,7 @@ void Channel::doPowerCalculation()
 		powerOutStream << "+Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] "<< setprecision(5) << 
 			((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT() << " mW" << endl;
 
-		PsysACT += ((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT();
+		PsysACTTotal += ((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT();
 	}
 
 	RDschPct = entireCAS * timingSpecification.tBurst() / (float)(time);
@@ -487,7 +537,7 @@ void Channel::doPowerCalculation()
 	//cerr << RDschPct * 100 << "%\t" << WRschPct * 100 << "%"<< endl;
 
 	powerOutStream << "+Psys(ACT) ch[" << channelID << "] " << setprecision(5) << 
-		PsysACT << " mW" << endl;
+		PsysACTTotal << " mW" << endl;
 
 	powerOutStream << "+Psys(RD) ch[" << channelID << "] " << setprecision(5) << 
 		factorA * factorB * (powerModel.getIDD4R() - powerModel.getIDD3N()) * RDschPct << " mW" << endl;

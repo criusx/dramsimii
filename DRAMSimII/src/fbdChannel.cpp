@@ -224,6 +224,10 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 		// respect tRFC and tRP
 		min_gap = max((int)((currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC()),(int)((currentRank.getLastPrechargeTime() - time) + timingSpecification.tRP()));
 		break;
+
+	default:
+		exit(-20);
+		break;
 	}
 
 #ifdef DEBUG_MIN_PROTOCOL_GAP

@@ -216,7 +216,10 @@ namespace DRAMSimII
 		void releaseItem(T *item)
 		{
 			if(!push(item))
+			{
 				::delete item;
+				item = NULL;
+			}
 		}
 
 		/// @brief this function makes this queue a non-FIFO queue.  

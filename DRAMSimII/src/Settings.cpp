@@ -383,6 +383,8 @@ Settings::Settings(const int argc, const char **argv)
 							rowBufferManagementPolicy = OPEN_PAGE;
 						else if (nodeValue == "closePage")
 							rowBufferManagementPolicy = CLOSE_PAGE;
+						else if (nodeValue == "closePageOptimized")
+							rowBufferManagementPolicy = CLOSE_PAGE_OPTIMIZED;
 						else
 							rowBufferManagementPolicy = AUTO_PAGE;
 						break;

@@ -40,11 +40,9 @@ namespace DRAMSimII
 		unsigned length;				///< the burst length
 
 	public:
-		explicit Command();
 		explicit Command(const Command&);
-		explicit Command(const Address address, const CommandType commandType, const tick enqueueTime, Transaction *hostTransaction, const bool postedCAS);
-		explicit Command(const Address address, const CommandType commandType, const tick enqueueTime, Transaction *hostTransaction, const bool postedCAS, const int length);
-		explicit Command(Transaction *hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge);
+		explicit Command();		
+		explicit Command(Transaction *hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const CommandType commandType = CAS_COMMAND);
 		void *operator new(size_t size);
 		void operator delete(void *);
 

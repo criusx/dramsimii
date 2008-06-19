@@ -25,7 +25,7 @@ Algorithm::Algorithm(const Settings& settings)
 	WHCC.resize(settings.rankCount * settings.bankCount * 2);
 
 	Command *temp_c;
-
+#if 0
 	if (settings.rankCount == 2)
 	{
 		if(settings.bankCount == 8)
@@ -198,6 +198,7 @@ Algorithm::Algorithm(const Settings& settings)
 		temp_c = new Command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 3; temp_c->getAddress().bank =  1; WHCC.push(temp_c);
 		temp_c = new Command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  7; WHCC.push(temp_c);
 	}
+#endif
 }
 
 Algorithm::Algorithm(int rankCount,
@@ -225,7 +226,7 @@ Algorithm::Algorithm(int rankCount,
 	WHCC.resize(rankCount * bankCount * 2);
 
 	Command *temp_c;
-
+#if 0
 	if((config_type == BASELINE_CONFIG) && (rankCount == 2))
 	{
 		if(bankCount == 8)
@@ -398,6 +399,7 @@ Algorithm::Algorithm(int rankCount,
 		temp_c = new Command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 3; temp_c->getAddress().bank =  1; WHCC.push(temp_c);
 		temp_c = new Command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  7; WHCC.push(temp_c);
 	}
+#endif
 }
 
 Algorithm::Algorithm(const Algorithm &a)
@@ -427,7 +429,7 @@ void Algorithm::init(int rank_count,
 	WHCC.resize(rank_count * bank_count * 2);
 
 	Command *temp_c;
-
+#if 0
 	if((config_type == BASELINE_CONFIG) && (rank_count == 2))
 	{
 		if(bank_count == 8)
@@ -600,4 +602,5 @@ void Algorithm::init(int rank_count,
 		temp_c = new Command; temp_c->setCommandType(RAS_COMMAND); temp_c->getAddress().rank = 3; temp_c->getAddress().bank =  1; WHCC.push(temp_c);
 		temp_c = new Command; temp_c->setCommandType(CAS_COMMAND); temp_c->getAddress().rank = 0; temp_c->getAddress().bank =  7; WHCC.push(temp_c);
 	}
+#endif
 }

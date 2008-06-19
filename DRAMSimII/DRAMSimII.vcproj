@@ -505,6 +505,22 @@
 				RelativePath=".\src\transaction2commands.cpp"
 				>
 			</File>
+			<Filter
+				Name="reporting"
+				>
+				<File
+					RelativePath=".\src\reporting\soapC.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\reporting\soapClient.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\reporting\stdsoap2.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"

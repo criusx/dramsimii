@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:ns1="http://DRAMsimReporter/"
+ xmlns:ns2="http://DRAMsimReporter/types/">
+ <SOAP-ENV:Body>
+   <ns2:submitEpochResultElement>
+    <ns2:sessionID></ns2:sessionID>
+    <ns2:epoch>0</ns2:epoch>
+    <ns2:channel>0</ns2:channel>
+    <ns2:rank>0</ns2:rank>
+    <ns2:PsysACTSTBY>0.0</ns2:PsysACTSTBY>
+    <ns2:PsysACT>0.0</ns2:PsysACT>
+    <ns2:PsysRD>0.0</ns2:PsysRD>
+    <ns2:PsysWR>0.0</ns2:PsysWR>
+   </ns2:submitEpochResultElement>
+
+ </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

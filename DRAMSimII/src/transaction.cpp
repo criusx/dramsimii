@@ -10,7 +10,7 @@ unsigned Transaction::eventCounter(0);
 
 /// constructor to make a transaction with no values set
 Transaction::Transaction():
-eventNumber(eventNumber++),
+eventNumber(eventCounter++),
 type(CONTROL_TRANSACTION),
 status(0),
 length(0),
@@ -36,7 +36,7 @@ originalTransaction(rs->originalTransaction)
 
 /// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
 Transaction::Transaction(const int attribute,const tick enqueueTime,const int Size,const unsigned long long address, const void *originalTrans):
-eventNumber(eventNumber++),
+eventNumber(eventCounter++),
 status(0),
 length(Size),
 enqueueTime(enqueueTime),

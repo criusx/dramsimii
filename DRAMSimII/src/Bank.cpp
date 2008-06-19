@@ -128,20 +128,7 @@ bool Bank::openPageInsert(DRAMSimII::Transaction *value, tick time)
 			// channel, rank, bank, row all match, insert just before this precharge command
 			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().row == value->getAddresses().row)) 
 			{
-				bool result;
-				switch (value->getType())
-				{
-				case WRITE_TRANSACTION:
-					result = perBankQueue.insert(new Command(value->getAddresses(),CAS_WRITE_COMMAND,time,value,false,value->getLength()), currentIndex);	
-					break;
-				case IFETCH_TRANSACTION:
-				case READ_TRANSACTION:
-					result = perBankQueue.insert(new Command(value->getAddresses(),CAS_COMMAND,time,value,false,value->getLength()), currentIndex);
-					break;
-				default:
-					cerr << "Unrecognized transaction type." << endl;
-					break;
-				}
+				bool result = perBankQueue.insert(new Command(value, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()), currentIndex);
 				assert(result);
 
 				return true;
