@@ -47,7 +47,7 @@ namespace DRAMSimII
 		Command *getNextCommand();		
 		void doPowerCalculation();
 		void executeCommand(Command *thisCommand,const int gap);
-		void Channel::executeCommand(Command *thisCommand);
+		void executeCommand(Command *thisCommand);
 		tick nextTransactionDecodeTime() const;
 		virtual tick nextTick() const;
 		
