@@ -2,7 +2,7 @@
 #define ADDRESSES_H
 #pragma once
 
-#include <limits>
+#include <limits.h>
 
 namespace DRAMSimII
 {
