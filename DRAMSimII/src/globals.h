@@ -60,9 +60,9 @@ To do list:
 #define DEBUG_TRANSACTION
 
 //#define DEBUG_RAND
-
+#ifndef DEBUG
 #define DEBUG
-
+#endif
 //#define DEBUG_MIN_PROTOCOL_GAP
 
 //#define DEBUG_FLAG_2
