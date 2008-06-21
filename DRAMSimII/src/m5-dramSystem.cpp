@@ -266,13 +266,13 @@ void M5dramSystem::moveToTime(const tick now)
 			{			
 				assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
 
-				M5_TIMING_LOG("<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick)
+				M5_TIMING_LOG("<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick);
 
 					ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
 			}
 			else
 			{
-				delete packet->req;
+				//delete packet->req;
 				delete packet;
 			}			
 		}	
@@ -281,7 +281,7 @@ void M5dramSystem::moveToTime(const tick now)
 	// if there is now room, allow a retry to happen
 	if (needRetry && !ds->isFull(mostRecentChannel))
 	{
-		M5_TIMING_LOG("Allow retrys")
+		M5_TIMING_LOG("Allow retrys");
 
 			needRetry = false;
 		ports[lastPortIndex]->sendRetry();
