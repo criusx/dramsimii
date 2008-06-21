@@ -120,7 +120,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 		}
 		else
 		{
-			M5_TIMING_LOG("!T2C " << readTransaction(true));
+			//M5_TIMING_LOG("!T2C " << readTransaction(true));
 
 			// move time up by executing commands
 			if (const Command *temp_c = readNextCommand())
