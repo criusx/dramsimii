@@ -116,11 +116,11 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 			// checkForAvailablecommandSlots() should not have returned true if there was not enough space
 			assert(t2cResult == true);
 
-			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << decodedTransaction)
+			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << decodedTransaction);
 		}
 		else
 		{
-			M5_TIMING_LOG("!T2C " << decodedTransaction);
+			M5_TIMING_LOG("!T2C " << readTransaction(true));
 
 			// move time up by executing commands
 			if (const Command *temp_c = readNextCommand())

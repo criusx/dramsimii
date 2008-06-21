@@ -64,7 +64,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 	assert(pkt->isRequest());
 
-	if (pkt->memInhibitAsserted()) {
+	if (pkt->memInhibitAsserted()) 
+	{
 		// snooper will supply based on copy of packet
 		// still target's responsibility to delete packet
 		cerr << "deleted memInhibitAsserted" << endl;
@@ -98,19 +99,19 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	//if (!pkt->needsResponse())
 	if (!pkt->needsResponse() && !pkt->isWrite())
 	{
-		M5_TIMING_LOG("packet not needing response.")
+		M5_TIMING_LOG("packet not needing response.");
 
-			if (pkt->cmd != MemCmd::UpgradeReq)
-			{
-				cerr << "deleted pkt, not upgradereq, not write, needs no resp" << endl;
-				delete pkt->req;
-				delete pkt;
-			}
-			else
-			{
-				cerr << "####################### not upgrade request" << endl;
-			}
-			return true;
+		if (pkt->cmd != MemCmd::UpgradeReq)
+		{
+			cerr << "deleted pkt, not upgradereq, not write, needs no resp" << endl;
+			delete pkt->req;
+			delete pkt;
+		}
+		else
+		{
+			cerr << "####################### not upgrade request" << endl;
+		}
+		return true;
 	}
 	else
 	{
@@ -173,8 +174,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			memory->mostRecentChannel = trans->getAddresses().channel;
 			delete trans;
 
-			M5_TIMING_LOG("Wait for retry before sending more to ch[" << trans->getAddresses().channel << "]")
-				return false;
+			M5_TIMING_LOG("Wait for retry before sending more to ch[" << trans->getAddresses().channel << "]");
+			return false;
 		}
 		else
 		{
@@ -186,9 +187,9 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			assert(next < TICK_MAX);
 
 
-			M5_TIMING_LOG("schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]")
+			M5_TIMING_LOG("schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]");
 
-				memory->tickEvent.schedule(memory->getCpuRatio() * next);
+			memory->tickEvent.schedule(memory->getCpuRatio() * next);
 
 			return true;
 		}
@@ -268,7 +269,7 @@ void M5dramSystem::moveToTime(const tick now)
 
 				M5_TIMING_LOG("<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick);
 
-					ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
+				ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
 			}
 			else
 			{
@@ -283,7 +284,7 @@ void M5dramSystem::moveToTime(const tick now)
 	{
 		M5_TIMING_LOG("Allow retrys");
 
-			needRetry = false;
+		needRetry = false;
 		ports[lastPortIndex]->sendRetry();
 	}
 }

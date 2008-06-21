@@ -33,6 +33,7 @@ length(0)
 
 
 /// @brief to convert CAS(W)+P <=> CAS(W)
+/// @brief has no effect on non CAS commands
 void Command::setAutoPrecharge(const bool autoPrecharge) const
 {
 	switch (commandType)
@@ -46,6 +47,9 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 	case CAS_WRITE_COMMAND:
 		if (autoPrecharge)
 			commandType = commandType == CAS_WRITE_COMMAND ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_AND_PRECHARGE_COMMAND;
+		break;
+	default:
+		break;
 	}
 }
 
