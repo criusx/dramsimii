@@ -47,7 +47,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		//static unsigned numCallsWhileBlocked = 1;
 		//if (numCallsWhileBlocked++ % 100000 == 0)
 		//	cerr << numCallsWhileBlocked << "\r";
-		cerr << "attempted packet send after packet is nacked" << endl;
+		M5_TIMING_LOG("attempted packet send after packet is nacked");
 		return false;
 	}
 	//////////////////////////////////////////////////////////////////////////
