@@ -90,8 +90,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 
 	// any packet which doesn't need a response and isn't a write
-	if (pkt->needsResponse())
-	//if (!pkt->needsResponse() && !pkt->isWrite())
+	//if (pkt->needsResponse())
+	if (pkt->needsResponse() || pkt->isWrite())
 	{
 #ifdef TESTNORMAL
 		//memory->doFunctionalAccess(pkt);
