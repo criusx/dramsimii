@@ -37,8 +37,6 @@ using namespace DRAMSimII;
 //	}
 //}
 
-#define STATSINTERVAL 1000000
-
 //////////////////////////////////////////////////////////////////////
 /// @brief automatically runs the simulations according to the set parameters
 /// @details runs either until the trace file runs out or the request count reaches zero\n
@@ -49,19 +47,9 @@ using namespace DRAMSimII;
 void System::runSimulations3()
 {
 	Transaction *input_t = NULL;
-	tick nextStats = STATSINTERVAL;
 
 	for (unsigned i = simParameters.getRequestCount(); i > 0; )
-	{
-		// print stats periodically
-		if (time >= nextStats)
-		{		
-			doPowerCalculation();
-			printStatistics();
-		}
-		while (time >= nextStats)
-			nextStats += STATSINTERVAL;
-
+	{		
 		if (!input_t)
 		{
 			input_t = getNextIncomingTransaction();
@@ -112,11 +100,12 @@ void System::runSimulations3()
 bool System::enqueue(Transaction *currentTransaction)
 {
 	// map the PA of this transaction to this system, assuming the transaction is within range
-	bool success;
+	// convert addresses of transactions that are not refreshes
 	if (currentTransaction->getAddresses().physicalAddress != ULLONG_MAX)
-		success = convertAddress(currentTransaction->getAddresses());
-
-	assert(success);
+	{
+		bool success = convertAddress(currentTransaction->getAddresses());
+		assert(success);
+	}
 
 	// attempt to insert the transaction into the per-channel transaction queue
 	if (!channel[currentTransaction->getAddresses().channel].enqueue(currentTransaction))
@@ -205,16 +194,22 @@ const void *System::moveAllChannelsToTime(const tick endTime, tick *transFinishT
 #if M5DEBUG
 	timingOutStream << "move forward until: " << endTime << endl;
 #endif
+	const void *finishedTransaction = NULL;
+
 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
-		const void *finishedTrans = i->moveChannelToTime(endTime, transFinishTime);
-		if (finishedTrans)
+		finishedTransaction = i->moveChannelToTime(endTime, transFinishTime);
+
+		if (finishedTransaction)
 		{			
-			return finishedTrans;
+			break;
 		}
 	}
+	
 	updateSystemTime();
-	return NULL;
+	checkStats();
+
+	return finishedTransaction;
 }
 
 //input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)

@@ -53,9 +53,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	//////////////////////////////////////////////////////////////////////////
 
 	tick currentMemCycle = curTick/memory->getCpuRatio();
-
-	memory->ds->checkStats(currentMemCycle);	
-
+	
 	assert(pkt->isRequest());
 
 	if (pkt->memInhibitAsserted()) 
@@ -201,8 +199,6 @@ void M5dramSystem::TickEvent::process()
 {	
 	tick currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
 	
-	memory->ds->checkStats(currentMemCycle);
-
 	M5_TIMING_LOG("intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]");
 
 	// move memory channels to the current time

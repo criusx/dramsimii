@@ -48,6 +48,7 @@ namespace DRAMSimII
 		Transaction *getNextIncomingTransaction();
 		Transaction *getNextRandomRequest();
 		bool convertAddress(Address &) const;
+		void checkStats();
 		virtual void doPowerCalculation();
 		virtual void printStatistics();		
 
@@ -60,7 +61,7 @@ namespace DRAMSimII
 		InputStatus waitForTransactionToFinish(Transaction *trans);
 		virtual tick nextTick() const;
 		
-		void checkStats(tick currentTime);
+		
 		//void runSimulations();
 		//void runSimulations2();
 		void runSimulations3();

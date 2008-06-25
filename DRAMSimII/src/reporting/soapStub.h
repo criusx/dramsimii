@@ -34,7 +34,7 @@ class SOAP_CMAC _ns2__submitEpochResultElement
 {
 public:
 	char *sessionID;	/* optional element of type xsd:string */
-	int epoch;	/* required element of type xsd:int */
+	LONG64 epoch;	/* required element of type xsd:long */
 	int __sizechannel;	/* sequence of elements <channel> */
 	int *channel;	/* optional element of type xsd:int */
 	int __sizerank;	/* sequence of elements <rank> */
@@ -81,7 +81,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___ns1__submitEpochResult
-#define SOAP_TYPE___ns1__submitEpochResult (17)
+#define SOAP_TYPE___ns1__submitEpochResult (18)
 /* Operation wrapper: */
 struct __ns1__submitEpochResult
 {
@@ -91,7 +91,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (18)
+#define SOAP_TYPE_SOAP_ENV__Header (19)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -103,7 +103,7 @@ private:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (19)
+#define SOAP_TYPE_SOAP_ENV__Code (20)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -114,7 +114,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (21)
+#define SOAP_TYPE_SOAP_ENV__Detail (22)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -126,7 +126,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (24)
+#define SOAP_TYPE_SOAP_ENV__Reason (25)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -136,7 +136,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (25)
+#define SOAP_TYPE_SOAP_ENV__Fault (26)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {

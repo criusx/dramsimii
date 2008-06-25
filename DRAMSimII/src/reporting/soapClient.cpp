@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-06-19 02:36:14 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-06-25 19:08:16 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__submitEpochResult(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns2__submitEpochResultElement *ns2__submitEpochResultElement, _ns2__submitEpochResultResponseElement *ns2__submitEpochResultResponseElement)

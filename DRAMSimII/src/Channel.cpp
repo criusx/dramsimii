@@ -482,7 +482,7 @@ void Channel::doPowerCalculation()
 	char * s = new char[ss.str().length()+1];
 	strncpy(s,ss.str().c_str(), ss.str().length());
 	s[ss.str().length()] = '\0';
-	submit.sessionID = s;
+	submit.sessionID = s; 
 
 	submit.epoch = time;
 

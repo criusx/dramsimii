@@ -51,16 +51,16 @@ tick System::nextTick() const
 /// @brief decides if enough time has passed to do a new power calculation
 /// @brief or stats calculation, if so, aggregate and report results
 //////////////////////////////////////////////////////////////////////////
-void System::checkStats(tick currentTime)
+void System::checkStats()
 {
-	if (currentTime >= nextStats)
+	if (time >= nextStats)
 	{		
 		DEBUG_TIMING_LOG("aggregate stats");
 		doPowerCalculation();
 		printStatistics();
 	}
 
-	while (currentTime >= nextStats)
+	while (time >= nextStats)
 		nextStats += systemConfig.getEpoch();
 }
 
