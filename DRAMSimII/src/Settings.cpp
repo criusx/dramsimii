@@ -145,6 +145,9 @@ Settings::Settings(const int argc, const char **argv)
 					case output_file_token:
 						outFile = nodeValue;
 						break;
+					case epoch_token:
+						toNumeric<unsigned>(epoch,nodeValue,std::dec);
+						break;
 					case frequency_spec_token:
 						toNumeric<unsigned>(frequencySpec,nodeValue,std::dec);
 						break;

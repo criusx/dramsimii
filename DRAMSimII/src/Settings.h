@@ -112,6 +112,8 @@ namespace DRAMSimII
 				return datarate_token;
 			else if (input == "tBufferDelay")
 				return t_buffer_delay_token;
+			else if (input == "epoch")
+				return epoch_token;
 			else if (input == "clock_granularity" || input == "clockGranularity")
 				return clock_granularity_token;
 			else if (input == "row_buffer_policy" || input == "rowBufferPolicy")

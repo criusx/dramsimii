@@ -160,6 +160,7 @@ namespace DRAMSimII
 		dqs_per_dram_token,
 		dram_type_token,
 		event_queue_depth_token,
+		epoch_token,
 		frequency_spec_token,
 		help_token,
 		history_queue_depth_token,
