@@ -30,6 +30,7 @@ rankCount(settings.rankCount),
 bankCount(settings.bankCount),
 rowCount(settings.rowCount),
 columnCount(settings.columnCount),
+epoch(settings.epoch),
 shortBurstRatio(settings.shortBurstRatio),
 readPercentage(settings.readPercentage)
 {}
@@ -59,6 +60,7 @@ rankCount(rhs->rankCount),
 bankCount(rhs->bankCount),
 rowCount(rhs->rowCount),
 columnCount(rhs->columnCount),
+epoch(rhs->epoch),
 shortBurstRatio(rhs->shortBurstRatio),
 readPercentage(rhs->readPercentage)
 {}
@@ -109,7 +111,7 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMSimII::SystemConf
 	return *this;
 }
 
-
+#if 0
 #ifdef M5
 SystemConfiguration::SystemConfiguration(System::Params *parameter)
 {
@@ -181,4 +183,5 @@ SystemConfiguration::SystemConfiguration(System::Params *parameter)
 
 	cachelineSize = parameter->cachelineSize;
 }
+#endif
 #endif

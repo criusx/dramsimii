@@ -47,7 +47,7 @@ To do list:
 
 #define ABS(a) ((a) < 0 ? (-a) : (a))
 
-#define INVALID -1
+//#define INVALID -1
 
 #define PI 3.1415926535897932384626433832795
 
@@ -60,9 +60,9 @@ To do list:
 #define DEBUG_TRANSACTION
 
 //#define DEBUG_RAND
-#ifndef DEBUG
-#define DEBUG
-#endif
+
+#define DEBUGDRAMSIM
+
 //#define DEBUG_MIN_PROTOCOL_GAP
 
 //#define DEBUG_FLAG_2
@@ -117,30 +117,35 @@ namespace DRAMSimII
 	double ascii2multiplier(const std::string &);
 
 	// debug macros
-#ifdef M5DEBUG
+#if defined(DEBUG) && defined(M5DEBUG) // compiler should declare this
 #define M5_TIMING_LOG(X) timingOutStream << X << endl;
 #define M5_DEBUG(X) X;
 #else
 #define M5_TIMING_LOG(X)
 #define M5_DEBUG(X)
 #endif
-#ifdef DEBUG_TRANSACTION
+
+#if defined(DEBUG) && defined(DEBUG_TRANSACTION)// compiler should declare this
 #define DEBUG_TRANSACTION_LOG(X) timingOutStream << X << endl;
 #else
 #define DEBUG_TRANSACTION_LOG(X)
 #endif
-#ifdef DEBUG_COMMAND
+
+#if defined(DEBUG) && defined(DEBUG_COMMAND)
 #define DEBUG_COMMAND_LOG(X) timingOutStream << X << endl;
 #else
 #define DEBUG_COMMAND_LOG(X)
 #endif
-#ifdef DEBUG
+
+#if defined(DEBUG) && defined(DEBUGDRAMSIM)
 #define DEBUG_TIMING_LOG(X) timingOutStream << X << endl;
 #define DEBUG_LOG(X) cerr << X << endl;
 #else
+#define DEBUG_TIMING_LOG(X)
 #define DEBUG_LOG(X)
-#define DEBUG(X)
 #endif
+
+
 
 }
 

@@ -18,6 +18,7 @@ namespace DRAMSimII
 		std::string settingsOutputFile;
 		//////////////////////////////////////////////////////////////////////////	
 		// command data
+		unsigned epoch;
 		std::string inFile;
 		InputType inFileType;
 		std::string outFile;

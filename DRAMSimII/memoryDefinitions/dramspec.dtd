@@ -30,6 +30,7 @@
 	xsi:noNamespaceSchemaLocation CDATA #IMPLIED
 >
 <!ELEMENT eventQueueDepth (#PCDATA)>
+<!ELEMENT epoch (#PCDATA)>
 <!ELEMENT historyQueueDepth (#PCDATA)>
 <!ELEMENT inputFile (#PCDATA)>
 <!ATTLIST inputFile type CDATA #REQUIRED>
@@ -56,7 +57,7 @@
 <!ELEMENT rows (#PCDATA)>
 <!ELEMENT seniorityAgeLimit (#PCDATA)>
 <!ELEMENT shortBurstRatio (#PCDATA)>
-<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, outFile, requestCount, inputFile, cpuToMemoryClockRatio)>
+<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, outFile, requestCount, inputFile, cpuToMemoryClockRatio, epoch)>
 <!ELEMENT systemConfigurationType (#PCDATA)>
 <!ELEMENT systemVDD (#PCDATA)>
 <!ELEMENT tAL (#PCDATA)>

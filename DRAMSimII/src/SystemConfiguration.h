@@ -14,9 +14,9 @@ namespace DRAMSimII
 	class SystemConfiguration
 	{ 
 	protected:
-		CommandOrderingAlgorithm commandOrderingAlgorithm;			///< describes how to place commands into the per bank command queues
-		TransactionOrderingAlgorithm transactionOrderingAlgorithm;	///< the algorithm that describes how to place transactions into the queue
-		SystemConfigurationType configType;							///< whether the system is standard or FBD
+		CommandOrderingAlgorithm commandOrderingAlgorithm;				///< describes how to place commands into the per bank command queues
+		TransactionOrderingAlgorithm transactionOrderingAlgorithm;		///< the algorithm that describes how to place transactions into the queue
+		SystemConfigurationType configType;								///< whether the system is standard or FBD
 		unsigned refreshTime;											///< the frequency at which refresh commands are scheduled
 		RefreshPolicy refreshPolicy;									///< determines how refreshes are handled
 		unsigned columnSize;											///< the size of each column, in bytes
@@ -24,8 +24,8 @@ namespace DRAMSimII
 		unsigned cachelineSize;											///< 32/64/128 etc 
 		unsigned seniorityAgeLimit;										///< the oldest a command may be before it takes top priority
 		DRAMType dram_type; 
-		RowBufferPolicy rowBufferManagementPolicy;					///< row buffer management policy? OPEN/CLOSE, etc 
-		AddressMappingScheme addressMappingScheme;					///< addr mapping scheme for physical to DRAM addr 
+		RowBufferPolicy rowBufferManagementPolicy;						///< row buffer management policy? OPEN/CLOSE, etc 
+		AddressMappingScheme addressMappingScheme;						///< addr mapping scheme for physical to DRAM addr 
 		double datarate;												///< the operating frequency of the system
 		bool postedCAS;													///< TRUE/FALSE, so the CAS command may be stored and run later
 		bool readWriteGrouping;											///< whether or not reads and writes should be grouped closely
@@ -37,6 +37,7 @@ namespace DRAMSimII
 		unsigned bankCount;												///< How many banks per device? 
 		unsigned rowCount;												///< rows per bank
 		unsigned columnCount;											///< columns per row
+		const unsigned epoch;											///< the amount of time between stats aggregation and reporting
 		double shortBurstRatio;
 		double readPercentage;											///< the percentage of transactions that are reads
 
@@ -60,6 +61,7 @@ namespace DRAMSimII
 		unsigned getCachelineSize() const { return cachelineSize; }
 		unsigned getRefreshTime() const { return refreshTime; }
 		unsigned getSeniorityAgeLimit() const { return seniorityAgeLimit; }
+		unsigned getEpoch() const { return epoch; }
 		RefreshPolicy getRefreshPolicy() const { return refreshPolicy; }
 		DRAMType getDRAMType() const { return dram_type; }
 		bool isAutoPrecharge() const { return autoPrecharge; }

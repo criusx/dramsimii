@@ -7,7 +7,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
-#define STATS_INTERVAL 1000000
+//#define STATS_INTERVAL 1000000
 
 //#define TESTNORMAL
 
@@ -33,7 +33,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		schedSendTiming(pkt,curTick + 200000 + randomGen.random((Tick)0, (Tick)200000));
 	}
 	else
-	{
+	{ 
 		delete pkt->req;
 		delete pkt;
 	}
@@ -54,13 +54,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 	tick currentMemCycle = curTick/memory->getCpuRatio();
 
-	if (currentMemCycle >= memory->nextStats)
-	{		
-		memory->ds->doPowerCalculation();
-		memory->ds->printStatistics();
-	}
-	while (currentMemCycle >= memory->nextStats)
-		memory->nextStats += STATS_INTERVAL;
+	memory->ds->checkStats(currentMemCycle);	
 
 	assert(pkt->isRequest());
 
@@ -96,24 +90,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 
 	// any packet which doesn't need a response and isn't a write
-	//if (!pkt->needsResponse())
-	if (!pkt->needsResponse() && !pkt->isWrite())
-	{
-		M5_TIMING_LOG("packet not needing response.");
-
-		if (pkt->cmd != MemCmd::UpgradeReq)
-		{
-			cerr << "deleted pkt, not upgradereq, not write, needs no resp" << endl;
-			delete pkt->req;
-			delete pkt;
-		}
-		else
-		{
-			cerr << "####################### not upgrade request" << endl;
-		}
-		return true;
-	}
-	else
+	if (pkt->needsResponse())
+	//if (!pkt->needsResponse() && !pkt->isWrite())
 	{
 #ifdef TESTNORMAL
 		//memory->doFunctionalAccess(pkt);
@@ -194,6 +172,22 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			return true;
 		}
 #endif
+	}
+	else
+	{
+		M5_TIMING_LOG("packet not needing response.");
+
+		if (pkt->cmd != MemCmd::UpgradeReq)
+		{
+			cerr << "deleted pkt, not upgradereq, not write, needs no resp" << endl;
+			delete pkt->req;
+			delete pkt;
+		}
+		else
+		{
+			cerr << "####################### not upgrade request" << endl;
+		}
+		return true;
 	}
 }
 

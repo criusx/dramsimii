@@ -32,13 +32,15 @@ namespace DRAMSimII
 	{
 	protected:
 		// members
-		SystemConfiguration systemConfig;	///< stores the parameters for the DRAM system, including channel/rank/bank/row counts
-		std::vector<Channel> channel;		///< represents the independent channels
+		SystemConfiguration systemConfig;		///< stores the parameters for the DRAM system, including channel/rank/bank/row counts
+		std::vector<Channel> channel;			///< represents the independent channels
 		SimulationParameters simParameters;		///< has all the necessary parameters for the simulation run
-		Statistics statistics;				///< keeps running statistics about the simulation
+		Statistics statistics;					///< keeps running statistics about the simulation
 		InputStream input_stream;				///< provides an interface to the input trace for the simulation
+		
 
-		tick time;							///< master clock, usually set to the oldest channel's time
+		tick time;								///< master clock, usually set to the oldest channel's time
+		tick nextStats;							///< the next time at which stats should be collected
 
 		//functions
 		unsigned findOldestChannel() const;	
@@ -46,6 +48,7 @@ namespace DRAMSimII
 		Transaction *getNextIncomingTransaction();
 		Transaction *getNextRandomRequest();
 		bool convertAddress(Address &) const;
+		void checkStats(tick currentTime);
 
 	public:		
 		

@@ -75,17 +75,17 @@ private:
 
 
 protected:
-	TickEvent tickEvent;				///< instance of TickEvent to allow the wrapper to receive/send events to the global queue
-	std::vector<MemoryPort*> ports;		///< ports to send/recv data to other simulator components
+	TickEvent tickEvent;									///< instance of TickEvent to allow the wrapper to receive/send events to the global queue
+	std::vector<MemoryPort*> ports;							///< ports to send/recv data to other simulator components
 
-	int lastPortIndex;					///< the last port accessed
+	int lastPortIndex;										///< the last port accessed
 	typedef std::vector<MemoryPort*>::iterator PortIterator;
-	DRAMSimII::System *ds;			///< pointer to the DRAMSimII class
-	bool needRetry;						///< if the memory system needs to issue a retry statement before any more requests will come in
-	unsigned mostRecentChannel;			///< the most recent channel that a request was sent to
-	int cpuRatio;						///< the ratio of the cpu frequency to the memory frequency
-	float invCpuRatio;					///< the ratio of the memory frequency to the cpu frequency
-	tick nextStats;					///< the next time at which stats should be collected
+	DRAMSimII::System *ds;									///< pointer to the DRAMSimII class
+	bool needRetry;											///< if the memory system needs to issue a retry statement before any more requests will come in
+	unsigned mostRecentChannel;								///< the most recent channel that a request was sent to
+	int cpuRatio;											///< the ratio of the cpu frequency to the memory frequency
+	float invCpuRatio;										///< the ratio of the memory frequency to the cpu frequency
+	
 
 	//virtual Tick calculateLatency(Packet *);
 	//virtual Tick recvTiming(PacketPtr pkt);
@@ -93,16 +93,16 @@ protected:
 
 
 public:
-	typedef M5dramSystemParams Params;	///< the parameters used to initialize the memory sytem object
+	typedef M5dramSystemParams Params;						///< the parameters used to initialize the memory sytem object
 
-	M5dramSystem(const Params *);		///< constructor
+	M5dramSystem(const Params *);							///< constructor
 
 	// allows other components to get a port which they can send packets to
 	virtual Port *getPort(const std::string &if_name, int idx = -1);
 
 	void getAddressRanges(AddrRangeList &resp, bool &snoop);
 
-	int getCpuRatio() const { return cpuRatio; }	///< returns the ratio of the cpu frequency to the memory frequency
+	int getCpuRatio() const { return cpuRatio; }			///< returns the ratio of the cpu frequency to the memory frequency
 
 	float getInvCPURatio() const { return invCpuRatio; }	///< returns the ratio of the memory frequency to the cpu frequency
 

@@ -107,5 +107,6 @@
 		<inputFile type="mase">equake.trc</inputFile>
 		<!-- used in scaling CPU ticks to memory system ticks -->
 		<cpuToMemoryClockRatio>4.00</cpuToMemoryClockRatio>
+		<epoch>1000000</epoch>
 	</simulationParameters>
 </dramspec>

@@ -110,6 +110,7 @@
 								</xs:complexType>
 							</xs:element>
 							<xs:element name="cpuToMemoryClockRatio" type="xs:float" />
+							<xs:element name="epoch" type="xs:integer" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

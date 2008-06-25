@@ -32,7 +32,7 @@ using namespace DRAMSimII;
 //////////////////////////////////////////////////////////////////////
 tick System::nextTick() const
 {
-	tick nextWake = TICK_MAX;
+	tick nextWake = nextStats;
 
 	// find the next time to wake from among all the channels
 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
@@ -45,6 +45,23 @@ tick System::nextTick() const
 	}
 
 	return max(nextWake, time + 1);
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief decides if enough time has passed to do a new power calculation
+/// @brief or stats calculation, if so, aggregate and report results
+//////////////////////////////////////////////////////////////////////////
+void System::checkStats(tick currentTime)
+{
+	if (currentTime >= nextStats)
+	{		
+		DEBUG_TIMING_LOG("aggregate stats");
+		doPowerCalculation();
+		printStatistics();
+	}
+
+	while (currentTime >= nextStats)
+		nextStats += systemConfig.getEpoch();
 }
 
 //////////////////////////////////////////////////////////////////////
