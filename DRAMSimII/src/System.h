@@ -48,7 +48,8 @@ namespace DRAMSimII
 		Transaction *getNextIncomingTransaction();
 		Transaction *getNextRandomRequest();
 		bool convertAddress(Address &) const;
-		void checkStats(tick currentTime);
+		virtual void doPowerCalculation();
+		virtual void printStatistics();		
 
 	public:		
 		
@@ -58,8 +59,8 @@ namespace DRAMSimII
 		void enqueueTimeShift(Transaction* trans);
 		InputStatus waitForTransactionToFinish(Transaction *trans);
 		virtual tick nextTick() const;
-		virtual void doPowerCalculation();
-		virtual void printStatistics();
+		
+		void checkStats(tick currentTime);
 		//void runSimulations();
 		//void runSimulations2();
 		void runSimulations3();
