@@ -66,4 +66,3 @@ std::ostream &DRAMSimII::operator <<(std::ostream &os, const AddressMappingSchem
 	}
 	return os;
 }
-

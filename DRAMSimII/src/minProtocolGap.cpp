@@ -226,6 +226,12 @@ int Channel::minProtocolGap(const Command *this_c) const
 		// respect tRFC and tRP
 		min_gap = max((int)((currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC()),(int)((currentRank.getLastPrechargeTime() - time) + timingSpecification.tRP()));
 		break;
+
+	case NO_COMMAND:
+		break;
+
+	default:
+		break;
 	}
 
 	return max(min_gap,timingSpecification.tCMD());
@@ -449,6 +455,12 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	case REFRESH_ALL_COMMAND:
 		// respect tRFC and tRP
 		nextTime = max(currentRank.getLastRefreshTime() + timingSpecification.tRFC(), currentRank.getLastPrechargeTime() + timingSpecification.tRP());
+		break;
+
+	case NO_COMMAND:
+		break;
+
+	default:
 		break;
 	}
 

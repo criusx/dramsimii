@@ -43,7 +43,7 @@ tick System::nextTick() const
 			nextWake = channelNextWake;
 		}
 	}
-
+	assert(nextWake < TICK_MAX);
 	return max(nextWake, time + 1);
 }
 
@@ -658,7 +658,8 @@ channel(systemConfig.getChannelCount(),
 		simParameters(settings),
 		statistics(settings),
 		input_stream(settings),
-		time(0)
+		time(0),
+		nextStats(settings.epoch)
 {
 	string suffix;
 	switch (settings.outFileType)
@@ -895,4 +896,3 @@ void System::doPowerCalculation()
 		currentChannel->doPowerCalculation();
 	}
 }
-

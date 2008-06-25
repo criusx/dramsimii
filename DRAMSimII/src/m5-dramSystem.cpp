@@ -161,7 +161,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			if (memory->tickEvent.scheduled())
 				memory->tickEvent.deschedule();
 
-			tick next = min(memory->nextStats,memory->ds->nextTick());
+			tick next = memory->ds->nextTick();
 			assert(next < TICK_MAX);
 
 
@@ -200,14 +200,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 void M5dramSystem::TickEvent::process()
 {	
 	tick currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
-
-	if (currentMemCycle >= memory->nextStats)
-	{		
-		memory->ds->doPowerCalculation();
-		memory->ds->printStatistics();
-	}
-	while (currentMemCycle >= memory->nextStats)
-		memory->nextStats += STATS_INTERVAL;
+	
+	memory->ds->checkStats(currentMemCycle);
 
 	M5_TIMING_LOG("intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]");
 
@@ -220,8 +214,8 @@ void M5dramSystem::TickEvent::process()
 		memory->tickEvent.deschedule();
 
 	// determine the next time to wake up
-	tick next = min(memory->nextStats,memory->ds->nextTick());	
-	assert(next < TICK_MAX);
+	tick next = memory->ds->nextTick();	
+	
 
 	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]");
 
@@ -315,8 +309,7 @@ needRetry(false)
 	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency()));
 	invCpuRatio = (int)((double)ds->Frequency()/(Clock::Frequency));
 
-	nextStats = STATS_INTERVAL;
-
+	
 	timingOutStream << *ds << std::endl;
 }
 
