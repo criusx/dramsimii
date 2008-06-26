@@ -7,8 +7,6 @@
 using namespace std;
 using namespace DRAMSimII;
 
-//#define STATS_INTERVAL 1000000
-
 //#define TESTNORMAL
 
 //#define TESTNEW
