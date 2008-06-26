@@ -254,8 +254,7 @@ void M5dramSystem::moveToTime(const tick now)
 				ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
 			}
 			else
-			{
-				//delete packet->req;
+			{				
 				delete packet;
 			}			
 		}	
