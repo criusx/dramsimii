@@ -1,3 +1,0 @@
-bin\Test\MPR DLL.dll
-obj\Test\ResolveAssemblyReference.cache
-obj\Test\MPR DLL.dll

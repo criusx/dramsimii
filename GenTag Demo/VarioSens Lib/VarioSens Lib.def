@@ -1,6 +1,0 @@
-; VarioSens Lib.def : Declares the module parameters for the DLL.
-
-LIBRARY      "VarioSens Lib"
-
-EXPORTS
-    ; Explicit exports can go here

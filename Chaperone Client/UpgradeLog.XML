@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
-<Properties><Property Name="Solution" Value="MPR Examp DLL Proj">
-</Property><Property Name="Solution File" Value="C:\Documents and Settings\CriuS\My Documents\Visual Studio 2005\Projects\WJ\MPR Examp DLL Proj.sln">
-</Property><Property Name="Date" Value="Sunday, March 26, 2006">
-</Property><Property Name="Time" Value="0:21:36 AM">
-</Property></Properties><Event ErrorLevel="0" Project="MPR DLL" Source="MPR DLL\MPR DLL.csproj" Description="Project converted successfully">
-</Event><Event ErrorLevel="3" Project="MPR DLL" Source="MPR DLL\MPR DLL.csproj" Description="Converted">
-</Event><Event ErrorLevel="0" Project="MPR DLL" Source="MPR DLL\MPR DLL.csproj" Description="Scan complete: Upgrade not required for project files.">
-</Event></UpgradeLog>

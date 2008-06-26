@@ -1,9 +1,0 @@
-<?xml version = '1.0' encoding = 'windows-1252'?>
-<orion-application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/orion-application-10_0.xsd">
-  <web-module id="JavaWebService-GetDates-webapp" path="file:/C:/temp/jdeveloper/jdev/mywork/JavaWebService/GetDates/public_html/"/>
-  <log>
-    <file path="JavaWebService-oc4j-app.log"/>
-  </log>
-  <jazn provider="XML" location="JavaWebService-jazn-data.xml" default-realm="jazn.com"/>
-  <data-sources path="JavaWebService-data-sources.xml"/>
-</orion-application>

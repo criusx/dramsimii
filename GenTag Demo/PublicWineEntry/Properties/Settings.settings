@@ -1,9 +1,0 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WineEntryClient.Properties" GeneratedClassName="Settings">
-  <Profiles />
-  <Settings>
-    <Setting Name="WineEntryClient_org_dyndns_crius_wineWS" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://crius.dyndns.org:8888/GentagWineDemo-WineDemo-context-root/WineWSSoapHttpPort</Value>
-    </Setting>
-  </Settings>
-</SettingsFile>

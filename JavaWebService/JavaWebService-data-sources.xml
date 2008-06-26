@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'windows-1252'?>
-<data-sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/data-sources-10_1.xsd" xmlns="http://xmlns.oracle.com/oracleas/schema">
-  <connection-pool name="jdev-connection-pool-Local">
-    <connection-factory factory-class="oracle.jdbc.pool.OracleDataSource" user="system" password="->DataBase_User_WBED8N9elye-jiQQa5KBfUIoFL09iMorzXFsVTlekiQ=" url="jdbc:oracle:thin:@192.168.10.3:1521:ORCL"/>
-  </connection-pool>
-  <managed-data-source name="jdev-connection-managed-Local" jndi-name="jdbc/LocalDS" connection-pool-name="jdev-connection-pool-Local"/>
-  <native-data-source name="jdev-connection-native-Local" jndi-name="jdbc/LocalCoreDS" url="jdbc:oracle:thin:@192.168.10.3:1521:ORCL" user="system" password="->DataBase_User_Y-c07gvIINo1oBhibts4eHiVhRplrvqFbzVjHn5dMKA=" data-source-class="oracle.jdbc.pool.OracleDataSource"/>
-</data-sources>
