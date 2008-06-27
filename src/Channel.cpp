@@ -103,11 +103,37 @@ rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification, systemConfig
 const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime)
 {
 	// if there is an operation that takes place at time == endTime, this will allow it
-	bool done = true;
 
-	while ((time < endTime) || !done)
+	while (time < endTime)
 	{	
-		done = true;
+		const Command *nextCommand = readNextCommand();
+
+		tick nextExecuteTime = nextCommand ? earliestExecuteTime(nextCommand) : TICK_MAX;
+
+		if (nextCommand)
+		{
+			int minGap = minProtocolGap(nextCommand);
+			assert(nextExecuteTime == time + minGap);
+		}
+
+		// move time to either when the next command executes or the next transaction decodes, whichever is earlier
+		tick nextDecodeTime = nextTransactionDecodeTime();
+
+		// move time to when the next transaction decodes and go there
+		if (nextDecodeTime < min(nextExecuteTime, endTime))
+		{
+			time = nextDecodeTime;
+		}
+		// or the time at which the next command is issued to be executed and move there
+		else if (nextExecuteTime <= endTime)
+		{
+			time = nextExecuteTime;
+		}
+		// or simply move to the end time since there are no commands to execute or transactions to decode in this time
+		{
+			time = endTime;
+		}
+
 		// has room to decode an available transaction
 		if (checkForAvailableCommandSlots(readTransaction(true)))
 		{
@@ -120,107 +146,49 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 			assert(t2cResult == true);
 
 			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << decodedTransaction);
-		}
-		else
+		}		
+		// execute commands for this time, reevaluate what the next command is since this may have changed after decoding the transaction
+		if ((nextCommand = readNextCommand()) && (earliestExecuteTime(nextCommand) <= time))
 		{
-			// move time up by executing commands
-			if (const Command *nextCommand = readNextCommand())
+			Command *executingCommand = getNextCommand();
+
+			executeCommand(executingCommand);					
+
+			DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << nextExecuteTime - time << "] " << *executingCommand);
+
+			// only get completed commands if they have finished
+			if (Transaction *completedTransaction = completionQueue.pop())
 			{
-				tick nextExecuteTime = earliestExecuteTime(nextCommand);
+				statistics->collectTransactionStats(completedTransaction);
 
-				int minGap = minProtocolGap(nextCommand);
-				assert(nextExecuteTime == time + minGap);
+				DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completedTransaction);
 
-				// move time to either when the next command executes or the next transaction decodes, whichever is earlier
-				tick nextDecodeTime = nextTransactionDecodeTime();
-
-				// move time to when the next transaction decodes and go there
-				if (nextDecodeTime < min(nextExecuteTime, endTime))
+				// reuse the refresh transactions
+				if (completedTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 				{
-					time = nextDecodeTime;
-					done = false;
+					//completedTransaction->setEnqueueTime(completedTransaction->getEnqueueTime() + systemConfig.getRefreshTime());
+
+					assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
+
+					delete completedTransaction;
+
+					return NULL;
 				}
-				// allow system to overrun so that it may send a command				
-				//else if (nextExecuteTime <= endTime + timingSpecification.tCMD())
-				else if (nextExecuteTime <= endTime)
+				else // return what was pointed to
 				{
-					time = nextExecuteTime;
+					const void *origTrans = completedTransaction->getOriginalTransaction();
 
-					Command *executingCommand = getNextCommand();
+					M5_DEBUG(assert(completedTransaction->getOriginalTransaction()));
 
-					executeCommand(executingCommand);					
+					*transFinishTime = completedTransaction->getCompletionTime();
 
-					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << nextExecuteTime - time << "] " << *executingCommand);
+					delete completedTransaction;
 
-					// only get completed commands if they have finished
-					if (Transaction *completedTransaction = completionQueue.pop())
-					{
-						statistics->collectTransactionStats(completedTransaction);
-
-						DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completedTransaction);
-
-						// reuse the refresh transactions
-						if (completedTransaction->getType() == AUTO_REFRESH_TRANSACTION)
-						{
-							//completedTransaction->setEnqueueTime(completedTransaction->getEnqueueTime() + systemConfig.getRefreshTime());
-
-							assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
-
-							delete completedTransaction;
-
-							return NULL;
-						}
-						else // return what was pointed to
-						{
-							const void *origTrans = completedTransaction->getOriginalTransaction();
-
-							M5_DEBUG(assert(completedTransaction->getOriginalTransaction()));
-
-							*transFinishTime = completedTransaction->getCompletionTime();
-
-							delete completedTransaction;
-
-							return origTrans;
-						}
-					}
-				}
-				else
-				{
-					time = endTime;
-				}
-			}
-			else
-			{
-				// the transaction queue and all the per bank queues are empty, or the transactions cannot yet be decoded
-				// so just move time forward to the point where the transaction starts
-				// or move time forward until the transaction is ready to be decoded
-
-				// get the next command, irrespective whether it is available to decode 
-				const Transaction *nextTrans = readTransaction(false);
-
-				// if the transaction can be decoded before the end of this segment and there is space for it
-				if ((nextTrans) && (nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay() <= endTime) && checkForAvailableCommandSlots(nextTrans))
-				{
-					tick oldTime = time;
-					assert(nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay() <= endTime);
-
-					time = nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay();
-					assert(time <= endTime);
-
-					if (oldTime >= time)
-						assert(oldTime < time);
-
-					done = false;
-				}
-				// no transactions to convert, no commands to issue, just go forward
-				else
-				{
-					time = endTime;
+					return origTrans;
 				}
 			}
 		}
 	}
-
 	//assert(time <= endTime + timingSpecification.tCMD());
 	assert(time <= endTime);
 
@@ -229,6 +197,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 
 	return NULL;
 }
+
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief determines when the next transaction is decoded, command ready to be executed or next refresh command arrives
@@ -341,7 +310,7 @@ tick Channel::nextTransactionDecodeTime() const
 	{
 		if (checkForAvailableCommandSlots(nextTrans))
 		{
-			nextTime = nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay() + 1;
+			nextTime = nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay();
 		}
 	}
 	return nextTime;
