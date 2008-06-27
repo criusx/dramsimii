@@ -102,10 +102,13 @@ rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification, systemConfig
 //////////////////////////////////////////////////////////////////////////
 const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime)
 {
-	while (time < endTime)
+	// if there is an operation that takes place at time == endTime, this will allow it
+	bool done = true;
+
+	while ((time < endTime) || !done)
 	{	
+		done = true;
 		// has room to decode an available transaction
-		/// @todo should this switch to use nextTransactionDecodeTime() ? 
 		if (checkForAvailableCommandSlots(readTransaction(true)))
 		{
 			// actually remove it from the queue now
@@ -120,66 +123,65 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 		}
 		else
 		{
-			//M5_TIMING_LOG("!T2C " << readTransaction(true));
-
 			// move time up by executing commands
-			if (const Command *temp_c = readNextCommand())
+			if (const Command *nextCommand = readNextCommand())
 			{
-				tick nextExecuteTime = earliestExecuteTime(temp_c);
-				assert(nextExecuteTime == time + minProtocolGap(temp_c));
+				tick nextExecuteTime = earliestExecuteTime(nextCommand);
 
-				//M5_TIMING_LOG("mg: " << min_gap);
+				int minGap = minProtocolGap(nextCommand);
+				assert(nextExecuteTime == time + minGap);
 
 				// move time to either when the next command executes or the next transaction decodes, whichever is earlier
 				tick nextDecodeTime = nextTransactionDecodeTime();
 
+				// move time to when the next transaction decodes and go there
 				if (nextDecodeTime < min(nextExecuteTime, endTime))
 				{
 					time = nextDecodeTime;
+					done = false;
 				}
 				// allow system to overrun so that it may send a command				
-				else if (nextExecuteTime <= endTime + timingSpecification.tCMD())
+				//else if (nextExecuteTime <= endTime + timingSpecification.tCMD())
+				else if (nextExecuteTime <= endTime)
 				{
-					Command *nextCommand = getNextCommand();
+					time = nextExecuteTime;
 
-					executeCommand(nextCommand);
+					Command *executingCommand = getNextCommand();
 
-					statistics->collectCommandStats(nextCommand);
+					executeCommand(executingCommand);					
 
-					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << nextExecuteTime - time << "] " << *nextCommand);
+					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << nextExecuteTime - time << "] " << *executingCommand);
 
 					// only get completed commands if they have finished
-					Transaction *completed_t = completionQueue.pop();
-
-					if (completed_t)
+					if (Transaction *completedTransaction = completionQueue.pop())
 					{
-						statistics->collectTransactionStats(completed_t);
+						statistics->collectTransactionStats(completedTransaction);
 
-						DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completed_t);
+						DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completedTransaction);
 
-							// reuse the refresh transactions
-							if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
-							{
-								//completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
+						// reuse the refresh transactions
+						if (completedTransaction->getType() == AUTO_REFRESH_TRANSACTION)
+						{
+							//completedTransaction->setEnqueueTime(completedTransaction->getEnqueueTime() + systemConfig.getRefreshTime());
 
-								assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
+							assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
 
-								delete completed_t;
+							delete completedTransaction;
 
-								return NULL;
-							}
-							else // return what was pointed to
-							{
-								const void *origTrans = completed_t->getOriginalTransaction();
+							return NULL;
+						}
+						else // return what was pointed to
+						{
+							const void *origTrans = completedTransaction->getOriginalTransaction();
 
-								M5_DEBUG(assert(completed_t->getOriginalTransaction()));
+							M5_DEBUG(assert(completedTransaction->getOriginalTransaction()));
 
-								*transFinishTime = completed_t->getCompletionTime();
+							*transFinishTime = completedTransaction->getCompletionTime();
 
-								delete completed_t;
+							delete completedTransaction;
 
-								return origTrans;
-							}
+							return origTrans;
+						}
 					}
 				}
 				else
@@ -189,18 +191,26 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 			}
 			else
 			{
-				// the transaction queue and all the per bank queues are empty,
+				// the transaction queue and all the per bank queues are empty, or the transactions cannot yet be decoded
 				// so just move time forward to the point where the transaction starts
 				// or move time forward until the transaction is ready to be decoded
+
+				// get the next command, irrespective whether it is available to decode 
 				const Transaction *nextTrans = readTransaction(false);
-				if ((nextTrans) && (nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay() + 1 <= endTime) && checkForAvailableCommandSlots(nextTrans))
+
+				// if the transaction can be decoded before the end of this segment and there is space for it
+				if ((nextTrans) && (nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay() <= endTime) && checkForAvailableCommandSlots(nextTrans))
 				{
 					tick oldTime = time;
-					assert(nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay() + 1 <= endTime);
+					assert(nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay() <= endTime);
 
-					time = timingSpecification.tBufferDelay() + nextTrans->getEnqueueTime() + 1;
+					time = nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay();
+					assert(time <= endTime);
+
 					if (oldTime >= time)
 						assert(oldTime < time);
+
+					done = false;
 				}
 				// no transactions to convert, no commands to issue, just go forward
 				else
@@ -211,8 +221,8 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 		}
 	}
 
-	assert(time <= endTime + timingSpecification.tCMD());
-	//assert(time <= endTime);
+	//assert(time <= endTime + timingSpecification.tCMD());
+	assert(time <= endTime);
 
 	*transFinishTime = endTime;
 	M5_TIMING_LOG("ch[" << channelID << "] @ " << std::dec << time);
@@ -290,8 +300,10 @@ tick Channel::nextTick() const
 
 /// @brief adds this command to the history queue
 /// @details this allows other groups to view a recent history of commands that were issued to decide what to execute next
-void Channel::recordCommand(Command *newestCommand)
+void Channel::retireCommand(Command *newestCommand)
 {
+	statistics->collectCommandStats(newestCommand);
+
 	while (!historyQueue.push(newestCommand))
 	{
 		delete historyQueue.pop();
@@ -492,7 +504,7 @@ void Channel::doPowerCalculation()
 
 	submit.rank = &rankArray[0];
 	submit.__sizerank = rankArray.size();
-	
+
 	submit.PsysACTSTBY = &PsysACTSTBYArray[0];
 	submit.__sizePsysACTSTBY = PsysACTSTBYArray.size();
 	submit.PsysACT = &PsysACTArray[0];
@@ -626,7 +638,7 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig.getSeniorityAgeLimit()))
 		{
 			// if this transaction has not yet been decoded, then look to see if the refresh trans has arrived
-			if (time <= tempTrans->getEnqueueTime() + delay)
+			if (time < tempTrans->getEnqueueTime() + delay)
 			{
 				M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << delay);
 
@@ -673,7 +685,7 @@ Transaction *Channel::getTransaction()
 
 		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig.getSeniorityAgeLimit()))
 		{
-			if (time <= tempTrans->getEnqueueTime() + timingSpecification.tBufferDelay())
+			if (time < tempTrans->getEnqueueTime() + timingSpecification.tBufferDelay())
 			{
 				M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay());
 

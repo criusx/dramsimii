@@ -191,9 +191,8 @@ void System::enqueueTimeShift(Transaction* trans)
 //////////////////////////////////////////////////////////////////////
 const void *System::moveAllChannelsToTime(const tick endTime, tick *transFinishTime)
 {
-#if M5DEBUG
-	timingOutStream << "move forward until: " << endTime << endl;
-#endif
+	M5_TIMING_LOG("move forward until: " << endTime );
+
 	const void *finishedTransaction = NULL;
 
 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)

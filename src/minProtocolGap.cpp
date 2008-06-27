@@ -234,7 +234,8 @@ int Channel::minProtocolGap(const Command *this_c) const
 		break;
 	}
 
-	return max(min_gap,timingSpecification.tCMD());
+	//return max(min_gap,timingSpecification.tCMD());
+	return max(min_gap,0);
 }
 
 /// @brief Returns the soonest time that this command may execute
@@ -464,5 +465,6 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 		break;
 	}
 
-	return max(nextTime, time + timingSpecification.tCMD());
+	//return max(nextTime, time + timingSpecification.tCMD());
+	return max(nextTime, time);
 }

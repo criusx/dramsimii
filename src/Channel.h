@@ -40,7 +40,7 @@ namespace DRAMSimII
 		// functions
 		bool enqueue(Transaction *in);
 		bool isFull() const { return transactionQueue.freecount() == 0; }	///< determines whether there is room for more transactions
-		void recordCommand(Command *);
+		void retireCommand(Command *);
 		unsigned getChannelID() const { return channelID; }					///< return the ordinal of this channel
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
 		bool transaction2commands(Transaction *);
