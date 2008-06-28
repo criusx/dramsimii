@@ -68,7 +68,7 @@ void System::runSimulations()
 		tick nearFinish = 0;
 
 		// as long as transactions keep happening prior to this time
-		if (moveAllChannelsToTime(min(input_t->getEnqueueTime(),nextTick()),&nearFinish))
+		if (moveAllChannelsToTime(min(input_t->getEnqueueTime(),nextTick()),nearFinish))
 		{
 			cerr << "not right, no host transactions here" << endl;
 		}

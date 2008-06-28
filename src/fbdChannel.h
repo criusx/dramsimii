@@ -21,7 +21,7 @@ namespace DRAMSimII
 	protected:
 		// overridden virtual functions
 		int minProtocolGap(const Command *this_c) const;
-		const void *moveChannelToTime(const tick endTime, tick *transFinishTime);
+		const void *moveChannelToTime(const tick endTime, tick& transFinishTime);
 		const Command *readNextCommand(const Command *slotAFrame, const Command *slotBFrame) const;
 		Command *getNextCommand(const Command *slotAFrame, const Command *slotBFrame);
 		fbdFrame *getNextFrame();

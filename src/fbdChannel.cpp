@@ -242,7 +242,7 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 
 // may only execute commands from the previous frame or from the first slot in the next frame
 // however, up to three commands must be executed
-const void *fbdChannel::moveChannelToTime(const tick endTime, tick *transFinishTime)
+const void *fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 {
 
 	while (time < endTime)
@@ -273,19 +273,19 @@ const void *fbdChannel::moveChannelToTime(const tick endTime, tick *transFinishT
 				{
 					statistics->collectCommandStats(nextFrame->getCommandA());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandA());
-					executeCommand(nextFrame->getCommandA(),0);
+					executeCommand(nextFrame->getCommandA());
 				}
 				if (nextFrame->getCommandBType() != NO_COMMAND && nextFrame->getCommandBType() != DATA_COMMAND)
 				{
 					statistics->collectCommandStats(nextFrame->getCommandB());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandB());
-					executeCommand(nextFrame->getCommandB(),0);
+					executeCommand(nextFrame->getCommandB());
 				}
 				if (nextFrame->getCommandCType() != NO_COMMAND && nextFrame->getCommandCType() != DATA_COMMAND)
 				{
 					statistics->collectCommandStats(nextFrame->getCommandC());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandC());
-					executeCommand(nextFrame->getCommandC(),0);
+					executeCommand(nextFrame->getCommandC());
 				}
 			}
 
@@ -316,7 +316,7 @@ const void *fbdChannel::moveChannelToTime(const tick endTime, tick *transFinishT
 				{
 					const void *origTrans = completed_t->getOriginalTransaction();
 
-					*transFinishTime = completed_t->getCompletionTime();
+					transFinishTime = completed_t->getCompletionTime();
 
 					M5_DEBUG(assert(completed_t->getOriginalTransaction()));								
 
@@ -340,7 +340,7 @@ const void *fbdChannel::moveChannelToTime(const tick endTime, tick *transFinishT
 
 	assert(time <= endTime + timingSpecification.tCMD());
 
-	*transFinishTime = endTime;
+	//*transFinishTime = endTime;
 
 	M5_TIMING_LOG("ch[" << channelID << "] @ " << std::dec << time);
 
