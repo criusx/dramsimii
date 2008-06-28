@@ -192,7 +192,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 	//assert(time <= endTime + timingSpecification.tCMD());
 	assert(time <= endTime);
 
-	//*transFinishTime = endTime;
+	transFinishTime = endTime;
 	M5_TIMING_LOG("ch[" << channelID << "] @ " << std::dec << time);
 
 	return NULL;
