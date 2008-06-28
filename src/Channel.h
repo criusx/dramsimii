@@ -46,7 +46,7 @@ namespace DRAMSimII
 		bool transaction2commands(Transaction *);
 		Command *getNextCommand();		
 		void doPowerCalculation();
-		void executeCommand(Command *thisCommand,const int gap);
+		//void executeCommand(Command *thisCommand,const int gap);
 		void executeCommand(Command *thisCommand);
 		tick nextTransactionDecodeTime() const;
 		virtual tick nextTick() const;
@@ -54,7 +54,7 @@ namespace DRAMSimII
 
 		// functions that may differ for architectures that inherit this		
 		virtual const Command *readNextCommand() const;
-		virtual const void *moveChannelToTime(const tick endTime, tick *transFinishTime);
+		virtual const void *moveChannelToTime(const tick endTime, tick& transFinishTime);
 		virtual int minProtocolGap(const Command *thisCommand) const;
 		virtual tick earliestExecuteTime(const Command *thisCommand) const;
 

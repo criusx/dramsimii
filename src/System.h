@@ -55,7 +55,7 @@ namespace DRAMSimII
 	public:		
 		
 		// functions
-		const void *moveAllChannelsToTime(const tick endTime, tick *transFinishTime);
+		const void *moveAllChannelsToTime(const tick endTime, tick& transFinishTime);
 		bool enqueue(Transaction* trans);
 		void enqueueTimeShift(Transaction* trans);
 		InputStatus waitForTransactionToFinish(Transaction *trans);
@@ -64,7 +64,7 @@ namespace DRAMSimII
 		
 		//void runSimulations();
 		//void runSimulations2();
-		void runSimulations3();
+		void runSimulations();
 
 		// accessors
 		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); } ///< returns true if this channel has no more room

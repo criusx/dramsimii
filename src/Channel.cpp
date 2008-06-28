@@ -100,7 +100,7 @@ rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification, systemConfig
 /// @param endTime move the channel until it is at this time
 /// @param transFinishTime the time that this transaction finished
 //////////////////////////////////////////////////////////////////////////
-const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime)
+const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 {
 	// if there is an operation that takes place at time == endTime, this will allow it
 
@@ -178,9 +178,9 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 				{
 					const void *origTrans = completedTransaction->getOriginalTransaction();
 
-					M5_DEBUG(assert(completedTransaction->getOriginalTransaction()));
+					M5_DEBUG(assert(origTrans));
 
-					*transFinishTime = completedTransaction->getCompletionTime();
+					transFinishTime = completedTransaction->getCompletionTime();
 
 					delete completedTransaction;
 
@@ -192,7 +192,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick *transFinishTime
 	//assert(time <= endTime + timingSpecification.tCMD());
 	assert(time <= endTime);
 
-	*transFinishTime = endTime;
+	//*transFinishTime = endTime;
 	M5_TIMING_LOG("ch[" << channelID << "] @ " << std::dec << time);
 
 	return NULL;

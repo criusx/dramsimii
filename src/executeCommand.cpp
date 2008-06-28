@@ -5,6 +5,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
+#if 0
 /// <summary>
 /// Updates the channel time to what it would be had this command been executed
 /// Updates the rank and bank records of the most recent RAS, CAS, etc. times
@@ -125,8 +126,16 @@ void Channel::executeCommand(Command *thisCommand,const int gap)
 	// inserts into a queue which dequeues into the command pool
 	retireCommand(thisCommand);
 }
+#endif
 
-
+/// <summary>
+/// Updates the channel time to what it would be had this command been executed
+/// Updates the rank and bank records of the most recent RAS, CAS, etc. times
+/// Enqueues RAS times to allow t_faw to be determined later
+/// Updates rank and bank records of CAS, RAS lengths for later calculations in 
+/// min_protocol_gap()
+/// </summary>
+/// <param name="this_command">The command to execute against the current state</param>
 void Channel::executeCommand(Command *thisCommand)
 {
 	Rank &currentRank = rank[thisCommand->getAddress().rank];
@@ -237,7 +246,6 @@ void Channel::executeCommand(Command *thisCommand)
 		}
 	}
 
-	// record command history.
 	// inserts into a queue which dequeues into the command pool
 	retireCommand(thisCommand);
 }

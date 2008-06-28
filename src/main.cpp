@@ -23,13 +23,13 @@ int main(int argc,const char **argv, char *envp[])
 	if (settings.systemType == FBD_CONFIG)
 	{
 		fbdSystem fbds(settings);
-		fbds.runSimulations3();
+		fbds.runSimulations();
 	}
 	else
 	{
 		System ds(settings); // combines read_command line and other inits
 		//ds.run_simulations2();
-		ds.runSimulations3();
+		ds.runSimulations();
 		timingOutStream << ds << endl;
 	}
 
