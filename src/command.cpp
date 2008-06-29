@@ -41,12 +41,12 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 	case CAS_AND_PRECHARGE_COMMAND:
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
 		if (!autoPrecharge)
-			commandType = commandType == CAS_WRITE_AND_PRECHARGE_COMMAND ? CAS_WRITE_COMMAND : CAS_COMMAND;
+			commandType = (commandType == CAS_WRITE_AND_PRECHARGE_COMMAND) ? CAS_WRITE_COMMAND : CAS_COMMAND;
 		break;
 	case CAS_COMMAND:
 	case CAS_WRITE_COMMAND:
 		if (autoPrecharge)
-			commandType = commandType == CAS_WRITE_COMMAND ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_AND_PRECHARGE_COMMAND;
+			commandType = (commandType == CAS_WRITE_COMMAND) ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_AND_PRECHARGE_COMMAND;
 		break;
 	default:
 		break;

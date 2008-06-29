@@ -60,6 +60,9 @@ void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 
 void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 {
+	// make sure precharges follow activates
+	assert(activated == true);
+
 	switch (currentCommand->getCommandType())
 	{
 	case CAS_AND_PRECHARGE_COMMAND:
@@ -74,10 +77,7 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 	default:
 		cerr << "Unhandled CAS variant" << endl;
 		break;
-	}
-
-	// make sure precharges follow activates
-	assert(activated == true);
+	}	
 
 	activated = false;
 }
