@@ -103,37 +103,16 @@ rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification, systemConfig
 const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 {
 	// if there is an operation that takes place at time == endTime, this will allow it
+	assert(endTime >= time);
 
 	while (time < endTime)
 	{	
-		const Command *nextCommand = readNextCommand();
-
-		tick nextExecuteTime = nextCommand ? earliestExecuteTime(nextCommand) : TICK_MAX;
-
-		if (nextCommand)
-		{
-			int minGap = minProtocolGap(nextCommand);
-			assert(nextExecuteTime == time + minGap);
-		}
-
 		// move time to either when the next command executes or the next transaction decodes, whichever is earlier
-		tick nextDecodeTime = nextTransactionDecodeTime();
-
-		// move time to when the next transaction decodes and go there
-		if (nextDecodeTime < min(nextExecuteTime, endTime))
-		{
-			time = nextDecodeTime;
-		}
-		// or the time at which the next command is issued to be executed and move there
-		else if (nextExecuteTime <= endTime)
-		{
-			time = nextExecuteTime;
-		}
-		// or simply move to the end time since there are no commands to execute or transactions to decode in this time
-		{
-			time = endTime;
-		}
-
+		// otherwise just go to the end
+		tick oldTime = time;
+		time = max(min(endTime,min(nextTransactionDecodeTime(),nextCommandExecuteTime())),time);
+		assert(time >= oldTime);
+		
 		// has room to decode an available transaction
 		if (checkForAvailableCommandSlots(readTransaction(true)))
 		{
@@ -147,14 +126,17 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 
 			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << decodedTransaction);
 		}		
+
 		// execute commands for this time, reevaluate what the next command is since this may have changed after decoding the transaction
-		if ((nextCommand = readNextCommand()) && (earliestExecuteTime(nextCommand) <= time))
+		const Command *nextCommand = readNextCommand();
+
+		if (nextCommand && (earliestExecuteTime(nextCommand) <= time))
 		{
 			Command *executingCommand = getNextCommand();
 
 			executeCommand(executingCommand);					
 
-			DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << nextExecuteTime - time << "] " << *executingCommand);
+			DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << executingCommand->getStartTime() - time << "] " << *executingCommand);
 
 			// only get completed commands if they have finished
 			if (Transaction *completedTransaction = completionQueue.pop())
@@ -206,65 +188,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 //////////////////////////////////////////////////////////////////////////
 tick Channel::nextTick() const
 {
-	tick nextWake = TICK_MAX;
-
-	// first look for transactions
-	if (const Transaction *nextTrans = readTransactionSimple())
-	{
-		// make sure it can finish
-		tick tempWake = nextTrans->getEnqueueTime() + getTimingSpecification().tBufferDelay() + 1; 
-
-		assert(nextTrans->getEnqueueTime() <= time);
-		assert(tempWake <= time + timingSpecification.tBufferDelay() + 1);
-
-		// whenever the next transaction is ready and there are available slots for the R/C/P commands
-		if ((tempWake < nextWake) && (checkForAvailableCommandSlots(nextTrans)))
-		{
-			nextWake = tempWake;
-		}
-	}
-
-	// then check to see when the next command occurs
-	if (const Command *tempCommand = readNextCommand())
-	{
-		int tempGap = minProtocolGap(tempCommand);
-		tick tempCommandExecuteTime = earliestExecuteTime(tempCommand);
-		assert(time + tempGap == tempCommandExecuteTime);
-
-		if (tempCommandExecuteTime < nextWake)
-		{
-			nextWake = time + tempGap;
-		}
-	}
-
-	// check the refresh queue
-	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
-	{
-		if (const Transaction *refresh_t = readRefresh())
-		{
-			// add one because the transaction actually finishes halfway through the tick
-			tick tempWake = refresh_t->getEnqueueTime() + timingSpecification.tBufferDelay() + 1;
-
-			//assert(refresh_t->getEnqueueTime() <= currentChan->getTime());
-			//assert(tempWake <= currentChan->getTime() + currentChan->getTimingSpecification().tBufferDelay());
-
-			if ((refresh_t->getEnqueueTime() < nextWake) && (checkForAvailableCommandSlots(refresh_t)))
-			{
-				// a refresh transaction may have been missed, so ensure that the correct time is chosen in the future
-				nextWake = tempWake;
-			}
-		}
-
-		//const transaction *refresh_t = (*currentChan).readRefresh();
-
-		//if (refresh_t->getEnqueueTime() < nextWake)
-		//{
-		//	// a refresh transaction may have been missed, so ensure that the correct time is chosen in the future
-		//	nextWake = max(currentChan->getTime() + 1,refresh_t->getEnqueueTime());
-		//}
-	}
-
-	return nextWake;
+	return max(min(nextTransactionDecodeTime(),nextCommandExecuteTime()),time + 1);
 }
 
 /// @brief adds this command to the history queue
@@ -312,6 +236,24 @@ tick Channel::nextTransactionDecodeTime() const
 		{
 			nextTime = nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay();
 		}
+	}
+	return nextTime;
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief determines the next time available for a command to issue
+//////////////////////////////////////////////////////////////////////////
+tick Channel::nextCommandExecuteTime() const
+{
+	tick nextTime = TICK_MAX;
+	// then check to see when the next command occurs
+	if (const Command *tempCommand = readNextCommand())
+	{
+		int tempGap = minProtocolGap(tempCommand);
+		tick tempCommandExecuteTime = earliestExecuteTime(tempCommand);
+		assert(time + tempGap == tempCommandExecuteTime);
+
+		nextTime = tempCommandExecuteTime;
 	}
 	return nextTime;
 }

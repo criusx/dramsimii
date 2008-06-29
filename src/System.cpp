@@ -37,11 +37,12 @@ tick System::nextTick() const
 	// find the next time to wake from among all the channels
 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
-		tick channelNextWake = currentChan->nextTick();
-		if (channelNextWake < nextWake)
-		{
-			nextWake = channelNextWake;
-		}
+		//tick channelNextWake = currentChan->nextTick();
+		nextWake = min(currentChan->nextTick(),nextWake);
+		//if (channelNextWake < nextWake)
+		//{
+		//	nextWake = channelNextWake;
+		//}
 	}
 	assert(nextWake < TICK_MAX);
 	return max(nextWake, time + 1);
@@ -77,7 +78,7 @@ bool System::convertAddress(Address &thisAddress) const
 	unsigned bit_15,bit_27,bits_26_to_16;
 
 	// if there's a test involving specific ranks/banks and the mapping is predetermined
-	if (input_stream.getType() == MAPPED)
+	if (inputStream.getType() == MAPPED)
 		return true;
 	
 	static unsigned chan_addr_depth = log2(systemConfig.getChannelCount());
@@ -487,7 +488,7 @@ void System::updateSystemTime()
 //////////////////////////////////////////////////////////////////////
 Transaction *System::getNextRandomRequest()
 {
-	if (input_stream.getType() == RANDOM)
+	if (inputStream.getType() == RANDOM)
 	{
 		unsigned int j;
 		Transaction *thisTransaction = new Transaction();
@@ -495,7 +496,7 @@ Transaction *System::getNextRandomRequest()
 		rand_s(&j);
 
 		// check against last transaction to see what the chan_id was, and whether we need to change channels or not
-		if (input_stream.getChannelLocality() * UINT_MAX < j)
+		if (inputStream.getChannelLocality() * UINT_MAX < j)
 		{
 			thisTransaction->getAddresses().channel = (thisTransaction->getAddresses().channel + (j % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
 		}
@@ -511,7 +512,7 @@ Transaction *System::getNextRandomRequest()
 
 		rand_s(&j);
 
-		if ((input_stream.getRankLocality() * UINT_MAX < j) && (systemConfig.getRankCount() > 1))
+		if ((inputStream.getRankLocality() * UINT_MAX < j) && (systemConfig.getRankCount() > 1))
 		{
 			rank_id = thisTransaction->getAddresses().rank = 
 				(rank_id + 1 + (j % (systemConfig.getRankCount() - 1))) % systemConfig.getRankCount();
@@ -525,7 +526,7 @@ Transaction *System::getNextRandomRequest()
 
 		rand_s(&j);
 
-		if ((input_stream.getBankLocality() * UINT_MAX < j) && (systemConfig.getBankCount() > 1))
+		if ((inputStream.getBankLocality() * UINT_MAX < j) && (systemConfig.getBankCount() > 1))
 		{
 			bank_id = thisTransaction->getAddresses().bank =
 				(bank_id + 1 + (j % (systemConfig.getBankCount() - 1))) % systemConfig.getBankCount();
@@ -539,7 +540,7 @@ Transaction *System::getNextRandomRequest()
 
 		rand_s(&j);
 
-		if (input_stream.getRowLocality() * UINT_MAX < j)
+		if (inputStream.getRowLocality() * UINT_MAX < j)
 		{
 			thisTransaction->getAddresses().row = (row_id + 1 + (j % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
 			row_id = thisTransaction->getAddresses().row;
@@ -551,7 +552,7 @@ Transaction *System::getNextRandomRequest()
 
 		rand_s(&j);
 
-		if (input_stream.getReadPercentage() * UINT_MAX > j)
+		if (inputStream.getReadPercentage() * UINT_MAX > j)
 		{
 			thisTransaction->setType(READ_TRANSACTION);
 		}
@@ -562,34 +563,34 @@ Transaction *System::getNextRandomRequest()
 
 		rand_s(&j);
 
-		thisTransaction->setLength(input_stream.getShortBurstRatio() * UINT_MAX > j ? 4 : 8);
+		thisTransaction->setLength(inputStream.getShortBurstRatio() * UINT_MAX > j ? 4 : 8);
 
 		while (true)
 		{
 			rand_s(&j);
 
-			if (j > input_stream.getArrivalThreshhold() * UINT_MAX) // interarrival probability function
+			if (j > inputStream.getArrivalThreshhold() * UINT_MAX) // interarrival probability function
 			{
 
 				// Gaussian distribution function
-				if (input_stream.getInterarrivalDistributionModel() == GAUSSIAN_DISTRIBUTION)
+				if (inputStream.getInterarrivalDistributionModel() == GAUSSIAN_DISTRIBUTION)
 				{
-					input_stream.setArrivalThreshhold(1.0F - (1.0F / input_stream.boxMuller(input_stream.getAverageInterarrivalCycleCount(), 10)));
+					inputStream.setArrivalThreshhold(1.0F - (1.0F / inputStream.boxMuller(inputStream.getAverageInterarrivalCycleCount(), 10)));
 				}
 				// Poisson distribution function
-				else if (input_stream.getInterarrivalDistributionModel() == POISSON_DISTRIBUTION)
+				else if (inputStream.getInterarrivalDistributionModel() == POISSON_DISTRIBUTION)
 				{
-					input_stream.setArrivalThreshhold(1.0F - (1.0F / input_stream.Poisson(input_stream.getAverageInterarrivalCycleCount())));
+					inputStream.setArrivalThreshhold(1.0F - (1.0F / inputStream.Poisson(inputStream.getAverageInterarrivalCycleCount())));
 				}
 				break;
 			}
 			else
 			{
-				input_stream.setTime(input_stream.getTime() + 1);
+				inputStream.setTime(inputStream.getTime() + 1);
 			}
 		}
 
-		thisTransaction->setEnqueueTime(input_stream.getTime()); // FIXME: arrival time may be <= to enqueue time
+		thisTransaction->setEnqueueTime(inputStream.getTime()); // FIXME: arrival time may be <= to enqueue time
 		thisTransaction->getAddresses().column = 0;
 
 		return thisTransaction;
@@ -597,6 +598,78 @@ Transaction *System::getNextRandomRequest()
 	else
 		return NULL;
 }
+
+
+//////////////////////////////////////////////////////////////////////
+/// @brief enqueue the transaction
+/// @details attempts to enqueue the transaction in the correct channel
+/// also sets the enqueue time to the current time
+/// @author Joe Gross
+/// @param currentTransaction the transaction to be added to the per-channel queues
+/// @return true if the transaction was able to be enqueued
+//////////////////////////////////////////////////////////////////////
+bool System::enqueue(Transaction *currentTransaction)
+{
+	// map the PA of this transaction to this system, assuming the transaction is within range
+	// convert addresses of transactions that are not refreshes
+	if (currentTransaction->getAddresses().physicalAddress != ULLONG_MAX)
+	{
+		bool success = convertAddress(currentTransaction->getAddresses());
+		assert(success);
+	}
+
+	// attempt to insert the transaction into the per-channel transaction queue
+	if (!channel[currentTransaction->getAddresses().channel].enqueue(currentTransaction))
+	{
+#ifdef M5DEBUG
+		timingOutStream << "!+T(" << channel[currentTransaction->getAddresses().channel].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().channel].getTransactionQueueDepth() << ")" << endl;
+#endif
+		return false;
+	}
+	else
+	{
+#ifdef M5DEBUG
+		timingOutStream << "+T(" << currentTransaction->getAddresses().channel << ")[" << channel[currentTransaction->getAddresses().channel].getTransactionQueueCount() << "]" << endl;
+#endif
+		// if the transaction was successfully enqueued, set its enqueue time
+		currentTransaction->setEnqueueTime(channel[currentTransaction->getAddresses().channel].getTime());
+		return true;
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+/// @brief moves all channels to the specified time
+/// @details if a transaction completes before the end time is reached, it is returned and transFinishTime variable is set
+/// @author Joe Gross
+/// @param endTime the time which the channels should be moved to, assuming no transactions finish
+/// @param transFinishTime the time at which the transaction finished, less than the endTime
+/// @return a transaction which finished somewhere before the end time
+//////////////////////////////////////////////////////////////////////
+const void *System::moveAllChannelsToTime(const tick endTime, tick& transFinishTime)
+{
+	M5_TIMING_LOG("move forward until: " << endTime );
+
+	const void *finishedTransaction = NULL;
+
+	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+	{
+		finishedTransaction = i->moveChannelToTime(endTime, transFinishTime);
+
+		if (finishedTransaction)
+		{			
+			break;
+		}
+	}
+
+	updateSystemTime();
+	checkStats();
+
+	return finishedTransaction;
+}
+
+
+#define COMPRESS_INCOMING_TRANSACTIONS
 
 //////////////////////////////////////////////////////////////////////
 /// @brief get the next logical transaction
@@ -607,7 +680,7 @@ Transaction *System::getNextRandomRequest()
 //////////////////////////////////////////////////////////////////////
 Transaction *System::getNextIncomingTransaction()
 {
-	switch (input_stream.getType())
+	switch (inputStream.getType())
 	{
 	case RANDOM:
 		return getNextRandomRequest();
@@ -616,9 +689,9 @@ Transaction *System::getNextIncomingTransaction()
 	case MASE_TRACE:
 	case MAPPED:
 		{
-			static BusEvent this_e;
+			static BusEvent newEvent;
 
-			if (!input_stream.getNextBusEvent(this_e))
+			if (!inputStream.getNextBusEvent(newEvent))
 			{
 				/* EOF reached */
 				return NULL;
@@ -626,13 +699,17 @@ Transaction *System::getNextIncomingTransaction()
 			else
 			{
 				Transaction *tempTransaction = new Transaction;
-				tempTransaction->getAddresses() = this_e.address;
+				tempTransaction->getAddresses() = newEvent.address;
 				// FIXME: ignores return type
 				convertAddress(tempTransaction->getAddresses());
 				tempTransaction->setEventNumber(tempTransaction->getEventNumber() + 1);
-				tempTransaction->setType(this_e.attributes);
+				tempTransaction->setType(newEvent.attributes);
 				tempTransaction->setLength(channel[tempTransaction->getAddresses().channel].getTimingSpecification().tBurst());
-				tempTransaction->setEnqueueTime(this_e.timestamp);
+#ifdef COMPRESS_INCOMING_TRANSACTIONS
+				tempTransaction->setArrivalTime(newEvent.timestamp >> 8);
+#else
+				tempTransaction->setArrivalTime(newEvent.timestamp);
+#endif
 				// need to adjust arrival time for K6 traces to cycles
 				return tempTransaction;
 			}
@@ -657,7 +734,7 @@ channel(systemConfig.getChannelCount(),
 		Channel(settings, systemConfig)),
 		simParameters(settings),
 		statistics(settings),
-		input_stream(settings),
+		inputStream(settings),
 		time(0),
 		nextStats(settings.epoch)
 {

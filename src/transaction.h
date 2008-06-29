@@ -23,6 +23,7 @@ namespace DRAMSimII
 		TransactionType type;				///< transaction type
 		int status;							///< status of this transaction
 		unsigned length;					///< the number of words requested
+		tick arrivalTime;					///< the time when this transaction originally arrived
 		tick enqueueTime;					///< time when the transaction enters the MC queue
 		tick completionTime;				///< time when transaction has completed in DRAM ticks
 		tick decodeTime;					///< when the transaction was split up into several commands
@@ -34,7 +35,8 @@ namespace DRAMSimII
 		// accessors		
 		Address &getAddresses() { return addr; }									///< get the address of this transaction
 		const Address &getAddresses() const { return addr; }						///< get the address of this transaction
-		tick getEnqueueTime() const { return enqueueTime; }						///< get its enqueue time
+		tick getArrivalTime() const { return arrivalTime; }							///< get its arrival time
+		tick getEnqueueTime() const { return enqueueTime; }							///< get its enqueue time
 		tick getDecodeTime() const { return decodeTime; }							///< get its decode time
 		tick getCompletionTime() const { return completionTime; }					///< get the completion time
 		unsigned getLength() const { return length; }								///< get the number of bytes requested
@@ -44,6 +46,7 @@ namespace DRAMSimII
 
 		// mutators
 		void setEnqueueTime(const tick value) { enqueueTime = value; }
+		void setArrivalTime(const tick value) { arrivalTime = value; }
 		void setDecodeTime(const tick value) { decodeTime = value; }
 		void setCompletionTime(const tick value) { completionTime = value; }
 		void setType(const TransactionType value) { type = value; }

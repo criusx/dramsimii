@@ -150,10 +150,13 @@ void Channel::executeCommand(Command *thisCommand)
 	// ensure that the command is never started before it is enqueued
 	// this implies that if there was an idle period for the memory system, commands
 	// will not be seen as executing during this time	
-	if (thisCommand->getEnqueueTime() > earliestExecuteTime(thisCommand))
-		cerr << "asdf" << endl;
+	
 	//thisCommand->setStartTime(max(earliestExecuteTime(thisCommand), thisCommand->getEnqueueTime()));
+	
 	thisCommand->setStartTime(time + timingSpecification.tCMD());
+
+	assert(thisCommand->getStartTime() >= earliestExecuteTime(thisCommand));
+	assert(thisCommand->getStartTime() >= thisCommand->getEnqueueTime() + timingSpecification.tCMD());
 
 	// set this channel's time to the start time of this command
 	//time = thisCommand->getStartTime();

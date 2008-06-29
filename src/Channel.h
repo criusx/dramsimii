@@ -49,6 +49,7 @@ namespace DRAMSimII
 		//void executeCommand(Command *thisCommand,const int gap);
 		void executeCommand(Command *thisCommand);
 		tick nextTransactionDecodeTime() const;
+		tick nextCommandExecuteTime() const;
 		virtual tick nextTick() const;
 		
 

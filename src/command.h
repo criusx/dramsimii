@@ -12,7 +12,7 @@ namespace DRAMSimII
 	/// @brief represents a DRAM command from the memory controller to the DRAMs
 	class Command
 	{
-	private:
+	protected:
 		static Queue<Command> freeCommandPool; ///< command objects are stored here to avoid allocating memory after initialization
 
 		mutable CommandType commandType;///< what type of command this is

@@ -36,7 +36,7 @@ namespace DRAMSimII
 		std::vector<Channel> channel;			///< represents the independent channels
 		SimulationParameters simParameters;		///< has all the necessary parameters for the simulation run
 		Statistics statistics;					///< keeps running statistics about the simulation
-		InputStream input_stream;				///< provides an interface to the input trace for the simulation
+		InputStream inputStream;				///< provides an interface to the input trace for the simulation
 		
 
 		tick time;								///< master clock, usually set to the oldest channel's time

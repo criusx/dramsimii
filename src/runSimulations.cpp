@@ -48,18 +48,23 @@ void dramSystem::runSimulations2()
 //////////////////////////////////////////////////////////////////////
 void System::runSimulations()
 {
-	Transaction *input_t = NULL;
+	Transaction *inputTransaction = NULL;
+
+	tick newTime;
 
 	for (unsigned i = simParameters.getRequestCount(); i > 0; )
 	{		
-		if (!input_t)
+		if (!inputTransaction)
 		{
-			input_t = getNextIncomingTransaction();
-			if (!input_t)
+			inputTransaction = getNextIncomingTransaction();
+			
+			if (!inputTransaction)
 				break;
+
+			newTime = channel[inputTransaction->getAddresses().channel].getTime();
 			// if the previous transaction was delayed, thus making this arrival be in the past
 			// prevent new arrivals from arriving in the past
-			input_t->setEnqueueTime(max(input_t->getEnqueueTime(),channel[input_t->getAddresses().channel].getTime()));
+			//inputTransaction->setEnqueueTime(max(inputTransaction->getEnqueueTime(),channel[inputTransaction->getAddresses().channel].getTime()));
 		}
 
 		// in case this transaction tried to arrive while the queue was full
@@ -68,65 +73,31 @@ void System::runSimulations()
 		tick nearFinish = 0;
 
 		// as long as transactions keep happening prior to this time
-		if (moveAllChannelsToTime(min(input_t->getEnqueueTime(),nextTick()),nearFinish))
+		//if (moveAllChannelsToTime(min(inputTransaction->getEnqueueTime(),nextTick()),nearFinish))
+		if (moveAllChannelsToTime(max(newTime, inputTransaction->getArrivalTime()),nearFinish))
 		{
 			cerr << "not right, no host transactions here" << endl;
 		}
 
 		// attempt to enqueue external transactions
 		// as internal transactions (REFRESH) are enqueued automatically
-		if (nearFinish >= input_t->getEnqueueTime()) 
+		if (nearFinish >= inputTransaction->getArrivalTime()) 
 		{
-			if (enqueue(input_t))
+			if (enqueue(inputTransaction))
 			{
-				input_t = NULL;
+				inputTransaction = NULL;
 				i--;
 			}
 			else
 			{
 				// figure that the cpu <=> mch bus runs at the mostly the same speed
-				input_t->setEnqueueTime(input_t->getEnqueueTime() + channel[0].getTimingSpecification().tCMD());
+				//inputTransaction->setEnqueueTime(inputTransaction->getEnqueueTime() + channel[0].getTimingSpecification().tCMD());
+				newTime = channel[inputTransaction->getAddresses().channel].nextTick();
 			}
 		}
 	}
 }
 
-//////////////////////////////////////////////////////////////////////
-/// @brief enqueue the transaction
-/// @details attempts to enqueue the transaction in the correct channel
-/// also sets the enqueue time to the current time
-/// @author Joe Gross
-/// @param currentTransaction the transaction to be added to the per-channel queues
-/// @return true if the transaction was able to be enqueued
-//////////////////////////////////////////////////////////////////////
-bool System::enqueue(Transaction *currentTransaction)
-{
-	// map the PA of this transaction to this system, assuming the transaction is within range
-	// convert addresses of transactions that are not refreshes
-	if (currentTransaction->getAddresses().physicalAddress != ULLONG_MAX)
-	{
-		bool success = convertAddress(currentTransaction->getAddresses());
-		assert(success);
-	}
-
-	// attempt to insert the transaction into the per-channel transaction queue
-	if (!channel[currentTransaction->getAddresses().channel].enqueue(currentTransaction))
-	{
-#ifdef M5DEBUG
-		timingOutStream << "!+T(" << channel[currentTransaction->getAddresses().channel].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().channel].getTransactionQueueDepth() << ")" << endl;
-#endif
-		return false;
-	}
-	else
-	{
-#ifdef M5DEBUG
-		timingOutStream << "+T(" << currentTransaction->getAddresses().channel << ")[" << channel[currentTransaction->getAddresses().channel].getTransactionQueueCount() << "]" << endl;
-#endif
-		// if the transaction was successfully enqueued, set its enqueue time
-		currentTransaction->setEnqueueTime(channel[currentTransaction->getAddresses().channel].getTime());
-		return true;
-	}
-}
 
 #if 0
 /// Move time forward to ensure that the command was successfully enqueued
@@ -183,39 +154,7 @@ void System::enqueueTimeShift(Transaction* trans)
 		trans->setEnqueueTime(channel[chan].getTime());
 	}
 }
-#endif
 
-//////////////////////////////////////////////////////////////////////
-/// @brief moves all channels to the specified time
-/// @details if a transaction completes before the end time is reached, it is returned and transFinishTime variable is set
-/// @author Joe Gross
-/// @param endTime the time which the channels should be moved to, assuming no transactions finish
-/// @param transFinishTime the time at which the transaction finished, less than the endTime
-/// @return a transaction which finished somewhere before the end time
-//////////////////////////////////////////////////////////////////////
-const void *System::moveAllChannelsToTime(const tick endTime, tick& transFinishTime)
-{
-	M5_TIMING_LOG("move forward until: " << endTime );
-
-	const void *finishedTransaction = NULL;
-
-	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
-	{
-		finishedTransaction = i->moveChannelToTime(endTime, transFinishTime);
-
-		if (finishedTransaction)
-		{			
-			break;
-		}
-	}
-	
-	updateSystemTime();
-	checkStats();
-
-	return finishedTransaction;
-}
-
-#if 0
 input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 {
 	const int chan = trans->getAddresses().channel;
