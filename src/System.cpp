@@ -470,9 +470,11 @@ bool System::convertAddress(Address &thisAddress) const
 //////////////////////////////////////////////////////////////////////
 void System::updateSystemTime()
 {
-	time = TICK_MAX;
+	vector<Channel>::const_iterator currentChan = channel.begin(); 
+	time = currentChan->getTime();
+	currentChan++;
 
-	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
+	for (;currentChan != channel.end(); currentChan++)
 	{
 		if (currentChan->getTime() < time)
 			time = currentChan->getTime();

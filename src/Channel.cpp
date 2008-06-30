@@ -103,7 +103,7 @@ rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification, systemConfig
 const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 {
 	// if there is an operation that takes place at time == endTime, this will allow it
-	assert(endTime >= time);
+	//assert(endTime >= time);
 
 	while (time < endTime)
 	{	
@@ -111,6 +111,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 		// otherwise just go to the end
 		tick oldTime = time;
 		time = max(min(endTime,min(nextTransactionDecodeTime(),nextCommandExecuteTime())),time);
+		assert(time <= endTime);
 		assert(time >= oldTime);
 		
 		// has room to decode an available transaction
@@ -172,7 +173,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 		}
 	}
 	//assert(time <= endTime + timingSpecification.tCMD());
-	assert(time <= endTime);
+	//assert(time <= endTime);
 
 	transFinishTime = endTime;
 	M5_TIMING_LOG("ch[" << channelID << "] @ " << std::dec << time);

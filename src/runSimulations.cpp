@@ -57,7 +57,7 @@ void System::runSimulations()
 		if (!inputTransaction)
 		{
 			inputTransaction = getNextIncomingTransaction();
-			
+
 			if (!inputTransaction)
 				break;
 
@@ -68,7 +68,7 @@ void System::runSimulations()
 		}
 
 		// in case this transaction tried to arrive while the queue was full
-		
+
 
 		tick nearFinish = 0;
 
@@ -81,7 +81,7 @@ void System::runSimulations()
 
 		// attempt to enqueue external transactions
 		// as internal transactions (REFRESH) are enqueued automatically
-		if (nearFinish >= inputTransaction->getArrivalTime()) 
+		if (time >= inputTransaction->getArrivalTime()) 
 		{
 			if (enqueue(inputTransaction))
 			{
@@ -92,7 +92,7 @@ void System::runSimulations()
 			{
 				// figure that the cpu <=> mch bus runs at the mostly the same speed
 				//inputTransaction->setEnqueueTime(inputTransaction->getEnqueueTime() + channel[0].getTimingSpecification().tCMD());
-				newTime = channel[inputTransaction->getAddresses().channel].nextTick();
+				newTime = max(channel[inputTransaction->getAddresses().channel].nextTick(), newTime);
 			}
 		}
 	}
@@ -134,11 +134,11 @@ void System::enqueueTimeShift(Transaction* trans)
 				{
 					/*if (completed_t->getType() == AUTO_REFRESH_TRANSACTION)
 					{
-						completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
-						channel[chan].enqueueRefresh(completed_t);
+					completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
+					channel[chan].enqueueRefresh(completed_t);
 					}
 					else*/
-						delete completed_t;
+					delete completed_t;
 
 					statistics.collectTransactionStats(temp_t);
 #ifdef DEBUG_TRANSACTION					
@@ -201,7 +201,7 @@ input_status_t dramSystem::waitForTransactionToFinish(transaction *trans)
 					//	channel[completed_t->getAddresses().chan_id].enqueueRefresh(completed_t);
 					//}
 					//else
-						delete completed_t;
+					delete completed_t;
 
 #ifdef DEBUG_TRANSACTION
 					timingOutStream << "CH[" << setw(2) << chan << "] " << completed_t << endl;

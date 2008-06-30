@@ -5,13 +5,13 @@
 	<timing>
 		<datarate>800000000</datarate>
 		<clockGranularity>2</clockGranularity>
-		<channels>1</channels>
+		<channels>4</channels>
 		<channelWidth>8</channelWidth>
 		<!--burgerBase, closePageBaseline, intel845g, sdramBase, sdramClosePage, sdramHiperf-->
 		<physicalAddressMappingPolicy>closePageBaseline</physicalAddressMappingPolicy>
 		<rowBufferPolicy>closePage</rowBufferPolicy>
-		<ranks>2</ranks>
-		<banks>4</banks>
+		<ranks>4</ranks>
+		<banks>8</banks>
 		<rows>16384</rows>
 		<rowSize>16</rowSize>
 		<!-- columns * columnSize = pageSize -->

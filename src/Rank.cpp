@@ -58,8 +58,7 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 		for (vector<Bank>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
 		assert(!curBnk->isActivated());
 	banksPrecharged--;
-	assert(banksPrecharged > 0);
-	assert(banksPrecharged < bank.size());
+	assert(banksPrecharged >= 0 && banksPrecharged < bank.size());
 	// update the bank to reflect this change also
 	Bank &currentBank = bank[currentCommand->getAddress().bank];
 	currentBank.issueRAS(currentTime, currentCommand);
