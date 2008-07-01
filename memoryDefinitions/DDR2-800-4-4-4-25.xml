@@ -56,7 +56,7 @@
 		<cacheLineSize>64</cacheLineSize>
 		<historyQueueDepth>16</historyQueueDepth>
 		<completionQueueDepth>32</completionQueueDepth>
-		<transactionQueueDepth>8</transactionQueueDepth>
+		<transactionQueueDepth>16</transactionQueueDepth>
 		<eventQueueDepth>8</eventQueueDepth>
 		<refreshQueueDepth>8</refreshQueueDepth>
 		<!-- used to determine how long a refresh transaction may be deprioritized relative to normal transactions -->

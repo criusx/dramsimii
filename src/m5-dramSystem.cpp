@@ -7,7 +7,7 @@
 using namespace std;
 using namespace DRAMSimII;
 
-//#define TESTNORMAL
+#define TESTNORMAL
 
 //#define TESTNEW
 

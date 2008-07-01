@@ -447,7 +447,6 @@ const Command *Channel::readNextCommand() const
 		{
 			const Command *candidateCommand = NULL;
 
-			//int candidateGap = INT_MAX;
 			tick candidateExecuteTime = TICK_MAX;
 
 			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
