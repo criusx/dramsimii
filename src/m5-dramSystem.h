@@ -64,8 +64,7 @@ private:
 
 		virtual void recvStatusChange(Status status);
 
-		virtual void getDeviceAddressRanges(AddrRangeList &resp,
-			bool &snoop);
+		virtual void getDeviceAddressRanges(AddrRangeList &resp, bool &snoop);
 
 		virtual int deviceBlockSize();
 
@@ -84,7 +83,7 @@ protected:
 	bool needRetry;											///< if the memory system needs to issue a retry statement before any more requests will come in
 	unsigned mostRecentChannel;								///< the most recent channel that a request was sent to
 	int cpuRatio;											///< the ratio of the cpu frequency to the memory frequency
-	float invCpuRatio;										///< the ratio of the memory frequency to the cpu frequency
+	//float invCpuRatio;										///< the ratio of the memory frequency to the cpu frequency
 	
 
 	//virtual Tick calculateLatency(Packet *);
@@ -102,9 +101,9 @@ public:
 
 	void getAddressRanges(AddrRangeList &resp, bool &snoop);
 
-	int getCpuRatio() const { return cpuRatio; }			///< returns the ratio of the cpu frequency to the memory frequency
+	int getCPURatio() const { return cpuRatio; }			///< returns the ratio of the cpu frequency to the memory frequency
 
-	float getInvCPURatio() const { return invCpuRatio; }	///< returns the ratio of the memory frequency to the cpu frequency
+	//float getInvCPURatio() const { return invCpuRatio; }	///< returns the ratio of the memory frequency to the cpu frequency
 
 	void moveToTime(tick now);
 

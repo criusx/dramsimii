@@ -45,7 +45,8 @@ tick System::nextTick() const
 		//}
 	}
 	assert(nextWake < TICK_MAX);
-	return max(nextWake, time + 1);
+	assert(nextWake > time);
+	return nextWake;
 }
 
 //////////////////////////////////////////////////////////////////////////

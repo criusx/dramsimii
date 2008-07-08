@@ -37,8 +37,7 @@ namespace DRAMSimII
 		SimulationParameters simParameters;		///< has all the necessary parameters for the simulation run
 		Statistics statistics;					///< keeps running statistics about the simulation
 		InputStream inputStream;				///< provides an interface to the input trace for the simulation
-		
-
+	
 		tick time;								///< master clock, usually set to the oldest channel's time
 		tick nextStats;							///< the next time at which stats should be collected
 
@@ -69,6 +68,7 @@ namespace DRAMSimII
 		// accessors
 		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); } ///< returns true if this channel has no more room
 		double Frequency() const { return systemConfig.Frequency(); }	///< accessor to get the frequency of the DRAM system
+		tick getTime() const { return time; }
 
 		// constructors	
 		explicit System(const Settings& settings);

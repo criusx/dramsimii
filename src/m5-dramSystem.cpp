@@ -1,13 +1,12 @@
 #include <sstream>
 #include <stdlib.h>
+#include <cmath>
 
 #include "enumTypes.h"
 #include "m5-dramSystem.h"
 
 using namespace std;
 using namespace DRAMSimII;
-
-//#define TESTNORMAL
 
 //#define TESTNEW
 
@@ -32,7 +31,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	}
 	else
 	{ 
-		delete pkt->req;
+		//delete pkt->req;
 		delete pkt;
 	}
 	return true;
@@ -50,7 +49,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	}
 	//////////////////////////////////////////////////////////////////////////
 
-	tick currentMemCycle = curTick/memory->getCpuRatio();
+	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
 	
 	assert(pkt->isRequest());
 
@@ -89,18 +88,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	//if (pkt->needsResponse())
 	if (pkt->needsResponse() || pkt->isWrite())
 	{
-#ifdef TESTNORMAL
-		//memory->doFunctionalAccess(pkt);
-		bool nr = pkt->needsResponse();
-		memory->doAtomicAccess(pkt);
-		if (nr)
-		{
-			//pkt->makeTimingResponse();
-			timingOutStream << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
-			memory->ports[memory->lastPortIndex]->doSendTiming(pkt,(currentMemCycle + 101 + rand() % 100)*memory->getCpuRatio());
-		}
-		return true;
-#else		
 		int packetType = 0;
 
 		if (pkt->isRead())
@@ -161,13 +148,17 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			assert(next < TICK_MAX);
 
 
-			M5_TIMING_LOG("schWake [" << std::dec << memory->getCpuRatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]");
+			M5_TIMING_LOG("schWake [" << std::dec << memory->getCPURatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]");
 
-			memory->tickEvent.schedule(memory->getCpuRatio() * next);
+			assert(next > currentMemCycle);
+			assert(next * memory->getCPURatio() > curTick);
+			
+			memory->tickEvent.schedule(next * memory->getCPURatio());
+
+			//memory->tickEvent.schedule(memory->getCpuRatio() * next);
 
 			return true;
 		}
-#endif
 	}
 	else
 	{
@@ -195,7 +186,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 //////////////////////////////////////////////////////////////////////
 void M5dramSystem::TickEvent::process()
 {	
-	tick currentMemCycle = curTick / memory->getCpuRatio(); // TODO: make this a multiply operation
+	//tick currentMemCycle = curTick / memory->getCPURatio();
+	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
 	
 	M5_TIMING_LOG("intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]");
 
@@ -211,10 +203,12 @@ void M5dramSystem::TickEvent::process()
 	tick next = memory->ds->nextTick();	
 	
 
-	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCpuRatio()) << "][" << next << "]");
+	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCPURatio()) << "][" << next << "]");
 
-	assert(next * memory->getCpuRatio() > curTick);
-	schedule(static_cast<Tick>(next * memory->getCpuRatio()));
+	assert(next > currentMemCycle);
+	assert(next * memory->getCPURatio() > curTick);
+	
+	schedule(next * memory->getCPURatio());
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -233,7 +227,8 @@ void M5dramSystem::moveToTime(const tick now)
 	Packet *packet;
 	// if transactions are returned, then send them back,
 	// else if time is not brought up to date, then a refresh transaction has finished
-	while ((packet = (Packet *)ds->moveAllChannelsToTime(now, finishTime)) || finishTime < now)
+	//while ((packet = (Packet *)ds->moveAllChannelsToTime(now, finishTime)) || finishTime < now)
+	while ((packet = (Packet *)ds->moveAllChannelsToTime(now, finishTime)) || ds->getTime() < now)
 	{
 		if (packet)
 		{
@@ -241,17 +236,20 @@ void M5dramSystem::moveToTime(const tick now)
 
 			bool needsResponse = packet->needsResponse();
 
-			//doFunctionalAccess(packet);
-
 			doAtomicAccess(packet);		
 
 			if (needsResponse)
 			{			
-				assert(curTick <= static_cast<Tick>(finishTime * getCpuRatio()));
+				assert(curTick <= static_cast<Tick>(finishTime * getCPURatio()));
 
-				M5_TIMING_LOG("<-T [@" << std::dec << static_cast<Tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick);
+				M5_TIMING_LOG("<-T [@" << std::dec << static_cast<Tick>(finishTime * getCPURatio()) << "][+" << static_cast<Tick>(finishTime * getCPURatio() - curTick) << "] at" << curTick);
 
-				ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
+				ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(finishTime * getCPURatio()));
+
+				static tick returnCount;
+
+				if (++returnCount % 10000 == 0)
+					cerr << returnCount << "\r";
 			}
 			else
 			{				
@@ -299,8 +297,10 @@ needRetry(false)
 	else
 		ds = new fbdSystem(settings);	
 
-	cpuRatio = (int)((double)Clock::Frequency/(ds->Frequency()));
-	invCpuRatio = (int)((double)ds->Frequency()/(Clock::Frequency));
+	cpuRatio = (int)round(((float)Clock::Frequency/((float)ds->Frequency())));
+	cerr << cpuRatio << endl;
+	//invCpuRatio = (float)((double)ds->Frequency()/(Clock::Frequency));
+	//cerr << invCpuRatio << endl;
 
 	
 	timingOutStream << *ds << std::endl;

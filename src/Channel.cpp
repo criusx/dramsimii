@@ -42,20 +42,33 @@ rank(settings.rankCount, Rank(settings, timingSpecification, systemConfig))
 	// initialize the refresh counters per rank
 	if (settings.refreshPolicy != NO_REFRESH)
 	{
-		refreshCounter = new Transaction *[settings.rankCount];
+		refreshCounter = new Transaction *[rank.size()];
 
 		// stagger the times that each rank will be refreshed so they don't all arrive in a burst
 		unsigned step = settings.tREFI / settings.rankCount;
 
-		for (unsigned j = 0; j < settings.rankCount; ++j)
+		for (unsigned j = 0; j < rank.size(); ++j)
 		{
-			Transaction *newTrans = new Transaction();
+			Transaction *newTrans = new Transaction(); 
 			newTrans->setType(AUTO_REFRESH_TRANSACTION);
 			newTrans->getAddresses().rank = j;
 			newTrans->getAddresses().bank = 0;
 			newTrans->setEnqueueTime(j * (step +1));
 			refreshCounter[j] = newTrans;
 		}
+	}
+}
+
+Channel::~Channel()
+{
+	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
+	{
+		for (unsigned j = 0; j < systemConfig.getRankCount(); ++j)
+		{
+			delete refreshCounter[j];
+		}
+
+		delete refreshCounter;
 	}
 }
 
@@ -86,11 +99,11 @@ rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification, systemConfig
 	// initialize the refresh counters per rank
 	if (dc.systemConfig.getRefreshPolicy() != NO_REFRESH)
 	{
-		refreshCounter = dc.refreshCounter;
+		refreshCounter = new Transaction *[rank.size()];
 
 		for (unsigned j = 0; j < rank.size(); ++j)
 		{
-			refreshCounter[j] = dc.refreshCounter[j];
+			refreshCounter[j] = new Transaction(dc.refreshCounter[j]);
 		}
 	}
 }

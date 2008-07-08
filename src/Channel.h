@@ -63,7 +63,7 @@ namespace DRAMSimII
 		const TimingSpecification& getTimingSpecification() const { return timingSpecification; }	///< returns a reference to access the timing specification
 		Rank& getRank(const unsigned rankNum) { return rank[rankNum]; }								///< get a reference to this channel's rank n
 		const Rank& getRank(const unsigned rankNum) const { return rank[rankNum]; }					///< get a const reference to this channel's rank n
-		std::vector<Rank>& getRank() { return rank; }													///< get a reference to this channel's ranks
+		std::vector<Rank>& getRank() { return rank; }												///< get a reference to this channel's ranks
 		const std::vector<Rank>& getRank() const { return rank; }
 		tick getTime() const { return time; }
 		unsigned getLastRankID() const { return lastRankID; }
@@ -87,6 +87,7 @@ namespace DRAMSimII
 		explicit Channel();	
 		explicit Channel(const Settings& settings, const SystemConfiguration &sysConfig);
 		Channel(const Channel&);
+		virtual ~Channel();
 
 		Channel& operator =(const Channel& rs);
 	};
