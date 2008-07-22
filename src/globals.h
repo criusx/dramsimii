@@ -1,10 +1,9 @@
 /*
 To do list:
 
-1. add refresh
-2. add open page support
+2. add true open page support
 3. Look at power up/down models.
-4. re-add power models.
+4. improve power models.
 6. attach BIU/MCH, port to alpha-sim
 7. convert passed pointers/values to references
 8. standardize time variables
@@ -19,31 +18,23 @@ To do list:
 #pragma once
 
 #include <limits>
+#include <boost/integer_traits.hpp>
+#include <boost/cstdint.hpp>
 
-#define tick long long
-#define TICK_MAX LLONG_MAX
+using boost::int64_t;
+using boost::uint64_t;
+using boost::integer_traits;
 
-#include <iostream>
-#include <sstream>
-//#include <map>
+#define tick int64_t
+#define TICK_MAX static_cast<tick>(integer_traits<tick>::const_max)
+#define PHYSICAL_ADDRESS uint64_t
+#define PHYSICAL_ADDRESS_MAX static_cast<PHYSICAL_ADDRESS>(integer_traits<PHYSICAL_ADDRESS>::const_max)
+//#define TICK_MAX std::numeric_limits<boost::uint64_t>::max()
+
 #include <boost/iostreams/filtering_stream.hpp>
+#include <sstream>
 
 #include "enumTypes.h"
-
-// this is to take care of some nonstandard differences that arise due to having different platforms
-// check ISO24731 for details on what rand_s() will be
-#ifdef WIN32
-#ifdef DEBUG_RAND
-#define rand_s(a) (*a)=rand()
-#define srand48 srand
-#undef UINT_MAX
-#define UINT_MAX RAND_MAX
-#endif
-#define srand48 srand
-#else
-#define rand_s(a) *a=lrand48()*2
-#endif
-
 
 #define ABS(a) ((a) < 0 ? (-a) : (a))
 
@@ -99,6 +90,7 @@ namespace DRAMSimII
 		}
 		return l2;
 	}
+	
 
 	// converts a string to a number using stringstreams
 	template <class T>
@@ -107,6 +99,14 @@ namespace DRAMSimII
 		std::istringstream iss(s);
 		return !(iss >> f >> t).fail();
 	}	
+
+	template <class T>
+	inline std::string toString(const T& convertThis)
+	{
+		std::stringstream ss;
+		ss << convertThis;
+		return ss.str();
+	}
 
 	// global var forward
 	extern boost::iostreams::filtering_ostream timingOutStream;

@@ -1,7 +1,6 @@
 #include <assert.h>
 #include "event.h"
 
-using namespace std;
 using namespace DRAMSimII;
 
 // initialize the static member

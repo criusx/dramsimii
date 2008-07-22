@@ -1,50 +1,12 @@
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <iomanip>
-#include <cmath>
-#include <map>
-#include <fstream>
 #include <boost/iostreams/filtering_stream.hpp>
 
-#include "System.h"
-#include "Rank.h"
 #include "globals.h"
-#include "TimingSpecification.h"
-#include "Statistics.h"
 
-
-using namespace std;
-using namespace DRAMSimII;
+using boost::iostreams::filtering_ostream;
 
 // modified, writes to cerr or a compressed output file
-//boost::iostreams::filtering_ostream DRAMSimII::outStream;
-boost::iostreams::filtering_ostream DRAMSimII::timingOutStream;
-boost::iostreams::filtering_ostream DRAMSimII::powerOutStream;
-boost::iostreams::filtering_ostream DRAMSimII::statsOutStream;
+filtering_ostream DRAMSimII::timingOutStream;
+filtering_ostream DRAMSimII::powerOutStream;
+filtering_ostream DRAMSimII::statsOutStream;
 
-double DRAMSimII::ascii2multiplier(const string &input)
-{
-	switch(Settings::dramTokenizer(input))
-	{
-	case PICOSECOND:
-		return 0.001;
-		break;
-	case NANOSECOND:
-		return 1.0;
-		break;
-	case MICROSECOND:
-		return 1000.0;
-		break;
-	case MILLISECOND:
-		return 1000000.0;
-		break;
-	case SECOND:
-		return 1000000000.0;
-		break;
-	default:
-		cerr << "unknown multipler " << input << endl;
-		return 0.0;
-		break;
-	}
-}
+

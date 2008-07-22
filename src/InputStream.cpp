@@ -13,36 +13,47 @@
 using namespace std;
 using namespace DRAMSimII;
 
-InputStream::InputStream(const Settings& settings):
+InputStream::InputStream(const Settings& settings,const SystemConfiguration &systemConfigVal, const std::vector<Channel> &systemChannel):
 type(settings.inFileType),
-channelLocality(1 / static_cast<double>(settings.channelCount)),
-rankLocality(1 / settings.rankCount),
-BankLocality(1 / settings.bankCount),
+systemConfig(systemConfigVal),
+channel(systemChannel),
+channelLocality(1.0F / settings.channelCount),
+rankLocality(1.0F / settings.rankCount),
+bankLocality(1.0F / settings.bankCount),
 time(0),
-rowLocality(0.2f),
+rowLocality(1.0F / settings.rowCount),
 readPercentage(settings.readPercentage),
 shortBurstRatio(settings.shortBurstRatio),
 arrivalThreshold(0.0F),
 cpuToMemoryRatio(settings.cpuToMemoryClockRatio),
 averageInterarrivalCycleCount(10),
-interarrivalDistributionModel(UNIFORM_DISTRIBUTION)
+interarrivalDistributionModel(settings.arrivalDistributionModel),
+randomNumberGenerator(std::time(0)),
+rngDistributionModel(0,1),
+rngIntDistributionModel(0u,16383u),
+rngGenerator(randomNumberGenerator, rngDistributionModel),
+rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 {
 	if (interarrivalDistributionModel == UNIFORM_DISTRIBUTION)
 		arrivalThreshold = 1.0 - (1.0 / (double)averageInterarrivalCycleCount);
 	else if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
 		arrivalThreshold = 1.0 - (1.0 / boxMuller((double)averageInterarrivalCycleCount, 10));
 
-	if (settings.inFile.length() > 2)
+	if (!settings.inFile.empty())
 	{
-		string inFileWithPath = "./traceFiles/" + settings.inFile;
-		traceFile.open(inFileWithPath.c_str());
+		traceFile.open(settings.inFile.c_str());
+
 		if (!traceFile.good())
 		{
-			cerr << "Unable to open trace file \"" << settings.inFile << "\"" << endl;
-			exit(-9);
+			string inFileWithPath = "./traceFiles/" + settings.inFile;
+			traceFile.open(inFileWithPath.c_str());
+			if (!traceFile.good())
+			{
+				cerr << "Unable to open trace file \"" << settings.inFile << "\"" << endl;
+				exit(-9);
+			}
 		}
 	}
-	srand48((long) (1010321 + 9763099));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -51,7 +62,7 @@ interarrivalDistributionModel(UNIFORM_DISTRIBUTION)
 /// @param xm the average inter arrival cycle count
 /// @return the time until the next transaction arrives
 //////////////////////////////////////////////////////////////////////
-float InputStream::Poisson (float xm) const
+float InputStream::Poisson(float xm) const
 {	
 	static float sq, alxm, g, oldm = -1.0F;
 	float em, t, y;
@@ -68,9 +79,7 @@ float InputStream::Poisson (float xm) const
 		do
 		{
 			++em;
-			unsigned int j;
-			rand_s(&j);
-			t *= (float)j/(float)UINT_MAX;
+			t *= rngGenerator();
 		} while (t > g);		
 	}
 	else
@@ -80,22 +89,21 @@ float InputStream::Poisson (float xm) const
 			oldm = xm;
 			sq = sqrt(2.0 * xm);
 			alxm = log(xm);
-			g = xm * alxm-gammaLn(xm + 1.0);
+			g = xm * alxm - gammaLn(xm + 1.0);
 		}
-		unsigned int j;
 		do
 		{
 			do
 			{
-				rand_s(&j);
-				y = tan(PI * (float)j/(float)UINT_MAX);
+				y = tan(PI * rngGenerator());
 				em = sq * y + xm;
 
 			} while (em < 0.0);
+
 			em = floor(em);
 			t = 0.9 * (1.0 + y*y) * exp(em * alxm - gammaLn(em+1.0) -g);
-			rand_s(&j);
-		} while ((float)j/(float)UINT_MAX > t);
+			
+		} while (rngGenerator() > t);
 	}
 	return em;
 }
@@ -134,11 +142,8 @@ float InputStream::boxMuller(const float m, const float s) const
 		float x1, x2;
 		do 
 		{
-			unsigned int j;
-			rand_s(&j);
-			x1 = 2.0 * (float)j/(float)UINT_MAX - 1.0;
-			rand_s(&j);
-			x2 = 2.0 * (float)j/(float)UINT_MAX - 1.0;
+			x1 = 2.0F * rngGenerator() - 1.0F;
+			x2 = 2.0F * rngGenerator() - 1.0F;
 			w = x1 * x1 + x2 * x2;
 		} while ( w >= 1.0 );
 
@@ -147,6 +152,7 @@ float InputStream::boxMuller(const float m, const float s) const
 		y2 = x2 * w;
 		use_last = true;
 	}
+	
 	return floor(m + y1 * s);
 }
 
@@ -169,7 +175,7 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 			tick timestamp = TICK_MAX;
 			unsigned address = UINT_MAX;
 
-			while((bursting == true) && traceFile.good())
+			while ((bursting == true) && traceFile.good())
 			{
 				traceFile >> std::hex >> address >> input >> timestamp;
 
@@ -181,13 +187,13 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 
 				control = Settings::dramTokenizer(input);
 
-				if(control == unknown_token)
+				if (control == unknown_token)
 				{
 					cout << "Unknown Token Found" << input << endl;
 					return false;
 				}
 
-				if(control == MEM_WR)
+				if (control == MEM_WR)
 				{
 					attributes = WRITE_TRANSACTION;
 				}
@@ -203,11 +209,11 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 					return false;
 				}
 				if((this_e.attributes != control) || 
-					(((this_e.address.physicalAddress ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
+					(((this_e.address.getPhysicalAddress() ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
 				{
 					bursting = false;
 					timestamp = static_cast<tick>(static_cast<double>(timestamp) * ascii2multiplier(input));
-					this_e.address.physicalAddress = 0x3FFFFFFF & address; // mask out top addr bit
+					this_e.address.setPhysicalAddress(0x3FFFFFFF & address); // mask out top addr bit
 					this_e.attributes = CONTROL_TRANSACTION;
 					this_e.timestamp = timestamp;
 					burst_count = 1;
@@ -217,13 +223,15 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 					burst_count++;
 				}
 			}
-			this_e.address.physicalAddress = address;
+			this_e.address.setPhysicalAddress(address);
 			this_e.timestamp = timestamp;
 		} 
 		break;
 	case MASE_TRACE:
 		{
-			traceFile >> std::hex >> this_e.address.physicalAddress >> input >> std::dec >> this_e.timestamp;
+			PHYSICAL_ADDRESS tempPA;
+			traceFile >> std::hex >> tempPA >> input >> std::dec >> this_e.timestamp;
+			this_e.address.setPhysicalAddress(tempPA);
 
 			//this_e.timestamp /= 40000;
 			this_e.timestamp /= cpuToMemoryRatio;
@@ -311,4 +319,332 @@ enum InputType InputStream::toInputToken(const string &input) const
 	else if (input == "mapped" || input == "Mapped" || input == "MAPPED")
 		return MAPPED;
 	return MAPPED;
+}
+
+//////////////////////////////////////////////////////////////////////
+/// @brief get a random request
+/// @details create a random transaction according to the parameters in systemConfig
+/// use the probabilities specified to generate a mapped request
+/// @author Joe Gross
+/// @return a pointer to the transaction that was generated
+//////////////////////////////////////////////////////////////////////
+#if 0
+Transaction *InputStream::getNextRandomRequest()
+{
+	if (type == RANDOM)
+	{
+		unsigned int randVar;
+
+		static Address nextAddress;
+
+		//Transaction *thisTransaction = new Transaction();
+
+		rand_s(&randVar);
+
+		static unsigned nextChannel;
+
+		// check against last transaction to see what the chan_id was, and whether we need to change channels or not
+		// choose a random channel that's not this one
+		if (channelLocality * UINT_MAX < randVar)
+		{
+			nextChannel = (nextChannel + (randVar % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
+		}
+		// choose a random channel from any of them
+		else
+		{
+			nextChannel = randVar % systemConfig.getChannelCount();
+		}
+
+		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
+		// or keep to this rank_id 
+		unsigned nextRank = channel[nextChannel].getLastRankID();
+
+		rand_s(&randVar);
+
+		if (rankLocality * UINT_MAX < randVar)
+		{
+			// choose a rank that's not this one
+			nextRank = (nextRank + 1 + (randVar % (systemConfig.getRankCount() - 1))) % systemConfig.getRankCount();
+		}
+		// else choose the same rank again
+		
+		unsigned nextBank = channel[nextChannel].getRank(nextRank).getLastBankID();
+
+		rand_s(&randVar);
+
+		if (bankLocality * UINT_MAX < randVar)
+		{
+			// choose a new bank that's not this one
+			nextBank =  (nextBank + 1 + (randVar % (systemConfig.getBankCount() - 1))) % systemConfig.getBankCount();
+		}
+		// else leave it as is
+
+		unsigned nextRow = channel[nextChannel].getRank(nextRank).bank[nextBank].getOpenRowID();
+
+		rand_s(&randVar);
+
+		if (rowLocality * UINT_MAX < randVar)
+		{
+			// choose a new row that's not this one
+			nextRow = (nextRow + 1 + (randVar % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
+		}
+		// else leave it as is
+
+		TransactionType type;
+
+		rand_s(&randVar);
+
+		if (readPercentage * UINT_MAX > randVar)
+		{
+			type = READ_TRANSACTION;
+		}
+		else
+		{
+			type = WRITE_TRANSACTION;
+		}
+
+		rand_s(&randVar);
+
+		unsigned burstLength = shortBurstRatio * UINT_MAX > randVar ? 4 : 8;
+
+		unsigned nextColumn = randVar & systemConfig.getColumnCount();
+
+		while (true)
+		{
+			rand_s(&randVar);
+
+			if (arrivalThreshold * UINT_MAX < randVar) // interarrival probability function
+			{
+
+				// Gaussian distribution function
+				if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
+				{
+					arrivalThreshold = 1.0F - (1.0F / abs(boxMuller(averageInterarrivalCycleCount, 10)));
+				}
+				// Poisson distribution function
+				else if (interarrivalDistributionModel == POISSON_DISTRIBUTION)
+				{
+					arrivalThreshold = 1.0F - (1.0F / Poisson(averageInterarrivalCycleCount));
+				}
+				break;
+			}
+			else
+			{
+				time = time + 1;
+			}
+		}
+
+		// set arrival time
+
+		static tick oldTime;
+		cerr << time - oldTime << endl;
+		oldTime = time;
+
+		nextAddress.channel = nextChannel;
+		nextAddress.rank = nextRank;
+		nextAddress.bank = nextBank;
+		nextAddress.row = nextRow;
+		nextAddress.column = nextColumn;
+		return new Transaction(type,time, burstLength, nextAddress, NULL);
+	}
+	else
+		return NULL;
+}
+#endif
+
+Transaction *InputStream::getNextRandomRequest()
+{
+	if (type == RANDOM)
+	{
+		float randVar;
+
+		static Address nextAddress;
+
+		//Transaction *thisTransaction = new Transaction();
+
+		randVar = rngGenerator();
+
+		static unsigned nextChannel;
+
+		// check against last transaction to see what the chan_id was, and whether we need to change channels or not
+		// choose a random channel that's not this one
+		if (channelLocality < randVar)
+		{
+			nextChannel = (nextChannel + (rngIntGenerator() % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
+		}
+		// choose a random channel from any of them
+		else
+		{
+			nextChannel = rngIntGenerator() % systemConfig.getChannelCount();
+		}
+
+		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
+		// or keep to this rank_id 
+		unsigned nextRank = channel[nextChannel].getLastRankID();
+
+		randVar = rngGenerator();
+
+		if (rankLocality < randVar)
+		{
+			// choose a rank that's not this one
+			nextRank = (nextRank + 1 + (rngIntGenerator() % (systemConfig.getRankCount() - 1))) % systemConfig.getRankCount();
+		}
+		// else choose the same rank again
+
+		unsigned nextBank = channel[nextChannel].getRank(nextRank).getLastBankID();
+
+		randVar = rngGenerator();
+
+		if (bankLocality < randVar)
+		{
+			// choose a new bank that's not this one
+			nextBank =  (nextBank + 1 + (rngIntGenerator() % (systemConfig.getBankCount() - 1))) % systemConfig.getBankCount();
+		}
+		// else leave it as is
+
+		unsigned nextRow = channel[nextChannel].getRank(nextRank).bank[nextBank].getOpenRowID();
+
+		randVar = rngGenerator();
+
+		if (rowLocality < randVar)
+		{
+			// choose a new row that's not this one
+			nextRow = (nextRow + 1 + (rngIntGenerator() % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
+		}
+		// else leave it as is
+
+		TransactionType type;
+
+		randVar = rngGenerator();
+
+		if (readPercentage > randVar)
+		{
+			type = READ_TRANSACTION;
+		}
+		else
+		{
+			type = WRITE_TRANSACTION;
+		}
+
+		randVar = rngGenerator();
+
+		unsigned burstLength = shortBurstRatio > randVar ? 4 : 8;
+
+		unsigned nextColumn = rngIntGenerator() & systemConfig.getColumnCount();
+
+		while (true)
+		{
+			randVar = rngGenerator();
+
+			if (arrivalThreshold < randVar) // interarrival probability function
+			{
+
+				// Gaussian distribution function
+				if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
+				{
+					arrivalThreshold = 1.0F - (1.0F / abs(boxMuller(averageInterarrivalCycleCount, 10)));
+				}
+				// Poisson distribution function
+				else if (interarrivalDistributionModel == POISSON_DISTRIBUTION)
+				{
+					arrivalThreshold = 1.0F - (1.0F / Poisson(averageInterarrivalCycleCount));
+				}
+				break;
+			}
+			else
+			{
+				time = time + 1;
+			}
+		}
+
+		// set arrival time
+
+		static tick oldTime;
+		//cerr << time - oldTime << endl;
+		oldTime = time;
+
+		nextAddress.channel = nextChannel;
+		nextAddress.rank = nextRank;
+		nextAddress.bank = nextBank;
+		nextAddress.row = nextRow;
+		nextAddress.column = nextColumn;
+		return new Transaction(type,time, burstLength, nextAddress, NULL);
+	}
+	else
+		return NULL;
+}
+
+
+
+
+#define COMPRESS_INCOMING_TRANSACTIONS 8
+
+//////////////////////////////////////////////////////////////////////
+/// @brief get the next logical transaction
+/// @details get the transaction from whichever source is currently being used
+/// whether a random input, mase, k6 or mapped trace file
+/// @author Joe Gross
+/// @return the next transaction, NULL if there are no more available transactions
+//////////////////////////////////////////////////////////////////////
+Transaction *InputStream::getNextIncomingTransaction()
+{
+	switch (type)
+	{
+	case RANDOM:
+		return getNextRandomRequest();
+		break;
+	case K6_TRACE:
+	case MASE_TRACE:
+	case MAPPED:
+		{
+			static BusEvent newEvent;
+
+			if (!getNextBusEvent(newEvent))
+			{
+				/* EOF reached */
+				return NULL;
+			} 
+			else
+			{
+				Transaction *tempTransaction = new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address,NULL) ;
+				// FIXME: ignores return type
+				//convertAddress(tempTransaction->getAddresses());
+
+				// need to adjust arrival time for K6 traces to cycles
+				return tempTransaction;
+			}
+		}
+		break;
+	case NONE:
+	default:
+		cerr << "Unknown input trace format" << endl;
+		exit(-20);
+		break;
+	}
+}
+
+double InputStream::ascii2multiplier(const string &input) const
+{
+	switch(Settings::dramTokenizer(input))
+	{
+	case PICOSECOND:
+		return 0.001;
+		break;
+	case NANOSECOND:
+		return 1.0;
+		break;
+	case MICROSECOND:
+		return 1000.0;
+		break;
+	case MILLISECOND:
+		return 1000000.0;
+		break;
+	case SECOND:
+		return 1000000000.0;
+		break;
+	default:
+		cerr << "unknown multipler " << input << endl;
+		return 0.0;
+		break;
+	}
 }

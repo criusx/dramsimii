@@ -2,7 +2,9 @@
 
 #include "Channel.h"
 
-using namespace std;
+using std::vector;
+using std::cerr;
+using std::endl;
 using namespace DRAMSimII;
 
 //////////////////////////////////////////////////////////////////////

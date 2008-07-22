@@ -33,7 +33,7 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 		transactionDecodeDelay[currentTransaction->getDecodeTime() - currentTransaction->getEnqueueTime()]++;
 
 		// gather working set information for this epoch, exclude the entries which alias to the same column		
-		workingSet[currentTransaction->getAddresses().physicalAddress >> columnDepth]++;
+		workingSet[currentTransaction->getAddresses().getPhysicalAddress() >> columnDepth]++;
 	}
 }
 

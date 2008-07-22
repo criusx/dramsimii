@@ -2,7 +2,9 @@
 
 #include "Channel.h"
 
-using namespace std;
+using std::max;
+using std::cerr;
+using std::endl;
 using namespace DRAMSimII;
 
 #if 0
@@ -160,6 +162,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	// set this channel's time to the start time of this command
 	//time = thisCommand->getStartTime();
+	lastCommandIssueTime = time;
 
 	switch(thisCommand->getCommandType())
 	{

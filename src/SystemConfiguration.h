@@ -40,6 +40,7 @@ namespace DRAMSimII
 		const unsigned epoch;											///< the amount of time between stats aggregation and reporting
 		double shortBurstRatio;
 		double readPercentage;											///< the percentage of transactions that are reads
+		std::string sessionID;											///< a unique identifier for this run
 
 	public:
 		// constructors
@@ -70,6 +71,7 @@ namespace DRAMSimII
 		double getShortBurstRatio() const { return shortBurstRatio; }
 		double getReadPercentage() const { return readPercentage; }
 		double Frequency() const { return datarate; }
+		const std::string &getSessionID() const { return sessionID; }
 
 		// operator overloads
 		SystemConfiguration& operator =(const SystemConfiguration &rs);

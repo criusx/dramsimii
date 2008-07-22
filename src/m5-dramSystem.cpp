@@ -88,12 +88,12 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	//if (pkt->needsResponse())
 	if (pkt->needsResponse() || pkt->isWrite())
 	{
-		int packetType = 0;
+		TransactionType packetType = PREFETCH_TRANSACTION;
 
 		if (pkt->isRead())
-			packetType = 1;
+			packetType = READ_TRANSACTION;
 		else if (pkt->isWrite())
-			packetType = 2;
+			packetType = WRITE_TRANSACTION;
 
 		Transaction *trans = new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
 
@@ -298,7 +298,7 @@ needRetry(false)
 		ds = new fbdSystem(settings);	
 
 	cpuRatio = (int)round(((float)Clock::Frequency/((float)ds->Frequency())));
-	cerr << cpuRatio << endl;
+	//cerr << cpuRatio << endl;
 	//invCpuRatio = (float)((double)ds->Frequency()/(Clock::Frequency));
 	//cerr << invCpuRatio << endl;
 

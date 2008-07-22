@@ -13,12 +13,14 @@ using namespace DRAMSimII;
 
 int main(int argc,const char **argv, char *envp[])
 {
-	map<enum FileIOToken,string> parameters;
+	//map<enum FileIOToken,string> parameters;
 
 	const Settings settings(argc, argv);
 	//create_input_map(argc, argv, parameters);
 	//simulation_parameters_t	*simulation_parameters;
 	//dram_statistics_t	*dram_stats;
+
+	//cerr << std::numeric_limits<boost::uint64_t>::max() << std::endl;
 
 	if (settings.systemType == FBD_CONFIG)
 	{

@@ -1,17 +1,24 @@
 #include <string>
 #include <sstream>
-#include <iostream>
 #include <iomanip>
 #include <cmath>
 #include <map>
 #include <fstream>
 #include <vector>
+#include <iostream>
 
 #include "Channel.h"
 #include "reporting/soapDRAMsimWSSoapHttpProxy.h"
 #include "reporting/DRAMsimWSSoapHttp.nsmap"
 
-using namespace std;
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+
+using std::endl;
+using std::setw;
+using std::cerr;
+using std::hex;
+using std::dec;
 using namespace DRAMSimII;
 
 //////////////////////////////////////////////////////////////////////////
@@ -21,7 +28,8 @@ using namespace DRAMSimII;
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings& settings, const SystemConfiguration &sysConfig):
 time(0ll),
-lastRefreshTime(0ll),
+lastRefreshTime(-100ll),
+lastCommandIssueTime(-100ll),
 lastRankID(0),
 timingSpecification(settings),
 transactionQueue(settings.transactionQueueDepth),
@@ -47,14 +55,15 @@ rank(settings.rankCount, Rank(settings, timingSpecification, systemConfig))
 		// stagger the times that each rank will be refreshed so they don't all arrive in a burst
 		unsigned step = settings.tREFI / settings.rankCount;
 
+		Address addr;
+
 		for (unsigned j = 0; j < rank.size(); ++j)
 		{
-			Transaction *newTrans = new Transaction(); 
-			newTrans->setType(AUTO_REFRESH_TRANSACTION);
-			newTrans->getAddresses().rank = j;
-			newTrans->getAddresses().bank = 0;
-			newTrans->setEnqueueTime(j * (step +1));
-			refreshCounter[j] = newTrans;
+			addr.rank = j;
+			addr.bank = 0;
+			//newTrans->setEnqueueTime(j * (step +1));
+			refreshCounter[j] = new Transaction(AUTO_REFRESH_TRANSACTION,j * (step + 1), 8, addr, NULL);
+			refreshCounter[j]->setEnqueueTime(refreshCounter[j]->getArrivalTime());
 		}
 	}
 }
@@ -79,6 +88,7 @@ Channel::~Channel()
 Channel::Channel(const Channel &dc):
 time(dc.time),
 lastRefreshTime(dc.lastRefreshTime),
+lastCommandIssueTime(dc.lastCommandIssueTime),
 lastRankID(dc.lastRankID),
 timingSpecification(dc.timingSpecification),
 transactionQueue(dc.transactionQueue),
@@ -150,7 +160,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 
 			executeCommand(executingCommand);					
 
-			DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << executingCommand->getStartTime() - time << "] " << *executingCommand);
+			DEBUG_COMMAND_LOG("C F[" << hex << setw(8) << time << "] MG[" << setw(2) << executingCommand->getStartTime() - time << "] " << *executingCommand);
 
 			// only get completed commands if they have finished
 			if (Transaction *completedTransaction = completionQueue.pop())
@@ -189,7 +199,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 	//assert(time <= endTime);
 
 	transFinishTime = endTime;
-	M5_TIMING_LOG("ch[" << channelID << "] @ " << std::dec << time);
+	M5_TIMING_LOG("ch[" << channelID << "] @ " << dec << time);
 
 	return NULL;
 }
@@ -231,8 +241,8 @@ bool Channel::enqueue(Transaction *in)
 	/// @todo add support for additional transaction ordering algorithms, such as read, instruction, fetch first
 	else
 	{
-		exit(-1);
 		assert(systemConfig.getTransactionOrderingAlgorithm() == RIFF);
+		exit(-1);		
 	}
 }
 
@@ -251,6 +261,7 @@ tick Channel::nextTransactionDecodeTime() const
 			nextTime = nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay();
 		}
 	}
+
 	return nextTime;
 }
 
@@ -319,7 +330,7 @@ using namespace std;
 void Channel::doPowerCalculation()
 {
 	float factorA = (powerModel.getVDD() / powerModel.getVDDmax()) * (powerModel.getVDD() / powerModel.getVDDmax());
-	float factorB = powerModel.getFrequency() / powerModel.getSpecFrequency();
+	float factorB = (float)powerModel.getFrequency() / (float)powerModel.getSpecFrequency();
 
 	// the counts for the total number of operations
 	unsigned entireRAS = 1;
@@ -409,35 +420,8 @@ void Channel::doPowerCalculation()
 	powerModel.setLastCalculation(time);
 
 	// report these results
-	DRAMsimWSSoapHttp service;
-	_ns2__submitEpochResultElement submit;
-
-	stringstream ss;
-	clock_t now = clock();
-	srand(now);
-	ss << rand();	
-	char * s = new char[ss.str().length()+1];
-	strncpy(s,ss.str().c_str(), ss.str().length());
-	s[ss.str().length()] = '\0';
-	submit.sessionID = s; 
-
-	submit.epoch = time;
-
-	vector<int> channelArray(rank.size(),channelID);	
-	submit.channel = &channelArray[0];
-	submit.__sizechannel = channelArray.size();
-
-	submit.rank = &rankArray[0];
-	submit.__sizerank = rankArray.size();
-
-	submit.PsysACTSTBY = &PsysACTSTBYArray[0];
-	submit.__sizePsysACTSTBY = PsysACTSTBYArray.size();
-	submit.PsysACT = &PsysACTArray[0];
-	submit.__sizePsysACT = PsysACTArray.size();
-	submit.PsysRD = PsysRD;
-	submit.PsysWR = PsysWR;
-	_ns2__submitEpochResultResponseElement response;
-	int retVal = service.__ns1__submitEpochResult(&submit,&response);
+	//boost::thread(sendPower())
+	boost::thread(boost::bind(&DRAMSimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray));
 
 	powerOutStream << "++++++++++++++++++++++ total ++++++++++++++++++++++" << endl;
 
@@ -485,6 +469,35 @@ void Channel::doPowerCalculation()
 	//powerOutStream.flush();
 }
 
+bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vector<float> PsysACTSTBYArray, vector<float> PsysACTArray) const 
+{
+	DRAMsimWSSoapHttp service;
+	_ns2__submitEpochResultElement submit;
+
+	char newString[64];
+	systemConfig.getSessionID().copy(newString,systemConfig.getSessionID().length());
+	submit.sessionID = newString;
+
+	submit.epoch = time;
+
+	vector<int> channelArray(rank.size(),channelID);	
+	submit.channel = &channelArray[0];
+	submit.__sizechannel = channelArray.size();
+
+	submit.rank = &rankArray[0];
+	submit.__sizerank = rankArray.size();
+
+	submit.PsysACTSTBY = &PsysACTSTBYArray[0];
+	submit.__sizePsysACTSTBY = PsysACTSTBYArray.size();
+	submit.PsysACT = &PsysACTArray[0];
+	submit.__sizePsysACT = PsysACTArray.size();
+	submit.PsysRD = PsysRD;
+	submit.PsysWR = PsysWR;
+	_ns2__submitEpochResultResponseElement response;
+	int retVal = service.__ns1__submitEpochResult(&submit,&response);
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // get the next refresh command and remove it from the queue
 //////////////////////////////////////////////////////////////////////////
@@ -499,19 +512,23 @@ Transaction *Channel::getRefresh()
 	for (unsigned i = 1; i < rank.size(); ++i)
 	{
 		assert(refreshCounter[i]);
-		if (refreshCounter[i]->getEnqueueTime() < earliestTransaction->getEnqueueTime())
+		if (refreshCounter[i]->getArrivalTime() < earliestTransaction->getArrivalTime())
 		{
 			earliestTransaction = refreshCounter[i];
 			earliestRank = i;
 		}
 	}
 
-	refreshCounter[earliestRank] = new Transaction();
-	refreshCounter[earliestRank]->setEnqueueTime(earliestTransaction->getEnqueueTime() + timingSpecification.tREFI());
-	refreshCounter[earliestRank]->setType(AUTO_REFRESH_TRANSACTION);
-	refreshCounter[earliestRank]->getAddresses().rank = earliestRank;
-	refreshCounter[earliestRank]->getAddresses().bank = 0;
+	static Address address;
 
+	address.channel = channelID;
+	address.rank = earliestRank;
+	address.bank = 0;
+
+	refreshCounter[earliestRank] = new Transaction(AUTO_REFRESH_TRANSACTION,earliestTransaction->getEnqueueTime() + timingSpecification.tREFI(),8,address,NULL);
+
+	refreshCounter[earliestRank]->setEnqueueTime(refreshCounter[earliestRank]->getArrivalTime());
+	
 	return earliestTransaction;
 }
 
@@ -521,16 +538,18 @@ Transaction *Channel::getRefresh()
 const Transaction *Channel::readRefresh() const
 {
 	assert(rank.size() >= 1);
-	Transaction *earliestTransaction = refreshCounter[0];
+
+	Transaction *earliestRefreshTransaction = refreshCounter[0];
+
 	for (unsigned i = 1; i < rank.size(); ++i)
 	{
 		assert(refreshCounter[i]);
-		if (refreshCounter[i]->getEnqueueTime() < earliestTransaction->getEnqueueTime())
+		if (refreshCounter[i]->getEnqueueTime() < earliestRefreshTransaction->getEnqueueTime())
 		{
-			earliestTransaction = refreshCounter[i];
+			earliestRefreshTransaction = refreshCounter[i];
 		}
 	}
-	return earliestTransaction;
+	return earliestRefreshTransaction;
 }
 
 

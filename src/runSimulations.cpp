@@ -4,7 +4,9 @@
 
 #include "System.h"
 
-using namespace std;
+using std::max;
+using std::cerr;
+using std::endl;
 using namespace DRAMSimII;
 
 #if 0
@@ -56,7 +58,7 @@ void System::runSimulations()
 	{		
 		if (!inputTransaction)
 		{
-			inputTransaction = getNextIncomingTransaction();
+			inputTransaction = inputStream.getNextIncomingTransaction();
 
 			if (!inputTransaction)
 				break;

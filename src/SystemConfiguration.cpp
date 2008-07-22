@@ -32,7 +32,8 @@ rowCount(settings.rowCount),
 columnCount(settings.columnCount),
 epoch(settings.epoch),
 shortBurstRatio(settings.shortBurstRatio),
-readPercentage(settings.readPercentage)
+readPercentage(settings.readPercentage),
+sessionID(settings.sessionID)
 {}
 
 
@@ -62,7 +63,8 @@ rowCount(rhs->rowCount),
 columnCount(rhs->columnCount),
 epoch(rhs->epoch),
 shortBurstRatio(rhs->shortBurstRatio),
-readPercentage(rhs->readPercentage)
+readPercentage(rhs->readPercentage),
+sessionID(rhs->sessionID)
 {}
 
 
@@ -107,6 +109,7 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMSimII::SystemConf
 	bankCount = rs.bankCount;
 	shortBurstRatio = rs.shortBurstRatio;
 	readPercentage = rs.readPercentage;
+	sessionID = rs.sessionID;
 
 	return *this;
 }

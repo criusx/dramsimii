@@ -1,6 +1,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <boost/random.hpp>
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
@@ -108,22 +109,53 @@ Settings::Settings(const int argc, const char **argv)
 						else if (type == "mapped")
 							inFileType = MAPPED;
 						else if (type == "random")
-							inFileType = RANDOM;
+						{
+							if (xmlTextReaderRead(reader) == 1)
+							{
+								if (xmlTextReaderNodeType(reader) == XML_TEXT_NODE)
+								{
+									inFileType = RANDOM;
+
+									nodeValue = (const char *)xmlTextReaderConstValue(reader);
+
+									if (nodeValue == "uniform")
+										arrivalDistributionModel = UNIFORM_DISTRIBUTION;
+									else if (nodeValue == "poisson")
+										arrivalDistributionModel = POISSON_DISTRIBUTION;
+									else if (nodeValue == "gaussian")
+										arrivalDistributionModel = GAUSSIAN_DISTRIBUTION;
+									else if (nodeValue == "normal")
+										arrivalDistributionModel = NORMAL_DISTRIBUTION;
+									else
+									{
+										cerr << "unrecognized distribution model: \"" << nodeValue << "\", defaulting to uniform";
+										arrivalDistributionModel = NORMAL_DISTRIBUTION;
+									}
+								}								
+							}							
+						}
 					}
 					else if (nodeName == "outFile")
 					{
 						const xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
-						const string type = (const char *)attr;
-						if (type == "gz" || type == "GZ")
-							outFileType = GZ;
-						else if (type == "bz" || type == "BZ" || type == "bzip" || type == "bzip2" || type == "bz2")
-							outFileType = BZ;
-						else if (type == "cout" || type == "stdout" || type == "COUT")
-							outFileType = COUT;
-						else if (type == "uncompressed" || type == "plain")
-							outFileType = UNCOMPRESSED;
+						if (attr)
+						{
+							const string type = (const char *)attr;
+							if (type == "gz" || type == "GZ")
+								outFileType = GZ;
+							else if (type == "bz" || type == "BZ" || type == "bzip" || type == "bzip2" || type == "bz2")
+								outFileType = BZ;
+							else if (type == "cout" || type == "stdout" || type == "COUT")
+								outFileType = COUT;
+							else if (type == "uncompressed" || type == "plain")
+								outFileType = UNCOMPRESSED;
+							else
+								outFileType = NONE;
+						}
 						else
+						{
 							outFileType = NONE;
+						}
 					}					
 				}
 				break;
@@ -440,7 +472,11 @@ Settings::Settings(const int argc, const char **argv)
 		xmlFreeTextReader(reader);
 	}
 
-	
+	boost::mt19937 generator(std::time(0));
+	// Define a uniform random number distribution which produces "double"
+	// values between 0 and 1 (0 inclusive, 1 exclusive).
+	boost::uniform_int<> uni_dist(0,INT_MAX);
+	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > uni(generator, uni_dist);	
+	sessionID = toString(uni());
 
-	
 }

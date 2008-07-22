@@ -20,6 +20,8 @@ namespace DRAMSimII
 		// command data
 		unsigned epoch;
 		std::string inFile;
+		std::string sessionID;
+		DistributionType arrivalDistributionModel;
 		InputType inFileType;
 		std::string outFile;
 		OutputFileType outFileType;

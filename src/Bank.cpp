@@ -1,7 +1,9 @@
 #include "Bank.h"
 
+using std::max;
+using std::cerr;
+using std::endl;
 using namespace DRAMSimII;
-using namespace std;
 
 Bank::Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
@@ -66,10 +68,13 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 	switch (currentCommand->getCommandType())
 	{
 	case CAS_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), lastRASTime + timing.tRAS());
+		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), lastRASTime + timing.tRAS());
+		// see figure 11.28 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
+		lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), lastRASTime + timing.tRAS());
 		break;
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR(), lastRASTime + timing.tRAS());
+		// see figure 11.29 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
+		lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), lastRASTime + timing.tRAS());
 		break;
 	case PRECHARGE_COMMAND:
 		lastPrechargeTime = currentTime;
@@ -85,6 +90,7 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	lastCASTime = currentTime;
+
 	lastCASLength = currentCommand->getLength();
 	CASCount++;
 }

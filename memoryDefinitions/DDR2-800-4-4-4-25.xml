@@ -3,7 +3,9 @@
 <!DOCTYPE dramspec SYSTEM "dramspec.dtd">
 <dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema2.xsd">
 	<timing>
-		<datarate>800000000</datarate>
+		<!-- the number of beats per, so if a timing parameter is one cycle long, count it as two beats for DDR -->
+		<datarate>400000000</datarate>
+		<!-- set to 2 for DDR, DDR2, DDR3, etc. -->
 		<clockGranularity>2</clockGranularity>
 		<channels>4</channels>
 		<channelWidth>8</channelWidth>
@@ -20,32 +22,32 @@
 		<tBufferDelay>6</tBufferDelay>
 		<tBurst>8</tBurst>
 		<tCAS>6</tCAS>
-		<tCMD>1</tCMD>
+		<tCMD>2</tCMD>
 		<tCWD>8</tCWD>
-		<tFAW>40</tFAW>
+		<tFAW>28</tFAW>
 		<!--time between a row access and data restoration in the data array-->
-		<tRAS>36</tRAS>
+		<tRAS>32</tRAS>
 		<!--minimum activate-to-activate timing (same bank), tRC = tRAS + tRP-->
 		<tRC>44</tRC>
-		<tRCD>12</tRCD>
+		<tRCD>10</tRCD>
 		<!--minimum refresh-to-refresh cycle time-->
 		<tRFC>84</tRFC>
 		<!--minimum activate-to-activate timing (different bank)-->
-		<tRRD>6</tRRD>
-		<tRP>12</tRP>
+		<tRRD>8</tRRD>
+		<tRP>10</tRP>
 		<tRTP>6</tRTP>
 		<tRTRS>2</tRTRS>
 		<tWR>12</tWR>
 		<tWTR>6</tWTR>
 		<postedCAS>true</postedCAS>
 		<!--additive latency, the dram device may buffer a command for up to this length of time to allow it to be transferred and help until timing parameters are met, see Micron doc TN4710-->
-		<tAL>10</tAL>
+		<tAL>8</tAL>
 		<!--may be none, refreshOneChanAllRankAllBank, etc.-->
 		<autoRefreshPolicy>refreshOneChanAllRankAllBank</autoRefreshPolicy>
 		<!--given in us-->
 		<refreshTime>64000</refreshTime>
 		<!--average periodic refresh time, look at Micron app note TN-46-09 -->
-		<tREFI>8000</tREFI>
+		<tREFI>6240</tREFI>
 		<!--strict, bankRoundRobin, rankRoundRobin, wangHop, greedy-->
 		<commandOrderingAlgorithm>greedy</commandOrderingAlgorithm>
 		<!--may be 'strict' or 'RIFF'-->
@@ -103,8 +105,9 @@
 		<!-- type may be gz, bz, cout, uncompressed, none -->
 		<outFile type="gz">standardOutFile.gz</outFile>
 		<requestCount>990000000</requestCount>
-		<!--may be "mase","k6","mapped","random"-->
-		<inputFile type="mase">equake.trc</inputFile>
+		<!-- type may be "mase","k6","mapped","random," if random, then the value is the distrubution model, which may be 'uniform', 'gaussian' , 'poisson', 'normal' -->
+		<inputFile type="random">gaussian</inputFile>
+		<!--inputFile type="mase">equake.trc</inputFile-->
 		<!-- used in scaling CPU ticks to memory system ticks -->
 		<cpuToMemoryClockRatio>4.00</cpuToMemoryClockRatio>
 		<epoch>1000000</epoch>

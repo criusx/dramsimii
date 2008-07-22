@@ -44,9 +44,8 @@ namespace DRAMSimII
 		//functions
 		unsigned findOldestChannel() const;	
 		void updateSystemTime();
-		Transaction *getNextIncomingTransaction();
-		Transaction *getNextRandomRequest();
-		bool convertAddress(Address &) const;
+		
+		
 		void checkStats();
 		virtual void doPowerCalculation();
 		virtual void printStatistics();		

@@ -2,7 +2,9 @@
 #include "command.h"
 #include "transaction.h"
 
-using namespace std;
+using std::cerr;
+using std::endl;
+using std::ostream;
 using namespace DRAMSimII;
 
 // initialize the static member
@@ -134,9 +136,9 @@ ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 	return os;
 }
 
-ostream &DRAMSimII::operator<<(ostream &os, const Command &this_c)
+ostream &DRAMSimII::operator<<(ostream &os, const Command &currentCommand)
 {
-	os << this_c.commandType << this_c.addr << " S[" << std::dec << this_c.startTime << "] Q[" << std::dec << this_c.enqueueTime << "] E[" << std::dec << this_c.completionTime << std::dec << "] T[" << this_c.completionTime - this_c.startTime << "] DLY[" << std::dec << this_c.startTime - this_c.enqueueTime << "]";
+	os << currentCommand.commandType << currentCommand.addr << " S[" << std::dec << currentCommand.startTime << "] Q[" << std::dec << currentCommand.enqueueTime << "] E[" << std::dec << currentCommand.completionTime << std::dec << "] T[" << currentCommand.completionTime - currentCommand.startTime << "] DLY[" << std::dec << currentCommand.startTime - currentCommand.enqueueTime << "]";
 	return os;
 }
 

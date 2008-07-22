@@ -23,6 +23,7 @@ namespace DRAMSimII
 	protected:
 		tick time;										///< channel time, allow for channel concurrency			
 		tick lastRefreshTime;							///< tells me when last refresh was done
+		tick lastCommandIssueTime;					///< the last time a command was executed on this channel
 		unsigned lastRankID;							///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
@@ -51,7 +52,11 @@ namespace DRAMSimII
 		tick nextTransactionDecodeTime() const;
 		tick nextCommandExecuteTime() const;
 		virtual tick nextTick() const;
-		
+
+	private:
+		bool sendPower(float PsysRD, float PsysWR, std::vector<int> rankArray, std::vector<float> PsysACTSTBYArray, std::vector<float> PsysACTArray) const;
+
+	public:
 
 		// functions that may differ for architectures that inherit this		
 		virtual const Command *readNextCommand() const;

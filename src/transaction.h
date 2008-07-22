@@ -55,9 +55,12 @@ namespace DRAMSimII
 		void setOriginalTransaction(const unsigned *value) { originalTransaction = value; }
 
 		// constructors
-		explicit Transaction();
-		explicit Transaction(const int,const  tick,const int,const unsigned long long, const void *);
+		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const void *originalTrans);		
+		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const unsigned long long physicalAddress, const void *originalTrans);
 		explicit Transaction(const Transaction *rs);
+		explicit Transaction();
+	
+	public:
 		friend std::ostream &operator<<(std::ostream &, const Transaction *);
 
 		void *operator new(size_t size);

@@ -10,16 +10,32 @@ unsigned Transaction::eventCounter(0);
 
 /// constructor to make a transaction with no values set
 Transaction::Transaction():
-eventNumber(eventCounter++),
+eventNumber(0),
 type(CONTROL_TRANSACTION),
 status(0),
 length(0),
+arrivalTime(0),
 enqueueTime(0),
 completionTime(0),
 decodeTime(0),
-addr(),
+addr(0),
 originalTransaction(0)
 {}
+
+
+Transaction::Transaction(const TransactionType type, const tick arrivalTime,const unsigned burstLength, const Address &address, const void *originalTrans):
+eventNumber(eventCounter++),
+type(type),
+status(0),
+length(burstLength),
+arrivalTime(arrivalTime),
+enqueueTime(0),
+completionTime(0),
+decodeTime(0),
+addr(address),
+originalTransaction(originalTrans)
+{}
+
 
 /// copy constructor to duplicate a transaction
 Transaction::Transaction(const Transaction *rs):
@@ -35,32 +51,25 @@ originalTransaction(rs->originalTransaction)
 {}
 
 /// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
-Transaction::Transaction(const int attribute,const tick enqueueTime,const int Size,const unsigned long long address, const void *originalTrans):
+Transaction::Transaction(const TransactionType transType, const tick arrivalTime,const unsigned burstLength,const unsigned long long physicalAddress, const void *originalTrans):
 eventNumber(eventCounter++),
+type(transType),
 status(0),
-length(Size),
-enqueueTime(enqueueTime),
+length(burstLength),
+arrivalTime(arrivalTime),
+enqueueTime(0),
 completionTime(0),
 decodeTime(0),
-addr(address),
+addr(physicalAddress),
 originalTransaction(originalTrans)
-
-{
-	switch(attribute & 0x07)
-	{
-	case 1: type = READ_TRANSACTION; break;
-	case 2: type = WRITE_TRANSACTION; break;
-	case 3: type = PREFETCH_TRANSACTION; break;
-	default: cerr << "unknown type of transaction" << endl; exit(-11);
-	}
-}
+{}
 
 /// overrides the new operator to draw from the transaction pool instead
 void * Transaction::operator new(size_t size)
 {
 	assert(size == sizeof(Transaction));
 	Transaction *newTrans = freeTransactionPool.acquireItem();
-	newTrans->getAddresses().physicalAddress = Address::ADDR_MAX;
+	newTrans->getAddresses().setPhysicalAddress(0);
 	return newTrans;
 }
 

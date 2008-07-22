@@ -6,10 +6,10 @@ using namespace std;
 
 Rank::Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
-lastRefreshTime(0),
-lastPrechargeTime(0),
-lastCASTime(0),
-lastCASWTime(0),
+lastRefreshTime(-100),
+lastPrechargeTime(-100),
+lastCASTime(-100),
+lastCASWTime(-100),
 prechargeTime(0),
 totalPrechargeTime(0),
 lastCASLength(0),
@@ -73,10 +73,12 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 	switch (currentCommand->getCommandType())
 	{
 	case CAS_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), currentBank.getLastRASTime() + timing.tRAS());
+		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), currentBank.getLastRASTime() + timing.tRAS());
+		lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), currentBank.getLastRASTime() + timing.tRAS());
 		break;
 	case CAS_WRITE_AND_PRECHARGE_COMMAND:
-		lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR(), currentBank.getLastRASTime() + timing.tRAS());
+		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR(), currentBank.getLastRASTime() + timing.tRAS());
+		lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), currentBank.getLastRASTime() + timing.tRAS());
 		break;
 	case PRECHARGE_COMMAND:
 		lastPrechargeTime = currentTime;

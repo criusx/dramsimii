@@ -3,6 +3,9 @@ import sys
 #Import(`env`)
 
 sources = Split("""
+			reporting/soapC.cpp
+			reporting/soapClient.cpp
+			reporting/stdsoap2.cpp
 			Address.cpp
 			Bank.cpp
 			busEvent.cpp
@@ -26,7 +29,7 @@ sources = Split("""
 			main.cpp
 			powerConfig.cpp
 			minProtocolGap.cpp
-			rank_c.cpp
+			Rank.cpp
 			runSimulations.cpp
 			simulationParameters.cpp
 			transaction.cpp
@@ -82,5 +85,5 @@ def makeEnv(label, objsfx, strip = False, **kwargs):
     envList.append(newEnv)
 
 #makeEnv('opt', '.o', CCFLAGS = Split('-g -O3'),CPPDEFINES = ['TRACING_ON=1'])
-env.Program('dramSimII',sources, LIBS=['boost_iostreams', 'libxml2'])
-envOpt.Program('dramSimII.opt',sources, LIBS=['boost_iostreams', 'libxml2'])
+env.Program('dramSimII',sources, LIBS=['boost_thread', 'boost_iostreams', 'libxml2'])
+envOpt.Program('dramSimII.opt',sources, LIBS=['boost_thread', 'boost_iostreams', 'libxml2'])

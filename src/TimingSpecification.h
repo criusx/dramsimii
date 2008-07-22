@@ -44,6 +44,7 @@ namespace DRAMSimII
 		// accessors
 		int tAL() const { return t_al; }
 		int tCAS() const { return t_cas; }
+		int tCCD() const { return t_ccd; }
 		int tBurst() const { return t_burst; }
 		int tRTP() const { return t_rtp; }
 		int tRAS() const { return t_ras; }

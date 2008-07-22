@@ -45,16 +45,20 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 
 		t_ccd = 4;					// two cycles, 4 beats in DDR2
 		t_al = settings.postedCAS ? settings.tAL : 0; // if posted CAS is disabled, tAL should be zero
+		assert(t_al >= 0 && t_al <= 8); // must be 0..4 cycles, or 0..8 beats
+		t_rcd = settings.tRCD;
+		assert(t_al <= t_rcd);
 		t_burst = settings.tBurst;
 		t_cas = settings.tCAS;
 		t_cmd = 2;					// protocol specific, cannot be changed
+		assert(t_al + t_cmd == t_rcd);
 		t_cwd = t_cas - 2;			// protocol specific, cannot be changed
 		t_int_burst = 4;			// protocol specific, cannot be changed
 		t_faw = settings.tFAW;
 		t_ras = settings.tRAS;
 		t_rp = settings.tRP;
 		t_rc = settings.tRC;
-		t_rcd = settings.tRCD;
+		
 		t_rfc = settings.tRFC;
 		t_rrd = settings.tRRD;
 		t_rtp = settings.tRTP;
