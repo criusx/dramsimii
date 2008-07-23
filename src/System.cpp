@@ -17,10 +17,30 @@
 #ifndef WIN32
 #include <boost/iostreams/filter/bzip2.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
+using boost::iostreams::bzip2_compressor;
+using boost::iostreams::gzip_compressor;
 #endif
+
 #include "System.h"
 
-using namespace std;
+
+using boost::iostreams::null_sink;
+using boost::iostreams::file_sink;
+using std::ifstream;
+using std::ofstream;
+using std::stringstream;
+using std::cout;
+using std::vector;
+using std::endl;
+using std::ostream;
+using std::ios;
+using std::setw;
+using std::string;
+using std::cerr;
+using std::ifstream;
+using std::setfill;
+using std::setprecision;
+using std::min;
 using namespace DRAMSimII;
 
 //////////////////////////////////////////////////////////////////////
@@ -178,31 +198,31 @@ nextStats(settings.epoch)
 	{	
 	case BZ:
 #ifndef WIN32
-		timingOutStream.push(boost::iostreams::bzip2_compressor());
-		powerOutStream.push(boost::iostreams::bzip2_compressor());
-		statsOutStream.push(boost::iostreams::bzip2_compressor());
+		timingOutStream.push(bzip2_compressor());
+		powerOutStream.push(bzip2_compressor());
+		statsOutStream.push(bzip2_compressor());
 		suffix = ".bz2";
 		break;
 #endif
 	case GZ:
 #ifndef WIN32
-		timingOutStream.push(boost::iostreams::gzip_compressor());
-		powerOutStream.push(boost::iostreams::gzip_compressor());
-		statsOutStream.push(boost::iostreams::gzip_compressor());
+		timingOutStream.push(gzip_compressor());
+		powerOutStream.push(gzip_compressor());
+		statsOutStream.push(gzip_compressor());
 		suffix = ".gz";
 		break;
 #endif
 	case UNCOMPRESSED:
 		break;
 	case COUT:
-		timingOutStream.push(std::cout);
-		powerOutStream.push(std::cout);
-		statsOutStream.push(std::cout);
+		timingOutStream.push(cout);
+		powerOutStream.push(cout);
+		statsOutStream.push(cout);
 		break;
 	case NONE:
-		timingOutStream.push(boost::iostreams::null_sink());
-		powerOutStream.push(boost::iostreams::null_sink());
-		statsOutStream.push(boost::iostreams::null_sink());
+		timingOutStream.push(null_sink());
+		powerOutStream.push(null_sink());
+		statsOutStream.push(null_sink());
 		break;
 	}
 	if (settings.outFileType == GZ || settings.outFileType == BZ || settings.outFileType == UNCOMPRESSED)
@@ -256,7 +276,7 @@ nextStats(settings.epoch)
 			timingIn.open(timingFilename.str().c_str(),ifstream::in);
 			powerIn.open(powerFilename.str().c_str(),ifstream::in);
 			statsIn.open(statsFilename.str().c_str(),ifstream::in);							
-			settingsIn.open(settingsFilename.str().c_str(),iostream::in);
+			settingsIn.open(settingsFilename.str().c_str(),ifstream::in);
 		}
 
 		timingIn.close();
@@ -264,9 +284,9 @@ nextStats(settings.epoch)
 		statsIn.close();
 		settingsIn.close();
 
-		timingOutStream.push(boost::iostreams::file_sink(timingFilename.str().c_str()));
-		powerOutStream.push(boost::iostreams::file_sink(powerFilename.str().c_str()));
-		statsOutStream.push(boost::iostreams::file_sink(statsFilename.str().c_str()));
+		timingOutStream.push(file_sink(timingFilename.str().c_str()));
+		powerOutStream.push(file_sink(powerFilename.str().c_str()));
+		statsOutStream.push(file_sink(statsFilename.str().c_str()));
 		ofstream settingsOutStream(settingsFilename.str().c_str());
 		
 

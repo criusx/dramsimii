@@ -4,7 +4,9 @@
 
 #include "TimingSpecification.h"
 
-using namespace std;
+using std::ostream;
+using std::cerr;
+using std::endl;
 using namespace DRAMSimII;
 
 ostream &DRAMSimII::operator<<(ostream &os, const TimingSpecification &this_a)

@@ -3,7 +3,9 @@
 
 #include "System.h"
 
-using namespace std;
+using std::cerr;
+using std::endl;
+using std::vector;
 using namespace DRAMSimII;
 
 //////////////////////////////////////////////////////////////////////

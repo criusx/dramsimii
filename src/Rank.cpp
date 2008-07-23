@@ -1,8 +1,11 @@
 #include <iostream>
 #include "Rank.h"
 
+using std::vector;
+using std::max;
+using std::endl;
+using std::cerr;
 using namespace DRAMSimII;
-using namespace std;
 
 Rank::Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),

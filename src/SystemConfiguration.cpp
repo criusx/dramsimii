@@ -3,7 +3,7 @@
 #include <sstream>
 #include "SystemConfiguration.h"
 
-using namespace std;
+using std::ostream;
 using namespace DRAMSimII;
 
 SystemConfiguration::SystemConfiguration(const Settings& settings):

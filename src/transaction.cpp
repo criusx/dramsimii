@@ -1,7 +1,9 @@
-
 #include "transaction.h"
 
-using namespace std;
+using std::ostream;
+using std::dec;
+using std::hex;
+using std::setw;
 using namespace DRAMSimII;
 
 // initialize the static members
@@ -81,16 +83,16 @@ void Transaction::operator delete(void *mem)
 }
 
 /// prints the key attributes of a transaction
-std::ostream &DRAMSimII::operator<<(std::ostream &os, const Transaction *this_t)
+ostream &DRAMSimII::operator<<(ostream &os, const Transaction *this_t)
 {	
-	os << "Q[" << std::setw(8) << std::dec << this_t->getEnqueueTime() << "] ";
-	os << "D[" << std::setw(8) << std::dec << this_t->getDecodeTime() << "] ";
-	os << "E[" << std::setw(8) << std::dec << this_t->getCompletionTime() << "] ";
+	os << "Q[" << setw(8) << dec << this_t->getEnqueueTime() << "] ";
+	os << "D[" << setw(8) << dec << this_t->getDecodeTime() << "] ";
+	os << "E[" << setw(8) << dec << this_t->getCompletionTime() << "] ";
 	os << this_t->getType();
 	if (this_t->type == AUTO_REFRESH_TRANSACTION)
 		os << " R[" << this_t->addr.rank << "] ";
 	else
-		os << "PA[0x" << std::hex << this_t->getAddresses().physicalAddress << "]";
+		os << "PA[0x" << hex << this_t->getAddresses().physicalAddress << "]";
 	return os;
 }
 

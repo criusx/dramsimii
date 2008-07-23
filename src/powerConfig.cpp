@@ -5,7 +5,6 @@
 
 #include "powerConfig.h"
 
-using namespace std;
 using namespace DRAMSimII;
 
 PowerConfig::PowerConfig(const Settings& settings):

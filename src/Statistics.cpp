@@ -3,8 +3,10 @@
 #include <iomanip>
 #include <iostream>
 
+using std::ostream;
+using std::endl;
+using std::map;
 using namespace DRAMSimII;
-using namespace std;
 
 Statistics::Statistics(const Settings& settings):
 validTransactionCount(0),

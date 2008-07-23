@@ -5,7 +5,10 @@
 #include "enumTypes.h"
 #include "m5-dramSystem.h"
 
-using namespace std;
+using std::dec;
+using std::hex;
+using std::endl;
+using std::string;
 using namespace DRAMSimII;
 
 //#define TESTNEW
@@ -24,7 +27,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	memory->doAtomicAccess(pkt);
 	if (nr)
 	{
-		timingOutStream << "sending packet back at " << std::dec << static_cast<Tick>(curTick + 95996) << endl;
+		timingOutStream << "sending packet back at " << dec << static_cast<Tick>(curTick + 95996) << endl;
 		//memory->ports[memory->lastPortIndex]->doSendTiming(pkt,curTick + 18750 + rand()%400);
 		//schedSendTiming(pkt,curTick + 20000 + rand()%20000);
 		schedSendTiming(pkt,curTick + 200000 + randomGen.random((Tick)0, (Tick)200000));
@@ -77,10 +80,10 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		timingOutStream << "? ";
 
 
-	timingOutStream << "0x" << std::hex << pkt->getAddr() << endl;
+	timingOutStream << "0x" << hex << pkt->getAddr() << endl;
 
 	if (pkt->getSize() != 0x40)
-		cerr << "0x" << std::hex << pkt->getSize() << endl;
+		cerr << "0x" << hex << pkt->getSize() << endl;
 #endif
 
 
@@ -148,7 +151,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			assert(next < TICK_MAX);
 
 
-			M5_TIMING_LOG("schWake [" << std::dec << memory->getCPURatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]");
+			M5_TIMING_LOG("schWake [" << dec << memory->getCPURatio() * next << "][" << next << ")" << " at " << curTick << "(" << currentMemCycle << "]");
 
 			assert(next > currentMemCycle);
 			assert(next * memory->getCPURatio() > curTick);
@@ -189,7 +192,7 @@ void M5dramSystem::TickEvent::process()
 	//tick currentMemCycle = curTick / memory->getCPURatio();
 	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
 	
-	M5_TIMING_LOG("intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]");
+	M5_TIMING_LOG("intWake [" << dec << curTick << "][" << dec << currentMemCycle << "]");
 
 	// move memory channels to the current time
 	memory->moveToTime(currentMemCycle);
@@ -242,7 +245,7 @@ void M5dramSystem::moveToTime(const tick now)
 			{			
 				assert(curTick <= static_cast<Tick>(finishTime * getCPURatio()));
 
-				M5_TIMING_LOG("<-T [@" << std::dec << static_cast<Tick>(finishTime * getCPURatio()) << "][+" << static_cast<Tick>(finishTime * getCPURatio() - curTick) << "] at" << curTick);
+				M5_TIMING_LOG("<-T [@" << dec << static_cast<Tick>(finishTime * getCPURatio()) << "][+" << static_cast<Tick>(finishTime * getCPURatio() - curTick) << "] at" << curTick);
 
 				ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(finishTime * getCPURatio()));
 
@@ -280,7 +283,7 @@ PhysicalMemory(p),
 tickEvent(this), 
 needRetry(false)
 {	
-	timingOutStream << "M5dramSystem constructor" << std::endl;
+	timingOutStream << "M5dramSystem constructor" << endl;
 
 	const char **settingsMap = new const char*[2];
 
@@ -303,7 +306,7 @@ needRetry(false)
 	//cerr << invCpuRatio << endl;
 
 	
-	timingOutStream << *ds << std::endl;
+	timingOutStream << *ds << endl;
 }
 
 
@@ -321,7 +324,7 @@ M5dramSystem *M5dramSystemParams::create()
 /// @param _memory the pointer to the M5dramSystem object that will be backing this object
 /// @return a new memoryPort object associated with a dramSystem object
 //////////////////////////////////////////////////////////////////////
-M5dramSystem::MemoryPort::MemoryPort(const std::string &_name, M5dramSystem *_memory):
+M5dramSystem::MemoryPort::MemoryPort(const string &_name, M5dramSystem *_memory):
 SimpleTimingPort(_name),
 memory(_memory)
 { }
@@ -379,7 +382,7 @@ M5dramSystem::~M5dramSystem()
 	//if (pmemAddr)
 	//	munmap(pmemAddr, params()->addrRange.size());
 
-	timingOutStream << "M5dramSystem destructor" << std::endl;
+	timingOutStream << "M5dramSystem destructor" << endl;
 	delete ds;
 }
 

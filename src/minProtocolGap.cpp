@@ -2,7 +2,8 @@
 
 #include "Channel.h"
 
-using namespace std;
+using std::vector;
+using std::max;
 using namespace DRAMSimII;
 
 /// <summary>

@@ -8,7 +8,9 @@
 #include "globals.h"
 #include "Settings.h"
 
-using namespace std;
+using std::cerr;
+using std::endl;
+
 using namespace DRAMSimII;
 
 int main(int argc,const char **argv, char *envp[])
@@ -20,7 +22,8 @@ int main(int argc,const char **argv, char *envp[])
 	//simulation_parameters_t	*simulation_parameters;
 	//dram_statistics_t	*dram_stats;
 
-	//cerr << std::numeric_limits<boost::uint64_t>::max() << std::endl;
+	cerr << TICK_MAX << endl;
+	cerr << PHYSICAL_ADDRESS_MAX << endl;
 
 	if (settings.systemType == FBD_CONFIG)
 	{

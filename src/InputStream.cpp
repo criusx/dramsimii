@@ -10,10 +10,15 @@
 
 #include "InputStream.h"
 
-using namespace std;
+using std::vector;
+using std::dec;
+using std::hex;
+using std::cerr;
+using std::endl;
+using std::string;
 using namespace DRAMSimII;
 
-InputStream::InputStream(const Settings& settings,const SystemConfiguration &systemConfigVal, const std::vector<Channel> &systemChannel):
+InputStream::InputStream(const Settings& settings,const SystemConfiguration &systemConfigVal, const vector<Channel> &systemChannel):
 type(settings.inFileType),
 systemConfig(systemConfigVal),
 channel(systemChannel),
@@ -177,11 +182,11 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 
 			while ((bursting == true) && traceFile.good())
 			{
-				traceFile >> std::hex >> address >> input >> timestamp;
+				traceFile >> hex >> address >> input >> timestamp;
 
 				if(traceFile.good())
 				{
-					cout << "Unexpected EOF, Please fix input trace file" << endl;
+					cerr << "Unexpected EOF, Please fix input trace file" << endl;
 					return false;
 				}
 
@@ -189,7 +194,7 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 
 				if (control == unknown_token)
 				{
-					cout << "Unknown Token Found" << input << endl;
+					cerr << "Unknown Token Found" << input << endl;
 					return false;
 				}
 
@@ -205,7 +210,7 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 				traceFile >> input;
 				if(traceFile.eof())
 				{
-					cout << "Unexpected EOF, Please fix input trace file" << endl;
+					cerr << "Unexpected EOF, Please fix input trace file" << endl;
 					return false;
 				}
 				if((this_e.attributes != control) || 
@@ -230,7 +235,7 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 	case MASE_TRACE:
 		{
 			PHYSICAL_ADDRESS tempPA;
-			traceFile >> std::hex >> tempPA >> input >> std::dec >> this_e.timestamp;
+			traceFile >> hex >> tempPA >> input >> dec >> this_e.timestamp;
 			this_e.address.setPhysicalAddress(tempPA);
 
 			//this_e.timestamp /= 40000;
@@ -267,7 +272,7 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 		break;
 	case MAPPED:
 		{
-			traceFile >> std::dec >> this_e.timestamp >> input >> std::dec >> this_e.address.channel >> this_e.address.rank >> this_e.address.bank >> this_e.address.row >> this_e.address.column;
+			traceFile >> dec >> this_e.timestamp >> input >> dec >> this_e.address.channel >> this_e.address.rank >> this_e.address.bank >> this_e.address.row >> this_e.address.column;
 
 			if(!traceFile.good()) /// found starting Hex address 
 			{
