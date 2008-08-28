@@ -9,38 +9,6 @@ using std::cerr;
 using std::endl;
 using namespace DRAMSimII;
 
-#if 0
-void dramSystem::runSimulations2()
-{
-	for (int i = simParameters.get_request_count(); i > 0; --i)
-	{
-		// see if it is time for the channel to arrive, if so, put in the channel
-		// queue
-		// if not, either make the channels wait and move time to the point where
-		// the transaction should arrive or execute commands until that time happens
-		// make sure not to overshoot the time by looking at when a transaction would end
-		// so that executing one more command doesn't go too far forward
-		// this only happens when there is the option to move time or execute commands
-		if (transaction *input_t = getNextIncomingTransaction())
-		{
-			// record stats
-			statistics.collectTransactionStats(input_t);
-
-			// first try to update the channel so that it is one command past this
-			// transaction's start time
-			tick finishTime;
-			while (channel[input_t->getAddresses().channel].moveChannelToTime(input_t->getEnqueueTime(),&finishTime)) {;}
-
-			// attempt to enqueue, if there is no room, move time forward until there is
-			enqueueTimeShift(input_t);
-		}	
-		else
-			// EOF reached, quit the loop
-			break;
-	}
-}
-#endif
-
 //////////////////////////////////////////////////////////////////////
 /// @brief automatically runs the simulations according to the set parameters
 /// @details runs either until the trace file runs out or the request count reaches zero\n
@@ -48,13 +16,13 @@ void dramSystem::runSimulations2()
 /// pulls data from either a trace file or generates random requests according to parameters
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
-void System::runSimulations()
+void System::runSimulations(const unsigned requestCount)
 {
 	Transaction *inputTransaction = NULL;
 
 	tick newTime;
 
-	for (unsigned i = simParameters.getRequestCount(); i > 0; )
+	for (unsigned i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0; )
 	{		
 		if (!inputTransaction)
 		{
@@ -63,7 +31,7 @@ void System::runSimulations()
 			if (!inputTransaction)
 				break;
 
-			newTime = channel[inputTransaction->getAddresses().channel].getTime();
+			newTime = channel[inputTransaction->getAddresses().getChannel()].getTime();
 			// if the previous transaction was delayed, thus making this arrival be in the past
 			// prevent new arrivals from arriving in the past
 			//inputTransaction->setEnqueueTime(max(inputTransaction->getEnqueueTime(),channel[inputTransaction->getAddresses().channel].getTime()));
@@ -94,7 +62,7 @@ void System::runSimulations()
 			{
 				// figure that the cpu <=> mch bus runs at the mostly the same speed
 				//inputTransaction->setEnqueueTime(inputTransaction->getEnqueueTime() + channel[0].getTimingSpecification().tCMD());
-				newTime = max(channel[inputTransaction->getAddresses().channel].nextTick(), newTime);
+				newTime = max(channel[inputTransaction->getAddresses().getChannel()].nextTick(), newTime);
 			}
 		}
 	}

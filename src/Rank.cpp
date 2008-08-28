@@ -7,8 +7,8 @@ using std::endl;
 using std::cerr;
 using namespace DRAMSimII;
 
-Rank::Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
-timing(timingVal),
+Rank::Rank(const Settings& settings, const TimingSpecification &timing, const SystemConfiguration &systemConfig):
+timing(timing),
 lastRefreshTime(-100),
 lastPrechargeTime(-100),
 lastCASTime(-100),
@@ -20,36 +20,108 @@ lastCASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
 banksPrecharged(settings.bankCount),
-lastRASTimes(4), // make the queue hold four (tFAW)
-bank(settings.bankCount,Bank(settings, timingVal, systemConfigVal))
+lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
+bank(systemConfig.getBankCount(),Bank(settings, timing, systemConfig))
 {}
 
-Rank::Rank(const Rank &r, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
-timing(timingVal),
-lastRefreshTime(r.lastRefreshTime),
-lastPrechargeTime(0),
-lastCASTime(r.lastCASTime),
-lastCASWTime(r.lastCASWTime),
-prechargeTime(r.prechargeTime),
-totalPrechargeTime(r.totalPrechargeTime),
-lastCASLength(r.lastCASLength),
-lastCASWLength(r.lastCASWLength),
-rankID(r.rankID),
-lastBankID(r.lastBankID),
-lastRASTimes(r.lastRASTimes),
-banksPrecharged(r.banksPrecharged),
-bank((unsigned)r.bank.size(), Bank(r.bank[0], timingVal, systemConfigVal))
+Rank::Rank(const Rank &rhs):
+timing(rhs.timing),
+lastRefreshTime(rhs.lastRefreshTime),
+lastPrechargeTime(rhs.lastPrechargeTime),
+lastCASTime(rhs.lastCASTime),
+lastCASWTime(rhs.lastCASWTime),
+prechargeTime(rhs.prechargeTime),
+totalPrechargeTime(rhs.totalPrechargeTime),
+lastCASLength(rhs.lastCASLength),
+lastCASWLength(rhs.lastCASWLength),
+rankID(rhs.rankID),
+lastBankID(rhs.lastBankID),
+lastActivateTimes(rhs.lastActivateTimes),
+banksPrecharged(rhs.banksPrecharged),
+bank(rhs.bank)
 {}
+
+Rank::Rank(const Rank &rhs, const TimingSpecification &timing, const SystemConfiguration &systemConfig):
+timing(timing),
+lastRefreshTime(rhs.lastRefreshTime),
+lastPrechargeTime(rhs.lastPrechargeTime),
+lastCASTime(rhs.lastCASTime),
+lastCASWTime(rhs.lastCASWTime),
+prechargeTime(rhs.prechargeTime),
+totalPrechargeTime(rhs.totalPrechargeTime),
+lastCASLength(rhs.lastCASLength),
+lastCASWLength(rhs.lastCASWLength),
+rankID(rhs.rankID),
+lastBankID(rhs.lastBankID),
+lastActivateTimes(rhs.lastActivateTimes),
+banksPrecharged(rhs.banksPrecharged),
+bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConfig))
+{
+	// TODO: copy over values in banks now that reference members are init	
+	//for (unsigned i = 0; i < systemConfig.getBankCount(); i++)
+	//{
+	//	bank[i] = rhs.bank[i];
+	//}
+	bank = rhs.bank;
+}
+
+Rank::Rank(const TimingSpecification &timingSpec, const std::vector<Bank> & newBank):
+timing(timingSpec),
+bank(newBank),
+lastActivateTimes(4)
+{}
+
+Rank& Rank::operator =(const Rank& rhs)
+{
+	//::new(this)DRAMSimII::Rank(rhs.timing,rhs.bank);
+	lastRefreshTime = rhs.lastRefreshTime;
+	lastPrechargeTime = rhs.lastPrechargeTime;
+	lastCASTime = rhs.lastCASTime;
+	lastCASWTime = rhs.lastCASWTime;
+	prechargeTime = rhs.prechargeTime;
+	totalPrechargeTime = rhs.totalPrechargeTime;
+	lastCASLength = rhs.lastCASLength;
+	lastCASWLength = rhs.lastCASWLength;
+	rankID = rhs.rankID;
+	lastBankID = rhs.lastBankID;
+	banksPrecharged = rhs.banksPrecharged;
+	//lastActivateTimes = rhs.lastActivateTimes;
+
+	return *this;
+}
+
+bool Rank::operator==(const Rank& right) const
+{
+	return (timing == right.timing && lastRefreshTime == right.lastRefreshTime && lastPrechargeTime == right.lastPrechargeTime &&
+		lastCASTime == right.lastCASTime && lastCASWTime == right.lastCASWTime && prechargeTime == right.prechargeTime && totalPrechargeTime == right.totalPrechargeTime &&
+		lastCASLength == right.lastCASLength && lastCASWLength == right.lastCASWLength && rankID == right.rankID && lastBankID == right.lastBankID &&
+		banksPrecharged == right.banksPrecharged && lastActivateTimes == right.lastActivateTimes && bank == right.bank);
+}
+
+std::ostream& DRAMSimII::operator<<(std::ostream &os, const Rank &r)
+{
+	os << r.lastRefreshTime << endl;
+	os << r.lastPrechargeTime << endl;
+	os << r.lastCASTime << endl;	
+	os << r.lastCASWTime << endl;	
+	os << r.prechargeTime << endl;
+	os << r.totalPrechargeTime << endl;
+	os << r.lastCASLength << endl;	
+	os << r.lastCASWLength << endl;	
+	os << r.rankID << endl;			
+	os << r.lastBankID << endl;		
+	os << r.banksPrecharged << endl;	
+
+	return os;
+}
 
 void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	// RAS time history queue, per rank
-	tick *thisRASTime = lastRASTimes.acquireItem();
+	const tick thisRASTime = currentTime;
 
-	*thisRASTime = currentTime;
-
-	lastRASTimes.push(thisRASTime);
-	lastBankID = currentCommand->getAddress().bank;
+	lastActivateTimes.push_front(thisRASTime);
+	lastBankID = currentCommand->getAddress().getBank();
 
 	// for power modeling, if all banks were precharged and now one is being activated, record the interval that one was precharged	
 	if (banksPrecharged == bank.size())
@@ -59,18 +131,18 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 	}
 	if (banksPrecharged == bank.size())
 		for (vector<Bank>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
-		assert(!curBnk->isActivated());
+			assert(!curBnk->isActivated());
 	banksPrecharged--;
 	assert(banksPrecharged >= 0 && banksPrecharged < bank.size());
 	// update the bank to reflect this change also
-	Bank &currentBank = bank[currentCommand->getAddress().bank];
+	Bank &currentBank = bank[currentCommand->getAddress().getBank()];
 	currentBank.issueRAS(currentTime, currentCommand);
 }
 
 void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
-	Bank &currentBank = bank[currentCommand->getAddress().bank];
+	Bank &currentBank = bank[currentCommand->getAddress().getBank()];
 	currentBank.issuePRE(currentTime, currentCommand);
 
 	switch (currentCommand->getCommandType())
@@ -90,7 +162,7 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 		cerr << "Unhandled CAS variant" << endl;
 		break;
 	}
-	
+
 	banksPrecharged++;
 	assert(banksPrecharged > 0);
 	assert(banksPrecharged <= bank.size());
@@ -99,23 +171,23 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
-	bank[currentCommand->getAddress().bank].issueCAS(currentTime, currentCommand);
-	
+	bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
+
 	lastCASTime = currentTime;
 	lastCASLength = currentCommand->getLength();
 
-	lastBankID = currentCommand->getAddress().bank;
+	lastBankID = currentCommand->getAddress().getBank();
 }
 
 void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
-	bank[currentCommand->getAddress().bank].issueCASW(currentTime, currentCommand);
+	bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);
 
 	lastCASWTime = currentTime;
 	lastCASWLength = currentCommand->getLength();
 
-	lastBankID = currentCommand->getAddress().bank;
+	lastBankID = currentCommand->getAddress().getBank();
 }
 
 void Rank::issueREF(const tick currentTime, const Command *currentCommand)

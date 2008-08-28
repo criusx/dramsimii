@@ -4,8 +4,11 @@
 
 #include "globals.h"
 #include "Address.h"
-#include "enumTypes.h"
 #include "queue.h"
+
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/is_abstract.hpp>
 
 namespace DRAMSimII
 {
@@ -40,11 +43,14 @@ namespace DRAMSimII
 		unsigned length;				///< the burst length
 
 	public:
+
+		// constructors
 		explicit Command(const Command&);
 		explicit Command();		
-		explicit Command(Transaction *hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const CommandType commandType = CAS_COMMAND);
+		explicit Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const CommandType commandType = CAS_COMMAND);
 		void *operator new(size_t size);
 		void operator delete(void *);
+		//~Command();
 
 		// accessors
 		CommandType getCommandType() const { return commandType; }
@@ -58,6 +64,7 @@ namespace DRAMSimII
 		bool isPostedCAS() const { return postedCAS; }
 
 		// mutators
+		Transaction *removeHost() { Transaction* host = hostTransaction; hostTransaction = NULL; return host; }
 		void setStartTime(const tick st) { startTime = st; }
 		void setCompletionTime(const tick ct) { completionTime = ct; }
 		void setCommandType(const CommandType ct) { commandType = ct; }
@@ -65,6 +72,20 @@ namespace DRAMSimII
 
 		// friends
 		friend std::ostream &DRAMSimII::operator<<(std::ostream &, const DRAMSimII::Command &);	
+
+		// overloads
+		bool operator==(const Command& right) const;
+
+	private:
+		// serialization
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned version)
+		{
+			//ar & freeCommandPool;
+			ar & commandType & startTime & enqueueTime & completionTime & addr & hostTransaction & postedCAS & length;
+		}
 	};	
 }
 #endif

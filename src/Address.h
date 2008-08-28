@@ -2,8 +2,13 @@
 #define ADDRESSES_H
 #pragma once
 
-#include <limits.h>
+#include "globals.h"
 #include "Settings.h"
+
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/list.hpp>
+#include <boost/serialization/is_abstract.hpp>
 
 namespace DRAMSimII
 {
@@ -13,22 +18,20 @@ namespace DRAMSimII
 	/// or as channel, rank, bank, column and row identifiers
 	class Address
 	{
-	private:
-		static unsigned chan_addr_depth;
-		static unsigned rank_addr_depth;
-		static unsigned bank_addr_depth;
-		static unsigned row_addr_depth;
-		static unsigned col_addr_depth;
+	protected:
+		static unsigned channelAddressDepth;
+		static unsigned rankAddressDepth;
+		static unsigned bankAddressDepth;
+		static unsigned rowAddressDepth;
+		static unsigned columnAddressDepth;
 		//FIXME: shouldn't this already be set appropriately?
-		static unsigned col_size_depth;
+		static unsigned columnSizeDepth;
 		static unsigned cacheLineSize;
 		static AddressMappingScheme mappingScheme;
 
-	public:
 		unsigned virtualAddress;			///< the virtual address
-	private:
 		PHYSICAL_ADDRESS physicalAddress; ///< the physical address
-	public:
+	
 		unsigned channel;					///< the enumerated channel id
 		unsigned rank;						///< the rank id
 		unsigned bank;						///< the bank id
@@ -37,8 +40,23 @@ namespace DRAMSimII
 
 		// functions
 		bool convertAddress();
+	public:
+		
+		// accessors
+		PHYSICAL_ADDRESS getPhysicalAddress() const { return physicalAddress; }
+		unsigned getChannel() const { return channel; }
+		unsigned getRank() const { return rank; }
+		unsigned getBank() const { return bank; }
+		unsigned getRow() const { return row; }
+		unsigned getColumn() const { return column; }
+
+		// mutators
 		void setPhysicalAddress(PHYSICAL_ADDRESS pa) { physicalAddress = pa; convertAddress(); }
-		unsigned long long getPhysicalAddress() const { return physicalAddress; }
+		void setChannel(const unsigned value ) { channel = value; }
+		void setRank(const unsigned value) { rank = value; }
+		void setBank(const unsigned value) { bank = value; }
+		void setRow(const unsigned value) { row = value; }
+		void setColumn(const unsigned value) { column = value; }
 
 		// constructor
 		Address();						///< the no-arg constructor
@@ -47,10 +65,23 @@ namespace DRAMSimII
 
 		// initialize
 		void static initialize(const Settings &dramSettings);
+		void static initialize(const SystemConfiguration &systemConfig);
 
 		// friend
 		friend std::ostream &DRAMSimII::operator<<(std::ostream &os, const Address &this_a);
-		friend std::ostream &DRAMSimII::operator<<(std::ostream &os, const Transaction *this_t);
+		friend std::ostream &DRAMSimII::operator<<(std::ostream &os, const Transaction &this_t);
+		friend class boost::serialization::access;
+
+		// overloads
+		bool operator==(const Address& right) const;
+
+	private:
+		template<class Archive>
+		void serialize( Archive & ar, const unsigned file_version )
+		{
+			ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth & columnAddressDepth & columnSizeDepth & cacheLineSize;
+			ar & mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column;
+		}
 	};
 }
 #endif

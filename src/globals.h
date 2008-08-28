@@ -17,46 +17,15 @@ To do list:
 #define GLOBALS_H
 #pragma once
 
+#include <boost/iostreams/filtering_stream.hpp>
+#include <sstream>
+
 #include <limits>
 #include <boost/integer_traits.hpp>
 #include <boost/cstdint.hpp>
 
-using boost::int64_t;
-using boost::uint64_t;
-using boost::integer_traits;
-
-#define tick int64_t
-#define TICK_MAX static_cast<tick>(integer_traits<tick>::const_max)
-#define PHYSICAL_ADDRESS uint64_t
-#define PHYSICAL_ADDRESS_MAX static_cast<PHYSICAL_ADDRESS>(integer_traits<PHYSICAL_ADDRESS>::const_max)
-//#define TICK_MAX std::numeric_limits<boost::uint64_t>::max()
-
-#include <boost/iostreams/filtering_stream.hpp>
-#include <sstream>
-
 #include "enumTypes.h"
 
-#define ABS(a) ((a) < 0 ? (-a) : (a))
-
-//#define INVALID -1
-
-#define PI 3.1415926535897932384626433832795
-
-#define COMMAND_QUEUE_SIZE 32
-
-//#define DEBUG_FLAG
-
-#define DEBUG_COMMAND
-
-#define DEBUG_TRANSACTION
-
-//#define DEBUG_RAND
-
-#define DEBUGDRAMSIM
-
-//#define DEBUG_MIN_PROTOCOL_GAP
-
-//#define DEBUG_FLAG_2
 
 // global vars and functions
 namespace DRAMSimII
@@ -70,15 +39,26 @@ namespace DRAMSimII
 	class fbdFrame;
 	class SystemConfiguration;
 	class TimingSpecification;
+	class InputStream;
+	class Settings;
+	class PowerConfig;
+	class Bank;
+	class Rank;
+
+	void unitTests(const Settings &settings);
 
 	// overloaded insertion operator functions for printing various aspects of the dram system
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::CommandType &);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::Command &);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::Address &);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::Transaction *);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::AddressMappingScheme &);
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::TransactionType );
-	std::ostream &operator<<(std::ostream &, const DRAMSimII::fbdFrame &);	
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::CommandType&);
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::Command&);
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::Address&);
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::Transaction&);
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::AddressMappingScheme&);
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::TransactionType );
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::fbdFrame&);	
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::PowerConfig&);
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::Address &);
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::AddressMappingScheme&);
+	std::ostream& operator<<(std::ostream&, const DRAMSimII::InputStream&);
 
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)
@@ -90,7 +70,7 @@ namespace DRAMSimII
 		}
 		return l2;
 	}
-	
+
 
 	// converts a string to a number using stringstreams
 	template <class T>
@@ -147,6 +127,38 @@ namespace DRAMSimII
 
 
 
-}
+	using boost::int64_t;
+	using boost::uint64_t;
+	using boost::integer_traits;
 
+#define tick int64_t
+#define TICK_MAX static_cast<tick>(integer_traits<tick>::const_max)
+#define PHYSICAL_ADDRESS uint64_t
+#define PHYSICAL_ADDRESS_MAX static_cast<PHYSICAL_ADDRESS>(integer_traits<PHYSICAL_ADDRESS>::const_max)
+	//#define TICK_MAX std::numeric_limits<boost::uint64_t>::max()
+
+#define ABS(a) ((a) < 0 ? (-a) : (a))
+
+	//#define INVALID -1
+
+#define PI 3.1415926535897932384626433832795
+
+#define COMMAND_QUEUE_SIZE 32
+
+	//#define DEBUG_FLAG
+
+#define DEBUG_COMMAND
+
+#define DEBUG_TRANSACTION
+
+	//#define DEBUG_RAND
+
+#define DEBUGDRAMSIM
+
+	//#define DEBUG_MIN_PROTOCOL_GAP
+
+	//#define DEBUG_FLAG_2
+
+
+}
 #endif

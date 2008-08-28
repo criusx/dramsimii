@@ -13,11 +13,11 @@ int Channel::minProtocolGap(const Command *this_c) const
 { 
 	int min_gap = 0;
 
-	const unsigned this_rank = this_c->getAddress().rank;
+	const unsigned this_rank = this_c->getAddress().getRank();
 
 	const Rank &currentRank = rank[this_rank];
 
-	const Bank &currentBank = currentRank.bank[this_c->getAddress().bank];
+	const Bank &currentBank = currentRank.bank[this_c->getAddress().getBank()];
 
 	switch(this_c->getCommandType())
 	{
@@ -26,40 +26,41 @@ int Channel::minProtocolGap(const Command *this_c) const
 			// refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk
 
 			// respect the row cycle time limitation
-			int tRCGap = (currentBank.getLastRASTime() - time) + timingSpecification.tRC();
+			int tRCGap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRC();
 
 			// respect tRRD and tRC of all other banks of same rank
 			int tRRDGap;
 
-			int ras_q_count = currentRank.lastRASTimes.size();
+			int ras_q_count = currentRank.lastActivateTimes.size();
 
-			if (ras_q_count == 0)
+			if (currentRank.lastActivateTimes.empty())
 			{
 				tRRDGap = 0;
 			}
 			else 
 			{
 				// read tail end of ras history
-				tick *lastRASTime = currentRank.lastRASTimes.read(ras_q_count - 1); 
+				//tick *lastRASTime = currentRank.lastActivateTimes.read(ras_q_count - 1); 
+				const tick lastRASTime = currentRank.lastActivateTimes.front();
 				// respect the row-to-row activation delay
-				tRRDGap = (*lastRASTime - time) + timingSpecification.tRRD();				
+				tRRDGap = (int)(lastRASTime - time) + timingSpecification.tRRD();				
 			}
 
 			// respect tRP of same bank
-			int tRPGap = (currentBank.getLastPrechargeTime() - time) + timingSpecification.tRP();
+			int tRPGap = (int)(currentBank.getLastPrechargeTime() - time) + timingSpecification.tRP();
 
 			// respect the t_faw value for DDR2 and beyond
 			int tFAWGap;
 
-			if (ras_q_count < 4)
+			if (!currentRank.lastActivateTimes.full())
 			{
 				tFAWGap = 0;
 			}
 			else
 			{
 				// read head of ras history
-				const tick *fourthRASTime = currentRank.lastRASTimes.front(); 
-				tFAWGap = (*fourthRASTime - time) + timingSpecification.tFAW();
+				const tick fourthRASTime = currentRank.lastActivateTimes.back(); 
+				tFAWGap = (fourthRASTime - time) + timingSpecification.tFAW();
 			}
 
 			// respect tRFC
@@ -245,11 +246,11 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 { 
 	tick nextTime;
 
-	const unsigned this_rank = currentCommand->getAddress().rank;
+	const unsigned this_rank = currentCommand->getAddress().getRank();
 
 	const Rank &currentRank = rank[this_rank];
 
-	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().bank];
+	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
 
 	switch(currentCommand->getCommandType())
 	{
@@ -263,17 +264,18 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			// respect tRRD and tRC of all other banks of same rank
 			tick tRRDLimit;
 
-			if (currentRank.lastRASTimes.isEmpty())
-			{
-				tRRDLimit = time;
-			}
-			else 
-			{
+			//if (currentRank.lastActivateTimes.empty())
+			//{
+			//	tRRDLimit = time;
+			//}
+			//else 
+			//{
 				// read tail end of RAS history
-				const tick *lastRASTime = currentRank.lastRASTimes.back(); 
+			// lastActivateTimes should always be full
+				const tick lastRASTime = currentRank.lastActivateTimes.front(); 
 				// respect the row-to-row activation delay
-				tRRDLimit = *lastRASTime + timingSpecification.tRRD();				
-			}
+				tRRDLimit = lastRASTime + timingSpecification.tRRD();				
+			//}
 
 			// respect tRP of same bank
 			tick tRPLimit = currentBank.getLastPrechargeTime() + timingSpecification.tRP();
@@ -281,16 +283,17 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			// respect the t_faw value for DDR2 and beyond
 			tick tFAWLimit;
 
-			if (currentRank.lastRASTimes.isFull())
-			{
+			//if (currentRank.lastActivateTimes.full())
+			//{
 				// read head of ras history
-				const tick *fourthRASTime = currentRank.lastRASTimes.front(); 
-				tFAWLimit = (int)(*fourthRASTime - time) + timingSpecification.tFAW();
-			}
-			else
-			{
+			// lastActivateTimes should always be full
+				const tick fourthRASTime = currentRank.lastActivateTimes.back(); 
+				tFAWLimit = (int)(fourthRASTime - time) + timingSpecification.tFAW();
+			//}
+			//else
+			//{
 				tFAWLimit = time;
-			}
+			//}
 
 			// respect tRFC
 			tick tRFCLimit = currentRank.getLastRefreshTime() + timingSpecification.tRFC();

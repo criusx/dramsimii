@@ -20,7 +20,7 @@ Command *Channel::getNextCommand()
 {
 	if (const Command *nextCommand = readNextCommand())
 	{
-		Rank &currentRank = rank[nextCommand->getAddress().rank];
+		Rank &currentRank = rank[nextCommand->getAddress().getRank()];
 		
 		// if it was a refresh all command, then dequeue all n banks worth of commands
 		if (nextCommand->getCommandType() == REFRESH_ALL_COMMAND)
@@ -42,8 +42,8 @@ Command *Channel::getNextCommand()
 		}
 		else
 		{			
-			assert(currentRank.bank[nextCommand->getAddress().bank].front() == nextCommand);
-			return currentRank.bank[nextCommand->getAddress().bank].pop();
+			assert(currentRank.bank[nextCommand->getAddress().getBank()].front() == nextCommand);
+			return currentRank.bank[nextCommand->getAddress().getBank()].pop();
 		}
 	}
 	else
@@ -65,8 +65,8 @@ const Command *Channel::readNextCommand() const
 
 	const Command *lastCommand = historyQueue.back();
 
-	const unsigned lastBankID = lastCommand ? lastCommand->getAddress().bank : systemConfig.getBankCount() - 1;
-	const unsigned lastRankID = lastCommand ? lastCommand->getAddress().rank : systemConfig.getRankCount() - 1;
+	const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
+	const unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
 	const CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : CAS_WRITE_AND_PRECHARGE_COMMAND;
 
 	switch (systemConfig.getCommandOrderingAlgorithm())
@@ -165,14 +165,14 @@ const Command *Channel::readNextCommand() const
 			// if any executable command was found, prioritize it over those which must wait
 			if (oldestExecutableCommandTime < TICK_MAX)
 			{
-				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL_COMMAND || rank[oldestExecutableBank->front()->getAddress().rank].bank[oldestExecutableBank->front()->getAddress().bank].front() == oldestExecutableBank->front());
+				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL_COMMAND || rank[oldestExecutableBank->front()->getAddress().getRank()].bank[oldestExecutableBank->front()->getAddress().getBank()].front() == oldestExecutableBank->front());
 
 				return oldestExecutableBank->front();
 			}
 			// if there was a command found
 			else if (oldestCommandTime < TICK_MAX)
 			{
-				assert(oldestBank->front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestBank->front()->getAddress().rank].bank[oldestBank->front()->getAddress().bank].front() == oldestBank->front());
+				assert(oldestBank->front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
 
 				return oldestBank->front();
 			}
@@ -304,8 +304,8 @@ const Command *Channel::readNextCommand() const
 							((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_COMMAND) && (transactionType == READ_TRANSACTION)) ||
 							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_WRITE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
 						{
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().bank == lastBankID);
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().rank == lastRankID);
+							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
+							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
 							return rank[lastRankID].bank[lastBankID].front();
 						}
 					}
@@ -421,8 +421,8 @@ const Command *Channel::readNextCommand() const
 							((nextCommand->getCommandType() == CAS_AND_PRECHARGE_COMMAND || nextCommand->getCommandType() == CAS_COMMAND) && (transactionType == READ_TRANSACTION)) ||
 							((nextCommand->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || nextCommand->getCommandType() == CAS_WRITE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
 						{
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().bank == lastBankID);
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().rank == lastRankID);
+							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
+							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
 							return rank[lastRankID].bank[lastBankID].front();
 						}
 					}
@@ -462,7 +462,10 @@ const Command *Channel::readNextCommand() const
 					if (challengerCommand)
 					{
 						tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
-						assert(time + minProtocolGap(challengerCommand) == challengerExecuteTime);
+						
+						int minGap = minProtocolGap(challengerCommand);
+						
+						assert(time + minGap == challengerExecuteTime);
 
 						// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
 						if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
@@ -501,7 +504,7 @@ const Command *Channel::readNextCommand() const
 
 			if (candidateCommand)
 			{
-				assert(candidateCommand->getCommandType() == REFRESH_ALL_COMMAND || rank[candidateCommand->getAddress().rank].bank[candidateCommand->getAddress().bank].front() == candidateCommand);
+				assert(candidateCommand->getCommandType() == REFRESH_ALL_COMMAND || rank[candidateCommand->getAddress().getRank()].bank[candidateCommand->getAddress().getBank()].front() == candidateCommand);
 
 #ifdef DEBUG_GREEDY
 			timingOutStream << "R[" << candidateCommand->getAddress().rank << "] B[" << candidateCommand->getAddress().bank << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]" << endl;

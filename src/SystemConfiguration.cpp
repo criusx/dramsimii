@@ -16,7 +16,7 @@ columnSize(settings.columnSize),
 rowSize(settings.rowSize),
 cachelineSize(settings.cacheLineSize),
 seniorityAgeLimit(settings.seniorityAgeLimit),
-dram_type(settings.dramType),
+dramType(settings.dramType),
 rowBufferManagementPolicy(settings.rowBufferManagementPolicy),
 addressMappingScheme(settings.addressMappingScheme),
 datarate(settings.dataRate),
@@ -35,39 +35,6 @@ shortBurstRatio(settings.shortBurstRatio),
 readPercentage(settings.readPercentage),
 sessionID(settings.sessionID)
 {}
-
-
-SystemConfiguration::SystemConfiguration(const SystemConfiguration *rhs):
-commandOrderingAlgorithm(rhs->commandOrderingAlgorithm),
-transactionOrderingAlgorithm(rhs->transactionOrderingAlgorithm),
-configType(rhs->configType),
-refreshTime(rhs->refreshTime),
-refreshPolicy(rhs->refreshPolicy),
-columnSize(rhs->columnSize),
-rowSize(rhs->rowSize),
-cachelineSize(rhs->cachelineSize),
-seniorityAgeLimit(rhs->seniorityAgeLimit),
-dram_type(rhs->dram_type),
-rowBufferManagementPolicy(rhs->rowBufferManagementPolicy),
-addressMappingScheme(rhs->addressMappingScheme),
-datarate(rhs->datarate),
-postedCAS(rhs->postedCAS),
-readWriteGrouping(rhs->readWriteGrouping),
-autoPrecharge(rhs->autoPrecharge),
-clockGranularity(rhs->clockGranularity),
-cachelinesPerRow(rhs->cachelinesPerRow),
-channelCount(rhs->channelCount),
-rankCount(rhs->rankCount),
-bankCount(rhs->bankCount),
-rowCount(rhs->rowCount),
-columnCount(rhs->columnCount),
-epoch(rhs->epoch),
-shortBurstRatio(rhs->shortBurstRatio),
-readPercentage(rhs->readPercentage),
-sessionID(rhs->sessionID)
-{}
-
-
 
 ostream &DRAMSimII::operator<<(ostream &os, const SystemConfiguration &this_a)
 {
@@ -95,7 +62,7 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMSimII::SystemConf
 	columnCount = rs.columnCount;
 	cachelineSize = rs.cachelineSize;
 	seniorityAgeLimit = rs.seniorityAgeLimit;
-	dram_type = rs.dram_type;
+	dramType = rs.dramType;
 	rowBufferManagementPolicy = rs.rowBufferManagementPolicy;
 	addressMappingScheme = rs.addressMappingScheme;
 	datarate = rs.datarate;
@@ -114,77 +81,33 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMSimII::SystemConf
 	return *this;
 }
 
-#if 0
-#ifdef M5
-SystemConfiguration::SystemConfiguration(System::Params *parameter)
+bool SystemConfiguration::operator ==(const SystemConfiguration& right) const 
 {
-	if (parameter->dramType == "sdram")
-		dram_type = SDRAM;
-	else if (parameter->dramType == "ddr" || parameter->dramType == "ddrsdram")
-		dram_type = DDR;
-	else if (parameter->dramType == "ddr2")
-		dram_type = DDR2;
-	else if (parameter->dramType == "ddr3")
-		dram_type = DDR3;
-	else if (parameter->dramType == "drdram")
-		dram_type = DRDRAM;
-	else
-		dram_type = DDR2;
-
-	noRefresh = parameter->refresh;
-
-	if (parameter->rowBufferManagmentPolicy == "open_page")
-		rowBufferManagementPolicy = OPEN_PAGE;
-	else if (parameter->rowBufferManagmentPolicy == "close_page")
-		rowBufferManagementPolicy = CLOSE_PAGE;
-	else
-		rowBufferManagementPolicy = AUTO_PAGE;
-
-	autoPrecharge = parameter->autoPrecharge;
-
-	if (parameter->addrMappingScheme == "burger_base_map")
-		addressMappingScheme = BURGER_BASE_MAP;
-	else if (parameter->addrMappingScheme == "close_page_baseline")
-		addressMappingScheme = CLOSE_PAGE_BASELINE;
-	else if (parameter->addrMappingScheme == "INTEL845G_MAP")
-		addressMappingScheme = INTEL845G_MAP;
-	else if (parameter->addrMappingScheme == "sdram_base_map")
-		addressMappingScheme = SDRAM_BASE_MAP;
-	else if (parameter->addrMappingScheme == "sdram_close_page_map")
-		addressMappingScheme = SDRAM_CLOSE_PAGE_MAP;
-	else
-		addressMappingScheme = SDRAM_HIPERF_MAP;
-
-	datarate = parameter->datarate;
-
-	refreshTime = parameter->refreshTime * datarate;
-
-	readWriteGrouping = parameter->readWriteGrouping;
-
-	if (parameter->refreshPolicy == "none" || parameter->refreshPolicy == "no refresh")
-		refreshPolicy = NO_REFRESH;
-	else if (parameter->refreshPolicy == "bank_concurrent" || parameter->refreshPolicy == "bank concurrent")
-		refreshPolicy = BANK_CONCURRENT;
-	else
-		refreshPolicy = BANK_STAGGERED_HIDDEN;
-
-	seniorityAgeLimit = parameter->seniorityAgeLimit;
-
-	postedCAS = parameter->postedCas;
-
-	clockGranularity = parameter->clockGranularity;
-
-	cachelinesPerRow = parameter->cachelinesPerRow;
-
-	rowCount = parameter->rowCount;
-
-	columnCount = parameter->colCount;
-
-	columnSize = parameter->colSize;
-
-	rowSize = parameter->rowSize;
-
-	cachelineSize = parameter->cachelineSize;
+	return (commandOrderingAlgorithm==right.commandOrderingAlgorithm &&
+		transactionOrderingAlgorithm==right.transactionOrderingAlgorithm &&
+		configType==right.configType &&
+		refreshTime==right.refreshTime &&
+		refreshPolicy==right.refreshPolicy &&
+		columnSize==right.columnSize &&
+		rowSize==right.rowSize &&
+		cachelineSize==right.cachelineSize &&
+		seniorityAgeLimit==right.seniorityAgeLimit &&
+		dramType==right.dramType &&
+		rowBufferManagementPolicy==right.rowBufferManagementPolicy &&
+		addressMappingScheme==right.addressMappingScheme &&
+		datarate==right.datarate &&
+		postedCAS==right.postedCAS &&
+		readWriteGrouping==right.readWriteGrouping &&
+		autoPrecharge==right.autoPrecharge &&
+		clockGranularity==right.clockGranularity &&
+		cachelinesPerRow==right.cachelinesPerRow &&
+		channelCount==right.channelCount &&
+		rankCount==right.rankCount &&
+		bankCount==right.bankCount &&
+		rowCount==right.rowCount &&
+		columnCount==right.columnCount &&
+		epoch==right.epoch &&
+		shortBurstRatio==right.shortBurstRatio &&
+		readPercentage==right.readPercentage &&
+		sessionID==right.sessionID);
 }
-#endif
-#endif

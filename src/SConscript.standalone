@@ -2,7 +2,7 @@ import os
 import sys
 #Import(`env`)
 
-sources = Split("""
+sourceFile = Split("""
 			reporting/soapC.cpp
 			reporting/soapClient.cpp
 			reporting/stdsoap2.cpp
@@ -25,29 +25,65 @@ sources = Split("""
 			fbdSystem.cpp
 			getNextCommand.cpp
 			globals.cpp
-			InputStream.cpp
-			main.cpp
+			InputStream.cpp			
 			powerConfig.cpp
 			minProtocolGap.cpp
 			Rank.cpp
 			runSimulations.cpp
 			simulationParameters.cpp
 			transaction.cpp
-			transaction2commands.cpp""")
+			transaction2commands.cpp
+			main.cpp""")
+			
+sourcesTest = Split("""
+			reporting/soapC.cpp
+			reporting/soapClient.cpp
+			reporting/stdsoap2.cpp
+			Address.cpp
+			Bank.cpp
+			busEvent.cpp
+			command.cpp
+			Algorithm.cpp
+			Channel.cpp			
+			Statistics.cpp
+			System.cpp
+			Settings.cpp
+			SystemConfiguration.cpp
+			TimingSpecification.cpp
+			event.cpp
+			executeCommand.cpp
+			fbdAMB.cpp
+			fbdChannel.cpp
+			fbdFrame.cpp
+			fbdSystem.cpp
+			getNextCommand.cpp
+			globals.cpp
+			InputStream.cpp			
+			powerConfig.cpp
+			minProtocolGap.cpp
+			Rank.cpp
+			runSimulations.cpp
+			simulationParameters.cpp
+			transaction.cpp
+			transaction2commands.cpp
+			unitTest.cpp""")
 
 
 ROOT = Dir('.').abspath
 SRCDIR = os.path.join(ROOT,'src')
 
-#env = Environment(ENV = os.environ,  # inherit user's environment vars
-#                  ROOT = ROOT,
-#                  SRCDIR = SRCDIR)
-env = Environment(CCFLAGS = '-g -O3 -Weffc++',
-			OBJSUFFIC = ".o",
+env = Environment(CCFLAGS = '-g -O -Weffc++ -DDEBUG',
+			OBJSUFFIX = ".og",
 			CPPPATH = '/usr/include/libxml2/')
+			
+
 
 envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64',
-			OBJSUFFIX = '.fo',
+			OBJSUFFIX = ".of",
+			CPPPATH = '/usr/include/libxml2/')
+			
+envTest = Environment(CCFLAGS = '-g -O -Weffc++ -DDEBUG',
+			OBJSUFFIX = ".ot",
 			CPPPATH = '/usr/include/libxml2/')
 
                   
@@ -56,8 +92,8 @@ envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-f
 # Object nodes (including an extra one for date.cc).  We explicitly
 # add the Object nodes so we can set up special dependencies for
 # date.cc.
-def make_objs(sources, env):
-    objs = [env.Object(s) for s in sources]
+def make_objs(sourceFiles, env):
+    objs = [env.Object(s) for s in sourceFiles]
     # make date.cc depend on all other objects so it always gets
     # recompiled whenever anything else does
     date_obj = env.Object('base/date.cc')
@@ -85,5 +121,7 @@ def makeEnv(label, objsfx, strip = False, **kwargs):
     envList.append(newEnv)
 
 #makeEnv('opt', '.o', CCFLAGS = Split('-g -O3'),CPPDEFINES = ['TRACING_ON=1'])
-env.Program('dramSimII',sources, LIBS=['boost_thread', 'boost_iostreams', 'libxml2'])
-envOpt.Program('dramSimII.opt',sources, LIBS=['boost_thread', 'boost_iostreams', 'libxml2'])
+
+env.Program('dramSimII',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
+envOpt.Program('dramSimII.opt',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
+envTest.Program('dramSimII.test',sourcesTest, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])

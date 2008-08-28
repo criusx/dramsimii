@@ -3,11 +3,17 @@
 #pragma once
 
 #include "globals.h"
-#include <fstream>
-#include <map>
 #include "transaction.h"
 #include "command.h"
 #include "Settings.h"
+
+#include <fstream>
+#include <map>
+
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/is_abstract.hpp>
 
 namespace DRAMSimII
 {
@@ -23,11 +29,11 @@ namespace DRAMSimII
 		unsigned burstOf4Count;
 		unsigned columnDepth;
 		std::map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
-		std::map<unsigned,unsigned> commandExceution;		///< stores the finish time - start time stats for commands
+		std::map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
 		std::map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
 		std::map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
 		std::map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
-		std::map<unsigned long long, tick> workingSet;	///< stores all the addresses seen in an epoch to calculate the working set
+		std::map<PHYSICAL_ADDRESS, tick> workingSet;	///< stores all the addresses seen in an epoch to calculate the working set
 
 	public:
 
@@ -40,6 +46,22 @@ namespace DRAMSimII
 		void collectCommandStats(const Command*);
 		inline void setValidTransactionCount(int vtc) {validTransactionCount = vtc;}
 		friend std::ostream &operator<<(std::ostream &, const Statistics &);
+
+		// overloads
+		bool operator==(const Statistics& right) const;
+
+	private:
+
+		explicit Statistics();
+		friend class boost::serialization::access;
+		friend void DRAMSimII::unitTests(const Settings &settings);
+		
+		template<class Archive>
+		void serialize( Archive & ar, const unsigned int file_version )
+		{
+			ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & commandDelay & commandExecution &
+				commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;
+		}
 	};
 }
 #endif

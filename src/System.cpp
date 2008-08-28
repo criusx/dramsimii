@@ -23,7 +23,6 @@ using boost::iostreams::gzip_compressor;
 
 #include "System.h"
 
-
 using boost::iostreams::null_sink;
 using boost::iostreams::file_sink;
 using std::ifstream;
@@ -42,6 +41,186 @@ using std::setfill;
 using std::setprecision;
 using std::min;
 using namespace DRAMSimII;
+
+//////////////////////////////////////////////////////////////////////
+/// @brief constructor for a dramSystem, based on dramSettings
+/// @author Joe Gross
+/// @param settings the settings that define what the system should look like
+//////////////////////////////////////////////////////////////////////
+System::System(const Settings &settings): 
+systemConfig(settings),
+simParameters(settings),
+statistics(settings),
+inputStream(settings, systemConfig, channel),
+channel(systemConfig.getChannelCount(), Channel(settings, systemConfig, statistics)),
+time(0),
+nextStats(settings.epoch)
+{
+	Address::initialize(settings);
+
+	// initialize the output streams
+	if (!timingOutStream.is_complete())
+	{
+
+		string suffix;
+		switch (settings.outFileType)
+		{	
+		case BZ:
+#ifndef WIN32
+			timingOutStream.push(bzip2_compressor());
+			powerOutStream.push(bzip2_compressor());
+			statsOutStream.push(bzip2_compressor());
+			suffix = ".bz2";
+			break;
+#endif
+		case GZ:
+#ifndef WIN32
+			timingOutStream.push(gzip_compressor());
+			powerOutStream.push(gzip_compressor());
+			statsOutStream.push(gzip_compressor());
+			suffix = ".gz";
+			break;
+#endif
+		case UNCOMPRESSED:
+			break;
+		case COUT:
+			timingOutStream.push(cout);
+			powerOutStream.push(cout);
+			statsOutStream.push(cout);
+			break;
+		case NONE:
+			timingOutStream.push(null_sink());
+			powerOutStream.push(null_sink());
+			statsOutStream.push(null_sink());
+			break;
+		}
+		if (settings.outFileType == GZ || settings.outFileType == BZ || settings.outFileType == UNCOMPRESSED)
+		{
+			string baseFilename = settings.outFile;
+
+			// strip off the file suffix
+			if (baseFilename.find("gz") > 0)
+				baseFilename = baseFilename.substr(0,baseFilename.find(".gz"));
+			if (baseFilename.find("bz2") > 0)
+				baseFilename = baseFilename.substr(0,baseFilename.find(".bz2"));
+
+
+			int counter = 0;		
+			ifstream timingIn;
+			ifstream powerIn;
+			ifstream statsIn;
+			ifstream settingsIn;
+			stringstream timingFilename;
+			stringstream powerFilename;
+			stringstream statsFilename;		
+			stringstream settingsFilename;
+			timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
+			powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
+			statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
+			settingsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
+			timingIn.open(timingFilename.str().c_str(),ifstream::in);
+			powerIn.open(powerFilename.str().c_str(),ifstream::in);
+			statsIn.open(statsFilename.str().c_str(),ifstream::in);				
+			settingsIn.open(settingsFilename.str().c_str(),ifstream::in);
+
+			while (timingIn.is_open() || powerIn.is_open() || statsIn.is_open() || settingsIn.is_open())
+			{
+				timingIn.close();
+				powerIn.close();
+				statsIn.close();
+				settingsIn.close();
+				counter++;
+				timingIn.clear(ios::failbit);
+				powerIn.clear(ios::failbit);
+				statsIn.clear(ios::failbit);
+				settingsIn.clear(ios::failbit);
+				timingFilename.str("");
+				powerFilename.str("");
+				statsFilename.str("");
+				settingsFilename.str("");
+				timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
+				powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
+				statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
+				settingsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
+				timingIn.open(timingFilename.str().c_str(),ifstream::in);
+				powerIn.open(powerFilename.str().c_str(),ifstream::in);
+				statsIn.open(statsFilename.str().c_str(),ifstream::in);							
+				settingsIn.open(settingsFilename.str().c_str(),ifstream::in);
+			}
+
+			timingIn.close();
+			powerIn.close();
+			statsIn.close();
+			settingsIn.close();
+
+			timingOutStream.push(file_sink(timingFilename.str().c_str()));
+			powerOutStream.push(file_sink(powerFilename.str().c_str()));
+			statsOutStream.push(file_sink(statsFilename.str().c_str()));
+			ofstream settingsOutStream(settingsFilename.str().c_str());
+
+
+			if (!timingOutStream.good())
+			{
+				cerr << "Error opening file \"" << timingFilename << "\" for writing" << endl;
+				exit(-12);
+			}
+			else if (!powerOutStream.good())
+			{
+				cerr << "Error opening file \"" << powerFilename << "\" for writing" << endl;
+				exit(-12);
+			}
+			else if (!statsOutStream.good())
+			{
+				cerr << "Error opening file \"" << statsFilename << "\" for writing" << endl;
+				exit(-12);
+			}
+			else if (!settingsOutStream.good())
+			{
+				cerr << "Error writing settings file" << settingsFilename << endl;
+				exit(-12);
+			}
+			else
+			{
+				settingsOutStream.write(settings.settingsOutputFile.c_str(),settings.settingsOutputFile.length());
+				settingsOutStream.close();
+			}
+		}
+	}
+	// else printing to these streams goes nowhere
+
+	// set the channelID so that each channel may know its ordinal value
+	for (unsigned i = 0; i < settings.channelCount; i++)
+	{
+		channel[i].setChannelID(i);		
+	}
+}
+
+System::System(const System &rhs): 
+systemConfig(rhs.systemConfig),
+simParameters(rhs.simParameters),
+statistics(rhs.statistics),
+channel(systemConfig.getChannelCount(), Channel(rhs.channel[0],systemConfig, statistics)),
+inputStream(rhs.inputStream,systemConfig,channel),
+time(0),
+nextStats(rhs.nextStats)
+{
+	Address::initialize(systemConfig);
+	channel = rhs.channel;
+}
+
+/// @brief deserialization constructor
+System::System(const SystemConfiguration &sysConfig, const std::vector<Channel> &chan, const SimulationParameters &simParams,
+			   const Statistics &stats, const InputStream &inputStr):
+systemConfig(sysConfig),
+channel(chan),
+simParameters(simParams),
+statistics(stats),
+inputStream(inputStr)
+{
+	Address::initialize(systemConfig);
+	//channel = chan;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 /// @brief returns the time at which the next event happens
@@ -118,14 +297,14 @@ bool System::enqueue(Transaction *currentTransaction)
 {
 	// map the PA of this transaction to this system, assuming the transaction is within range
 	// convert addresses of transactions that are not refreshes
-	if (currentTransaction->getAddresses().getPhysicalAddress() != ULLONG_MAX)
+	if (currentTransaction->getAddresses().getPhysicalAddress() != PHYSICAL_ADDRESS_MAX)
 	{
 		//bool success = convertAddress(currentTransaction->getAddresses());
 		//assert(success);
 	}
 
 	// attempt to insert the transaction into the per-channel transaction queue
-	if (!channel[currentTransaction->getAddresses().channel].enqueue(currentTransaction))
+	if (!channel[currentTransaction->getAddresses().getChannel()].enqueue(currentTransaction))
 	{
 #ifdef M5DEBUG
 		timingOutStream << "!+T(" << channel[currentTransaction->getAddresses().channel].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().channel].getTransactionQueueDepth() << ")" << endl;
@@ -138,7 +317,7 @@ bool System::enqueue(Transaction *currentTransaction)
 		timingOutStream << "+T(" << currentTransaction->getAddresses().channel << ")[" << channel[currentTransaction->getAddresses().channel].getTransactionQueueCount() << "]" << endl;
 #endif
 		// if the transaction was successfully enqueued, set its enqueue time
-		currentTransaction->setEnqueueTime(channel[currentTransaction->getAddresses().channel].getTime());
+		currentTransaction->setEnqueueTime(channel[currentTransaction->getAddresses().getChannel()].getTime());
 		return true;
 	}
 }
@@ -174,162 +353,6 @@ const void *System::moveAllChannelsToTime(const tick endTime, tick& transFinishT
 	return finishedTransaction;
 }
 
-
-
-
-//////////////////////////////////////////////////////////////////////
-/// @brief constructor for a dramSystem, based on dramSettings
-/// @author Joe Gross
-/// @param settings the settings that define what the system should look like
-//////////////////////////////////////////////////////////////////////
-System::System(const Settings &settings): 
-systemConfig(settings),
-channel(systemConfig.getChannelCount(), Channel(settings, systemConfig)),
-simParameters(settings),
-statistics(settings),
-inputStream(settings, systemConfig, channel),
-time(0),
-nextStats(settings.epoch)
-{
-	Address::initialize(settings);
-
-	string suffix;
-	switch (settings.outFileType)
-	{	
-	case BZ:
-#ifndef WIN32
-		timingOutStream.push(bzip2_compressor());
-		powerOutStream.push(bzip2_compressor());
-		statsOutStream.push(bzip2_compressor());
-		suffix = ".bz2";
-		break;
-#endif
-	case GZ:
-#ifndef WIN32
-		timingOutStream.push(gzip_compressor());
-		powerOutStream.push(gzip_compressor());
-		statsOutStream.push(gzip_compressor());
-		suffix = ".gz";
-		break;
-#endif
-	case UNCOMPRESSED:
-		break;
-	case COUT:
-		timingOutStream.push(cout);
-		powerOutStream.push(cout);
-		statsOutStream.push(cout);
-		break;
-	case NONE:
-		timingOutStream.push(null_sink());
-		powerOutStream.push(null_sink());
-		statsOutStream.push(null_sink());
-		break;
-	}
-	if (settings.outFileType == GZ || settings.outFileType == BZ || settings.outFileType == UNCOMPRESSED)
-	{
-		string baseFilename = settings.outFile;
-
-		// strip off the file suffix
-		if (baseFilename.find("gz") > 0)
-			baseFilename = baseFilename.substr(0,baseFilename.find(".gz"));
-		if (baseFilename.find("bz2") > 0)
-			baseFilename = baseFilename.substr(0,baseFilename.find(".bz2"));
-		
-
-		int counter = 0;		
-		ifstream timingIn;
-		ifstream powerIn;
-		ifstream statsIn;
-		ifstream settingsIn;
-		stringstream timingFilename;
-		stringstream powerFilename;
-		stringstream statsFilename;		
-		stringstream settingsFilename;
-		timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
-		powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
-		statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-		settingsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
-		timingIn.open(timingFilename.str().c_str(),ifstream::in);
-		powerIn.open(powerFilename.str().c_str(),ifstream::in);
-		statsIn.open(statsFilename.str().c_str(),ifstream::in);				
-		settingsIn.open(settingsFilename.str().c_str(),ifstream::in);
-		
-		while (timingIn.is_open() || powerIn.is_open() || statsIn.is_open() || settingsIn.is_open())
-		{
-			timingIn.close();
-			powerIn.close();
-			statsIn.close();
-			settingsIn.close();
-			counter++;
-			timingIn.clear(ios::failbit);
-			powerIn.clear(ios::failbit);
-			statsIn.clear(ios::failbit);
-			settingsIn.clear(ios::failbit);
-			timingFilename.str("");
-			powerFilename.str("");
-			statsFilename.str("");
-			settingsFilename.str("");
-			timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
-			powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
-			statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-			settingsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
-			timingIn.open(timingFilename.str().c_str(),ifstream::in);
-			powerIn.open(powerFilename.str().c_str(),ifstream::in);
-			statsIn.open(statsFilename.str().c_str(),ifstream::in);							
-			settingsIn.open(settingsFilename.str().c_str(),ifstream::in);
-		}
-
-		timingIn.close();
-		powerIn.close();
-		statsIn.close();
-		settingsIn.close();
-
-		timingOutStream.push(file_sink(timingFilename.str().c_str()));
-		powerOutStream.push(file_sink(powerFilename.str().c_str()));
-		statsOutStream.push(file_sink(statsFilename.str().c_str()));
-		ofstream settingsOutStream(settingsFilename.str().c_str());
-		
-
-		if (!timingOutStream.good())
-		{
-			cerr << "Error opening file \"" << timingFilename << "\" for writing" << endl;
-			exit(-12);
-		}
-		else if (!powerOutStream.good())
-		{
-			cerr << "Error opening file \"" << powerFilename << "\" for writing" << endl;
-			exit(-12);
-		}
-		else if (!statsOutStream.good())
-		{
-			cerr << "Error opening file \"" << statsFilename << "\" for writing" << endl;
-			exit(-12);
-		}
-		else if (!settingsOutStream.good())
-		{
-			cerr << "Error writing settings file" << settingsFilename << endl;
-			exit(-12);
-		}
-		else
-		{
-			settingsOutStream.write(settings.settingsOutputFile.c_str(),settings.settingsOutputFile.length());
-			settingsOutStream.close();
-		}
-	}
-	// else printing to these streams goes nowhere
-
-	// set backward pointers to the system config and the statistics for each channel
-	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
-	{
-		//i->setSystemConfig(&systemConfig);
-		i->setStatistics(&statistics);
-	}
-	// set the channelID so that each channel may know its ordinal value
-	for (unsigned i = 0; i < settings.channelCount; i++)
-	{
-		channel[i].setChannelID(i);		
-	}
-}
 
 //////////////////////////////////////////////////////////////////////
 /// @brief goes through each channel to find the channel whose time is the least
@@ -427,4 +450,11 @@ void System::doPowerCalculation()
 	{
 		currentChannel->doPowerCalculation();
 	}
+}
+
+bool System::operator==(const System &rhs) const
+{
+	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&
+		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
+		nextStats == rhs.nextStats;
 }

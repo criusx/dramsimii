@@ -1,6 +1,7 @@
+#include "globals.h"
 #include "Address.h"
 #include "enumTypes.h"
-#include "globals.h"
+#include "SystemConfiguration.h"
 
 #include <iostream>
 #include <iomanip>
@@ -13,18 +14,18 @@ using namespace DRAMSimII;
 
 
 // static member declaration
-unsigned Address::chan_addr_depth;
-unsigned Address::rank_addr_depth;
-unsigned Address::bank_addr_depth;
-unsigned Address::row_addr_depth;
-unsigned Address::col_addr_depth;
-unsigned Address::col_size_depth;
+unsigned Address::channelAddressDepth;
+unsigned Address::rankAddressDepth;
+unsigned Address::bankAddressDepth;
+unsigned Address::rowAddressDepth;
+unsigned Address::columnAddressDepth;
+unsigned Address::columnSizeDepth;
 unsigned Address::cacheLineSize;
 AddressMappingScheme Address::mappingScheme;
 
 Address::Address():
 virtualAddress(UINT_MAX),
-physicalAddress(0),
+physicalAddress(PHYSICAL_ADDRESS_MAX),
 channel(UINT_MAX),
 rank(UINT_MAX),
 bank(UINT_MAX),
@@ -32,7 +33,7 @@ row(UINT_MAX),
 column(UINT_MAX)
 {}
 
-Address::Address(unsigned long long pA):
+Address::Address(PHYSICAL_ADDRESS pA):
 virtualAddress(0),
 physicalAddress(pA),
 channel(0),
@@ -56,16 +57,30 @@ column(column)
 
 void Address::initialize(const Settings &dramSettings)
 {
-	chan_addr_depth = log2(dramSettings.channelCount);
-	rank_addr_depth = log2(dramSettings.rankCount);
-	bank_addr_depth = log2(dramSettings.bankCount);
-	row_addr_depth  = log2(dramSettings.rowCount);
-	col_addr_depth  = log2(dramSettings.columnCount);
+	channelAddressDepth = log2(dramSettings.channelCount);
+	rankAddressDepth = log2(dramSettings.rankCount);
+	bankAddressDepth = log2(dramSettings.bankCount);
+	rowAddressDepth  = log2(dramSettings.rowCount);
+	columnAddressDepth  = log2(dramSettings.columnCount);
 	//FIXME: shouldn't this already be set appropriately?
-	col_size_depth	= log2(dramSettings.dramType == DRDRAM ? 16 : dramSettings.columnSize);
+	columnSizeDepth	= log2(dramSettings.dramType == DRDRAM ? 16 : dramSettings.columnSize);
 	cacheLineSize = dramSettings.cacheLineSize;
 	mappingScheme = dramSettings.addressMappingScheme;
 }
+
+void Address::initialize(const SystemConfiguration &systemConfig)
+{
+	channelAddressDepth = log2(systemConfig.getChannelCount());
+	rankAddressDepth = log2(systemConfig.getRankCount());
+	bankAddressDepth = log2(systemConfig.getBankCount());
+	rowAddressDepth  = log2(systemConfig.getRowCount());
+	columnAddressDepth  = log2(systemConfig.getColumnCount());
+	//FIXME: shouldn't this already be set appropriately?
+	columnSizeDepth	= log2(systemConfig.getDRAMType() == DRDRAM ? 16 : systemConfig.getColumnSize());
+	cacheLineSize = systemConfig.getCachelineSize();
+	mappingScheme = systemConfig.getAddressMappingScheme();
+}
+
 
 //////////////////////////////////////////////////////////////////////
 /// @brief converts a given memory request from a physical address to a rank/bank/row/column representation
@@ -76,7 +91,7 @@ void Address::initialize(const Settings &dramSettings)
 //////////////////////////////////////////////////////////////////////
 bool Address::convertAddress()
 {
-	unsigned temp_a, temp_b;
+	PHYSICAL_ADDRESS temp_a, temp_b;
 	unsigned bit_15,bit_27,bits_26_to_16;
 
 	// if there's a test involving specific ranks/banks and the mapping is predetermined
@@ -86,7 +101,7 @@ bool Address::convertAddress()
 		return false;
 
 	// strip away the byte address portion
-	unsigned input_a = physicalAddress >> col_size_depth;
+	PHYSICAL_ADDRESS input_a = physicalAddress >> columnSizeDepth;
 
 
 	//unsigned cacheline_size;
@@ -117,28 +132,28 @@ bool Address::convertAddress()
 
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> chan_addr_depth;
-		temp_a  = input_a << chan_addr_depth;
+		input_a = input_a >> channelAddressDepth;
+		temp_a  = input_a << channelAddressDepth;
 		channel = temp_a ^ temp_b;     		/* strip out the channel address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> col_addr_depth;
-		temp_a  = input_a << col_addr_depth;
+		input_a = input_a >> columnAddressDepth;
+		temp_a  = input_a << columnAddressDepth;
 		column = temp_a ^ temp_b;     		/* strip out the column address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> rank_addr_depth;
-		temp_a  = input_a << rank_addr_depth;
+		input_a = input_a >> rankAddressDepth;
+		temp_a  = input_a << rankAddressDepth;
 		rank = temp_a ^ temp_b;		/* this should strip out the rank address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> bank_addr_depth;
-		temp_a  = input_a << bank_addr_depth;
+		input_a = input_a >> bankAddressDepth;
+		temp_a  = input_a << bankAddressDepth;
 		bank = temp_a ^ temp_b;		/* this should strip out the bank address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> row_addr_depth;
-		temp_a  = input_a << row_addr_depth;
+		input_a = input_a >> rowAddressDepth;
+		temp_a  = input_a << rowAddressDepth;
 		row = temp_a ^ temp_b;		/* this should strip out the row address */
 		if (input_a != 0)				/* If there is still "stuff" left, the input address is out of range */
 		{
@@ -198,8 +213,8 @@ bool Address::convertAddress()
 		//cacheline_size = systemConfig.getCachelineSize();
 		cacheline_size_depth = log2(cacheLineSize);
 
-		col_id_lo_depth = cacheline_size_depth - col_size_depth;
-		col_id_hi_depth = col_addr_depth - col_id_lo_depth;
+		col_id_lo_depth = cacheline_size_depth - columnSizeDepth;
+		col_id_hi_depth = columnAddressDepth - col_id_lo_depth;
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> col_id_lo_depth;
@@ -207,8 +222,8 @@ bool Address::convertAddress()
 		col_id_lo = temp_a ^ temp_b;     		/* strip out the column low address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> chan_addr_depth;
-		temp_a  = input_a << chan_addr_depth;
+		input_a = input_a >> channelAddressDepth;
+		temp_a  = input_a << channelAddressDepth;
 		channel = temp_a ^ temp_b;     		/* strip out the channel address */
 
 		temp_b = input_a;				/* save away original address */
@@ -219,18 +234,18 @@ bool Address::convertAddress()
 		column = (col_id_hi << col_id_lo_depth) | col_id_lo;
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> bank_addr_depth;
-		temp_a  = input_a << bank_addr_depth;
+		input_a = input_a >> bankAddressDepth;
+		temp_a  = input_a << bankAddressDepth;
 		bank = temp_a ^ temp_b;     		/* strip out the bank address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> rank_addr_depth;
-		temp_a  = input_a << rank_addr_depth;
+		input_a = input_a >> rankAddressDepth;
+		temp_a  = input_a << rankAddressDepth;
 		rank = temp_a ^ temp_b;     		/* strip out the rank address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> row_addr_depth;
-		temp_a  = input_a << row_addr_depth;
+		input_a = input_a >> rowAddressDepth;
+		temp_a  = input_a << rowAddressDepth;
 		row = temp_a ^ temp_b;		/* this should strip out the row address */
 		if (input_a != 0) // If there is still "stuff" left, the input address is out of range
 		{
@@ -278,8 +293,8 @@ bool Address::convertAddress()
 		//cacheline_size = systemConfig.getCachelineSize();
 		cacheline_size_depth = log2(cacheLineSize);
 
-		col_id_lo_depth = cacheline_size_depth - col_size_depth;
-		col_id_hi_depth = col_addr_depth - col_id_lo_depth;
+		col_id_lo_depth = cacheline_size_depth - columnSizeDepth;
+		col_id_hi_depth = columnAddressDepth - col_id_lo_depth;
 
 		temp_b = input_a;				/* save away original address */
 		input_a = input_a >> col_id_lo_depth;
@@ -287,8 +302,8 @@ bool Address::convertAddress()
 		col_id_lo = temp_a ^ temp_b;     		/* strip out the column low address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> chan_addr_depth;
-		temp_a  = input_a << chan_addr_depth;
+		input_a = input_a >> channelAddressDepth;
+		temp_a  = input_a << channelAddressDepth;
 		channel = temp_a ^ temp_b;     		/* strip out the channel address */
 
 		temp_b = input_a;				/* save away original address */
@@ -299,18 +314,18 @@ bool Address::convertAddress()
 		column = (col_id_hi << col_id_lo_depth) | col_id_lo;
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> bank_addr_depth;
-		temp_a  = input_a << bank_addr_depth;
+		input_a = input_a >> bankAddressDepth;
+		temp_a  = input_a << bankAddressDepth;
 		bank = temp_a ^ temp_b;     		/* strip out the bank address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> row_addr_depth;
-		temp_a  = input_a << row_addr_depth;
+		input_a = input_a >> rowAddressDepth;
+		temp_a  = input_a << rowAddressDepth;
 		row = temp_a ^ temp_b;		/* this should strip out the row address */
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> rank_addr_depth;
-		temp_a  = input_a << rank_addr_depth;
+		input_a = input_a >> rankAddressDepth;
+		temp_a  = input_a << rankAddressDepth;
 		rank = temp_a ^ temp_b;     		/* strip out the rank address */
 
 		if(input_a != 0){				/* If there is still "stuff" left, the input address is out of range */
@@ -402,10 +417,10 @@ bool Address::convertAddress()
 		cacheline_size_depth = log2(cacheLineSize);
 
 		// this is really cacheline_size / col_size
-		col_id_lo_depth = cacheline_size_depth - col_size_depth;
+		col_id_lo_depth = cacheline_size_depth - columnSizeDepth;
 
 		// col_addr / col_id_lo
-		col_id_hi_depth = col_addr_depth - col_id_lo_depth;
+		col_id_hi_depth = columnAddressDepth - col_id_lo_depth;
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= col_id_lo_depth;
@@ -414,19 +429,19 @@ bool Address::convertAddress()
 		col_id_lo = temp_b ^ (input_a << col_id_lo_depth); 
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> chan_addr_depth;
+		input_a = input_a >> channelAddressDepth;
 		// strip out the channel address 
-		channel = temp_b ^ (input_a << chan_addr_depth); 
+		channel = temp_b ^ (input_a << channelAddressDepth); 
 
 		temp_b = input_a;				/* save away original address */
-		input_a >>= bank_addr_depth;
+		input_a >>= bankAddressDepth;
 		// strip out the bank address 
-		bank = temp_b ^ (input_a << bank_addr_depth);
+		bank = temp_b ^ (input_a << bankAddressDepth);
 
 		temp_b = input_a;				/* save away original address */
-		input_a >>= rank_addr_depth;
+		input_a >>= rankAddressDepth;
 		// strip out the rank address 
-		rank = temp_b ^ (input_a << rank_addr_depth);		
+		rank = temp_b ^ (input_a << rankAddressDepth);		
 
 		temp_b = input_a;				/* save away original address */
 		input_a >>= col_id_hi_depth;
@@ -436,9 +451,9 @@ bool Address::convertAddress()
 		column = (col_id_hi << col_id_lo_depth) | col_id_lo;
 
 		temp_b = input_a;				/* save away original address */
-		input_a >>= row_addr_depth;
+		input_a >>= rowAddressDepth;
 		// strip out the row address
-		row = temp_b ^ (input_a << row_addr_depth);
+		row = temp_b ^ (input_a << rowAddressDepth);
 
 		// If there is still "stuff" left, the input address is out of range
 		if(input_a != 0)
@@ -499,4 +514,14 @@ std::ostream &DRAMSimII::operator <<(std::ostream &os, const AddressMappingSchem
 		break;
 	}
 	return os;
+}
+
+// overloads
+bool Address::operator==(const Address& right) const
+{
+	return (channelAddressDepth == right.channelAddressDepth && rankAddressDepth == right.rankAddressDepth && bankAddressDepth == right.bankAddressDepth &&
+		rowAddressDepth == right.rowAddressDepth && columnAddressDepth == right.columnAddressDepth && columnSizeDepth == right.columnSizeDepth &&
+		mappingScheme == right.mappingScheme && virtualAddress == right.virtualAddress && physicalAddress == right.physicalAddress && channel == right.channel &&
+		rank == right.rank && bank == right.bank && row == right.row && column == right.column);
+
 }

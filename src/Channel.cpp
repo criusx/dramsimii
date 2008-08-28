@@ -19,6 +19,8 @@ using std::setw;
 using std::cerr;
 using std::hex;
 using std::dec;
+using std::min;
+using std::max;
 using namespace DRAMSimII;
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,20 +28,21 @@ using namespace DRAMSimII;
 /// @param settings the settings file that defines the number of ranks, refresh policy, etc.
 /// @param sysConfig a const reference is made to this for some functions to grab parameters from
 //////////////////////////////////////////////////////////////////////////
-Channel::Channel(const Settings& settings, const SystemConfiguration &sysConfig):
+Channel::Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats):
 time(0ll),
 lastRefreshTime(-100ll),
 lastCommandIssueTime(-100ll),
 lastRankID(0),
 timingSpecification(settings),
 transactionQueue(settings.transactionQueueDepth),
-refreshCounter(NULL),
+refreshCounter(settings.rankCount),
 historyQueue(settings.historyQueueDepth),
 completionQueue(settings.completionQueueDepth),
 systemConfig(sysConfig),
+statistics(stats),
 powerModel(settings),
 algorithm(settings),
-rank(settings.rankCount, Rank(settings, timingSpecification, systemConfig))
+rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig))
 {
 	// assign an id to each channel (normally done with commands)
 	for (unsigned i = 0; i < settings.rankCount; i++)
@@ -50,8 +53,6 @@ rank(settings.rankCount, Rank(settings, timingSpecification, systemConfig))
 	// initialize the refresh counters per rank
 	if (settings.refreshPolicy != NO_REFRESH)
 	{
-		refreshCounter = new Transaction *[rank.size()];
-
 		// stagger the times that each rank will be refreshed so they don't all arrive in a burst
 		unsigned step = settings.tREFI / settings.rankCount;
 
@@ -59,13 +60,48 @@ rank(settings.rankCount, Rank(settings, timingSpecification, systemConfig))
 
 		for (unsigned j = 0; j < rank.size(); ++j)
 		{
-			addr.rank = j;
-			addr.bank = 0;
+			addr.setRank(j);
+			addr.setBank(0);
 			//newTrans->setEnqueueTime(j * (step +1));
 			refreshCounter[j] = new Transaction(AUTO_REFRESH_TRANSACTION,j * (step + 1), 8, addr, NULL);
 			refreshCounter[j]->setEnqueueTime(refreshCounter[j]->getArrivalTime());
 		}
 	}
+}
+
+/// normal constructor
+Channel::Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats):
+time(rhs.time),
+lastRefreshTime(rhs.lastRefreshTime),
+lastCommandIssueTime(rhs.lastCommandIssueTime),
+lastRankID(rhs.lastRankID),
+timingSpecification(rhs.timingSpecification),
+transactionQueue(rhs.transactionQueue),
+historyQueue(rhs.historyQueue),
+completionQueue(rhs.completionQueue),
+systemConfig(systemConfig),
+statistics(stats),
+powerModel(rhs.powerModel),
+algorithm(rhs.algorithm),
+channelID(rhs.channelID),
+// to initialize the references
+rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification, systemConfig))
+{
+	// to fill in the values
+	rank = rhs.rank;
+}
+
+
+Channel::Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
+timingSpecification(timing),
+systemConfig(sysConf),
+statistics(stats),
+powerModel(power),
+algorithm(settings),
+rank(newRank)
+
+{
+	//rank = newRank;
 }
 
 Channel::~Channel()
@@ -76,46 +112,50 @@ Channel::~Channel()
 		{
 			delete refreshCounter[j];
 		}
-
-		delete refreshCounter;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief copy constructor, reassigns the ordinal to each rank as they are duplicated
-/// @param dc the dramChannel object to be copied
+/// @param rhs the dramChannel object to be copied
 //////////////////////////////////////////////////////////////////////////
-Channel::Channel(const Channel &dc):
-time(dc.time),
-lastRefreshTime(dc.lastRefreshTime),
-lastCommandIssueTime(dc.lastCommandIssueTime),
-lastRankID(dc.lastRankID),
-timingSpecification(dc.timingSpecification),
-transactionQueue(dc.transactionQueue),
-refreshCounter(dc.refreshCounter),
-historyQueue(dc.historyQueue),
-completionQueue(dc.completionQueue),
-systemConfig(dc.systemConfig),
-powerModel(dc.powerModel),
-algorithm(dc.algorithm),
-rank((unsigned)dc.rank.size(), Rank(dc.rank[0],timingSpecification, systemConfig))
+Channel::Channel(const Channel &rhs):
+time(rhs.time),
+lastRefreshTime(rhs.lastRefreshTime),
+lastCommandIssueTime(rhs.lastCommandIssueTime),
+lastRankID(rhs.lastRankID),
+timingSpecification(rhs.timingSpecification),
+transactionQueue(rhs.transactionQueue),
+refreshCounter(rhs.refreshCounter),
+historyQueue(rhs.historyQueue),
+completionQueue(rhs.completionQueue),
+systemConfig(rhs.systemConfig),
+statistics(rhs.statistics),
+powerModel(rhs.powerModel),
+algorithm(rhs.algorithm),
+channelID(rhs.channelID),
+rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConfig))
 {
+	// TODO: copy over values in ranks now that reference members are init
 	// assign an id to each channel (normally done with commands)
+	rank = rhs.rank;
+
+	// initialize the refresh counters per rank
+	// because the vector copy constructor doesn't make deep copies
+	if (rhs.systemConfig.getRefreshPolicy() != NO_REFRESH)
+	{
+		for (unsigned j = 0; j < rank.size(); ++j)
+		{
+			refreshCounter[j] = new Transaction(*rhs.refreshCounter[j]);
+		}
+	}
+
+#if 0
 	for (unsigned i = 0; i < rank.size(); i++)
 	{
 		rank[i].setRankID(i);
-	}
-
-	// initialize the refresh counters per rank
-	if (dc.systemConfig.getRefreshPolicy() != NO_REFRESH)
-	{
-		refreshCounter = new Transaction *[rank.size()];
-
-		for (unsigned j = 0; j < rank.size(); ++j)
-		{
-			refreshCounter[j] = new Transaction(dc.refreshCounter[j]);
-		}
-	}
+	}	
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -165,7 +205,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 			// only get completed commands if they have finished
 			if (Transaction *completedTransaction = completionQueue.pop())
 			{
-				statistics->collectTransactionStats(completedTransaction);
+				statistics.collectTransactionStats(completedTransaction);
 
 				DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completedTransaction);
 
@@ -219,7 +259,7 @@ tick Channel::nextTick() const
 /// @details this allows other groups to view a recent history of commands that were issued to decide what to execute next
 void Channel::retireCommand(Command *newestCommand)
 {
-	statistics->collectCommandStats(newestCommand);
+	statistics.collectCommandStats(newestCommand);
 
 	while (!historyQueue.push(newestCommand))
 	{
@@ -521,9 +561,9 @@ Transaction *Channel::getRefresh()
 
 	static Address address;
 
-	address.channel = channelID;
-	address.rank = earliestRank;
-	address.bank = 0;
+	address.setChannel(channelID);
+	address.setRank(earliestRank);
+	address.setBank(0);
 
 	refreshCounter[earliestRank] = new Transaction(AUTO_REFRESH_TRANSACTION,earliestTransaction->getEnqueueTime() + timingSpecification.tREFI(),8,address,NULL);
 
@@ -651,3 +691,64 @@ Transaction *Channel::getTransaction()
 		}
 	}
 }
+
+std::ostream& DRAMSimII::operator<<(std::ostream& os, const DRAMSimII::Channel& r)
+{
+	os << "T[" << r.time << "] ch[" << r.channelID << endl;
+	os << r.timingSpecification << endl;
+	os << r.powerModel << endl;
+	return os;
+}
+
+Channel& Channel::operator =(const Channel &rhs)
+{
+	//Settings settings;
+	//::new(this)DRAMSimII::Channel(settings,rhs.systemConfig,rhs.statistics, rhs.powerModel, rhs.rank, rhs.timingSpecification);
+	time = rhs.time;
+	lastRefreshTime = rhs.lastRefreshTime;
+	lastCommandIssueTime = rhs.lastCommandIssueTime;
+	lastRankID = rhs.lastRankID;
+	//timingSpecification = rhs.timingSpecification;
+	transactionQueue = rhs.transactionQueue;
+	refreshCounter = rhs.refreshCounter;
+	historyQueue = rhs.historyQueue;
+	completionQueue = rhs.completionQueue;
+	//systemConfig = rhs.systemConfig;
+	//statistics = rhs.statistics;
+	//powerModel = rhs.powerModel;
+	//algorithm = rhs.algorithm;
+	channelID = rhs.channelID;
+	//rank = rhs.rank;
+
+	return *this;
+}
+
+bool Channel::operator ==(const Channel& rhs) const
+{
+	if (time == rhs.time && lastRefreshTime == rhs.lastRefreshTime && lastCommandIssueTime == rhs.lastCommandIssueTime && lastRankID == rhs.lastRankID &&
+		timingSpecification == rhs.timingSpecification && transactionQueue == rhs.transactionQueue && historyQueue == rhs.historyQueue &&
+		completionQueue == rhs.completionQueue && systemConfig == rhs.systemConfig && statistics == rhs.statistics && powerModel == rhs.powerModel &&
+		algorithm == rhs.algorithm && channelID == rhs.channelID && rank == rhs.rank)
+	{
+		if (refreshCounter.size() == rhs.refreshCounter.size())
+		{
+			for (unsigned i = 0; i < refreshCounter.size(); i++)
+			{
+				if (refreshCounter[i] && rhs.refreshCounter[i])
+				{
+					if (*refreshCounter[i] != *rhs.refreshCounter[i])
+						return false;
+				}
+				else
+					return false;
+			}
+			return true;
+		}
+		else
+			return false;
+
+	}
+	else
+		return false;
+}
+

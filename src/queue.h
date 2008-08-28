@@ -2,63 +2,75 @@
 #define QUEUE_H
 #pragma once
 
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/vector.hpp>
+
 #include <iostream>
 #include <cassert>
+#include <vector>
+
 
 namespace DRAMSimII
 {
+	// forward declaration
+	template <typename T>
+	class Queue;
+
+	template <typename T>
+	std::ostream& operator<<(std::ostream&, const Queue<T>&);
+
+
 	/// @brief the queue template class, a circular queue
 	/// @detail push/pop are O(1) operations, while random insertions are O(n) operations
-	template <class T>
+	template <typename T>
 	class Queue
 	{
 	private:
-		unsigned depth;	///< how big is this queue
+		unsigned maxCount; ///< how many elements can there be total
 		unsigned count;	///< how many elements are in the queue now
 		unsigned head;	///< the point where items will be inserted
 		unsigned tail;	///< the point where items will be removed
-		T **entry;		///< the circular queue
+		std::vector<T *> entry;		///< the circular queue
 
 	public:
-		explicit Queue(): depth(0),count(0), head(0), tail(0), entry(NULL)
+		explicit Queue(): maxCount(0), count(0), head(0), tail(0), entry(0)
 		{}
 
 		/// @brief copy constructor
 		/// @detail copy the existing queue, making copies of each element
 		explicit Queue(const Queue<T>& a):
-			depth(a.depth),
-			count(0),
-			head(0),
-			tail(0),
-			entry(new T *[a.depth])
+		maxCount(a.maxCount),
+			count(a.count),
+			head(a.head),
+			tail(a.tail),
+			entry(a.maxCount)
+		{
+			for (unsigned i = 0; i < a.count; i++)
 			{
-				for (unsigned i = 0; i < a.count; i++)
-				{
-					assert(a.read(i) != NULL);
-					// attempt to copy the contents of this queue
-					push(::new T(*a.read(i)));
-				}
-			}	
+				assert(a.at(i) != NULL);
+				// attempt to copy the contents of this queue
+				entry[(head + i) % maxCount] = new T(*a.at(i));
+			}
+		}	
 
 		/// @brief constructor
 		/// @detail create a queue of a certain size and optionally fill it with empty elements
 		/// @param size the depth of the circular queue
 		/// @preallocate whether or not to fill the queue with blank elements, defaults to false
 		explicit Queue(const unsigned size, const bool preallocate = false):
-		depth(size),
+		maxCount(size),
 			count(0),
 			head(0),
 			tail(0),
-			entry(new T *[size])
+			entry(size)
 		{
 			if (preallocate)
 			{      
-				T *newOne = ::new T();
-				while (push(newOne))
+				while (entry.size() < size)
 				{
-					newOne = ::new T();
+					push(::new T());
 				}
-				::delete newOne;
 			}
 		}
 
@@ -66,16 +78,11 @@ namespace DRAMSimII
 		/// @detail remove the elements and delete them before removing the rest of the queue
 		~Queue()
 		{
-			while (count > 0)
+			while (!isEmpty())
 			{
-				::delete pop();			
+				delete pop();			
 			}
-			if (entry != NULL)
-			{
-				delete[] entry;
-				entry = NULL;
-			}
-		}
+		}	
 
 		/// @brief change the size of the queue
 		/// @detail remove all existing elements and create a new queue of a different size
@@ -83,15 +90,14 @@ namespace DRAMSimII
 		/// @param preallocate whether or not to fill the queue with blank elements, defaults to false
 		void resize(unsigned size, bool preallocate = false)
 		{
-			depth = size;
 			count = 0;
 			head = 0;
 			tail = 0;
-			entry = new T *[size];
+			entry.resize(size);
 
 			if (preallocate)
 			{      
-				for (unsigned i = 0; i < size; i++)
+				while (count < maxCount)
 					push(::new T);
 			}
 			else
@@ -109,7 +115,7 @@ namespace DRAMSimII
 		bool push(T *item)
 		{
 			assert(item != NULL);
-			if (count == depth)
+			if (count == maxCount)
 				return false;
 			else if (item == NULL)
 			{
@@ -120,7 +126,7 @@ namespace DRAMSimII
 			{
 				count++;
 				entry[tail] = item;
-				tail = (tail + 1) % depth; 	//advance tail_ptr
+				tail = (tail + 1) % maxCount; 	//advance tail_ptr
 				return true;
 			}
 		}
@@ -152,7 +158,9 @@ namespace DRAMSimII
 
 				T *item = entry[head];
 
-				head = (head + 1) % depth;	//advance head_ptr
+				entry[head] = NULL; // ensure this item isn't a part of the queue anymore
+
+				head = (head + 1) % maxCount;	//advance head_ptr
 
 				return item;
 			}
@@ -169,7 +177,7 @@ namespace DRAMSimII
 			{
 				T* theItem = entry[tail];
 				count--;
-				tail = tail - 1 >= 0 ? tail - 1 : depth - 1; // decrease the tail pointer
+				tail = tail - 1 >= 0 ? tail - 1 : maxCount - 1; // decrease the tail pointer
 				return theItem;
 
 			}
@@ -186,7 +194,7 @@ namespace DRAMSimII
 		/// @brief to get a pointer to the item most recently inserted into the queue
 		const T* back() const
 		{
-			return count ? entry[(head + count - 1) % depth] : NULL;
+			return count ? entry[(head + count - 1) % maxCount] : NULL;
 		}
 
 		/// @brief get the number of entries currently in this queue
@@ -198,7 +206,7 @@ namespace DRAMSimII
 		/// @brief get the number of entries this queue can hold
 		inline unsigned get_depth() const
 		{
-			return depth;
+			return maxCount;
 		}
 
 		/// @brief get a pointer to the item at this offset without removing it
@@ -207,7 +215,7 @@ namespace DRAMSimII
 			if ((offset >= count) || (offset < 0))
 				return NULL;
 			else
-				return entry[(head + offset) % depth];
+				return entry[(head + offset) % maxCount];
 		}
 
 		/// @brief release item into pool
@@ -228,7 +236,7 @@ namespace DRAMSimII
 		{
 			assert(offset <= (((int)count) - 1));
 
-			if (count == depth)
+			if (count == maxCount)
 				return false;
 
 			else if (item == NULL)
@@ -241,13 +249,13 @@ namespace DRAMSimII
 			{
 				// move everything back by one unit
 				for (int i = count - 1 ; i >= offset ; --i)
-					entry[(head + i + 1) % depth] = entry[(head + i) % depth];
+					entry[(head + i + 1) % maxCount] = entry[(head + i) % maxCount];
 
 				count++;
 
-				entry[(head+offset) % depth] = item;
+				entry[(head+offset) % maxCount] = item;
 
-				tail = (tail+1) % depth;	// advance tail_ptr
+				tail = (tail+1) % maxCount;	// advance tail_ptr
 
 				return true;
 			}
@@ -256,13 +264,13 @@ namespace DRAMSimII
 		/// @brief the number of entries still available in this queue
 		unsigned freecount() const
 		{
-			return depth - count;
+			return maxCount - count;
 		}
 
 		/// @brief whether or not there is room for any more entries in this queue
 		bool isFull() const
 		{
-			return (depth - count) == 0;
+			return (maxCount - count) == 0;
 		}
 
 		/// @brief whether or not this queue has no entries in it
@@ -270,7 +278,40 @@ namespace DRAMSimII
 		{
 			return count == 0;
 		}
-		
+
+		const T* at(const unsigned value) const
+		{
+			assert(value >= 0 && value < count);
+			return read(value);
+		}
+
+		const T* operator[](const unsigned value) const
+		{
+			return at(value);
+		}
+
+		/// @brief do a comparison to see if the queues are equal
+		bool operator==(const Queue<T>& right) const
+		{
+			if (maxCount == right.maxCount && count == right.count && entry.size() == right.entry.size() &&
+				head == right.head && tail == right.tail)
+			{
+				for (unsigned i = 0; i < count; i++)
+				{
+					if (at(i) && right.at(i))
+					{
+						if (!(*(at(i)) == *(right.at(i))))
+							return false;
+					}
+					else if (at(i) && !right.at(i) || !at(i) && right.at(i))
+						return false;
+				}	
+				return true;
+			}
+			else
+				return false;
+		}
+
 		/// @brief assignment operator overload
 		/// @detail moves all the objects from the rhs object to the lhs object
 		Queue<T> &operator=(const Queue<T> &right)
@@ -278,22 +319,49 @@ namespace DRAMSimII
 			if (&right == this)
 				return *this;
 
-			while (count > 0)
+			entry.resize(right.maxCount);
+			for (unsigned i = 0; i < right.maxCount; i++)
 			{
-				delete pop();
+				if (right.entry[i])
+					entry[i] = new T(*(right.entry[i]));
 			}
-			delete entry;
-			entry = new T *[right.depth];
-			head = tail = 0;
-			count = right.count;
-			depth = right.depth;
 
-			for (unsigned i = 0; i < right.depth; i++)
-			{
-				push(right.read(i));
-			}
+			head = right.head;
+			tail = right.tail;
+			count = right.count;
+			maxCount = right.maxCount;
+
 			return *this;
 		}
+
+		//friend std::ostream& operator<<(std::ostream&, const Queue<T>&);
+		friend std::ostream& operator<< <T>(std::ostream&, const Queue<T>&);
+
+
+		// serialization
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version)
+		{			
+			ar & maxCount & count & head & tail;	
+
+			ar & entry;
+		}
 	};
+
+	template<typename T>
+	std::ostream& operator<<(std::ostream& in, const Queue<T>& theQueue)
+	{
+		in << "Queue S[" << std::dec << theQueue.maxCount << "] C[" << std::dec << theQueue.count << "] H[" << std::dec << theQueue.head << "] T[" << std::dec << theQueue.tail << "]" << std::endl;
+		if (theQueue.maxCount)
+		{
+			for (unsigned i = 0; i < theQueue.count; i++)
+			{
+				in << "\t" << theQueue[i] << std::endl;
+			}
+		}
+		return in;
+	}
 }
 #endif

@@ -14,6 +14,15 @@
 #include "command.h"
 #include "Algorithm.h"
 
+#include <vector>
+
+#include <boost/circular_buffer.hpp>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/vector.hpp>
+
+
 namespace DRAMSimII
 {
 	/// @brief represents a DRAM channel, has individual timing parameters, ranks, banks, clock, etc.
@@ -23,15 +32,15 @@ namespace DRAMSimII
 	protected:
 		tick time;										///< channel time, allow for channel concurrency			
 		tick lastRefreshTime;							///< tells me when last refresh was done
-		tick lastCommandIssueTime;					///< the last time a command was executed on this channel
+		tick lastCommandIssueTime;						///< the last time a command was executed on this channel
 		unsigned lastRankID;							///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
-		Transaction **refreshCounter;					///< holds the next refresh commands
+		std::vector<Transaction *> refreshCounter;		///< holds the next refresh commands
 		Queue<Command> historyQueue;					///< what were the last N commands to this channel?
 		Queue<Transaction> completionQueue;				///< completed_q, can send status back to memory controller
-		const SystemConfiguration& systemConfig;		///< a pointer to common system config values
-		Statistics *statistics;							///< backward pointer to the stats engine
+		const SystemConfiguration &systemConfig;		///< a pointer to common system config values
+		Statistics &statistics;							///< backward pointer to the stats engine
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
 		Algorithm algorithm;							///< the algorithms used for transaction, command, etc. ordering
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
@@ -47,7 +56,6 @@ namespace DRAMSimII
 		bool transaction2commands(Transaction *);
 		Command *getNextCommand();		
 		void doPowerCalculation();
-		//void executeCommand(Command *thisCommand,const int gap);
 		void executeCommand(Command *thisCommand);
 		tick nextTransactionDecodeTime() const;
 		tick nextCommandExecuteTime() const;
@@ -57,6 +65,11 @@ namespace DRAMSimII
 		bool sendPower(float PsysRD, float PsysWR, std::vector<int> rankArray, std::vector<float> PsysACTSTBYArray, std::vector<float> PsysACTArray) const;
 
 	public:
+		// constructors
+		explicit Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats);
+		Channel(const Channel&);
+		explicit Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats);
+		virtual ~Channel();
 
 		// functions that may differ for architectures that inherit this		
 		virtual const Command *readNextCommand() const;
@@ -74,7 +87,6 @@ namespace DRAMSimII
 		unsigned getLastRankID() const { return lastRankID; }
 		Transaction *getTransaction();			// remove and return the oldest transaction
 		const Transaction *readTransaction(bool) const;	// read the oldest transaction without affecting the queue
-		const Transaction *readTransactionSimple() const { return transactionQueue.front(); }
 		Transaction *getRefresh();
 		const Transaction *readRefresh() const;
 		Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }
@@ -83,19 +95,63 @@ namespace DRAMSimII
 		Rank& operator[](unsigned rank_num) { return rank[rank_num]; }
 
 		// mutators
-		void setStatistics(Statistics *value) { statistics = value; }		///< set the statistics pointer to a dramStatistics object
-		void setTime(tick new_time) { time = new_time; }						///< update the time for this channel
+		void setTime(tick value) { time = value; }						///< update the time for this channel
 		void setChannelID(const unsigned value) { channelID = value; }			///< set the channel ordinal
 		TransactionType setReadWriteType(const int,const int) const;	///< determine whether a read or write transaction should be generated
-
-		// constructors
-		explicit Channel();	
-		explicit Channel(const Settings& settings, const SystemConfiguration &sysConfig);
-		Channel(const Channel&);
-		virtual ~Channel();
-
+		
+		// overloads
 		Channel& operator =(const Channel& rs);
+		bool operator==(const Channel& right) const;
+		friend std::ostream& operator<<(std::ostream& , const Channel& );
+
+		// serialization
+	private:
+		explicit Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power,const std::vector<Rank> &rank, const TimingSpecification &timing);
+		explicit Channel();
+
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize( Archive & ar, const unsigned int version)
+		{
+			ar & time & lastRefreshTime & lastCommandIssueTime & lastRankID
+				& transactionQueue & refreshCounter &
+				historyQueue & completionQueue & algorithm & channelID;			
+		}
+
+		template<class Archive>
+		friend inline void save_construct_data(Archive &ar, const DRAMSimII::Channel *t, const unsigned version)
+		{			
+			const DRAMSimII::SystemConfiguration* const sysC = &(t->systemConfig);
+			ar << sysC;
+			const DRAMSimII::Statistics* const stats = &(t->statistics);
+			ar << stats;
+			const DRAMSimII::PowerConfig* const power = &(t->powerModel);
+			ar << power;
+			const std::vector<DRAMSimII::Rank>* const rank = &(t->rank);
+			ar << rank;
+			const DRAMSimII::TimingSpecification* const timing = &(t->timingSpecification);
+			ar << timing;
+		}
+
+		template<class Archive>
+		friend inline void load_construct_data(Archive & ar, DRAMSimII::Channel * t, const unsigned version)
+		{
+			DRAMSimII::SystemConfiguration* sysC;
+			ar >> sysC;
+			DRAMSimII::Statistics* stats;
+			ar >> stats;
+			DRAMSimII::PowerConfig* power;
+			ar >> power;
+			std::vector<DRAMSimII::Rank>* newRank;
+			ar >> newRank;
+			DRAMSimII::TimingSpecification* timing;
+			ar >> timing;
+			Settings settings;
+
+
+			new(t)DRAMSimII::Channel(settings, *sysC, *stats, *power, *newRank, *timing);
+		}
 	};
 }
-
 #endif

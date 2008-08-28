@@ -34,12 +34,85 @@ frequency(settings.dataRate),
 specFrequency(settings.frequencySpec),
 tBurst(settings.tBurst),
 tRC(settings.tRC),
+tRAS(settings.tRAS),
 lastCalculation(0)
 {}
 
 PowerConfig::~PowerConfig()
 {}
 
+// no arg constructor for unit testing and deserialization
+PowerConfig::PowerConfig():
+VDD(-1.0F),
+VDDmax(-1.0F),
+IDD0(-1),
+IDD2P(-1),
+IDD2N(-1),
+IDD3P(-1),
+IDD3N(-1),
+IDD4R(-1),
+IDD4W(-1),
+IDD5(-1),
+PdsACT(-1.0F),
+PdsACT_STBY(-1.0F),
+PdsRD(-1.0F),
+PdsWR(-1.0F),
+PdstermW(-1.0F),
+PdqRD(-1.0F),
+PdqWR(-1.0F),
+PdqRDoth(-1.0F),
+PdqWRoth(-1.0F),
+DQperDRAM(-1),
+DQSperDRAM(-1),
+DMperDRAM(-1),
+frequency(-1),
+specFrequency(-1),
+tBurst(-1),
+tRC(-1),
+tRAS(-1),
+lastCalculation(-1)
+{}
 
+bool PowerConfig::operator==(const PowerConfig& rhs) const
+{
+	return (VDD == rhs.VDD &&
+		VDDmax == rhs.VDDmax &&
+		IDD0 == IDD0 &&
+		IDD2P == rhs.IDD2P &&
+		IDD2N == rhs.IDD2N &&
+		IDD3P == rhs.IDD3P &&
+		IDD3N == rhs.IDD3N &&
+		IDD4R == rhs.IDD4R &&
+		IDD4W == rhs.IDD4W &&
+		IDD5 == rhs.IDD5 &&
+		PdsACT == rhs.PdsACT &&
+		PdsACT_STBY == rhs.PdsACT_STBY &&
+		PdsRD == rhs.PdsRD &&
+		PdsWR == rhs.PdsWR &&
+		PdstermW == rhs.PdstermW &&
+		PdqRD == rhs.PdqRD &&
+		PdqWR == rhs.PdqWR &&
+		PdqRDoth == rhs.PdqRDoth &&
+		PdqWRoth == rhs.PdqWRoth &&
+		DQperDRAM == rhs.DQperDRAM &&
+		DQSperDRAM == rhs.DQSperDRAM &&
+		DMperDRAM == rhs.DMperDRAM &&
+		frequency == rhs.frequency &&
+		specFrequency == rhs.specFrequency &&
+		tBurst == rhs.tBurst &&
+		tRC == rhs.tRC &&
+		tRAS == rhs.tRAS &&
+		lastCalculation==rhs.lastCalculation);
+}
 
+using std::endl;
 
+std::ostream& DRAMSimII::operator<<(std::ostream& in, const PowerConfig& pc)
+{
+	in << "PowerConfig" << endl;
+	in << "VDD" << pc.VDD << endl;
+	in << "VDDmax" << pc.VDDmax << endl;
+	in << "IDD0" << pc.IDD0 << endl;
+	in << "IDD2p" << pc.IDD2P << endl;
+	return in;
+}

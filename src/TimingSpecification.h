@@ -2,10 +2,14 @@
 #define DRAMTIMINGSPECIFICATION
 #pragma once
 
-#include <map>
-#include "enumTypes.h"
-#include "Settings.h"
 #include "globals.h"
+#include "Settings.h"
+
+#include <map>
+
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/is_abstract.hpp>
 
 namespace DRAMSimII
 {
@@ -64,6 +68,23 @@ namespace DRAMSimII
 
 		// friends
 		friend std::ostream &operator<<( std::ostream&, const TimingSpecification&);
+
+		// overloads
+		bool operator==(const TimingSpecification& right) const;
+
+	private:
+		// serialization
+		friend class boost::serialization::access;
+		friend void unitTests(const Settings &settings);
+
+		TimingSpecification();
+
+		template<class Archive>
+		void serialize( Archive & ar, const unsigned verison)
+		{
+			ar & t_al & t_burst & t_cas & t_ccd & t_cmd & t_cwd &  t_faw & t_ras & t_rc & t_rcd & t_rfc & t_rp & t_rrd & t_rtp &
+				t_rtrs & t_wr & t_wtr & t_int_burst & t_buffer_delay & t_refi;
+		}
 	};
 }
 #endif

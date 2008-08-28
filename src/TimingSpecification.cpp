@@ -21,7 +21,7 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 	switch(settings.dramType)
 	{
 	case DDR:
-		
+
 		t_ccd = 2;					// internal fetch is 1 cycle, 2 beats for DDR
 		t_al = 0;					// no such thing in DDR 
 		t_burst = settings.tBurst;	// depending on system config! can be 2, 4, or 8
@@ -50,17 +50,18 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 		assert(t_al >= 0 && t_al <= 8); // must be 0..4 cycles, or 0..8 beats
 		t_rcd = settings.tRCD;
 		assert(t_al <= t_rcd);
-		t_burst = settings.tBurst;
+		t_burst = settings.tBurst; // can be 4 or 8
 		t_cas = settings.tCAS;
 		t_cmd = 2;					// protocol specific, cannot be changed
 		assert(t_al + t_cmd == t_rcd);
+		// assert(t_rcd + t_burst + t_rtp - t_ccd == t_rc);
 		t_cwd = t_cas - 2;			// protocol specific, cannot be changed
 		t_int_burst = 4;			// protocol specific, cannot be changed
 		t_faw = settings.tFAW;
 		t_ras = settings.tRAS;
 		t_rp = settings.tRP;
 		t_rc = settings.tRC;
-		
+
 		t_rfc = settings.tRFC;
 		t_rrd = settings.tRRD;
 		t_rtp = settings.tRTP;
@@ -120,9 +121,44 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 	default:
 		break;
 	}
-	
+
 	// set the minimum length of time a command must take to be decoded
 	t_buffer_delay = settings.tBufferDelay;
 	// set the refresh interval, issue a refresh command every tREFI
 	t_refi = settings.tREFI;
+}
+
+// no arg constructor for deserialization and unit testing
+TimingSpecification::TimingSpecification():
+t_al(-1),
+t_burst(-1),
+t_cas(-1),
+t_ccd(-1),
+t_cmd(-1),
+t_cwd(-1),
+t_faw(-1),
+t_ras(-1),
+t_rc(-1),
+t_rcd(-1),
+t_rfc(-1),
+t_rp(-1),
+t_rrd(-1),
+t_rtp(-1),
+t_rtrs(-1),
+t_wr(-1),
+t_wtr(-1),
+t_int_burst(-1),
+t_buffer_delay(-1),
+t_refi(-1)
+{}
+
+
+bool TimingSpecification::operator==(const TimingSpecification &right) const 
+{
+	return (t_al == right.t_al && t_burst == right.t_burst && t_cas == right.t_cas && t_ccd == right.t_ccd && t_cmd == right.t_cmd &&
+		t_cwd == right.t_cwd && t_faw == right.t_faw && t_ras == right.t_ras && t_rc == right.t_rc && t_rcd == right.t_rcd && 
+		t_rfc == right.t_rfc && t_rp == right.t_rp && t_rrd == right.t_rrd && t_rtp == right.t_rtp && t_rtrs == right.t_rtrs && 
+		t_wr == right.t_wr && t_wtr == right.t_wtr && t_int_burst == right.t_int_burst && t_buffer_delay == right.t_buffer_delay &&
+		t_refi == right.t_refi);
+
 }

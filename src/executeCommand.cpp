@@ -140,11 +140,11 @@ void Channel::executeCommand(Command *thisCommand,const int gap)
 /// <param name="this_command">The command to execute against the current state</param>
 void Channel::executeCommand(Command *thisCommand)
 {
-	Rank &currentRank = rank[thisCommand->getAddress().rank];
+	Rank &currentRank = rank[thisCommand->getAddress().getRank()];
 
-	Bank &currentBank = currentRank.bank[thisCommand->getAddress().bank];
+	Bank &currentBank = currentRank.bank[thisCommand->getAddress().getBank()];
 
-	currentRank.setLastBankID(thisCommand->getAddress().bank);
+	currentRank.setLastBankID(thisCommand->getAddress().getBank());
 
 	//int t_al = this_command->isPostedCAS() ? timingSpecification.tAL() : 0;
 
@@ -244,7 +244,7 @@ void Channel::executeCommand(Command *thisCommand)
 	// since this is when a transaction is done from the standpoint of the requester
 	if (thisCommand->getHost()) 
 	{
-		if (!completionQueue.push(thisCommand->getHost()))
+		if (!completionQueue.push(thisCommand->removeHost()))
 		{
 			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
 			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;

@@ -47,6 +47,58 @@ CASWCount(b.CASWCount),
 totalCASWCount(b.totalCASWCount)
 {}
 
+
+Bank::Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
+timing(timingVal),
+systemConfig(systemConfigVal)
+{}
+
+
+Bank& Bank::operator =(const Bank& rhs)
+{
+	//::new(this)DRAMSimII::Bank(rhs.timing,rhs.systemConfig);
+	//timing = rhs.timing;		
+	//systemConfig = rhs.systemConfig;
+	perBankQueue = rhs.perBankQueue;
+	lastRASTime = rhs.lastRASTime;
+	lastCASTime = rhs.lastCASTime;
+	lastCASWTime = rhs.lastCASWTime;
+	lastPrechargeTime = rhs.lastPrechargeTime;
+	lastRefreshAllTime = rhs.lastRefreshAllTime;	
+	lastCASLength = rhs.lastCASLength;		
+	lastCASWLength = rhs.lastCASWLength;		
+	openRowID = rhs.openRowID;			
+	activated = rhs.activated;			
+	RASCount = rhs.RASCount;			
+	totalRASCount = rhs.totalRASCount;		
+	CASCount = rhs.CASCount;			
+	totalCASCount = rhs.totalCASCount;		
+	CASWCount = rhs.CASWCount;			
+	totalCASWCount = rhs.totalCASWCount;	
+
+	return *this;
+}
+
+bool Bank::operator==(const Bank& rhs) const
+{
+	return (timing == rhs.timing && systemConfig == rhs.systemConfig && perBankQueue == rhs.perBankQueue && lastRASTime == rhs.lastRASTime &&
+		lastCASTime == rhs.lastCASTime && lastCASWTime == rhs.lastCASWTime && lastPrechargeTime == rhs.lastPrechargeTime && 
+		lastRefreshAllTime == rhs.lastRefreshAllTime && lastCASLength == rhs.lastCASLength && lastCASWLength == rhs.lastCASWLength && 
+		openRowID == rhs.openRowID && activated == rhs.activated && RASCount == rhs.RASCount && totalRASCount == rhs.totalRASCount &&
+		CASCount == rhs.CASCount && totalCASCount == rhs.totalCASCount && CASWCount == rhs.CASWCount && totalCASWCount == rhs.totalCASWCount);
+}
+
+using std::endl;
+
+std::ostream& DRAMSimII::operator<<(std::ostream& in, const Bank& pc)
+{
+	in << "PBQ" << endl << pc.perBankQueue;
+	in << "last RAS [" << pc.lastRASTime << "] act[" <<
+		pc.activated << "] open row[" << pc.openRowID << "]" << endl;	
+
+	return in;
+}
+
 /// this logically issues a RAS command and updates all variables to reflect this
 void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
@@ -56,7 +108,7 @@ void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 	activated = true;
 
 	lastRASTime = currentTime;
-	openRowID = currentCommand->getAddress().row;
+	openRowID = currentCommand->getAddress().getRow();
 	RASCount++;
 }
 
@@ -132,9 +184,9 @@ bool Bank::openPageInsert(DRAMSimII::Transaction *value, tick time)
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().row == value->getAddresses().row)) 
+			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
 			{
-				bool result = perBankQueue.insert(new Command(value, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()), currentIndex);
+				bool result = perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()), currentIndex);
 				assert(result);
 
 				return true;
@@ -180,7 +232,7 @@ bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().row == value->getAddresses().row)) 
+			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
 			{
 				return true;
 			}
@@ -199,3 +251,4 @@ bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 		return false;
 	}
 }
+

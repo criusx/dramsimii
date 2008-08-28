@@ -2,10 +2,11 @@
 #define FBDCHANNEL_H
 #pragma once
 
-#include "queue.h"
+#include "globals.h"
 #include "fbdAMB.h"
 #include "fbdFrame.h"
 #include "Channel.h"
+#include "queue.h"
 
 namespace DRAMSimII
 {
@@ -16,7 +17,7 @@ namespace DRAMSimII
 		//std::vector<fbdChannel> ranks;
 		Queue<fbdFrame> frameQueue;	///< the queue of upcoming fbd frames
 	public:
-		explicit fbdChannel(const Settings& settings, const SystemConfiguration &sysConfig);
+		explicit fbdChannel(const Settings& settings, const SystemConfiguration &sysConfig, Statistics &stats);
 
 	protected:
 		// overridden virtual functions

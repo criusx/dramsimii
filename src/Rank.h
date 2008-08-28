@@ -2,12 +2,20 @@
 #define RANK_C_H
 #pragma once
 
-#include <vector>
-#include "Bank.h"
 #include "globals.h"
-#include "queue.h"
+#include "Bank.h"
 #include "Settings.h"
 #include "TimingSpecification.h"
+#include "queue.h"
+
+#include <vector>
+
+#include <boost/circular_buffer.hpp>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/vector.hpp>
+
 
 namespace DRAMSimII
 {
@@ -17,6 +25,7 @@ namespace DRAMSimII
 	protected:
 
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
+
 		tick lastRefreshTime;		///< the time of the last refresh
 		tick lastPrechargeTime;		///< the time of the last precharge
 		tick lastCASTime;			///< the time of the last CAS
@@ -31,7 +40,7 @@ namespace DRAMSimII
 
 	public:
 
-		Queue<tick> lastRASTimes;	///< ras time queue. useful to determine if t_faw is met
+		boost::circular_buffer<tick> lastActivateTimes; ///< ras time queue. useful to determine if t_faw is met
 		std::vector<Bank> bank;		///< the banks within this rank
 
 		// functions
@@ -44,9 +53,10 @@ namespace DRAMSimII
 		void issueREF(const tick currentTime, const Command *currentCommand);
 		
 		// constructors
-		Rank(const Rank&, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
+		explicit Rank(const Rank &, const TimingSpecification &, const SystemConfiguration &);
 		explicit Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
-
+		Rank(const Rank &);
+		
 		// accessors
 		unsigned getRankID() const { return rankID; }		
 		tick getTotalPrechargeTime() const { return totalPrechargeTime; }
@@ -59,13 +69,104 @@ namespace DRAMSimII
 		unsigned getLastCASLength() const { return lastCASLength; }
 		unsigned getLastCASWLength() const { return lastCASWLength; }
 		
-
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
 		void setLastBankID(const unsigned value) { lastBankID = value; }
 		void setPrechargeTime(const tick value) { prechargeTime = value; }
 
-		Rank& operator =(const Rank &rs);
+		// overloads
+		Rank& operator=(const Rank &rs);
+		bool operator==(const Rank& right) const;
+		friend std::ostream& operator<<(std::ostream& os, const Rank& r);
+
+	private:
+		//serialization
+		explicit Rank(const TimingSpecification &timing, const std::vector<Bank> & newBank);
+		explicit Rank();
+
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize( Archive & ar, const unsigned verison)
+		{
+			ar & lastRefreshTime & lastPrechargeTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength; 
+			ar & lastCASWLength & rankID & lastBankID & banksPrecharged;
+			ar & lastActivateTimes;		
+		}
+
+		template <class Archive>
+		friend inline void save_construct_data(Archive& ar, const DRAMSimII::Rank* t, const unsigned version)
+		{
+			const DRAMSimII::TimingSpecification* const timing = &(t->timing);
+			ar << timing;
+			const std::vector<DRAMSimII::Bank>* const bank = &(t->bank);
+			ar << bank;			
+		}
+
+		template <class Archive>
+		friend inline void load_construct_data(Archive & ar, DRAMSimII::Rank *t, const unsigned version)
+		{
+			DRAMSimII::TimingSpecification* timing;
+			ar >> timing;
+			std::vector<DRAMSimII::Bank>* newBank;
+			ar >> newBank;
+			
+			::new(t)DRAMSimII::Rank(*timing, *newBank);
+		}		
 	};
 }
+
+namespace boost
+{
+	template<class Archive, class U>
+	inline void serialize(Archive &ar, boost::circular_buffer<U> &t, const unsigned file_version)
+	{
+		boost::serialization::split_free(ar,t,file_version);
+	}
+
+
+	template<class Archive, class U>
+	inline void save(Archive &ar, const boost::circular_buffer<U> &t, const unsigned int file_version)
+	{
+		//const circular_buffer<U>::size_type maxCount(t.capacity());
+		//ar << BOOST_SERIALIZATION_NVP(maxCount);
+		circular_buffer<tick>::capacity_type maxCount(t.capacity());
+		ar << (maxCount);
+
+		//const circular_buffer<U>::size_type count(t.size());
+		//ar << BOOST_SERIALIZATION_NVP(count);
+		unsigned count(t.size());
+		ar << (count);
+
+		//for (boost::circular_buffer<U>::const_iterator i = t.begin(); i != t.end(); i++)
+		for (unsigned i = 0; i < count; i++)
+		{
+			//ar << *i;
+			ar << t[i];
+		}
+	}
+
+	template<class Archive, class U>
+	inline void load(Archive &ar, boost::circular_buffer<U> &t, const unsigned file_version)
+	{
+		//ar >> BOOST_SERIALIZATION_NVP(maxCount);
+		circular_buffer<tick>::capacity_type maxCount;
+		ar >> (maxCount);
+		t.set_capacity(maxCount);
+
+		//circular_buffer<U>::size_type count;
+		//ar >> BOOST_SERIALIZATION_NVP(count);
+		unsigned count;
+		ar >> (count);
+
+		while (count-- > 0)
+		{
+			U value;
+			ar >> value;
+			t.push_back(value);
+		}
+	}
+
+}
+
 #endif

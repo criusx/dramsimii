@@ -2,11 +2,15 @@
 #define DRAMSYSTEMCONFIGURATION_H
 #pragma once
 
-#include <fstream>
-
-#include "enumTypes.h"
 #include "globals.h"
 #include "Settings.h"
+
+#include <fstream>
+
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/list.hpp>
+#include <boost/serialization/is_abstract.hpp>
 
 namespace DRAMSimII
 {
@@ -23,7 +27,7 @@ namespace DRAMSimII
 		unsigned rowSize;												///< bytes per row (across one rank) 
 		unsigned cachelineSize;											///< 32/64/128 etc 
 		unsigned seniorityAgeLimit;										///< the oldest a command may be before it takes top priority
-		DRAMType dram_type; 
+		DRAMType dramType; 
 		RowBufferPolicy rowBufferManagementPolicy;						///< row buffer management policy? OPEN/CLOSE, etc 
 		AddressMappingScheme addressMappingScheme;						///< addr mapping scheme for physical to DRAM addr 
 		double datarate;												///< the operating frequency of the system
@@ -45,8 +49,7 @@ namespace DRAMSimII
 	public:
 		// constructors
 		explicit SystemConfiguration(const Settings& settings);
-		explicit SystemConfiguration(const SystemConfiguration *rhs);
-
+		
 		// accessors
 		RowBufferPolicy getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }
 		AddressMappingScheme getAddressMappingScheme() const { return addressMappingScheme; }
@@ -64,7 +67,7 @@ namespace DRAMSimII
 		unsigned getSeniorityAgeLimit() const { return seniorityAgeLimit; }
 		unsigned getEpoch() const { return epoch; }
 		RefreshPolicy getRefreshPolicy() const { return refreshPolicy; }
-		DRAMType getDRAMType() const { return dram_type; }
+		DRAMType getDRAMType() const { return dramType; }
 		bool isAutoPrecharge() const { return autoPrecharge; }
 		bool isReadWriteGrouping() const { return readWriteGrouping; }
 		bool isPostedCAS() const { return postedCAS; }
@@ -75,10 +78,41 @@ namespace DRAMSimII
 
 		// operator overloads
 		SystemConfiguration& operator =(const SystemConfiguration &rs);
+		bool operator ==(const SystemConfiguration &) const;
 
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const System &);	
 		friend std::ostream &operator<<(std::ostream &, const SystemConfiguration &);		
+		
+
+	private:
+		friend class boost::serialization::access;
+		
+		template<class Archive>
+		void serialize(Archive& ar, const unsigned version)
+		{
+			ar & commandOrderingAlgorithm & transactionOrderingAlgorithm & configType & refreshTime & refreshPolicy & columnSize & rowSize;
+			ar & cachelineSize & seniorityAgeLimit & dramType & rowBufferManagementPolicy & addressMappingScheme & datarate & postedCAS;
+			ar & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount & rankCount & bankCount & rowCount;
+			ar & columnCount & shortBurstRatio & readPercentage & sessionID;
+			//ar & epoch;
+		}
+
+		template <class Archive>
+		friend inline void save_construct_data(Archive& ar, const DRAMSimII::SystemConfiguration *t, const unsigned version)
+		{
+			ar << t->epoch;
+		}
+
+		template <class Archive>
+		friend inline void load_construct_data(Archive & ar, DRAMSimII::SystemConfiguration *t, const unsigned version)
+		{
+			Settings s;
+			ar >> s.epoch;			
+			 
+			new(t)DRAMSimII::SystemConfiguration(s);
+		}
+
 	};
 }
 #endif

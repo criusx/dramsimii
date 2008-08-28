@@ -16,8 +16,19 @@ burstOf8Count(0),
 burstOf4Count(0),
 columnDepth(log2(settings.columnSize)),
 commandDelay(),
-commandExceution()
+commandExecution()
 {}
+
+// no arg constructor for deserialization
+Statistics::Statistics():
+validTransactionCount(-1),
+startNumber(-1),
+endNumber(-1),
+burstOf8Count(-1),
+burstOf4Count(-1),
+columnDepth(-1)
+{}
+
 
 void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 {
@@ -44,7 +55,7 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 	if (currentCommand->getCommandType() != REFRESH_ALL_COMMAND)
 	{
 		commandDelay[currentCommand->getStartTime() - currentCommand->getEnqueueTime()]++;
-		commandExceution[currentCommand->getCompletionTime() - currentCommand->getStartTime()]++;
+		commandExecution[currentCommand->getCompletionTime() - currentCommand->getStartTime()]++;
 		commandTurnaround[currentCommand->getCompletionTime() - currentCommand->getEnqueueTime()]++;
 	}
 }
@@ -53,14 +64,14 @@ ostream &DRAMSimII::operator<<(ostream &os, const Statistics &this_a)
 {
 	//os << "RR[" << setw(6) << setprecision(6) << (double)this_a.end_time/max(1,this_a.bo4_count + this_a.bo8_count) << "] ";
 	//os << "BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick)1) << "]" << endl;
-	
+
 	os << "----Delay----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionDecodeDelay.begin(); currentValue != this_a.transactionDecodeDelay.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----CMD Execution Time----" << endl;
-	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.commandExceution.begin(); currentValue != this_a.commandExceution.end(); currentValue++)
+	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.commandExecution.begin(); currentValue != this_a.commandExecution.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
@@ -71,7 +82,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const Statistics &this_a)
 	}
 	os << "----Working Set----" << endl;
 	os << this_a.workingSet.size() << endl;
-	
+
 	return os;
 }
 
@@ -79,8 +90,16 @@ void Statistics::clear()
 {
 	commandTurnaround.clear();
 	commandDelay.clear();	
-	commandExceution.clear();
+	commandExecution.clear();
 	transactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
+}
+
+bool Statistics::operator==(const Statistics& right) const
+{
+	return (validTransactionCount == right.validTransactionCount && startNumber == right.startNumber && endNumber == right.endNumber &&
+		burstOf8Count == right.burstOf8Count && burstOf4Count == right.burstOf4Count && columnDepth == right.columnDepth && 
+		commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
+		transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && workingSet == right.workingSet);
 }

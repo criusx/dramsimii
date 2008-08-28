@@ -2,8 +2,8 @@
 #define DRAMALGORITHM_H
 #pragma once
 
-#include "command.h"
 #include "globals.h"
+#include "command.h"
 #include "queue.h"
 #include "Settings.h"
 #include "transaction.h"
@@ -25,15 +25,36 @@ namespace DRAMSimII
 
 	public:
 		// constructors
-		Algorithm(int, int, SystemConfigurationType);
 		Algorithm(const Algorithm&);
 		Algorithm(const Settings& settings);
 
 		// functions
-		void init(int, int, int); 
 		Queue<Command> &getWHCC() { return WHCC; }
 		unsigned getWHCCOffset(const unsigned value) const { return WHCCOffset[value]; }
 		int *getTransactionType() { return transactionType; }
+
+		// overloads
+		bool operator==(const Algorithm& right) const;
+
+	private:
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize( Archive & ar, const unsigned version)
+		{
+			ar & WHCC & transactionType & rankID & rasBankID & casCount;
+		}
+
+		template<class Archive>
+		friend inline void save_construct_data(Archive &ar, const DRAMSimII::Algorithm *t, const unsigned version)
+		{}
+
+		template<class Archive>
+		friend inline void load_construct_data(Archive & ar, DRAMSimII::Algorithm * t, const unsigned version)
+		{
+			DRAMSimII::Settings settings;
+			new(t)DRAMSimII::Algorithm(settings);
+		}
 	};
 }
 #endif

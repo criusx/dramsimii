@@ -4,8 +4,6 @@
 
 #include "globals.h"
 #include "command.h"
-#include "enumTypes.h"
-
 
 namespace DRAMSimII
 {

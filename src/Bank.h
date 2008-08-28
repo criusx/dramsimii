@@ -2,13 +2,17 @@
 #define BANK_C_H
 #pragma once
 
-#include "queue.h"
 #include "globals.h"
 #include "command.h"
 #include "Settings.h"
 #include "transaction.h"
 #include "TimingSpecification.h"
 #include "SystemConfiguration.h"
+#include "queue.h"
+
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/serialization.hpp>
 
 namespace DRAMSimII
 {
@@ -17,8 +21,8 @@ namespace DRAMSimII
 	class Bank
 	{
 	private:
-		const TimingSpecification& timing;		///< a reference to the timing specification
-		const SystemConfiguration& systemConfig;	///< reference to the system config to obtain specs
+		const TimingSpecification &timing;		///< a reference to the timing specification
+		const SystemConfiguration &systemConfig;///< reference to the system config to obtain specs
 	protected:	
 
 		// members
@@ -84,8 +88,6 @@ namespace DRAMSimII
 		bool openPageInsert(Transaction *value, const tick time);
 		bool openPageInsertCheck(const Transaction *value, const tick time) const;
 		bool isFull() const { return perBankQueue.isFull(); }
-		//Queue<Command> &getPerBankQueue() { return perBankQueue; }
-		//const Queue<Command> &getPerBankQueue() const { return perBankQueue; }
 
 		// mutators
 		void setLastRASTime(const tick value) { lastRASTime = value; }
@@ -107,7 +109,48 @@ namespace DRAMSimII
 		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
 		Bank(const Bank&, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);	
 
-		Bank& operator=(const Bank& rs);
+		// overloads
+		bool operator==(const Bank& rhs) const;
+		Bank &operator=(const Bank& rhs);
+
+		friend std::ostream& operator<<(std::ostream& , const Bank& );
+
+	private:
+
+		// serialization
+		// friends
+		friend class boost::serialization::access;
+
+		explicit Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
+
+		template<class Archive>
+		void serialize( Archive & ar, const unsigned version)
+		{
+			ar & perBankQueue;
+			ar & lastRASTime & lastCASTime & lastCASWTime & lastPrechargeTime & lastRefreshAllTime & lastCASLength & 
+				lastCASWLength & openRowID & activated & RASCount & totalRASCount & CASCount & totalCASCount & CASWCount & totalCASWCount;
+		}
+
+		template <class Archive>
+		friend inline void save_construct_data(Archive& ar, const DRAMSimII::Bank* t, const unsigned int file_version)
+		{
+			const DRAMSimII::TimingSpecification* const timing = &(t->timing);
+			ar << timing;
+			const DRAMSimII::SystemConfiguration* const systemConfig = &(t->systemConfig);
+			ar << systemConfig;			
+		}
+
+		template <class Archive>
+		friend inline void load_construct_data(Archive & ar, DRAMSimII::Bank *t, const unsigned version)
+		{
+			DRAMSimII::TimingSpecification* timing;		///< a reference to the timing specification
+			ar >> timing;
+			DRAMSimII::SystemConfiguration* systemConfig;	///< reference to the system config to obtain specs
+			ar >> systemConfig;
+
+			::new(t)DRAMSimII::Bank(*timing,*systemConfig);
+		}
 	};
+
 }
 #endif

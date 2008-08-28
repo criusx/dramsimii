@@ -16,6 +16,7 @@ using std::hex;
 using std::cerr;
 using std::endl;
 using std::string;
+using std::ostream;
 using namespace DRAMSimII;
 
 InputStream::InputStream(const Settings& settings,const SystemConfiguration &systemConfigVal, const vector<Channel> &systemChannel):
@@ -33,6 +34,7 @@ arrivalThreshold(0.0F),
 cpuToMemoryRatio(settings.cpuToMemoryClockRatio),
 averageInterarrivalCycleCount(10),
 interarrivalDistributionModel(settings.arrivalDistributionModel),
+traceFilename(settings.inFile),
 randomNumberGenerator(std::time(0)),
 rngDistributionModel(0,1),
 rngIntDistributionModel(0u,16383u),
@@ -43,6 +45,8 @@ rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 		arrivalThreshold = 1.0 - (1.0 / (double)averageInterarrivalCycleCount);
 	else if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
 		arrivalThreshold = 1.0 - (1.0 / boxMuller((double)averageInterarrivalCycleCount, 10));
+	if (arrivalThreshold > 1.0F)
+		arrivalThreshold = 1.0F / arrivalThreshold;
 
 	if (!settings.inFile.empty())
 	{
@@ -55,6 +59,33 @@ rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 			if (!traceFile.good())
 			{
 				cerr << "Unable to open trace file \"" << settings.inFile << "\"" << endl;
+				exit(-9);
+			}
+		}
+	}
+}
+
+InputStream::InputStream(const SystemConfiguration &systemConfig, const vector<Channel> &systemChannel, DistributionType arrivalDistributionModel, string filename):
+systemConfig(systemConfig),
+channel(systemChannel),
+interarrivalDistributionModel(arrivalDistributionModel),
+randomNumberGenerator(std::time(0)),
+rngDistributionModel(0,1),
+rngIntDistributionModel(0u,16383u),
+rngGenerator(randomNumberGenerator, rngDistributionModel),
+rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
+{
+	if (!filename.empty())
+	{
+		traceFile.open(filename.c_str());
+
+		if (!traceFile.good())
+		{
+			string inFileWithPath = "./traceFiles/" + filename;
+			traceFile.open(inFileWithPath.c_str());
+			if (!traceFile.good())
+			{
+				cerr << "Unable to reopen trace file \"" << filename << "\"" << endl;
 				exit(-9);
 			}
 		}
@@ -272,7 +303,14 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 		break;
 	case MAPPED:
 		{
-			traceFile >> dec >> this_e.timestamp >> input >> dec >> this_e.address.channel >> this_e.address.rank >> this_e.address.bank >> this_e.address.row >> this_e.address.column;
+			unsigned channel, rank, bank, row, column;
+
+			traceFile >> dec >> this_e.timestamp >> input >> dec >> channel >> rank >> bank >> row >> column;
+			this_e.address.setChannel(channel);
+			this_e.address.setRank(rank);
+			this_e.address.setBank(bank);
+			this_e.address.setRow(row);
+			this_e.address.setColumn(column);
 
 			if(!traceFile.good()) /// found starting Hex address 
 			{
@@ -537,6 +575,8 @@ Transaction *InputStream::getNextRandomRequest()
 
 		unsigned nextColumn = rngIntGenerator() & systemConfig.getColumnCount();
 
+		assert(arrivalThreshold <= 1.0F);
+
 		while (true)
 		{
 			randVar = rngGenerator();
@@ -548,11 +588,13 @@ Transaction *InputStream::getNextRandomRequest()
 				if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
 				{
 					arrivalThreshold = 1.0F - (1.0F / abs(boxMuller(averageInterarrivalCycleCount, 10)));
+					assert(arrivalThreshold <= 1.0F);
 				}
 				// Poisson distribution function
 				else if (interarrivalDistributionModel == POISSON_DISTRIBUTION)
 				{
 					arrivalThreshold = 1.0F - (1.0F / Poisson(averageInterarrivalCycleCount));
+					assert(arrivalThreshold <= 1.0F);
 				}
 				break;
 			}
@@ -568,11 +610,12 @@ Transaction *InputStream::getNextRandomRequest()
 		//cerr << time - oldTime << endl;
 		oldTime = time;
 
-		nextAddress.channel = nextChannel;
-		nextAddress.rank = nextRank;
-		nextAddress.bank = nextBank;
-		nextAddress.row = nextRow;
-		nextAddress.column = nextColumn;
+		nextAddress.setChannel(nextChannel);
+		nextAddress.setRank(nextRank);
+		nextAddress.setBank(nextBank);
+		nextAddress.setRow(nextRow);
+		nextAddress.setColumn(nextColumn);
+
 		return new Transaction(type,time, burstLength, nextAddress, NULL);
 	}
 	else
@@ -653,3 +696,75 @@ double InputStream::ascii2multiplier(const string &input) const
 		break;
 	}
 }
+
+ostream& DRAMSimII::operator<<(ostream& os, const InputStream& is)
+{
+	os << "type[" << is.type << "]" << endl;
+	os << is.systemConfig << endl;
+	for (vector<Channel>::const_iterator i = is.channel.begin(); i != is.channel.end(); i++)
+	{
+		os << *i << endl;
+	}
+	os << is.channelLocality << " " << is.rankLocality << " " << is.bankLocality << " " <<
+		is.time << " " << is.rowLocality << " " << is.readPercentage << " " << is.shortBurstRatio <<
+		is.arrivalThreshold << " " << is.arrivalThreshold << " " << is.cpuToMemoryRatio << " " <<
+		is.averageInterarrivalCycleCount << " " << is.traceFilename << endl;
+
+	return os;
+}
+
+bool InputStream::operator==(const InputStream& rhs) const
+{
+	return type == rhs.type && systemConfig == rhs.systemConfig && channel == rhs.channel &&
+		channelLocality == rhs.channelLocality && rankLocality == rhs.rankLocality && bankLocality == rhs.bankLocality &&
+		time == rhs.time && rowLocality == rhs.rowLocality && readPercentage == rhs.readPercentage &&
+		shortBurstRatio == rhs.shortBurstRatio && arrivalThreshold == rhs.arrivalThreshold &&
+		cpuToMemoryRatio == rhs.cpuToMemoryRatio && averageInterarrivalCycleCount == rhs.averageInterarrivalCycleCount &&
+		interarrivalDistributionModel == rhs.interarrivalDistributionModel;
+}
+
+InputStream::InputStream(const InputStream& rhs):
+type(rhs.type),
+systemConfig(rhs.systemConfig),
+channel(rhs.channel),
+channelLocality(rhs.channelLocality),
+rankLocality(rhs.rankLocality),
+bankLocality(rhs.bankLocality),
+time(rhs.time),
+rowLocality(rhs.rowLocality),
+readPercentage(rhs.readPercentage),
+shortBurstRatio(rhs.shortBurstRatio),
+arrivalThreshold(rhs.arrivalThreshold),
+cpuToMemoryRatio(rhs.cpuToMemoryRatio),
+averageInterarrivalCycleCount(rhs.averageInterarrivalCycleCount),
+interarrivalDistributionModel(rhs.interarrivalDistributionModel),
+// TODO: serialize tracefile position
+randomNumberGenerator(rhs.randomNumberGenerator),
+rngDistributionModel(rhs.rngDistributionModel),
+rngIntDistributionModel(rhs.rngIntDistributionModel),
+rngGenerator(rhs.rngGenerator),
+rngIntGenerator(rhs.rngIntGenerator)
+{}
+
+InputStream::InputStream(const InputStream& rhs, const SystemConfiguration &systemConfigVal, const vector<Channel> &systemChannel):
+type(rhs.type),
+systemConfig(systemConfig),
+channel(channel),
+channelLocality(rhs.channelLocality),
+rankLocality(rhs.rankLocality),
+bankLocality(rhs.bankLocality),
+time(rhs.time),
+rowLocality(rhs.rowLocality),
+readPercentage(rhs.readPercentage),
+shortBurstRatio(rhs.shortBurstRatio),
+arrivalThreshold(rhs.arrivalThreshold),
+cpuToMemoryRatio(rhs.cpuToMemoryRatio),
+averageInterarrivalCycleCount(rhs.averageInterarrivalCycleCount),
+interarrivalDistributionModel(rhs.interarrivalDistributionModel),
+// TODO: serialize tracefile position
+randomNumberGenerator(rhs.randomNumberGenerator),
+rngDistributionModel(rhs.rngDistributionModel),
+rngIntDistributionModel(rhs.rngIntDistributionModel),
+rngGenerator(rhs.rngGenerator),
+rngIntGenerator(rhs.rngIntGenerator)
+{}

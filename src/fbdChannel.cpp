@@ -3,8 +3,8 @@
 using namespace std;
 using namespace DRAMSimII;
 
-fbdChannel::fbdChannel(const Settings& settings, const SystemConfiguration &sysConfig):
-Channel(settings, sysConfig),
+fbdChannel::fbdChannel(const Settings& settings, const SystemConfiguration &sysConfig, Statistics &stats):
+Channel(settings, sysConfig, stats),
 frameQueue(3)
 {
 
@@ -19,9 +19,9 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 	// TODO: also consider commands issued one cycle ago which are not yet executed
 	int min_gap;
 
-	const unsigned this_rank = this_c->getAddress().rank;
+	const unsigned this_rank = this_c->getAddress().getRank();
 	const Rank &currentRank = rank[this_rank];
-	const Bank &currentBank = currentRank.bank[this_c->getAddress().bank];
+	const Bank &currentBank = currentRank.bank[this_c->getAddress().getBank()];
 
 	int t_al = this_c->isPostedCAS() ? timingSpecification.tAL() : 0;
 
@@ -32,7 +32,7 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 			// respect t_rp of same bank
 			int tRPGap = (int)(currentBank.getLastPrechargeTime() - time) + timingSpecification.tRP();
 
-			int ras_q_count = currentRank.lastRASTimes.size();
+			int ras_q_count = currentRank.lastActivateTimes.size();
 
 			// respect tRRD and tRC of all other banks of same rank
 			int tRRDGap;
@@ -44,9 +44,10 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 			else 
 			{
 				// read tail end of ras history
-				tick *last_ras_time = currentRank.lastRASTimes.read(ras_q_count - 1); 
+				//tick *last_ras_time = currentRank.lastActivateTimes.read(ras_q_count - 1); 
+				const tick lastRASTime = currentRank.lastActivateTimes.back();
 				// respect the row-to-row activation delay
-				tRRDGap = (int)(*last_ras_time - time) + timingSpecification.tRRD();				
+				tRRDGap = (int)(lastRASTime - time) + timingSpecification.tRRD();				
 			}
 
 			// respect the row cycle time limitation
@@ -62,8 +63,8 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 			else
 			{
 				// read head of ras history
-				const tick *fourth_ras_time = currentRank.lastRASTimes.front(); 
-				tFAWGap = (int)(*fourth_ras_time - time) + timingSpecification.tFAW();
+				const tick fourth_ras_time = currentRank.lastActivateTimes.back(); 
+				tFAWGap = (int)(fourth_ras_time - time) + timingSpecification.tFAW();
 			}
 
 			// respect tRFC
@@ -271,19 +272,19 @@ const void *fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishT
 				// execute any commands in this frame
 				if (nextFrame->getCommandAType() != NO_COMMAND)
 				{
-					statistics->collectCommandStats(nextFrame->getCommandA());
+					statistics.collectCommandStats(nextFrame->getCommandA());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandA());
 					executeCommand(nextFrame->getCommandA());
 				}
 				if (nextFrame->getCommandBType() != NO_COMMAND && nextFrame->getCommandBType() != DATA_COMMAND)
 				{
-					statistics->collectCommandStats(nextFrame->getCommandB());
+					statistics.collectCommandStats(nextFrame->getCommandB());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandB());
 					executeCommand(nextFrame->getCommandB());
 				}
 				if (nextFrame->getCommandCType() != NO_COMMAND && nextFrame->getCommandCType() != DATA_COMMAND)
 				{
-					statistics->collectCommandStats(nextFrame->getCommandC());
+					statistics.collectCommandStats(nextFrame->getCommandC());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandC());
 					executeCommand(nextFrame->getCommandC());
 				}
@@ -297,7 +298,7 @@ const void *fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishT
 			// only get completed commands if they have finished TODO:
 			if (Transaction *completed_t = completionQueue.pop())
 			{
-				statistics->collectTransactionStats(completed_t);
+				statistics.collectTransactionStats(completed_t);
 
 				DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completed_t);
 
@@ -446,14 +447,14 @@ Command *fbdChannel::getNextCommand(const Command *slotACommand, const Command *
 
 	if (nextCommand)
 	{
-		Rank &currentRank = rank[nextCommand->getAddress().rank];
+		Rank &currentRank = rank[nextCommand->getAddress().getRank()];
 
 		// if it was a refresh all command, then dequeue all n banks worth of commands
 		if (nextCommand->getCommandType() == REFRESH_ALL_COMMAND)
 		{
 			Command *tempCommand = NULL;
 
-			for (vector<Bank>::iterator cur_bank = currentRank.bank.begin(); cur_bank != currentRank.bank.end();cur_bank++)
+			for (vector<Bank>::iterator cur_bank = currentRank.bank.begin(); cur_bank != currentRank.bank.end(); cur_bank++)
 			{
 				if (tempCommand)
 					delete tempCommand;
@@ -467,8 +468,8 @@ Command *fbdChannel::getNextCommand(const Command *slotACommand, const Command *
 		else
 		{
 			//bank_c &currentBank = currentRank.bank[nextCommand->getAddress().bank_id];
-			assert(currentRank.bank[nextCommand->getAddress().bank].front() == nextCommand);
-			return currentRank.bank[nextCommand->getAddress().bank].pop();
+			assert(currentRank.bank[nextCommand->getAddress().getBank()].front() == nextCommand);
+			return currentRank.bank[nextCommand->getAddress().getBank()].pop();
 		}
 	}
 	else
@@ -499,12 +500,12 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 
 	const Command *lastCommand = historyQueue.back();
 
-	unsigned lastBankID = lastCommand ? lastCommand->getAddress().bank : systemConfig.getBankCount() - 1;
-	unsigned lastRankID = lastCommand ? lastCommand->getAddress().rank : systemConfig.getRankCount() - 1;
+	unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
+	unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
 	const CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : CAS_WRITE_AND_PRECHARGE_COMMAND;
 
-	const int slotARank = slotACommand ? slotACommand->getAddress().rank : -1;
-	const int slotBRank = slotBCommand ? slotBCommand->getAddress().rank : -1;
+	const int slotARank = slotACommand ? slotACommand->getAddress().getRank() : -1;
+	const int slotBRank = slotBCommand ? slotBCommand->getAddress().getRank() : -1;
 
 	switch (systemConfig.getCommandOrderingAlgorithm())
 	{
@@ -605,14 +606,14 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 			// if any executable command was found, prioritize it over those which must wait
 			if (oldestExecutableCommandTime < TICK_MAX)
 			{
-				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL_COMMAND || rank[oldestExecutableBank->front()->getAddress().rank].bank[oldestExecutableBank->front()->getAddress().bank].front() == oldestExecutableBank->front());
+				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL_COMMAND || rank[oldestExecutableBank->front()->getAddress().getRank()].bank[oldestExecutableBank->front()->getAddress().getBank()].front() == oldestExecutableBank->front());
 
 				return oldestExecutableBank->front();
 			}
 			// if there was a command found
 			else if (oldestCommandTime < TICK_MAX)
 			{
-				assert(oldestBank->front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestBank->front()->getAddress().rank].bank[oldestBank->front()->getAddress().bank].front() == oldestBank->front());
+				assert(oldestBank->front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
 
 				return oldestBank->front();
 			}
@@ -732,8 +733,8 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 							((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_COMMAND) && (transactionType == READ_TRANSACTION)) ||
 							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_WRITE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
 						{
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().bank == lastBankID);
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().rank == lastRankID);
+							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
+							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
 							return rank[lastRankID].bank[lastBankID].front();
 						}
 					}
@@ -861,8 +862,8 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 							((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_COMMAND) && (transactionType == READ_TRANSACTION)) ||
 							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_WRITE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
 						{
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().bank == lastBankID);
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().rank == lastRankID);
+							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
+							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
 							return rank[lastRankID].bank[lastBankID].front();
 						}
 					}
@@ -939,9 +940,9 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 
 			if (candidateCommand)
 			{
-				assert(candidateCommand->getCommandType() == REFRESH_ALL_COMMAND || rank[candidateCommand->getAddress().rank].bank[candidateCommand->getAddress().bank].front() == candidateCommand);
+				assert(candidateCommand->getCommandType() == REFRESH_ALL_COMMAND || rank[candidateCommand->getAddress().getRank()].bank[candidateCommand->getAddress().getBank()].front() == candidateCommand);
 
-				DEBUG_TIMING_LOG("R[" << candidateCommand->getAddress().rank << "] B[" << candidateCommand->getAddress().bank << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]")
+				DEBUG_TIMING_LOG("R[" << candidateCommand->getAddress().getRank() << "] B[" << candidateCommand->getAddress().getBank() << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]")
 			}
 
 			return candidateCommand;

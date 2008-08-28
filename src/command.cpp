@@ -34,6 +34,111 @@ length(0)
 {}
 
 
+Command::Command(const Command &rhs):
+commandType(rhs.commandType),
+startTime(rhs.startTime),
+enqueueTime(rhs.enqueueTime),
+completionTime(rhs.completionTime),
+addr(rhs.addr),
+//hostTransaction(rhs.hostTransaction ? new Transaction(*rhs.hostTransaction) : NULL),
+hostTransaction(rhs.hostTransaction), // assume that this is managed elsewhere
+//link_comm_tran_comp_time(rhs.link_comm_tran_comp_time),
+//amb_proc_comp_time(rhs.amb_down_proc_comp_time),
+//dimm_comm_tran_comp_time(rhs.dimm_comm_tran_comp_time),
+//dram_proc_comp_time(rhs.dram_proc_comp_time),
+//dimm_data_tran_comp_time(rhs.dimm_data_tran_comp_time),
+//amb_down_proc_comp_time(rhs.amb_down_proc_comp_time),
+//link_data_tran_comp_time(rhs.link_data_tran_comp_time),
+//bundle_id(rhs.bundle_id),
+//tran_id(rhs.tran_id),
+//data_word(rhs.data_word),
+//data_word_position(rhs.data_word_position),
+//refresh(rhs.refresh),
+postedCAS(rhs.postedCAS),
+length(rhs.length)
+{
+	assert(!hostTransaction ||
+		(commandType == CAS_WRITE_AND_PRECHARGE_COMMAND && hostTransaction->getType() == WRITE_TRANSACTION) ||
+		(commandType == CAS_AND_PRECHARGE_COMMAND && hostTransaction->getType() == READ_TRANSACTION) ||
+		(commandType == CAS_COMMAND && hostTransaction->getType() == READ_TRANSACTION) ||
+		(commandType == CAS_WRITE_COMMAND && hostTransaction->getType() == WRITE_TRANSACTION) ||		 
+		(commandType == REFRESH_ALL_COMMAND && hostTransaction->getType() == AUTO_REFRESH_TRANSACTION) ||
+		(commandType == RAS_COMMAND) || (commandType == PRECHARGE_COMMAND)
+		);
+}
+
+bool Command::operator==(const Command& right) const
+{
+	if (commandType == right.commandType && startTime == right.startTime &&
+		enqueueTime == right.enqueueTime && completionTime == right.completionTime && addr == right.addr && 
+		postedCAS == right.postedCAS && length == right.length)
+	{
+		if ((hostTransaction && !right.hostTransaction) || 
+			(!hostTransaction && right.hostTransaction))
+			return false;
+		else if (!hostTransaction && !right.hostTransaction)
+			return true;
+		else if (*hostTransaction == *right.hostTransaction)
+			return true;
+		else 
+			return false;
+	}
+	else
+		return false;
+}
+
+
+Command::Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const CommandType type):
+startTime(-1),
+enqueueTime(enqueueTime),
+completionTime(-1),
+addr(hostTransaction.getAddresses()),
+hostTransaction(type == CAS_COMMAND ? &hostTransaction : NULL), // this link is only needed for CAS commands
+postedCAS(postedCAS)
+{
+	if (type == CAS_COMMAND)
+	{
+		switch (hostTransaction.getType())
+		{
+		case AUTO_REFRESH_TRANSACTION:
+			commandType = REFRESH_ALL_COMMAND;
+			break;
+		case WRITE_TRANSACTION:
+			commandType = autoPrecharge ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_WRITE_COMMAND;
+			break;
+		case READ_TRANSACTION:
+		case IFETCH_TRANSACTION:
+			commandType = autoPrecharge ? CAS_AND_PRECHARGE_COMMAND : CAS_COMMAND;
+			break;
+		default:
+			cerr << "Unknown transaction type, quitting." << endl;
+			exit(-21);
+			break;
+		}
+	}
+	else
+	{
+		assert(type == PRECHARGE_COMMAND || type == RAS_COMMAND);
+		commandType = type;
+	}
+
+	assert((commandType == CAS_WRITE_AND_PRECHARGE_COMMAND && hostTransaction.getType() == WRITE_TRANSACTION) ||
+		(commandType == CAS_AND_PRECHARGE_COMMAND && hostTransaction.getType() == READ_TRANSACTION) ||
+		(commandType == CAS_COMMAND && hostTransaction.getType() == READ_TRANSACTION) ||
+		(commandType == CAS_WRITE_COMMAND && hostTransaction.getType() == WRITE_TRANSACTION) ||
+		(commandType == RAS_COMMAND) || (commandType == PRECHARGE_COMMAND) ||
+		(commandType == REFRESH_ALL_COMMAND && hostTransaction.getType() == AUTO_REFRESH_TRANSACTION)
+		);
+}
+
+#if 0
+Command::~Command()
+{
+	delete hostTransaction;
+}
+#endif
+
+
 /// @brief to convert CAS(W)+P <=> CAS(W)
 /// @brief has no effect on non CAS commands
 void Command::setAutoPrecharge(const bool autoPrecharge) const
@@ -55,39 +160,6 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 	}
 }
 
-Command::Command(Transaction *hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const CommandType type):
-startTime(-1),
-enqueueTime(enqueueTime),
-completionTime(-1),
-addr(hostTransaction->getAddresses()),
-hostTransaction(type == CAS_COMMAND ? hostTransaction : NULL), // this link is only needed for CAS commands
-postedCAS(postedCAS)
-{
-	if (type == CAS_COMMAND)
-	{
-		switch (hostTransaction->getType())
-		{
-		case AUTO_REFRESH_TRANSACTION:
-			commandType = REFRESH_ALL_COMMAND;
-			break;
-		case WRITE_TRANSACTION:
-			commandType = autoPrecharge ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_WRITE_COMMAND;
-			break;
-		case READ_TRANSACTION:
-		case IFETCH_TRANSACTION:
-			commandType = autoPrecharge ? CAS_AND_PRECHARGE_COMMAND : CAS_COMMAND;
-			break;
-		default:
-			cerr << "Unknown transaction type, quitting." << endl;
-			exit(-21);
-			break;
-		}
-	}
-	else
-	{
-		commandType = type;
-	}
-}
 
 ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 {
@@ -142,28 +214,6 @@ ostream &DRAMSimII::operator<<(ostream &os, const Command &currentCommand)
 	return os;
 }
 
-Command::Command(const Command &rhs):
-commandType(rhs.commandType),
-startTime(rhs.startTime),
-enqueueTime(rhs.enqueueTime),
-completionTime(rhs.completionTime),
-addr(rhs.addr),
-hostTransaction(rhs.hostTransaction),
-//link_comm_tran_comp_time(rhs.link_comm_tran_comp_time),
-//amb_proc_comp_time(rhs.amb_down_proc_comp_time),
-//dimm_comm_tran_comp_time(rhs.dimm_comm_tran_comp_time),
-//dram_proc_comp_time(rhs.dram_proc_comp_time),
-//dimm_data_tran_comp_time(rhs.dimm_data_tran_comp_time),
-//amb_down_proc_comp_time(rhs.amb_down_proc_comp_time),
-//link_data_tran_comp_time(rhs.link_data_tran_comp_time),
-//bundle_id(rhs.bundle_id),
-//tran_id(rhs.tran_id),
-//data_word(rhs.data_word),
-//data_word_position(rhs.data_word_position),
-//refresh(rhs.refresh),
-postedCAS(rhs.postedCAS),
-length(rhs.length)
-{}
 
 void *Command::operator new(size_t size)
 {
