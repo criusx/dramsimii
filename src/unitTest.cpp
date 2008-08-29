@@ -82,6 +82,22 @@ void restore(const char *filename, T* &item)
 
 using namespace boost::unit_test;
 using namespace boost::unit_test::framework;
+using std::vector;
+
+BOOST_AUTO_TEST_CASE( serialize_vector ) 
+{
+	vector<Address *> vecA(18);
+
+	vecA[9] = new Address(0xfaceffee);
+
+	backup("serializeVectorTest",vecA);
+
+	vector<Address *> vecB;
+
+	restore("serializeVectorTest",vecB);
+
+	BOOST_CHECK(vecA == vecB);
+}
 
 BOOST_AUTO_TEST_CASE( rank_copy_test )
 {
@@ -217,26 +233,32 @@ BOOST_AUTO_TEST_CASE( test_system_serialization )
 	const Settings settings(master_test_suite().argc, (const char **)master_test_suite().argv);
 	
 	System *ds3 = new System(settings);	
-	
-	ds3->runSimulations(500);
-	
-	backup("systemTest",ds3);
 
-	System *ds4;
-	restore("systemTest",ds4);
+	for (int i = std::rand() % 30; i > 0; i--)
+	{
 
-	BOOST_CHECK_EQUAL(*ds4,*ds3);
+		ds3->runSimulations(500 + std::rand());
 
-	ds4->runSimulations(600);
+		backup("systemTest",ds3);
 
-	backup("systemTest2",ds4);
+		System *ds4;
 
-	restore("systemTest2",ds3);
+		restore("systemTest",ds4);
 
-	BOOST_CHECK_EQUAL(*ds3,*ds4);
+		BOOST_CHECK_EQUAL(*ds4,*ds3);
 
-	delete ds3;
-	delete ds4;
+		delete ds3;
+
+		ds4->runSimulations(600);
+
+		backup("systemTest2",ds4);
+
+		restore("systemTest2",ds3);
+
+		BOOST_CHECK_EQUAL(*ds3,*ds4);
+
+		delete ds4;
+	}
 }
 
 

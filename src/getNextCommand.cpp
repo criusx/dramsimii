@@ -30,7 +30,11 @@ Command *Channel::getNextCommand()
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end();currentBank++)
 			{
 				if (tempCommand)
+				{
+					// still need one of these to have a pointer to the refresh transaction
+					tempCommand->removeHost();
 					delete tempCommand;
+				}
 
 				tempCommand = currentBank->pop();
 

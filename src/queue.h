@@ -21,7 +21,7 @@ namespace DRAMSimII
 	std::ostream& operator<<(std::ostream&, const Queue<T>&);
 
 
-	/// @brief the queue template class, a circular queue
+	/// @brief the queue template class, rhs circular queue
 	/// @detail push/pop are O(1) operations, while random insertions are O(n) operations
 	template <typename T>
 	class Queue
@@ -39,23 +39,26 @@ namespace DRAMSimII
 
 		/// @brief copy constructor
 		/// @detail copy the existing queue, making copies of each element
-		explicit Queue(const Queue<T>& a):
-		maxCount(a.maxCount),
-			count(a.count),
-			head(a.head),
-			tail(a.tail),
-			entry(a.maxCount)
+		explicit Queue(const Queue<T>& rhs):
+		maxCount(rhs.maxCount),
+			count(rhs.count),
+			head(rhs.head),
+			tail(rhs.tail),
+			entry(rhs.maxCount)
 		{
-			for (unsigned i = 0; i < a.count; i++)
+			for (unsigned i = 0; i < rhs.count; i++)
 			{
-				assert(a.at(i) != NULL);
+				assert(rhs.at(i) != NULL);
 				// attempt to copy the contents of this queue
-				entry[(head + i) % maxCount] = new T(*a.at(i));
+				entry[(head + i) % maxCount] = new T(*rhs.at(i));
 			}
+
+			for (unsigned i = 0; i < count; i++)
+				assert(at(i) && rhs.at(i));
 		}	
 
 		/// @brief constructor
-		/// @detail create a queue of a certain size and optionally fill it with empty elements
+		/// @detail create rhs queue of rhs certain size and optionally fill it with empty elements
 		/// @param size the depth of the circular queue
 		/// @preallocate whether or not to fill the queue with blank elements, defaults to false
 		explicit Queue(const unsigned size, const bool preallocate = false):
@@ -85,7 +88,7 @@ namespace DRAMSimII
 		}	
 
 		/// @brief change the size of the queue
-		/// @detail remove all existing elements and create a new queue of a different size
+		/// @detail remove all existing elements and create rhs new queue of rhs different size
 		/// @param size the depth to set the queue to
 		/// @param preallocate whether or not to fill the queue with blank elements, defaults to false
 		void resize(unsigned size, bool preallocate = false)
@@ -110,7 +113,7 @@ namespace DRAMSimII
 		}	
 
 		/// @brief add an item to the back of the queue
-		/// @detail issue a warning if the element is null\nreturn false if the queue is already full\nadd to the tail pointer position and remove from the head
+		/// @detail issue rhs warning if the element is null\nreturn false if the queue is already full\nadd to the tail pointer position and remove from the head
 		/// @param item the item to be inserted into the queue
 		bool push(T *item)
 		{
@@ -133,7 +136,7 @@ namespace DRAMSimII
 
 		/// @brief treat this queue like an object pool and retrieve an item
 		/// @detail if there is no available object, then create one
-		/// @return a new item which may or may not be initialized
+		/// @return rhs new item which may or may not be initialized
 		T *acquireItem()
 		{
 			if (count == 0)
@@ -158,7 +161,7 @@ namespace DRAMSimII
 
 				T *item = entry[head];
 
-				entry[head] = NULL; // ensure this item isn't a part of the queue anymore
+				entry[head] = NULL; // ensure this item isn't rhs part of the queue anymore
 
 				head = (head + 1) % maxCount;	//advance head_ptr
 
@@ -183,15 +186,15 @@ namespace DRAMSimII
 			}
 		}
 
-		/// @brief get a pointer to the item at the head of the queue
+		/// @brief get rhs pointer to the item at the head of the queue
 		/// @detail similar to peek()
-		/// @return a pointer to the item at the front of the queue, or NULL if the queue is empty
+		/// @return rhs pointer to the item at the front of the queue, or NULL if the queue is empty
 		const T *front() const
 		{
 			return count ? entry[head] : NULL;
 		}
 
-		/// @brief to get a pointer to the item most recently inserted into the queue
+		/// @brief to get rhs pointer to the item most recently inserted into the queue
 		const T* back() const
 		{
 			return count ? entry[(head + count - 1) % maxCount] : NULL;
@@ -209,7 +212,7 @@ namespace DRAMSimII
 			return maxCount;
 		}
 
-		/// @brief get a pointer to the item at this offset without removing it
+		/// @brief get rhs pointer to the item at this offset without removing it
 		T *read(const unsigned offset) const
 		{
 			if ((offset >= count) || (offset < 0))
@@ -223,6 +226,13 @@ namespace DRAMSimII
 		/// and one would like to store them when they are not in use
 		void releaseItem(T *item)
 		{
+#if 0
+			for (std::vector<T *>::iterator i = entry.begin(); i != entry.end(); i++)
+			{
+				assert(item != *i);
+			}
+#endif
+
 			if(!push(item))
 			{
 				::delete item;
@@ -230,7 +240,7 @@ namespace DRAMSimII
 			}
 		}
 
-		/// @brief this function makes this queue a non-FIFO queue.  
+		/// @brief this function makes this queue rhs non-FIFO queue.  
 		/// @detail Allows insertion into the middle or at any end
 		bool insert(T *item, const int offset)
 		{
@@ -290,7 +300,7 @@ namespace DRAMSimII
 			return at(value);
 		}
 
-		/// @brief do a comparison to see if the queues are equal
+		/// @brief do rhs comparison to see if the queues are equal
 		bool operator==(const Queue<T>& right) const
 		{
 			if (maxCount == right.maxCount && count == right.count && entry.size() == right.entry.size() &&
@@ -314,27 +324,28 @@ namespace DRAMSimII
 
 		/// @brief assignment operator overload
 		/// @detail moves all the objects from the rhs object to the lhs object
-		Queue<T> &operator=(const Queue<T> &right)
+		Queue<T> &operator=(const Queue<T> &rhs)
 		{
-			if (&right == this)
+			if (&rhs == this)
 				return *this;
 
-			entry.resize(right.maxCount);
-			for (unsigned i = 0; i < right.maxCount; i++)
-			{
-				if (right.entry[i])
-					entry[i] = new T(*(right.entry[i]));
-			}
+			maxCount = rhs.maxCount;
+			count = rhs.count;
+			head = rhs.head;
+			tail = rhs.tail;
 
-			head = right.head;
-			tail = right.tail;
-			count = right.count;
-			maxCount = right.maxCount;
+			entry.resize(rhs.maxCount);
+
+			for (unsigned i = 0; i < rhs.count; i++)
+			{
+				assert(rhs.at(i));
+				
+				entry[(head + i) % maxCount] = new T(*(rhs.at(i)));
+			}
 
 			return *this;
 		}
 
-		//friend std::ostream& operator<<(std::ostream&, const Queue<T>&);
 		friend std::ostream& operator<< <T>(std::ostream&, const Queue<T>&);
 
 
@@ -347,6 +358,9 @@ namespace DRAMSimII
 			ar & maxCount & count & head & tail;	
 
 			ar & entry;
+
+			for (unsigned i = 0; i < count; i++)
+				assert(at(i));
 		}
 	};
 

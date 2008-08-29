@@ -40,8 +40,8 @@ startTime(rhs.startTime),
 enqueueTime(rhs.enqueueTime),
 completionTime(rhs.completionTime),
 addr(rhs.addr),
-//hostTransaction(rhs.hostTransaction ? new Transaction(*rhs.hostTransaction) : NULL),
-hostTransaction(rhs.hostTransaction), // assume that this is managed elsewhere
+hostTransaction(rhs.hostTransaction ? new Transaction(*rhs.hostTransaction) : NULL),
+//hostTransaction(rhs.hostTransaction), // assume that this is managed elsewhere
 //link_comm_tran_comp_time(rhs.link_comm_tran_comp_time),
 //amb_proc_comp_time(rhs.amb_down_proc_comp_time),
 //dimm_comm_tran_comp_time(rhs.dimm_comm_tran_comp_time),
@@ -131,12 +131,14 @@ postedCAS(postedCAS)
 		);
 }
 
-#if 0
 Command::~Command()
 {
-	delete hostTransaction;
+	if (hostTransaction)
+	{
+		delete hostTransaction;
+		hostTransaction = NULL;
+	}
 }
-#endif
 
 
 /// @brief to convert CAS(W)+P <=> CAS(W)
@@ -158,6 +160,14 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 	default:
 		break;
 	}
+
+	assert((commandType == CAS_WRITE_AND_PRECHARGE_COMMAND && hostTransaction->getType() == WRITE_TRANSACTION) ||
+		(commandType == CAS_AND_PRECHARGE_COMMAND && hostTransaction->getType() == READ_TRANSACTION) ||
+		(commandType == CAS_COMMAND && hostTransaction->getType() == READ_TRANSACTION) ||
+		(commandType == CAS_WRITE_COMMAND && hostTransaction->getType() == WRITE_TRANSACTION) ||
+		(commandType == RAS_COMMAND) || (commandType == PRECHARGE_COMMAND) ||
+		(commandType == REFRESH_ALL_COMMAND && hostTransaction->getType() == AUTO_REFRESH_TRANSACTION)
+		);
 }
 
 
@@ -224,5 +234,6 @@ void *Command::operator new(size_t size)
 void Command::operator delete(void *mem)
 {
 	Command *cmd(static_cast<Command*>(mem));
+	cmd->~Command();
 	freeCommandPool.releaseItem(cmd);
 }

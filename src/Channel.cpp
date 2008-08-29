@@ -56,26 +56,28 @@ rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig))
 		// stagger the times that each rank will be refreshed so they don't all arrive in a burst
 		unsigned step = settings.tREFI / settings.rankCount;
 
-		Address addr;
+		//Address addr;
 
-		for (unsigned j = 0; j < rank.size(); ++j)
+		for (unsigned j = 0; j < refreshCounter.size(); ++j)
 		{
-			addr.setRank(j);
-			addr.setBank(0);
+			//addr.setRank(j);
+			//addr.setBank(0);
 			//newTrans->setEnqueueTime(j * (step +1));
-			refreshCounter[j] = new Transaction(AUTO_REFRESH_TRANSACTION,j * (step + 1), 8, addr, NULL);
-			refreshCounter[j]->setEnqueueTime(refreshCounter[j]->getArrivalTime());
+			//refreshCounter[j] = new Transaction(AUTO_REFRESH_TRANSACTION,j * (step + 1), 8, addr, NULL);
+			refreshCounter[j] = j * (step + 1);
+			//refreshCounter[j]->setEnqueueTime(refreshCounter[j]->getArrivalTime());
 		}
 	}
 }
 
-/// normal constructor
+/// normal copy constructor
 Channel::Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats):
 time(rhs.time),
 lastRefreshTime(rhs.lastRefreshTime),
 lastCommandIssueTime(rhs.lastCommandIssueTime),
 lastRankID(rhs.lastRankID),
 timingSpecification(rhs.timingSpecification),
+refreshCounter(rhs.refreshCounter),
 transactionQueue(rhs.transactionQueue),
 historyQueue(rhs.historyQueue),
 completionQueue(rhs.completionQueue),
@@ -91,28 +93,34 @@ rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification
 	rank = rhs.rank;
 }
 
-
+/// deserialization constructor
 Channel::Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
+time(0),
+lastRefreshTime(0),
+lastCommandIssueTime(0),
+lastRankID(0),
 timingSpecification(timing),
+transactionQueue(0),
+refreshCounter(0),
+historyQueue(0),
+completionQueue(0),
 systemConfig(sysConf),
 statistics(stats),
 powerModel(power),
 algorithm(settings),
+channelID(-1),
 rank(newRank)
-
-{
-	//rank = newRank;
-}
+{}
 
 Channel::~Channel()
 {
-	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
-	{
-		for (unsigned j = 0; j < systemConfig.getRankCount(); ++j)
-		{
-			delete refreshCounter[j];
-		}
-	}
+// 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
+// 	{
+// 		for (std::vector<Transaction *>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
+// 		{
+// 			delete *i;
+// 		}
+// 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -142,13 +150,14 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 
 	// initialize the refresh counters per rank
 	// because the vector copy constructor doesn't make deep copies
-	if (rhs.systemConfig.getRefreshPolicy() != NO_REFRESH)
-	{
-		for (unsigned j = 0; j < rank.size(); ++j)
-		{
-			refreshCounter[j] = new Transaction(*rhs.refreshCounter[j]);
-		}
-	}
+// 	if (rhs.systemConfig.getRefreshPolicy() != NO_REFRESH)
+// 	{
+// 		for (unsigned j = 0; j < rhs.refreshCounter.size(); ++j)
+// 		{
+// 			if (rhs.refreshCounter[j])
+// 				refreshCounter[j] = new Transaction(*rhs.refreshCounter[j]);
+// 		}
+// 	}
 
 #if 0
 	for (unsigned i = 0; i < rank.size(); i++)
@@ -261,6 +270,21 @@ void Channel::retireCommand(Command *newestCommand)
 {
 	statistics.collectCommandStats(newestCommand);
 
+	// transaction complete? if so, put in completion queue
+	// note that the host transaction should only be pointed to by a CAS command
+	// since this is when a transaction is done from the standpoint of the requester
+	if (newestCommand->getHost()) 
+	{
+		if (!completionQueue.push(newestCommand->removeHost()))
+		{
+			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
+			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;
+			exit(2);
+		}
+	}
+
+	assert(!newestCommand->getHost());
+
 	while (!historyQueue.push(newestCommand))
 	{
 		delete historyQueue.pop();
@@ -298,7 +322,10 @@ tick Channel::nextTransactionDecodeTime() const
 	{
 		if (checkForAvailableCommandSlots(nextTrans))
 		{
-			nextTime = nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay();
+			if (nextTrans->getType() == AUTO_REFRESH_TRANSACTION)
+				nextTime = nextTrans->getArrivalTime();
+			else
+				nextTime = nextTrans->getEnqueueTime() + timingSpecification.tBufferDelay();
 		}
 	}
 
@@ -538,13 +565,164 @@ bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vecto
 	return true;
 }
 
+
 //////////////////////////////////////////////////////////////////////////
-// get the next refresh command and remove it from the queue
+// @brief get the next refresh time
 //////////////////////////////////////////////////////////////////////////
-Transaction *Channel::getRefresh()
+const tick Channel::nextRefresh() const
 {
 	assert(rank.size() >= 1);
 
+	return *(std::min_element(refreshCounter.begin(), refreshCounter.end()));
+
+// 	Transaction *earliestRefreshTransaction = refreshCounter[0];
+// 
+// 	for (unsigned i = 1; i < rank.size(); ++i)
+// 	{
+// 		assert(refreshCounter[i]);
+// 		if (refreshCounter[i]->getEnqueueTime() < earliestRefreshTransaction->getEnqueueTime())
+// 		{
+// 			earliestRefreshTransaction = refreshCounter[i];
+// 		}
+// 	}
+// 	return earliestRefreshTransaction;
+}
+
+
+/// read the next available transaction for this channel without actually removing it from the queue
+/// if bufferDelay is set, then only transactions that have been in the queue long enough to decode are considered
+const Transaction *Channel::readTransaction(const bool bufferDelay) const
+{
+	const unsigned delay = bufferDelay ? timingSpecification.tBufferDelay() : 0;
+
+	const Transaction *nextTransaction = transactionQueue.front(); 
+
+	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
+	{
+		if ((nextTransaction) && (time - nextTransaction->getEnqueueTime() < delay))
+		{
+			M5_TIMING_LOG("resetting: " << time << " " << nextTransaction->getEnqueueTime() << " " << delay);
+			return NULL; // not enough time has passed
+		}
+		else
+		{
+			return nextTransaction;
+		}
+	}
+	else
+	{
+		const tick nextRefreshTransaction = nextRefresh();
+
+		// give an advantage to normal transactions, but prevent starvation for refresh operations
+		if (nextTransaction && (nextTransaction->getEnqueueTime() < nextRefreshTransaction + systemConfig.getSeniorityAgeLimit()))
+		{
+			// if this transaction has not yet been decoded, then look to see if the refresh trans has arrived
+			if (time < nextTransaction->getEnqueueTime() + delay)
+			{
+				M5_TIMING_LOG("resetting: " << time << " " << nextTransaction->getEnqueueTime() << " " << delay);
+
+				// if this refresh command has arrived
+				if (nextRefreshTransaction <= time) 
+					return readNextRefresh();
+				else
+					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
+			}
+			else
+			{
+				return nextTransaction;
+			}
+		}
+		else if (time >= nextRefreshTransaction)
+		{
+			return readNextRefresh();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+}
+
+// get the next transaction, whether a refresh transaction or a normal R/W transaction
+Transaction *Channel::getTransaction()
+{
+	const Transaction *tempTrans = transactionQueue.front(); 
+
+	// no refresh transactions, just see if normal transactions are decoded
+	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
+	{
+		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
+		{
+			M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay());			
+			return NULL; // not enough time has passed
+		}
+		return transactionQueue.pop();
+	}
+	else
+	{
+		const tick refreshTrans = nextRefresh();
+
+		// prioritize the normal transactions, but don't starve the refresh transactions
+		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans + systemConfig.getSeniorityAgeLimit()))
+		{
+			// if it's not decoded, go with the refresh transaction
+			if (time < tempTrans->getEnqueueTime() + timingSpecification.tBufferDelay())
+			{
+				M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay());
+
+				// if this refresh command has arrived
+				if (refreshTrans <= time) 
+					return createNextRefresh();
+				else
+					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
+			}
+			else
+			{
+				return transactionQueue.pop();
+			}
+		}
+		else if (time >= refreshTrans)
+		{
+			return createNextRefresh();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+// get the next refresh command and remove it from the queue
+//////////////////////////////////////////////////////////////////////////
+Transaction *Channel::createNextRefresh()
+{
+	assert(rank.size() >= 1);
+	unsigned currentRank = 0;
+	unsigned earliestRank = 0;
+	tick earliestTime = refreshCounter[0];
+	for (vector<tick>::const_iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++, currentRank++)
+	{
+		if (*i < earliestTime)
+		{
+			earliestRank = currentRank;
+			earliestTime = *i;
+		}
+	}
+
+	static Address address;
+
+	address.setChannel(channelID);
+	address.setRank(earliestRank);
+	address.setBank(0);
+
+	Transaction *newRefreshTransaction = new Transaction(AUTO_REFRESH_TRANSACTION, earliestTime, 8,address,NULL);
+	refreshCounter[earliestRank] = refreshCounter[earliestRank] + timingSpecification.tREFI();
+
+	return newRefreshTransaction;
+
+#if 0
 	Transaction *earliestTransaction = refreshCounter[0];
 
 	unsigned earliestRank = 0;
@@ -568,128 +746,38 @@ Transaction *Channel::getRefresh()
 	refreshCounter[earliestRank] = new Transaction(AUTO_REFRESH_TRANSACTION,earliestTransaction->getEnqueueTime() + timingSpecification.tREFI(),8,address,NULL);
 
 	refreshCounter[earliestRank]->setEnqueueTime(refreshCounter[earliestRank]->getArrivalTime());
-	
+
 	return earliestTransaction;
+#endif
 }
 
-//////////////////////////////////////////////////////////////////////////
-// read the next occurring refresh transaction without removing it
-//////////////////////////////////////////////////////////////////////////
-const Transaction *Channel::readRefresh() const
+const Transaction *Channel::readNextRefresh() const
 {
 	assert(rank.size() >= 1);
 
-	Transaction *earliestRefreshTransaction = refreshCounter[0];
-
-	for (unsigned i = 1; i < rank.size(); ++i)
+	unsigned currentRank = 0;
+	unsigned earliestRank = 0;
+	tick earliestTime = refreshCounter[0];
+	for (vector<tick>::const_iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++, currentRank++)
 	{
-		assert(refreshCounter[i]);
-		if (refreshCounter[i]->getEnqueueTime() < earliestRefreshTransaction->getEnqueueTime())
+		if (*i < earliestTime)
 		{
-			earliestRefreshTransaction = refreshCounter[i];
+			earliestRank = currentRank;
+			earliestTime = *i;
 		}
 	}
-	return earliestRefreshTransaction;
-}
 
+	static Address address;
 
-/// read the next available transaction for this channel without actually removing it from the queue
-/// if bufferDelay is set, then only transactions that have been in the queue long enough to decode are considered
-const Transaction *Channel::readTransaction(const bool bufferDelay) const
-{
-	const unsigned delay = bufferDelay ? timingSpecification.tBufferDelay() : 0;
+	address.setChannel(channelID);
+	address.setRank(earliestRank);
+	address.setBank(0);
 
-	const Transaction *tempTrans = transactionQueue.front(); 
+	static Transaction newRefreshTransaction;
+	::new(&newRefreshTransaction)Transaction(AUTO_REFRESH_TRANSACTION, 0, 8,address,NULL);
+	
+	return &newRefreshTransaction;
 
-	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
-	{
-		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < delay))
-		{
-			M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << delay);
-			return NULL; // not enough time has passed
-		}
-		else
-		{
-			return tempTrans;
-		}
-	}
-	else
-	{
-		const Transaction *refreshTrans = readRefresh();
-		assert(refreshTrans != NULL);
-
-		// give an advantage to normal transactions, but prevent starvation for refresh operations
-		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig.getSeniorityAgeLimit()))
-		{
-			// if this transaction has not yet been decoded, then look to see if the refresh trans has arrived
-			if (time < tempTrans->getEnqueueTime() + delay)
-			{
-				M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << delay);
-
-				// if this refresh command has arrived
-				if (refreshTrans->getEnqueueTime() + delay <= time) 
-					return refreshTrans;
-				else
-					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
-			}
-			else
-			{
-				return tempTrans;
-			}
-		}
-		else if (time >= refreshTrans->getEnqueueTime() + delay)
-		{
-			return refreshTrans;
-		}
-		else
-		{
-			return NULL;
-		}
-	}
-}
-
-// get the next transaction, whether a refresh transaction or a normal R/W transaction
-Transaction *Channel::getTransaction()
-{
-	const Transaction *tempTrans = transactionQueue.front(); 
-
-	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
-	{
-		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
-		{
-			M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay());			
-			return NULL; // not enough time has passed
-		}
-		return transactionQueue.pop();
-	}
-	else
-	{
-		const Transaction *refreshTrans = readRefresh();
-		assert(refreshTrans != NULL); // should always be refresh transactions coming
-
-		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans->getEnqueueTime() + systemConfig.getSeniorityAgeLimit()))
-		{
-			if (time < tempTrans->getEnqueueTime() + timingSpecification.tBufferDelay())
-			{
-				M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay());
-
-				// if this refresh command has arrived
-				if (refreshTrans->getEnqueueTime() + timingSpecification.tBufferDelay() <= time) 
-					return getRefresh();
-				else
-					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
-			}
-			return transactionQueue.pop();
-		}
-		else if (time >= refreshTrans->getEnqueueTime() + timingSpecification.tBufferDelay())
-		{
-			return getRefresh();
-		}
-		else
-		{
-			return NULL;
-		}
-	}
 }
 
 std::ostream& DRAMSimII::operator<<(std::ostream& os, const DRAMSimII::Channel& r)
@@ -718,37 +806,16 @@ Channel& Channel::operator =(const Channel &rhs)
 	//powerModel = rhs.powerModel;
 	//algorithm = rhs.algorithm;
 	channelID = rhs.channelID;
-	//rank = rhs.rank;
+	rank = rhs.rank;
 
 	return *this;
 }
 
 bool Channel::operator ==(const Channel& rhs) const
 {
-	if (time == rhs.time && lastRefreshTime == rhs.lastRefreshTime && lastCommandIssueTime == rhs.lastCommandIssueTime && lastRankID == rhs.lastRankID &&
+	return (time == rhs.time && lastRefreshTime == rhs.lastRefreshTime && lastCommandIssueTime == rhs.lastCommandIssueTime && lastRankID == rhs.lastRankID &&
 		timingSpecification == rhs.timingSpecification && transactionQueue == rhs.transactionQueue && historyQueue == rhs.historyQueue &&
 		completionQueue == rhs.completionQueue && systemConfig == rhs.systemConfig && statistics == rhs.statistics && powerModel == rhs.powerModel &&
-		algorithm == rhs.algorithm && channelID == rhs.channelID && rank == rhs.rank)
-	{
-		if (refreshCounter.size() == rhs.refreshCounter.size())
-		{
-			for (unsigned i = 0; i < refreshCounter.size(); i++)
-			{
-				if (refreshCounter[i] && rhs.refreshCounter[i])
-				{
-					if (*refreshCounter[i] != *rhs.refreshCounter[i])
-						return false;
-				}
-				else
-					return false;
-			}
-			return true;
-		}
-		else
-			return false;
-
-	}
-	else
-		return false;
+		algorithm == rhs.algorithm && channelID == rhs.channelID && rank == rhs.rank && refreshCounter == rhs.refreshCounter);
 }
 

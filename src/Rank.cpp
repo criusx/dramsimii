@@ -85,7 +85,8 @@ Rank& Rank::operator =(const Rank& rhs)
 	rankID = rhs.rankID;
 	lastBankID = rhs.lastBankID;
 	banksPrecharged = rhs.banksPrecharged;
-	//lastActivateTimes = rhs.lastActivateTimes;
+	lastActivateTimes = rhs.lastActivateTimes;
+	bank = rhs.bank;
 
 	return *this;
 }

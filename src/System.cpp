@@ -212,13 +212,16 @@ nextStats(rhs.nextStats)
 System::System(const SystemConfiguration &sysConfig, const std::vector<Channel> &chan, const SimulationParameters &simParams,
 			   const Statistics &stats, const InputStream &inputStr):
 systemConfig(sysConfig),
-channel(chan),
 simParameters(simParams),
 statistics(stats),
-inputStream(inputStr)
+//channel(chan),
+channel((unsigned)chan.size(),Channel(chan[0],sysConfig,statistics)),
+inputStream(inputStr),
+time(0),
+nextStats(0)
 {
 	Address::initialize(systemConfig);
-	//channel = chan;
+	channel = chan;
 }
 
 

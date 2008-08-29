@@ -50,7 +50,7 @@ namespace DRAMSimII
 		explicit Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const CommandType commandType = CAS_COMMAND);
 		void *operator new(size_t size);
 		void operator delete(void *);
-		//~Command();
+		~Command();
 
 		// accessors
 		CommandType getCommandType() const { return commandType; }
@@ -77,6 +77,8 @@ namespace DRAMSimII
 		bool operator==(const Command& right) const;
 
 	private:
+		Command& operator=(const Command& right);
+
 		// serialization
 		friend class boost::serialization::access;
 

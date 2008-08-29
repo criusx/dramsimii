@@ -47,6 +47,27 @@ CASWCount(b.CASWCount),
 totalCASWCount(b.totalCASWCount)
 {}
 
+Bank::Bank(const Bank &rhs):
+timing(rhs.timing),
+systemConfig(rhs.systemConfig),
+perBankQueue(rhs.perBankQueue),
+lastRASTime(rhs.lastRASTime),
+lastCASTime(rhs.lastCASTime),
+lastCASWTime(rhs.lastCASWTime),
+lastPrechargeTime(rhs.lastPrechargeTime),
+lastRefreshAllTime(rhs.lastRefreshAllTime),
+lastCASLength(rhs.lastCASLength),
+lastCASWLength(rhs.lastCASWLength),
+openRowID(rhs.openRowID),
+activated(rhs.activated),
+RASCount(rhs.RASCount),
+totalRASCount(rhs.totalRASCount),
+CASCount(rhs.CASCount),
+totalCASCount(rhs.totalCASCount),
+CASWCount(rhs.CASWCount),
+totalCASWCount(rhs.totalCASWCount)
+{}
+
 
 Bank::Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),

@@ -36,7 +36,7 @@ namespace DRAMSimII
 		unsigned lastRankID;							///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
-		std::vector<Transaction *> refreshCounter;		///< holds the next refresh commands
+		std::vector<tick> refreshCounter;				///< holds the next refresh command time for the rank
 		Queue<Command> historyQueue;					///< what were the last N commands to this channel?
 		Queue<Transaction> completionQueue;				///< completed_q, can send status back to memory controller
 		const SystemConfiguration &systemConfig;		///< a pointer to common system config values
@@ -85,10 +85,14 @@ namespace DRAMSimII
 		const std::vector<Rank>& getRank() const { return rank; }
 		tick getTime() const { return time; }
 		unsigned getLastRankID() const { return lastRankID; }
+
 		Transaction *getTransaction();			// remove and return the oldest transaction
 		const Transaction *readTransaction(bool) const;	// read the oldest transaction without affecting the queue
-		Transaction *getRefresh();
-		const Transaction *readRefresh() const;
+		Transaction *createNextRefresh();
+		const Transaction *readNextRefresh() const;
+		const tick nextRefresh() const;
+
+
 		Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }
 		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }

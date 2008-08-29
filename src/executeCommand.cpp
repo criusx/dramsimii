@@ -237,20 +237,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case CAS_WITH_DRIVE_COMMAND:
 		break;	
-	}
-
-	// transaction complete? if so, put in completion queue
-	// note that the host transaction should only be pointed to by a CAS command
-	// since this is when a transaction is done from the standpoint of the requester
-	if (thisCommand->getHost()) 
-	{
-		if (!completionQueue.push(thisCommand->removeHost()))
-		{
-			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
-			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;
-			exit(2);
-		}
-	}
+	}	
 
 	// inserts into a queue which dequeues into the command pool
 	retireCommand(thisCommand);

@@ -16,7 +16,6 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>
 
-
 namespace DRAMSimII
 {
 	/// @brief represents a logical rank and associated statistics
@@ -118,19 +117,19 @@ namespace DRAMSimII
 
 namespace boost
 {
-	template<class Archive, class U>
-	inline void serialize(Archive &ar, boost::circular_buffer<U> &t, const unsigned file_version)
+	template<class Archive, class U, class Allocator>
+	inline void serialize(Archive &ar, boost::circular_buffer<U, Allocator> &t, const unsigned file_version)
 	{
 		boost::serialization::split_free(ar,t,file_version);
 	}
 
 
-	template<class Archive, class U>
-	inline void save(Archive &ar, const boost::circular_buffer<U> &t, const unsigned int file_version)
+	template<class Archive, class U, class Allocator>
+	inline void save(Archive &ar, const boost::circular_buffer<U, Allocator> &t, const unsigned int file_version)
 	{
 		//const circular_buffer<U>::size_type maxCount(t.capacity());
 		//ar << BOOST_SERIALIZATION_NVP(maxCount);
-		circular_buffer<tick>::capacity_type maxCount(t.capacity());
+		typename circular_buffer<U, Allocator>::capacity_type maxCount(t.capacity());
 		ar << (maxCount);
 
 		//const circular_buffer<U>::size_type count(t.size());
@@ -138,19 +137,19 @@ namespace boost
 		unsigned count(t.size());
 		ar << (count);
 
-		//for (boost::circular_buffer<U>::const_iterator i = t.begin(); i != t.end(); i++)
-		for (unsigned i = 0; i < count; i++)
+		for (typename circular_buffer<U, Allocator>::const_iterator i = t.begin(); i != t.end(); i++)
+		//for (boost::circular_buffer<U,Allocator>::size_type i = 0; i < t.size(); i++)
 		{
-			//ar << *i;
-			ar << t[i];
+			ar << *i;
+			//ar << t[i];
 		}
 	}
 
-	template<class Archive, class U>
-	inline void load(Archive &ar, boost::circular_buffer<U> &t, const unsigned file_version)
+	template<class Archive, class U, class Allocator>
+	inline void load(Archive &ar, boost::circular_buffer<U, Allocator> &t, const unsigned file_version)
 	{
 		//ar >> BOOST_SERIALIZATION_NVP(maxCount);
-		circular_buffer<tick>::capacity_type maxCount;
+		typename circular_buffer<U, Allocator>::capacity_type maxCount;
 		ar >> (maxCount);
 		t.set_capacity(maxCount);
 
@@ -163,6 +162,7 @@ namespace boost
 		{
 			U value;
 			ar >> value;
+			//t.push_front(value);
 			t.push_back(value);
 		}
 	}
