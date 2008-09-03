@@ -154,7 +154,7 @@
 				AssemblerOutput="4"
 				GenerateXMLDocumentationFiles="false"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				CompileAs="2"
 				DisableSpecificWarnings="4530"
