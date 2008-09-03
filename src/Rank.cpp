@@ -148,15 +148,15 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 
 	switch (currentCommand->getCommandType())
 	{
-	case CAS_AND_PRECHARGE_COMMAND:
+	case READ_AND_PRECHARGE:
 		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), currentBank.getLastRASTime() + timing.tRAS());
 		lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), currentBank.getLastRASTime() + timing.tRAS());
 		break;
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+	case WRITE_AND_PRECHARGE:
 		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR(), currentBank.getLastRASTime() + timing.tRAS());
 		lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), currentBank.getLastRASTime() + timing.tRAS());
 		break;
-	case PRECHARGE_COMMAND:
+	case PRECHARGE:
 		lastPrechargeTime = currentTime;
 		break;
 	default:
@@ -209,7 +209,7 @@ void Rank::issueREF(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////
 Command *Rank::getCommand(const unsigned thisBank)
 {
-	if (bank[thisBank].nextCommandType() == REFRESH_ALL_COMMAND)
+	if (bank[thisBank].nextCommandType() == REFRESH_ALL)
 	{
 		if (refreshAllReady())
 		{
@@ -222,7 +222,7 @@ Command *Rank::getCommand(const unsigned thisBank)
 
 				tempCommand = currentBank->pop();
 
-				assert(tempCommand->getCommandType() == REFRESH_ALL_COMMAND);
+				assert(tempCommand->getCommandType() == REFRESH_ALL);
 			}
 
 			return tempCommand;
@@ -255,7 +255,7 @@ bool Rank::refreshAllReady() const
 	for (vector<Bank>::const_iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
 	{
 		// if any queue is empty or the head of any queue isn't a refresh command, then the rank isn't ready for a refresh all command
-		if (currentBank->nextCommandType() != REFRESH_ALL_COMMAND)
+		if (currentBank->nextCommandType() != REFRESH_ALL)
 		{
 			return false;
 		}

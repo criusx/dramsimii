@@ -27,7 +27,7 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 
 	switch(this_c->getCommandType())
 	{
-	case RAS_COMMAND:
+	case ACTIVATE:
 		{
 			// respect t_rp of same bank
 			int tRPGap = (int)(currentBank.getLastPrechargeTime() - time) + timingSpecification.tRP();
@@ -74,12 +74,12 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 		}
 		break;
 
-	case CAS_AND_PRECHARGE_COMMAND:
+	case READ_AND_PRECHARGE:
 		// Auto precharge will be issued as part of command,
 		// but DRAM devices are intelligent enough to delay the prec command
 		// until tRAS timing is met, so no need to check tRAS timing requirement here.
 
-	case CAS_COMMAND:
+	case READ:
 		{
 			//respect last ras of same rank
 			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - t_al);
@@ -135,13 +135,13 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 		}
 		break;
 
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+	case WRITE_AND_PRECHARGE:
 		// Auto precharge will be issued as part of command, so
 		// Since commodity DRAM devices are write-cycle limited, we don't have to worry if
-		// the precharge will met tRAS timing or not. So CAS_WRITE_AND_PRECHARGE_COMMAND
+		// the precharge will met tRAS timing or not. So WRITE_AND_PRECHARGE
 		// has the exact same timing requirements as a simple CAS COMMAND.
 
-	case CAS_WRITE_COMMAND:
+	case WRITE:
 		{
 			//respect last ras of same rank
 			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - t_al);
@@ -191,7 +191,7 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 	case RETIRE_COMMAND:
 		break;
 
-	case PRECHARGE_COMMAND:
+	case PRECHARGE:
 		{
 			// respect t_ras of same bank
 			int t_ras_gap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRAS();
@@ -206,10 +206,10 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 		}
 		break;
 
-	case PRECHARGE_ALL_COMMAND:
+	case PRECHARGE_ALL:
 		break;
 
-	case RAS_ALL_COMMAND:
+	case ACTIVATE_ALL:
 		break;
 
 	case DRIVE_COMMAND:
@@ -221,7 +221,7 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 	case CAS_WITH_DRIVE_COMMAND:
 		break;
 
-	case REFRESH_ALL_COMMAND:
+	case REFRESH_ALL:
 		// respect tRFC and tRP
 		min_gap = max((int)((currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC()),(int)((currentRank.getLastPrechargeTime() - time) + timingSpecification.tRP()));
 		break;
@@ -270,19 +270,19 @@ const void *fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishT
 			if (nextFrame)
 			{
 				// execute any commands in this frame
-				if (nextFrame->getCommandAType() != NO_COMMAND)
+				if (nextFrame->getCommandAType() != INVALID_COMMAND)
 				{
 					statistics.collectCommandStats(nextFrame->getCommandA());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandA());
 					executeCommand(nextFrame->getCommandA());
 				}
-				if (nextFrame->getCommandBType() != NO_COMMAND && nextFrame->getCommandBType() != DATA_COMMAND)
+				if (nextFrame->getCommandBType() != INVALID_COMMAND && nextFrame->getCommandBType() != DATA_COMMAND)
 				{
 					statistics.collectCommandStats(nextFrame->getCommandB());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandB());
 					executeCommand(nextFrame->getCommandB());
 				}
-				if (nextFrame->getCommandCType() != NO_COMMAND && nextFrame->getCommandCType() != DATA_COMMAND)
+				if (nextFrame->getCommandCType() != INVALID_COMMAND && nextFrame->getCommandCType() != DATA_COMMAND)
 				{
 					statistics.collectCommandStats(nextFrame->getCommandC());
 					DEBUG_COMMAND_LOG("C F[" << std::hex << setw(8) << time << "] MG[" << setw(2) << 0 << "] " << *nextFrame->getCommandC());
@@ -401,7 +401,7 @@ bool fbdChannel::makeFrame(const tick currentTime)
 			newFrame->setCommandA(getNextCommand(NULL, NULL));
 
 			// if this was a CAS+W then the frame type will be CMD+D
-			if (newCommand->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || newCommand->getCommandType() == CAS_WRITE_COMMAND)
+			if (newCommand->getCommandType() == WRITE_AND_PRECHARGE || newCommand->getCommandType() == WRITE)
 			{
 				newFrame->setCommandB(NULL);
 				newFrame->setCommandC(NULL);
@@ -450,7 +450,7 @@ Command *fbdChannel::getNextCommand(const Command *slotACommand, const Command *
 		Rank &currentRank = rank[nextCommand->getAddress().getRank()];
 
 		// if it was a refresh all command, then dequeue all n banks worth of commands
-		if (nextCommand->getCommandType() == REFRESH_ALL_COMMAND)
+		if (nextCommand->getCommandType() == REFRESH_ALL)
 		{
 			Command *tempCommand = NULL;
 
@@ -459,7 +459,7 @@ Command *fbdChannel::getNextCommand(const Command *slotACommand, const Command *
 				if (tempCommand)
 					delete tempCommand;
 				tempCommand = cur_bank->pop();
-				assert(tempCommand->getCommandType() == REFRESH_ALL_COMMAND);
+				assert(tempCommand->getCommandType() == REFRESH_ALL);
 			}
 
 			return tempCommand;
@@ -502,7 +502,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 
 	unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
 	unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
-	const CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : CAS_WRITE_AND_PRECHARGE_COMMAND;
+	const CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : WRITE_AND_PRECHARGE;
 
 	const int slotARank = slotACommand ? slotACommand->getAddress().getRank() : -1;
 	const int slotBRank = slotBCommand ? slotBCommand->getAddress().getRank() : -1;
@@ -535,7 +535,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 						{
 							// if it's a refresh_all command and
 							// we haven't proved that all the queues aren't refresh_all commands, search
-							if (temp_c->getCommandType() == REFRESH_ALL_COMMAND)
+							if (temp_c->getCommandType() == REFRESH_ALL)
 							{
 								if (!notAllRefresh)
 								{
@@ -543,7 +543,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 									for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 									{
 										// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-										if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != REFRESH_ALL_COMMAND)))
+										if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != REFRESH_ALL)))
 										{
 											notAllRefresh = true;
 											break;
@@ -562,7 +562,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 							{
 								// if it's a refresh_all command and
 								// we haven't proved that all the queues aren't refresh_all commands, search
-								if (temp_c->getCommandType() == REFRESH_ALL_COMMAND)
+								if (temp_c->getCommandType() == REFRESH_ALL)
 								{
 									if (!notAllRefresh)
 									{
@@ -570,7 +570,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 										for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 										{
 											// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-											if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != REFRESH_ALL_COMMAND)))
+											if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != REFRESH_ALL)))
 											{
 												notAllRefresh = true;
 												break;
@@ -606,14 +606,14 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 			// if any executable command was found, prioritize it over those which must wait
 			if (oldestExecutableCommandTime < TICK_MAX)
 			{
-				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL_COMMAND || rank[oldestExecutableBank->front()->getAddress().getRank()].bank[oldestExecutableBank->front()->getAddress().getBank()].front() == oldestExecutableBank->front());
+				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL || rank[oldestExecutableBank->front()->getAddress().getRank()].bank[oldestExecutableBank->front()->getAddress().getBank()].front() == oldestExecutableBank->front());
 
 				return oldestExecutableBank->front();
 			}
 			// if there was a command found
 			else if (oldestCommandTime < TICK_MAX)
 			{
-				assert(oldestBank->front()->getCommandType() == REFRESH_ALL_COMMAND || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
+				assert(oldestBank->front()->getCommandType() == REFRESH_ALL || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
 
 				return oldestBank->front();
 			}
@@ -630,15 +630,15 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 			switch (lastCommandType)
 			{
 				// if it was RAS before and you want to finish doing the read/write
-			case RAS_COMMAND:
+			case ACTIVATE:
 				{
 					const Command *temp_c =  rank[lastRankID].bank[lastBankID].front();
 
 					if ((temp_c) &&
-						((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) ||
-						(temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) ||
-						(temp_c->getCommandType() == CAS_COMMAND) ||
-						(temp_c->getCommandType() == CAS_WRITE_COMMAND)))
+						((temp_c->getCommandType() == WRITE_AND_PRECHARGE) ||
+						(temp_c->getCommandType() == READ_AND_PRECHARGE) ||
+						(temp_c->getCommandType() == READ) ||
+						(temp_c->getCommandType() == WRITE)))
 					{
 						return rank[lastRankID].bank[lastBankID].front();
 					}
@@ -650,15 +650,15 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 				}
 				break;
 
-			case CAS_AND_PRECHARGE_COMMAND:
-			case CAS_COMMAND:
-			case PRECHARGE_COMMAND:
+			case READ_AND_PRECHARGE:
+			case READ:
+			case PRECHARGE:
 				transactionType = READ_TRANSACTION;
 				break;
 
-			case REFRESH_ALL_COMMAND:
-			case CAS_WRITE_COMMAND:
-			case CAS_WRITE_AND_PRECHARGE_COMMAND:
+			case REFRESH_ALL:
+			case WRITE:
+			case WRITE_AND_PRECHARGE:
 				transactionType = WRITE_TRANSACTION;
 				break;	
 
@@ -690,7 +690,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 							for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 							{
 								// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-								if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != REFRESH_ALL_COMMAND)))
+								if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != REFRESH_ALL)))
 								{
 									notAllRefresh = true;
 									break;
@@ -718,7 +718,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 
 				const Command *temp_c = rank[lastRankID].bank[lastBankID].front();
 
-				if (temp_c && temp_c->getCommandType() != REFRESH_ALL_COMMAND)
+				if (temp_c && temp_c->getCommandType() != REFRESH_ALL)
 				{
 					if (!systemConfig.isReadWriteGrouping())
 					{
@@ -730,8 +730,8 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 						const Command *next_c = rank[lastRankID].bank[lastBankID].read(1);	
 
 						if (next_c &&
-							((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_COMMAND) && (transactionType == READ_TRANSACTION)) ||
-							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_WRITE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
+							((next_c->getCommandType() == READ_AND_PRECHARGE || next_c->getCommandType() == READ) && (transactionType == READ_TRANSACTION)) ||
+							((next_c->getCommandType() == WRITE_AND_PRECHARGE || next_c->getCommandType() == WRITE) && (transactionType == WRITE_TRANSACTION)))
 						{
 							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
 							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
@@ -764,15 +764,15 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 
 			switch (lastCommandType)
 			{
-			case RAS_COMMAND:
+			case ACTIVATE:
 				{
 					const Command *temp_c = rank[lastRankID].bank[lastBankID].front();
 
 					if ((temp_c) &&
-						((temp_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND) ||
-						(temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND) ||
-						(temp_c->getCommandType() == CAS_COMMAND) ||
-						(temp_c->getCommandType() == CAS_WRITE_COMMAND)))
+						((temp_c->getCommandType() == WRITE_AND_PRECHARGE) ||
+						(temp_c->getCommandType() == READ_AND_PRECHARGE) ||
+						(temp_c->getCommandType() == READ) ||
+						(temp_c->getCommandType() == WRITE)))
 					{
 						return rank[lastRankID].bank[lastBankID].front();
 					}
@@ -783,15 +783,15 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 					}
 				}
 				break;
-			case CAS_AND_PRECHARGE_COMMAND:
-			case CAS_COMMAND:
-			case PRECHARGE_COMMAND:
+			case READ_AND_PRECHARGE:
+			case READ:
+			case PRECHARGE:
 				transactionType = READ_TRANSACTION;
 				break;
 
-			case REFRESH_ALL_COMMAND:
-			case CAS_WRITE_COMMAND:
-			case CAS_WRITE_AND_PRECHARGE_COMMAND:
+			case REFRESH_ALL:
+			case WRITE:
+			case WRITE_AND_PRECHARGE:
 				transactionType = WRITE_TRANSACTION;
 				break;
 			default:
@@ -821,7 +821,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 							for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 							{
 								// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-								if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != REFRESH_ALL_COMMAND)))
+								if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != REFRESH_ALL)))
 								{
 									notAllRefresh = true;
 									break;
@@ -847,7 +847,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 
 				const Command *temp_c = rank[lastRankID].bank[lastBankID].front();
 
-				if (temp_c && temp_c->getCommandType() != REFRESH_ALL_COMMAND)
+				if (temp_c && temp_c->getCommandType() != REFRESH_ALL)
 				{	
 					if(systemConfig.isReadWriteGrouping() == false)
 					{
@@ -859,8 +859,8 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 						const Command *next_c =  rank[lastRankID].bank[lastBankID].read(1);
 
 						if (next_c &&
-							((next_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_COMMAND) && (transactionType == READ_TRANSACTION)) ||
-							((next_c->getCommandType() == CAS_WRITE_AND_PRECHARGE_COMMAND || next_c->getCommandType() == CAS_WRITE_COMMAND) && (transactionType == WRITE_TRANSACTION)))
+							((next_c->getCommandType() == READ_AND_PRECHARGE || next_c->getCommandType() == READ) && (transactionType == READ_TRANSACTION)) ||
+							((next_c->getCommandType() == WRITE_AND_PRECHARGE || next_c->getCommandType() == WRITE) && (transactionType == WRITE_TRANSACTION)))
 						{
 							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
 							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
@@ -906,7 +906,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 
 						if (challengerGap < candidateGap || (candidateGap == challengerGap && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
 						{
-							if (challengerCommand->getCommandType() == REFRESH_ALL_COMMAND)
+							if (challengerCommand->getCommandType() == REFRESH_ALL)
 							{					
 								// if it hasn't been proven to be all refreshes or not yet
 								if (!notAllRefresh)
@@ -914,7 +914,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 									for (vector<Bank>::const_iterator thisBank = currentRank->bank.begin(); thisBank != currentRank->bank.end(); thisBank++)
 									{
 										// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-										if ((thisBank->size() == 0) || (thisBank->front()->getCommandType() != REFRESH_ALL_COMMAND))
+										if ((thisBank->size() == 0) || (thisBank->front()->getCommandType() != REFRESH_ALL))
 										{
 											notAllRefresh = true;
 											break;
@@ -940,7 +940,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 
 			if (candidateCommand)
 			{
-				assert(candidateCommand->getCommandType() == REFRESH_ALL_COMMAND || rank[candidateCommand->getAddress().getRank()].bank[candidateCommand->getAddress().getBank()].front() == candidateCommand);
+				assert(candidateCommand->getCommandType() == REFRESH_ALL || rank[candidateCommand->getAddress().getRank()].bank[candidateCommand->getAddress().getBank()].front() == candidateCommand);
 
 				DEBUG_TIMING_LOG("R[" << candidateCommand->getAddress().getRank() << "] B[" << candidateCommand->getAddress().getBank() << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]")
 			}

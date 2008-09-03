@@ -21,7 +21,7 @@ int Channel::minProtocolGap(const Command *this_c) const
 
 	switch(this_c->getCommandType())
 	{
-	case RAS_COMMAND:
+	case ACTIVATE:
 		{
 			// refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk
 
@@ -31,7 +31,7 @@ int Channel::minProtocolGap(const Command *this_c) const
 			// respect tRRD and tRC of all other banks of same rank
 			int tRRDGap;
 
-			int ras_q_count = currentRank.lastActivateTimes.size();
+			boost::circular_buffer<tick>::size_type ras_q_count = currentRank.lastActivateTimes.size();
 
 			if (currentRank.lastActivateTimes.empty())
 			{
@@ -72,12 +72,12 @@ int Channel::minProtocolGap(const Command *this_c) const
 		}
 		break;
 
-	case CAS_AND_PRECHARGE_COMMAND:
+	case READ_AND_PRECHARGE:
 		// Auto precharge will be issued as part of command,
 		// but DRAM devices are intelligent enough to delay the prec command
 		// until tRAS timing is met (thanks to tAL), so no need to check tRAS timing requirement here.
 
-	case CAS_COMMAND:
+	case READ:
 		{
 			//respect last ras of same rank
 			int tRCDGap = ((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
@@ -133,13 +133,13 @@ int Channel::minProtocolGap(const Command *this_c) const
 		}
 		break;
 
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+	case WRITE_AND_PRECHARGE:
 		// Auto precharge will be issued as part of command, so
 		// Since commodity DRAM devices are write-cycle limited, we don't have to worry if
-		// the precharge will met tRAS timing or not. So CAS_WRITE_AND_PRECHARGE_COMMAND
+		// the precharge will met tRAS timing or not. So WRITE_AND_PRECHARGE
 		// has the exact same timing requirements as a simple CAS COMMAND.
 
-	case CAS_WRITE_COMMAND:
+	case WRITE:
 		{
 			//respect last ras of same rank
 			int t_ras_gap = ((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
@@ -194,7 +194,7 @@ int Channel::minProtocolGap(const Command *this_c) const
 	case RETIRE_COMMAND:
 		break;
 
-	case PRECHARGE_COMMAND:
+	case PRECHARGE:
 		{
 			// respect t_ras of same bank
 			int t_ras_gap = (currentBank.getLastRASTime() - time) + timingSpecification.tRAS();
@@ -209,10 +209,10 @@ int Channel::minProtocolGap(const Command *this_c) const
 		}
 		break;
 
-	case PRECHARGE_ALL_COMMAND:
+	case PRECHARGE_ALL:
 		break;
 
-	case RAS_ALL_COMMAND:
+	case ACTIVATE_ALL:
 		break;
 
 	case DRIVE_COMMAND:
@@ -224,12 +224,12 @@ int Channel::minProtocolGap(const Command *this_c) const
 	case CAS_WITH_DRIVE_COMMAND:
 		break;
 
-	case REFRESH_ALL_COMMAND:
+	case REFRESH_ALL:
 		// respect tRFC and tRP
 		min_gap = max(((currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC()),((currentRank.getLastPrechargeTime() - time) + timingSpecification.tRP()));
 		break;
 
-	case NO_COMMAND:
+	case INVALID_COMMAND:
 		break;
 
 	default:
@@ -254,7 +254,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 	switch(currentCommand->getCommandType())
 	{
-	case RAS_COMMAND:
+	case ACTIVATE:
 		{
 			// refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk
 
@@ -304,12 +304,12 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 		}
 		break;
 
-	case CAS_AND_PRECHARGE_COMMAND:
+	case READ_AND_PRECHARGE:
 		// Auto precharge will be issued as part of command,
 		// but DRAM devices are intelligent enough to delay the prec command
 		// until tRAS timing is met (thanks to tAL), so no need to check tRAS timing requirement here.
 
-	case CAS_COMMAND:
+	case READ:
 		{
 			//respect last RAS of same rank
 			tick tRCDLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
@@ -366,13 +366,13 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 		}
 		break;
 
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+	case WRITE_AND_PRECHARGE:
 		// Auto precharge will be issued as part of command, so
 		// Since commodity DRAM devices are write-cycle limited, we don't have to worry if
-		// the precharge will met tRAS timing or not. So CAS_WRITE_AND_PRECHARGE_COMMAND
+		// the precharge will met tRAS timing or not. So WRITE_AND_PRECHARGE
 		// has the exact same timing requirements as a simple CAS COMMAND.
 
-	case CAS_WRITE_COMMAND:
+	case WRITE:
 		{
 			//respect last RAS of same rank
 			tick tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
@@ -427,7 +427,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	case RETIRE_COMMAND:
 		break;
 
-	case PRECHARGE_COMMAND:
+	case PRECHARGE:
 		{
 			// respect t_ras of same bank
 			tick tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRAS();
@@ -442,10 +442,10 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 		}
 		break;
 
-	case PRECHARGE_ALL_COMMAND:
+	case PRECHARGE_ALL:
 		break;
 
-	case RAS_ALL_COMMAND:
+	case ACTIVATE_ALL:
 		break;
 
 	case DRIVE_COMMAND:
@@ -457,12 +457,12 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	case CAS_WITH_DRIVE_COMMAND:
 		break;
 
-	case REFRESH_ALL_COMMAND:
+	case REFRESH_ALL:
 		// respect tRFC and tRP
 		nextTime = max(currentRank.getLastRefreshTime() + timingSpecification.tRFC(), currentRank.getLastPrechargeTime() + timingSpecification.tRP());
 		break;
 
-	case NO_COMMAND:
+	case INVALID_COMMAND:
 		break;
 
 	default:

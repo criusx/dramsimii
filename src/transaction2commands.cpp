@@ -83,7 +83,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 		else if (destinationBank.back() 
 			&& destinationBank.back()->getAddress().getRow() == incomingTransaction->getAddresses().getRow() // rows match
 			&& (time - destinationBank.back()->getEnqueueTime() < systemConfig.getSeniorityAgeLimit()) // not starving the last command
-			&& destinationBank.back()->getCommandType() != REFRESH_ALL_COMMAND) // ends with CAS+P or PRE
+			&& destinationBank.back()->getCommandType() != REFRESH_ALL) // ends with CAS+P or PRE
 		{
 			return true;
 		}		
@@ -136,7 +136,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 					break;
 				}
 				// goes right before the PRE command to ensure that the original order is preserved
-				else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) &&
+				else if ((currentCommand->getCommandType() == PRECHARGE) &&
 					(currentCommand->getAddress().getRow() == incomingTransaction->getAddresses().getRow()))
 				{
 					// can piggyback on other R-C-C...C-P sequences
@@ -234,7 +234,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		else
 		{
 			// command one, the RAS command to activate the row
-			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), RAS_COMMAND));
+			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), ACTIVATE));
 
 			// command two, CAS or CAS+Precharge
 			destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()));
@@ -244,7 +244,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			{
 				// command three, the Precharge command
 				// only one of these commands has a pointer to the original transaction, thus NULL
-				destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), PRECHARGE_COMMAND));
+				destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), PRECHARGE));
 			}
 		}
 		break;
@@ -287,7 +287,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		else if (destinationBank.back()
 			&& destinationBank.back()->getAddress().getRow() == incomingTransaction->getAddresses().getRow() // rows match
 			&& (time - destinationBank.back()->getEnqueueTime() < systemConfig.getSeniorityAgeLimit()) // not starving the last command
-			&& destinationBank.back()->getCommandType() != REFRESH_ALL_COMMAND) // ends with CAS+P or PRE
+			&& destinationBank.back()->getCommandType() != REFRESH_ALL) // ends with CAS+P or PRE
 		{
 			// ignore other command types
 			if (systemConfig.isAutoPrecharge())
@@ -300,7 +300,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			}
 			else // no CAS+P available
 			{
-				assert(destinationBank.back()->getCommandType() == PRECHARGE_COMMAND);
+				assert(destinationBank.back()->getCommandType() == PRECHARGE);
 
 				// insert new command
 				destinationBank.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()), destinationBank.size() - 1);
@@ -316,7 +316,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		else
 		{
 			// command one, the RAS command to activate the row
-			destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), RAS_COMMAND));
+			destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), ACTIVATE));
 
 			// command two, CAS or CAS+Precharge			
 			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()));
@@ -324,7 +324,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// possible command three, Precharge
 			if (!systemConfig.isAutoPrecharge())
 			{				
-				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), PRECHARGE_COMMAND));
+				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), PRECHARGE));
 			}
 		}		
 		break;
@@ -351,7 +351,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			for (vector<Bank>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
 				bool result = i->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(),systemConfig.isAutoPrecharge()));
-				//bool result = i->push(new Command(incomingTransaction->getAddresses(), REFRESH_ALL_COMMAND, time, incomingTransaction, false));
+				//bool result = i->push(new Command(incomingTransaction->getAddresses(), REFRESH_ALL, time, incomingTransaction, false));
 				assert (result);
 			}
 		}
@@ -383,13 +383,13 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				}
 
 				// RAS command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), false, RAS_COMMAND));
+				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), false, ACTIVATE));
 
 				// CAS command
 				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false));
 
 				// last, the precharge command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false,PRECHARGE_COMMAND));
+				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false,PRECHARGE));
 			}
 		}
 		break;

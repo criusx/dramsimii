@@ -54,7 +54,7 @@ namespace DRAMSimII
 		unsigned getChannelID() const { return channelID; }					///< return the ordinal of this channel
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
 		bool transaction2commands(Transaction *);
-		Command *getNextCommand();		
+		Command *getNextCommand(const Command *knownNextCommand = NULL);		
 		void doPowerCalculation();
 		void executeCommand(Command *thisCommand);
 		tick nextTransactionDecodeTime() const;
@@ -102,7 +102,7 @@ namespace DRAMSimII
 		void setTime(tick value) { time = value; }						///< update the time for this channel
 		void setChannelID(const unsigned value) { channelID = value; }			///< set the channel ordinal
 		TransactionType setReadWriteType(const int,const int) const;	///< determine whether a read or write transaction should be generated
-		
+
 		// overloads
 		Channel& operator =(const Channel& rs);
 		bool operator==(const Channel& right) const;

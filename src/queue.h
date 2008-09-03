@@ -32,9 +32,10 @@ namespace DRAMSimII
 		unsigned head;	///< the point where items will be inserted
 		unsigned tail;	///< the point where items will be removed
 		std::vector<T *> entry;		///< the circular queue
+		bool pool;		///< whether or not this is a pool
 
 	public:
-		explicit Queue(): maxCount(0), count(0), head(0), tail(0), entry(0)
+		explicit Queue(): maxCount(0), count(0), head(0), tail(0), entry(0), pool(false)
 		{}
 
 		/// @brief copy constructor
@@ -44,7 +45,8 @@ namespace DRAMSimII
 			count(rhs.count),
 			head(rhs.head),
 			tail(rhs.tail),
-			entry(rhs.maxCount)
+			entry(rhs.maxCount),
+			pool(rhs.pool)
 		{
 			for (unsigned i = 0; i < rhs.count; i++)
 			{
@@ -66,7 +68,8 @@ namespace DRAMSimII
 			count(0),
 			head(0),
 			tail(0),
-			entry(size)
+			entry(size),
+			pool(preallocate)
 		{
 			if (preallocate)
 			{      
@@ -83,7 +86,10 @@ namespace DRAMSimII
 		{
 			while (!isEmpty())
 			{
-				delete pop();			
+				if (pool)
+					::delete pop();
+				else
+					delete pop();			
 			}
 		}	
 
@@ -97,6 +103,7 @@ namespace DRAMSimII
 			head = 0;
 			tail = 0;
 			entry.resize(size);
+			pool = preallocate;
 
 			if (preallocate)
 			{      
@@ -191,7 +198,11 @@ namespace DRAMSimII
 		/// @return rhs pointer to the item at the front of the queue, or NULL if the queue is empty
 		const T *front() const
 		{
-			return count ? entry[head] : NULL;
+#if DEBUG
+			assert(count > 0 ? entry[head] != NULL : entry[head] == NULL);
+#endif
+			return entry[head];
+			//return count ? entry[head] : NULL;
 		}
 
 		/// @brief to get rhs pointer to the item most recently inserted into the queue
@@ -301,19 +312,19 @@ namespace DRAMSimII
 		}
 
 		/// @brief do rhs comparison to see if the queues are equal
-		bool operator==(const Queue<T>& right) const
+		bool operator==(const Queue<T>& rhs) const
 		{
-			if (maxCount == right.maxCount && count == right.count && entry.size() == right.entry.size() &&
-				head == right.head && tail == right.tail)
+			if (maxCount == rhs.maxCount && count == rhs.count && entry.size() == rhs.entry.size() &&
+				head == rhs.head && tail == rhs.tail && pool == rhs.pool)
 			{
 				for (unsigned i = 0; i < count; i++)
 				{
-					if (at(i) && right.at(i))
+					if (at(i) && rhs.at(i))
 					{
-						if (!(*(at(i)) == *(right.at(i))))
+						if (!(*(at(i)) == *(rhs.at(i))))
 							return false;
 					}
-					else if (at(i) && !right.at(i) || !at(i) && right.at(i))
+					else if (at(i) && !rhs.at(i) || !at(i) && rhs.at(i))
 						return false;
 				}	
 				return true;
@@ -333,6 +344,7 @@ namespace DRAMSimII
 			count = rhs.count;
 			head = rhs.head;
 			tail = rhs.tail;
+			pool = rhs.pool;
 
 			entry.resize(rhs.maxCount);
 
@@ -354,8 +366,8 @@ namespace DRAMSimII
 
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version)
-		{			
-			ar & maxCount & count & head & tail;	
+		{
+			ar & maxCount & count & head & tail & pool;	
 
 			ar & entry;
 
@@ -367,7 +379,7 @@ namespace DRAMSimII
 	template<typename T>
 	std::ostream& operator<<(std::ostream& in, const Queue<T>& theQueue)
 	{
-		in << "Queue S[" << std::dec << theQueue.maxCount << "] C[" << std::dec << theQueue.count << "] H[" << std::dec << theQueue.head << "] T[" << std::dec << theQueue.tail << "]" << std::endl;
+		in << "Queue S[" << std::dec << theQueue.maxCount << "] C[" << std::dec << theQueue.count << "] H[" << std::dec << theQueue.head << "] T[" << std::dec << theQueue.tail << "] P[" << theQueue.pool << "]" << std::endl;
 		if (theQueue.maxCount)
 		{
 			for (unsigned i = 0; i < theQueue.count; i++)

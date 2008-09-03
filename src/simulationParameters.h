@@ -39,7 +39,7 @@ namespace DRAMSimII
 		}
 
 		template<class Archive>
-		friend void inline load_construct_data(Archive& ar, DRAMSimII::SimulationParameters* t, const unsigned file_version)
+		friend void inline load_construct_data(Archive& ar, DRAMSimII::SimulationParameters* t, const unsigned version)
 		{
 			Settings settings;
 			::new(t)DRAMSimII::SimulationParameters(settings);

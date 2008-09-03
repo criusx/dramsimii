@@ -54,10 +54,9 @@ namespace DRAMSimII
 
 		explicit Statistics();
 		friend class boost::serialization::access;
-		friend void DRAMSimII::unitTests(const Settings &settings);
 		
 		template<class Archive>
-		void serialize( Archive & ar, const unsigned int file_version )
+		void serialize( Archive & ar, const unsigned version )
 		{
 			ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & commandDelay & commandExecution &
 				commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;

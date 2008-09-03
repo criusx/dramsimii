@@ -190,15 +190,18 @@ BOOST_AUTO_TEST_CASE( test_queue)
 	backup("cmdtest3",q4);
 	restore("cmdtest3",q4);
 
-	q3->push(new Command(t,0xfacedeef,true,true,RAS_COMMAND));
-	q3->push(new Command(t,0xfbcedeef,true,true,RAS_COMMAND));
-	q3->push(new Command(t,0xfccedeef,true,true,RAS_COMMAND));
-	q3->push(new Command(t,0xfdcedeef,true,true,RAS_COMMAND));
-	q3->push(new Command(t,0xfecedeef,true,true,RAS_COMMAND));
-	q3->push(new Command(t,0xffcedeef,true,true,RAS_COMMAND));
+	q3->push(new Command(t,0xfacedeef,true,true,ACTIVATE));
+	q3->push(new Command(t,0xfbcedeef,true,true,ACTIVATE));
+	q3->push(new Command(t,0xfccedeef,true,true,ACTIVATE));
+	q3->push(new Command(t,0xfdcedeef,true,true,ACTIVATE));
+	q3->push(new Command(t,0xfecedeef,true,true,ACTIVATE));
+	q3->push(new Command(t,0xffcedeef,true,true,ACTIVATE));
 	backup("cmdtest2",q3);
 	restore("cmdtest2",q2);
 	BOOST_CHECK_EQUAL(*q3,*q2);
+
+	delete q2;
+	delete q3;
 
 	std::srand(std::time(0));
 	const int iterations = (std::rand() % 500);
@@ -234,10 +237,10 @@ BOOST_AUTO_TEST_CASE( test_system_serialization )
 	
 	System *ds3 = new System(settings);	
 
-	for (int i = std::rand() % 30; i > 0; i--)
+	//for (int i = std::rand() % 30; i > 0; i--)
 	{
 
-		ds3->runSimulations(500 + std::rand());
+		ds3->runSimulations(500 + (std::rand() % 50000));
 
 		backup("systemTest",ds3);
 
@@ -257,6 +260,7 @@ BOOST_AUTO_TEST_CASE( test_system_serialization )
 
 		BOOST_CHECK_EQUAL(*ds3,*ds4);
 
+		ds4->runSimulations();
 		delete ds4;
 	}
 }

@@ -24,14 +24,13 @@ namespace DRAMSimII
 		static unsigned bankAddressDepth;
 		static unsigned rowAddressDepth;
 		static unsigned columnAddressDepth;
-		//FIXME: shouldn't this already be set appropriately?
 		static unsigned columnSizeDepth;
 		static unsigned cacheLineSize;
 		static AddressMappingScheme mappingScheme;
 
 		unsigned virtualAddress;			///< the virtual address
-		PHYSICAL_ADDRESS physicalAddress; ///< the physical address
-	
+		PHYSICAL_ADDRESS physicalAddress;	///< the physical address
+
 		unsigned channel;					///< the enumerated channel id
 		unsigned rank;						///< the rank id
 		unsigned bank;						///< the bank id
@@ -39,9 +38,13 @@ namespace DRAMSimII
 		unsigned column;					///< the column id
 
 		// functions
-		bool convertAddress();
+		bool convertFromAddress();
+		bool convertToAddress();
 	public:
-		
+
+		// functions
+		PHYSICAL_ADDRESS static highestAddress();
+
 		// accessors
 		PHYSICAL_ADDRESS getPhysicalAddress() const { return physicalAddress; }
 		unsigned getChannel() const { return channel; }
@@ -51,12 +54,8 @@ namespace DRAMSimII
 		unsigned getColumn() const { return column; }
 
 		// mutators
-		void setPhysicalAddress(PHYSICAL_ADDRESS pa) { physicalAddress = pa; convertAddress(); }
-		void setChannel(const unsigned value ) { channel = value; }
-		void setRank(const unsigned value) { rank = value; }
-		void setBank(const unsigned value) { bank = value; }
-		void setRow(const unsigned value) { row = value; }
-		void setColumn(const unsigned value) { column = value; }
+		void setPhysicalAddress(PHYSICAL_ADDRESS pa) { physicalAddress = pa; convertFromAddress(); }
+		void setAddress(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column);
 
 		// constructor
 		Address();						///< the no-arg constructor
@@ -77,7 +76,7 @@ namespace DRAMSimII
 
 	private:
 		template<class Archive>
-		void serialize( Archive & ar, const unsigned file_version )
+		void serialize(Archive & ar, const unsigned version )
 		{
 			ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth & columnAddressDepth & columnSizeDepth & cacheLineSize;
 			ar & mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column;

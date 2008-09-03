@@ -34,7 +34,7 @@ namespace DRAMSimII
 			slots[0] = value;
 			if (!value)
 				// can be empty or a command, but never data
-				commandSlotType[0] = NO_COMMAND;
+				commandSlotType[0] = INVALID_COMMAND;
 			else
 				commandSlotType[0] = value->getCommandType();
 		}

@@ -58,12 +58,12 @@ postedCAS(rhs.postedCAS),
 length(rhs.length)
 {
 	assert(!hostTransaction ||
-		(commandType == CAS_WRITE_AND_PRECHARGE_COMMAND && hostTransaction->getType() == WRITE_TRANSACTION) ||
-		(commandType == CAS_AND_PRECHARGE_COMMAND && hostTransaction->getType() == READ_TRANSACTION) ||
-		(commandType == CAS_COMMAND && hostTransaction->getType() == READ_TRANSACTION) ||
-		(commandType == CAS_WRITE_COMMAND && hostTransaction->getType() == WRITE_TRANSACTION) ||		 
-		(commandType == REFRESH_ALL_COMMAND && hostTransaction->getType() == AUTO_REFRESH_TRANSACTION) ||
-		(commandType == RAS_COMMAND) || (commandType == PRECHARGE_COMMAND)
+		(commandType == WRITE_AND_PRECHARGE && hostTransaction->getType() == WRITE_TRANSACTION) ||
+		(commandType == READ_AND_PRECHARGE && hostTransaction->getType() == READ_TRANSACTION) ||
+		(commandType == READ && hostTransaction->getType() == READ_TRANSACTION) ||
+		(commandType == WRITE && hostTransaction->getType() == WRITE_TRANSACTION) ||		 
+		(commandType == REFRESH_ALL && hostTransaction->getType() == AUTO_REFRESH_TRANSACTION) ||
+		(commandType == ACTIVATE) || (commandType == PRECHARGE)
 		);
 }
 
@@ -93,22 +93,22 @@ startTime(-1),
 enqueueTime(enqueueTime),
 completionTime(-1),
 addr(hostTransaction.getAddresses()),
-hostTransaction(type == CAS_COMMAND ? &hostTransaction : NULL), // this link is only needed for CAS commands
+hostTransaction(type == READ ? &hostTransaction : NULL), // this link is only needed for CAS commands
 postedCAS(postedCAS)
 {
-	if (type == CAS_COMMAND)
+	if (type == READ)
 	{
 		switch (hostTransaction.getType())
 		{
 		case AUTO_REFRESH_TRANSACTION:
-			commandType = REFRESH_ALL_COMMAND;
+			commandType = REFRESH_ALL;
 			break;
 		case WRITE_TRANSACTION:
-			commandType = autoPrecharge ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_WRITE_COMMAND;
+			commandType = autoPrecharge ? WRITE_AND_PRECHARGE : WRITE;
 			break;
 		case READ_TRANSACTION:
 		case IFETCH_TRANSACTION:
-			commandType = autoPrecharge ? CAS_AND_PRECHARGE_COMMAND : CAS_COMMAND;
+			commandType = autoPrecharge ? READ_AND_PRECHARGE : READ;
 			break;
 		default:
 			cerr << "Unknown transaction type, quitting." << endl;
@@ -118,16 +118,16 @@ postedCAS(postedCAS)
 	}
 	else
 	{
-		assert(type == PRECHARGE_COMMAND || type == RAS_COMMAND);
+		assert(type == PRECHARGE || type == ACTIVATE);
 		commandType = type;
 	}
 
-	assert((commandType == CAS_WRITE_AND_PRECHARGE_COMMAND && hostTransaction.getType() == WRITE_TRANSACTION) ||
-		(commandType == CAS_AND_PRECHARGE_COMMAND && hostTransaction.getType() == READ_TRANSACTION) ||
-		(commandType == CAS_COMMAND && hostTransaction.getType() == READ_TRANSACTION) ||
-		(commandType == CAS_WRITE_COMMAND && hostTransaction.getType() == WRITE_TRANSACTION) ||
-		(commandType == RAS_COMMAND) || (commandType == PRECHARGE_COMMAND) ||
-		(commandType == REFRESH_ALL_COMMAND && hostTransaction.getType() == AUTO_REFRESH_TRANSACTION)
+	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction.getType() == WRITE_TRANSACTION) ||
+		(commandType == READ_AND_PRECHARGE && hostTransaction.getType() == READ_TRANSACTION) ||
+		(commandType == READ && hostTransaction.getType() == READ_TRANSACTION) ||
+		(commandType == WRITE && hostTransaction.getType() == WRITE_TRANSACTION) ||
+		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
+		(commandType == REFRESH_ALL && hostTransaction.getType() == AUTO_REFRESH_TRANSACTION)
 		);
 }
 
@@ -147,26 +147,26 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 {
 	switch (commandType)
 	{
-	case CAS_AND_PRECHARGE_COMMAND:
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+	case READ_AND_PRECHARGE:
+	case WRITE_AND_PRECHARGE:
 		if (!autoPrecharge)
-			commandType = (commandType == CAS_WRITE_AND_PRECHARGE_COMMAND) ? CAS_WRITE_COMMAND : CAS_COMMAND;
+			commandType = (commandType == WRITE_AND_PRECHARGE) ? WRITE : READ;
 		break;
-	case CAS_COMMAND:
-	case CAS_WRITE_COMMAND:
+	case READ:
+	case WRITE:
 		if (autoPrecharge)
-			commandType = (commandType == CAS_WRITE_COMMAND) ? CAS_WRITE_AND_PRECHARGE_COMMAND : CAS_AND_PRECHARGE_COMMAND;
+			commandType = (commandType == WRITE) ? WRITE_AND_PRECHARGE : READ_AND_PRECHARGE;
 		break;
 	default:
 		break;
 	}
 
-	assert((commandType == CAS_WRITE_AND_PRECHARGE_COMMAND && hostTransaction->getType() == WRITE_TRANSACTION) ||
-		(commandType == CAS_AND_PRECHARGE_COMMAND && hostTransaction->getType() == READ_TRANSACTION) ||
-		(commandType == CAS_COMMAND && hostTransaction->getType() == READ_TRANSACTION) ||
-		(commandType == CAS_WRITE_COMMAND && hostTransaction->getType() == WRITE_TRANSACTION) ||
-		(commandType == RAS_COMMAND) || (commandType == PRECHARGE_COMMAND) ||
-		(commandType == REFRESH_ALL_COMMAND && hostTransaction->getType() == AUTO_REFRESH_TRANSACTION)
+	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->getType() == WRITE_TRANSACTION) ||
+		(commandType == READ_AND_PRECHARGE && hostTransaction->getType() == READ_TRANSACTION) ||
+		(commandType == READ && hostTransaction->getType() == READ_TRANSACTION) ||
+		(commandType == WRITE && hostTransaction->getType() == WRITE_TRANSACTION) ||
+		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
+		(commandType == REFRESH_ALL && hostTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 		);
 }
 
@@ -175,31 +175,31 @@ ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 {
 	switch(command)
 	{
-	case RAS_COMMAND:
+	case ACTIVATE:
 		os << "RAS ";
 		break;
-	case CAS_COMMAND:
+	case READ:
 		os << "CAS ";
 		break;
-	case CAS_AND_PRECHARGE_COMMAND:
+	case READ_AND_PRECHARGE:
 		os << "CAS+P ";
 		break;
-	case CAS_WRITE_COMMAND:
+	case WRITE:
 		os << "CASW ";
 		break;
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+	case WRITE_AND_PRECHARGE:
 		os << "CASW+P ";
 		break;
 	case RETIRE_COMMAND:
 		os << "RETIRE ";
 		break;
-	case PRECHARGE_COMMAND:
+	case PRECHARGE:
 		os << "PREC ";
 		break;
-	case PRECHARGE_ALL_COMMAND:
+	case PRECHARGE_ALL:
 		os << "PREC_A ";
 		break;
-	case RAS_ALL_COMMAND:
+	case ACTIVATE_ALL:
 		os << "RAS_A ";
 		break;
 	case DRIVE_COMMAND:
@@ -211,7 +211,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 	case CAS_WITH_DRIVE_COMMAND:
 		os << "CAS+D ";
 		break;
-	case REFRESH_ALL_COMMAND:
+	case REFRESH_ALL:
 		os << "REF   ";
 		break;
 	}

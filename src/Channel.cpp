@@ -108,7 +108,7 @@ systemConfig(sysConf),
 statistics(stats),
 powerModel(power),
 algorithm(settings),
-channelID(-1),
+channelID(UINT_MAX),
 rank(newRank)
 {}
 
@@ -205,7 +205,8 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 
 		if (nextCommand && (earliestExecuteTime(nextCommand) <= time))
 		{
-			Command *executingCommand = getNextCommand();
+			Command *executingCommand = getNextCommand(nextCommand);
+			assert(executingCommand == nextCommand);
 
 			executeCommand(executingCommand);					
 
@@ -261,6 +262,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 //////////////////////////////////////////////////////////////////////////
 tick Channel::nextTick() const
 {
+	tick value = max(min(nextTransactionDecodeTime(),nextCommandExecuteTime()),time + 1);
 	return max(min(nextTransactionDecodeTime(),nextCommandExecuteTime()),time + 1);
 }
 
@@ -363,7 +365,7 @@ TransactionType Channel::setReadWriteType(const int rank_id,const int bank_count
 
 		if(temp_c != NULL)
 		{
-			if (temp_c->getCommandType() == CAS_AND_PRECHARGE_COMMAND)
+			if (temp_c->getCommandType() == READ_AND_PRECHARGE)
 			{
 				read_count++;
 			}
@@ -562,7 +564,7 @@ bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vecto
 	submit.PsysWR = PsysWR;
 	_ns2__submitEpochResultResponseElement response;
 	int retVal = service.__ns1__submitEpochResult(&submit,&response);
-	return true;
+	return (retVal == 0);
 }
 
 
@@ -713,9 +715,7 @@ Transaction *Channel::createNextRefresh()
 
 	static Address address;
 
-	address.setChannel(channelID);
-	address.setRank(earliestRank);
-	address.setBank(0);
+	address.setAddress(channelID,earliestRank,0,0,0);
 
 	Transaction *newRefreshTransaction = new Transaction(AUTO_REFRESH_TRANSACTION, earliestTime, 8,address,NULL);
 	refreshCounter[earliestRank] = refreshCounter[earliestRank] + timingSpecification.tREFI();
@@ -769,9 +769,7 @@ const Transaction *Channel::readNextRefresh() const
 
 	static Address address;
 
-	address.setChannel(channelID);
-	address.setRank(earliestRank);
-	address.setBank(0);
+	address.setAddress(channelID,earliestRank,0,0,0);
 
 	static Transaction newRefreshTransaction;
 	::new(&newRefreshTransaction)Transaction(AUTO_REFRESH_TRANSACTION, 0, 8,address,NULL);

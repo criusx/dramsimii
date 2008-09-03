@@ -306,11 +306,8 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 			unsigned channel, rank, bank, row, column;
 
 			traceFile >> dec >> this_e.timestamp >> input >> dec >> channel >> rank >> bank >> row >> column;
-			this_e.address.setChannel(channel);
-			this_e.address.setRank(rank);
-			this_e.address.setBank(bank);
-			this_e.address.setRow(row);
-			this_e.address.setColumn(column);
+
+			this_e.address.setAddress(channel,rank,bank,row,column);
 
 			if(!traceFile.good()) /// found starting Hex address 
 			{
@@ -610,11 +607,7 @@ Transaction *InputStream::getNextRandomRequest()
 		//cerr << time - oldTime << endl;
 		oldTime = time;
 
-		nextAddress.setChannel(nextChannel);
-		nextAddress.setRank(nextRank);
-		nextAddress.setBank(nextBank);
-		nextAddress.setRow(nextRow);
-		nextAddress.setColumn(nextColumn);
+		nextAddress.setAddress(nextChannel,nextRank,nextBank,nextRow,nextColumn);
 
 		return new Transaction(type,time, burstLength, nextAddress, NULL);
 	}
@@ -748,7 +741,7 @@ rngIntGenerator(rhs.rngIntGenerator)
 
 InputStream::InputStream(const InputStream& rhs, const SystemConfiguration &systemConfigVal, const vector<Channel> &systemChannel):
 type(rhs.type),
-systemConfig(systemConfig),
+systemConfig(systemConfigVal),
 channel(channel),
 channelLocality(rhs.channelLocality),
 rankLocality(rhs.rankLocality),

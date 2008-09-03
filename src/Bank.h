@@ -83,10 +83,10 @@ namespace DRAMSimII
 		const Command *front() const { return perBankQueue.front(); }
 		const Command *back() const { return perBankQueue.back(); }
 		unsigned size() const { return perBankQueue.size(); }
-		CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : NO_COMMAND; }
+		CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : INVALID_COMMAND; }
 		unsigned freeCommandSlots() const { return perBankQueue.freecount(); }
 		bool openPageInsert(Transaction *value, const tick time);
-		bool openPageInsertCheck(const Transaction *value, const tick time) const;
+		bool openPageInsertAvailable(const Transaction *value, const tick time) const;
 		bool isFull() const { return perBankQueue.isFull(); }
 
 		// mutators

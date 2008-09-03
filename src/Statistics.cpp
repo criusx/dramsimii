@@ -21,12 +21,12 @@ commandExecution()
 
 // no arg constructor for deserialization
 Statistics::Statistics():
-validTransactionCount(-1),
-startNumber(-1),
-endNumber(-1),
-burstOf8Count(-1),
-burstOf4Count(-1),
-columnDepth(-1)
+validTransactionCount(UINT_MAX),
+startNumber(UINT_MAX),
+endNumber(UINT_MAX),
+burstOf8Count(UINT_MAX),
+burstOf4Count(UINT_MAX),
+columnDepth(UINT_MAX)
 {}
 
 
@@ -52,7 +52,7 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 
 void Statistics::collectCommandStats(const Command *currentCommand)
 {
-	if (currentCommand->getCommandType() != REFRESH_ALL_COMMAND)
+	if (currentCommand->getCommandType() != REFRESH_ALL)
 	{
 		commandDelay[currentCommand->getStartTime() - currentCommand->getEnqueueTime()]++;
 		commandExecution[currentCommand->getCompletionTime() - currentCommand->getStartTime()]++;

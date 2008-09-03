@@ -9,7 +9,7 @@ Queue<fbdFrame> fbdFrame::freeFramePool(4*COMMAND_QUEUE_SIZE,true);
 fbdFrame::fbdFrame(tick time): 
 executeTime(time)
 {
-	commandSlotType[0] = commandSlotType[1] = commandSlotType[2] = NO_COMMAND;
+	commandSlotType[0] = commandSlotType[1] = commandSlotType[2] = INVALID_COMMAND;
 }
 
 fbdFrame::~fbdFrame()

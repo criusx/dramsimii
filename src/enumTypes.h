@@ -106,20 +106,23 @@ namespace DRAMSimII
 
 	enum CommandType
 	{
-		RAS_COMMAND,						///< open this row
-		CAS_COMMAND,						///< read from the open row
-		CAS_AND_PRECHARGE_COMMAND,			///< read from the open row and then close it
-		CAS_WRITE_COMMAND,					///< write this value to the open row
-		CAS_WRITE_AND_PRECHARGE_COMMAND,	///< write this value and then close the row
+		ACTIVATE,							///< open this row
+		READ,								///< read from the open row
+		READ_AND_PRECHARGE,					///< read from the open row and then close it
+		WRITE,								///< write this value to the open row
+		WRITE_AND_PRECHARGE,				///< write this value and then close the row
 		RETIRE_COMMAND,						///< ?
-		PRECHARGE_COMMAND,					///< close this open row
-		PRECHARGE_ALL_COMMAND,				///< precharge each bank in the rank, end of a refresh
-		RAS_ALL_COMMAND,					///< activate a row in each bank in the rank, half of a refresh
+		PRECHARGE,							///< close this open row
+		PRECHARGE_ALL,						///< precharge each bank in the rank, end of a refresh
+		ACTIVATE_ALL,						///< activate a row in each bank in the rank, half of a refresh
 		DRIVE_COMMAND,						///< ?
 		DATA_COMMAND,						///< for FBD, holds data instead of a command
 		CAS_WITH_DRIVE_COMMAND,				///< ?
-		REFRESH_ALL_COMMAND,				///< refresh all banks in the rank
-		NO_COMMAND							///< no command, or not a valid command at this time
+		REFRESH_ALL,						///< refresh all banks in the rank
+		SELF_REFRESH,						///< put the rank into self refresh mode
+		DESELECT,							///< command inhibit, does not allow new commands to be executed
+		NOOP,								///< the no operation command
+		INVALID_COMMAND						///< no command, or not a valid command at this time
 	};
 
 	enum FileIOToken

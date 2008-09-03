@@ -28,7 +28,7 @@ virtualAddress(UINT_MAX),
 physicalAddress(PHYSICAL_ADDRESS_MAX),
 channel(UINT_MAX),
 rank(UINT_MAX),
-bank(UINT_MAX),
+bank(UINT_MAX), 
 row(UINT_MAX),
 column(UINT_MAX)
 {}
@@ -42,18 +42,20 @@ bank(0),
 row(0),
 column(0)
 {
-	convertAddress();
+	convertFromAddress();
 }
 
 Address::Address(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column):
 virtualAddress(0),
-physicalAddress(PHYSICAL_ADDRESS_MAX),
+physicalAddress(0x00),
 channel(channel),
 rank(rank),
 bank(bank),
 row(row),
 column(column)
-{}
+{
+	convertToAddress();
+}
 
 void Address::initialize(const Settings &dramSettings)
 {
@@ -81,6 +83,53 @@ void Address::initialize(const SystemConfiguration &systemConfig)
 	mappingScheme = systemConfig.getAddressMappingScheme();
 }
 
+bool Address::convertToAddress()
+{
+	switch(mappingScheme)
+	{
+	case BURGER_BASE_MAP:
+		break;
+	case SDRAM_HIPERF_MAP:
+	case OPEN_PAGE_BASELINE:
+
+		break;
+	case SDRAM_CLOSE_PAGE_MAP:
+	case CLOSE_PAGE_BASELINE:
+		{
+			unsigned columnLowDepth = log2(cacheLineSize) - columnSizeDepth;
+			unsigned columnHighDepth = columnAddressDepth - columnLowDepth;
+
+			unsigned columnHigh = column >> columnLowDepth;
+			unsigned columnLow = column & (columnHigh << columnLowDepth);
+
+			physicalAddress = 0x00;
+			unsigned shiftAmount = columnSizeDepth;
+			physicalAddress |= columnLow << shiftAmount;
+			shiftAmount += columnLowDepth;
+			physicalAddress |= bank << shiftAmount;
+			shiftAmount += bankAddressDepth;
+			physicalAddress |= rank << shiftAmount;
+			shiftAmount += rankAddressDepth;
+			physicalAddress |= columnHigh << shiftAmount;
+			shiftAmount += columnHighDepth;
+			physicalAddress |= row << shiftAmount;
+
+			break;
+		}
+	default:
+		break;
+	}
+
+
+#if DEBUG
+	PHYSICAL_ADDRESS backup = physicalAddress;
+	convertFromAddress();
+	assert(physicalAddress == backup);
+#endif
+
+	return true;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 /// @brief converts a given memory request from a physical address to a rank/bank/row/column representation
@@ -89,7 +138,7 @@ void Address::initialize(const SystemConfiguration &systemConfig)
 /// @param thisAddress the addresses representation to be decoded in-place
 /// @return true if the conversion was successful, false if there was some problem
 //////////////////////////////////////////////////////////////////////
-bool Address::convertAddress()
+bool Address::convertFromAddress()
 {
 	PHYSICAL_ADDRESS temp_a, temp_b;
 	unsigned bit_15,bit_27,bits_26_to_16;
@@ -102,6 +151,7 @@ bool Address::convertAddress()
 
 	// strip away the byte address portion
 	PHYSICAL_ADDRESS input_a = physicalAddress >> columnSizeDepth;
+	//PHYSICAL_ADDRESS input_a = physicalAddress;
 
 
 	//unsigned cacheline_size;
@@ -429,7 +479,7 @@ bool Address::convertAddress()
 		col_id_lo = temp_b ^ (input_a << col_id_lo_depth); 
 
 		temp_b = input_a;				/* save away original address */
-		input_a = input_a >> channelAddressDepth;
+		input_a >>= channelAddressDepth;
 		// strip out the channel address 
 		channel = temp_b ^ (input_a << channelAddressDepth); 
 
@@ -475,7 +525,16 @@ bool Address::convertAddress()
 	return true;
 }
 
+void Address::setAddress(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column)
+{
+	this->channel = channel;
+	this->rank = rank;
+	this->bank = bank;
+	this->column = column;
+	this->row = row;
 
+	convertToAddress();
+}
 
 std::ostream &DRAMSimII::operator <<(std::ostream &os, const Address &this_a)
 {

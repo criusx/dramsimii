@@ -2,7 +2,8 @@
 
 using namespace DRAMSimII;
 
-Algorithm::Algorithm(const Settings& settings)
+Algorithm::Algorithm(const Settings& settings):
+WHCC(settings.rankCount * settings.bankCount * 2)
 {
 	rankID[0] = 0;
 	rankID[1] = 3;
@@ -20,12 +21,9 @@ Algorithm::Algorithm(const Settings& settings)
 	transactionType[1] = READ_TRANSACTION;
 	transactionType[2] = READ_TRANSACTION;
 	transactionType[3] = READ_TRANSACTION;
-
-
-	WHCC.resize(settings.rankCount * settings.bankCount * 2);
-
-	Command *temp_c;
 #if 0
+	Command *temp_c;
+
 	if (settings.rankCount == 2)
 	{
 		if(settings.bankCount == 8)
@@ -203,10 +201,11 @@ Algorithm::Algorithm(const Settings& settings)
 
 bool Algorithm::operator==(const Algorithm& right) const
 {
-	return true;
+	return (WHCC == right.WHCC);
 }
 
-Algorithm::Algorithm(const Algorithm &a)
+Algorithm::Algorithm(const Algorithm &a):
+WHCC(a.WHCC)
 {
 	rankID[0] = a.rankID[0];
 	rankID[1] = a.rankID[1];

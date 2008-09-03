@@ -13,7 +13,8 @@
 using namespace std;
 using namespace DRAMSimII;
 
-Settings::Settings(const int argc, const char **argv)
+Settings::Settings(const int argc, const char **argv):
+systemType(BASELINE_CONFIG)
 {
 	// if there are not enough arguments or one is for help, print the help msg and quit
 	bool printHelp = false;
@@ -471,6 +472,7 @@ Settings::Settings(const int argc, const char **argv)
 		}
 		// close the reader
 		xmlFreeTextReader(reader);
+		xmlCleanupParser();
 	}
 
 	boost::mt19937 generator(std::time(0));
@@ -524,42 +526,42 @@ rankCount(0),
 bankCount(0),
 shortBurstRatio(2),
 readPercentage(2),
-tRTRS(-1),
-tAL(-1),
-tBurst(-1),
-tCAS(-1),
-tCWD(-1),
-tFAW(-1),
-tRAS(-1),
-tRC(-1),
-tRCD(-1),
-tREFI(-1),
-tRFC(-1),
-tRP(-1),
-tRRD(-1),
-tRTP(-1),
-tWR(-1),
-tWTR(-1),
-tCMD(-1),
-tInternalBurst(-1),
-tBufferDelay(-1),
-cpuToMemoryClockRatio(-1),
-PdqRD(-1),
-PdqWR(-1),
-PdqRDoth(-1),
-PdqWRoth(-1),
-DQperDRAM(-1),
-DQSperDRAM(-1),
-DMperDRAM(-1),
-frequencySpec(-1),
-maxVCC(-1),
-VDD(-1),
-IDD0(-1),
-IDD2P(-1),
-IDD2N(-1),
-IDD3P(-1),
-IDD3N(-1),
-IDD4W(-1),
-IDD4R(-1),
-IDD5(-1)
+tRTRS(UINT_MAX),
+tAL(UINT_MAX),
+tBurst(UINT_MAX),
+tCAS(UINT_MAX),
+tCWD(UINT_MAX),
+tFAW(UINT_MAX),
+tRAS(UINT_MAX),
+tRC(UINT_MAX),
+tRCD(UINT_MAX),
+tREFI(UINT_MAX),
+tRFC(UINT_MAX),
+tRP(UINT_MAX),
+tRRD(UINT_MAX),
+tRTP(UINT_MAX),
+tWR(UINT_MAX),
+tWTR(UINT_MAX),
+tCMD(UINT_MAX),
+tInternalBurst(UINT_MAX),
+tBufferDelay(UINT_MAX),
+cpuToMemoryClockRatio(UINT_MAX),
+PdqRD(-1.0F),
+PdqWR(-1.0F),
+PdqRDoth(-1.0F),
+PdqWRoth(-1.0F),
+DQperDRAM(UINT_MAX),
+DQSperDRAM(UINT_MAX),
+DMperDRAM(UINT_MAX),
+frequencySpec(UINT_MAX),
+maxVCC(-1.0F),
+VDD(-1.0F),
+IDD0(UINT_MAX),
+IDD2P(UINT_MAX),
+IDD2N(UINT_MAX),
+IDD3P(UINT_MAX),
+IDD3N(UINT_MAX),
+IDD4W(UINT_MAX),
+IDD4R(UINT_MAX),
+IDD5(UINT_MAX)
 {}

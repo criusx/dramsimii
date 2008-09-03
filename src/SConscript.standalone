@@ -75,11 +75,13 @@ SRCDIR = os.path.join(ROOT,'src')
 env = Environment(CCFLAGS = '-g -O -Weffc++ -DDEBUG',
 			OBJSUFFIX = ".og",
 			CPPPATH = '/usr/include/libxml2/')
-			
-
 
 envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64',
 			OBJSUFFIX = ".of",
+			CPPPATH = '/usr/include/libxml2/')
+
+envProf = Environment(CCFLAGS = '-g -O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64',
+			OBJSUFFIX = ".prof",
 			CPPPATH = '/usr/include/libxml2/')
 			
 envTest = Environment(CCFLAGS = '-g -O -Weffc++ -DDEBUG',
@@ -122,6 +124,7 @@ def makeEnv(label, objsfx, strip = False, **kwargs):
 
 #makeEnv('opt', '.o', CCFLAGS = Split('-g -O3'),CPPDEFINES = ['TRACING_ON=1'])
 
-env.Program('dramSimII',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
+env.Program('dramSimII.debug',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
 envOpt.Program('dramSimII.opt',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
 envTest.Program('dramSimII.test',sourcesTest, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
+envProf.Program('dramSimII.prof',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])

@@ -166,7 +166,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	switch(thisCommand->getCommandType())
 	{
-	case RAS_COMMAND:
+	case ACTIVATE:
 		{
 			currentRank.issueRAS(time, thisCommand);
 
@@ -175,12 +175,12 @@ void Channel::executeCommand(Command *thisCommand)
 		}
 		break;
 
-	case CAS_AND_PRECHARGE_COMMAND:
+	case READ_AND_PRECHARGE:
 
 		currentRank.issuePRE(time, thisCommand);
 		// lack of break is intentional
 
-	case CAS_COMMAND:
+	case READ:
 
 		currentRank.issueCAS(time, thisCommand);
 
@@ -190,12 +190,12 @@ void Channel::executeCommand(Command *thisCommand)
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 		break;
 
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+	case WRITE_AND_PRECHARGE:
 
 		currentRank.issuePRE(time, thisCommand);		
 		// missing break is intentional
 
-	case CAS_WRITE_COMMAND:
+	case WRITE:
 
 		currentRank.issueCASW(time, thisCommand);
 
@@ -204,7 +204,7 @@ void Channel::executeCommand(Command *thisCommand)
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 		break;
 
-	case PRECHARGE_COMMAND:
+	case PRECHARGE:
 
 		currentRank.issuePRE(time, thisCommand);
 
@@ -212,7 +212,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 		break;
 
-	case REFRESH_ALL_COMMAND:
+	case REFRESH_ALL:
 
 		currentRank.issueREF(time, thisCommand);
 
@@ -223,10 +223,10 @@ void Channel::executeCommand(Command *thisCommand)
 	case RETIRE_COMMAND:
 		break;	
 
-	case PRECHARGE_ALL_COMMAND:
+	case PRECHARGE_ALL:
 		break;
 
-	case RAS_ALL_COMMAND:
+	case ACTIVATE_ALL:
 		break;
 
 	case DRIVE_COMMAND:

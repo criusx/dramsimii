@@ -134,7 +134,7 @@ namespace boost
 
 		//const circular_buffer<U>::size_type count(t.size());
 		//ar << BOOST_SERIALIZATION_NVP(count);
-		unsigned count(t.size());
+		typename circular_buffer<U, Allocator>::size_type count(t.size());
 		ar << (count);
 
 		for (typename circular_buffer<U, Allocator>::const_iterator i = t.begin(); i != t.end(); i++)
