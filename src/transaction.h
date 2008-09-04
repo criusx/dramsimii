@@ -30,12 +30,11 @@ namespace DRAMSimII
 		tick decodeTime;					///< when the transaction was split up into several commands
 		const Address addr;						///< the physical, virtual, and mapped representations of the address for this transaction
 		//const OriginalTransactionType *originalTransaction;	///< utility pointer in the event that this transaction represents another version of a transaction
-		const void *originalTransaction;	///< utility pointer in the event that this transaction represents another version of a transaction
+		const unsigned originalTransaction;	///< utility counter id in the event that this transaction represents another version of a transaction
 
 	public:
 		
-		// accessors		
-		//Address &getAddresses() { return addr; }									///< get the address of this transaction
+		// accessors
 		const Address &getAddresses() const { return addr; }						///< get the address of this transaction
 		tick getArrivalTime() const { return arrivalTime; }							///< get its arrival time
 		tick getEnqueueTime() const { return enqueueTime; }							///< get its enqueue time
@@ -44,21 +43,18 @@ namespace DRAMSimII
 		unsigned getLength() const { return length; }								///< get the number of bytes requested
 		TransactionType getType() const { return type; }							///< get what type of transaction this is
 		unsigned getEventNumber() const { return eventNumber; }						///< which event number this is
-		const void *getOriginalTransaction() const { return originalTransaction; }	///< get the external transaction that this is a representation for
+		const unsigned getOriginalTransaction() const { return originalTransaction; }	///< get the external transaction that this is a representation for
 
 		// mutators
 		void setEnqueueTime(const tick value) { enqueueTime = value; }
 		void setArrivalTime(const tick value) { arrivalTime = value; }
 		void setDecodeTime(const tick value) { decodeTime = value; }
 		void setCompletionTime(const tick value) { completionTime = value; }
-		//void setType(const TransactionType value) { type = value; }
-		//void setLength(const unsigned value) { length = value; }
-		//void setEventNumber(const unsigned value) { eventNumber = value; }
-		void setOriginalTransaction(const unsigned *value) { originalTransaction = value; }
+		//void setOriginalTransaction(const unsigned value) { originalTransaction = value; }
 
 		// constructors
-		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const void *originalTrans);		
-		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, const void *originalTrans);
+		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const unsigned originalTrans);		
+		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, const unsigned originalTrans);
 		explicit Transaction(const Transaction &rhs);
 		explicit Transaction();
 	
@@ -82,8 +78,7 @@ namespace DRAMSimII
 			//ar & eventCounter;
 			ar & const_cast<unsigned&>(eventNumber) & const_cast<TransactionType&>(type) & status;
 			ar & const_cast<unsigned&>(length) & arrivalTime & enqueueTime & completionTime;
-			ar & decodeTime & const_cast<Address&>(addr);
-			//ar & const_cast<OriginalTransactionType *>(originalTransaction);
+			ar & decodeTime & const_cast<Address&>(addr) & const_cast<unsigned&>(originalTransaction);
 		}
 	};
 }

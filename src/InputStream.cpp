@@ -609,7 +609,7 @@ Transaction *InputStream::getNextRandomRequest()
 
 		nextAddress.setAddress(nextChannel,nextRank,nextBank,nextRow,nextColumn);
 
-		return new Transaction(type,time, burstLength, nextAddress, NULL);
+		return new Transaction(type,time, burstLength, nextAddress, UINT_MAX);
 	}
 	else
 		return NULL;

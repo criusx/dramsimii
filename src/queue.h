@@ -291,13 +291,13 @@ namespace DRAMSimII
 		/// @brief whether or not there is room for any more entries in this queue
 		bool isFull() const
 		{
-			return (maxCount - count) == 0;
+			return (maxCount == count);
 		}
 
 		/// @brief whether or not this queue has no entries in it
 		bool isEmpty() const
 		{
-			return count == 0;
+			return (count == 0);
 		}
 
 		const T* at(const unsigned value) const

@@ -60,14 +60,13 @@ namespace DRAMSimII
 	public:		
 
 		// functions
-		const void *moveAllChannelsToTime(const tick endTime, tick& transFinishTime);
+		unsigned moveAllChannelsToTime(const tick endTime, tick& transFinishTime);
 		bool enqueue(Transaction* trans);
 		void enqueueTimeShift(Transaction* trans);
 		InputStatus waitForTransactionToFinish(Transaction *trans);
 		virtual tick nextTick() const;
 		void runSimulations(const unsigned requestCount = 0);
-
-	public:
+		
 		// accessors
 		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); } ///< returns true if this channel has no more room
 		double Frequency() const { return systemConfig.Frequency(); }	///< accessor to get the frequency of the DRAM system

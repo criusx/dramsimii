@@ -8,6 +8,7 @@
 using std::dec;
 using std::hex;
 using std::endl;
+using std::cerr;
 using std::string;
 using namespace DRAMSimII;
 
@@ -98,8 +99,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		else if (pkt->isWrite())
 			packetType = WRITE_TRANSACTION;
 
-		Transaction *trans = new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),(void *)pkt);
-
+		
 		assert((pkt->isRead() && pkt->needsResponse()) || (!pkt->isRead() && !pkt->needsResponse()));
 
 		//memory->doAtomicAccess(pkt); // maybe try to do the access prior to simulating timing?
@@ -111,9 +111,10 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 		assert(!pkt->wasNacked());
 		// turn packet around to go back to requester if response expected
+		Address addr(pkt->getAddr());
 
 		// attempt to add the transaction to the memory system
-		if (!memory->ds->enqueue(trans))
+		if (memory->ds->isFull(addr.getChannel()))
 		{
 #ifdef M5DEBUG						
 			static tick numberOfDelays = 0;
@@ -135,14 +136,24 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
 			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
 			memory->needRetry = true;
-			memory->mostRecentChannel = trans->getAddresses().channel;
-			delete trans;
+			//memory->mostRecentChannel = trans->getAddresses().getChannel();
+			memory->mostRecentChannel = addr.getChannel();
+			//delete trans;
 
-			M5_TIMING_LOG("Wait for retry before sending more to ch[" << trans->getAddresses().channel << "]");
+			M5_TIMING_LOG("Wait for retry before sending more to ch[" << addr.getChannel() << "]");
 			return false;
 		}
 		else
 		{
+			Transaction *trans = new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),memory->currentTransactionID);
+
+			bool result = memory->ds->enqueue(trans);
+
+			assert(result == true);
+
+			memory->transactionLookupTable[memory->currentTransactionID] = pkt;
+			memory->currentTransactionID = (memory->currentTransactionID + 1) % UINT_MAX;
+
 			// deschedule and reschedule yourself to wake at the next event time
 			if (memory->tickEvent.scheduled())
 				memory->tickEvent.deschedule();
@@ -227,12 +238,22 @@ void M5dramSystem::moveToTime(const tick now)
 {
 	tick finishTime;	
 
-	Packet *packet;
 	// if transactions are returned, then send them back,
 	// else if time is not brought up to date, then a refresh transaction has finished
 	//while ((packet = (Packet *)ds->moveAllChannelsToTime(now, finishTime)) || finishTime < now)
-	while ((packet = (Packet *)ds->moveAllChannelsToTime(now, finishTime)) || ds->getTime() < now)
+	unsigned transactionID;
+	while (((transactionID = ds->moveAllChannelsToTime(now, finishTime)) < UINT_MAX) || ds->getTime() < now)
 	{
+		Packet *packet = NULL;
+
+		if (transactionID < UINT_MAX)
+		{
+			std::map<unsigned,Packet*>::iterator packetIterator = transactionLookupTable.find(transactionID);
+			assert(packetIterator != transactionLookupTable.end());
+			packet = packetIterator->second;
+			transactionLookupTable.erase(packetIterator);
+		}
+
 		if (packet)
 		{
 			assert(packet->isRead() || packet->isWrite() || packet->isInvalidate());
@@ -280,8 +301,14 @@ void M5dramSystem::moveToTime(const tick now)
 //////////////////////////////////////////////////////////////////////
 M5dramSystem::M5dramSystem(const Params *p):
 PhysicalMemory(p), 
+ports(1),
+lastPortIndex(0),
 tickEvent(this), 
-needRetry(false)
+needRetry(false),
+mostRecentChannel(0),
+cpuRatio(0),
+transactionLookupTable(),
+currentTransactionID(0)
 {	
 	timingOutStream << "M5dramSystem constructor" << endl;
 
@@ -300,11 +327,12 @@ needRetry(false)
 	else
 		ds = new fbdSystem(settings);	
 
-	cpuRatio = (int)round(((float)Clock::Frequency/((float)ds->Frequency())));
+	delete settingsMap;
+
+	cpuRatio =(int)round(((float)Clock::Frequency/((float)ds->Frequency())));
 	//cerr << cpuRatio << endl;
 	//invCpuRatio = (float)((double)ds->Frequency()/(Clock::Frequency));
 	//cerr << invCpuRatio << endl;
-
 	
 	timingOutStream << *ds << endl;
 }
@@ -327,7 +355,7 @@ M5dramSystem *M5dramSystemParams::create()
 M5dramSystem::MemoryPort::MemoryPort(const string &_name, M5dramSystem *_memory):
 SimpleTimingPort(_name),
 memory(_memory)
-{ }
+{}
 
 Port *M5dramSystem::getPort(const string &if_name, int idx)
 {

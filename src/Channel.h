@@ -49,7 +49,7 @@ namespace DRAMSimII
 	public:
 		// functions
 		bool enqueue(Transaction *in);
-		bool isFull() const { return transactionQueue.freecount() == 0; }	///< determines whether there is room for more transactions
+		bool isFull() const { return transactionQueue.isFull(); }	///< determines whether there is room for more transactions
 		void retireCommand(Command *);
 		unsigned getChannelID() const { return channelID; }					///< return the ordinal of this channel
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
@@ -73,7 +73,7 @@ namespace DRAMSimII
 
 		// functions that may differ for architectures that inherit this		
 		virtual const Command *readNextCommand() const;
-		virtual const void *moveChannelToTime(const tick endTime, tick& transFinishTime);
+		virtual unsigned moveChannelToTime(const tick endTime, tick& transFinishTime);
 		virtual int minProtocolGap(const Command *thisCommand) const;
 		virtual tick earliestExecuteTime(const Command *thisCommand) const;
 

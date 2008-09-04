@@ -172,7 +172,7 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 /// @param endTime move the channel until it is at this time
 /// @param transFinishTime the time that this transaction finished
 //////////////////////////////////////////////////////////////////////////
-const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
+unsigned Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 {
 	// if there is an operation that takes place at time == endTime, this will allow it
 	//assert(endTime >= time);
@@ -228,13 +228,13 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 
 					delete completedTransaction;
 
-					return NULL;
+					return UINT_MAX;
 				}
 				else // return what was pointed to
 				{
-					const void *origTrans = completedTransaction->getOriginalTransaction();
+					const unsigned origTrans = completedTransaction->getOriginalTransaction();
 
-					M5_DEBUG(assert(origTrans));
+					M5_DEBUG(assert(origTrans < UINT_MAX));
 
 					transFinishTime = completedTransaction->getCompletionTime();
 
@@ -251,7 +251,7 @@ const void *Channel::moveChannelToTime(const tick endTime, tick& transFinishTime
 	transFinishTime = endTime;
 	M5_TIMING_LOG("ch[" << channelID << "] @ " << dec << time);
 
-	return NULL;
+	return UINT_MAX;
 }
 
 
@@ -700,7 +700,7 @@ Transaction *Channel::getTransaction()
 //////////////////////////////////////////////////////////////////////////
 Transaction *Channel::createNextRefresh()
 {
-	assert(rank.size() >= 1);
+	//assert(rank.size() >= 1);
 	unsigned currentRank = 0;
 	unsigned earliestRank = 0;
 	tick earliestTime = refreshCounter[0];
@@ -717,7 +717,8 @@ Transaction *Channel::createNextRefresh()
 
 	address.setAddress(channelID,earliestRank,0,0,0);
 
-	Transaction *newRefreshTransaction = new Transaction(AUTO_REFRESH_TRANSACTION, earliestTime, 8,address,NULL);
+	Transaction *newRefreshTransaction = new Transaction(AUTO_REFRESH_TRANSACTION, earliestTime, 8,address,UINT_MAX);
+
 	refreshCounter[earliestRank] = refreshCounter[earliestRank] + timingSpecification.tREFI();
 
 	return newRefreshTransaction;
@@ -772,7 +773,7 @@ const Transaction *Channel::readNextRefresh() const
 	address.setAddress(channelID,earliestRank,0,0,0);
 
 	static Transaction newRefreshTransaction;
-	::new(&newRefreshTransaction)Transaction(AUTO_REFRESH_TRANSACTION, 0, 8,address,NULL);
+	::new(&newRefreshTransaction)Transaction(AUTO_REFRESH_TRANSACTION, 0, 8,address,UINT_MAX);
 	
 	return &newRefreshTransaction;
 

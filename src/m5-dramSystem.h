@@ -84,6 +84,8 @@ protected:
 	unsigned mostRecentChannel;								///< the most recent channel that a request was sent to
 	int cpuRatio;											///< the ratio of the cpu frequency to the memory frequency
 	//float invCpuRatio;										///< the ratio of the memory frequency to the cpu frequency
+	std::map<unsigned,Packet*> transactionLookupTable;
+	unsigned currentTransactionID;
 	
 
 	//virtual Tick calculateLatency(Packet *);

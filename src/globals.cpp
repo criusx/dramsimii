@@ -11,8 +11,6 @@
 #include <boost/archive/text_oarchive.hpp> 
 #include <boost/archive/text_iarchive.hpp>
 
-#include <boost/test/unit_test.hpp>
-
 using boost::iostreams::filtering_ostream;
 
 // modified, writes to cerr or a compressed output file

@@ -310,21 +310,20 @@ bool System::enqueue(Transaction *currentTransaction)
 	if (!channel[currentTransaction->getAddresses().getChannel()].enqueue(currentTransaction))
 	{
 #ifdef M5DEBUG
-		timingOutStream << "!+T(" << channel[currentTransaction->getAddresses().channel].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().channel].getTransactionQueueDepth() << ")" << endl;
+		timingOutStream << "!+T(" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueDepth() << ")" << endl;
 #endif
 		return false;
 	}
 	else
 	{
 #ifdef M5DEBUG
-		timingOutStream << "+T(" << currentTransaction->getAddresses().channel << ")[" << channel[currentTransaction->getAddresses().channel].getTransactionQueueCount() << "]" << endl;
+		timingOutStream << "+T(" << currentTransaction->getAddresses().getChannel() << ")[" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "]" << endl;
 #endif
 		// if the transaction was successfully enqueued, set its enqueue time
 		currentTransaction->setEnqueueTime(channel[currentTransaction->getAddresses().getChannel()].getTime());
 		return true;
 	}
 }
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief moves all channels to the specified time
@@ -334,17 +333,17 @@ bool System::enqueue(Transaction *currentTransaction)
 /// @param transFinishTime the time at which the transaction finished, less than the endTime
 /// @return a transaction which finished somewhere before the end time
 //////////////////////////////////////////////////////////////////////
-const void *System::moveAllChannelsToTime(const tick endTime, tick& transFinishTime)
+unsigned System::moveAllChannelsToTime(const tick endTime, tick& transFinishTime)
 {
 	M5_TIMING_LOG("move forward until: " << endTime );
 
-	const void *finishedTransaction = NULL;
+	unsigned finishedTransaction = UINT_MAX;
 
 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
 		finishedTransaction = i->moveChannelToTime(endTime, transFinishTime);
 
-		if (finishedTransaction)
+		if (finishedTransaction < UINT_MAX)
 		{			
 			break;
 		}

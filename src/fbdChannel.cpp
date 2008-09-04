@@ -243,7 +243,7 @@ int fbdChannel::minProtocolGap(const Command *this_c) const
 
 // may only execute commands from the previous frame or from the first slot in the next frame
 // however, up to three commands must be executed
-const void *fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishTime)
+unsigned fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 {
 
 	while (time < endTime)
@@ -311,11 +311,11 @@ const void *fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishT
 
 					delete completed_t;
 
-					return NULL;
+					return UINT_MAX;
 				}
 				else // return what was pointed to
 				{
-					const void *origTrans = completed_t->getOriginalTransaction();
+					const unsigned origTrans = completed_t->getOriginalTransaction();
 
 					transFinishTime = completed_t->getCompletionTime();
 
@@ -345,7 +345,7 @@ const void *fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishT
 
 	M5_TIMING_LOG("ch[" << channelID << "] @ " << std::dec << time);
 
-	return NULL;
+	return UINT_MAX;
 
 }
 

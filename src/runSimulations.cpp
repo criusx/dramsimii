@@ -44,7 +44,7 @@ void System::runSimulations(const unsigned requestCount)
 
 		// as long as transactions keep happening prior to this time
 		//if (moveAllChannelsToTime(min(inputTransaction->getEnqueueTime(),nextTick()),nearFinish))
-		if (moveAllChannelsToTime(max(newTime, inputTransaction->getArrivalTime()),nearFinish))
+		if (moveAllChannelsToTime(max(newTime, inputTransaction->getArrivalTime()),nearFinish) < UINT_MAX)
 		{
 			cerr << "not right, no host transactions here" << endl;
 		}

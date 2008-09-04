@@ -21,11 +21,11 @@ enqueueTime(0xcdcdcdcdcdcdcdcd),
 completionTime(0xcdcdcdcdcdcdcdcd),
 decodeTime(0xcdcdcdcdcdcdcdcd),
 addr(0xcdcdcdcd),
-originalTransaction(NULL)
+originalTransaction(UINT_MAX)
 {}
 
 
-Transaction::Transaction(const TransactionType type, const tick arrivalTime,const unsigned burstLength, const Address &address, const void *originalTrans):
+Transaction::Transaction(const TransactionType type, const tick arrivalTime,const unsigned burstLength, const Address &address, const unsigned originalTrans):
 eventNumber(eventCounter++),
 type(type),
 status(0),
@@ -54,7 +54,7 @@ originalTransaction(rs.originalTransaction)
 {}
 
 /// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
-Transaction::Transaction(const TransactionType transType, const tick arrivalTime,const unsigned burstLength,const PHYSICAL_ADDRESS physicalAddress, const void *originalTrans):
+Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, const unsigned originalTrans):
 eventNumber(eventCounter++),
 type(transType),
 status(0),

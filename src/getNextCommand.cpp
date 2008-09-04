@@ -467,27 +467,29 @@ const Command *Channel::readNextCommand() const
 
 			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 			{
-				if (currentRank->refreshAllReady())
-				{					
-					const Command *challengerCommand = currentRank->bank.begin()->front();
+				bool isRefreshCommand = true;
 
-					tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
-#if DEBUG
-					int minGap = minProtocolGap(challengerCommand);
-
-					assert(time + minGap == challengerExecuteTime);
-#endif
-					if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
-					{													
-						candidateCommand = challengerCommand;
-					}
-				}
-				else
+				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 				{
-					for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
-					{
-						const Command *challengerCommand = currentBank->front();
+					const Command *challengerCommand = currentBank->front();
 
+					if (isRefreshCommand && challengerCommand && challengerCommand->getCommandType() == REFRESH_ALL && currentRank->refreshAllReady())
+					{
+						tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
+#if DEBUG
+						int minGap = minProtocolGap(challengerCommand);
+
+						assert(time + minGap == challengerExecuteTime);
+#endif
+						if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
+						{						
+							candidateCommand = challengerCommand;
+							// stop searching since all the queues are proven to have refresh commands at the front
+							break;
+						}						
+					}
+					else
+					{
 						// can ignore refresh commands since it's known that not all the queues have a ref command at the front
 						if (challengerCommand && challengerCommand->getCommandType() != REFRESH_ALL)
 						{
@@ -505,6 +507,10 @@ const Command *Channel::readNextCommand() const
 							}
 						}
 					}
+
+					// if it was a refresh command was chosen then it wouldn't make it this far, so it's not a refresh command
+					// if a refresh command wasn't chosen then there one can't be found later
+					isRefreshCommand = false;
 				}				
 			}
 

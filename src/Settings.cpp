@@ -87,7 +87,7 @@ systemType(BASELINE_CONFIG)
 					nodeName = (const char *)xmlTextReaderConstName(reader);
 					if (nodeName == "dramspec")
 					{
-						const xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
+						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
 						string attrS = (const char *)attr;
 						if (attrS == "ddr2")
 							dramType = DDR2;
@@ -99,10 +99,11 @@ systemType(BASELINE_CONFIG)
 							dramType = DRDRAM;
 						else
 							dramType = DDR2;
+						xmlFree(attr);
 					}
 					else if (nodeName == "inputFile")
 					{
-						const xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
+						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
 						string type = (const char *)attr;
 						if (type == "mase")
 							inFileType = MASE_TRACE;
@@ -136,10 +137,11 @@ systemType(BASELINE_CONFIG)
 								}								
 							}							
 						}
+						xmlFree(attr);
 					}
 					else if (nodeName == "outFile")
 					{
-						const xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
+						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
 						if (attr)
 						{
 							const string type = (const char *)attr;
@@ -158,6 +160,7 @@ systemType(BASELINE_CONFIG)
 						{
 							outFileType = NONE;
 						}
+						xmlFree(attr);
 					}					
 				}
 				break;
@@ -472,7 +475,7 @@ systemType(BASELINE_CONFIG)
 		}
 		// close the reader
 		xmlFreeTextReader(reader);
-		xmlCleanupParser();
+		xmlMemoryDump();
 	}
 
 	boost::mt19937 generator(std::time(0));
@@ -487,14 +490,14 @@ systemType(BASELINE_CONFIG)
 // for unit tests, should not be instantiated
 Settings::Settings():
 settingsOutputFile(""),
-epoch(-1),
+epoch(UINT_MAX),
 inFile(""),
 sessionID(""),
 arrivalDistributionModel(NORMAL_DISTRIBUTION),
 inFileType(MASE_TRACE),
 outFile(""),
 outFileType(BZ),
-requestCount(-1),
+requestCount(UINT_MAX),
 refreshPolicy(NO_REFRESH),
 dramType(DDR),
 commandOrderingAlgorithm(STRICT_ORDER),
@@ -522,10 +525,10 @@ autoPrecharge(false),
 clockGranularity(0),
 cachelinesPerRow(0),
 channelCount(0),
-rankCount(0),
-bankCount(0),
-shortBurstRatio(2),
-readPercentage(2),
+rankCount(0U),
+bankCount(0U),
+shortBurstRatio(2.0F),
+readPercentage(2.0F),
 tRTRS(UINT_MAX),
 tAL(UINT_MAX),
 tBurst(UINT_MAX),
@@ -545,7 +548,7 @@ tWTR(UINT_MAX),
 tCMD(UINT_MAX),
 tInternalBurst(UINT_MAX),
 tBufferDelay(UINT_MAX),
-cpuToMemoryClockRatio(UINT_MAX),
+cpuToMemoryClockRatio(-1.0F),
 PdqRD(-1.0F),
 PdqWR(-1.0F),
 PdqRDoth(-1.0F),
