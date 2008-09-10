@@ -205,11 +205,7 @@ bool Bank::openPageInsert(DRAMSimII::Transaction *value, tick time)
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-<<<<<<< .mine
 			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
-=======
-			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
->>>>>>> .r643
 			{
 				bool result = perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()), currentIndex);
 				assert(result);
@@ -257,11 +253,7 @@ bool Bank::openPageInsertAvailable(const Transaction *value, const tick time) co
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-<<<<<<< .mine
 			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
-=======
-			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
->>>>>>> .r643
 			{
 				return true;
 			}
