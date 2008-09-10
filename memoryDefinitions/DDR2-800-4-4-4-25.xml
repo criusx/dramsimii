@@ -104,7 +104,7 @@
 		<readPercentage>.5</readPercentage>
 		<!-- type may be gz, bz, cout, uncompressed, none -->
 		<outFile type="gz">standardOutFile.gz</outFile>
-		<requestCount>7500000</requestCount>
+		<requestCount>75000000</requestCount>
 		<!-- type may be "mase","k6","mapped","random," if random, then the value is the distrubution model, which may be 'uniform', 'gaussian' , 'poisson', 'normal' -->
 		<inputFile type="random">gaussian</inputFile>
 		<!--inputFile type="mase">equake.trc</inputFile-->

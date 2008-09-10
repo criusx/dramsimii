@@ -38,8 +38,8 @@ namespace DRAMSimII
 		unsigned column;					///< the column id
 
 		// functions
-		bool convertFromAddress();
-		bool convertToAddress();
+		bool addressTranslation();
+		bool reverseAddressTranslation();
 	public:
 
 		// functions
@@ -54,7 +54,7 @@ namespace DRAMSimII
 		unsigned getColumn() const { return column; }
 
 		// mutators
-		void setPhysicalAddress(PHYSICAL_ADDRESS pa) { physicalAddress = pa; convertFromAddress(); }
+		void setPhysicalAddress(PHYSICAL_ADDRESS pa) { physicalAddress = pa; addressTranslation(); }
 		void setAddress(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column);
 
 		// constructor

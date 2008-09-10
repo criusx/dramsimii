@@ -196,7 +196,7 @@ namespace DRAMSimII
 		/// @brief get rhs pointer to the item at the head of the queue
 		/// @detail similar to peek()
 		/// @return rhs pointer to the item at the front of the queue, or NULL if the queue is empty
-		const T *front() const
+		const inline T *front() const
 		{
 #if DEBUG
 			assert(count > 0 ? entry[head] != NULL : entry[head] == NULL);

@@ -448,10 +448,17 @@ void System::printStatistics()
 //////////////////////////////////////////////////////////////////////
 void System::doPowerCalculation()
 {
-	for (vector<Channel>::iterator currentChannel = channel.begin(); currentChannel != channel.end(); currentChannel++)
+	// waiting for OpenMP 3.0
+//#pragma omp parallel
 	{
-		currentChannel->doPowerCalculation();
+
+//#pragma omp for
+		for (vector<Channel>::iterator currentChannel = channel.begin(); currentChannel != channel.end(); currentChannel++)
+		{
+			currentChannel->doPowerCalculation(time);
+		}
 	}
+
 }
 
 bool System::operator==(const System &rhs) const

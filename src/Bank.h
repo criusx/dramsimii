@@ -80,7 +80,7 @@ namespace DRAMSimII
 		bool push(Command *value) { return perBankQueue.push(value); }
 		bool insert(Command *value, const int index) { return perBankQueue.insert(value, index); }
 		const Command *read(const unsigned value) const { return perBankQueue.read(value); }
-		const Command *front() const { return perBankQueue.front(); }
+		const inline Command *front() const { return perBankQueue.front(); }
 		const Command *back() const { return perBankQueue.back(); }
 		unsigned size() const { return perBankQueue.size(); }
 		CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : INVALID_COMMAND; }

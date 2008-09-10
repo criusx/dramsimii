@@ -396,7 +396,7 @@ using namespace std;
 /// also does breakdowns of power consumed per channel and per epoch as well as averaged over time
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
-void Channel::doPowerCalculation()
+void Channel::doPowerCalculation(const tick systemTime)
 {
 	float factorA = (powerModel.getVDD() / powerModel.getVDDmax()) * (powerModel.getVDD() / powerModel.getVDDmax());
 	float factorB = (float)powerModel.getFrequency() / (float)powerModel.getSpecFrequency();
@@ -490,7 +490,7 @@ void Channel::doPowerCalculation()
 
 	// report these results
 	//boost::thread(sendPower())
-	boost::thread(boost::bind(&DRAMSimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray));
+	boost::thread(boost::bind(&DRAMSimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray, systemTime));
 
 	powerOutStream << "++++++++++++++++++++++ total ++++++++++++++++++++++" << endl;
 
@@ -538,7 +538,7 @@ void Channel::doPowerCalculation()
 	//powerOutStream.flush();
 }
 
-bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vector<float> PsysACTSTBYArray, vector<float> PsysACTArray) const 
+bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vector<float> PsysACTSTBYArray, vector<float> PsysACTArray, const tick currentTime) const 
 {
 	DRAMsimWSSoapHttp service;
 	_ns2__submitEpochResultElement submit;
@@ -547,7 +547,7 @@ bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vecto
 	systemConfig.getSessionID().copy(newString,systemConfig.getSessionID().length());
 	submit.sessionID = newString;
 
-	submit.epoch = time;
+	submit.epoch = currentTime;
 
 	vector<int> channelArray(rank.size(),channelID);	
 	submit.channel = &channelArray[0];

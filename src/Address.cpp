@@ -42,7 +42,7 @@ bank(0),
 row(0),
 column(0)
 {
-	convertFromAddress();
+	addressTranslation();
 }
 
 Address::Address(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column):
@@ -54,7 +54,7 @@ bank(bank),
 row(row),
 column(column)
 {
-	convertToAddress();
+	reverseAddressTranslation();
 }
 
 void Address::initialize(const Settings &dramSettings)
@@ -83,7 +83,7 @@ void Address::initialize(const SystemConfiguration &systemConfig)
 	mappingScheme = systemConfig.getAddressMappingScheme();
 }
 
-bool Address::convertToAddress()
+bool Address::reverseAddressTranslation()
 {
 	switch(mappingScheme)
 	{
@@ -123,7 +123,7 @@ bool Address::convertToAddress()
 
 #if DEBUG
 	PHYSICAL_ADDRESS backup = physicalAddress;
-	convertFromAddress();
+	addressTranslation();
 	assert(physicalAddress == backup);
 #endif
 
@@ -138,7 +138,7 @@ bool Address::convertToAddress()
 /// @param thisAddress the addresses representation to be decoded in-place
 /// @return true if the conversion was successful, false if there was some problem
 //////////////////////////////////////////////////////////////////////
-bool Address::convertFromAddress()
+bool Address::addressTranslation()
 {
 	PHYSICAL_ADDRESS temp_a, temp_b;
 	unsigned bit_15,bit_27,bits_26_to_16;
@@ -533,7 +533,7 @@ void Address::setAddress(const unsigned channel, const unsigned rank, const unsi
 	this->column = column;
 	this->row = row;
 
-	convertToAddress();
+	reverseAddressTranslation();
 }
 
 std::ostream &DRAMSimII::operator <<(std::ostream &os, const Address &this_a)

@@ -140,16 +140,16 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 
 	switch (currentCommand->getCommandType())
 	{
-	case CAS_AND_PRECHARGE_COMMAND:
+	case READ_AND_PRECHARGE:
 		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), lastRASTime + timing.tRAS());
 		// see figure 11.28 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
 		lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), lastRASTime + timing.tRAS());
 		break;
-	case CAS_WRITE_AND_PRECHARGE_COMMAND:
+	case WRITE_AND_PRECHARGE:
 		// see figure 11.29 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
 		lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), lastRASTime + timing.tRAS());
 		break;
-	case PRECHARGE_COMMAND:
+	case PRECHARGE:
 		lastPrechargeTime = currentTime;
 		break;
 	default:
@@ -177,7 +177,7 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 
 void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 {
-
+	lastRefreshAllTime = currentTime;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -205,7 +205,11 @@ bool Bank::openPageInsert(DRAMSimII::Transaction *value, tick time)
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
+<<<<<<< .mine
+			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
+=======
 			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
+>>>>>>> .r643
 			{
 				bool result = perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()), currentIndex);
 				assert(result);
@@ -236,7 +240,7 @@ bool Bank::openPageInsert(DRAMSimII::Transaction *value, tick time)
 /// @param value the transaction to test
 /// @return true if it is able to be inserted, false otherwise
 //////////////////////////////////////////////////////////////////////
-bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
+bool Bank::openPageInsertAvailable(const Transaction *value, const tick time) const
 {
 	if (!perBankQueue.isFull())
 	{
@@ -253,7 +257,11 @@ bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
+<<<<<<< .mine
+			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
+=======
 			else if ((currentCommand->getCommandType() == PRECHARGE_COMMAND) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
+>>>>>>> .r643
 			{
 				return true;
 			}

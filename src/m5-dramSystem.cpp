@@ -312,10 +312,10 @@ currentTransactionID(0)
 {	
 	timingOutStream << "M5dramSystem constructor" << endl;
 
-	const char **settingsMap = new const char*[2];
+	const char *settingsMap[2] = {"--settings", p->settingsFile.c_str()};
 
-	settingsMap[0] = "--settings";
-	settingsMap[1] = p->settingsFile.c_str();
+	//settingsMap[0] = ;
+	//settingsMap[1] = ;
 
 	Settings settings(2,settingsMap);
 
@@ -327,7 +327,7 @@ currentTransactionID(0)
 	else
 		ds = new fbdSystem(settings);	
 
-	delete settingsMap;
+	//delete settingsMap;
 
 	cpuRatio =(int)round(((float)Clock::Frequency/((float)ds->Frequency())));
 	//cerr << cpuRatio << endl;

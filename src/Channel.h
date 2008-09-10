@@ -55,14 +55,14 @@ namespace DRAMSimII
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
 		bool transaction2commands(Transaction *);
 		Command *getNextCommand(const Command *knownNextCommand = NULL);		
-		void doPowerCalculation();
+		void doPowerCalculation(const tick systemTime);
 		void executeCommand(Command *thisCommand);
 		tick nextTransactionDecodeTime() const;
 		tick nextCommandExecuteTime() const;
 		virtual tick nextTick() const;
 
 	private:
-		bool sendPower(float PsysRD, float PsysWR, std::vector<int> rankArray, std::vector<float> PsysACTSTBYArray, std::vector<float> PsysACTArray) const;
+		bool sendPower(float PsysRD, float PsysWR, std::vector<int> rankArray, std::vector<float> PsysACTSTBYArray, std::vector<float> PsysACTArray, const tick currentTime) const;
 
 	public:
 		// constructors
