@@ -54,10 +54,27 @@ systemType(BASELINE_CONFIG)
 		exit (-1);
 	}
 
-	xmlTextReader *reader = xmlReaderForFile(
-		settingsFile.c_str(),
-		NULL,
-		XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);
+	ifstream xmlFile(settingsFile.c_str(),ios::in|ios::ate);
+
+	xmlTextReader *reader = NULL;
+
+	char *entireXmlFile = NULL;
+	ifstream::pos_type entireXmlFileLength = 0;
+
+	if (xmlFile.is_open())
+	{
+		entireXmlFileLength = xmlFile.tellg();
+		entireXmlFile = new char[entireXmlFileLength];
+
+		xmlFile.seekg(0,ios::beg);
+		xmlFile.read(entireXmlFile,entireXmlFileLength);
+		xmlFile.close();
+		entireXmlFile[entireXmlFileLength] = 0;
+		reader = xmlReaderForMemory(
+			entireXmlFile,entireXmlFileLength,
+			NULL,NULL,
+			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);		
+	}
 
 	if (reader == NULL)
 	{
@@ -453,20 +470,8 @@ systemType(BASELINE_CONFIG)
 		}
 		else
 		{
-			ifstream settingsInFile;
-			settingsInFile.open(settingsFile.c_str());		
-
-			if (settingsInFile.is_open())
-			{
-				char currentWord[8192];
-				while (!settingsInFile.eof())
-				{
-					settingsInFile.read(currentWord,8192);
-					int lengthRead = settingsInFile.gcount();
-					settingsOutputFile.append(currentWord,lengthRead);
-				}
-				settingsInFile.close();
-			}
+			if (entireXmlFileLength > 0)
+				settingsOutputFile.append(entireXmlFile, entireXmlFileLength);
 			else
 			{
 				cerr << "Could not create output for settings file" << endl;
