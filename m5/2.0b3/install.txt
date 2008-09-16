@@ -1,7 +1,0 @@
-to install DRAMSimII as a module for M5
-1. make sure the DRAMSimII directory is in <m5>/src/mem/
-2. M5dramSystem.py is copied to <m5>/src/python/objects/
-3. se.py is copied to <m5>/configs/examples/
-4. SConscript should replace the copy in <m5>/src, this adds additional compiler flags and a 'fast2' build option
-do a diff to see what changes were done to the basic files if you want to know what's different
-5. add "SimObject('m5/objects/M5dramSystem.py')" to <m5>/src/python/SConscript

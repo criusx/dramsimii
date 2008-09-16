@@ -1,0 +1,5 @@
+to install DRAMSimII as a module for M5
+1. make sure the DRAMSimII directory is in <m5>/src/mem/ or somewhere similar, M5 searches the src subdir for SConscript files to locate add-on modules
+2. M5dramSystem.py is copied to <m5>/src/python/objects/
+3. se.py is copied to <m5>/configs/examples/
+4. add "SimObject('m5/objects/M5dramSystem.py')" to <m5>/src/python/SConscript
