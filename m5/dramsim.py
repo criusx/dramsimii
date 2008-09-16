@@ -25,6 +25,10 @@ parser.add_option("-o", "--options", default="",
                         string.")
 parser.add_option("-i", "--input", default="",
                   help="A file of input to give to the binary.")
+                  
+parser.add_option("-f", "--config",
+		  default=os.path.join(m5_root,"src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25.xml"),
+		  help="The DRAMsimII config file.")
 
 execfile(os.path.join(config_root, "common", "Options.py"))
 
@@ -68,7 +72,8 @@ np = options.num_cpus
 
 system = System(cpu = [CPUClass(cpu_id=i) for i in xrange(np)],
                 #physmem = PhysicalMemory(range=AddrRange("512MB")),
-  		  physmem = M5dramSystem(settingsFile = "/home/crius/m5/src/mem/DRAMSimII/memoryDefinitions/DDR2-800-4-4-4.xml", outFilename = "seNew.gz", range=AddrRange("512MB")),	
+  		#  physmem = M5dramSystem(settingsFile = "/home/crius/m5/src/mem/DRAMSimII/memoryDefinitions/DDR2-800-4-4-4.xml", outFilename = "seNew.gz", range=AddrRange("512MB")),	
+  		physmem = M5dramSystem(settingsFile = options.config, outFilename = "seNew.gz", range=AddrRange("512MB")),
                 membus = Bus(), mem_mode = test_mem_mode)
 
 system.physmem.port = system.membus.port

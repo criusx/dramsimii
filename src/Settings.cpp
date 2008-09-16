@@ -54,6 +54,9 @@ systemType(BASELINE_CONFIG)
 		exit (-1);
 	}
 
+//#define USEREADERFORMEMORY
+
+
 	ifstream xmlFile(settingsFile.c_str(),ios::in|ios::ate);
 
 	xmlTextReader *reader = NULL;
@@ -68,12 +71,22 @@ systemType(BASELINE_CONFIG)
 
 		xmlFile.seekg(0,ios::beg);
 		xmlFile.read(entireXmlFile,entireXmlFileLength);
+		
 		xmlFile.close();
+		
 		entireXmlFile[entireXmlFileLength] = 0;
+#ifdef USEREADERFORMEMORY
 		reader = xmlReaderForMemory(
 			entireXmlFile,entireXmlFileLength,
 			NULL,NULL,
-			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);		
+			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);	
+#else
+		reader = xmlReaderForFile( 
+			settingsFile.c_str(), 
+			NULL, 
+			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID); 
+#endif
+
 	}
 
 	if (reader == NULL)
