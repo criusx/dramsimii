@@ -36,8 +36,8 @@ lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
 rankID(rhs.rankID),
 lastBankID(rhs.lastBankID),
-lastActivateTimes(rhs.lastActivateTimes),
 banksPrecharged(rhs.banksPrecharged),
+lastActivateTimes(rhs.lastActivateTimes),
 bank(rhs.bank)
 {}
 
@@ -53,8 +53,8 @@ lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
 rankID(rhs.rankID),
 lastBankID(rhs.lastBankID),
-lastActivateTimes(rhs.lastActivateTimes),
 banksPrecharged(rhs.banksPrecharged),
+lastActivateTimes(rhs.lastActivateTimes),
 bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConfig))
 {
 	// TODO: copy over values in banks now that reference members are init	
@@ -67,8 +67,19 @@ bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConf
 
 Rank::Rank(const TimingSpecification &timingSpec, const std::vector<Bank> & newBank):
 timing(timingSpec),
-bank(newBank),
-lastActivateTimes(4)
+lastRefreshTime(-100),
+lastPrechargeTime(-100),
+lastCASTime(-100),
+lastCASWTime(-100),
+prechargeTime(0),
+totalPrechargeTime(0),
+lastCASLength(0),
+lastCASWLength(0),
+rankID(UINT_MAX),
+lastBankID(0),
+banksPrecharged(0),
+lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
+bank(newBank)
 {}
 
 Rank& Rank::operator =(const Rank& rhs)

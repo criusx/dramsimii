@@ -1,10 +1,49 @@
 Import('*')
 
+conf = Configure(env)
+if not conf.CheckLib('boost_serialization'):
+	print 'Boost serialization library not found, please install this.'
+	Exit(1)
+if not conf.CheckLib('boost_iostreams'):
+	print 'Boost iostreams library not found, please install first.'
+	Exit(1)
+if not conf.CheckCXXHeader('boost/circular_buffer.hpp'):
+	print 'Need Boost 1.35 or newer with the circular buffer library.'
+	print 'The circular buffer header files may also be copied from a newer Boost instance to an older one.'
+	Exit(1)
+if not conf.CheckLib('boost_thread'):
+	print 'Boost thread library not found, please install this.'
+	Exit(1)
+if not conf.CheckLib('boost_unit_test_framework'):
+	print 'Boost unit test framework not found, please install this.'
+	Exit(1)
+if not conf.CheckLib('boost_signals'):
+	print 'Boost signals library not found, please install this.'
+	Exit(1)
+	
+
+
+#makeEnv('faster', '.ff', strip = True,
+#        CCFLAGS = Split('-O3 -ffast-math -march=athlon64 -fexceptions -I/usr/include/libxml2'),
+#        CPPDEFINES = ['NDEBUG', 'TRACING_ON=0'],
+#        LINKFLAGS = Split('-lxml2 -lboost_iostreams -lboost_thread'))
+#print env.CCFLAGS
+#print env.CPPDEFINES
+#print env.LINKFLAGS
+#print env.OBJSUFFIX
+#env.Append(CCFLAGS = Split('-O3 -ffast-math -march=athlon64 -fexceptions -I/usr/include/libxml2'),
+#	CPPDEFINES = ['M5DEBUG'],
+#	LINKFLAGS = Split('-lxml2 -lboost_iostreams -lboost_thread'))
+
+# get rid of the flag that makes it impossible to compile
+env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
+
+env.Append(CCFLAGS = ['-I/usr/include/libxml2'],
+	CPPDEFINES = ['M5DEBUG'],
+	LINKFLAGS = ['-lxml2', '-lboost_iostreams', '-lboost_thread'])
+
 SimObject('M5dramSystem.py')
 
-Source('reporting/soapC.cpp')
-Source('reporting/soapClient.cpp')
-Source('reporting/stdsoap2.cpp')
 Source('Address.cpp')
 Source('Algorithm.cpp')
 Source('Bank.cpp')
@@ -34,3 +73,6 @@ Source('SystemConfiguration.cpp')
 Source('TimingSpecification.cpp')
 Source('transaction.cpp')
 Source('transaction2commands.cpp')
+Source('reporting/soapC.cpp')
+Source('reporting/soapClient.cpp')
+Source('reporting/stdsoap2.cpp')

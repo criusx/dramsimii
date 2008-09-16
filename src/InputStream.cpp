@@ -193,9 +193,8 @@ float InputStream::boxMuller(const float m, const float s) const
 }
 
 
-bool InputStream::getNextBusEvent(BusEvent &this_e)
+bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 {	
-	enum FileIOToken control;	
 	string input;	
 
 	switch (type)
@@ -221,7 +220,7 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 					return false;
 				}
 
-				control = Settings::dramTokenizer(input);
+				FileIOToken control = Settings::dramTokenizer(input);
 
 				if (control == unknown_token)
 				{
@@ -244,14 +243,15 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 					cerr << "Unexpected EOF, Please fix input trace file" << endl;
 					return false;
 				}
-				if((this_e.attributes != control) || 
-					(((this_e.address.getPhysicalAddress() ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
+				// FIXME: what was this for?
+				if (/*(thisEvent.attributes != control) || */
+					(((thisEvent.address.getPhysicalAddress() ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
 				{
 					bursting = false;
 					timestamp = static_cast<tick>(static_cast<double>(timestamp) * ascii2multiplier(input));
-					this_e.address.setPhysicalAddress(0x3FFFFFFF & address); // mask out top addr bit
-					this_e.attributes = CONTROL_TRANSACTION;
-					this_e.timestamp = timestamp;
+					thisEvent.address.setPhysicalAddress(0x3FFFFFFF & address); // mask out top addr bit
+					thisEvent.attributes = CONTROL_TRANSACTION;
+					thisEvent.timestamp = timestamp;
 					burst_count = 1;
 				}
 				else
@@ -259,25 +259,25 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 					burst_count++;
 				}
 			}
-			this_e.address.setPhysicalAddress(address);
-			this_e.timestamp = timestamp;
+			thisEvent.address.setPhysicalAddress(address);
+			thisEvent.timestamp = timestamp;
 		} 
 		break;
 	case MASE_TRACE:
 		{
 			PHYSICAL_ADDRESS tempPA;
-			traceFile >> hex >> tempPA >> input >> dec >> this_e.timestamp;
-			this_e.address.setPhysicalAddress(tempPA);
+			traceFile >> hex >> tempPA >> input >> dec >> thisEvent.timestamp;
+			thisEvent.address.setPhysicalAddress(tempPA);
 
-			//this_e.timestamp /= 40000;
-			this_e.timestamp /= cpuToMemoryRatio;
+			//thisEvent.timestamp /= 40000;
+			thisEvent.timestamp /= cpuToMemoryRatio;
 			if(!traceFile.good()) /// found starting Hex address 
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;
 				return false;
 			}
 
-			control = Settings::dramTokenizer(input);
+			FileIOToken control = Settings::dramTokenizer(input);
 
 			switch (control)
 			{
@@ -286,13 +286,13 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 				return false;
 				break;
 			case FETCH:
-				this_e.attributes = IFETCH_TRANSACTION;
+				thisEvent.attributes = IFETCH_TRANSACTION;
 				break;
 			case MEM_RD:
-				this_e.attributes = READ_TRANSACTION;
+				thisEvent.attributes = READ_TRANSACTION;
 				break;
 			case MEM_WR:
-				this_e.attributes = WRITE_TRANSACTION;
+				thisEvent.attributes = WRITE_TRANSACTION;
 				break;
 			default:
 				cerr << "Unexpected transaction type: " << input;
@@ -305,9 +305,9 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 		{
 			unsigned channel, rank, bank, row, column;
 
-			traceFile >> dec >> this_e.timestamp >> input >> dec >> channel >> rank >> bank >> row >> column;
+			traceFile >> dec >> thisEvent.timestamp >> input >> dec >> channel >> rank >> bank >> row >> column;
 
-			this_e.address.setAddress(channel,rank,bank,row,column);
+			thisEvent.address.setAddress(channel,rank,bank,row,column);
 
 			if(!traceFile.good()) /// found starting Hex address 
 			{
@@ -315,7 +315,7 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 				return false;
 			}
 
-			control = Settings::dramTokenizer(input);
+			FileIOToken control = Settings::dramTokenizer(input);
 
 			switch (control)
 			{
@@ -324,13 +324,13 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 				return false;
 				break;
 			case FETCH:
-				this_e.attributes = IFETCH_TRANSACTION;
+				thisEvent.attributes = IFETCH_TRANSACTION;
 				break;
 			case MEM_RD:
-				this_e.attributes = READ_TRANSACTION;
+				thisEvent.attributes = READ_TRANSACTION;
 				break;
 			case MEM_WR:
-				this_e.attributes = WRITE_TRANSACTION;
+				thisEvent.attributes = WRITE_TRANSACTION;
 				break;
 			default:
 				cerr << "Unexpected transaction type: " << input;
@@ -343,7 +343,7 @@ bool InputStream::getNextBusEvent(BusEvent &this_e)
 		break;
 	}
 
-	//this_e.attributes = CONTROL_TRANSACTION;
+	//thisEvent.attributes = CONTROL_TRANSACTION;
 
 	return true;
 }
@@ -570,7 +570,7 @@ Transaction *InputStream::getNextRandomRequest()
 
 		unsigned burstLength = shortBurstRatio > randVar ? 4 : 8;
 
-		unsigned nextColumn = rngIntGenerator() & systemConfig.getColumnCount();
+		unsigned nextColumn = rngIntGenerator() & (systemConfig.getColumnCount() - 1);
 
 		assert(arrivalThreshold <= 1.0F);
 

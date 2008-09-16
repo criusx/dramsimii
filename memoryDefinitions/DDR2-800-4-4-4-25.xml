@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="style2.xsl"?>
-<!DOCTYPE dramspec PUBLIC "http://glue.umd.edu/~joegross/dramspec.dtd">
-<dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema2.xsd">
+<!DOCTYPE dramspec PUBLIC "PUBLIC" "dramspec.dtd">
+<dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DRAMSETTINGS">
 	<timing>
 		<!-- the number of beats per, so if a timing parameter is one cycle long, count it as two beats for DDR -->
 		<datarate>400000000</datarate>

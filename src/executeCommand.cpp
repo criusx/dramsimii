@@ -32,7 +32,7 @@ void Channel::executeCommand(Command *thisCommand,const int gap)
 	// this implies that if there was an idle period for the memory system, commands
 	// will not be seen as executing during this time	
 	thisCommand->setStartTime(max(time + gap, thisCommand->getEnqueueTime()));
-	
+
 	// set this channel's time to the start time of this command
 	time = thisCommand->getStartTime();
 
@@ -41,7 +41,7 @@ void Channel::executeCommand(Command *thisCommand,const int gap)
 	case RAS_COMMAND:
 		{
 			currentRank.issueRAS(time, thisCommand);
-			
+
 			// specific for RAS command
 			thisCommand->setCompletionTime(thisCommand->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRAS());
 		}
@@ -55,7 +55,7 @@ void Channel::executeCommand(Command *thisCommand,const int gap)
 	case CAS_COMMAND:
 
 		currentRank.issueCAS(time, thisCommand);
-		
+
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
 		thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
@@ -68,9 +68,9 @@ void Channel::executeCommand(Command *thisCommand,const int gap)
 		// missing break is intentional
 
 	case CAS_WRITE_COMMAND:
-		
+
 		currentRank.issueCASW(time, thisCommand);
-		
+
 		// for the CAS write command
 		thisCommand->getHost()->setCompletionTime(time);
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
@@ -152,9 +152,9 @@ void Channel::executeCommand(Command *thisCommand)
 	// ensure that the command is never started before it is enqueued
 	// this implies that if there was an idle period for the memory system, commands
 	// will not be seen as executing during this time	
-	
+
 	//thisCommand->setStartTime(max(earliestExecuteTime(thisCommand), thisCommand->getEnqueueTime()));
-	
+
 	thisCommand->setStartTime(time + timingSpecification.tCMD());
 
 	assert(thisCommand->getStartTime() >= earliestExecuteTime(thisCommand));
@@ -237,6 +237,18 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case CAS_WITH_DRIVE_COMMAND:
 		break;	
+
+	case SELF_REFRESH:
+		break;
+		
+	case DESELECT:
+		break;
+
+	case NOOP:
+		break;
+
+	case INVALID_COMMAND:
+		break;
 	}	
 
 	// inserts into a queue which dequeues into the command pool

@@ -1,6 +1,9 @@
 #include <sstream>
 #include <stdlib.h>
 #include <cmath>
+#include <zlib.h>
+#include <fcntl.h>
+#include <sys/mman.h>
 
 #include "enumTypes.h"
 #include "m5-dramSystem.h"
@@ -10,6 +13,7 @@ using std::hex;
 using std::endl;
 using std::cerr;
 using std::string;
+using std::ostream;
 using namespace DRAMSimII;
 
 //#define TESTNEW
@@ -54,7 +58,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	//////////////////////////////////////////////////////////////////////////
 
 	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
-	
+
 	assert(pkt->isRequest());
 
 	if (pkt->memInhibitAsserted()) 
@@ -99,7 +103,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		else if (pkt->isWrite())
 			packetType = WRITE_TRANSACTION;
 
-		
+
 		assert((pkt->isRead() && pkt->needsResponse()) || (!pkt->isRead() && !pkt->needsResponse()));
 
 		//memory->doAtomicAccess(pkt); // maybe try to do the access prior to simulating timing?
@@ -166,7 +170,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 			assert(next > currentMemCycle);
 			assert(next * memory->getCPURatio() > curTick);
-			
+
 			memory->tickEvent.schedule(next * memory->getCPURatio());
 
 			//memory->tickEvent.schedule(memory->getCpuRatio() * next);
@@ -202,7 +206,7 @@ void M5dramSystem::TickEvent::process()
 {	
 	//tick currentMemCycle = curTick / memory->getCPURatio();
 	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
-	
+
 	M5_TIMING_LOG("intWake [" << dec << curTick << "][" << dec << currentMemCycle << "]");
 
 	// move memory channels to the current time
@@ -215,13 +219,13 @@ void M5dramSystem::TickEvent::process()
 
 	// determine the next time to wake up
 	tick next = memory->ds->nextTick();	
-	
+
 
 	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCPURatio()) << "][" << next << "]");
 
 	assert(next > currentMemCycle);
 	assert(next * memory->getCPURatio() > curTick);
-	
+
 	schedule(next * memory->getCPURatio());
 }
 
@@ -301,9 +305,10 @@ void M5dramSystem::moveToTime(const tick now)
 //////////////////////////////////////////////////////////////////////
 M5dramSystem::M5dramSystem(const Params *p):
 PhysicalMemory(p), 
+tickEvent(this), 
 ports(1),
 lastPortIndex(0),
-tickEvent(this), 
+ds(NULL),
 needRetry(false),
 mostRecentChannel(0),
 cpuRatio(0),
@@ -333,7 +338,7 @@ currentTransactionID(0)
 	//cerr << cpuRatio << endl;
 	//invCpuRatio = (float)((double)ds->Frequency()/(Clock::Frequency));
 	//cerr << invCpuRatio << endl;
-	
+
 	timingOutStream << *ds << endl;
 }
 
@@ -472,6 +477,8 @@ void M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
 	resp.push_back(RangeSize(start(), params()->range.size()));
 }
 
+
+
 M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 : Event(&mainEventQueue, CPU_Tick_Pri), memory(c)
 {}
@@ -479,4 +486,117 @@ M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 const char *M5dramSystem::TickEvent::description()
 {
 	return "m5dramSystem tick event";	
+}
+
+void M5dramSystem::serialize(ostream &os)
+{
+	gzFile compressedMem;
+	string filename = name() + ".physmem";
+
+	SERIALIZE_SCALAR(filename);
+
+	// write memory file
+	string thefile = Checkpoint::dir() + "/" + filename.c_str();
+	int fd = creat(thefile.c_str(), 0664);
+	if (fd < 0) 
+	{
+		perror("creat");
+		fatal("Can't open physical memory checkpoint file '%s'\n", filename);
+	}
+
+	compressedMem = gzdopen(fd, "wb");
+	if (compressedMem == NULL)
+		fatal("Insufficient memory to allocate compression state for %s\n",
+		filename);
+
+	if (gzwrite(compressedMem, pmemAddr, params()->range.size()) !=
+		params()->range.size()) 
+	{
+		fatal("Write failed on physical memory checkpoint file '%s'\n",
+			filename);
+	}
+
+	if (gzclose(compressedMem))
+		fatal("Close failed on physical memory checkpoint file '%s'\n",
+		filename);
+
+}
+
+void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
+{
+	gzFile compressedMem;
+	long *tempPage;
+	long *pmem_current;
+	uint64_t curSize;
+	uint32_t bytesRead;
+	const int chunkSize = 16384;
+
+
+	string filename;
+
+	UNSERIALIZE_SCALAR(filename);
+
+	filename = cp->cptDir + "/" + filename;
+
+	// mmap memoryfile
+	int fd = open(filename.c_str(), O_RDONLY);
+	if (fd < 0)
+	{
+		perror("open");
+		fatal("Can't open physical memory checkpoint file '%s'", filename);
+	}
+
+	compressedMem = gzdopen(fd, "rb");
+	if (compressedMem == NULL)
+		fatal("Insufficient memory to allocate compression state for %s\n",
+		filename);
+
+	// unmap file that was mmaped in the constructor
+	// This is done here to make sure that gzip and open don't muck with our
+	// nice large space of memory before we reallocate it
+	munmap((char*)pmemAddr, params()->range.size());
+
+	pmemAddr = (uint8_t *)mmap(NULL, params()->range.size(),
+		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+
+	if (pmemAddr == (void *)MAP_FAILED) 
+	{
+		perror("mmap");
+		fatal("Could not mmap physical memory!\n");
+	}
+
+	curSize = 0;
+	tempPage = (long*)malloc(chunkSize);
+	if (tempPage == NULL)
+		fatal("Unable to malloc memory to read file %s\n", filename);
+	/* Only copy bytes that are non-zero, so we don't give the VM system hell */
+	while (curSize < params()->range.size()) 
+	{
+		bytesRead = gzread(compressedMem, tempPage, chunkSize);
+		if (bytesRead != chunkSize &&
+			bytesRead != params()->range.size() - curSize)
+			fatal("Read failed on physical memory checkpoint file '%s'"
+			" got %d bytes, expected %d or %d bytes\n",
+			filename, bytesRead, chunkSize,
+			params()->range.size() - curSize);
+
+		assert(bytesRead % sizeof(long) == 0);
+
+		for (int x = 0; x < bytesRead/sizeof(long); x++)
+		{
+			if (*(tempPage+x) != 0) {
+				pmem_current = (long*)(pmemAddr + curSize + x * sizeof(long));
+				*pmem_current = *(tempPage+x);
+			}
+		}
+		curSize += bytesRead;
+	}
+
+	free(tempPage);
+
+	if (gzclose(compressedMem))
+		fatal("Close failed on physical memory checkpoint file '%s'\n",
+		filename);
+
+
 }

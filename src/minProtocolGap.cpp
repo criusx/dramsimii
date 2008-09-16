@@ -31,7 +31,7 @@ int Channel::minProtocolGap(const Command *this_c) const
 			// respect tRRD and tRC of all other banks of same rank
 			int tRRDGap;
 
-			boost::circular_buffer<tick>::size_type ras_q_count = currentRank.lastActivateTimes.size();
+			//boost::circular_buffer<tick>::size_type ras_q_count = currentRank.lastActivateTimes.size();
 
 			if (currentRank.lastActivateTimes.empty())
 			{
@@ -264,37 +264,22 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			// respect tRRD and tRC of all other banks of same rank
 			tick tRRDLimit;
 
-			//if (currentRank.lastActivateTimes.empty())
-			//{
-			//	tRRDLimit = time;
-			//}
-			//else 
-			//{
-				// read tail end of RAS history
-			// lastActivateTimes should always be full
-				const tick lastRASTime = currentRank.lastActivateTimes.front(); 
-				// respect the row-to-row activation delay
-				tRRDLimit = lastRASTime + timingSpecification.tRRD();				
-			//}
-
+			const tick lastRASTime = currentRank.lastActivateTimes.front(); 
+			
+			// respect the row-to-row activation delay
+			tRRDLimit = lastRASTime + timingSpecification.tRRD();				
+			
 			// respect tRP of same bank
 			tick tRPLimit = currentBank.getLastPrechargeTime() + timingSpecification.tRP();
 
 			// respect the t_faw value for DDR2 and beyond
 			tick tFAWLimit;
 
-			//if (currentRank.lastActivateTimes.full())
-			//{
-				// read head of ras history
-			// lastActivateTimes should always be full
-				const tick fourthRASTime = currentRank.lastActivateTimes.back(); 
-				tFAWLimit = (int)(fourthRASTime - time) + timingSpecification.tFAW();
-			//}
-			//else
-			//{
-				tFAWLimit = time;
-			//}
-
+			const tick fourthRASTime = currentRank.lastActivateTimes.back(); 
+			tFAWLimit = (int)(fourthRASTime - time) + timingSpecification.tFAW();
+			
+			tFAWLimit = time;
+			
 			// respect tRFC
 			tick tRFCLimit = currentRank.getLastRefreshTime() + timingSpecification.tRFC();
 
@@ -359,7 +344,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 				//respect timingc of READ follow WRITE, different ranks
 				tCASLimit = max(tCASLimit,otherRankLastCASWTime + timingSpecification.tCWD() + otherRankLastCASWLength + timingSpecification.tRTRS() - timingSpecification.tCAS());
 			}
-			
+
 			nextTime = max(tRCDLimit,tCASLimit);
 
 			//fprintf(stderr," [%8d] [%8d] [%8d] [%8d] [%8d] [%2d]\n",(int)now,(int)this_r_last_cas_time,(int)this_r_last_casw_time,(int)other_r_last_cas_time,(int)other_r_last_casw_time,min_gap);
@@ -457,12 +442,21 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	case CAS_WITH_DRIVE_COMMAND:
 		break;
 
-	case REFRESH_ALL:
-		// respect tRFC and tRP
-		nextTime = max(currentRank.getLastRefreshTime() + timingSpecification.tRFC(), currentRank.getLastPrechargeTime() + timingSpecification.tRP());
+	case SELF_REFRESH:
+		break;
+
+	case DESELECT:
+		break;
+
+	case NOOP:
 		break;
 
 	case INVALID_COMMAND:
+		break;
+
+	case REFRESH_ALL:
+		// respect tRFC and tRP
+		nextTime = max(currentRank.getLastRefreshTime() + timingSpecification.tRFC(), currentRank.getLastPrechargeTime() + timingSpecification.tRP());
 		break;
 
 	default:

@@ -214,6 +214,18 @@ ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 	case REFRESH_ALL:
 		os << "REF   ";
 		break;
+	case SELF_REFRESH:
+		os << "SELREF";
+		break;
+	case DESELECT:
+		os << "DESLCT";
+		break;
+	case NOOP:
+		os << "NOOP  ";
+		break;
+	case INVALID_COMMAND:
+		os << "INVALD";
+		break;
 	}
 	return os;
 }

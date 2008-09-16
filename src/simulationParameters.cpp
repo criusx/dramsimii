@@ -3,8 +3,8 @@
 using namespace DRAMSimII;
 
 SimulationParameters::SimulationParameters(const Settings& settings):
-inputType(RANDOM),
-requestCount(settings.requestCount)
+requestCount(settings.requestCount),
+inputType(RANDOM)
 {}
 
 std::ostream& DRAMSimII::operator<<(std::ostream& in, const SimulationParameters& params)

@@ -51,8 +51,8 @@ System::System(const Settings &settings):
 systemConfig(settings),
 simParameters(settings),
 statistics(settings),
-inputStream(settings, systemConfig, channel),
 channel(systemConfig.getChannelCount(), Channel(settings, systemConfig, statistics)),
+inputStream(settings, systemConfig, channel),
 time(0),
 nextStats(settings.epoch)
 {

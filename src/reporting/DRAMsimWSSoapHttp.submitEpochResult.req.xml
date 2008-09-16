@@ -8,14 +8,14 @@
  xmlns:ns2="http://DRAMsimReporter/types/">
  <SOAP-ENV:Body>
    <ns2:submitEpochResultElement>
-    <ns2:sessionID></ns2:sessionID>
-    <ns2:epoch>0</ns2:epoch>
-    <ns2:channel>0</ns2:channel>
-    <ns2:rank>0</ns2:rank>
-    <ns2:PsysACTSTBY>0.0</ns2:PsysACTSTBY>
-    <ns2:PsysACT>0.0</ns2:PsysACT>
-    <ns2:PsysRD>0.0</ns2:PsysRD>
-    <ns2:PsysWR>0.0</ns2:PsysWR>
+    <ns2:String_1></ns2:String_1>
+    <ns2:int_2>0</ns2:int_2>
+    <ns2:arrayOfint_3>0</ns2:arrayOfint_3>
+    <ns2:arrayOfint_4>0</ns2:arrayOfint_4>
+    <ns2:arrayOffloat_5>0.0</ns2:arrayOffloat_5>
+    <ns2:arrayOffloat_6>0.0</ns2:arrayOffloat_6>
+    <ns2:float_7>0.0</ns2:float_7>
+    <ns2:float_8>0.0</ns2:float_8>
    </ns2:submitEpochResultElement>
 
  </SOAP-ENV:Body>

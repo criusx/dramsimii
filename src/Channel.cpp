@@ -77,8 +77,8 @@ lastRefreshTime(rhs.lastRefreshTime),
 lastCommandIssueTime(rhs.lastCommandIssueTime),
 lastRankID(rhs.lastRankID),
 timingSpecification(rhs.timingSpecification),
-refreshCounter(rhs.refreshCounter),
 transactionQueue(rhs.transactionQueue),
+refreshCounter(rhs.refreshCounter),
 historyQueue(rhs.historyQueue),
 completionQueue(rhs.completionQueue),
 systemConfig(systemConfig),
@@ -262,7 +262,7 @@ unsigned Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 //////////////////////////////////////////////////////////////////////////
 tick Channel::nextTick() const
 {
-	tick value = max(min(nextTransactionDecodeTime(),nextCommandExecuteTime()),time + 1);
+	//tick value = max(min(nextTransactionDecodeTime(),nextCommandExecuteTime()),time + 1);
 	return max(min(nextTransactionDecodeTime(),nextCommandExecuteTime()),time + 1);
 }
 
@@ -426,7 +426,6 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 		for (vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
-
 			totalRAS += l->getRASCount();			
 			perRankRASCount += l->getRASCount();
 			totalCAS += l->getCASCount();
@@ -543,23 +542,18 @@ bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vecto
 	DRAMsimWSSoapHttp service;
 	_ns2__submitEpochResultElement submit;
 
-	char newString[64];
-	systemConfig.getSessionID().copy(newString,systemConfig.getSessionID().length());
-	submit.sessionID = newString;
+	string session(systemConfig.getSessionID());
+	submit.sessionID = &session;
 
 	submit.epoch = currentTime;
 
 	vector<int> channelArray(rank.size(),channelID);	
-	submit.channel = &channelArray[0];
-	submit.__sizechannel = channelArray.size();
+	submit.channel = channelArray;
 
-	submit.rank = &rankArray[0];
-	submit.__sizerank = rankArray.size();
+	submit.rank = rankArray;
 
-	submit.PsysACTSTBY = &PsysACTSTBYArray[0];
-	submit.__sizePsysACTSTBY = PsysACTSTBYArray.size();
-	submit.PsysACT = &PsysACTArray[0];
-	submit.__sizePsysACT = PsysACTArray.size();
+	submit.PsysACTSTBY = PsysACTSTBYArray;
+	submit.PsysACT = PsysACTArray;
 	submit.PsysRD = PsysRD;
 	submit.PsysWR = PsysWR;
 	_ns2__submitEpochResultResponseElement response;

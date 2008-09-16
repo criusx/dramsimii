@@ -110,6 +110,10 @@ public:
 	void moveToTime(tick now);
 
 	virtual ~M5dramSystem();
+
+	virtual void serialize(std::ostream &os);
+	virtual void unserialize(Checkpoint *cp, const std::string &section);
+
 };
 
 #endif

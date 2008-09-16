@@ -88,6 +88,14 @@ envTest = Environment(CCFLAGS = '-g -O -Weffc++ -DDEBUG',
 			OBJSUFFIX = ".ot",
 			CPPPATH = '/usr/include/libxml2/')
 
+envProfgen = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate',
+			OBJSUFFIX = ".opg",
+			CPPPATH = '/usr/include/libxml2/')
+
+envProfuse = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-use',
+			OBJSUFFIX = ".opu",
+			CPPPATH = '/usr/include/libxml2/')
+
                   
 # This function adds the specified sources to the given build
 # environment, and returns a list of all the corresponding SCons
@@ -128,3 +136,5 @@ env.Program('dramSimII.debug',sourceFile, LIBS=['boost_thread', 'boost_iostreams
 envOpt.Program('dramSimII.opt',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
 envTest.Program('dramSimII.test',sourcesTest, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
 envProf.Program('dramSimII.prof',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
+envProfgen.Program('dramSimII.profgen',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework', 'gcov'])
+envProfuse.Program('dramSimII.profuse',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework', 'gcov'])
