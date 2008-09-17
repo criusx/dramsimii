@@ -103,7 +103,7 @@ void SSTdramSystem::moveToTime(const tick now)
 				assert(curTick <= static_cast<tick>(finishTime * getCpuRatio()));
 
 				//M5_TIMING_LOG("<-T [@" << std::dec << static_cast<tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick);
-				
+
 				//ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
 				/// @todo check for port contention when returning parcels
 				sendParcel(packet,packet->source(), TimeStamp());
@@ -115,7 +115,7 @@ void SSTdramSystem::moveToTime(const tick now)
 		}	
 	}
 
-	
+
 }
 
 bool SSTdramSystem::doAtomicAccess(parcel *p)

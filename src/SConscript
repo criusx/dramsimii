@@ -1,4 +1,5 @@
 Import('*')
+import shutil
 
 conf = Configure(env)
 if not conf.CheckLib('boost_serialization'):
@@ -21,8 +22,11 @@ if not conf.CheckLib('boost_signals'):
 	print 'Boost signals library not found, please install this.'
 	Exit(1)
 	
-
-
+#print env._dict['ENV']['PWD']
+#shutil.copy(Dir('.').abspath + '/m5/dramsim.py',env._dict['ENV']['PWD'] + '/configs/examples/')
+#print Dir('.').abspath
+#for x in env._dict:
+#	print x, env._dict[x]
 #makeEnv('faster', '.ff', strip = True,
 #        CCFLAGS = Split('-O3 -ffast-math -march=athlon64 -fexceptions -I/usr/include/libxml2'),
 #        CPPDEFINES = ['NDEBUG', 'TRACING_ON=0'],
