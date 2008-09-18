@@ -57,7 +57,6 @@ SSTdramSystem::preTic()
 
 	if (curTick >= nextStats)
 	{
-
 		ds->doPowerCalculation();
 		ds->printStatistics();
 	}

@@ -4,9 +4,11 @@ import shutil
 conf = Configure(env)
 if not conf.CheckLib('boost_serialization'):
 	print 'Boost serialization library not found, please install this.'
+	print 'e.g. sudo apt-get install "libboost-serialization*"'
 	Exit(1)
 if not conf.CheckLib('boost_iostreams'):
-	print 'Boost iostreams library not found, please install first.'
+	print 'Boost iostreams library not found, please install this.'
+	print 'e.g. sudo apt-get install "libboost-iostreams*"'
 	Exit(1)
 if not conf.CheckCXXHeader('boost/circular_buffer.hpp'):
 	print 'Need Boost 1.35 or newer with the circular buffer library.'
@@ -14,17 +16,37 @@ if not conf.CheckCXXHeader('boost/circular_buffer.hpp'):
 	Exit(1)
 if not conf.CheckLib('boost_thread'):
 	print 'Boost thread library not found, please install this.'
+	print 'e.g. sudo apt-get install "libboost-thread*"'
 	Exit(1)
 if not conf.CheckLib('boost_unit_test_framework'):
 	print 'Boost unit test framework not found, please install this.'
+	print 'e.g. sudo apt-get install "libboost-test*"'
 	Exit(1)
 if not conf.CheckLib('boost_signals'):
 	print 'Boost signals library not found, please install this.'
+	print 'e.g. sudo apt-get install "libboost-signals*"'
+	Exit(1)	
+if not conf.CheckLib('xml2'):
+	print 'libXml2 not found, please install this.'
+	print 'e.g. sudo apt-get install "libxml2-*"'
 	Exit(1)
-	
+
+print Dir('.').abspath	
+#print Source
+#module_depends.append(File('../m5/dramsim.py'))
+#SimObject('../m5/dramsim.py')
 #print env._dict['ENV']['PWD']
-#shutil.copy(Dir('.').abspath + '/m5/dramsim.py',env._dict['ENV']['PWD'] + '/configs/examples/')
+#print env._dict
+#shutil.copy(Dir('.').abspath + '/m5/dramsim.py',env._dict['ENV']['OLDPWD'] + '/configs/examples/')
 #print Dir('.').abspath
+#print dir('make_switching_dir')
+#print dir('nonsticky_opts')
+#dir('sticky_opts')
+#print dir('env')
+#print dir()
+#for x in dir():
+	#if x.startswith("var"):
+#		exec("print " + x)
 #for x in env._dict:
 #	print x, env._dict[x]
 #makeEnv('faster', '.ff', strip = True,

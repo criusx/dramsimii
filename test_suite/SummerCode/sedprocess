@@ -1,0 +1,7 @@
+N
+N
+N
+s/chan\[ffffffff\]/chan\[       0\]/1
+s/chan\[ffffffff\]/chan\[       1\]/1
+s/chan\[ffffffff\]/chan\[       2\]/1 
+s/chan\[ffffffff\]/chan\[       3\]/1

@@ -1,3 +1,0 @@
-to install DRAMSimII as a module for M5
-1. make sure the DRAMSimII directory is in <m5>/src/mem/ or somewhere similar, M5 searches the src subdir for SConscript files to locate add-on modules
-2. se.py is copied to <m5>/configs/examples/
