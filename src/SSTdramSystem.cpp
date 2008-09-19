@@ -1,13 +1,19 @@
-
 #include "SSTdramSystem.h"
 
+#include <configuration.h>
+#include <instruction.h>
+
+#include <debug.h>
 
 
-SSTdramSystem::SSTdramSystem():
-generator(42u),
-uni_dist(0,65535),
-uni(generator, uni_dist)
+SSTdramSystem::SSTdramSystem(std::string prefix):
+component(prefix),
+randomNumberGenerator(std::time(0)),
+rngDistributionModel(0,1),
+rngGenerator(randomNumberGenerator, rngDistributionModel),
+cpuRatio(0)
 {
+	cpuRatio =(int)round(((float)ClockMhz()/((float)ds->Frequency())));
 
 }
 
@@ -32,10 +38,10 @@ void SSTdramSystem::handleParcel(parcel *p)
 
 		// do the read or write for this transaction
 		doAtomicAccess(p);
-		int randomDelay = uni();
+		int randomDelay = rngGenerator();
 		DEBUG_TIMING_LOG("sending packet back at " << std::dec << static_cast<tick>(Timestamp() + randomDelay));
 		/// @todo avoid port contention, ensure that the port is available
-		sendParcel(p,p->source(), Timestamp() + randomDelay);
+		sendParcel(p,p->source(), TimeStamp() + randomDelay);
 #else
 
 #endif
@@ -51,17 +57,11 @@ void SSTdramSystem::handleParcel(parcel *p)
 
 }
 
-SSTdramSystem::preTic()
+void SSTdramSystem::preTic()
 {
 	tick curTick = TimeStamp();
 
-	if (curTick >= nextStats)
-	{
-		ds->doPowerCalculation();
-		ds->printStatistics();
-	}
-	while (curTick >= nextStats)
-		nextStats += STATS_INTERVAL;
+	//ds->checkStats();
 
 	M5_TIMING_LOG("intWake [" << std::dec << curTick << "][" << std::dec << currentMemCycle << "]");
 
@@ -84,11 +84,11 @@ SSTdramSystem::preTic()
 void SSTdramSystem::moveToTime(const tick now)
 {
 	tick finishTime;	
-
+	boost::uint64_t curTick = TimeStamp();
 	parcel *packet;
 	// if transactions are returned, then send them back,
 	// else if time is not brought up to date, then a refresh transaction has finished
-	while ((packet = (parcel *)ds->moveAllChannelsToTime(now, &finishTime)) || finishTime < now)
+	while ((packet = (parcel *)ds->moveAllChannelsToTime(now, finishTime)) || finishTime < now)
 	{
 		if (packet)
 		{			
@@ -99,7 +99,7 @@ void SSTdramSystem::moveToTime(const tick now)
 			// needs a response
 			if (packet->inst())
 			{			
-				assert(curTick <= static_cast<tick>(finishTime * getCpuRatio()));
+				assert(curTick <= static_cast<tick>(finishTime * cpuRatio));
 
 				//M5_TIMING_LOG("<-T [@" << std::dec << static_cast<tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick);
 
