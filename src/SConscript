@@ -2,6 +2,7 @@ Import('*')
 import shutil
 
 conf = Configure(env)
+
 if not conf.CheckLib('boost_serialization'):
 	print 'Boost serialization library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-serialization*"'
@@ -25,43 +26,24 @@ if not conf.CheckLib('boost_unit_test_framework'):
 if not conf.CheckLib('boost_signals'):
 	print 'Boost signals library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-signals*"'
-	Exit(1)	
+	Exit(1)
+if not conf.CheckCXXHeader('vector'):
+        print 'vector must be installed!'
+        Exit(1)
+#if not conf.CheckCHeader('xmlreader.h'):
+#	print 'Missing xmlreader.h from libxml2'
+#	Exit(1)
+#if not conf.CheckCHeader('libxml2/libxml/parser.h'):
+#	print 'Missing parser.h from libxml2'
+#	Exit(1)
+#if not conf.CheckCHeader('libxml2/libxml/tree.h'):
+#	print 'Missing tree.h from libxml2'
+#	Exit(1)
 if not conf.CheckLib('xml2'):
-	print 'libXml2 not found, please install this.'
+	print 'libxml2 not found, please install this.'
 	print 'e.g. sudo apt-get install "libxml2-*"'
 	Exit(1)
 
-print Dir('.').abspath	
-#print Source
-#module_depends.append(File('../m5/dramsim.py'))
-#SimObject('../m5/dramsim.py')
-#print env._dict['ENV']['PWD']
-#print env._dict
-#shutil.copy(Dir('.').abspath + '/m5/dramsim.py',env._dict['ENV']['OLDPWD'] + '/configs/examples/')
-#print Dir('.').abspath
-#print dir('make_switching_dir')
-#print dir('nonsticky_opts')
-#dir('sticky_opts')
-#print dir('env')
-#print dir()
-#for x in dir():
-	#if x.startswith("var"):
-#		exec("print " + x)
-#for x in env._dict:
-#	print x, env._dict[x]
-#makeEnv('faster', '.ff', strip = True,
-#        CCFLAGS = Split('-O3 -ffast-math -march=athlon64 -fexceptions -I/usr/include/libxml2'),
-#        CPPDEFINES = ['NDEBUG', 'TRACING_ON=0'],
-#        LINKFLAGS = Split('-lxml2 -lboost_iostreams -lboost_thread'))
-#print env.CCFLAGS
-#print env.CPPDEFINES
-#print env.LINKFLAGS
-#print env.OBJSUFFIX
-#env.Append(CCFLAGS = Split('-O3 -ffast-math -march=athlon64 -fexceptions -I/usr/include/libxml2'),
-#	CPPDEFINES = ['M5DEBUG'],
-#	LINKFLAGS = Split('-lxml2 -lboost_iostreams -lboost_thread'))
-
-# get rid of the flag that makes it impossible to compile
 env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
 
 env.Append(CCFLAGS = ['-I/usr/include/libxml2'],
@@ -102,3 +84,35 @@ Source('transaction2commands.cpp')
 Source('reporting/soapC.cpp')
 Source('reporting/soapClient.cpp')
 Source('reporting/stdsoap2.cpp')
+
+env = conf.Finish()
+
+
+#print Dir('.').abspath	
+#print Source
+#module_depends.append(File('../m5/dramsim.py'))
+#SimObject('../m5/dramsim.py')
+#print env._dict['ENV']['PWD']
+#print env._dict
+#shutil.copy(Dir('.').abspath + '/m5/dramsim.py',env._dict['ENV']['OLDPWD'] + '/configs/examples/')
+#print Dir('.').abspath
+#print dir('make_switching_dir')
+#print dir('nonsticky_opts')
+#dir('sticky_opts')
+#print dir('env')
+#print dir()
+#for x in env._dict:
+#	print x, env._dict[x]
+#makeEnv('faster', '.ff', strip = True,
+#        CCFLAGS = Split('-O3 -ffast-math -march=athlon64 -fexceptions -I/usr/include/libxml2'),
+#        CPPDEFINES = ['NDEBUG', 'TRACING_ON=0'],
+#        LINKFLAGS = Split('-lxml2 -lboost_iostreams -lboost_thread'))
+#print env.CCFLAGS
+#print env.CPPDEFINES
+#print env.LINKFLAGS
+#print env.OBJSUFFIX
+#env.Append(CCFLAGS = Split('-O3 -ffast-math -march=athlon64 -fexceptions -I/usr/include/libxml2'),
+#	CPPDEFINES = ['M5DEBUG'],
+#	LINKFLAGS = Split('-lxml2 -lboost_iostreams -lboost_thread'))
+
+# get rid of the flag that makes it impossible to compile
