@@ -106,6 +106,8 @@ namespace DRAMSimII
 		unsigned IDD4R;
 		unsigned IDD5;
 
+		void setKeyValue(const std::string nodeName, const std::string nodeValue);
+
 		// converts a string to a file_io_token
 		static FileIOToken dramTokenizer(const std::string &input)
 		{
@@ -117,8 +119,12 @@ namespace DRAMSimII
 				return dram_type_token;
 			else if (input == "datarate")
 				return datarate_token;
+			else if (input == "dramspec")
+				return dram_type_token;
 			else if (input == "tBufferDelay")
 				return t_buffer_delay_token;
+			else if (input == "inputType")
+				return input_type_token;
 			else if (input == "epoch")
 				return epoch_token;
 			else if (input == "clock_granularity" || input == "clockGranularity")
@@ -149,6 +155,10 @@ namespace DRAMSimII
 				return input_file_token;
 			else if (input == "outFile")
 				return output_file_token;
+			else if (input == "outFileType")
+				return output_file_type_token;
+			else if (input == "random")
+				return random_distribution_token;
 			else if (input == "auto_refresh_policy" || input == "autoRefreshPolicy")
 				return refresh_policy_token;
 			else if (input == "cpuToMemoryClockRatio")

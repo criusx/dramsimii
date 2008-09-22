@@ -654,6 +654,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\SettingsXML.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\simulationParameters.cpp"
 				>
 			</File>

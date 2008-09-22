@@ -1,6 +1,3 @@
-#include <libxml/xmlreader.h>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
 #include <boost/random.hpp>
 #include <stdlib.h>
 #include <iostream>
@@ -13,497 +10,6 @@
 using namespace std;
 using namespace DRAMSimII;
 
-Settings::Settings(const int argc, const char **argv):
-systemType(BASELINE_CONFIG)
-{
-	// if there are not enough arguments or one is for help, print the help msg and quit
-	bool printHelp = false;
-	const string help = "help";
-	for (int i = argc - 1; i > 0; --i)
-	{
-		if (help == argv[i])
-		{
-			printHelp = true;
-			break;
-		}
-	}
-	if ((argc < 2) || printHelp)
-	{
-		cout << "Usage: " << argv[0] << " -options optionswitch" << endl;
-		cout << "-input_type [k6|mase|random]" << endl;
-		cout << "-trace_file TRACE_FILENAME" << endl;
-		cout << "-dram:spd_input SPD_FILENAME" << endl;
-		cout << "-output_file OUTPUT_FILENAME" << endl;
-		cout << "-debug" << endl;
-		exit(0);
-	}
-	// first find the settings file
-	const string settings = "--settings";
-	string settingsFile = "";
-	for (int i = argc - 1; i >= 0; --i)
-	{
-		if (settings == argv[i])
-		{
-			settingsFile = argv[i+1];
-			break;
-		}
-	}
-	if (settingsFile == "")
-	{
-		cout << "No settings file specified, use --settings <filename.xml> " << endl;
-		exit (-1);
-	}
-
-//#define USEREADERFORMEMORY
-
-
-	ifstream xmlFile(settingsFile.c_str(),ios::in|ios::ate);
-
-	xmlTextReader *reader = NULL;
-
-	char *entireXmlFile = NULL;
-	ifstream::pos_type entireXmlFileLength = 0;
-
-	if (xmlFile.is_open())
-	{
-		entireXmlFileLength = xmlFile.tellg();
-		entireXmlFile = new char[entireXmlFileLength];
-
-		xmlFile.seekg(0,ios::beg);
-		xmlFile.read(entireXmlFile,entireXmlFileLength);
-		
-		xmlFile.close();
-		
-		entireXmlFile[entireXmlFileLength] = 0;
-#ifdef USEREADERFORMEMORY
-		reader = xmlReaderForMemory(
-			entireXmlFile,entireXmlFileLength,
-			NULL,NULL,
-			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);	
-#else
-		reader = xmlReaderForFile( 
-			settingsFile.c_str(), 
-			NULL, 
-			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID); 
-#endif
-
-	}
-
-	if (reader == NULL)
-	{
-		cout << "Unable to open settings file \"" << settingsFile << "\"" << endl;
-		exit(-2);
-	}
-	else
-	{
-		if (xmlTextReaderIsValid(reader) != 1)
-		{
-			cerr << "\"" << settingsFile << "\" does not validate." << endl;
-			exit(-2);
-		}		
-
-		int ret;		
-		string nodeName;
-		string nodeValue;
-
-		while ((ret = xmlTextReaderRead(reader)) == 1)
-		{	
-			switch (xmlTextReaderNodeType(reader))
-			{
-			case XML_ELEMENT_NODE:
-				{
-					if (!xmlTextReaderConstName(reader))
-						break;
-					nodeName = (const char *)xmlTextReaderConstName(reader);
-					if (nodeName == "dramspec")
-					{
-						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
-						string attrS = (const char *)attr;
-						if (attrS == "ddr2")
-							dramType = DDR2;
-						else if (attrS == "ddr")
-							dramType = DDR;
-						else if (attrS == "ddr3")
-							dramType = DDR3;
-						else if (attrS == "drdram")
-							dramType = DRDRAM;
-						else
-							dramType = DDR2;
-						xmlFree(attr);
-					}
-					else if (nodeName == "inputFile")
-					{
-						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
-						string type = (const char *)attr;
-						if (type == "mase")
-							inFileType = MASE_TRACE;
-						else if (type == "k6")
-							inFileType = K6_TRACE;
-						else if (type == "mapped")
-							inFileType = MAPPED;
-						else if (type == "random")
-						{
-							if (xmlTextReaderRead(reader) == 1)
-							{
-								if (xmlTextReaderNodeType(reader) == XML_TEXT_NODE)
-								{
-									inFileType = RANDOM;
-
-									nodeValue = (const char *)xmlTextReaderConstValue(reader);
-
-									if (nodeValue == "uniform")
-										arrivalDistributionModel = UNIFORM_DISTRIBUTION;
-									else if (nodeValue == "poisson")
-										arrivalDistributionModel = POISSON_DISTRIBUTION;
-									else if (nodeValue == "gaussian")
-										arrivalDistributionModel = GAUSSIAN_DISTRIBUTION;
-									else if (nodeValue == "normal")
-										arrivalDistributionModel = NORMAL_DISTRIBUTION;
-									else
-									{
-										cerr << "unrecognized distribution model: \"" << nodeValue << "\", defaulting to uniform";
-										arrivalDistributionModel = NORMAL_DISTRIBUTION;
-									}
-								}								
-							}							
-						}
-						xmlFree(attr);
-					}
-					else if (nodeName == "outFile")
-					{
-						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
-						if (attr)
-						{
-							const string type = (const char *)attr;
-							if (type == "gz" || type == "GZ")
-								outFileType = GZ;
-							else if (type == "bz" || type == "BZ" || type == "bzip" || type == "bzip2" || type == "bz2")
-								outFileType = BZ;
-							else if (type == "cout" || type == "stdout" || type == "COUT")
-								outFileType = COUT;
-							else if (type == "uncompressed" || type == "plain")
-								outFileType = UNCOMPRESSED;
-							else
-								outFileType = NONE;
-						}
-						else
-						{
-							outFileType = NONE;
-						}
-						xmlFree(attr);
-					}					
-				}
-				break;
-			case XML_TEXT_NODE:				
-				if (xmlTextReaderConstName(reader))
-				{
-					nodeValue = (const char *)xmlTextReaderConstValue(reader);
-					
-					switch (dramTokenizer(nodeName))
-					{
-					case unknown_token:
-						break;
-					case cpu_to_memory_clock_ratio:
-						toNumeric<float>(cpuToMemoryClockRatio,nodeValue,std::dec);
-						break;
-					case input_file_token:
-						inFile = nodeValue;
-						break;
-					case output_file_token:
-						outFile = nodeValue;
-						break;
-					case epoch_token:
-						toNumeric<unsigned>(epoch,nodeValue,std::dec);
-						break;
-					case frequency_spec_token:
-						toNumeric<unsigned>(frequencySpec,nodeValue,std::dec);
-						break;
-					case p_dq_rd_token:
-						toNumeric<float>(PdqRD,nodeValue,std::dec);
-						break;
-					case p_dq_wr_token:
-						toNumeric<float>(PdqWR,nodeValue,std::dec);
-						break;
-					case p_dq_rd_oth_token:
-						toNumeric<float>(PdqRDoth,nodeValue,std::dec);
-						break;
-					case p_dq_wr_oth_token:
-						toNumeric<float>(PdqWRoth,nodeValue,std::dec);
-						break;
-					case dq_per_dram_token:
-						toNumeric<unsigned>(DQperDRAM,nodeValue,std::dec);
-						break;
-					case dqs_per_dram_token:
-						toNumeric<unsigned>(DQSperDRAM,nodeValue,std::dec);
-						break;
-					case dm_per_dram_token:
-						toNumeric<unsigned>(DMperDRAM,nodeValue,std::dec);
-						break;
-					case request_count_token:
-						toNumeric<unsigned>(requestCount,nodeValue,std::dec);
-						break;
-					case idd5_token:
-						toNumeric<unsigned>(IDD5,nodeValue,std::dec);
-						break;
-					case idd4r_token:
-						toNumeric<unsigned>(IDD4R,nodeValue,std::dec);
-						break;
-					case idd4w_token:
-						toNumeric<unsigned>(IDD4W,nodeValue,std::dec);
-						break;
-					case idd3n_token:
-						toNumeric<unsigned>(IDD3N,nodeValue,std::dec);
-						break;
-					case idd3p_token:
-						toNumeric<unsigned>(IDD3P,nodeValue,std::dec);
-						break;
-					case idd2n_token:
-						toNumeric<unsigned>(IDD2N,nodeValue,std::dec);
-						break;
-					case idd2p_token:
-						toNumeric<unsigned>(IDD2P,nodeValue,std::dec);
-						break;
-					case idd0_token:
-						toNumeric<unsigned>(IDD0,nodeValue,std::dec);
-						break;
-					case vdd_token:
-						toNumeric<float>(VDD,nodeValue,std::dec);
-						break;
-					case t_cwd_token:
-						toNumeric<unsigned>(tCWD,nodeValue,std::dec);
-						break;
-					case t_buffer_delay_token:
-						toNumeric<unsigned>(tBufferDelay,nodeValue,std::dec);
-						break;
-					case t_cmd_token:
-						toNumeric<unsigned>(tCMD,nodeValue,std::dec);
-						break;
-					case t_wtr_token:
-						toNumeric<unsigned>(tWTR,nodeValue,std::dec);
-						break;
-					case t_wr_token:
-						toNumeric<unsigned>(tWR,nodeValue,std::dec);
-						break;
-					case t_refi_token:
-						toNumeric<unsigned>(tREFI,nodeValue,std::dec);
-						break;
-					case t_rtrs_token:
-						toNumeric<unsigned>(tRTRS,nodeValue,std::dec);
-						break;
-					case t_rtp_token:
-						toNumeric<unsigned>(tRTP,nodeValue,std::dec);
-						break;
-					case t_rrd_token:
-						toNumeric<unsigned>(tRRD,nodeValue,std::dec);
-						break;
-					case t_rfc_token:
-						toNumeric<unsigned>(tRFC,nodeValue,std::dec);
-						break;
-					case t_rcd_token:
-						toNumeric<unsigned>(tRCD,nodeValue,std::dec);
-						break;
-					case t_rc_token:
-						toNumeric<unsigned>(tRC,nodeValue,std::dec);
-						break;
-					case t_rp_token:
-						toNumeric<unsigned>(tRP,nodeValue,std::dec);
-						break;
-					case t_ras_token:
-						toNumeric<unsigned>(tRAS,nodeValue,std::dec);
-						break;
-					case t_faw_token:
-						toNumeric<unsigned>(tFAW,nodeValue,std::dec);
-						break;
-					case t_cas_token:
-						toNumeric<unsigned>(tCAS,nodeValue,std::dec);
-						break;
-					case t_burst_token:
-						toNumeric<unsigned>(tBurst,nodeValue,std::dec);
-						break;
-					case t_al_token:
-						toNumeric<unsigned>(tAL,nodeValue,std::dec);
-						break;
-					case refresh_queue_depth_token:
-						toNumeric<unsigned>(refreshQueueDepth,nodeValue,std::dec);
-						break;
-					case bank_count_token:
-						toNumeric<unsigned>(bankCount,nodeValue,std::dec);
-						break;
-					case rank_count_token:
-						toNumeric<unsigned>(rankCount,nodeValue,std::dec);
-						break;
-					case chan_count_token:
-						toNumeric<unsigned>(channelCount,nodeValue,std::dec);
-						break;
-					case short_burst_ratio_token:
-						toNumeric<float>(shortBurstRatio,nodeValue,std::dec);
-						break;
-					case read_percentage_token:
-						toNumeric<float>(readPercentage,nodeValue,std::dec);
-						break;					
-					case per_bank_queue_depth_token:
-						toNumeric<unsigned>(perBankQueueDepth,nodeValue,std::dec);
-						break;
-					case event_queue_depth_token:
-						toNumeric<unsigned>(eventQueueDepth,nodeValue,std::dec);
-						break;
-					case transaction_queue_depth_token:
-						toNumeric<unsigned>(transactionQueueDepth,nodeValue,std::dec);
-						break;
-					case completion_queue_depth_token:
-						toNumeric<unsigned>(completionQueueDepth,nodeValue,std::dec);
-						break;
-					case history_queue_depth_token:
-						toNumeric<unsigned>(historyQueueDepth,nodeValue,std::dec);
-						break;
-					case cacheline_size_token:
-						toNumeric<unsigned>(cacheLineSize,nodeValue,std::dec);
-						break;
-					case row_size_token:
-						toNumeric<unsigned>(rowSize,nodeValue,std::dec);
-						break;
-					case col_size_token:
-						toNumeric<unsigned>(columnSize,nodeValue,std::dec);
-						break;
-					case channel_width_token:
-						toNumeric<unsigned>(channelWidth,nodeValue,std::dec);
-						break;
-					case col_count_token:
-						toNumeric<unsigned>(columnCount,nodeValue,std::dec);
-						break;
-					case row_count_token:
-						toNumeric<unsigned>(rowCount,nodeValue,std::dec);
-						break;
-					case cachelines_per_row_token:
-						toNumeric<unsigned>(cachelinesPerRow,nodeValue,std::dec);
-						break;
-					case posted_cas_token:
-						postedCAS = (nodeValue == "true") ? true : false;
-						break;
-					case seniority_age_limit_token:
-						toNumeric<unsigned>(seniorityAgeLimit,nodeValue,std::dec);
-						break;
-					case refresh_policy_token:
-						if (nodeValue == "none" || nodeValue == "no refresh")
-							refreshPolicy = NO_REFRESH;
-						else if (nodeValue == "bankConcurrent")
-							refreshPolicy = BANK_CONCURRENT;
-						else if (nodeValue == "bankStaggeredHidden")
-							refreshPolicy = BANK_STAGGERED_HIDDEN;
-						else if (nodeValue == "refreshOneChanAllRankAllBank")
-							refreshPolicy = ONE_CHANNEL_ALL_RANK_ALL_BANK;
-						else
-							refreshPolicy = NO_REFRESH;
-						break;
-					case read_write_grouping_token:
-						readWriteGrouping = (nodeValue == "true") ? true : false;
-						break;
-					case refresh_time_token:
-						toNumeric<unsigned>(refreshTime,nodeValue,std::dec);
-						break;
-					case system_configuration_type_token:
-						// TODO: if baseline, then normal system, if FBD, then make a FBD system
-
-						break;
-					case transaction_ordering_policy_token:
-						if (nodeValue == "strict")
-							transactionOrderingAlgorithm = STRICT;
-						else if (nodeValue == "RIFF" || nodeValue == "riff")
-							transactionOrderingAlgorithm = RIFF;
-						else
-							transactionOrderingAlgorithm = STRICT;						
-						break;
-					case command_ordering_algorithm_token:
-						if (nodeValue == "strict")
-							commandOrderingAlgorithm = STRICT_ORDER;
-						else if (nodeValue == "bankRoundRobin")
-							commandOrderingAlgorithm = BANK_ROUND_ROBIN;
-						else if (nodeValue == "rankRoundRobin")
-							commandOrderingAlgorithm = RANK_ROUND_ROBIN;
-						else if (nodeValue == "wangHop")
-							commandOrderingAlgorithm = WANG_RANK_HOP;
-						else if (nodeValue == "greedy")
-							commandOrderingAlgorithm = GREEDY;
-						else {
-							cerr << "Unrecognized ordering algorithm: " << nodeValue << endl;
-							commandOrderingAlgorithm = BANK_ROUND_ROBIN;
-						}
-						break;
-					case addr_mapping_scheme_token:
-						if (nodeValue == "burgerBase")
-							addressMappingScheme = BURGER_BASE_MAP;
-						else if (nodeValue == "closePageBaseline")
-							addressMappingScheme = CLOSE_PAGE_BASELINE;
-						else if (nodeValue == "intel845g")
-							addressMappingScheme = INTEL845G_MAP;
-						else if (nodeValue == "sdramBase")
-							addressMappingScheme = SDRAM_BASE_MAP;
-						else if (nodeValue == "sdramClosePage")
-							addressMappingScheme = SDRAM_CLOSE_PAGE_MAP;
-						else if (nodeValue == "sdramHiperf")
-							addressMappingScheme = SDRAM_HIPERF_MAP;
-						else
-							addressMappingScheme = SDRAM_HIPERF_MAP;
-						break;
-					case auto_precharge_token:
-						autoPrecharge = (nodeValue == "true") ? true : false;
-						break;
-					case row_buffer_management_policy_token:
-						if (nodeValue == "openPage")
-							rowBufferManagementPolicy = OPEN_PAGE;
-						else if (nodeValue == "closePage")
-							rowBufferManagementPolicy = CLOSE_PAGE;
-						else if (nodeValue == "closePageOptimized")
-							rowBufferManagementPolicy = CLOSE_PAGE_OPTIMIZED;
-						else
-							rowBufferManagementPolicy = AUTO_PAGE;
-						break;
-					case clock_granularity_token:
-						toNumeric<unsigned>(clockGranularity,nodeValue,std::dec);
-						break;
-					case datarate_token:
-						toNumeric<unsigned>(dataRate,nodeValue,std::dec);
-						break;
-					case max_vcc_token:
-						toNumeric<float>(maxVCC,nodeValue,std::dec);
-						break;					
-					default:
-						break;
-					}
-				}
-			case XML_CDATA_SECTION_NODE:
-				break;
-			}
-		}
-
-		if ((ret == -1) || (xmlTextReaderIsValid(reader) != 1))
-		{
-			cerr << "There was an error reading/parsing " << settingsFile << "." << endl;
-			exit(-2);
-		}
-		else
-		{
-			if (entireXmlFileLength > 0)
-				settingsOutputFile.append(entireXmlFile, entireXmlFileLength);
-			else
-			{
-				cerr << "Could not create output for settings file" << endl;
-				exit(-2);
-			}
-		}
-		// close the reader
-		xmlFreeTextReader(reader);
-		xmlMemoryDump();
-	}
-
-	boost::mt19937 generator(std::time(0));
-	// Define a uniform random number distribution which produces "double"
-	// values between 0 and 1 (0 inclusive, 1 exclusive).
-	boost::uniform_int<> uni_dist(0,INT_MAX);
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > uni(generator, uni_dist);	
-	sessionID = toString(uni());
-
-}
 
 // for unit tests, should not be instantiated
 Settings::Settings():
@@ -586,3 +92,327 @@ IDD4W(UINT_MAX),
 IDD4R(UINT_MAX),
 IDD5(UINT_MAX)
 {}
+
+void Settings::setKeyValue(const string nodeName, const string nodeValue )
+{
+	switch (dramTokenizer(nodeName))
+	{
+	case unknown_token:
+		break;
+	case cpu_to_memory_clock_ratio:
+		toNumeric<float>(cpuToMemoryClockRatio,nodeValue,std::dec);
+		break;
+	case input_file_token:
+		inFile = nodeValue;
+		break;
+	case output_file_token:
+		outFile = nodeValue;
+		break;
+	case epoch_token:
+		toNumeric<unsigned>(epoch,nodeValue,std::dec);
+		break;
+	case frequency_spec_token:
+		toNumeric<unsigned>(frequencySpec,nodeValue,std::dec);
+		break;
+	case p_dq_rd_token:
+		toNumeric<float>(PdqRD,nodeValue,std::dec);
+		break;
+	case p_dq_wr_token:
+		toNumeric<float>(PdqWR,nodeValue,std::dec);
+		break;
+	case p_dq_rd_oth_token:
+		toNumeric<float>(PdqRDoth,nodeValue,std::dec);
+		break;
+	case p_dq_wr_oth_token:
+		toNumeric<float>(PdqWRoth,nodeValue,std::dec);
+		break;
+	case dq_per_dram_token:
+		toNumeric<unsigned>(DQperDRAM,nodeValue,std::dec);
+		break;
+	case dqs_per_dram_token:
+		toNumeric<unsigned>(DQSperDRAM,nodeValue,std::dec);
+		break;
+	case dm_per_dram_token:
+		toNumeric<unsigned>(DMperDRAM,nodeValue,std::dec);
+		break;
+	case request_count_token:
+		toNumeric<unsigned>(requestCount,nodeValue,std::dec);
+		break;
+	case idd5_token:
+		toNumeric<unsigned>(IDD5,nodeValue,std::dec);
+		break;
+	case idd4r_token:
+		toNumeric<unsigned>(IDD4R,nodeValue,std::dec);
+		break;
+	case idd4w_token:
+		toNumeric<unsigned>(IDD4W,nodeValue,std::dec);
+		break;
+	case idd3n_token:
+		toNumeric<unsigned>(IDD3N,nodeValue,std::dec);
+		break;
+	case idd3p_token:
+		toNumeric<unsigned>(IDD3P,nodeValue,std::dec);
+		break;
+	case idd2n_token:
+		toNumeric<unsigned>(IDD2N,nodeValue,std::dec);
+		break;
+	case idd2p_token:
+		toNumeric<unsigned>(IDD2P,nodeValue,std::dec);
+		break;
+	case idd0_token:
+		toNumeric<unsigned>(IDD0,nodeValue,std::dec);
+		break;
+	case vdd_token:
+		toNumeric<float>(VDD,nodeValue,std::dec);
+		break;
+	case t_cwd_token:
+		toNumeric<unsigned>(tCWD,nodeValue,std::dec);
+		break;
+	case t_buffer_delay_token:
+		toNumeric<unsigned>(tBufferDelay,nodeValue,std::dec);
+		break;
+	case t_cmd_token:
+		toNumeric<unsigned>(tCMD,nodeValue,std::dec);
+		break;
+	case t_wtr_token:
+		toNumeric<unsigned>(tWTR,nodeValue,std::dec);
+		break;
+	case t_wr_token:
+		toNumeric<unsigned>(tWR,nodeValue,std::dec);
+		break;
+	case t_refi_token:
+		toNumeric<unsigned>(tREFI,nodeValue,std::dec);
+		break;
+	case t_rtrs_token:
+		toNumeric<unsigned>(tRTRS,nodeValue,std::dec);
+		break;
+	case t_rtp_token:
+		toNumeric<unsigned>(tRTP,nodeValue,std::dec);
+		break;
+	case t_rrd_token:
+		toNumeric<unsigned>(tRRD,nodeValue,std::dec);
+		break;
+	case t_rfc_token:
+		toNumeric<unsigned>(tRFC,nodeValue,std::dec);
+		break;
+	case t_rcd_token:
+		toNumeric<unsigned>(tRCD,nodeValue,std::dec);
+		break;
+	case t_rc_token:
+		toNumeric<unsigned>(tRC,nodeValue,std::dec);
+		break;
+	case t_rp_token:
+		toNumeric<unsigned>(tRP,nodeValue,std::dec);
+		break;
+	case t_ras_token:
+		toNumeric<unsigned>(tRAS,nodeValue,std::dec);
+		break;
+	case t_faw_token:
+		toNumeric<unsigned>(tFAW,nodeValue,std::dec);
+		break;
+	case t_cas_token:
+		toNumeric<unsigned>(tCAS,nodeValue,std::dec);
+		break;
+	case t_burst_token:
+		toNumeric<unsigned>(tBurst,nodeValue,std::dec);
+		break;
+	case t_al_token:
+		toNumeric<unsigned>(tAL,nodeValue,std::dec);
+		break;
+	case refresh_queue_depth_token:
+		toNumeric<unsigned>(refreshQueueDepth,nodeValue,std::dec);
+		break;
+	case bank_count_token:
+		toNumeric<unsigned>(bankCount,nodeValue,std::dec);
+		break;
+	case rank_count_token:
+		toNumeric<unsigned>(rankCount,nodeValue,std::dec);
+		break;
+	case chan_count_token:
+		toNumeric<unsigned>(channelCount,nodeValue,std::dec);
+		break;
+	case short_burst_ratio_token:
+		toNumeric<float>(shortBurstRatio,nodeValue,std::dec);
+		break;
+	case read_percentage_token:
+		toNumeric<float>(readPercentage,nodeValue,std::dec);
+		break;					
+	case per_bank_queue_depth_token:
+		toNumeric<unsigned>(perBankQueueDepth,nodeValue,std::dec);
+		break;
+	case event_queue_depth_token:
+		toNumeric<unsigned>(eventQueueDepth,nodeValue,std::dec);
+		break;
+	case transaction_queue_depth_token:
+		toNumeric<unsigned>(transactionQueueDepth,nodeValue,std::dec);
+		break;
+	case completion_queue_depth_token:
+		toNumeric<unsigned>(completionQueueDepth,nodeValue,std::dec);
+		break;
+	case history_queue_depth_token:
+		toNumeric<unsigned>(historyQueueDepth,nodeValue,std::dec);
+		break;
+	case cacheline_size_token:
+		toNumeric<unsigned>(cacheLineSize,nodeValue,std::dec);
+		break;
+	case row_size_token:
+		toNumeric<unsigned>(rowSize,nodeValue,std::dec);
+		break;
+	case col_size_token:
+		toNumeric<unsigned>(columnSize,nodeValue,std::dec);
+		break;
+	case channel_width_token:
+		toNumeric<unsigned>(channelWidth,nodeValue,std::dec);
+		break;
+	case col_count_token:
+		toNumeric<unsigned>(columnCount,nodeValue,std::dec);
+		break;
+	case row_count_token:
+		toNumeric<unsigned>(rowCount,nodeValue,std::dec);
+		break;
+	case cachelines_per_row_token:
+		toNumeric<unsigned>(cachelinesPerRow,nodeValue,std::dec);
+		break;
+	case posted_cas_token:
+		postedCAS = (nodeValue == "true") ? true : false;
+		break;
+	case seniority_age_limit_token:
+		toNumeric<unsigned>(seniorityAgeLimit,nodeValue,std::dec);
+		break;
+	case refresh_policy_token:
+		if (nodeValue == "none" || nodeValue == "no refresh")
+			refreshPolicy = NO_REFRESH;
+		else if (nodeValue == "bankConcurrent")
+			refreshPolicy = BANK_CONCURRENT;
+		else if (nodeValue == "bankStaggeredHidden")
+			refreshPolicy = BANK_STAGGERED_HIDDEN;
+		else if (nodeValue == "refreshOneChanAllRankAllBank")
+			refreshPolicy = ONE_CHANNEL_ALL_RANK_ALL_BANK;
+		else
+			refreshPolicy = NO_REFRESH;
+		break;
+	case read_write_grouping_token:
+		readWriteGrouping = (nodeValue == "true") ? true : false;
+		break;
+	case refresh_time_token:
+		toNumeric<unsigned>(refreshTime,nodeValue,std::dec);
+		break;
+	case system_configuration_type_token:
+		// TODO: if baseline, then normal system, if FBD, then make a FBD system
+
+		break;
+	case transaction_ordering_policy_token:
+		if (nodeValue == "strict")
+			transactionOrderingAlgorithm = STRICT;
+		else if (nodeValue == "RIFF" || nodeValue == "riff")
+			transactionOrderingAlgorithm = RIFF;
+		else
+			transactionOrderingAlgorithm = STRICT;						
+		break;
+	case command_ordering_algorithm_token:
+		if (nodeValue == "strict")
+			commandOrderingAlgorithm = STRICT_ORDER;
+		else if (nodeValue == "bankRoundRobin")
+			commandOrderingAlgorithm = BANK_ROUND_ROBIN;
+		else if (nodeValue == "rankRoundRobin")
+			commandOrderingAlgorithm = RANK_ROUND_ROBIN;
+		else if (nodeValue == "wangHop")
+			commandOrderingAlgorithm = WANG_RANK_HOP;
+		else if (nodeValue == "greedy")
+			commandOrderingAlgorithm = GREEDY;
+		else {
+			cerr << "Unrecognized ordering algorithm: " << nodeValue << endl;
+			commandOrderingAlgorithm = BANK_ROUND_ROBIN;
+		}
+		break;
+	case addr_mapping_scheme_token:
+		if (nodeValue == "burgerBase")
+			addressMappingScheme = BURGER_BASE_MAP;
+		else if (nodeValue == "closePageBaseline")
+			addressMappingScheme = CLOSE_PAGE_BASELINE;
+		else if (nodeValue == "intel845g")
+			addressMappingScheme = INTEL845G_MAP;
+		else if (nodeValue == "sdramBase")
+			addressMappingScheme = SDRAM_BASE_MAP;
+		else if (nodeValue == "sdramClosePage")
+			addressMappingScheme = SDRAM_CLOSE_PAGE_MAP;
+		else if (nodeValue == "sdramHiperf")
+			addressMappingScheme = SDRAM_HIPERF_MAP;
+		else
+			addressMappingScheme = SDRAM_HIPERF_MAP;
+		break;
+	case auto_precharge_token:
+		autoPrecharge = (nodeValue == "true") ? true : false;
+		break;
+	case row_buffer_management_policy_token:
+		if (nodeValue == "openPage")
+			rowBufferManagementPolicy = OPEN_PAGE;
+		else if (nodeValue == "closePage")
+			rowBufferManagementPolicy = CLOSE_PAGE;
+		else if (nodeValue == "closePageOptimized")
+			rowBufferManagementPolicy = CLOSE_PAGE_OPTIMIZED;
+		else
+			rowBufferManagementPolicy = AUTO_PAGE;
+		break;
+	case clock_granularity_token:
+		toNumeric<unsigned>(clockGranularity,nodeValue,std::dec);
+		break;
+	case datarate_token:
+		toNumeric<unsigned>(dataRate,nodeValue,std::dec);
+		break;
+	case max_vcc_token:
+		toNumeric<float>(maxVCC,nodeValue,std::dec);
+		break;		
+	case dram_type_token:
+		if (nodeValue == "ddr2")
+			dramType = DDR2;
+		else if (nodeValue == "ddr")
+			dramType = DDR;
+		else if (nodeValue == "ddr3")
+			dramType = DDR3;
+		else if (nodeValue == "drdram")
+			dramType = DRDRAM;
+		else
+			dramType = DDR2;
+		break;
+	case input_type_token:
+		if (nodeValue == "mase")
+			inFileType = MASE_TRACE;
+		else if (nodeValue == "k6")
+			inFileType = K6_TRACE;
+		else if (nodeValue == "mapped")
+			inFileType = MAPPED;
+		else if (nodeValue == "random")
+			inFileType = RANDOM;
+		break;
+	case random_distribution_token:
+		if (nodeValue == "uniform")
+			arrivalDistributionModel = UNIFORM_DISTRIBUTION;
+		else if (nodeValue == "poisson")
+			arrivalDistributionModel = POISSON_DISTRIBUTION;
+		else if (nodeValue == "gaussian")
+			arrivalDistributionModel = GAUSSIAN_DISTRIBUTION;
+		else if (nodeValue == "normal")
+			arrivalDistributionModel = NORMAL_DISTRIBUTION;
+		else
+		{
+			cerr << "unrecognized distribution model: \"" << nodeValue << "\", defaulting to uniform";
+			arrivalDistributionModel = NORMAL_DISTRIBUTION;
+		}
+		break;
+	case output_file_type_token:
+		if (nodeValue == "gz" || nodeValue == "GZ")
+			outFileType = GZ;
+		else if (nodeValue == "bz" || nodeValue == "BZ" || nodeValue == "bzip" || nodeValue == "bzip2" || nodeValue == "bz2")
+			outFileType = BZ;
+		else if (nodeValue == "cout" || nodeValue == "stdout" || nodeValue == "COUT")
+			outFileType = COUT;
+		else if (nodeValue == "uncompressed" || nodeValue == "plain")
+			outFileType = UNCOMPRESSED;
+		else
+			outFileType = NONE;
+		break;
+	default:
+		break;
+	}
+}

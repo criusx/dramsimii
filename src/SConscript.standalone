@@ -47,6 +47,7 @@ sourceFile = Split("""
 			Statistics.cpp
 			System.cpp
 			Settings.cpp
+			SettingsXML.cpp
 			SystemConfiguration.cpp
 			TimingSpecification.cpp
 			event.cpp
@@ -80,6 +81,7 @@ sourcesTest = Split("""
 			Statistics.cpp
 			System.cpp
 			Settings.cpp
+			SettingsXML.cpp
 			SystemConfiguration.cpp
 			TimingSpecification.cpp
 			event.cpp

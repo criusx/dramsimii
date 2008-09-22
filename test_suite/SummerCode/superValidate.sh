@@ -46,7 +46,8 @@ cd ~/workspace/TimingChecker/ && java TimingChecker ~-/src/mem/DRAMsimII/memoryD
 #Start m5 process and wait time seconds before killing it.  Assumes the spec binary is in specs/ and is the sjeng benchmark
 
 echo -e "./build/ALPHA_SE/m5.opt configs/example/se.py -c specs/sjeng_base.amd64-m64-gcc41-nn &\n"
-./build/ALPHA_SE/m5.opt configs/example/se.py -m $timeW -c specs/sjeng_base.amd64-m64-gcc41-nn --detailed --caches
+#./build/ALPHA_SE/m5.opt configs/example/se.py -m $timeW -c specs/sjeng_base.amd64-m64-gcc41-nn --detailed --caches
+/home/crius/m5-stable/build/ALPHA_SE/m5.opt /home/crius/m5-stable/configs/example/dramsim.py --detailed --caches -c /home/crius/benchmarks/spec2000/benchspec/CINT2000/164.gzip/exe/gzip.alpha-linux -o /home/crius/benchmarks/spec2000/benchspec/CINT2000/164.gzip/data/ref/input/input.graphic
 #sleep $timeW
 #killall m5.opt
 echo -e "m5 killed\n"
@@ -65,9 +66,9 @@ echo -e "./process.sh $m5Out\n"
 #Run DramSimValid on newly created output which according to process.sh is $m5Out.cmd.gz  Assumes DRAMSimValid.class and all its included calsses are in ~/workspace/DramSimValid
 
 echo -e "DramSimValid Running\n"
-cd ~/workspace/DramSimValid 
+#cd ~/workspace/DramSimValid 
 java DramSimTest ~-/$m5Out.cmd.gz ~-/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25.xml ~-/$outputPrefix.gz
-cd ~-
+#cd ~-
 
 #Run filter.py with the newly created errors file named $outputPrefix.gz
 
