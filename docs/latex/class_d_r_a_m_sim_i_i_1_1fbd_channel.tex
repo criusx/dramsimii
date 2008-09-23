@@ -5,27 +5,12 @@ a fully buffered DIMM channel
 
 {\tt \#include $<$fbdChannel.h$>$}
 
-Inheritance diagram for DRAMSimII::fbdChannel:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=82pt]{class_d_r_a_m_sim_i_i_1_1fbd_channel__inherit__graph}
-\end{center}
-\end{figure}
-Collaboration diagram for DRAMSimII::fbdChannel:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=400pt]{class_d_r_a_m_sim_i_i_1_1fbd_channel__coll__graph}
-\end{center}
-\end{figure}
-\subsection*{Protected Member Functions}
+Inheritance diagram for DRAMSimII::fbdChannel:Collaboration diagram for DRAMSimII::fbdChannel:\subsection*{Protected Member Functions}
 \begin{CompactItemize}
 \item 
-int {\bf minProtocolGap} (const {\bf Command} $\ast$this\_\-c) const \label{class_d_r_a_m_sim_i_i_1_1fbd_channel_6a62bfa9fe3f0c009bd8f595d9ca2303}
-
+int {\bf minProtocolGap} (const {\bf Command} $\ast$this\_\-c) const 
 \begin{CompactList}\small\item\em find the protocol gap between a command and current system state \item\end{CompactList}\item 
-const void $\ast$ {\bf moveChannelToTime} (const tick endTime, tick $\ast$transFinishTime)
+unsigned {\bf moveChannelToTime} (const tick endTime, tick \&transFinishTime)
 \begin{CompactList}\small\item\em Moves the specified channel to at least the time given. \item\end{CompactList}\item 
 const {\bf Command} $\ast$ {\bf readNextCommand} (const {\bf Command} $\ast$slotAFrame, const {\bf Command} $\ast$slotBFrame) const 
 \begin{CompactList}\small\item\em Chooses the command which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config \doxyref{Command}{p.}{class_d_r_a_m_sim_i_i_1_1_command} returned is not yet removed from the per\_\-bank\_\-command\_\-queue from which it was selected. \item\end{CompactList}\item 
@@ -37,9 +22,18 @@ const {\bf Command} $\ast$ {\bf readNextCommand} (const {\bf Command} $\ast$slot
 a fully buffered DIMM channel 
 
 \subsection{Member Function Documentation}
-\index{DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}!moveChannelToTime@{moveChannelToTime}}
+\index{DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}!minProtocolGap@{minProtocolGap}}
+\index{minProtocolGap@{minProtocolGap}!DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}}
+\subsubsection[minProtocolGap]{\setlength{\rightskip}{0pt plus 5cm}int fbdChannel::minProtocolGap (const {\bf Command} $\ast$ {\em this\_\-c}) const\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_6a62bfa9fe3f0c009bd8f595d9ca2303}
+
+
+find the protocol gap between a command and current system state 
+
+
+
+Reimplemented from {\bf DRAMSimII::Channel} \doxyref{}{p.}{class_d_r_a_m_sim_i_i_1_1_channel_d8c7b776aebaecaf00099595a1edc7a5}.\index{DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}!moveChannelToTime@{moveChannelToTime}}
 \index{moveChannelToTime@{moveChannelToTime}!DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const void $\ast$ fbdChannel::moveChannelToTime (const tick {\em endTime}, tick $\ast$ {\em transFinishTime})\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_d25f850a6d515d21a02978809fde1c43}
+\subsubsection[moveChannelToTime]{\setlength{\rightskip}{0pt plus 5cm}unsigned fbdChannel::moveChannelToTime (const tick {\em endTime}, \/  tick \& {\em transFinishTime})\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_f8453aba2c651078bad7ec5ca7bec1e4}
 
 
 Moves the specified channel to at least the time given. 
@@ -49,22 +43,20 @@ Moves the specified channel to at least the time given.
 \begin{description}
 \item[{\em endTime}]move the channel until it is at this time \item[{\em transFinishTime}]the time that this transaction finished \end{description}
 \end{Desc}
-
-
 \begin{Desc}
-\item[{\bf Todo}]should this switch to use \doxyref{nextTransactionDecodeTime()}{p.}{class_d_r_a_m_sim_i_i_1_1_channel_d3e2f574c25d524c1bc76b7948b4f1ea} ? \end{Desc}
+\item[Author:]Joe Gross \end{Desc}
 
 
-Reimplemented from {\bf DRAMSimII::Channel} \doxyref{}{p.}{class_d_r_a_m_sim_i_i_1_1_channel_f87f7fe9e76f1924931f127b2dd05e7c}.\index{DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}!readNextCommand@{readNextCommand}}
+Reimplemented from {\bf DRAMSimII::Channel} \doxyref{}{p.}{class_d_r_a_m_sim_i_i_1_1_channel_f0cec54e40e7c3b233935113103ab2db}.\index{DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}!readNextCommand@{readNextCommand}}
 \index{readNextCommand@{readNextCommand}!DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const {\bf Command} $\ast$ fbdChannel::readNextCommand (const {\bf Command} $\ast$ {\em slotACommand}, const {\bf Command} $\ast$ {\em slotBCommand}) const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_bf9e923f53aba01ec0ff478b6366438d}
+\subsubsection[readNextCommand]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Command} $\ast$ fbdChannel::readNextCommand (const {\bf Command} $\ast$ {\em slotACommand}, \/  const {\bf Command} $\ast$ {\em slotBCommand}) const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_bf9e923f53aba01ec0ff478b6366438d}
 
 
 Chooses the command which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config \doxyref{Command}{p.}{class_d_r_a_m_sim_i_i_1_1_command} returned is not yet removed from the per\_\-bank\_\-command\_\-queue from which it was selected. 
 
 \index{DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}!getNextCommand@{getNextCommand}}
 \index{getNextCommand@{getNextCommand}!DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} $\ast$ fbdChannel::getNextCommand (const {\bf Command} $\ast$ {\em slotACommand}, const {\bf Command} $\ast$ {\em slotBCommand})\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_3d9bc56507f1d873092c6a96bae3db56}
+\subsubsection[getNextCommand]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} $\ast$ fbdChannel::getNextCommand (const {\bf Command} $\ast$ {\em slotACommand}, \/  const {\bf Command} $\ast$ {\em slotBCommand})\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_3d9bc56507f1d873092c6a96bae3db56}
 
 
 Chooses the command which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config \doxyref{Command}{p.}{class_d_r_a_m_sim_i_i_1_1_command} returned has already been removed from the per\_\-bank\_\-command\_\-queue from which it was selected. 

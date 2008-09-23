@@ -27,6 +27,7 @@ using namespace DRAMSimII;
 /// @brief constructs the dramChannel using this settings reference, also makes a reference to the dramSystemConfiguration object
 /// @param settings the settings file that defines the number of ranks, refresh policy, etc.
 /// @param sysConfig a const reference is made to this for some functions to grab parameters from
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats):
 time(0ll),
@@ -71,6 +72,8 @@ rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig))
 }
 
 /// normal copy constructor
+/// @brief the copy constructor for building unitialized copies of a channel
+/// @author Joe Gross
 Channel::Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats):
 time(rhs.time),
 lastRefreshTime(rhs.lastRefreshTime),
@@ -94,6 +97,8 @@ rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification
 }
 
 /// deserialization constructor
+/// @brief the constructor to build copies of a channel once it's been deserialized, needs further initialization before it's ready
+/// @author Joe Gross
 Channel::Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
 time(0),
 lastRefreshTime(0),
@@ -126,6 +131,7 @@ Channel::~Channel()
 //////////////////////////////////////////////////////////////////////////
 /// @brief copy constructor, reassigns the ordinal to each rank as they are duplicated
 /// @param rhs the dramChannel object to be copied
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Channel &rhs):
 time(rhs.time),
@@ -171,6 +177,7 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 /// @brief Moves the specified channel to at least the time given
 /// @param endTime move the channel until it is at this time
 /// @param transFinishTime the time that this transaction finished
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 unsigned Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 {
@@ -259,6 +266,7 @@ unsigned Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 /// @brief determines when the next transaction is decoded, command ready to be executed or next refresh command arrives
 /// @return the time when the next event happens
 /// @sa readTransactionSimple() readNextCommand() earliestExecuteTime() checkForAvailableCommandSlots()
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 tick Channel::nextTick() const
 {
@@ -266,8 +274,11 @@ tick Channel::nextTick() const
 	return max(min(nextTransactionDecodeTime(),nextCommandExecuteTime()),time + 1);
 }
 
+//////////////////////////////////////////////////////////////////////////
 /// @brief adds this command to the history queue
 /// @details this allows other groups to view a recent history of commands that were issued to decide what to execute next
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 void Channel::retireCommand(Command *newestCommand)
 {
 	statistics.collectCommandStats(newestCommand);
@@ -277,6 +288,7 @@ void Channel::retireCommand(Command *newestCommand)
 	// since this is when a transaction is done from the standpoint of the requester
 	if (newestCommand->getHost()) 
 	{
+		// remove the host pointer so that when this is serialized there aren't multiple copies made
 		if (!completionQueue.push(newestCommand->removeHost()))
 		{
 			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
@@ -297,6 +309,7 @@ void Channel::retireCommand(Command *newestCommand)
 /// @brief enqueue the transaction into the transactionQueue
 /// @param in the transaction to be put into the queue
 /// @return true if there was room in the queue for this command and the algorithm allowed it, false otherwise
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 bool Channel::enqueue(Transaction *in)
 {
@@ -315,6 +328,7 @@ bool Channel::enqueue(Transaction *in)
 //////////////////////////////////////////////////////////////////////////
 /// @brief determine when the next transaction in the queue will be decoded
 /// @return the time when the decoding will be complete
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 tick Channel::nextTransactionDecodeTime() const
 {
@@ -336,6 +350,8 @@ tick Channel::nextTransactionDecodeTime() const
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief determines the next time available for a command to issue
+/// @return the next time an event occurs on this channel
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 tick Channel::nextCommandExecuteTime() const
 {
@@ -352,7 +368,10 @@ tick Channel::nextCommandExecuteTime() const
 	return nextTime;
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief counts the number of reads and writes so far and returns whichever had more
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 TransactionType Channel::setReadWriteType(const int rank_id,const int bank_count) const
 {
 	int read_count = 0;
@@ -537,6 +556,10 @@ void Channel::doPowerCalculation(const tick systemTime)
 	//powerOutStream.flush();
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief sends power calculations off to a remote server, should be run in a separate thread
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vector<float> PsysACTSTBYArray, vector<float> PsysACTArray, const tick currentTime) const 
 {
 	DRAMsimWSSoapHttp service;
@@ -563,30 +586,24 @@ bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vecto
 
 
 //////////////////////////////////////////////////////////////////////////
-// @brief get the next refresh time
+/// @brief get the next refresh time
+/// @return the time at which the next refresh should be issued for this channel
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 const tick Channel::nextRefresh() const
 {
 	assert(rank.size() >= 1);
 
 	return *(std::min_element(refreshCounter.begin(), refreshCounter.end()));
-
-// 	Transaction *earliestRefreshTransaction = refreshCounter[0];
-// 
-// 	for (unsigned i = 1; i < rank.size(); ++i)
-// 	{
-// 		assert(refreshCounter[i]);
-// 		if (refreshCounter[i]->getEnqueueTime() < earliestRefreshTransaction->getEnqueueTime())
-// 		{
-// 			earliestRefreshTransaction = refreshCounter[i];
-// 		}
-// 	}
-// 	return earliestRefreshTransaction;
 }
 
-
-/// read the next available transaction for this channel without actually removing it from the queue
+//////////////////////////////////////////////////////////////////////////
+/// @brief returns a pointer to the next transaction to issue to this channel without removing it
+/// @detail read the next available transaction for this channel without actually removing it from the queue \n
 /// if bufferDelay is set, then only transactions that have been in the queue long enough to decode are considered
+/// @return the next transaction that should be issued to this channel
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 const Transaction *Channel::readTransaction(const bool bufferDelay) const
 {
 	const unsigned delay = bufferDelay ? timingSpecification.tBufferDelay() : 0;
@@ -639,7 +656,12 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 	}
 }
 
-// get the next transaction, whether a refresh transaction or a normal R/W transaction
+//////////////////////////////////////////////////////////////////////////
+/// @brief get the next transaction, whether a refresh transaction or a normal R/W transaction
+/// @detail gets the next transaction for this channel and removes it
+/// @return the next transaction for this channel
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 Transaction *Channel::getTransaction()
 {
 	const Transaction *tempTrans = transactionQueue.front(); 
@@ -690,7 +712,11 @@ Transaction *Channel::getTransaction()
 
 
 //////////////////////////////////////////////////////////////////////////
-// get the next refresh command and remove it from the queue
+/// @brief get the next refresh command and remove it from the queue
+/// @detail returns a pointer to a refresh transaction that represents what the next refresh \n
+/// transaction would be. this should not be enqueued as it has not been removed yet
+/// @return the next possible refresh transaction
+/// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 Transaction *Channel::createNextRefresh()
 {
@@ -746,6 +772,12 @@ Transaction *Channel::createNextRefresh()
 #endif
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief returns a pointer to the next refresh transaction that's going to be issued to this channel
+/// @detail returns a pointer to a representative object for the next refresh that this channel will see
+/// @return a pointer to a representative copy of the next refresh transaction
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 const Transaction *Channel::readNextRefresh() const
 {
 	assert(rank.size() >= 1);
@@ -768,11 +800,16 @@ const Transaction *Channel::readNextRefresh() const
 
 	static Transaction newRefreshTransaction;
 	::new(&newRefreshTransaction)Transaction(AUTO_REFRESH_TRANSACTION, 0, 8,address,UINT_MAX);
-	
+
 	return &newRefreshTransaction;
 
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief the insertion operator, adds a string to the given stream with stats about this channel
+/// @return the input stream but with a string representing the channel state appended
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 std::ostream& DRAMSimII::operator<<(std::ostream& os, const DRAMSimII::Channel& r)
 {
 	os << "T[" << r.time << "] ch[" << r.channelID << endl;
@@ -781,6 +818,12 @@ std::ostream& DRAMSimII::operator<<(std::ostream& os, const DRAMSimII::Channel& 
 	return os;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief the assignment operator, will copy non-key items to this channel
+/// @detail copies the non-reference items over, should be used for deserialization
+/// @return a reference to this channel, for chaining
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 Channel& Channel::operator =(const Channel &rhs)
 {
 	//Settings settings;
@@ -804,6 +847,11 @@ Channel& Channel::operator =(const Channel &rhs)
 	return *this;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief the equality operator, to determine if the channels are equal in value
+/// @return true if the channels are equal
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 bool Channel::operator ==(const Channel& rhs) const
 {
 	return (time == rhs.time && lastRefreshTime == rhs.lastRefreshTime && lastCommandIssueTime == rhs.lastCommandIssueTime && lastRankID == rhs.lastRankID &&

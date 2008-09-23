@@ -46,28 +46,29 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 	case DDR2:
 
 		t_ccd = 4;					// two cycles, 4 beats in DDR2
-		t_al = settings.postedCAS ? settings.tAL : 0; // if posted CAS is disabled, tAL should be zero
-		assert(t_al >= 0 && t_al <= 8); // must be 0..4 cycles, or 0..8 beats
+		t_al = settings.postedCAS ? settings.tAL : 0; // if posted CAS is disabled, tAL should be zero		
 		t_rcd = settings.tRCD;
-		assert(t_al <= t_rcd);
 		t_burst = settings.tBurst; // can be 4 or 8
 		t_cas = settings.tCAS;
 		t_cmd = 2;					// protocol specific, cannot be changed
-		assert(t_al + t_cmd == t_rcd);
-		// assert(t_rcd + t_burst + t_rtp - t_ccd == t_rc);
+		t_rtp = settings.tRTP;
+		t_rc = settings.tRC;
+		t_ras = settings.tRAS;		
+		//assert(t_rcd + t_burst + t_rtp - t_ccd == t_rc);
 		t_cwd = t_cas - 2;			// protocol specific, cannot be changed
 		t_int_burst = 4;			// protocol specific, cannot be changed
-		t_faw = settings.tFAW;
-		t_ras = settings.tRAS;
+		t_faw = settings.tFAW;		
 		t_rp = settings.tRP;
-		t_rc = settings.tRC;
-
 		t_rfc = settings.tRFC;
-		t_rrd = settings.tRRD;
-		t_rtp = settings.tRTP;
+		t_rrd = settings.tRRD;		
 		t_rtrs = settings.tRTRS;
 		t_wr = settings.tWR;
 		t_wtr = settings.tWTR;
+
+		assert(t_rcd + t_burst + t_rtp - t_ccd <= t_ras);
+		assert(t_al <= t_rcd);
+		assert(t_al >= 0 && t_al <= 8); // must be 0..4 cycles, or 0..8 beats
+		assert(t_al + t_cmd == t_rcd);
 		break;
 
 	case DDR3:
