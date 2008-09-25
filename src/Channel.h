@@ -16,7 +16,6 @@
 
 #include <vector>
 
-#include <boost/circular_buffer.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/serialization.hpp>
@@ -74,7 +73,7 @@ namespace DRAMSimII
 		// functions that may differ for architectures that inherit this		
 		virtual const Command *readNextCommand() const;
 		virtual unsigned moveChannelToTime(const tick endTime, tick& transFinishTime);
-		virtual int minProtocolGap(const Command *thisCommand) const;
+		virtual tick minProtocolGap(const Command *thisCommand) const;
 		virtual tick earliestExecuteTime(const Command *thisCommand) const;
 
 		// accessors

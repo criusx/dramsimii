@@ -1,3 +1,6 @@
+#include <boost/serialization/map.hpp>
+#include <boost/archive/text_oarchive.hpp> 
+#include <boost/archive/text_iarchive.hpp>
 #include <sstream>
 #include <stdlib.h>
 #include <cmath>
@@ -8,6 +11,10 @@
 #include "enumTypes.h"
 #include "m5-dramSystem.h"
 
+using std::ofstream;
+using boost::archive::text_oarchive;
+
+
 using std::dec;
 using std::hex;
 using std::endl;
@@ -17,6 +24,325 @@ using std::ostream;
 using namespace DRAMSimII;
 
 //#define TESTNEW
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief stuff taken from PhysicalMemory.cc
+//////////////////////////////////////////////////////////////////////////
+M5dramSystem *M5dramSystemParams::create()
+{
+	return new M5dramSystem(this);
+}
+
+void M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
+{
+	snoop = false;
+	resp.clear();
+	resp.push_back(RangeSize(start(), params()->range.size()));
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+/// @brief move all channels in this system to the specified time
+/// @details tells the channels that nothing arrived since the last wakeup and
+/// now, so go do whatever would have happened during this time and return finished transactions
+/// note that this should probably only process one event per channel at most so that
+/// finished transactions can be returned in a timely fashion
+/// @author Joe Gross
+/// @param now the current time
+//////////////////////////////////////////////////////////////////////
+void M5dramSystem::moveToTime(const tick now)
+{
+	tick finishTime;	
+
+	// if transactions are returned, then send them back,
+	// else if time is not brought up to date, then a refresh transaction has finished
+	//while ((packet = (Packet *)ds->moveAllChannelsToTime(now, finishTime)) || finishTime < now)
+	unsigned transactionID;
+	while (((transactionID = ds->moveAllChannelsToTime(now, finishTime)) < UINT_MAX) || ds->getTime() < now)
+	{
+		Packet *packet = NULL;
+
+		if (transactionID < UINT_MAX)
+		{
+			std::map<unsigned,Packet*>::iterator packetIterator = transactionLookupTable.find(transactionID);
+			assert(packetIterator != transactionLookupTable.end());
+			packet = packetIterator->second;
+			transactionLookupTable.erase(packetIterator);
+		}
+
+		if (packet)
+		{
+			assert(packet->isRead() || packet->isWrite() || packet->isInvalidate());
+
+			bool needsResponse = packet->needsResponse();
+
+			doAtomicAccess(packet);		
+
+			if (needsResponse)
+			{			
+				assert(curTick <= static_cast<Tick>(finishTime * getCPURatio()));
+
+				M5_TIMING_LOG("<-T [@" << dec << static_cast<Tick>(finishTime * getCPURatio()) << "][+" << static_cast<Tick>(finishTime * getCPURatio() - curTick) << "] at" << curTick);
+
+				ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(finishTime * getCPURatio()));
+
+				static tick returnCount;
+
+				if (++returnCount % 10000 == 0)
+					cerr << returnCount << "\r";
+			}
+			else
+			{				
+				delete packet;
+			}			
+		}	
+	}
+
+	// if there is now room, allow a retry to happen
+	if (needRetry && !ds->isFull(mostRecentChannel))
+	{
+		M5_TIMING_LOG("Allow retrys");
+
+		needRetry = false;
+		ports[lastPortIndex]->sendRetry();
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+/// @brief builds a M5dramSystem object
+/// @details looks for the settings file and constructs a dramSystem object from that
+/// @author Joe Gross
+/// @param p the M5 parameters object to extract parameters from
+/// @return a new M5dramSystem object
+//////////////////////////////////////////////////////////////////////
+M5dramSystem::M5dramSystem(const Params *p):
+PhysicalMemory(p), 
+tickEvent(this), 
+ports(1),
+lastPortIndex(0),
+ds(NULL),
+needRetry(false),
+mostRecentChannel(0),
+cpuRatio(0),
+transactionLookupTable(),
+currentTransactionID(0)
+{	
+	timingOutStream << "M5dramSystem constructor" << endl;
+
+	const char *settingsMap[2] = {"--settings", p->settingsFile.c_str()};
+
+	Settings settings(2,settingsMap);
+
+	settings.inFile = "";
+
+	// if this is a normal system or a fbd system
+	if (settings.systemType == BASELINE_CONFIG)
+		ds = new System(settings);
+	else
+		ds = new fbdSystem(settings);	
+
+	//delete settingsMap;
+
+	cpuRatio =(int)round(((float)Clock::Frequency/((float)ds->Frequency())));
+	//cerr << cpuRatio << endl;
+	//invCpuRatio = (float)((double)ds->Frequency()/(Clock::Frequency));
+	//cerr << invCpuRatio << endl;
+
+	timingOutStream << *ds << endl;
+}
+
+
+Port *M5dramSystem::getPort(const string &if_name, int idx)
+{
+	// Accept request for "functional" port for backwards compatibility
+	// with places where this function is called from C++.  I'd prefer
+	// to move all these into Python someday.
+	if (if_name == "functional")
+	{
+		return new MemoryPort(csprintf("%s-functional", name()), this);
+	}
+
+	if (if_name != "port") 
+	{
+		panic("PhysicalMemory::getPort: unknown port %s requested", if_name);
+	}
+
+	if (idx >= ports.size()) 
+	{
+		ports.resize(idx+1);
+	}
+
+	if (ports[idx] != NULL)
+	{
+		panic("PhysicalMemory::getPort: port %d already assigned", idx);
+	}
+
+	MemoryPort *port = new MemoryPort(csprintf("%s-port%d", name(), idx), this);
+
+	lastPortIndex = idx;
+	ports[idx] = port;
+	timingOutStream << "called M5dramSystem::getPort" << endl;
+	return port;
+}
+
+void M5dramSystem::init()
+{
+	if (ports.size() == 0)
+	{
+		fatal("M5dramSystem object %s is unconnected!", name());
+	}
+
+	for (PortIterator pi = ports.begin(); pi != ports.end(); ++pi) 
+	{
+		if (*pi)
+			(*pi)->sendStatusChange(Port::RangeChange);
+	}
+}
+
+M5dramSystem::~M5dramSystem()
+{
+	//if (pmemAddr)
+	//	munmap(pmemAddr, params()->addrRange.size());
+
+	timingOutStream << "M5dramSystem destructor" << endl;
+	delete ds;
+}
+
+void M5dramSystem::serialize(ostream &os)
+{
+	gzFile compressedMem;
+	string filename = name() + ".physmem";
+	string dsFilename = name() + ".ds2";
+
+	SERIALIZE_SCALAR(filename);
+	SERIALIZE_SCALAR(dsFilename);
+
+	// write memory file
+	string thefile = Checkpoint::dir() + "/" + filename.c_str();
+
+	int fd = creat(thefile.c_str(), 0664);
+	if (fd < 0) 
+	{
+		perror("creat");
+		fatal("Can't open physical memory checkpoint file '%s'\n", filename);
+	}
+
+	compressedMem = gzdopen(fd, "wb");
+
+	if (compressedMem == NULL)
+	{
+		fatal("Insufficient memory to allocate compression state for %s\n", filename);
+	}
+
+	if (gzwrite(compressedMem, pmemAddr, params()->range.size()) != params()->range.size()) 
+	{
+		fatal("Write failed on physical memory checkpoint file '%s'\n", filename);
+	}
+
+	if (gzclose(compressedMem))
+	{
+		fatal("Close failed on physical memory checkpoint file '%s'\n", filename);
+	}
+
+	// write the
+	string theDs2File = Checkpoint::dir() + "/" + dsFilename;
+
+	ofstream outStream(theDs2File.c_str());
+	text_oarchive outputArchive(outStream);
+
+	const System* const dsConst = ds;
+	outputArchive << dsConst;
+	outputArchive << lastPortIndex;
+	outputArchive << needRetry;
+	outputArchive << mostRecentChannel;
+	outputArchive << cpuRatio;
+	//outputArchive << transactionLookupTable;
+	outStream.close();
+}
+
+void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
+{
+	gzFile compressedMem;
+	long *tempPage;
+	long *pmem_current;
+	uint64_t curSize;
+	uint32_t bytesRead;
+	const int chunkSize = 16384;
+
+
+	string filename, dsFilename;
+
+	UNSERIALIZE_SCALAR(filename);
+	UNSERIALIZE_SCALAR(dsFilename);
+
+	filename = cp->cptDir + "/" + filename;
+
+	// mmap memoryfile
+	int fd = open(filename.c_str(), O_RDONLY);
+
+	if (fd < 0)
+	{
+		perror("open");
+		fatal("Can't open physical memory checkpoint file '%s'", filename);
+	}
+
+	compressedMem = gzdopen(fd, "rb");
+
+	if (compressedMem == NULL)
+	{
+		fatal("Insufficient memory to allocate compression state for %s\n", filename);
+	}
+
+	// unmap file that was mmaped in the constructor
+	// This is done here to make sure that gzip and open don't muck with our
+	// nice large space of memory before we reallocate it
+	munmap((char*)pmemAddr, params()->range.size());
+
+	pmemAddr = (uint8_t *)mmap(NULL, params()->range.size(),
+		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+
+	if (pmemAddr == (void *)MAP_FAILED) 
+	{
+		perror("mmap");
+		fatal("Could not mmap physical memory!\n");
+	}
+
+	curSize = 0;
+	tempPage = (long*)malloc(chunkSize);
+	if (tempPage == NULL)
+		fatal("Unable to malloc memory to read file %s\n", filename);
+	/* Only copy bytes that are non-zero, so we don't give the VM system hell */
+	while (curSize < params()->range.size()) 
+	{
+		bytesRead = gzread(compressedMem, tempPage, chunkSize);
+		if (bytesRead != chunkSize &&
+			bytesRead != params()->range.size() - curSize)
+			fatal("Read failed on physical memory checkpoint file '%s'"
+			" got %d bytes, expected %d or %d bytes\n",
+			filename, bytesRead, chunkSize,
+			params()->range.size() - curSize);
+
+		assert(bytesRead % sizeof(long) == 0);
+
+		for (int x = 0; x < bytesRead/sizeof(long); x++)
+		{
+			if (*(tempPage+x) != 0) {
+				pmem_current = (long*)(pmemAddr + curSize + x * sizeof(long));
+				*pmem_current = *(tempPage+x);
+			}
+		}
+		curSize += bytesRead;
+	}
+
+	free(tempPage);
+
+	if (gzclose(compressedMem))
+		fatal("Close failed on physical memory checkpoint file '%s'\n",
+		filename);
+
+
+}
 
 //////////////////////////////////////////////////////////////////////
 /// @brief receive a packet and do something with it
@@ -197,161 +523,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 }
 
 //////////////////////////////////////////////////////////////////////
-/// @brief wake up via the global event queue
-/// @details wake up and perform some action at this time, then determine when the next wakeup time should be
-/// inserts the memory system into the event queue and handles being woken by it
-/// @author Joe Gross
-//////////////////////////////////////////////////////////////////////
-void M5dramSystem::TickEvent::process()
-{	
-	//tick currentMemCycle = curTick / memory->getCPURatio();
-	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
-
-	M5_TIMING_LOG("intWake [" << dec << curTick << "][" << dec << currentMemCycle << "]");
-
-	// move memory channels to the current time
-	memory->moveToTime(currentMemCycle);
-
-
-	// deschedule yourself
-	if (memory->tickEvent.scheduled())
-		memory->tickEvent.deschedule();
-
-	// determine the next time to wake up
-	tick next = memory->ds->nextTick();	
-
-
-	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCPURatio()) << "][" << next << "]");
-
-	assert(next > currentMemCycle);
-	assert(next * memory->getCPURatio() > curTick);
-
-	schedule(next * memory->getCPURatio());
-}
-
-//////////////////////////////////////////////////////////////////////
-/// @brief move all channels in this system to the specified time
-/// @details tells the channels that nothing arrived since the last wakeup and
-/// now, so go do whatever would have happened during this time and return finished transactions
-/// note that this should probably only process one event per channel at most so that
-/// finished transactions can be returned in a timely fashion
-/// @author Joe Gross
-/// @param now the current time
-//////////////////////////////////////////////////////////////////////
-void M5dramSystem::moveToTime(const tick now)
-{
-	tick finishTime;	
-
-	// if transactions are returned, then send them back,
-	// else if time is not brought up to date, then a refresh transaction has finished
-	//while ((packet = (Packet *)ds->moveAllChannelsToTime(now, finishTime)) || finishTime < now)
-	unsigned transactionID;
-	while (((transactionID = ds->moveAllChannelsToTime(now, finishTime)) < UINT_MAX) || ds->getTime() < now)
-	{
-		Packet *packet = NULL;
-
-		if (transactionID < UINT_MAX)
-		{
-			std::map<unsigned,Packet*>::iterator packetIterator = transactionLookupTable.find(transactionID);
-			assert(packetIterator != transactionLookupTable.end());
-			packet = packetIterator->second;
-			transactionLookupTable.erase(packetIterator);
-		}
-
-		if (packet)
-		{
-			assert(packet->isRead() || packet->isWrite() || packet->isInvalidate());
-
-			bool needsResponse = packet->needsResponse();
-
-			doAtomicAccess(packet);		
-
-			if (needsResponse)
-			{			
-				assert(curTick <= static_cast<Tick>(finishTime * getCPURatio()));
-
-				M5_TIMING_LOG("<-T [@" << dec << static_cast<Tick>(finishTime * getCPURatio()) << "][+" << static_cast<Tick>(finishTime * getCPURatio() - curTick) << "] at" << curTick);
-
-				ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(finishTime * getCPURatio()));
-
-				static tick returnCount;
-
-				if (++returnCount % 10000 == 0)
-					cerr << returnCount << "\r";
-			}
-			else
-			{				
-				delete packet;
-			}			
-		}	
-	}
-
-	// if there is now room, allow a retry to happen
-	if (needRetry && !ds->isFull(mostRecentChannel))
-	{
-		M5_TIMING_LOG("Allow retrys");
-
-		needRetry = false;
-		ports[lastPortIndex]->sendRetry();
-	}
-}
-
-//////////////////////////////////////////////////////////////////////
-/// @brief builds a M5dramSystem object
-/// @details looks for the settings file and constructs a dramSystem object from that
-/// @author Joe Gross
-/// @param p the M5 parameters object to extract parameters from
-/// @return a new M5dramSystem object
-//////////////////////////////////////////////////////////////////////
-M5dramSystem::M5dramSystem(const Params *p):
-PhysicalMemory(p), 
-tickEvent(this), 
-ports(1),
-lastPortIndex(0),
-ds(NULL),
-needRetry(false),
-mostRecentChannel(0),
-cpuRatio(0),
-transactionLookupTable(),
-currentTransactionID(0)
-{	
-	timingOutStream << "M5dramSystem constructor" << endl;
-
-	const char *settingsMap[2] = {"--settings", p->settingsFile.c_str()};
-
-	//settingsMap[0] = ;
-	//settingsMap[1] = ;
-
-	Settings settings(2,settingsMap);
-
-	settings.inFile = "";
-
-	// if this is a normal system or a fbd system
-	if (settings.systemType == BASELINE_CONFIG)
-		ds = new System(settings);
-	else
-		ds = new fbdSystem(settings);	
-
-	//delete settingsMap;
-
-	cpuRatio =(int)round(((float)Clock::Frequency/((float)ds->Frequency())));
-	//cerr << cpuRatio << endl;
-	//invCpuRatio = (float)((double)ds->Frequency()/(Clock::Frequency));
-	//cerr << invCpuRatio << endl;
-
-	timingOutStream << *ds << endl;
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-/// @brief stuff taken from PhysicalMemory.cc
-//////////////////////////////////////////////////////////////////////////
-M5dramSystem *M5dramSystemParams::create()
-{
-	return new M5dramSystem(this);
-}
-
-//////////////////////////////////////////////////////////////////////
 /// @brief builds a memory port to interact with other components
 /// @param _name the friendly name of this object
 /// @param _memory the pointer to the M5dramSystem object that will be backing this object
@@ -361,63 +532,6 @@ M5dramSystem::MemoryPort::MemoryPort(const string &_name, M5dramSystem *_memory)
 SimpleTimingPort(_name),
 memory(_memory)
 {}
-
-Port *M5dramSystem::getPort(const string &if_name, int idx)
-{
-	// Accept request for "functional" port for backwards compatibility
-	// with places where this function is called from C++.  I'd prefer
-	// to move all these into Python someday.
-	if (if_name == "functional")
-	{
-		return new MemoryPort(csprintf("%s-functional", name()), this);
-	}
-
-	if (if_name != "port") 
-	{
-		panic("PhysicalMemory::getPort: unknown port %s requested", if_name);
-	}
-
-	if (idx >= ports.size()) 
-	{
-		ports.resize(idx+1);
-	}
-
-	if (ports[idx] != NULL)
-	{
-		panic("PhysicalMemory::getPort: port %d already assigned", idx);
-	}
-
-	MemoryPort *port =
-		new MemoryPort(csprintf("%s-port%d", name(), idx), this);
-
-	lastPortIndex = idx;
-	ports[idx] = port;
-	timingOutStream << "called M5dramSystem::getPort" << endl;
-	return port;
-}
-
-void M5dramSystem::init()
-{
-	if (ports.size() == 0)
-	{
-		fatal("M5dramSystem object %s is unconnected!", name());
-	}
-
-	for (PortIterator pi = ports.begin(); pi != ports.end(); ++pi) 
-	{
-		if (*pi)
-			(*pi)->sendStatusChange(Port::RangeChange);
-	}
-}
-
-M5dramSystem::~M5dramSystem()
-{
-	//if (pmemAddr)
-	//	munmap(pmemAddr, params()->addrRange.size());
-
-	timingOutStream << "M5dramSystem destructor" << endl;
-	delete ds;
-}
 
 int M5dramSystem::MemoryPort::deviceBlockSize()
 {
@@ -470,14 +584,37 @@ void M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp, bool 
 	memory->getAddressRanges(resp, snoop);
 }
 
-void M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
-{
-	snoop = false;
-	resp.clear();
-	resp.push_back(RangeSize(start(), params()->range.size()));
+//////////////////////////////////////////////////////////////////////
+/// @brief wake up via the global event queue
+/// @details wake up and perform some action at this time, then determine when the next wakeup time should be
+/// inserts the memory system into the event queue and handles being woken by it
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////
+void M5dramSystem::TickEvent::process()
+{	
+	//tick currentMemCycle = curTick / memory->getCPURatio();
+	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
+
+	M5_TIMING_LOG("intWake [" << dec << curTick << "][" << dec << currentMemCycle << "]");
+
+	// move memory channels to the current time
+	memory->moveToTime(currentMemCycle);
+
+	// deschedule yourself
+	if (memory->tickEvent.scheduled())
+		memory->tickEvent.deschedule();
+
+	// determine the next time to wake up
+	tick next = memory->ds->nextTick();	
+
+
+	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCPURatio()) << "][" << next << "]");
+
+	assert(next > currentMemCycle);
+	assert(next * memory->getCPURatio() > curTick);
+
+	schedule(next * memory->getCPURatio());
 }
-
-
 
 M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 : Event(&mainEventQueue, CPU_Tick_Pri), memory(c)
@@ -488,115 +625,3 @@ const char *M5dramSystem::TickEvent::description()
 	return "m5dramSystem tick event";	
 }
 
-void M5dramSystem::serialize(ostream &os)
-{
-	gzFile compressedMem;
-	string filename = name() + ".physmem";
-
-	SERIALIZE_SCALAR(filename);
-
-	// write memory file
-	string thefile = Checkpoint::dir() + "/" + filename.c_str();
-	int fd = creat(thefile.c_str(), 0664);
-	if (fd < 0) 
-	{
-		perror("creat");
-		fatal("Can't open physical memory checkpoint file '%s'\n", filename);
-	}
-
-	compressedMem = gzdopen(fd, "wb");
-	if (compressedMem == NULL)
-		fatal("Insufficient memory to allocate compression state for %s\n",
-		filename);
-
-	if (gzwrite(compressedMem, pmemAddr, params()->range.size()) !=
-		params()->range.size()) 
-	{
-		fatal("Write failed on physical memory checkpoint file '%s'\n",
-			filename);
-	}
-
-	if (gzclose(compressedMem))
-		fatal("Close failed on physical memory checkpoint file '%s'\n",
-		filename);
-
-}
-
-void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
-{
-	gzFile compressedMem;
-	long *tempPage;
-	long *pmem_current;
-	uint64_t curSize;
-	uint32_t bytesRead;
-	const int chunkSize = 16384;
-
-
-	string filename;
-
-	UNSERIALIZE_SCALAR(filename);
-
-	filename = cp->cptDir + "/" + filename;
-
-	// mmap memoryfile
-	int fd = open(filename.c_str(), O_RDONLY);
-	if (fd < 0)
-	{
-		perror("open");
-		fatal("Can't open physical memory checkpoint file '%s'", filename);
-	}
-
-	compressedMem = gzdopen(fd, "rb");
-	if (compressedMem == NULL)
-		fatal("Insufficient memory to allocate compression state for %s\n",
-		filename);
-
-	// unmap file that was mmaped in the constructor
-	// This is done here to make sure that gzip and open don't muck with our
-	// nice large space of memory before we reallocate it
-	munmap((char*)pmemAddr, params()->range.size());
-
-	pmemAddr = (uint8_t *)mmap(NULL, params()->range.size(),
-		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-
-	if (pmemAddr == (void *)MAP_FAILED) 
-	{
-		perror("mmap");
-		fatal("Could not mmap physical memory!\n");
-	}
-
-	curSize = 0;
-	tempPage = (long*)malloc(chunkSize);
-	if (tempPage == NULL)
-		fatal("Unable to malloc memory to read file %s\n", filename);
-	/* Only copy bytes that are non-zero, so we don't give the VM system hell */
-	while (curSize < params()->range.size()) 
-	{
-		bytesRead = gzread(compressedMem, tempPage, chunkSize);
-		if (bytesRead != chunkSize &&
-			bytesRead != params()->range.size() - curSize)
-			fatal("Read failed on physical memory checkpoint file '%s'"
-			" got %d bytes, expected %d or %d bytes\n",
-			filename, bytesRead, chunkSize,
-			params()->range.size() - curSize);
-
-		assert(bytesRead % sizeof(long) == 0);
-
-		for (int x = 0; x < bytesRead/sizeof(long); x++)
-		{
-			if (*(tempPage+x) != 0) {
-				pmem_current = (long*)(pmemAddr + curSize + x * sizeof(long));
-				*pmem_current = *(tempPage+x);
-			}
-		}
-		curSize += bytesRead;
-	}
-
-	free(tempPage);
-
-	if (gzclose(compressedMem))
-		fatal("Close failed on physical memory checkpoint file '%s'\n",
-		filename);
-
-
-}

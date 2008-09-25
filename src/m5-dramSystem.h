@@ -116,4 +116,60 @@ public:
 
 };
 
+#if 0
+namespace boost
+{
+	template<class Archive, class U, class Allocator>
+	inline void serialize(Archive &ar, Packet &t, const unsigned file_version)
+	{
+		boost::serialization::split_free(ar,t,file_version);
+	}
+
+
+	template<class Archive, class U, class Allocator>
+	inline void save(Archive &ar, const Packet &t, const unsigned int file_version)
+	{
+		//const circular_buffer<U>::size_type maxCount(t.capacity());
+		//ar << BOOST_SERIALIZATION_NVP(maxCount);
+		typename circular_buffer<U, Allocator>::capacity_type maxCount(t.capacity());
+		ar << (maxCount);
+
+		//const circular_buffer<U>::size_type count(t.size());
+		//ar << BOOST_SERIALIZATION_NVP(count);
+		typename circular_buffer<U, Allocator>::size_type count(t.size());
+		ar << (count);
+
+		for (typename circular_buffer<U, Allocator>::const_iterator i = t.begin(); i != t.end(); i++)
+			//for (boost::circular_buffer<U,Allocator>::size_type i = 0; i < t.size(); i++)
+		{
+			ar << *i;
+			//ar << t[i];
+		}
+	}
+
+	template<class Archive, class U, class Allocator>
+	inline void load(Archive &ar, Packet &t, const unsigned file_version)
+	{
+		//ar >> BOOST_SERIALIZATION_NVP(maxCount);
+		typename circular_buffer<U, Allocator>::capacity_type maxCount;
+		ar >> (maxCount);
+		t.set_capacity(maxCount);
+
+		//circular_buffer<U>::size_type count;
+		//ar >> BOOST_SERIALIZATION_NVP(count);
+		unsigned count;
+		ar >> (count);
+
+		while (count-- > 0)
+		{
+			U value;
+			ar >> value;
+			//t.push_front(value);
+			t.push_back(value);
+		}
+	}
+
+}
+
+#endif // 0
 #endif

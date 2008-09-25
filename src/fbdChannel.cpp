@@ -14,10 +14,10 @@ frameQueue(3)
 /// find the protocol gap between a command and current system state
 /// 
 /// </summary>
-int fbdChannel::minProtocolGap(const Command *this_c) const
+tick fbdChannel::minProtocolGap(const Command *this_c) const
 { 
 	// TODO: also consider commands issued one cycle ago which are not yet executed
-	int min_gap;
+	tick min_gap;
 
 	const unsigned this_rank = this_c->getAddress().getRank();
 	const Rank &currentRank = rank[this_rank];

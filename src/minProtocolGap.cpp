@@ -9,9 +9,9 @@ using namespace DRAMSimII;
 /// <summary>
 /// find the protocol gap between a command and current system state
 /// </summary>
-int Channel::minProtocolGap(const Command *this_c) const
+tick Channel::minProtocolGap(const Command *this_c) const
 { 
-	int min_gap = 0;
+	tick min_gap = 0;
 
 	const unsigned this_rank = this_c->getAddress().getRank();
 
@@ -226,7 +226,7 @@ int Channel::minProtocolGap(const Command *this_c) const
 
 	case REFRESH_ALL:
 		// respect tRFC and tRP
-		min_gap = max(((currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC()),((currentRank.getLastPrechargeTime() - time) + timingSpecification.tRP()));
+		min_gap = max((currentRank.getLastRefreshTime() + timingSpecification.tRFC()),(currentRank.getLastPrechargeTime() + timingSpecification.tRP())) - time;
 		break;
 
 	case INVALID_COMMAND:
@@ -237,7 +237,7 @@ int Channel::minProtocolGap(const Command *this_c) const
 	}
 
 	//return max(min_gap,timingSpecification.tCMD());
-	return max(min_gap,max((int)(lastCommandIssueTime - time) + timingSpecification.tCMD(), 0));
+	return max(min_gap,max(lastCommandIssueTime - time + (tick)timingSpecification.tCMD(), (tick)0));
 }
 
 /// @brief Returns the soonest time that this command may execute

@@ -72,6 +72,11 @@ void SSTdramSystem::preTic()
 	// schedule a time to be woken
 }
 
+bool SSTdramSystem::doAtomicAccess(parcel *p)
+{
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////
 /// @brief move all channels in this system to the specified time
 /// @details tells the channels that nothing arrived since the last wakeup and
@@ -115,9 +120,4 @@ void SSTdramSystem::moveToTime(const tick now)
 	}
 
 
-}
-
-bool SSTdramSystem::doAtomicAccess(parcel *p)
-{
-	return true;
 }

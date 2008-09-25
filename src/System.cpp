@@ -9,6 +9,8 @@
 #include <cmath>
 #include <map>
 #include <vector>
+#include <functional>
+#include <algorithm>
 #include <assert.h>
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
@@ -441,6 +443,9 @@ void System::printStatistics()
 	statistics.clear();
 }
 
+using std::for_each;
+using std::bind2nd;
+using std::mem_fun_ref;
 
 //////////////////////////////////////////////////////////////////////
 /// @brief calculate and print the power consumption for each channel
@@ -449,15 +454,13 @@ void System::printStatistics()
 void System::doPowerCalculation()
 {
 	// waiting for OpenMP 3.0
-//#pragma omp parallel
-	{
+	//#pragma omp parallel
 
-//#pragma omp for
-		for (vector<Channel>::iterator currentChannel = channel.begin(); currentChannel != channel.end(); currentChannel++)
-		{
-			currentChannel->doPowerCalculation(time);
-		}
-	}
+
+	//#pragma omp for
+
+	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
+
 
 }
 
