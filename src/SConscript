@@ -44,12 +44,16 @@ if not conf.CheckLib('xml2'):
 	print 'e.g. sudo apt-get install "libxml2-*"'
 	Exit(1)
 
-env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
+try:
+	env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
+except ValueError:
+	pass
 
-env.Append(CCFLAGS = ['-I/usr/include/libxml2'],
+env.Append(
+	CCFLAGS = ['-I/usr/include/libxml2'],
 	CPPDEFINES = ['M5DEBUG'],
 	LINKFLAGS = ['-lxml2', '-lboost_iostreams', '-lboost_thread'])
-
+#	LINKFLAGS = ['-lboost_iostreams', '-lboost_thread'])
 SimObject('M5dramSystem.py')
 
 Source('Address.cpp')

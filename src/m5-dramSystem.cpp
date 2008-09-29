@@ -1,20 +1,17 @@
 #include <boost/serialization/map.hpp>
-#include <boost/archive/text_oarchive.hpp> 
-#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp> 
+#include <boost/archive/text_iarchive.hpp>
 #include <sstream>
 #include <stdlib.h>
 #include <cmath>
 #include <zlib.h>
 #include <fcntl.h>
 #include <sys/mman.h>
-
 #include "enumTypes.h"
 #include "m5-dramSystem.h"
 
 using std::ofstream;
 using boost::archive::text_oarchive;
-
-
 using std::dec;
 using std::hex;
 using std::endl;
@@ -33,14 +30,15 @@ M5dramSystem *M5dramSystemParams::create()
 	return new M5dramSystem(this);
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief returns the address range available in this device
+//////////////////////////////////////////////////////////////////////////
 void M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
 {
 	snoop = false;
 	resp.clear();
 	resp.push_back(RangeSize(start(), params()->range.size()));
 }
-
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief move all channels in this system to the specified time
@@ -152,7 +150,9 @@ currentTransactionID(0)
 	timingOutStream << *ds << endl;
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief returns a port for other devices to connect to
+//////////////////////////////////////////////////////////////////////////
 Port *M5dramSystem::getPort(const string &if_name, int idx)
 {
 	// Accept request for "functional" port for backwards compatibility
@@ -186,6 +186,9 @@ Port *M5dramSystem::getPort(const string &if_name, int idx)
 	return port;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief initializes the ports of this object
+//////////////////////////////////////////////////////////////////////////
 void M5dramSystem::init()
 {
 	if (ports.size() == 0)
@@ -200,6 +203,9 @@ void M5dramSystem::init()
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief deletes the DRAMsim object
+//////////////////////////////////////////////////////////////////////////
 M5dramSystem::~M5dramSystem()
 {
 	//if (pmemAddr)
@@ -209,6 +215,9 @@ M5dramSystem::~M5dramSystem()
 	delete ds;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief dumps the memory array to a file as part of a systemwide checkpoint
+//////////////////////////////////////////////////////////////////////////
 void M5dramSystem::serialize(ostream &os)
 {
 	gzFile compressedMem;
@@ -261,6 +270,9 @@ void M5dramSystem::serialize(ostream &os)
 	outStream.close();
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief restores the memory array after resuming from a checkpoint
+//////////////////////////////////////////////////////////////////////////
 void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
 {
 	gzFile compressedMem;
@@ -533,11 +545,19 @@ SimpleTimingPort(_name),
 memory(_memory)
 {}
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief returns the block size for this module
+//////////////////////////////////////////////////////////////////////////
 int M5dramSystem::MemoryPort::deviceBlockSize()
 {
 	return memory->deviceBlockSize();
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief replies to requests when in functional mode
+/// @details simply returns a memory request instantly when running in atomic mode \n
+/// does not affect the underlying memory system
+//////////////////////////////////////////////////////////////////////////
 void M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
 {
 	if (!checkFunctional(pkt))
@@ -616,10 +636,17 @@ void M5dramSystem::TickEvent::process()
 	schedule(next * memory->getCPURatio());
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief the TickEvent constructor
+/// @details sets a pointer to the underlying DRAMsim memory system
+//////////////////////////////////////////////////////////////////////////
 M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 : Event(&mainEventQueue, CPU_Tick_Pri), memory(c)
 {}
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief returns a description of this component
+//////////////////////////////////////////////////////////////////////////
 const char *M5dramSystem::TickEvent::description()
 {
 	return "m5dramSystem tick event";	

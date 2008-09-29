@@ -48,7 +48,7 @@ rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 	if (arrivalThreshold > 1.0F)
 		arrivalThreshold = 1.0F / arrivalThreshold;
 
-	if (!settings.inFile.empty())
+	if (!settings.inFile.empty() && (settings.inFileType != RANDOM))
 	{
 		traceFile.open(settings.inFile.c_str());
 

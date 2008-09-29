@@ -5,10 +5,24 @@ a fully buffered DIMM channel
 
 {\tt \#include $<$fbdChannel.h$>$}
 
-Inheritance diagram for DRAMSimII::fbdChannel:Collaboration diagram for DRAMSimII::fbdChannel:\subsection*{Protected Member Functions}
+Inheritance diagram for DRAMSimII::fbdChannel:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=82pt]{class_d_r_a_m_sim_i_i_1_1fbd_channel__inherit__graph}
+\end{center}
+\end{figure}
+Collaboration diagram for DRAMSimII::fbdChannel:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{class_d_r_a_m_sim_i_i_1_1fbd_channel__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Protected Member Functions}
 \begin{CompactItemize}
 \item 
-int {\bf minProtocolGap} (const {\bf Command} $\ast$this\_\-c) const 
+tick {\bf minProtocolGap} (const {\bf Command} $\ast$this\_\-c) const 
 \begin{CompactList}\small\item\em find the protocol gap between a command and current system state \item\end{CompactList}\item 
 unsigned {\bf moveChannelToTime} (const tick endTime, tick \&transFinishTime)
 \begin{CompactList}\small\item\em Moves the specified channel to at least the time given. \item\end{CompactList}\item 
@@ -24,14 +38,14 @@ a fully buffered DIMM channel
 \subsection{Member Function Documentation}
 \index{DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}!minProtocolGap@{minProtocolGap}}
 \index{minProtocolGap@{minProtocolGap}!DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}}
-\subsubsection[minProtocolGap]{\setlength{\rightskip}{0pt plus 5cm}int fbdChannel::minProtocolGap (const {\bf Command} $\ast$ {\em this\_\-c}) const\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_6a62bfa9fe3f0c009bd8f595d9ca2303}
+\subsubsection[minProtocolGap]{\setlength{\rightskip}{0pt plus 5cm}tick fbdChannel::minProtocolGap (const {\bf Command} $\ast$ {\em this\_\-c}) const\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_e00da4585914ccdeea1cff8294e9ed69}
 
 
 find the protocol gap between a command and current system state 
 
 
 
-Reimplemented from {\bf DRAMSimII::Channel} \doxyref{}{p.}{class_d_r_a_m_sim_i_i_1_1_channel_d8c7b776aebaecaf00099595a1edc7a5}.\index{DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}!moveChannelToTime@{moveChannelToTime}}
+Reimplemented from {\bf DRAMSimII::Channel} \doxyref{}{p.}{class_d_r_a_m_sim_i_i_1_1_channel_e530764b1ea3144c32f1ee2f15ec9c89}.\index{DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}!moveChannelToTime@{moveChannelToTime}}
 \index{moveChannelToTime@{moveChannelToTime}!DRAMSimII::fbdChannel@{DRAMSimII::fbdChannel}}
 \subsubsection[moveChannelToTime]{\setlength{\rightskip}{0pt plus 5cm}unsigned fbdChannel::moveChannelToTime (const tick {\em endTime}, \/  tick \& {\em transFinishTime})\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_m_sim_i_i_1_1fbd_channel_f8453aba2c651078bad7ec5ca7bec1e4}
 
