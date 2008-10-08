@@ -1,5 +1,3 @@
-#define _CRT_RAND_S
-
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -204,7 +202,7 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 			//int base_control;
 			enum TransactionType attributes;
 			int burst_length = 4; // Socket 7 cachelines are 32 byte long, burst of 4
-			int burst_count;
+			int burst_count = 0;
 			bool bursting = true;
 			//double multiplier;
 			tick timestamp = TICK_MAX;

@@ -120,11 +120,12 @@ bool Address::reverseAddressTranslation()
 		break;
 	}
 
-
-#if DEBUG
+#if 0
+#ifdef DEBUG
 	PHYSICAL_ADDRESS backup = physicalAddress;
 	addressTranslation();
 	assert(physicalAddress == backup);
+#endif
 #endif
 
 	return true;

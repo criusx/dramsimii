@@ -66,6 +66,7 @@ Command *Channel::getNextCommand(const Command *nextCommand)
 //////////////////////////////////////////////////////////////////////
 /// @brief returns a pointer to the command which would be chosen to be executed next
 /// @details chooses a command according to the command ordering algorithm, tries to choose a command which can execute
+/// the command returned may not be able to be executed yet, so it is important to check this
 /// command is not actually removed from the per bank queues
 /// @author Joe Gross
 /// @return a const pointer to the next available command
@@ -102,7 +103,7 @@ const Command *Channel::readNextCommand() const
 					{
 						const tick executeTime = earliestExecuteTime(challengerCommand);
 
-#if DEBUG
+#ifdef DEBUG
 						assert(executeTime == time + minProtocolGap(challengerCommand));
 #endif
 						if ((challengerCommand->getEnqueueTime() < oldestExecutableCommandTime) && (executeTime <= time + timingSpecification.tCMD()))
@@ -476,15 +477,16 @@ const Command *Channel::readNextCommand() const
 					if (isRefreshCommand && challengerCommand && challengerCommand->getCommandType() == REFRESH_ALL && currentRank->refreshAllReady())
 					{
 						tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
-#if DEBUG
+#ifdef DEBUG
 						int minGap = minProtocolGap(challengerCommand);
 
-						assert(time + minGap == challengerExecuteTime);
+						if (time + minGap != challengerExecuteTime)
+							assert(time + minGap == challengerExecuteTime);
 #endif
 						if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
 						{						
 							candidateCommand = challengerCommand;
-							// stop searching since all the queues are proven to have refresh commands at the front
+							// stop searching since all the queues are proved to have refresh commands at the front
 							break;
 						}						
 					}
@@ -494,10 +496,11 @@ const Command *Channel::readNextCommand() const
 						if (challengerCommand && challengerCommand->getCommandType() != REFRESH_ALL)
 						{
 							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
-#if DEBUG
+#ifdef DEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							assert(time + minGap == challengerExecuteTime);
+							if (time + minGap != challengerExecuteTime)
+								assert(time + minGap == challengerExecuteTime);
 #endif
 							// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
 							if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))

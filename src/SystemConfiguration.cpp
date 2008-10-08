@@ -36,16 +36,6 @@ readPercentage(settings.readPercentage),
 sessionID(settings.sessionID)
 {}
 
-ostream &DRAMSimII::operator<<(ostream &os, const SystemConfiguration &this_a)
-{
-	//os << "PerBankQ[" << this_a.perBankQueueDepth << "] ";
-	os << "CH[" << this_a.channelCount << "] ";
-	os << "RK[" << this_a.rankCount << "] ";
-	os << "BK[" << this_a.bankCount << "] ";
-
-	return os;
-}
-
 SystemConfiguration& SystemConfiguration::operator =(const DRAMSimII::SystemConfiguration &rs)
 {
 	if (this == &rs)
@@ -110,4 +100,13 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
 		shortBurstRatio==right.shortBurstRatio &&
 		readPercentage==right.readPercentage &&
 		sessionID==right.sessionID);
+}
+
+ostream &DRAMSimII::operator<<(ostream &os, const SystemConfiguration &this_a)
+{
+	os << "CH[" << this_a.channelCount << "] ";
+	os << "RK[" << this_a.rankCount << "] ";
+	os << "BK[" << this_a.bankCount << "] ";
+
+	return os;
 }

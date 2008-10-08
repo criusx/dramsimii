@@ -216,7 +216,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// then add the command to all queues
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
-				bool result = currentBank->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()));
+				bool result = currentBank->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
 				assert (result);
 			}
 		}
@@ -234,17 +234,17 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		else
 		{
 			// command one, the RAS command to activate the row
-			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), ACTIVATE));
+			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), ACTIVATE));
 
 			// command two, CAS or CAS+Precharge
-			destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()));
+			destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
 
 			// if CAS+Precharge is unavailable
 			if (!systemConfig.isAutoPrecharge())
 			{
 				// command three, the Precharge command
 				// only one of these commands has a pointer to the original transaction, thus NULL
-				destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), PRECHARGE));
+				destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), PRECHARGE));
 			}
 		}
 		break;
@@ -269,7 +269,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// then add the command to all queues
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
-				bool result = currentBank->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()));
+				bool result = currentBank->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
 				assert (result);
 			}
 		}
@@ -296,14 +296,14 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				destinationBank.back()->setAutoPrecharge(false);
 
 				// insert new command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()));				
+				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));				
 			}
 			else // no CAS+P available
 			{
 				assert(destinationBank.back()->getCommandType() == PRECHARGE);
 
 				// insert new command
-				destinationBank.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()), destinationBank.size() - 1);
+				destinationBank.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()), destinationBank.size() - 1);
 
 			}
 		}
@@ -316,15 +316,15 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		else
 		{
 			// command one, the RAS command to activate the row
-			destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), ACTIVATE));
+			destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), ACTIVATE));
 
 			// command two, CAS or CAS+Precharge			
-			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()));
+			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
 
 			// possible command three, Precharge
 			if (!systemConfig.isAutoPrecharge())
 			{				
-				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), PRECHARGE));
+				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), PRECHARGE));
 			}
 		}		
 		break;
@@ -350,7 +350,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// then add the command to all queues
 			for (vector<Bank>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				bool result = i->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(),systemConfig.isAutoPrecharge()));
+				bool result = i->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(),systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
 				//bool result = i->push(new Command(incomingTransaction->getAddresses(), REFRESH_ALL, time, incomingTransaction, false));
 				assert (result);
 			}
@@ -383,13 +383,13 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				}
 
 				// RAS command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), false, ACTIVATE));
+				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), false, timingSpecification.tBurst(), ACTIVATE));
 
 				// CAS command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false));
+				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst()));
 
 				// last, the precharge command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false,PRECHARGE));
+				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst(),PRECHARGE));
 			}
 		}
 		break;

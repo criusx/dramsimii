@@ -25,9 +25,6 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/vector.hpp>
-#include <boost/serialization/is_abstract.hpp>
-
-
 
 namespace DRAMSimII
 {
@@ -66,7 +63,7 @@ namespace DRAMSimII
 		InputStatus waitForTransactionToFinish(Transaction *trans);
 		virtual tick nextTick() const;
 		void runSimulations(const unsigned requestCount = 0);
-		
+
 		// accessors
 		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); } ///< returns true if this channel has no more room
 		double Frequency() const { return systemConfig.Frequency(); }	///< accessor to get the frequency of the DRAM system

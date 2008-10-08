@@ -36,7 +36,7 @@ namespace DRAMSimII
 		int t_rtrs;			///< rank hand off penalty, also t_dqs
 		int t_wr;			///< write recovery time , time to restore data
 		int t_wtr;			///< write to read turnaround time
-		
+		int t_ost;			///< on-die termination switching time
 		int t_int_burst;	///< internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3
 		int t_buffer_delay;	///< the delay a transaction experiences before it can be converted to a series of commands
 		int t_refi;			///< refresh interval, should send one refresh every n ticks to a rank
@@ -65,6 +65,7 @@ namespace DRAMSimII
 		int tWTR() const { return t_wtr; };
 		int tRTRS() const { return t_rtrs; }
 		int tRC() const { return t_rc; }
+		int tOST() const { return t_ost; }
 
 		// friends
 		friend std::ostream &operator<<( std::ostream&, const TimingSpecification&);
@@ -83,7 +84,7 @@ namespace DRAMSimII
 		void serialize( Archive & ar, const unsigned verison)
 		{
 			ar & t_al & t_burst & t_cas & t_ccd & t_cmd & t_cwd &  t_faw & t_ras & t_rc & t_rcd & t_rfc & t_rp & t_rrd & t_rtp &
-				t_rtrs & t_wr & t_wtr & t_int_burst & t_buffer_delay & t_refi;
+				t_rtrs & t_wr & t_wtr & t_int_burst & t_buffer_delay & t_refi & t_ost;
 		}
 	};
 }

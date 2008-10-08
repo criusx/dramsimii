@@ -3,6 +3,8 @@
 using std::max;
 using std::cerr;
 using std::endl;
+using std::endl;
+
 using namespace DRAMSimII;
 
 Bank::Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
@@ -75,51 +77,6 @@ systemConfig(systemConfigVal)
 {}
 
 
-Bank& Bank::operator =(const Bank& rhs)
-{
-	//::new(this)DRAMSimII::Bank(rhs.timing,rhs.systemConfig);
-	//timing = rhs.timing;		
-	//systemConfig = rhs.systemConfig;
-	perBankQueue = rhs.perBankQueue;
-	lastRASTime = rhs.lastRASTime;
-	lastCASTime = rhs.lastCASTime;
-	lastCASWTime = rhs.lastCASWTime;
-	lastPrechargeTime = rhs.lastPrechargeTime;
-	lastRefreshAllTime = rhs.lastRefreshAllTime;	
-	lastCASLength = rhs.lastCASLength;		
-	lastCASWLength = rhs.lastCASWLength;		
-	openRowID = rhs.openRowID;			
-	activated = rhs.activated;			
-	RASCount = rhs.RASCount;			
-	totalRASCount = rhs.totalRASCount;		
-	CASCount = rhs.CASCount;			
-	totalCASCount = rhs.totalCASCount;		
-	CASWCount = rhs.CASWCount;			
-	totalCASWCount = rhs.totalCASWCount;	
-
-	return *this;
-}
-
-bool Bank::operator==(const Bank& rhs) const
-{
-	return (timing == rhs.timing && systemConfig == rhs.systemConfig && perBankQueue == rhs.perBankQueue && lastRASTime == rhs.lastRASTime &&
-		lastCASTime == rhs.lastCASTime && lastCASWTime == rhs.lastCASWTime && lastPrechargeTime == rhs.lastPrechargeTime && 
-		lastRefreshAllTime == rhs.lastRefreshAllTime && lastCASLength == rhs.lastCASLength && lastCASWLength == rhs.lastCASWLength && 
-		openRowID == rhs.openRowID && activated == rhs.activated && RASCount == rhs.RASCount && totalRASCount == rhs.totalRASCount &&
-		CASCount == rhs.CASCount && totalCASCount == rhs.totalCASCount && CASWCount == rhs.CASWCount && totalCASWCount == rhs.totalCASWCount);
-}
-
-using std::endl;
-
-std::ostream& DRAMSimII::operator<<(std::ostream& in, const Bank& pc)
-{
-	in << "PBQ" << endl << pc.perBankQueue;
-	in << "last RAS [" << pc.lastRASTime << "] act[" <<
-		pc.activated << "] open row[" << pc.openRowID << "]" << endl;	
-
-	return in;
-}
-
 /// this logically issues a RAS command and updates all variables to reflect this
 void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
@@ -143,10 +100,12 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 	case READ_AND_PRECHARGE:
 		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), lastRASTime + timing.tRAS());
 		// see figure 11.28 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
+		//lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), lastRASTime + timing.tRAS());
 		lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), lastRASTime + timing.tRAS());
 		break;
 	case WRITE_AND_PRECHARGE:
 		// see figure 11.29 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
+		//lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), lastRASTime + timing.tRAS());
 		lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), lastRASTime + timing.tRAS());
 		break;
 	case PRECHARGE:
@@ -162,7 +121,7 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 
 void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
-	lastCASTime = currentTime;
+	lastCASTime = currentTime + timing.tAL();
 
 	lastCASLength = currentCommand->getLength();
 	CASCount++;
@@ -170,7 +129,7 @@ void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 
 void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
-	lastCASWTime = currentTime;
+	lastCASWTime = currentTime + timing.tAL();
 	lastCASWLength = currentCommand->getLength();
 	CASWCount++;
 }
@@ -207,7 +166,7 @@ bool Bank::openPageInsert(DRAMSimII::Transaction *value, tick time)
 			// channel, rank, bank, row all match, insert just before this precharge command
 			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
 			{
-				bool result = perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge()), currentIndex);
+				bool result = perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), currentIndex);
 				assert(result);
 
 				return true;
@@ -273,3 +232,46 @@ bool Bank::openPageInsertAvailable(const Transaction *value, const tick time) co
 	}
 }
 
+
+Bank& Bank::operator =(const Bank& rhs)
+{
+	//::new(this)DRAMSimII::Bank(rhs.timing,rhs.systemConfig);
+	//timing = rhs.timing;		
+	//systemConfig = rhs.systemConfig;
+	perBankQueue = rhs.perBankQueue;
+	lastRASTime = rhs.lastRASTime;
+	lastCASTime = rhs.lastCASTime;
+	lastCASWTime = rhs.lastCASWTime;
+	lastPrechargeTime = rhs.lastPrechargeTime;
+	lastRefreshAllTime = rhs.lastRefreshAllTime;	
+	lastCASLength = rhs.lastCASLength;		
+	lastCASWLength = rhs.lastCASWLength;		
+	openRowID = rhs.openRowID;			
+	activated = rhs.activated;			
+	RASCount = rhs.RASCount;			
+	totalRASCount = rhs.totalRASCount;		
+	CASCount = rhs.CASCount;			
+	totalCASCount = rhs.totalCASCount;		
+	CASWCount = rhs.CASWCount;			
+	totalCASWCount = rhs.totalCASWCount;	
+
+	return *this;
+}
+
+bool Bank::operator==(const Bank& rhs) const
+{
+	return (timing == rhs.timing && systemConfig == rhs.systemConfig && perBankQueue == rhs.perBankQueue && lastRASTime == rhs.lastRASTime &&
+		lastCASTime == rhs.lastCASTime && lastCASWTime == rhs.lastCASWTime && lastPrechargeTime == rhs.lastPrechargeTime && 
+		lastRefreshAllTime == rhs.lastRefreshAllTime && lastCASLength == rhs.lastCASLength && lastCASWLength == rhs.lastCASWLength && 
+		openRowID == rhs.openRowID && activated == rhs.activated && RASCount == rhs.RASCount && totalRASCount == rhs.totalRASCount &&
+		CASCount == rhs.CASCount && totalCASCount == rhs.totalCASCount && CASWCount == rhs.CASWCount && totalCASWCount == rhs.totalCASWCount);
+}
+
+std::ostream& DRAMSimII::operator<<(std::ostream& in, const Bank& pc)
+{
+	in << "PBQ" << endl << pc.perBankQueue;
+	in << "last RAS [" << pc.lastRASTime << "] act[" <<
+		pc.activated << "] open row[" << pc.openRowID << "]" << endl;	
+
+	return in;
+}

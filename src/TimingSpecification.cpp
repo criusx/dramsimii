@@ -9,11 +9,30 @@ using std::cerr;
 using std::endl;
 using namespace DRAMSimII;
 
-ostream &DRAMSimII::operator<<(ostream &os, const TimingSpecification &this_a)
-{
-	os << "rtrs[" << this_a.t_rtrs << "] ";
-	return os;
-}
+// no arg constructor for deserialization and unit testing
+TimingSpecification::TimingSpecification():
+t_al(-1),
+t_burst(-1),
+t_cas(-1),
+t_ccd(-1),
+t_cmd(-1),
+t_cwd(-1),
+t_faw(-1),
+t_ras(-1),
+t_rc(-1),
+t_rcd(-1),
+t_rfc(-1),
+t_rp(-1),
+t_rrd(-1),
+t_rtp(-1),
+t_rtrs(-1),
+t_wr(-1),
+t_wtr(-1),
+t_ost(0),
+t_int_burst(-1),
+t_buffer_delay(-1),
+t_refi(-1)
+{}
 
 
 TimingSpecification::TimingSpecification(const Settings& settings)
@@ -41,6 +60,8 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 		t_wr = settings.tWR;		// 15 ns @ 2.5 ns per beat = 6 beats
 		t_wtr = settings.tWTR;
 		t_rtrs = settings.tRTRS;
+		t_ost = 0;					// does not exist for DDR
+		assert(t_rcd + t_cwd + t_burst + t_wr >= t_ras);
 		break;
 
 	case DDR2:
@@ -64,11 +85,14 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 		t_rtrs = settings.tRTRS;
 		t_wr = settings.tWR;
 		t_wtr = settings.tWTR;
+		t_ost = 5;					// 2.5 cycles to turn off, 2 to turn on
 
-		assert(t_rcd + t_burst + t_rtp - t_ccd <= t_ras);
+		assert(t_rcd + t_burst + t_rtp - t_ccd >= t_ras);
+		assert(t_rcd + t_cwd + t_burst + t_wr >= t_ras);		
 		assert(t_al <= t_rcd);
 		assert(t_al >= 0 && t_al <= 8); // must be 0..4 cycles, or 0..8 beats
 		assert(t_al + t_cmd == t_rcd);
+
 		break;
 
 	case DDR3:
@@ -91,6 +115,11 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 		t_rtp = settings.tRTP;
 		t_wr = settings.tWR;
 		t_wtr = settings.tWTR;
+		t_ost = 5;					// 2.5 cycles to turn off, 2 to turn on
+
+		assert(t_rcd + t_burst + t_rtp - t_ccd >= t_ras);
+		assert(t_rcd + t_cwd + t_burst + t_wr >= t_ras);
+
 		break;
 
 	case SDRAM:
@@ -111,7 +140,8 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 		t_rrd = 0;					// no such thing in SDRAM 
 		t_rtp = settings.tRTP;
 		t_rtrs = settings.tRTRS;	// no such thing in SDRAM 
-		t_wr = settings.tWR;		
+		t_wr = settings.tWR;	
+		t_ost = 0;					// does not exist in SDRAM
 		break;
 
 	case DRDRAM:
@@ -129,37 +159,19 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 	t_refi = settings.tREFI;
 }
 
-// no arg constructor for deserialization and unit testing
-TimingSpecification::TimingSpecification():
-t_al(-1),
-t_burst(-1),
-t_cas(-1),
-t_ccd(-1),
-t_cmd(-1),
-t_cwd(-1),
-t_faw(-1),
-t_ras(-1),
-t_rc(-1),
-t_rcd(-1),
-t_rfc(-1),
-t_rp(-1),
-t_rrd(-1),
-t_rtp(-1),
-t_rtrs(-1),
-t_wr(-1),
-t_wtr(-1),
-t_int_burst(-1),
-t_buffer_delay(-1),
-t_refi(-1)
-{}
-
-
 bool TimingSpecification::operator==(const TimingSpecification &right) const 
 {
 	return (t_al == right.t_al && t_burst == right.t_burst && t_cas == right.t_cas && t_ccd == right.t_ccd && t_cmd == right.t_cmd &&
 		t_cwd == right.t_cwd && t_faw == right.t_faw && t_ras == right.t_ras && t_rc == right.t_rc && t_rcd == right.t_rcd && 
 		t_rfc == right.t_rfc && t_rp == right.t_rp && t_rrd == right.t_rrd && t_rtp == right.t_rtp && t_rtrs == right.t_rtrs && 
 		t_wr == right.t_wr && t_wtr == right.t_wtr && t_int_burst == right.t_int_burst && t_buffer_delay == right.t_buffer_delay &&
-		t_refi == right.t_refi);
+		t_refi == right.t_refi && t_ost == right.t_ost);
 
 }
+ostream &DRAMSimII::operator<<(ostream &os, const TimingSpecification &this_a)
+{
+	os << "rtrs[" << this_a.t_rtrs << "] ";
+	return os;
+}
+
+

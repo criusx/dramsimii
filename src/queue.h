@@ -198,7 +198,7 @@ namespace DRAMSimII
 		/// @return rhs pointer to the item at the front of the queue, or NULL if the queue is empty
 		const inline T *front() const
 		{
-#if DEBUG
+#ifdef DEBUG
 			assert(count > 0 ? entry[head] != NULL : entry[head] == NULL);
 #endif
 			return entry[head];

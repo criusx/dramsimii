@@ -1,5 +1,6 @@
 Import('*')
 import shutil
+import re
 
 conf = Configure(env)
 
@@ -44,16 +45,26 @@ if not conf.CheckLib('xml2'):
 	print 'e.g. sudo apt-get install "libxml2-*"'
 	Exit(1)
 
-try:
-	env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
-except ValueError:
-	pass
+#try:
+#	env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
+#except ValueError:
+#	pass
 
-env.Append(
-	CCFLAGS = ['-I/usr/include/libxml2'],
-	CPPDEFINES = ['M5DEBUG'],
-	LINKFLAGS = ['-lxml2', '-lboost_iostreams', '-lboost_thread'])
-#	LINKFLAGS = ['-lboost_iostreams', '-lboost_thread'])
+try:
+	if 'fast' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
+		print viableTargets
+		env.Append(
+			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops', '-Weffc++', '-ffast-math', '-fomit-frame-pointer', '-finline-functions', '-march=athlon64'],
+			CPPDEFINES = ['M5DEBUG'])
+	else:	
+		raise IndexError
+except IndexError:
+	# then this must be a debug build
+	env.Append(
+		CCFLAGS = ['-I/usr/include/libxml2'],
+		CPPDEFINES = ['M5DEBUG', 'DEBUG'])
+
+	
 SimObject('M5dramSystem.py')
 
 Source('Address.cpp')
@@ -92,32 +103,3 @@ Source('reporting/stdsoap2.cpp')
 
 env = conf.Finish()
 
-
-#print Dir('.').abspath	
-#print Source
-#module_depends.append(File('../m5/dramsim.py'))
-#SimObject('../m5/dramsim.py')
-#print env._dict['ENV']['PWD']
-#print env._dict
-#shutil.copy(Dir('.').abspath + '/m5/dramsim.py',env._dict['ENV']['OLDPWD'] + '/configs/examples/')
-#print Dir('.').abspath
-#print dir('make_switching_dir')
-#print dir('nonsticky_opts')
-#dir('sticky_opts')
-#print dir('env')
-#print dir()
-#for x in env._dict:
-#	print x, env._dict[x]
-#makeEnv('faster', '.ff', strip = True,
-#        CCFLAGS = Split('-O3 -ffast-math -march=athlon64 -fexceptions -I/usr/include/libxml2'),
-#        CPPDEFINES = ['NDEBUG', 'TRACING_ON=0'],
-#        LINKFLAGS = Split('-lxml2 -lboost_iostreams -lboost_thread'))
-#print env.CCFLAGS
-#print env.CPPDEFINES
-#print env.LINKFLAGS
-#print env.OBJSUFFIX
-#env.Append(CCFLAGS = Split('-O3 -ffast-math -march=athlon64 -fexceptions -I/usr/include/libxml2'),
-#	CPPDEFINES = ['M5DEBUG'],
-#	LINKFLAGS = Split('-lxml2 -lboost_iostreams -lboost_thread'))
-
-# get rid of the flag that makes it impossible to compile

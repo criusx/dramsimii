@@ -133,12 +133,14 @@ currentTransactionID(0)
 	Settings settings(2,settingsMap);
 
 	settings.inFile = "";
+	if (p->outFilename.length() > 0)
+		settings.outFile = p->outFilename;
 
 	// if this is a normal system or a fbd system
-	if (settings.systemType == BASELINE_CONFIG)
-		ds = new System(settings);
-	else
+	if (settings.systemType == FBD_CONFIG)
 		ds = new fbdSystem(settings);	
+	else
+		ds = new System(settings);
 
 	//delete settingsMap;
 

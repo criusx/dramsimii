@@ -23,6 +23,8 @@ using std::min;
 using std::max;
 using namespace DRAMSimII;
 
+using namespace std;
+
 //////////////////////////////////////////////////////////////////////////
 /// @brief constructs the dramChannel using this settings reference, also makes a reference to the dramSystemConfiguration object
 /// @param settings the settings file that defines the number of ranks, refresh policy, etc.
@@ -117,17 +119,6 @@ channelID(UINT_MAX),
 rank(newRank)
 {}
 
-Channel::~Channel()
-{
-// 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
-// 	{
-// 		for (std::vector<Transaction *>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
-// 		{
-// 			delete *i;
-// 		}
-// 	}
-}
-
 //////////////////////////////////////////////////////////////////////////
 /// @brief copy constructor, reassigns the ordinal to each rank as they are duplicated
 /// @param rhs the dramChannel object to be copied
@@ -156,14 +147,14 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 
 	// initialize the refresh counters per rank
 	// because the vector copy constructor doesn't make deep copies
-// 	if (rhs.systemConfig.getRefreshPolicy() != NO_REFRESH)
-// 	{
-// 		for (unsigned j = 0; j < rhs.refreshCounter.size(); ++j)
-// 		{
-// 			if (rhs.refreshCounter[j])
-// 				refreshCounter[j] = new Transaction(*rhs.refreshCounter[j]);
-// 		}
-// 	}
+	// 	if (rhs.systemConfig.getRefreshPolicy() != NO_REFRESH)
+	// 	{
+	// 		for (unsigned j = 0; j < rhs.refreshCounter.size(); ++j)
+	// 		{
+	// 			if (rhs.refreshCounter[j])
+	// 				refreshCounter[j] = new Transaction(*rhs.refreshCounter[j]);
+	// 		}
+	// 	}
 
 #if 0
 	for (unsigned i = 0; i < rank.size(); i++)
@@ -171,6 +162,17 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 		rank[i].setRankID(i);
 	}	
 #endif
+}
+
+Channel::~Channel()
+{
+// 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
+// 	{
+// 		for (std::vector<Transaction *>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
+// 		{
+// 			delete *i;
+// 		}
+// 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -406,8 +408,6 @@ TransactionType Channel::setReadWriteType(const int rank_id,const int bank_count
 	else
 		return WRITE_TRANSACTION;
 }
-
-using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 /// @brief performs power calculations for this epoch and cumulative
@@ -806,19 +806,6 @@ const Transaction *Channel::readNextRefresh() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief the insertion operator, adds a string to the given stream with stats about this channel
-/// @return the input stream but with a string representing the channel state appended
-/// @author Joe Gross
-//////////////////////////////////////////////////////////////////////////
-std::ostream& DRAMSimII::operator<<(std::ostream& os, const DRAMSimII::Channel& r)
-{
-	os << "T[" << r.time << "] ch[" << r.channelID << endl;
-	os << r.timingSpecification << endl;
-	os << r.powerModel << endl;
-	return os;
-}
-
-//////////////////////////////////////////////////////////////////////////
 /// @brief the assignment operator, will copy non-key items to this channel
 /// @detail copies the non-reference items over, should be used for deserialization
 /// @return a reference to this channel, for chaining
@@ -858,5 +845,18 @@ bool Channel::operator ==(const Channel& rhs) const
 		timingSpecification == rhs.timingSpecification && transactionQueue == rhs.transactionQueue && historyQueue == rhs.historyQueue &&
 		completionQueue == rhs.completionQueue && systemConfig == rhs.systemConfig && statistics == rhs.statistics && powerModel == rhs.powerModel &&
 		algorithm == rhs.algorithm && channelID == rhs.channelID && rank == rhs.rank && refreshCounter == rhs.refreshCounter);
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief the insertion operator, adds a string to the given stream with stats about this channel
+/// @return the input stream but with a string representing the channel state appended
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
+std::ostream& DRAMSimII::operator<<(std::ostream& os, const DRAMSimII::Channel& r)
+{
+	os << "T[" << r.time << "] ch[" << r.channelID << endl;
+	os << r.timingSpecification << endl;
+	os << r.powerModel << endl;
+	return os;
 }
 

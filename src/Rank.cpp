@@ -82,51 +82,6 @@ lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(newBank)
 {}
 
-Rank& Rank::operator =(const Rank& rhs)
-{
-	//::new(this)DRAMSimII::Rank(rhs.timing,rhs.bank);
-	lastRefreshTime = rhs.lastRefreshTime;
-	lastPrechargeTime = rhs.lastPrechargeTime;
-	lastCASTime = rhs.lastCASTime;
-	lastCASWTime = rhs.lastCASWTime;
-	prechargeTime = rhs.prechargeTime;
-	totalPrechargeTime = rhs.totalPrechargeTime;
-	lastCASLength = rhs.lastCASLength;
-	lastCASWLength = rhs.lastCASWLength;
-	rankID = rhs.rankID;
-	lastBankID = rhs.lastBankID;
-	banksPrecharged = rhs.banksPrecharged;
-	lastActivateTimes = rhs.lastActivateTimes;
-	bank = rhs.bank;
-
-	return *this;
-}
-
-bool Rank::operator==(const Rank& right) const
-{
-	return (timing == right.timing && lastRefreshTime == right.lastRefreshTime && lastPrechargeTime == right.lastPrechargeTime &&
-		lastCASTime == right.lastCASTime && lastCASWTime == right.lastCASWTime && prechargeTime == right.prechargeTime && totalPrechargeTime == right.totalPrechargeTime &&
-		lastCASLength == right.lastCASLength && lastCASWLength == right.lastCASWLength && rankID == right.rankID && lastBankID == right.lastBankID &&
-		banksPrecharged == right.banksPrecharged && lastActivateTimes == right.lastActivateTimes && bank == right.bank);
-}
-
-std::ostream& DRAMSimII::operator<<(std::ostream &os, const Rank &r)
-{
-	os << r.lastRefreshTime << endl;
-	os << r.lastPrechargeTime << endl;
-	os << r.lastCASTime << endl;	
-	os << r.lastCASWTime << endl;	
-	os << r.prechargeTime << endl;
-	os << r.totalPrechargeTime << endl;
-	os << r.lastCASLength << endl;	
-	os << r.lastCASWLength << endl;	
-	os << r.rankID << endl;			
-	os << r.lastBankID << endl;		
-	os << r.banksPrecharged << endl;	
-
-	return os;
-}
-
 void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	// RAS time history queue, per rank
@@ -161,11 +116,12 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 	{
 	case READ_AND_PRECHARGE:
 		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), currentBank.getLastRASTime() + timing.tRAS());
+		//lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), currentBank.getLastRASTime() + timing.tRAS());
 		lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), currentBank.getLastRASTime() + timing.tRAS());
 		break;
 	case WRITE_AND_PRECHARGE:
-		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR(), currentBank.getLastRASTime() + timing.tRAS());
 		lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), currentBank.getLastRASTime() + timing.tRAS());
+		//lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), currentBank.getLastRASTime() + timing.tRAS());
 		break;
 	case PRECHARGE:
 		lastPrechargeTime = currentTime;
@@ -185,7 +141,7 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
 
-	lastCASTime = currentTime;
+	lastCASTime = currentTime + timing.tAL();
 	lastCASLength = currentCommand->getLength();
 
 	lastBankID = currentCommand->getAddress().getBank();
@@ -196,7 +152,7 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);
 
-	lastCASWTime = currentTime;
+	lastCASWTime = currentTime + timing.tAL();
 	lastCASWLength = currentCommand->getLength();
 
 	lastBankID = currentCommand->getAddress().getBank();
@@ -204,6 +160,8 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 
 void Rank::issueREF(const tick currentTime, const Command *currentCommand)
 {
+	lastRefreshTime = currentTime;
+
 	// FIXME: should this not count as a RAS + PRE command to all banks?
 	for (vector<Bank>::iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
 		currentBank->issueREF(currentTime, currentCommand);
@@ -272,4 +230,49 @@ bool Rank::refreshAllReady() const
 		}
 	}
 	return true;
+}
+
+Rank& Rank::operator =(const Rank& rhs)
+{
+	//::new(this)DRAMSimII::Rank(rhs.timing,rhs.bank);
+	lastRefreshTime = rhs.lastRefreshTime;
+	lastPrechargeTime = rhs.lastPrechargeTime;
+	lastCASTime = rhs.lastCASTime;
+	lastCASWTime = rhs.lastCASWTime;
+	prechargeTime = rhs.prechargeTime;
+	totalPrechargeTime = rhs.totalPrechargeTime;
+	lastCASLength = rhs.lastCASLength;
+	lastCASWLength = rhs.lastCASWLength;
+	rankID = rhs.rankID;
+	lastBankID = rhs.lastBankID;
+	banksPrecharged = rhs.banksPrecharged;
+	lastActivateTimes = rhs.lastActivateTimes;
+	bank = rhs.bank;
+
+	return *this;
+}
+
+bool Rank::operator==(const Rank& right) const
+{
+	return (timing == right.timing && lastRefreshTime == right.lastRefreshTime && lastPrechargeTime == right.lastPrechargeTime &&
+		lastCASTime == right.lastCASTime && lastCASWTime == right.lastCASWTime && prechargeTime == right.prechargeTime && totalPrechargeTime == right.totalPrechargeTime &&
+		lastCASLength == right.lastCASLength && lastCASWLength == right.lastCASWLength && rankID == right.rankID && lastBankID == right.lastBankID &&
+		banksPrecharged == right.banksPrecharged && lastActivateTimes == right.lastActivateTimes && bank == right.bank);
+}
+
+std::ostream& DRAMSimII::operator<<(std::ostream &os, const Rank &r)
+{
+	os << r.lastRefreshTime << endl;
+	os << r.lastPrechargeTime << endl;
+	os << r.lastCASTime << endl;	
+	os << r.lastCASWTime << endl;	
+	os << r.prechargeTime << endl;
+	os << r.totalPrechargeTime << endl;
+	os << r.lastCASLength << endl;	
+	os << r.lastCASWLength << endl;	
+	os << r.rankID << endl;			
+	os << r.lastBankID << endl;		
+	os << r.banksPrecharged << endl;	
+
+	return os;
 }

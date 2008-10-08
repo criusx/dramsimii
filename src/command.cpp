@@ -67,34 +67,14 @@ length(rhs.length)
 		);
 }
 
-bool Command::operator==(const Command& right) const
-{
-	if (commandType == right.commandType && startTime == right.startTime &&
-		enqueueTime == right.enqueueTime && completionTime == right.completionTime && addr == right.addr && 
-		postedCAS == right.postedCAS && length == right.length)
-	{
-		if ((hostTransaction && !right.hostTransaction) || 
-			(!hostTransaction && right.hostTransaction))
-			return false;
-		else if (!hostTransaction && !right.hostTransaction)
-			return true;
-		else if (*hostTransaction == *right.hostTransaction)
-			return true;
-		else 
-			return false;
-	}
-	else
-		return false;
-}
-
-
-Command::Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const CommandType type):
+Command::Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 startTime(-1),
 enqueueTime(enqueueTime),
 completionTime(-1),
 addr(hostTransaction.getAddresses()),
 hostTransaction(type == READ ? &hostTransaction : NULL), // this link is only needed for CAS commands
-postedCAS(postedCAS)
+postedCAS(postedCAS),
+length(commandLength)
 {
 	if (type == READ)
 	{
@@ -171,6 +151,33 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 }
 
 
+void *Command::operator new(size_t size)
+{
+	assert(size == sizeof(Command));
+	return freeCommandPool.acquireItem();
+}
+
+bool Command::operator==(const Command& right) const
+{
+	if (commandType == right.commandType && startTime == right.startTime &&
+		enqueueTime == right.enqueueTime && completionTime == right.completionTime && addr == right.addr && 
+		postedCAS == right.postedCAS && length == right.length)
+	{
+		if ((hostTransaction && !right.hostTransaction) || 
+			(!hostTransaction && right.hostTransaction))
+			return false;
+		else if (!hostTransaction && !right.hostTransaction)
+			return true;
+		else if (*hostTransaction == *right.hostTransaction)
+			return true;
+		else 
+			return false;
+	}
+	else
+		return false;
+}
+
+
 ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 {
 	switch(command)
@@ -236,12 +243,6 @@ ostream &DRAMSimII::operator<<(ostream &os, const Command &currentCommand)
 	return os;
 }
 
-
-void *Command::operator new(size_t size)
-{
-	assert(size == sizeof(Command));
-	return freeCommandPool.acquireItem();
-}
 
 void Command::operator delete(void *mem)
 {

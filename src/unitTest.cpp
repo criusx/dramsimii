@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE( test_queue)
 			*(new Address(std::rand()))
 			,NULL)),
 			std::rand(),
-			true,true
+			true,true,8
 			)
 			);
 	}

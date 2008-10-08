@@ -23,10 +23,11 @@
 		<tBurst>8</tBurst>
 		<tCAS>6</tCAS>
 		<tCMD>2</tCMD>
-		<tCWD>8</tCWD>
+		<!--  should be equal to tCAS - 2 beats -->
+		<tCWD>4</tCWD>
 		<tFAW>28</tFAW>
 		<!--time between a row access and data restoration in the data array-->
-		<tRAS>32</tRAS>
+		<tRAS>16</tRAS>
 		<!--minimum activate-to-activate timing (same bank), tRC = tRAS + tRP-->
 		<tRC>44</tRC>
 		<tRCD>10</tRCD>

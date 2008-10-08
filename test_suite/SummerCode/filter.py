@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import re,gzip,zlib,sys
 
 filename = sys.argv[1]

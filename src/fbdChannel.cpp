@@ -17,7 +17,7 @@ frameQueue(3)
 tick fbdChannel::minProtocolGap(const Command *this_c) const
 { 
 	// TODO: also consider commands issued one cycle ago which are not yet executed
-	tick min_gap;
+	tick min_gap = 0;
 
 	const unsigned this_rank = this_c->getAddress().getRank();
 	const Rank &currentRank = rank[this_rank];

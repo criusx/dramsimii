@@ -21,10 +21,16 @@
 #include <boost/iostreams/filter/gzip.hpp>
 using boost::iostreams::bzip2_compressor;
 using boost::iostreams::gzip_compressor;
+using boost::iostreams::gzip_params;
 #endif
 
 #include "System.h"
 
+using std::for_each;
+using std::bind2nd;
+using std::mem_fun_ref;
+
+
 using boost::iostreams::null_sink;
 using boost::iostreams::file_sink;
 using std::ifstream;
@@ -77,7 +83,7 @@ nextStats(settings.epoch)
 #endif
 		case GZ:
 #ifndef WIN32
-			timingOutStream.push(gzip_compressor());
+			timingOutStream.push(gzip_compressor(gzip_params(9)));
 			powerOutStream.push(gzip_compressor());
 			statsOutStream.push(gzip_compressor());
 			suffix = ".gz";
@@ -378,8 +384,37 @@ unsigned System::findOldestChannel() const
 	}
 
 	return oldestChanID;
+}//////////////////////////////////////////////////////////////////////
+/// @brief prints out the statistics accumulated so far and about the current epoch
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////
+void System::printStatistics()
+{
+	statsOutStream << statistics << endl;
+	statistics.clear();
+}//////////////////////////////////////////////////////////////////////
+/// @brief calculate and print the power consumption for each channel
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////
+void System::doPowerCalculation()
+{
+	// waiting for OpenMP 3.0
+	//#pragma omp parallel
+
+
+	//#pragma omp for
+
+	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
+
+
 }
 
+bool System::operator==(const System &rhs) const
+{
+	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&
+		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
+		nextStats == rhs.nextStats;
+}
 //////////////////////////////////////////////////////////////////////
 /// @brief serializes the dramSystem and prints it to the given ostream
 /// @author Joe Gross
@@ -433,40 +468,4 @@ ostream &DRAMSimII::operator<<(ostream &os, const System &thisSystem)
 	return os;
 }
 
-//////////////////////////////////////////////////////////////////////
-/// @brief prints out the statistics accumulated so far and about the current epoch
-/// @author Joe Gross
-//////////////////////////////////////////////////////////////////////
-void System::printStatistics()
-{
-	statsOutStream << statistics << endl;
-	statistics.clear();
-}
 
-using std::for_each;
-using std::bind2nd;
-using std::mem_fun_ref;
-
-//////////////////////////////////////////////////////////////////////
-/// @brief calculate and print the power consumption for each channel
-/// @author Joe Gross
-//////////////////////////////////////////////////////////////////////
-void System::doPowerCalculation()
-{
-	// waiting for OpenMP 3.0
-	//#pragma omp parallel
-
-
-	//#pragma omp for
-
-	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
-
-
-}
-
-bool System::operator==(const System &rhs) const
-{
-	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&
-		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
-		nextStats == rhs.nextStats;
-}

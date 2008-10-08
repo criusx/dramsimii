@@ -47,7 +47,7 @@ namespace DRAMSimII
 		// constructors
 		explicit Command(const Command&);
 		explicit Command();		
-		explicit Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const CommandType commandType = READ);
+		explicit Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
 		void *operator new(size_t size);
 		void operator delete(void *);
 		~Command();
