@@ -199,11 +199,6 @@ WHCC(settings.rankCount * settings.bankCount * 2)
 #endif
 }
 
-bool Algorithm::operator==(const Algorithm& right) const
-{
-	return (WHCC == right.WHCC);
-}
-
 Algorithm::Algorithm(const Algorithm &a):
 WHCC(a.WHCC)
 {
@@ -223,4 +218,9 @@ WHCC(a.WHCC)
 	transactionType[1] = a.transactionType[1];
 	transactionType[2] = a.transactionType[2];
 	transactionType[3] = a.transactionType[3];
+}
+
+bool Algorithm::operator==(const Algorithm& right) const
+{
+	return (WHCC == right.WHCC);
 }

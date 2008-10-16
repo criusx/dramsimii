@@ -195,10 +195,10 @@ tick Channel::minProtocolGap(const Command *this_c) const
 			int t_ras_gap = (currentBank.getLastRASTime() - time) + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			int t_cas_gap = max(0,((int)(currentBank.getLastCASTime() - time) + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
+			int t_cas_gap = max(0,((int)(currentBank.getLastCASTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
 
 			// respect t_casw of same bank
-			t_cas_gap = max((tick)t_cas_gap,((currentBank.getLastCASWTime() - time) + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
+			t_cas_gap = max((tick)t_cas_gap,((currentBank.getLastCASWTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
 
 			min_gap = max(t_ras_gap,t_cas_gap);
 		}

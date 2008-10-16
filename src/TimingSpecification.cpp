@@ -94,7 +94,7 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 		assert(t_al + t_cmd == t_rcd);
 
 		break;
-
+		
 	case DDR3:
 
 		t_ccd = 8;					// four cycles, eight beats in DDR3

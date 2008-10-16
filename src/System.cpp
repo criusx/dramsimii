@@ -29,8 +29,6 @@ using boost::iostreams::gzip_params;
 using std::for_each;
 using std::bind2nd;
 using std::mem_fun_ref;
-
-
 using boost::iostreams::null_sink;
 using boost::iostreams::file_sink;
 using std::ifstream;

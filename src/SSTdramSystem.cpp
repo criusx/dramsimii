@@ -22,39 +22,40 @@ SSTdramSystem::~SSTdramSystem()
 	delete ds;
 }
 
+/// @brief used by prefetcher to determine whether to prefetch or not
+/// @details returns the number of currently used DRAMs
+int load() 
+{
+	return portCount[FROM_DRAM];
+}
+
 void SSTdramSystem::setup() {}
 
 void SSTdramSystem::finish() {}
 
 void SSTdramSystem::handleParcel(parcel *p)
-{
-
-	// if this is a read
-	if (instruction *inst = (instruction*)p->inst())
-	{
-		simAddress memoryEffectiveAddress = (inst->state() <= FETCHED) ? inst->PC() : inst->memEAphys();	
-
+{	
 #ifdef TESTNEW
 
 		// do the read or write for this transaction
-		doAtomicAccess(p);
 		int randomDelay = rngGenerator();
 		DEBUG_TIMING_LOG("sending packet back at " << std::dec << static_cast<tick>(Timestamp() + randomDelay));
 		/// @todo avoid port contention, ensure that the port is available
 		sendParcel(p,p->source(), TimeStamp() + randomDelay);
 #else
+	instruction *inst = (instruction*)p->inst();
+	simAddress wb = (simAddress)(size_t)p->data();
 
-#endif
-	}
-	// if this is a write
-	else if (simAddress wb = (simAddress)(size_t)p->data()) 
+	if (!inst && !wb) // if a normal access or a writeback
 	{
-#ifdef TESTNEW
-		parcel::deleteParcel(p);
-#else
-#endif
+		cerr << "error: DS2SW2 received parcel w/o instruction or writeback data\n";
 	}
-
+	else
+	{
+		simAddress effectiveAddress = wb ? wb : (inst->state() <= FETCHED ? inst->PC() : inst->memEA());
+		Transaction newTransaction = new Transaction() inst->
+	}
+#endif
 }
 
 void SSTdramSystem::preTic()
@@ -106,7 +107,7 @@ void SSTdramSystem::moveToTime(const tick now)
 			{			
 				assert(curTick <= static_cast<tick>(finishTime * cpuRatio));
 
-				//M5_TIMING_LOG("<-T [@" << std::dec << static_cast<tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick);
+				SST_TIMING_LOG("<-T [@" << std::dec << static_cast<tick>(finishTime * getCpuRatio()) << "][+" << static_cast<Tick>(finishTime * getCpuRatio() - curTick) << "] at" << curTick);
 
 				//ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
 				/// @todo check for port contention when returning parcels

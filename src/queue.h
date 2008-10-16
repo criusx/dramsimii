@@ -33,7 +33,7 @@ namespace DRAMSimII
 		unsigned tail;	///< the point where items will be removed
 		std::vector<T *> entry;		///< the circular queue
 		bool pool;		///< whether or not this is a pool
-
+		
 	public:
 		explicit Queue(): maxCount(0), count(0), head(0), tail(0), entry(0), pool(false)
 		{}

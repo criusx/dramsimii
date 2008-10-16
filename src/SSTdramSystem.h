@@ -12,9 +12,9 @@
 
 #include "System.h"
 
-#define TESTNEW
+//#define TESTNEW
 
-class SSTdramSystem : public component
+class SSTdramSystem : public SW2
 {
 protected:
 	DRAMSimII::System *ds;				///< the DRAMSimII object
@@ -33,6 +33,8 @@ protected:
 public:
 	SSTdramSystem(std::string prefix);
 	~SSTdramSystem();
+
+	int load();
 	virtual void setup();
 	virtual void finish();
 	virtual void handleParcel(parcel *p);

@@ -1,8 +1,11 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import java.io.InputStreamReader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +33,12 @@ public class DramSimValid
   private String errors, outFile;
   private long currentB, totalB;
   private GZIPOutputStream gOut;
+  private int errorsFound;
 
-  public DramSimValid(String filename, String timingFile, 
-                      String outFilename)
+  public DramSimValid(String filename, String timingFile, String outFilename)
     throws IOException
   {
+  errorsFound = 0;
     parseParameters(timingFile);
     System.out.println(checkParameters());
 
@@ -57,10 +61,10 @@ public class DramSimValid
       DocumentBuilder db = dbf.newDocumentBuilder();
       Document doc = db.parse(f);
 
+      // figure out what kind of dram this is
       NodeList nl0 = doc.getElementsByTagName("dramspec");
       for (int i = 0; i < nl0.getLength(); i++)
       {
-        System.out.println(nl0.item(i).getNodeName());
         if (nl0.item(i).getNodeName() == "dramspec")
         {
           NamedNodeMap nnm = nl0.item(i).getAttributes();
@@ -89,16 +93,13 @@ public class DramSimValid
 
       for (int i = 0; i < nl.getLength(); i++)
       {
-        if (nl.item(i).getNodeName().startsWith("t") && 
-            !nl.item(i).getNodeName().startsWith("transaction"))
+        if (nl.item(i).getNodeName().startsWith("t") && !nl.item(i).getNodeName().startsWith("transaction"))
         {
-          timingParameters.put(nl.item(i).getNodeName(), 
-                               Integer.parseInt(nl.item(i).getTextContent()));
+          timingParameters.put(nl.item(i).getNodeName(), Integer.parseInt(nl.item(i).getTextContent()));
         }
       }
       nl = doc.getElementsByTagName("channels");
-      chans = 
-          new DramChannel[Integer.parseInt(nl.item(0).getTextContent())];
+      chans = new DramChannel[Integer.parseInt(nl.item(0).getTextContent())];
     }
     catch (Exception e)
     {
@@ -126,53 +127,48 @@ public class DramSimValid
     {
       e.printStackTrace();
     }
-    FileInputStream fis = new FileInputStream(file);
+    //FileInputStream fis = new FileInputStream(file);
     DramCommand dc;
     //System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
     try
     {
-      GZIPInputStream gzStream = new GZIPInputStream(fis, 32768);
-      byte[] b = new byte[1];
-      String line = "";
-      while (gzStream.available() == 1)
+      // GZIPInputStream gzStream = new GZIPInputStream(fis, 32768);
+      BufferedReader gzStream = 
+        new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))));
+      //byte[] b = new byte[1];
+      //String line = "";
+      String line = gzStream.readLine();
+      while (line != null)
       {
-        gzStream.read(b);
-        currentB++;
-        if (!new String(b).equals("\n"))
-          line += new String(b);
-        else
-        {          
-          if (line.startsWith("C F"))
+        if (line.startsWith("C F"))
+        {
+          dc = new DramCommand(line);
+          //Process Compound Commands
+          if (dc.getType().equals("CAS+P"))
           {
-            dc = new DramCommand(line);
-            //Process Compound Commands
-            if (dc.getType().equals("CAS+P"))
-            {
-              DramCommand CAS = dc.getCAS();
-              DramCommand Pre = dc.getPre();
-              sendCommand(CAS);
-              sendCommand(Pre);
-            }
-            else if (dc.getType().equals("CASW+P"))
-            {
-              DramCommand CAS = dc.getCAS();
-              DramCommand Pre = dc.getPre();
-              sendCommand(CAS);
-              sendCommand(Pre);
-            }
-            else
-            {
-              sendCommand(dc);
-            }
-            
-
-            if (currentB % (totalB / 100) == 0)
-            {
-              System.out.print(currentB + "/" + totalB + "\r");
-            }
+            DramCommand CAS = dc.getCAS();
+            DramCommand Pre = dc.getPre();
+            sendCommand(CAS);
+            sendCommand(Pre);
           }
-          line = "";
+          else if (dc.getType().equals("CASW+P"))
+          {
+            DramCommand CAS = dc.getCAS();
+            DramCommand Pre = dc.getPre();
+            sendCommand(CAS);
+            sendCommand(Pre);
+          }
+          else
+          {
+            sendCommand(dc);
+          }
         }
+
+        if (currentB++ % 100000 == 0)
+        {
+          System.out.print(currentB + "/" + totalB + "/" + errorsFound + "\r");
+        }
+        line = gzStream.readLine();
       }
     }
     catch (IOException ie)
@@ -181,7 +177,7 @@ public class DramSimValid
     }
     finally
     {
-      fis.close();
+      //fis.close();
       gOut.close();
     }
   }
@@ -191,14 +187,16 @@ public class DramSimValid
     //System.out.println(com.getType()+ " {S,E}: {" +com.getS() + "," + com.getE() + "} s:" 
     //	+ commands.size()+ " chan:"+com.getChan());
     commands.add(0, com);
-    while (commands.get(commands.size() - 1).getS() + lengthOfWindow < 
-           com.getS())
+    while (commands.get(commands.size() - 1).getS() + lengthOfWindow < com.getS())
     {
       commands.remove(commands.size() - 1);
     }
     errors = "";
     errors = chans[com.getChan()].checkTiming(com);
-
+    if (errors != null && errors.length() > 0)
+    {
+      errorsFound++;
+    }
     try
     {
       gOut.write(errors.getBytes());
@@ -226,58 +224,41 @@ public class DramSimValid
       t = timingParameters.get("tRP");
     else if (t < timingParameters.get("tRFC"))
       t = timingParameters.get("tRFC");
-    else if (t < 
-             timingParameters.get("tRCD") - timingParameters.get("tAL"))
+    else if (t < timingParameters.get("tRCD") - timingParameters.get("tAL"))
       t = timingParameters.get("tRP") - timingParameters.get("tAL");
-    else if (t < 
-             Math.max(timingParameters.get("tBurst"), timingParameters.get("tCCD")))
-      t = 
-          Math.max(timingParameters.get("tBurst"), timingParameters.get("tCCD"));
-    else if (t < 
-             timingParameters.get("tBurst") + timingParameters.get("tRTRS"))
+    else if (t < Math.max(timingParameters.get("tBurst"), timingParameters.get("tCCD")))
+      t = Math.max(timingParameters.get("tBurst"), timingParameters.get("tCCD"));
+    else if (t < timingParameters.get("tBurst") + timingParameters.get("tRTRS"))
       t = timingParameters.get("tBurst") + timingParameters.get("tRTRS");
+    else if (t < timingParameters.get("tBurst") + timingParameters.get("tCWD") + timingParameters.get("tWTR"))
+      t = timingParameters.get("tBurst") + timingParameters.get("tCWD") + timingParameters.get("tWTR");
     else if (t < 
-             timingParameters.get("tBurst") + timingParameters.get("tCWD") + 
-             timingParameters.get("tWTR"))
+             timingParameters.get("tBurst") + timingParameters.get("tCWD") + timingParameters.get("tRTRS") - timingParameters.get("tCAS"))
       t = 
-          timingParameters.get("tBurst") + timingParameters.get("tCWD") + timingParameters.get("tWTR");
+          timingParameters.get("tBurst") + timingParameters.get("tCWD") + timingParameters.get("tRTRS") - timingParameters.get("tCAS");
     else if (t < 
-             timingParameters.get("tBurst") + timingParameters.get("tCWD") + 
-             timingParameters.get("tRTRS") - timingParameters.get("tCAS"))
+             timingParameters.get("tBurst") + timingParameters.get("tCAS") + timingParameters.get("tRTRS") - timingParameters.get("tCWD"))
       t = 
-          timingParameters.get("tBurst") + timingParameters.get("tCWD") + timingParameters.get("tRTRS") - 
-          timingParameters.get("tCAS");
-    else if (t < 
-             timingParameters.get("tBurst") + timingParameters.get("tCAS") + 
-             timingParameters.get("tRTRS") - timingParameters.get("tCWD"))
-      t = 
-          timingParameters.get("tBurst") + timingParameters.get("tCAS") + timingParameters.get("tRTRS") - 
-          timingParameters.get("tCWD");
-    else if (t < 
-             timingParameters.get("tBurst") + timingParameters.get("tOTS"))
+          timingParameters.get("tBurst") + timingParameters.get("tCAS") + timingParameters.get("tRTRS") - timingParameters.get("tCWD");
+    else if (t < timingParameters.get("tBurst") + timingParameters.get("tOTS"))
       t = timingParameters.get("tBurst") + timingParameters.get("tOTS");
     else if (t < timingParameters.get("tRAS"))
       t = timingParameters.get("tRAS");
     else if (t < 
-             timingParameters.get("tBurst") + timingParameters.get("tAL") + 
-             timingParameters.get("tRTP") - timingParameters.get("tCCD"))
+             timingParameters.get("tBurst") + timingParameters.get("tAL") + timingParameters.get("tRTP") - timingParameters.get("tCCD"))
       t = 
-          timingParameters.get("tBurst") + timingParameters.get("tAL") + timingParameters.get("tRTP") - 
-          timingParameters.get("tCCD");
+          timingParameters.get("tBurst") + timingParameters.get("tAL") + timingParameters.get("tRTP") - timingParameters.get("tCCD");
     else if (t < 
-             timingParameters.get("tBurst") + timingParameters.get("tAL") + 
-             timingParameters.get("tCWD") + timingParameters.get("tWR"))
+             timingParameters.get("tBurst") + timingParameters.get("tAL") + timingParameters.get("tCWD") + timingParameters.get("tWR"))
       t = 
-          timingParameters.get("tBurst") + timingParameters.get("tAL") + timingParameters.get("tCWD") + 
-          timingParameters.get("tWR");
+          timingParameters.get("tBurst") + timingParameters.get("tAL") + timingParameters.get("tCWD") + timingParameters.get("tWR");
     return t;
   }
 
   public String checkParameters()
   {
     String perrors = "";
-    if (timingParameters.get("tRC") < 
-        timingParameters.get("tRAS") + timingParameters.get("tRP"))
+    if (timingParameters.get("tRC") < timingParameters.get("tRAS") + timingParameters.get("tRP"))
       perrors += "tRC<tRAS+tRP";
 
     return perrors;
