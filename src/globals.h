@@ -1,3 +1,20 @@
+// Copyright (C) 2008 University of Maryland.
+// This file is part of DRAMsimII.
+// 
+// DRAMsimII is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// DRAMsimII is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
+
+
 /*
 To do list:
 
@@ -5,12 +22,6 @@ To do list:
 3. Look at power up/down models.
 4. improve power models.
 6. attach BIU/MCH, port to alpha-sim
-7. convert passed pointers/values to references
-8. standardize time variables
-9. organize classes better, divide work more intelligently
-10. move away from srand48, drand48 functions, they are deprecated
-11. switch from machine dependent vars to definite types. e.g. unsigned int -> UINT32, __int64, etc
-12. make vars private again and declare various functions as friends
 */
 
 #ifndef GLOBALS_H
@@ -119,6 +130,14 @@ namespace DRAMSimII
 #else
 #define M5_TIMING_LOG(X)
 #define M5_DEBUG(X)
+#endif
+
+#if defined(DEBUG) && defined(SSTDEBUG) // compiler should declare this
+#define SST_TIMING_LOG(X) timingOutStream << X << endl;
+#define SST_DEBUG(X) X;
+#else
+#define SST_TIMING_LOG(X)
+#define SST_DEBUG(X)
 #endif
 
 #if defined(DEBUG) && defined(DEBUG_TRANSACTION)// compiler should declare this
