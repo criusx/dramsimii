@@ -44,6 +44,8 @@ namespace DRAMSimII
 		unsigned burstOf8Count;
 		unsigned burstOf4Count;
 		unsigned columnDepth;
+		unsigned readCount;
+		unsigned writeCount;
 		std::map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
 		std::map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
 		std::map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands

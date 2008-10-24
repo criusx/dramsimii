@@ -31,6 +31,8 @@ endNumber(0),
 burstOf8Count(0),
 burstOf4Count(0),
 columnDepth(log2(settings.columnSize)),
+readCount(0),
+writeCount(0),
 commandDelay(),
 commandExecution()
 {}
@@ -42,7 +44,9 @@ startNumber(UINT_MAX),
 endNumber(UINT_MAX),
 burstOf8Count(UINT_MAX),
 burstOf4Count(UINT_MAX),
-columnDepth(UINT_MAX)
+columnDepth(UINT_MAX),
+readCount(0),
+writeCount(0)
 {}
 
 
@@ -63,6 +67,10 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 
 		// gather working set information for this epoch, exclude the entries which alias to the same column		
 		workingSet[currentTransaction->getAddresses().getPhysicalAddress() >> columnDepth]++;
+		if (currentTransaction->getType() == READ_TRANSACTION)
+			readCount++;
+		else
+			writeCount++;
 	}
 }
 
@@ -76,28 +84,41 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 	}
 }
 
-ostream &DRAMSimII::operator<<(ostream &os, const Statistics &this_a)
+ostream &DRAMSimII::operator<<(ostream &os, const Statistics &statsLog)
 {
-	//os << "RR[" << setw(6) << setprecision(6) << (double)this_a.end_time/max(1,this_a.bo4_count + this_a.bo8_count) << "] ";
-	//os << "BWE[" << setw(6) << setprecision(6) << ((double)this_a.bo8_count * 8.0 + this_a.bo4_count * 4.0) * 100.0 / max(this_a.end_time,(tick)1) << "]" << endl;
+	//os << "RR[" << setw(6) << setprecision(6) << (double)statsLog.end_time/max(1,statsLog.bo4_count + statsLog.bo8_count) << "] ";
+	//os << "BWE[" << setw(6) << setprecision(6) << ((double)statsLog.bo8_count * 8.0 + statsLog.bo4_count * 4.0) * 100.0 / max(statsLog.end_time,(tick)1) << "]" << endl;
 
-	os << "----Delay----" << endl;
-	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionDecodeDelay.begin(); currentValue != this_a.transactionDecodeDelay.end(); currentValue++)
+	os << "----R W Total----" << endl;
+	os << readCount << " " << writeCount << " " << readCount + writeCount << endl;
+
+	os << "----Transaction Delay----" << endl;
+	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); currentValue++)
+	{
+		os << (*currentValue).first << " " << (*currentValue).second << endl;
+	}
+	os << "----Command Turnaround----" << endl;
+	for (map<unsigned,unsigned>::CONST_VTBL currentValue = statsLog.commandTurnaround.begin(); currentValue != statsLog.commandTurnaround.end(); currentValue++)
+	{
+		os << (*currentValue).first << " " << (*currentValue).second << endl;
+	}
+	os << "----Command Delay----" << endl;
+	for (map<unsigned,unsigned>::CONST_VTBL currentValue = statsLog.commandDelay.begin(); currentValue != statsLog.commandDelay.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----CMD Execution Time----" << endl;
-	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.commandExecution.begin(); currentValue != this_a.commandExecution.end(); currentValue++)
+	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.commandExecution.begin(); currentValue != statsLog.commandExecution.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----Transaction Execution Time----" << endl;
-	for (map<unsigned, unsigned>::const_iterator currentValue = this_a.transactionExecution.begin(); currentValue != this_a.transactionExecution.end(); currentValue++)
+	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----Working Set----" << endl;
-	os << this_a.workingSet.size() << endl;
+	os << statsLog.workingSet.size() << endl;
 
 	return os;
 }
@@ -110,6 +131,7 @@ void Statistics::clear()
 	transactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
+	readCount = writeCount = 0;
 }
 
 bool Statistics::operator==(const Statistics& right) const
@@ -117,5 +139,6 @@ bool Statistics::operator==(const Statistics& right) const
 	return (validTransactionCount == right.validTransactionCount && startNumber == right.startNumber && endNumber == right.endNumber &&
 		burstOf8Count == right.burstOf8Count && burstOf4Count == right.burstOf4Count && columnDepth == right.columnDepth && 
 		commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
-		transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && workingSet == right.workingSet);
+		transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && 
+		workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount);
 }
