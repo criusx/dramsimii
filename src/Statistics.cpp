@@ -90,7 +90,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const Statistics &statsLog)
 	//os << "BWE[" << setw(6) << setprecision(6) << ((double)statsLog.bo8_count * 8.0 + statsLog.bo4_count * 4.0) * 100.0 / max(statsLog.end_time,(tick)1) << "]" << endl;
 
 	os << "----R W Total----" << endl;
-	os << readCount << " " << writeCount << " " << readCount + writeCount << endl;
+	os << statsLog.readCount << " " << statsLog.writeCount << " " << statsLog.readCount + statsLog.writeCount << endl;
 
 	os << "----Transaction Delay----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); currentValue++)
@@ -98,12 +98,12 @@ ostream &DRAMSimII::operator<<(ostream &os, const Statistics &statsLog)
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----Command Turnaround----" << endl;
-	for (map<unsigned,unsigned>::CONST_VTBL currentValue = statsLog.commandTurnaround.begin(); currentValue != statsLog.commandTurnaround.end(); currentValue++)
+	for (map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandTurnaround.begin(); currentValue != statsLog.commandTurnaround.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----Command Delay----" << endl;
-	for (map<unsigned,unsigned>::CONST_VTBL currentValue = statsLog.commandDelay.begin(); currentValue != statsLog.commandDelay.end(); currentValue++)
+	for (map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandDelay.begin(); currentValue != statsLog.commandDelay.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
