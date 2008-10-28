@@ -307,7 +307,6 @@ void System::updateSystemTime()
 	}
 }
 
-
 //////////////////////////////////////////////////////////////////////
 /// @brief enqueue the transaction
 /// @details attempts to enqueue the transaction in the correct channel
@@ -396,15 +395,19 @@ unsigned System::findOldestChannel() const
 	}
 
 	return oldestChanID;
-}//////////////////////////////////////////////////////////////////////
+}
+
+//////////////////////////////////////////////////////////////////////
 /// @brief prints out the statistics accumulated so far and about the current epoch
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
 void System::printStatistics()
 {
-	statsOutStream << statistics << endl;
+	statsOutStream << statistics;
 	statistics.clear();
-}//////////////////////////////////////////////////////////////////////
+}
+
+//////////////////////////////////////////////////////////////////////
 /// @brief calculate and print the power consumption for each channel
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
@@ -427,6 +430,7 @@ bool System::operator==(const System &rhs) const
 		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
 		nextStats == rhs.nextStats;
 }
+
 //////////////////////////////////////////////////////////////////////
 /// @brief serializes the dramSystem and prints it to the given ostream
 /// @author Joe Gross

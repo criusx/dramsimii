@@ -14,7 +14,8 @@ set xlabel "Number of Commands with this Execution Time"
 set boxwidth 1.00 relative
 set title "Command Execution Time"  offset character 0, -1, 0 font "" norotate 
 
-plot 'commandExecution.dat' using 1:2:(1) with boxes
-
-
+plot '-' using 1:2:(1) with boxes
+@data@
+e
 unset output
+#exit

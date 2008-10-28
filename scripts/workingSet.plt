@@ -13,7 +13,8 @@ set ylabel "Working Set Size" offset character .05, 0,0 font "" textcolor lt -1 
 set xlabel "Epoch"
 set title "Working Set Size vs Time"  offset character 0, -1, 0 font "" norotate 
 
-plot 'workingSet.dat' using 1:2:(1) with boxes
-
+plot '-' using 1:2:(1) with boxes
+@data@
+e
 
 unset output
