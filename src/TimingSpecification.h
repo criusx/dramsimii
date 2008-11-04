@@ -25,7 +25,6 @@
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
-#include <boost/serialization/is_abstract.hpp>
 
 namespace DRAMSimII
 {
