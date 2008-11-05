@@ -208,6 +208,9 @@ nextStats(settings.epoch)
 	}
 	// else printing to these streams goes nowhere
 
+	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl
+		<< "+ total" << endl << "- epoch" << endl;
+
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)
 	{

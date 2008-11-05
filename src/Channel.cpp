@@ -448,7 +448,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 	float PsysACTTotal = 0;
 
-	powerOutStream << "---------------------- epoch ----------------------" << endl;
+	//powerOutStream << "---------------------- epoch ----------------------" << endl;
 
 	vector<int> rankArray;
 	vector<float> PsysACTSTBYArray, PsysACTArray;
@@ -526,7 +526,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 	//boost::thread(sendPower())
 	boost::thread(boost::bind(&DRAMSimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray, systemTime));
 
-	powerOutStream << "++++++++++++++++++++++ total ++++++++++++++++++++++" << endl;
+	//powerOutStream << "++++++++++++++++++++++ total ++++++++++++++++++++++" << endl;
 
 	PsysACTTotal = 0;
 
