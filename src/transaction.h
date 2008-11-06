@@ -59,6 +59,8 @@ namespace DRAMSimII
 		TransactionType getType() const { return type; }							///< get what type of transaction this is
 		unsigned getEventNumber() const { return eventNumber; }						///< which event number this is
 		const unsigned getOriginalTransaction() const { return originalTransaction; }	///< get the external transaction that this is a representation for
+		bool isRead() const { return ((type == IFETCH_TRANSACTION) || (type == READ_TRANSACTION) || (type == PREFETCH_TRANSACTION)); }
+		bool isWrite() const { return (type == WRITE_TRANSACTION); }
 
 		// mutators
 		void setEnqueueTime(const tick value) { enqueueTime = value; }

@@ -421,9 +421,6 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 		}
 		break;
 
-	case RETIRE_COMMAND:
-		break;
-
 	case PRECHARGE:
 		{
 			// respect t_ras of same bank
@@ -444,39 +441,23 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 		}
 		break;
 
-	case PRECHARGE_ALL:
-		break;
-
-	case ACTIVATE_ALL:
-		break;
-
-	case DRIVE_COMMAND:
-		break;
-
-	case DATA_COMMAND:
-		break;
-
-	case CAS_WITH_DRIVE_COMMAND:
-		break;
-
-	case SELF_REFRESH:
-		break;
-
-	case DESELECT:
-		break;
-
-	case NOOP:
-		break;
-
-	case INVALID_COMMAND:
-		break;
-
 	case REFRESH_ALL:
 		// respect tRFC and tRP
 		nextTime = max(currentRank.getLastRefreshTime() + timingSpecification.tRFC(), currentRank.getLastPrechargeTime() + timingSpecification.tRP());
 		break;
 
+	case RETIRE_COMMAND:
+	case PRECHARGE_ALL:
+	case ACTIVATE_ALL:
+	case DRIVE_COMMAND:
+	case DATA_COMMAND:
+	case CAS_WITH_DRIVE_COMMAND:
+	case SELF_REFRESH:
+	case DESELECT:
+	case NOOP:
+	case INVALID_COMMAND:
 	default:
+		nextTime = 0;
 		break;
 	}
 

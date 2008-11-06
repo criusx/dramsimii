@@ -36,7 +36,7 @@ void System::runSimulations(const unsigned requestCount)
 {
 	Transaction *inputTransaction = NULL;
 
-	tick newTime;
+	tick newTime = 0;
 
 	for (unsigned i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0; )
 	{		

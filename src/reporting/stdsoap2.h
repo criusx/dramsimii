@@ -1178,7 +1178,8 @@ extern "C" {
 	{ if (!soap->fdebug[SOAP_INDEX_##DBGFILE])\
 	soap_open_logfile((struct soap*)soap, SOAP_INDEX_##DBGFILE);\
 	if (soap->fdebug[SOAP_INDEX_##DBGFILE])\
-	{ fwrite((MSG), 1, (LEN), soap->fdebug[SOAP_INDEX_##DBGFILE]);\
+	{ size_t rc = fwrite((MSG), 1, (LEN), soap->fdebug[SOAP_INDEX_##DBGFILE]);\
+	if (rc < 0) rc++; \
 	fflush(soap->fdebug[SOAP_INDEX_##DBGFILE]);\
 	}\
 	}\

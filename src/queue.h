@@ -340,7 +340,9 @@ namespace DRAMSimII
 						if (!(*(at(i)) == *(rhs.at(i))))
 							return false;
 					}
-					else if (at(i) && !rhs.at(i) || !at(i) && rhs.at(i))
+					else if (at(i) != NULL && rhs.at(i) == NULL)
+						return false;
+					else if (at(i) == NULL && rhs.at(i) != NULL)
 						return false;
 				}	
 				return true;

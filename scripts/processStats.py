@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python -O
 
 import gzip
 import sys
@@ -11,72 +11,86 @@ def main():
     os.environ["GDFONTPATH"]="/usr/share/fonts/truetype/msttcorefonts"
     
     # setup the script headers
-    scripts.append['''
+    scripts = ['''
     set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
-unset border
-set size 1.0, 1.0
-set origin 0.0, 0.0
-unset key
-set xrange [0:*] noreverse nowriteback
-set yrange [1 : *] noreverse nowriteback
-
-set ytics out
-set xtics out
-set mxtics
-set logscale y
-set style fill  solid 1.00 border -1
-set ylabel "Execution Time (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
-set xlabel "Number of Transactions with this Execution Time"
-set title "Transaction Execution Time"  offset character 0, -1, 0 font "" norotate 
-set boxwidth 1.00 relative
-    ''','''
+    unset border
+    set size 1.0, 1.0
+    set origin 0.0, 0.0
+    unset key
+    set autoscale xfixmax
+    set yrange [1 : *] noreverse nowriteback
+    
+    set ytics out
+    set xtics out
+    set mxtics
+    set logscale y
+    set style fill  solid 1.00 border -1
+    set xlabel "Execution Time (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set ylabel "Number of Transactions with this Execution Time"
+    set title "Transaction Execution Time"  offset character 0, -1, 0 font "" norotate 
+    set boxwidth 1.00 relative
+        ''','''
+        set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
+    unset border
+    set size 1.0, 1.0
+    set origin 0.0, 0.0
+    unset key
+    set autoscale xfixmax
+    set yrange [0 : *] noreverse nowriteback
+    unset ytics
+    set mxtics
+    set style fill  solid 1.00 border -1
+    set xlabel "Execution Time (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set ylabel "Number of Commands with this Execution Time"
+    set boxwidth 1.00 relative
+    set title "Command Execution Time"  offset character 0, -1, 0 font "" norotate 
+        ''','''
+        set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
+    unset border
+    set size 1.0, 1.0
+    set origin 0.0, 0.0
+    unset key
+    set autoscale xfixmax
+    set yrange [1 : *] noreverse nowriteback
+    
+    set ytics out
+    set xtics out
+    set mxtics
+    set logscale y
+    set style fill  solid 1.00 border -1
+    set xlabel "Time From Enqueue To Execution (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set ylabel "Number of Commands with this Turnaround Time"
+    set title "Command Turnaround Time"  offset character 0, -1, 0 font "" norotate 
+    set boxwidth 1.00 relative
+    ''', '''
     set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
-unset border
-set size 1.0, 1.0
-set origin 0.0, 0.0
-unset key
-set xrange [0:*] noreverse nowriteback
-set yrange [0 : *] noreverse nowriteback
-unset ytics
-set mxtics
-set style fill  solid 1.00 border -1
-set ylabel "Execution Time (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
-set xlabel "Number of Commands with this Execution Time"
-set boxwidth 1.00 relative
-set title "Command Execution Time"  offset character 0, -1, 0 font "" norotate 
-    ''','''
-    set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
-unset border
-set size 1.0, 1.0
-set origin 0.0, 0.0
-unset key
-set xrange [0:*] noreverse nowriteback
-set yrange [1 : *] noreverse nowriteback
-
-set ytics out
-set xtics out
-set mxtics
-set logscale y
-set style fill  solid 1.00 border -1
-set ylabel "Time From Enqueue To Execution (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
-set xlabel "Number of Commands with this Turnaround Time"
-set title "Command Turnaround Time"  offset character 0, -1, 0 font "" norotate 
-set boxwidth 1.00 relative
-    ''']
+    unset border
+    set size 1.0, 1.0
+    set origin 0.0, 0.0
+    unset key
+    set autoscale xfixmax
+    set yrange [0 : *] noreverse nowriteback
+    unset ytics
+    set mxtics
+    set style fill  solid 1.00 border -1
+    set ylabel "Working Set Size" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set xlabel "Epoch"
+    set title "Working Set Size vs Time"  offset character 0, -1, 0 font "" norotate 
+    '''
+    ]
+    
     workingSetOutfile = []
-    rwTotalOutfile = open('rwTotal.dat', 'w')
-    # counters for each type
     transCounter = 0
     commandTurnaroundCounter = 0
     cmdCounter = 0    
     workingSetCounter = 0
     rwTotalCounter = 0
+    rwTotalOutfile = []
     # what type we are writing to
     writing = 0
     # the list of files to be compressed
     fileList = []
     # the list of files to be removed
-    rmFileList = ['rwTotal.dat']
     # one instance of gnuplot per script that needs this
     gnuplot = []
     #counter = 0
@@ -148,7 +162,7 @@ set boxwidth 1.00 relative
                     gnuplot[1].stdin.write(line)
                     pass
                 elif writing == 5:
-                    rwTotalOutfile.write(`rwTotalCounter` + '' + line)
+                    rwTotalOutfile.append(`rwTotalCounter` + '' + line)
                 elif writing == 6:
                     gnuplot[2].stdin.write(line)
                     pass
@@ -158,21 +172,17 @@ set boxwidth 1.00 relative
     except OSError,  strerror:
         print "OS error",  strerror
      
-    plotWS = open('workingSet.plt', "rt").read()
-    plotWS = plotWS.replace("@data@", string.join(workingSetOutfile, "\n"))
-    gnuplot[0].stdin.write(plotWS)
+    outFile = "workingSet.png"
+    gnuplot[0].stdin.write("set output './%s'\nplot '-' using 1:2:(1) with boxes\n" % outFile)
+    gnuplot[0].stdin.write(string.join(workingSetOutfile,  "\n") + "e\n")
     fileList.append("workingSet.png")
-    #os.system("gnuplot rwTotal.plt")
     
     for b in gnuplot:
         b.stdin.write('exit\n')
         b.wait()
-    
-    for a in rmFileList:
-        os.remove(a)
-    
+        
     # make a big file of them all
-    os.system("tar cjf " + outFileBZ2 + " --remove-files " + string.join(fileList, ' '))
+    os.system("tar cjf " + outFileBZ2 + " --remove-files " + " ".join(fileList))
     
 if __name__ == "__main__":
     main()

@@ -480,8 +480,8 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 		PsysACTSTBYArray.push_back(PsysACTSTBY);
 
-		powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
-			PsysACTSTBY << " mW P(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
+		powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] {" << setprecision(5) << 
+			PsysACTSTBY << "} mW P(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
 
 		float tRRDsch = ((float)time - powerModel.getLastCalculation()) / perRankRASCount;
 
@@ -489,8 +489,8 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 		PsysACTArray.push_back(PsysACT);
 
-		powerOutStream << "-Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] "<< setprecision(5) << 
-			PsysACT << " mW" << endl;
+		powerOutStream << "-Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] {"<< setprecision(5) << 
+			PsysACT << "} mW" << endl;
 
 		//tick tRRDsch = (time - powerModel.lastCalculation) / totalRAS * powerModel.tBurst / 2;
 
@@ -513,13 +513,13 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 	float PsysRD = factorA * factorB * (powerModel.getIDD4R() - powerModel.getIDD3N()) * RDschPct;
 
-	powerOutStream << "-Psys(RD) ch[" << channelID << "] " << setprecision(5) << 
-		PsysRD << " mW" << endl;
+	powerOutStream << "-Psys(RD) ch[" << channelID << "] {" << setprecision(5) << 
+		PsysRD << "} mW" << endl;
 
 	float PsysWR = factorA * factorB * (powerModel.getIDD4W() - powerModel.getIDD3N()) * WRschPct; 
 
-	powerOutStream << "-Psys(WR) ch[" << channelID << "] " << setprecision(5) << 
-		PsysWR << " mW" << endl;
+	powerOutStream << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << 
+		PsysWR << "} mW" << endl;
 	powerModel.setLastCalculation(time);
 
 	// report these results
@@ -544,13 +544,13 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 		float percentActive = 1.0F - (float)(k->getTotalPrechargeTime())/(float)time;
 
-		powerOutStream << "+Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] " << setprecision(5) << 
-			factorA * factorB * powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive << " mW P(" << k->getTotalPrechargeTime() << "/" << time  << ")" << endl;
+		powerOutStream << "+Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] {" << setprecision(5) << 
+			factorA * factorB * powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive << "} mW P(" << k->getTotalPrechargeTime() << "/" << time  << ")" << endl;
 
 		float tRRDsch = ((float)time) / perRankRASCount;
 
-		powerOutStream << "+Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] "<< setprecision(5) << 
-			((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT() << " mW" << endl;
+		powerOutStream << "+Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] {"<< setprecision(5) << 
+			((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT() << "} mW" << endl;
 
 		PsysACTTotal += ((float)powerModel.gettRC() / (float)tRRDsch) * factorA * powerModel.getPdsACT();
 	}
@@ -563,11 +563,11 @@ void Channel::doPowerCalculation(const tick systemTime)
 	powerOutStream << "+Psys(ACT) ch[" << channelID << "] " << setprecision(5) << 
 		PsysACTTotal << " mW" << endl;
 
-	powerOutStream << "+Psys(RD) ch[" << channelID << "] " << setprecision(5) << 
-		factorA * factorB * (powerModel.getIDD4R() - powerModel.getIDD3N()) * RDschPct << " mW" << endl;
+	powerOutStream << "+Psys(RD) ch[" << channelID << "] {" << setprecision(5) << 
+		factorA * factorB * (powerModel.getIDD4R() - powerModel.getIDD3N()) * RDschPct << "} mW" << endl;
 
-	powerOutStream << "+Psys(WR) ch[" << channelID << "] " << setprecision(5) << 
-		factorA * factorB * (powerModel.getIDD4W() - powerModel.getIDD3N()) * WRschPct << " mW" << endl;
+	powerOutStream << "+Psys(WR) ch[" << channelID << "] {" << setprecision(5) << 
+		factorA * factorB * (powerModel.getIDD4W() - powerModel.getIDD3N()) * WRschPct << "} mW" << endl;
 
 	//powerOutStream.flush();
 }

@@ -331,14 +331,14 @@ const Command *Channel::readNextCommand() const
 						// look at the second command
 						const Command *followingCommand = rank[lastRankID].bank[lastBankID].read(1);	
 
-						if (followingCommand &&
-							((followingCommand->getCommandType() == READ_AND_PRECHARGE || followingCommand->getCommandType() == READ) && (transactionType == READ_TRANSACTION)) ||
-							((followingCommand->getCommandType() == WRITE_AND_PRECHARGE || followingCommand->getCommandType() == WRITE) && (transactionType == WRITE_TRANSACTION)))
-						{
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
-							return rank[lastRankID].bank[lastBankID].front();
-						}
+						if (followingCommand)
+							if ((followingCommand->isRead() && (transactionType == READ_TRANSACTION)) ||
+								(followingCommand->isWrite() && (transactionType == WRITE_TRANSACTION)))
+							{
+								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
+								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
+								return rank[lastRankID].bank[lastBankID].front();
+							}
 					}
 
 				}
@@ -448,14 +448,14 @@ const Command *Channel::readNextCommand() const
 						// look at the second command
 						const Command *nextCommand =  rank[lastRankID].bank[lastBankID].read(1);
 
-						if (nextCommand &&
-							((nextCommand->getCommandType() == READ_AND_PRECHARGE || nextCommand->getCommandType() == READ) && (transactionType == READ_TRANSACTION)) ||
-							((nextCommand->getCommandType() == WRITE_AND_PRECHARGE || nextCommand->getCommandType() == WRITE) && (transactionType == WRITE_TRANSACTION)))
-						{
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
-							assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
-							return rank[lastRankID].bank[lastBankID].front();
-						}
+						if (nextCommand)
+							if ((nextCommand->isRead() && (transactionType == READ_TRANSACTION)) ||
+								(nextCommand->isWrite() && (transactionType == WRITE_TRANSACTION)))
+							{
+								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
+								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
+								return rank[lastRankID].bank[lastBankID].front();
+							}
 					}
 
 #ifdef DEBUG_FLAG_2
