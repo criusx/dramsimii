@@ -71,6 +71,9 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 			readCount++;
 		else
 			writeCount++;
+
+		// collect the number of bytes moved to and from the drams
+		bytesTransferred += currentTransaction->getLength();
 	}
 }
 
@@ -112,13 +115,16 @@ ostream &DRAMSimII::operator<<(ostream &os, const Statistics &statsLog)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
-	os << "----Transaction Execution Time----" << endl;
+	os << "----Transaction Latency----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----Working Set----" << endl;
 	os << statsLog.workingSet.size() << endl;
+
+	os << "----Bandwidth----" << endl;
+	os << statsLog.bytesTransferred << endl;
 
 	return os;
 }
@@ -131,7 +137,7 @@ void Statistics::clear()
 	transactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
-	readCount = writeCount = 0;
+	bytesTransferred = readCount = writeCount = 0;
 }
 
 bool Statistics::operator==(const Statistics& right) const
@@ -140,5 +146,5 @@ bool Statistics::operator==(const Statistics& right) const
 		burstOf8Count == right.burstOf8Count && burstOf4Count == right.burstOf4Count && columnDepth == right.columnDepth && 
 		commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
 		transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && 
-		workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount);
+		workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount && bytesTransferred == right.bytesTransferred);
 }

@@ -22,12 +22,12 @@ def main():
     
     set ytics out
     set xtics out
-    set mxtics
+    #set mxtics
     set logscale y
     set style fill  solid 1.00 border -1
     set xlabel "Execution Time (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "Number of Transactions with this Execution Time"
-    set title "Transaction Execution Time"  offset character 0, -1, 0 font "" norotate 
+    set title "Transaction Latency"  offset character 0, -1, 0 font "" norotate 
     set boxwidth 1.00 relative
         ''','''
         set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
@@ -38,7 +38,7 @@ def main():
     set autoscale xfixmax
     set yrange [0 : *] noreverse nowriteback
     unset ytics
-    set mxtics
+    #set mxtics
     set style fill  solid 1.00 border -1
     set xlabel "Execution Time (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "Number of Commands with this Execution Time"
@@ -55,7 +55,7 @@ def main():
     
     set ytics out
     set xtics out
-    set mxtics
+    #set mxtics
     set logscale y
     set style fill  solid 1.00 border -1
     set xlabel "Time From Enqueue To Execution (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
@@ -76,6 +76,25 @@ def main():
     set ylabel "Working Set Size" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set xlabel "Epoch"
     set title "Working Set Size vs Time"  offset character 0, -1, 0 font "" norotate 
+    ''', '''
+    set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
+    unset border
+    set size 1.0, 1.0
+    set origin 0.0, 0.0
+    unset key
+    set autoscale xfixmax
+    set yrange [1 : *] noreverse nowriteback    
+    set ytics out
+    set xtics out
+    #set mxtics
+    set logscale y
+    set style fill  solid 1.00 border -1
+    set xlabel "Time (epochs)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set ylabel "Bandwidth (bytes transferred)"
+    set title "System Bandwidth"  offset character 0, -1, 0 font "" norotate 
+    set boxwidth 1.00 relative
+    set output "bandwidth.png"
+    plot '-' using 1:2:(1)  with boxes
     '''
     ]
     
@@ -85,6 +104,7 @@ def main():
     cmdCounter = 0    
     workingSetCounter = 0
     rwTotalCounter = 0
+    bandwidthCounter = 0
     rwTotalOutfile = []
     # what type we are writing to
     writing = 0
@@ -122,7 +142,7 @@ def main():
                 writing = 0
                 line = line.strip() 
     
-                if line == '----Transaction Execution Time----':
+                if line == '----Transaction Latency----':
                     outFile = "transactionExecution" + '%04d' % transCounter + ".png"
                     gnuplot[0].stdin.write("set output './%s'\nplot '-' using 1:2:(1) with boxes\n" % outFile)
                     transCounter +=1
@@ -146,6 +166,8 @@ def main():
                     commandTurnaroundCounter += 1
                     fileList.append(outFile)
                     writing = 6
+                elif line == "----Bandwidth----":
+					writing = 7
                     
             # data in this section
             else:
@@ -156,16 +178,16 @@ def main():
                     if len(line) > 1:
                         workingSetCounter += 1
                         workingSetOutfile.append(`workingSetCounter` + ' ' + line)
-                elif writing == 3:
-                    pass
                 elif writing == 4:
                     gnuplot[1].stdin.write(line)
-                    pass
                 elif writing == 5:
                     rwTotalOutfile.append(`rwTotalCounter` + '' + line)
                 elif writing == 6:
                     gnuplot[2].stdin.write(line)
-                    pass
+                elif writing == 7:
+					gnuplot[4].stdin.write(`bandwidthCounter` + " " + line)
+					bandwidthCounter += 1
+                    
     
     except IOError, strerror:
         print "I/O error", strerror
@@ -175,7 +197,11 @@ def main():
     outFile = "workingSet.png"
     gnuplot[0].stdin.write("set output './%s'\nplot '-' using 1:2:(1) with boxes\n" % outFile)
     gnuplot[0].stdin.write(string.join(workingSetOutfile,  "\n") + "e\n")
+    
+    gnuplot[4].stdin.write("e\n")
+    
     fileList.append("workingSet.png")
+    fileList.append("bandwidth.png")
     
     for b in gnuplot:
         b.stdin.write('exit\n')

@@ -45,6 +45,7 @@ namespace DRAMSimII
 		unsigned columnDepth;
 		unsigned readCount;
 		unsigned writeCount;
+		unsigned bytesTransferred;
 		std::map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
 		std::map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
 		std::map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
@@ -75,8 +76,8 @@ namespace DRAMSimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned version )
 		{
-			ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & commandDelay & commandExecution &
-				commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;
+			ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount & writeCount & bytesTransferred & commandDelay &
+				commandExecution & commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;
 		}
 	};
 }

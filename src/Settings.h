@@ -44,6 +44,7 @@ namespace DRAMSimII
 		DistributionType arrivalDistributionModel;
 		InputType inFileType;
 		std::string outFile;
+		std::string commandLine;
 		OutputFileType outFileType;
 		unsigned requestCount;
 		RefreshPolicy refreshPolicy;

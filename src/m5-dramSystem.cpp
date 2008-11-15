@@ -152,6 +152,9 @@ currentTransactionID(0)
 	if (p->outFilename.length() > 0)
 		settings.outFile = p->outFilename;
 
+	if (p->commandLine.length() > 0)
+		settings.commandLine = p->commandLine;
+
 	// if this is a normal system or a fbd system
 	if (settings.systemType == FBD_CONFIG)
 		ds = new fbdSystem(settings);	

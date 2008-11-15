@@ -211,6 +211,11 @@ nextStats(settings.epoch)
 	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl
 		<< "+ total" << endl << "- epoch" << endl;
 
+	statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl
+		<< "+ total" << endl << "- epoch" << endl;
+
+	statsOutStream << "----" << settings.commandLine << "----" << endl;
+
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)
 	{

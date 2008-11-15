@@ -72,11 +72,12 @@ np = options.num_cpus
 
 executable = options.cmd.split("/")
 
+cmdLine = executable[len(executable) - 1] + " " + options.options + " <" + options.input
 
 system = System(cpu = [CPUClass(cpu_id=i) for i in xrange(np)],
                 #physmem = PhysicalMemory(range=AddrRange("512MB")),
   		#  physmem = M5dramSystem(settingsFile = "/home/crius/m5/src/mem/DRAMSimII/memoryDefinitions/DDR2-800-4-4-4.xml", outFilename = "seNew.gz", range=AddrRange("512MB")),	
-  		physmem = M5dramSystem(settingsFile = options.DRAMsimConfig, outFilename = executable.pop(), range=AddrRange("512MB")),
+  		physmem = M5dramSystem(settingsFile = options.DRAMsimConfig, outFilename = executable.pop(), commandLine = cmdLine, range=AddrRange("512MB")),
                 membus = Bus(), mem_mode = test_mem_mode)
 
 system.physmem.port = system.membus.port

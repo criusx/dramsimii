@@ -31,6 +31,7 @@ class M5dramSystem(PhysicalMemory):
 	cpuRatio = Param.Int(5,"ratio of CPU speed to DRAM data bus speed")
 	settingsFile = Param.String("/a/d/c/b","the settings file")
 	outFilename = Param.String("","output file name")
+	commandLine = Param.String("","command line used in this run")
 	dramType = Param.String("ddr2","dram type")
 	rowBufferManagementPolicy = Param.String("close_page","")
 	autoPrecharge = Param.String("true","");
