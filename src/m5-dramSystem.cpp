@@ -429,7 +429,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		return true;
 	}
 
-#ifdef M5DEBUG
+#if defined(M5DEBUG) && defined(DEBUG) && !defined(NDEBUG)
 	timingOutStream << "extWake [" << curTick << "]/[" << currentMemCycle << "]";
 	// calculate the time elapsed from when the transaction started
 	if (pkt->isRead())

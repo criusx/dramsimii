@@ -52,9 +52,13 @@ if not conf.CheckLib('xml2'):
 
 try:
 	if 'fast' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
-		print viableTargets
+		#print viableTargets
 		env.Append(
-			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops', '-Weffc++', '-ffast-math', '-fomit-frame-pointer', '-finline-functions', '-march=athlon64'],
+			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops',
+			#'-Weffc++',
+			#'-Wsign-compare',
+			#'-Wdeprecated', 
+			'-ffast-math', '-fomit-frame-pointer', '-finline-functions', '-march=native','-Wno-unused-variable'],
 			CPPDEFINES = ['M5DEBUG'])
 	else:	
 		raise IndexError

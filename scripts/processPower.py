@@ -13,11 +13,11 @@ def main():
     
     # setup the script headers
     scripts = ['''
-    set terminal png font "Arial_Black,10" transparent nointerlace truecolor  size 1280, 768 nocrop enhanced
+    set terminal png font "Arial_Black,10" transparent nointerlace truecolor  size 1600, 768 nocrop enhanced
     unset border
     set size 1.0, 1.0
     set origin 0.0, 0.0
-    set key center rmargin Right reverse invert outside enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
+    set key center rmargin Right reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
     #set xrange [0:*] noreverse nowriteback
     set autoscale xfixmin
     set autoscale xfixmax
@@ -30,7 +30,6 @@ def main():
     
     set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "Arial_Black,12" textcolor lt -1 rotate by 90
     set xlabel "Epoch" font "Arial_Black,12"
-    set title "Power Consumed vs. Time"  offset character 0, -1, 0 font "Arial_Black,14" norotate 
     
     set boxwidth 1.00 relative
     set style fill  solid 1.00 border -1
@@ -59,8 +58,11 @@ def main():
                     if startVal > 0:
                         endVal = line.find("}")
                         values[writing].append(line[startVal+1:endVal])
-                        writing = (writing + 1) % (valuesPerEpoch)                       
-                if line[1] == '+':
+                        writing = (writing + 1) % (valuesPerEpoch)  
+                elif line.startswith('----') and not line.startswith('----epoch'):
+					gnuplot[0].stdin.write("set title \"Power Consumed vs. Time\\n^{%s}\"  offset character 0, -1, 0 font \"Arial_Black,14\" norotate\n" % line[4:len(line)-5])
+                         
+                elif line[1] == '+':
                     gnuplot[0].stdin.write('set output "' + sys.argv[1].split('.gz')[0] + '.png"\n')
                     splitter = re.compile('([\[\]])')
                     splitLine = splitter.split(line)
@@ -87,12 +89,15 @@ def main():
         print "I/O error", strerror
     except OSError,  strerror:
         print "OS error",  strerror
+        
     #print len(values[0])
     #gnuplot[0].stdin.write("\nset xrange [0:%d]" % len(values[0]))
+    
     for u in values:
         gnuplot[0].stdin.write("\n".join(u) + "\ne\n")
            
-    gnuplot[0].stdin.write("e\nunset output\n")
+    gnuplot[0].stdin.write("unset output\n")
+    
     for b in gnuplot:
         b.stdin.write('exit\n')
         b.wait()

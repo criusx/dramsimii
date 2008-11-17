@@ -208,13 +208,22 @@ nextStats(settings.epoch)
 	}
 	// else printing to these streams goes nowhere
 
-	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl
-		<< "+ total" << endl << "- epoch" << endl;
+	statsOutStream<< "+ total" << endl << "- epoch" << endl;
 
-	statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl
-		<< "+ total" << endl << "- epoch" << endl;
+	powerOutStream << "+ total" << endl << "- epoch" << endl;
 
 	statsOutStream << "----" << settings.commandLine << "----" << endl;
+
+	powerOutStream << "----" << settings.commandLine << "----" << endl;
+
+	statsOutStream << "----epoch " << settings.epoch << "----" << endl;
+
+	powerOutStream << "----epoch " << settings.epoch << "----" << endl;
+
+	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
+
+	statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl
+	
 
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)
@@ -337,14 +346,14 @@ bool System::enqueue(Transaction *currentTransaction)
 	if (!channel[currentTransaction->getAddresses().getChannel()].enqueue(currentTransaction))
 	{
 #ifdef M5DEBUG
-		timingOutStream << "!+T(" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueDepth() << ")" << endl;
+		M5_TIMING_LOG("!+T(" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueDepth() << ")")
 #endif
 		return false;
 	}
 	else
 	{
 #ifdef M5DEBUG
-		timingOutStream << "+T(" << currentTransaction->getAddresses().getChannel() << ")[" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "]" << endl;
+		M5_TIMING_LOG("+T(" << currentTransaction->getAddresses().getChannel() << ")[" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "]")
 #endif
 		// if the transaction was successfully enqueued, set its enqueue time
 		currentTransaction->setEnqueueTime(channel[currentTransaction->getAddresses().getChannel()].getTime());

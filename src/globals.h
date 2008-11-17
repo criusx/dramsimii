@@ -124,7 +124,7 @@ namespace DRAMSimII
 	//#define DEBUG_FLAG_2
 
 
-#if defined(DEBUG) && defined(M5DEBUG) // compiler should declare this
+#if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) // compiler should declare this
 #define M5_TIMING_LOG(X) timingOutStream << X << endl;
 #define M5_DEBUG(X) X;
 #else
@@ -132,7 +132,7 @@ namespace DRAMSimII
 #define M5_DEBUG(X)
 #endif
 
-#if defined(DEBUG) && defined(SSTDEBUG) // compiler should declare this
+#if defined(DEBUG) && defined(SSTDEBUG) && !defined(NDEBUG)// compiler should declare this
 #define SST_TIMING_LOG(X) timingOutStream << X << endl;
 #define SST_DEBUG(X) X;
 #else
@@ -140,19 +140,19 @@ namespace DRAMSimII
 #define SST_DEBUG(X)
 #endif
 
-#if defined(DEBUG) && defined(DEBUG_TRANSACTION)// compiler should declare this
+#if defined(DEBUG) && defined(DEBUG_TRANSACTION) && !defined(NDEBUG)// compiler should declare this
 #define DEBUG_TRANSACTION_LOG(X) timingOutStream << X << endl;
 #else
 #define DEBUG_TRANSACTION_LOG(X)
 #endif
 
-#if defined(DEBUG) && defined(DEBUG_COMMAND)
+#if defined(DEBUG) && defined(DEBUG_COMMAND) && !defined(NDEBUG)
 #define DEBUG_COMMAND_LOG(X) timingOutStream << X << endl;
 #else
 #define DEBUG_COMMAND_LOG(X)
 #endif
 
-#if defined(DEBUG) && defined(DEBUGDRAMSIM)
+#if defined(DEBUG) && defined(DEBUGDRAMSIM) && !defined(NDEBUG)
 #define DEBUG_TIMING_LOG(X) timingOutStream << X << endl;
 #define DEBUG_LOG(X) cerr << X << endl;
 #else
