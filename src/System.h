@@ -68,7 +68,8 @@ namespace DRAMSimII
 
 		void checkStats();
 		virtual void doPowerCalculation();
-		virtual void printStatistics();		
+		virtual void printStatistics();	
+		bool fileExists(std::stringstream& fileName) const;
 
 	public:		
 

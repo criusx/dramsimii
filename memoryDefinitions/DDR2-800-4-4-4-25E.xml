@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="style2.xsl"?>
 <!DOCTYPE dramspec SYSTEM "dramspec.dtd">
-<dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DRAMSETTINGS">
+<dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema2.xsd">
 	<timing>
 		<!-- the number of beats per, so if a timing parameter is one cycle long, count it as two beats for DDR -->
 		<datarate>400000000</datarate>
@@ -106,6 +106,8 @@
 		<readPercentage>.5</readPercentage>
 		<!-- type may be gz, bz, cout, uncompressed, none -->
 		<outFile type="gz">standardOutFile.gz</outFile>
+		<!-- the directory that the output files will be written to -->
+		<outFileDirectory>.</outFileDirectory>
 		<requestCount>75000000</requestCount>
 		<!-- type may be "mase","k6","mapped","random," if random, then the value is the distrubution model, which may be 'uniform', 'gaussian' , 'poisson', 'normal' -->
 		<!--inputFile type="random">gaussian</inputFile-->

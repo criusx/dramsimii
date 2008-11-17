@@ -36,6 +36,7 @@ sessionID(""),
 arrivalDistributionModel(NORMAL_DISTRIBUTION),
 inFileType(MASE_TRACE),
 outFile(""),
+outFileDir(""),
 outFileType(BZ),
 requestCount(UINT_MAX),
 refreshPolicy(NO_REFRESH),
@@ -124,6 +125,9 @@ void Settings::setKeyValue(const string nodeName, const string nodeValue )
 	case output_file_token:
 		outFile = nodeValue;
 		break;
+	case output_file_dir_token:
+		outFileDir = nodeValue;
+		break;	
 	case epoch_token:
 		toNumeric<unsigned>(epoch,nodeValue,std::dec);
 		break;

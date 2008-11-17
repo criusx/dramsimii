@@ -37,6 +37,7 @@
 <!ELEMENT maxVCC (#PCDATA)>
 <!ELEMENT frequencySpec (#PCDATA)>
 <!ELEMENT outFile (#PCDATA)>
+<!ELEMENT outFileDirectory (#PCDATA)>
 <!ATTLIST outFile type CDATA #REQUIRED>
 <!ELEMENT perBankQueueDepth (#PCDATA)>
 <!ELEMENT PdqRD (#PCDATA)>
@@ -57,7 +58,7 @@
 <!ELEMENT rows (#PCDATA)>
 <!ELEMENT seniorityAgeLimit (#PCDATA)>
 <!ELEMENT shortBurstRatio (#PCDATA)>
-<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, outFile, requestCount, inputFile, cpuToMemoryClockRatio, epoch)>
+<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, outFile, outFileDirectory, requestCount, inputFile, cpuToMemoryClockRatio, epoch)>
 <!ELEMENT systemConfigurationType (#PCDATA)>
 <!ELEMENT systemVDD (#PCDATA)>
 <!ELEMENT tAL (#PCDATA)>

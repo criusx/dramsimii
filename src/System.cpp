@@ -29,6 +29,7 @@
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/device/file.hpp>
+#include <boost/filesystem/operations.hpp>
 
 #ifndef WIN32
 #include <boost/iostreams/filter/bzip2.hpp>
@@ -61,6 +62,7 @@ using std::setfill;
 using std::setprecision;
 using std::min;
 using namespace DRAMSimII;
+namespace bf = boost::filesystem;
 
 //////////////////////////////////////////////////////////////////////
 /// @brief constructor for a dramSystem, based on dramSettings
@@ -114,6 +116,25 @@ nextStats(settings.epoch)
 			statsOutStream.push(null_sink());
 			break;
 		}
+
+		bf::path outDir(settings.outFileDir.c_str());
+		
+		if (!bf::exists(outDir))
+		{
+			if (!bf::create_directory(outDir))
+			{
+				cerr << "Could not create dir " << outDir.leaf() << " and dir does not exist." << endl;
+				exit(-1);
+			}
+		}
+		else
+		{
+			if (!bf::is_directory(outDir))
+			{
+				cerr << "Directory " << outDir.leaf() << " exists, but is not a directory." << endl;
+				exit(-1);
+			}
+		}
 		if (settings.outFileType == GZ || settings.outFileType == BZ || settings.outFileType == UNCOMPRESSED)
 		{
 			string baseFilename = settings.outFile;
@@ -124,55 +145,31 @@ nextStats(settings.epoch)
 			if (baseFilename.find("bz2") > 0)
 				baseFilename = baseFilename.substr(0,baseFilename.find(".bz2"));
 
-
 			int counter = 0;		
-			ifstream timingIn;
-			ifstream powerIn;
-			ifstream statsIn;
-			ifstream settingsIn;
+			
 			stringstream timingFilename;
 			stringstream powerFilename;
 			stringstream statsFilename;		
 			stringstream settingsFilename;
-			timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
-			powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
-			statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-			settingsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
-			timingIn.open(timingFilename.str().c_str(),ifstream::in);
-			powerIn.open(powerFilename.str().c_str(),ifstream::in);
-			statsIn.open(statsFilename.str().c_str(),ifstream::in);				
-			settingsIn.open(settingsFilename.str().c_str(),ifstream::in);
-
-			while (timingIn.is_open() || powerIn.is_open() || statsIn.is_open() || settingsIn.is_open())
+			
+			timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
+			powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
+			statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
+			settingsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
+			
+			while (fileExists(timingFilename) || fileExists(powerFilename) || fileExists(statsFilename) || fileExists(settingsFilename))
 			{
-				timingIn.close();
-				powerIn.close();
-				statsIn.close();
-				settingsIn.close();
 				counter++;
-				timingIn.clear(ios::failbit);
-				powerIn.clear(ios::failbit);
-				statsIn.clear(ios::failbit);
-				settingsIn.clear(ios::failbit);
 				timingFilename.str("");
 				powerFilename.str("");
 				statsFilename.str("");
 				settingsFilename.str("");
-				timingFilename << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
-				powerFilename << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
-				statsFilename << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-				settingsFilename << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
-				timingIn.open(timingFilename.str().c_str(),ifstream::in);
-				powerIn.open(powerFilename.str().c_str(),ifstream::in);
-				statsIn.open(statsFilename.str().c_str(),ifstream::in);							
-				settingsIn.open(settingsFilename.str().c_str(),ifstream::in);
+				timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
+				powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
+				statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
+				settingsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";				
 			}
-
-			timingIn.close();
-			powerIn.close();
-			statsIn.close();
-			settingsIn.close();
-
+			
 			timingOutStream.push(file_sink(timingFilename.str().c_str()));
 			powerOutStream.push(file_sink(powerFilename.str().c_str()));
 			statsOutStream.push(file_sink(statsFilename.str().c_str()));
@@ -222,7 +219,7 @@ nextStats(settings.epoch)
 
 	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
 
-	statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl
+	statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
 	
 
 	// set the channelID so that each channel may know its ordinal value
@@ -259,6 +256,12 @@ nextStats(0)
 {
 	Address::initialize(systemConfig);
 	channel = chan;
+}
+
+bool System::fileExists(stringstream& fileName) const
+{
+	bf::path newPath(fileName.str().c_str());
+	return bf::exists(newPath);
 }
 
 

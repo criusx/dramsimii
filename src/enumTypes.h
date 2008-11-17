@@ -187,6 +187,7 @@ namespace DRAMSimII
 		input_type_token,
 		ordering_algorithm_token,
 		output_file_token,
+		output_file_dir_token,
 		output_file_type_token,
 		p_dq_rd_token,
 		p_dq_wr_token,

@@ -22,6 +22,9 @@
 #include <map>
 #include <fstream>
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string/replace.hpp>
+
 #include "InputStream.h"
 
 using std::vector;
@@ -71,9 +74,14 @@ rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 
 		if (!traceFile.good())
 		{
-			string inFileWithPath = "./traceFiles/" + settings.inFile;
+			boost::filesystem::path cwd(boost::filesystem::current_path());
+			cwd = cwd / "traceFiles" / settings.inFile;
+			string inFileWithPath = cwd.string();
+#ifdef WIN32
+			boost::replace_all(inFileWithPath,"/","\\");
+#endif // WIN32
 			traceFile.open(inFileWithPath.c_str());
-			if (!traceFile.good())
+			if (!traceFile.is_open())
 			{
 				cerr << "Unable to open trace file \"" << settings.inFile << "\"" << endl;
 				exit(-9);

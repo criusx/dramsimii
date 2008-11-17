@@ -44,6 +44,7 @@ namespace DRAMSimII
 		DistributionType arrivalDistributionModel;
 		InputType inFileType;
 		std::string outFile;
+		std::string outFileDir;
 		std::string commandLine;
 		OutputFileType outFileType;
 		unsigned requestCount;
@@ -171,6 +172,8 @@ namespace DRAMSimII
 				return input_file_token;
 			else if (input == "outFile")
 				return output_file_token;
+			else if (input == "outFileDirectory")
+				return output_file_dir_token;
 			else if (input == "outFileType")
 				return output_file_type_token;
 			else if (input == "random")
@@ -377,7 +380,7 @@ namespace DRAMSimII
 		template<class Archive>
 		void serialize( Archive & ar,const unsigned int version)
 		{
-			ar & settingsOutputFile & epoch & inFile & sessionID & arrivalDistributionModel & inFileType & outFile & outFileType & requestCount &
+			ar & settingsOutputFile & epoch & inFile & sessionID & arrivalDistributionModel & inFileType & outFile & outFileType & outFileDir & requestCount &
 				refreshPolicy & dramType & dataRate & commandOrderingAlgorithm & transactionOrderingAlgorithm & systemType & perBankQueueDepth &
 				columnSize & rowSize & channelWidth & columnCount & rowCount & cacheLineSize & historyQueueDepth & completionQueueDepth &
 				transactionQueueDepth & eventQueueDepth & refreshQueueDepth & refreshTime & seniorityAgeLimit & rowBufferManagementPolicy &

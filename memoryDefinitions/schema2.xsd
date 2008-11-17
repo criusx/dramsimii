@@ -93,6 +93,9 @@
 									</xs:simpleContent>
 								</xs:complexType>
 							</xs:element>
+							<xs:element name="outFileDirectory" type="xs:string">
+								
+							</xs:element>
 							<xs:element name="requestCount">
 								<xs:complexType>
 									<xs:simpleContent>

@@ -8,11 +8,11 @@ import subprocess
 from subprocess import Popen,  PIPE, STDOUT
 
 def main():
-    os.environ["GDFONTPATH"]="/usr/share/fonts/truetype/msttcorefonts"
+    os.environ["GDFONTPATH"]="/usr/share/fonts/truetype/ttf-bitstream-vera"
     
     # setup the script headers
     scripts = ['''
-    set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
+    set terminal png font "VeraMono" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
     unset border
     set size 1.0, 1.0
     set origin 0.0, 0.0
@@ -30,7 +30,7 @@ def main():
     set title "Transaction Latency"  offset character 0, -1, 0 font "" norotate 
     set boxwidth 1.00 relative
         ''','''
-        set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
+        set terminal png font "VeraMono" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
     unset border
     set size 1.0, 1.0
     set origin 0.0, 0.0
@@ -45,7 +45,7 @@ def main():
     set boxwidth 1.00 relative
     set title "Command Execution Time"  offset character 0, -1, 0 font "" norotate 
         ''','''
-        set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
+        set terminal png font "VeraMono" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
     unset border
     set size 1.0, 1.0
     set origin 0.0, 0.0
@@ -63,7 +63,7 @@ def main():
     set title "Command Turnaround Time"  offset character 0, -1, 0 font "" norotate 
     set boxwidth 1.00 relative
     ''', '''
-    set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
+    set terminal png font "VeraMono" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
     unset border
     set size 1.0, 1.0
     set origin 0.0, 0.0
@@ -77,7 +77,7 @@ def main():
     set xlabel "Epoch"
     set title "Working Set Size vs Time"  offset character 0, -1, 0 font "" norotate 
     ''', '''
-    set terminal png font "Arial_Black" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
+    set terminal png font "VeraMono" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
     unset border
     set size 1.0, 1.0
     set origin 0.0, 0.0
