@@ -87,14 +87,17 @@ def main():
     set ytics out
     set xtics out
     #set mxtics
-    set logscale y
+    #set logscale y
     set style fill  solid 1.00 border -1
     set xlabel "Time (epochs)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "Bandwidth (bytes transferred)"
     set title "System Bandwidth"  offset character 0, -1, 0 font "" norotate 
+    set style fill  solid 1.00 border -1
+    set style data histograms    
+    set style histogram rowstacked title offset 0,0,0
     set boxwidth 1.00 relative
     set output "bandwidth.png"
-    plot '-' using 1:2:(1)  with boxes
+    plot '-' using 1 title "Read Bytes", '-' using 1 title "Write Bytes"
     '''
     ]
     
@@ -119,6 +122,9 @@ def main():
         p.stdin.write(i)
         gnuplot.append(p)
     
+    bandwidthValues = []
+    bandwidthValues.append([])
+    bandwidthValues.append([])
     outFileBZ2 = sys.argv[1].split('.gz')[0] + ".tar.bz2"
     
     try:
@@ -185,7 +191,10 @@ def main():
                 elif writing == 6:
                     gnuplot[2].stdin.write(line)
                 elif writing == 7:
-					gnuplot[4].stdin.write(`bandwidthCounter` + " " + line)
+					#gnuplot[4].stdin.write(`bandwidthCounter` + " " + line)					
+					newLine = line.strip().split(" ")
+					bandwidthValues[0].append(newLine[0])
+					bandwidthValues[1].append(newLine[1])
 					bandwidthCounter += 1
                     
     
@@ -198,7 +207,9 @@ def main():
     gnuplot[0].stdin.write("set output './%s'\nplot '-' using 1:2:(1) with boxes\n" % outFile)
     gnuplot[0].stdin.write(string.join(workingSetOutfile,  "\n") + "e\n")
     
-    gnuplot[4].stdin.write("e\n")
+    #gnuplot[4].stdin.write("e\n")
+    for u in bandwidthValues:
+		gnuplot[4].stdin.write("\n".join(u) + "\ne\n")
     
     fileList.append("workingSet.png")
     fileList.append("bandwidth.png")

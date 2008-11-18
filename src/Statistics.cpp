@@ -33,6 +33,8 @@ burstOf4Count(0),
 columnDepth(log2(settings.columnSize)),
 readCount(0),
 writeCount(0),
+readBytesTransferred(0),
+writeBytesTransferred(0),
 commandDelay(),
 commandExecution()
 {}
@@ -46,7 +48,11 @@ burstOf8Count(UINT_MAX),
 burstOf4Count(UINT_MAX),
 columnDepth(UINT_MAX),
 readCount(0),
-writeCount(0)
+writeCount(0),
+readBytesTransferred(0),
+writeBytesTransferred(0),
+commandDelay(),
+commandExecution()
 {}
 
 
@@ -68,12 +74,15 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 		// gather working set information for this epoch, exclude the entries which alias to the same column		
 		workingSet[currentTransaction->getAddresses().getPhysicalAddress() >> columnDepth]++;
 		if (currentTransaction->getType() == READ_TRANSACTION)
+		{
 			readCount++;
+			readBytesTransferred += currentTransaction->getLength();
+		}
 		else
+		{
+			writeBytesTransferred += currentTransaction->getLength();
 			writeCount++;
-
-		// collect the number of bytes moved to and from the drams
-		bytesTransferred += currentTransaction->getLength();
+		}		
 	}
 }
 
@@ -124,7 +133,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << statsLog.workingSet.size() << endl;
 
 	os << "----Bandwidth----" << endl;
-	os << statsLog.bytesTransferred << endl;
+	os << statsLog.readBytesTransferred << " " << statsLog.writeBytesTransferred << endl;
 
 	return os;
 }
@@ -137,7 +146,7 @@ void Statistics::clear()
 	transactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
-	bytesTransferred = readCount = writeCount = 0;
+	readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
 }
 
 bool Statistics::operator==(const Statistics& right) const
@@ -146,5 +155,6 @@ bool Statistics::operator==(const Statistics& right) const
 		burstOf8Count == right.burstOf8Count && burstOf4Count == right.burstOf4Count && columnDepth == right.columnDepth && 
 		commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
 		transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && 
-		workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount && bytesTransferred == right.bytesTransferred);
+		workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount && 
+		readBytesTransferred == right.readBytesTransferred && writeBytesTransferred == right.writeBytesTransferred);
 }

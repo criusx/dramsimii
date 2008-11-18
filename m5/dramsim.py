@@ -8,6 +8,8 @@ import os, optparse, sys
 m5.AddToPath('../common')
 import Simulation
 from Caches import *
+import specbench
+import string
 
 # Get paths we might need.  It's expected this file is in m5/configs/example.
 config_path = os.path.dirname(os.path.abspath(__file__))
@@ -24,11 +26,13 @@ parser.add_option("-o", "--options", default="",
                   help="The options to pass to the binary, use \" \" around the entire\
                         string.")
 parser.add_option("-i", "--input", default="",
-                  help="A file of input to give to the binary.")
-                  
+                  help="A file of input to give to the binary.")                  
 parser.add_option("-f", "--DRAMsimConfig",
 		  default=os.path.join(m5_root,"src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml"),
 		  help="The DRAMsimII config file.")
+parser.add_option("-b", "--benchmark",
+					default = 0,help="Choose the number from the following:\nperlbench\nbzip2\ngcc\nbwaves\ngamess\nmcf\nmilc\nzeusmp\ngromacs\ncactusADM\nleslie3d\nnamd\ngobmk\ndealII\nsoplex\npovray\ncalculix\nhmmer\nsjeng\nGemsFDTD\nlibquantum\nh264ref\ntonto\nlbm\nomnetpp\nastar\nwrf\nsphinx3\nxalancbmk\n998.specrand_i\n999.specrand_f")
+
 
 execfile(os.path.join(config_root, "common", "Options.py"))
 
@@ -37,12 +41,84 @@ execfile(os.path.join(config_root, "common", "Options.py"))
 if args:
     print "Error: script doesn't take any positional arguments"
     sys.exit(1)
+    
+if len(options.benchmark) > 1:    
+	if options.benchmark == 'perlbench':
+		process = specbench.perlbench
+	elif options.benchmark == 'bzip2':
+	   process = specbench.bzip2
+	elif options.benchmark == 'gcc':
+	   process = specbench.gcc
+	elif options.benchmark == 'bwaves':
+	   process = specbench.bwaves
+	elif options.benchmark == 'gamess':
+	   process = specbench.gamess
+	elif options.benchmark == 'mcf':
+	   process = specbench.mcf
+	elif options.benchmark == 'milc':
+	   process = specbench.milc
+	elif options.benchmark == 'zeusmp':
+	   process = specbench.zeusmp
+	elif options.benchmark == 'gromacs':
+	   process = specbench.gromacs
+	elif options.benchmark == 'cactusADM':
+	   process = specbench.cactusADM
+	elif options.benchmark == 'leslie3d':
+	   process = specbench.leslie3d
+	elif options.benchmark == 'namd':
+	   process = specbench.namd
+	elif options.benchmark == 'gobmk':
+	   process = specbench.gobmk;
+	elif options.benchmark == 'dealII':
+	   process = specbench.dealII
+	elif options.benchmark == 'soplex':
+	   process = specbench.soplex
+	elif options.benchmark == 'povray':
+	   process = specbench.povray
+	elif options.benchmark == 'calculix':
+	   process = specbench.calculix
+	elif options.benchmark == 'hmmer':
+	   process = specbench.hmmer
+	elif options.benchmark == 'sjeng':
+	   process = specbench.sjeng
+	elif options.benchmark == 'GemsFDTD':
+	   process = specbench.GemsFDTD
+	elif options.benchmark == 'libquantum':
+	   process = specbench.libquantum
+	elif options.benchmark == 'h264ref':
+	   process = specbench.h264ref
+	elif options.benchmark == 'tonto':
+	   process = specbench.tonto
+	elif options.benchmark == 'lbm':
+	   process = specbench.lbm
+	elif options.benchmark == 'omnetpp':
+	   process = specbench.omnetpp
+	elif options.benchmark == 'astar':
+	   process = specbench.astar
+	elif options.benchmark == 'wrf':
+	   process = specbench.wrf
+	elif options.benchmark == 'sphinx3':
+	   process = specbench.sphinx3
+	elif options.benchmark == 'xalancbmk':
+	   process = specbench.xalancbmk
+	elif options.benchmark == 'specrand_i':
+	   process = specbench.specrand_i
+	elif options.benchmark == 'specrand_f':
+	   process = specbench.specrand_f
+	  
+	executable = process.executable.split("/")
+	cmdLine = executable[len(executable) - 1] + string.join(process.cmd[1:]," ") +" <" + process.input
+else:
+	process = LiveProcess()
+	process.executable = options.cmd
+	process.cmd = [options.cmd] + options.options.split()
+	if options.input != "":
+		process.input = options.input
+		
+	executable = options.cmd.split("/")
 
-process = LiveProcess()
-process.executable = options.cmd
-process.cmd = [options.cmd] + options.options.split()
-if options.input != "":
-    process.input = options.input
+	cmdLine = executable[len(executable) - 1] + " " + options.options + " <" + options.input
+
 
 if options.detailed:
     #check for SMT workload
@@ -70,9 +146,6 @@ CPUClass.clock = '2GHz'
 
 np = options.num_cpus
 
-executable = options.cmd.split("/")
-
-cmdLine = executable[len(executable) - 1] + " " + options.options + " <" + options.input
 
 system = System(cpu = [CPUClass(cpu_id=i) for i in xrange(np)],
                 #physmem = PhysicalMemory(range=AddrRange("512MB")),

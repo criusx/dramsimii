@@ -45,6 +45,7 @@ def main():
         p.stdin.write(i)
         gnuplot.append(p)
     
+    values = []
     outFileBZ2 = sys.argv[1].split('.gz')[0] + ".tar.bz2"
     channels = 0
     ranks = 0    
@@ -69,7 +70,7 @@ def main():
                     #splitLine = line.split(']').split('[')
                     channels = int(splitLine[2])
                     ranks = int(splitLine[6])
-                    values = []
+                    
                     gnuplot[0].stdin.write('plot ')
                     valuesPerEpoch = channels * (ranks + 2)
                     for a in range(channels):
