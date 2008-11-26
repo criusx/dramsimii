@@ -77,10 +77,8 @@ def main():
     set xlabel "Epoch"
     set title "Working Set Size vs Time"  offset character 0, -1, 0 font "" norotate 
     ''', '''
-    set terminal png font "VeraMono" 11 transparent nointerlace truecolor  size 1024, 768 nocrop enhanced
+    set terminal png font "VeraMono" 11 transparent nointerlace truecolor  size 1600, 768 nocrop enhanced
     unset border
-    set size 1.0, 1.0
-    set origin 0.0, 0.0
     unset key
     set autoscale xfixmax
     set yrange [1 : *] noreverse nowriteback    
@@ -88,11 +86,10 @@ def main():
     set xtics out
     #set mxtics
     #set logscale y
-    set style fill  solid 1.00 border -1
     set xlabel "Time (epochs)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "Bandwidth (bytes transferred)"
     set title "System Bandwidth"  offset character 0, -1, 0 font "" norotate 
-    set style fill  solid 1.00 border -1
+    set style fill  solid 1.00 border 0
     set style data histograms    
     set style histogram rowstacked title offset 0,0,0
     set boxwidth 1.00 relative

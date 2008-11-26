@@ -230,9 +230,11 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					return false;
 			}
 			// then add the command to all queues
+			Command *refreshCommand = new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
+
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
-				bool result = currentBank->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
+				bool result = currentBank->push(refreshCommand);
 				assert (result);
 			}
 		}
@@ -283,9 +285,11 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					return false;
 			}
 			// then add the command to all queues
+			Command *refreshCommand = new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
+
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
-				bool result = currentBank->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
+				bool result = currentBank->push(refreshCommand);
 				assert (result);
 			}
 		}
@@ -364,9 +368,11 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					return false;
 			}
 			// then add the command to all queues
+			Command *refreshCommand = new Command(*incomingTransaction, time, systemConfig.isPostedCAS(),systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
+
 			for (vector<Bank>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
-				bool result = i->push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(),systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
+				bool result = i->push(refreshCommand);
 				//bool result = i->push(new Command(incomingTransaction->getAddresses(), REFRESH_ALL, time, incomingTransaction, false));
 				assert (result);
 			}

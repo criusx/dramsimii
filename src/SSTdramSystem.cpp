@@ -38,8 +38,7 @@ cpuRatio(0)
 
 	// if this is a normal system or a fbd system
 	ds = new System(settings);
-	//cpuRatio =(int)round(((float)ClockMhz()/((float)ds->Frequency())));
-
+	//cpuRatio =(int)round(((float)ClockMhz()/((float)ds->Frequency())));	
 }
 
 SSTdramSystem::~SSTdramSystem()

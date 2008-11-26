@@ -261,7 +261,6 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 // however, up to three commands must be executed
 unsigned fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 {
-
 	while (time < endTime)
 	{
 		// try to convert any transactions into commands first
@@ -272,6 +271,10 @@ unsigned fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishTime
 
 			// then break into commands and insert into per bank command queues
 			bool t2cResult = transaction2commands(decodedTransaction);
+
+			// invalidate the cache
+			nextAvailableCommand = NULL;
+
 			assert(t2cResult == true);
 
 			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << decodedTransaction);
@@ -472,8 +475,8 @@ Command *fbdChannel::getNextCommand(const Command *slotACommand, const Command *
 
 			for (vector<Bank>::iterator cur_bank = currentRank.bank.begin(); cur_bank != currentRank.bank.end(); cur_bank++)
 			{
-				if (tempCommand)
-					delete tempCommand;
+				//if (tempCommand)
+					//delete tempCommand;
 				tempCommand = cur_bank->pop();
 				assert(tempCommand->getCommandType() == REFRESH_ALL);
 			}

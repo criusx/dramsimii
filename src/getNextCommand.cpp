@@ -32,45 +32,46 @@ using namespace DRAMSimII;
 /// @author Joe Gross
 /// @return a pointer to the next command
 //////////////////////////////////////////////////////////////////////
-Command *Channel::getNextCommand(const Command *nextCommand)
+Command *Channel::getNextCommand()
 {
-	if (nextCommand == NULL)
-		nextCommand = readNextCommand();
+	// populate the cache if need be
+	if (nextAvailableCommand == NULL)
+		nextAvailableCommand = readNextCommand();
 
-	if (nextCommand)
+	if (nextAvailableCommand)
 	{
-		Rank &currentRank = rank[nextCommand->getAddress().getRank()];
-
+		Rank &currentRank = rank[nextAvailableCommand->getAddress().getRank()];
+		
 		// if it was a refresh all command, then dequeue all n banks worth of commands
-		if (nextCommand->getCommandType() == REFRESH_ALL)
-		{
-			Command *tempCommand = NULL;
+		if (nextAvailableCommand->getCommandType() == REFRESH_ALL)
+		{			
+			// command is being removed, clear the cache
+			nextAvailableCommand = NULL;
 
-			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end();currentBank++)
+			for (vector<Bank>::iterator currentBank = currentRank.bank.begin();true;)
 			{
-				if (!tempCommand)
+				Command *tempCommand = currentBank->pop();
+				
+				assert(tempCommand->getCommandType() == REFRESH_ALL);
+				assert(tempCommand != NULL);
+
+				currentBank++;
+
+				if (currentBank == currentRank.bank.end())
 				{
-					tempCommand = currentBank->pop();
-					assert(tempCommand->getCommandType() == REFRESH_ALL);
-					assert(tempCommand == nextCommand);
-				}
-				else
-				{
-					// still need one of these to have a pointer to the refresh transaction
-					Command *deleteCommand = currentBank->pop();
-					deleteCommand->removeHost();
-					assert(deleteCommand->getCommandType() == REFRESH_ALL);
-					delete deleteCommand;
-				}
+					return tempCommand;
+				}				
 			}
-
-			return tempCommand;
-
 		}
 		else
 		{			
-			assert(currentRank.bank[nextCommand->getAddress().getBank()].front() == nextCommand);
-			return currentRank.bank[nextCommand->getAddress().getBank()].pop();
+			assert(currentRank.bank[nextAvailableCommand->getAddress().getBank()].front() == nextAvailableCommand);
+			Command *tempCommand = currentRank.bank[nextAvailableCommand->getAddress().getBank()].pop();
+			// command is being removed, clear the cache
+			assert(tempCommand == nextAvailableCommand);
+			nextAvailableCommand = NULL;
+			assert(tempCommand != NULL);
+			return tempCommand;
 		}
 	}
 	else
@@ -87,10 +88,19 @@ Command *Channel::getNextCommand(const Command *nextCommand)
 /// @author Joe Gross
 /// @return a const pointer to the next available command
 //////////////////////////////////////////////////////////////////////
-const Command *Channel::readNextCommand() const
-{
+const Command *Channel::readNextCommand(bool useCache) const
+{	
+	if (nextAvailableCommand && useCache)
+	{
+		static unsigned count = 0;
+		if ((count++ % 5000) == 0)
+		{
+			cerr << count << "\r";
+		}
+		return nextAvailableCommand;
+	}
+	
 	// look at the most recently retired command in this channel's history
-
 	const Command *lastCommand = historyQueue.back();
 
 	const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
@@ -99,6 +109,77 @@ const Command *Channel::readNextCommand() const
 
 	switch (systemConfig.getCommandOrderingAlgorithm())
 	{
+	case GREEDY:
+		{
+			const Command *candidateCommand = NULL;
+
+			tick candidateExecuteTime = TICK_MAX;
+
+			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
+			{
+				bool isRefreshCommand = true;
+
+				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+				{
+					const Command *challengerCommand = currentBank->front();
+
+					if (isRefreshCommand && challengerCommand && challengerCommand->getCommandType() == REFRESH_ALL && currentRank->refreshAllReady())
+					{
+						tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
+#ifdef DEBUG
+						int minGap = minProtocolGap(challengerCommand);
+
+						if (time + minGap != challengerExecuteTime)
+							assert(time + minGap == challengerExecuteTime);
+#endif
+						if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
+						{						
+							candidateCommand = challengerCommand;
+							// stop searching since all the queues are proved to have refresh commands at the front
+							break;
+						}						
+					}
+					else
+					{
+						// can ignore refresh commands since it's known that not all the queues have a ref command at the front
+						if (challengerCommand && challengerCommand->getCommandType() != REFRESH_ALL)
+						{
+							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
+#ifdef DEBUG
+							int minGap = minProtocolGap(challengerCommand);
+
+							if (time + minGap != challengerExecuteTime)
+								assert(time + minGap == challengerExecuteTime);
+#endif
+							// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
+							if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
+							{								
+								candidateExecuteTime = challengerExecuteTime;
+								candidateCommand = challengerCommand;															
+							}
+						}
+					}
+
+					// if it was a refresh command was chosen then it wouldn't make it this far, so it's not a refresh command
+					// if a refresh command wasn't chosen then there one can't be found later
+					isRefreshCommand = false;
+				}				
+			}
+
+			if (candidateCommand)
+			{
+				assert(candidateCommand->getCommandType() == REFRESH_ALL || rank[candidateCommand->getAddress().getRank()].bank[candidateCommand->getAddress().getBank()].front() == candidateCommand);
+
+#ifdef DEBUG_GREEDY
+				timingOutStream << "R[" << candidateCommand->getAddress().rank << "] B[" << candidateCommand->getAddress().bank << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]" << endl;
+#endif
+			}
+
+			assert(!nextAvailableCommand||nextAvailableCommand == candidateCommand);
+			nextAvailableCommand = candidateCommand;
+			return candidateCommand;
+		}
+		break;
 		// this strategy attempts to find the oldest command and returns that to be executed
 		// however, if the oldest command cannot be issued, the oldest command that can be executed immediately
 		// will be returned instead
@@ -198,17 +279,17 @@ const Command *Channel::readNextCommand() const
 			{
 				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL || rank[oldestExecutableBank->front()->getAddress().getRank()].bank[oldestExecutableBank->front()->getAddress().getBank()].front() == oldestExecutableBank->front());
 
-				return oldestExecutableBank->front();
+				return nextAvailableCommand = oldestExecutableBank->front();
 			}
 			// if there was a command found
 			else if (oldestCommandTime < TICK_MAX)
 			{
 				assert(oldestBank->front()->getCommandType() == REFRESH_ALL || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
 
-				return oldestBank->front();
+				return nextAvailableCommand = oldestBank->front();
 			}
 			else
-				return NULL;
+				return nextAvailableCommand = NULL;
 		}
 		break;
 
@@ -232,7 +313,7 @@ const Command *Channel::readNextCommand() const
 						(nextCommand->getCommandType() == READ) ||
 						(nextCommand->getCommandType() == WRITE)))
 					{
-						return rank[lastRankID].bank[lastBankID].front();
+						return nextAvailableCommand = rank[lastRankID].bank[lastBankID].front();
 					}
 					else
 					{
@@ -293,7 +374,7 @@ const Command *Channel::readNextCommand() const
 
 							// are all the commands refreshes? if so then return this
 							if (!notAllRefresh)
-								return currentRank->bank[currentBankID].front(); // which bank doesn't really matter
+								return nextAvailableCommand = currentRank->bank[currentBankID].front(); // which bank doesn't really matter
 						}
 						noPendingRefreshes = true;
 					}
@@ -310,7 +391,7 @@ const Command *Channel::readNextCommand() const
 						if (transactionType == originalTransactionType)
 						{
 							if (allowNotReadyCommands)
-								return NULL;
+								return nextAvailableCommand = NULL;
 							else
 								allowNotReadyCommands = true;
 						}
@@ -324,7 +405,7 @@ const Command *Channel::readNextCommand() const
 				{
 					if (!systemConfig.isReadWriteGrouping())
 					{
-						return potentialCommand;
+						return nextAvailableCommand = potentialCommand;
 					}
 					else // have to follow read/write grouping considerations 
 					{
@@ -337,7 +418,7 @@ const Command *Channel::readNextCommand() const
 							{
 								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
 								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
-								return rank[lastRankID].bank[lastBankID].front();
+								return nextAvailableCommand = rank[lastRankID].bank[lastBankID].front();
 							}
 					}
 
@@ -363,7 +444,7 @@ const Command *Channel::readNextCommand() const
 						(temp_c->getCommandType() == READ) ||
 						(temp_c->getCommandType() == WRITE)))
 					{
-						return rank[lastRankID].bank[lastBankID].front();
+						return nextAvailableCommand = rank[lastRankID].bank[lastBankID].front();
 					}
 					else
 					{
@@ -419,7 +500,7 @@ const Command *Channel::readNextCommand() const
 							}
 							// are all the commands refreshes? if so then return this
 							if (!notAllRefresh)
-								return currentRank->bank[lastBankID].front(); // which bank doesn't really matter
+								return nextAvailableCommand = currentRank->bank[lastBankID].front(); // which bank doesn't really matter
 						}
 						noPendingRefreshes = true;
 					}
@@ -441,7 +522,7 @@ const Command *Channel::readNextCommand() const
 				{	
 					if(systemConfig.isReadWriteGrouping() == false)
 					{
-						return potentialCommand;
+						return nextAvailableCommand = potentialCommand;
 					}
 					else // have to follow read_write grouping considerations
 					{
@@ -454,7 +535,7 @@ const Command *Channel::readNextCommand() const
 							{
 								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
 								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
-								return rank[lastRankID].bank[lastBankID].front();
+								return nextAvailableCommand = rank[lastRankID].bank[lastBankID].front();
 							}
 					}
 
@@ -473,76 +554,6 @@ const Command *Channel::readNextCommand() const
 #endif
 
 			}
-		}
-		break;
-
-	case GREEDY:
-		{
-			const Command *candidateCommand = NULL;
-
-			tick candidateExecuteTime = TICK_MAX;
-
-			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
-			{
-				bool isRefreshCommand = true;
-
-				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
-				{
-					const Command *challengerCommand = currentBank->front();
-
-					if (isRefreshCommand && challengerCommand && challengerCommand->getCommandType() == REFRESH_ALL && currentRank->refreshAllReady())
-					{
-						tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
-#ifdef DEBUG
-						int minGap = minProtocolGap(challengerCommand);
-
-						if (time + minGap != challengerExecuteTime)
-							assert(time + minGap == challengerExecuteTime);
-#endif
-						if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
-						{						
-							candidateCommand = challengerCommand;
-							// stop searching since all the queues are proved to have refresh commands at the front
-							break;
-						}						
-					}
-					else
-					{
-						// can ignore refresh commands since it's known that not all the queues have a ref command at the front
-						if (challengerCommand && challengerCommand->getCommandType() != REFRESH_ALL)
-						{
-							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
-#ifdef DEBUG
-							int minGap = minProtocolGap(challengerCommand);
-
-							if (time + minGap != challengerExecuteTime)
-								assert(time + minGap == challengerExecuteTime);
-#endif
-							// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
-							if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
-							{								
-								candidateExecuteTime = challengerExecuteTime;
-								candidateCommand = challengerCommand;															
-							}
-						}
-					}
-
-					// if it was a refresh command was chosen then it wouldn't make it this far, so it's not a refresh command
-					// if a refresh command wasn't chosen then there one can't be found later
-					isRefreshCommand = false;
-				}				
-			}
-
-			if (candidateCommand)
-			{
-				assert(candidateCommand->getCommandType() == REFRESH_ALL || rank[candidateCommand->getAddress().getRank()].bank[candidateCommand->getAddress().getBank()].front() == candidateCommand);
-
-#ifdef DEBUG_GREEDY
-				timingOutStream << "R[" << candidateCommand->getAddress().rank << "] B[" << candidateCommand->getAddress().bank << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]" << endl;
-#endif
-			}
-
-			return candidateCommand;
 		}
 		break;
 

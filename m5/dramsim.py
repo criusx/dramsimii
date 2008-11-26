@@ -9,6 +9,7 @@ m5.AddToPath('../common')
 import Simulation
 from Caches import *
 import specbench
+from specbench import *
 import string
 
 # Get paths we might need.  It's expected this file is in m5/configs/example.
@@ -105,7 +106,10 @@ if len(options.benchmark) > 1:
 	   process = specbench.specrand_i
 	elif options.benchmark == 'specrand_f':
 	   process = specbench.specrand_f
-	  
+	else:
+	   print "Unknown benchmark.\n"
+	   sys.exit()
+		  
 	executable = process.executable.split("/")
 	cmdLine = executable[len(executable) - 1] + string.join(process.cmd[1:]," ") +" <" + process.input
 else:

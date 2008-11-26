@@ -63,7 +63,21 @@ try:
 			#'-Wsign-compare',
 			#'-Wdeprecated', 
 			'-ffast-math', '-fomit-frame-pointer', '-finline-functions', '-march=native','-Wno-unused-variable'],
-			CPPDEFINES = ['M5DEBUG'])
+			CPPDEFINES = ['M5DEBUG'])	
+	elif 'prof' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
+		#print viableTargets
+		env.Append(
+			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops',
+			#'-Weffc++',
+			#'-Wsign-compare',
+			#'-Wdeprecated', 
+			'-ffast-math', '-finline-functions', '-march=native','-Wno-unused-variable'],
+			CPPDEFINES = ['M5DEBUG'])	
+		try:
+			env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-g'))
+		except ValueError:
+			pass
+
 	else:	
 		raise IndexError
 except IndexError:

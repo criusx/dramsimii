@@ -9,11 +9,11 @@ import re
 from subprocess import Popen,  PIPE, STDOUT
 
 def main():
-    os.environ["GDFONTPATH"]="/usr/share/fonts/truetype/msttcorefonts"
+    os.environ["GDFONTPATH"]="/usr/share/fonts/truetype/ttf-bitstream-vera"
     
     # setup the script headers
     scripts = ['''
-    set terminal png font "Arial_Black,10" transparent nointerlace truecolor  size 1600, 768 nocrop enhanced
+    set terminal png font "VeraMono,10" transparent nointerlace truecolor  size 1600, 768 nocrop enhanced
     unset border
     set size 1.0, 1.0
     set origin 0.0, 0.0
@@ -28,11 +28,11 @@ def main():
     #set mxtics
     #set logscale y
     
-    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "Arial_Black,12" textcolor lt -1 rotate by 90
-    set xlabel "Epoch" font "Arial_Black,12"
+    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
+    set xlabel "Epoch" font "VeraMono,12"
     
     set boxwidth 1.00 relative
-    set style fill  solid 1.00 border -1
+    set style fill  solid 1.00 border 0
     set style data histograms    
     set style histogram rowstacked title offset 0,0,0
     ''']
@@ -61,7 +61,7 @@ def main():
                         values[writing].append(line[startVal+1:endVal])
                         writing = (writing + 1) % (valuesPerEpoch)  
                 elif line.startswith('----') and not line.startswith('----epoch'):
-					gnuplot[0].stdin.write("set title \"Power Consumed vs. Time\\n^{%s}\"  offset character 0, -1, 0 font \"Arial_Black,14\" norotate\n" % line[4:len(line)-5])
+					gnuplot[0].stdin.write("set title \"Power Consumed vs. Time\\n^{%s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % line[4:len(line)-5])
                          
                 elif line[1] == '+':
                     gnuplot[0].stdin.write('set output "' + sys.argv[1].split('.gz')[0] + '.png"\n')

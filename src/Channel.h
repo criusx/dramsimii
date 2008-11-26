@@ -48,6 +48,7 @@ namespace DRAMSimII
 		tick time;										///< channel time, allow for channel concurrency			
 		tick lastRefreshTime;							///< tells me when last refresh was done
 		tick lastCommandIssueTime;						///< the last time a command was executed on this channel
+		mutable const Command *nextAvailableCommand;	///< the next command that was chosen by the algorithm, cached here
 		unsigned lastRankID;							///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
@@ -62,6 +63,12 @@ namespace DRAMSimII
 		std::vector<Rank> rank;							///< vector of the array of ranks
 
 	public:
+		// constructors
+		explicit Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats);
+		Channel(const Channel&);
+		explicit Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats);
+		virtual ~Channel();		
+
 		// functions
 		bool enqueue(Transaction *in);
 		bool isFull() const { return transactionQueue.isFull(); }	///< determines whether there is room for more transactions
@@ -69,25 +76,15 @@ namespace DRAMSimII
 		unsigned getChannelID() const { return channelID; }					///< return the ordinal of this channel
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
 		bool transaction2commands(Transaction *);
-		Command *getNextCommand(const Command *knownNextCommand = NULL);		
+		Command *getNextCommand();		
 		void doPowerCalculation(const tick systemTime);
 		void executeCommand(Command *thisCommand);
 		tick nextTransactionDecodeTime() const;
 		tick nextCommandExecuteTime() const;
 		virtual tick nextTick() const;
 
-	private:
-		bool sendPower(float PsysRD, float PsysWR, std::vector<int> rankArray, std::vector<float> PsysACTSTBYArray, std::vector<float> PsysACTArray, const tick currentTime) const;
-
-	public:
-		// constructors
-		explicit Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats);
-		Channel(const Channel&);
-		explicit Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats);
-		virtual ~Channel();
-
 		// functions that may differ for architectures that inherit this		
-		virtual const Command *readNextCommand() const;
+		virtual const Command *readNextCommand(bool useCache = true) const;
 		virtual unsigned moveChannelToTime(const tick endTime, tick& transFinishTime);
 		virtual tick minProtocolGap(const Command *thisCommand) const;
 		virtual tick earliestExecuteTime(const Command *thisCommand) const;
@@ -123,8 +120,10 @@ namespace DRAMSimII
 		bool operator==(const Channel& right) const;
 		friend std::ostream& operator<<(std::ostream& , const Channel& );
 
-		// serialization
 	private:
+		bool sendPower(float PsysRD, float PsysWR, std::vector<int> rankArray, std::vector<float> PsysACTSTBYArray, std::vector<float> PsysACTArray, const tick currentTime) const;
+	
+		// serialization
 		explicit Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power,const std::vector<Rank> &rank, const TimingSpecification &timing);
 		explicit Channel();
 

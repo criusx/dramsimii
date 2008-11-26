@@ -10,6 +10,6 @@ reporting/stdsoap2.cpp
 
 libDRAMsim_la_CPPFLAGS = -I/usr/include/libxml2
 
-libDRAMsim_la_LIBADD = -lxml2 -lboost_iostreams -lboost_thread
+libDRAMsim_la_LIBADD = -lxml2 -lboost_iostreams -lboost_thread -lboost_filesystem -lboost_system
 
 libDRAMsim_la_DEFS = -DSSTDEBUG

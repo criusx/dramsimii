@@ -8,8 +8,8 @@ from Caches import *
 
 
 
-binary_dir = '/home/crius/benchmarks/spec2006/benchspec/CPU2006/'
-data_dir = '/home/crius/benchmarks/spec2006/benchspec/CPU2006/'
+binary_dir = '/spec/'
+data_dir = '/spec/'
 suffix = '.alpha-gcc410-glibc236'
 
 #400.perlbench
@@ -187,14 +187,16 @@ astar.output = 'lake.out'
 #481.wrf
 wrf=LiveProcess()
 wrf.executable =  binary_dir+'481.wrf/exe/wrf_base' + suffix
-wrf.cmd = [wrf.executable]+['namelist.input']
+wrf.cmd = [wrf.executable]+[data_dir + '481.wrf/data/ref/input/namelist.input']
 wrf.output = 'rsl.out.0000'
+wrf.cwd = data_dir + '481.wrf/data/ref/input/'
 
 #482.sphinx
 sphinx3=LiveProcess()
-sphinx3.executable =  binary_dir+'482.sphinx_livepretend/exe/sphinx_livepretend_base' + suffix
+sphinx3.executable =  binary_dir+'482.sphinx3/exe/sphinx_livepretend_base' + suffix
 sphinx3.cmd = [sphinx3.executable]+['ctlfile', '.', 'args.an4']
 sphinx3.output = 'an4.out'
+sphinx3.cwd = data_dir + '482.sphinx3/data/ref/input/'
 
 #483.xalancbmk
 xalancbmk=LiveProcess()
