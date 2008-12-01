@@ -141,7 +141,7 @@ namespace boost
 
 
 	template<class Archive, class U, class Allocator>
-	inline void save(Archive &ar, const boost::circular_buffer<U, Allocator> &t, const unsigned int file_version)
+	inline void save(Archive &ar, const boost::circular_buffer<U, Allocator> &t, const unsigned int version)
 	{
 		//const circular_buffer<U>::size_type maxCount(t.capacity());
 		//ar << BOOST_SERIALIZATION_NVP(maxCount);
@@ -162,7 +162,7 @@ namespace boost
 	}
 
 	template<class Archive, class U, class Allocator>
-	inline void load(Archive &ar, boost::circular_buffer<U, Allocator> &t, const unsigned file_version)
+	inline void load(Archive &ar, boost::circular_buffer<U, Allocator> &t, const unsigned version)
 	{
 		//ar >> BOOST_SERIALIZATION_NVP(maxCount);
 		typename circular_buffer<U, Allocator>::capacity_type maxCount;

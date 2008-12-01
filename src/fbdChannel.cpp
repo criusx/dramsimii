@@ -272,9 +272,6 @@ unsigned fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishTime
 			// then break into commands and insert into per bank command queues
 			bool t2cResult = transaction2commands(decodedTransaction);
 
-			// invalidate the cache
-			nextAvailableCommand = NULL;
-
 			assert(t2cResult == true);
 
 			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << decodedTransaction);

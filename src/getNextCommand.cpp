@@ -21,6 +21,7 @@
 using std::vector;
 using std::cerr;
 using std::endl;
+using std::max;
 using namespace DRAMSimII;
 
 //////////////////////////////////////////////////////////////////////
@@ -32,22 +33,19 @@ using namespace DRAMSimII;
 /// @author Joe Gross
 /// @return a pointer to the next command
 //////////////////////////////////////////////////////////////////////
-Command *Channel::getNextCommand()
+Command *Channel::getNextCommand(const Command *useThisCommand)
 {
 	// populate the cache if need be
-	if (nextAvailableCommand == NULL)
-		nextAvailableCommand = readNextCommand();
+	if (useThisCommand == NULL)
+		useThisCommand = readNextCommand();
 
-	if (nextAvailableCommand)
+	if (useThisCommand)
 	{
-		Rank &currentRank = rank[nextAvailableCommand->getAddress().getRank()];
+		Rank &currentRank = rank[useThisCommand->getAddress().getRank()];
 		
 		// if it was a refresh all command, then dequeue all n banks worth of commands
-		if (nextAvailableCommand->getCommandType() == REFRESH_ALL)
+		if (useThisCommand->getCommandType() == REFRESH_ALL)
 		{			
-			// command is being removed, clear the cache
-			nextAvailableCommand = NULL;
-
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin();true;)
 			{
 				Command *tempCommand = currentBank->pop();
@@ -65,12 +63,10 @@ Command *Channel::getNextCommand()
 		}
 		else
 		{			
-			assert(currentRank.bank[nextAvailableCommand->getAddress().getBank()].front() == nextAvailableCommand);
-			Command *tempCommand = currentRank.bank[nextAvailableCommand->getAddress().getBank()].pop();
+			assert(currentRank.bank[useThisCommand->getAddress().getBank()].front() == useThisCommand);
+			Command *tempCommand = currentRank.bank[useThisCommand->getAddress().getBank()].pop();
 			// command is being removed, clear the cache
-			assert(tempCommand == nextAvailableCommand);
-			nextAvailableCommand = NULL;
-			assert(tempCommand != NULL);
+			assert(tempCommand && tempCommand == useThisCommand);
 			return tempCommand;
 		}
 	}
@@ -88,18 +84,8 @@ Command *Channel::getNextCommand()
 /// @author Joe Gross
 /// @return a const pointer to the next available command
 //////////////////////////////////////////////////////////////////////
-const Command *Channel::readNextCommand(bool useCache) const
+const Command *Channel::readNextCommand() const
 {	
-	if (nextAvailableCommand && useCache)
-	{
-		static unsigned count = 0;
-		if ((count++ % 5000) == 0)
-		{
-			cerr << count << "\r";
-		}
-		return nextAvailableCommand;
-	}
-	
 	// look at the most recently retired command in this channel's history
 	const Command *lastCommand = historyQueue.back();
 
@@ -130,7 +116,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 						int minGap = minProtocolGap(challengerCommand);
 
 						if (time + minGap != challengerExecuteTime)
-							assert(time + minGap == challengerExecuteTime);
+							assert(max(time + minGap, (tick)0) == challengerExecuteTime);
 #endif
 						if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
 						{						
@@ -149,7 +135,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 							int minGap = minProtocolGap(challengerCommand);
 
 							if (time + minGap != challengerExecuteTime)
-								assert(time + minGap == challengerExecuteTime);
+								assert(max(time + minGap, (tick)0) == challengerExecuteTime);
 #endif
 							// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
 							if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
@@ -175,8 +161,6 @@ const Command *Channel::readNextCommand(bool useCache) const
 #endif
 			}
 
-			assert(!nextAvailableCommand||nextAvailableCommand == candidateCommand);
-			nextAvailableCommand = candidateCommand;
 			return candidateCommand;
 		}
 		break;
@@ -279,17 +263,17 @@ const Command *Channel::readNextCommand(bool useCache) const
 			{
 				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL || rank[oldestExecutableBank->front()->getAddress().getRank()].bank[oldestExecutableBank->front()->getAddress().getBank()].front() == oldestExecutableBank->front());
 
-				return nextAvailableCommand = oldestExecutableBank->front();
+				return  oldestExecutableBank->front();
 			}
 			// if there was a command found
 			else if (oldestCommandTime < TICK_MAX)
 			{
 				assert(oldestBank->front()->getCommandType() == REFRESH_ALL || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
 
-				return nextAvailableCommand = oldestBank->front();
+				return  oldestBank->front();
 			}
 			else
-				return nextAvailableCommand = NULL;
+				return  NULL;
 		}
 		break;
 
@@ -313,7 +297,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 						(nextCommand->getCommandType() == READ) ||
 						(nextCommand->getCommandType() == WRITE)))
 					{
-						return nextAvailableCommand = rank[lastRankID].bank[lastBankID].front();
+						return  rank[lastRankID].bank[lastBankID].front();
 					}
 					else
 					{
@@ -374,7 +358,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 
 							// are all the commands refreshes? if so then return this
 							if (!notAllRefresh)
-								return nextAvailableCommand = currentRank->bank[currentBankID].front(); // which bank doesn't really matter
+								return currentRank->bank[currentBankID].front(); // which bank doesn't really matter
 						}
 						noPendingRefreshes = true;
 					}
@@ -391,7 +375,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 						if (transactionType == originalTransactionType)
 						{
 							if (allowNotReadyCommands)
-								return nextAvailableCommand = NULL;
+								return  NULL;
 							else
 								allowNotReadyCommands = true;
 						}
@@ -405,7 +389,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 				{
 					if (!systemConfig.isReadWriteGrouping())
 					{
-						return nextAvailableCommand = potentialCommand;
+						return potentialCommand;
 					}
 					else // have to follow read/write grouping considerations 
 					{
@@ -418,7 +402,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 							{
 								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
 								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
-								return nextAvailableCommand = rank[lastRankID].bank[lastBankID].front();
+								return rank[lastRankID].bank[lastBankID].front();
 							}
 					}
 
@@ -444,7 +428,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 						(temp_c->getCommandType() == READ) ||
 						(temp_c->getCommandType() == WRITE)))
 					{
-						return nextAvailableCommand = rank[lastRankID].bank[lastBankID].front();
+						return rank[lastRankID].bank[lastBankID].front();
 					}
 					else
 					{
@@ -500,7 +484,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 							}
 							// are all the commands refreshes? if so then return this
 							if (!notAllRefresh)
-								return nextAvailableCommand = currentRank->bank[lastBankID].front(); // which bank doesn't really matter
+								return currentRank->bank[lastBankID].front(); // which bank doesn't really matter
 						}
 						noPendingRefreshes = true;
 					}
@@ -522,7 +506,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 				{	
 					if(systemConfig.isReadWriteGrouping() == false)
 					{
-						return nextAvailableCommand = potentialCommand;
+						return potentialCommand;
 					}
 					else // have to follow read_write grouping considerations
 					{
@@ -535,7 +519,7 @@ const Command *Channel::readNextCommand(bool useCache) const
 							{
 								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
 								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
-								return nextAvailableCommand = rank[lastRankID].bank[lastBankID].front();
+								return rank[lastRankID].bank[lastBankID].front();
 							}
 					}
 

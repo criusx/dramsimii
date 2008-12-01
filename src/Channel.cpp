@@ -51,7 +51,6 @@ Channel::Channel(const Settings& settings, const SystemConfiguration& sysConfig,
 time(0ll),
 lastRefreshTime(-100ll),
 lastCommandIssueTime(-100ll),
-nextAvailableCommand(NULL),
 lastRankID(0),
 timingSpecification(settings),
 transactionQueue(settings.transactionQueueDepth),
@@ -97,7 +96,6 @@ Channel::Channel(const Channel& rhs, const SystemConfiguration& systemConfig, St
 time(rhs.time),
 lastRefreshTime(rhs.lastRefreshTime),
 lastCommandIssueTime(rhs.lastCommandIssueTime),
-nextAvailableCommand(rhs.nextAvailableCommand),
 lastRankID(rhs.lastRankID),
 timingSpecification(rhs.timingSpecification),
 transactionQueue(rhs.transactionQueue),
@@ -123,7 +121,6 @@ Channel::Channel(const Settings settings, const SystemConfiguration& sysConf, St
 time(0),
 lastRefreshTime(0),
 lastCommandIssueTime(0),
-nextAvailableCommand(NULL),
 lastRankID(0),
 timingSpecification(timing),
 transactionQueue(0),
@@ -147,7 +144,6 @@ Channel::Channel(const Channel &rhs):
 time(rhs.time),
 lastRefreshTime(rhs.lastRefreshTime),
 lastCommandIssueTime(rhs.lastCommandIssueTime),
-nextAvailableCommand(rhs.nextAvailableCommand),
 lastRankID(rhs.lastRankID),
 timingSpecification(rhs.timingSpecification),
 transactionQueue(rhs.transactionQueue),
@@ -226,25 +222,16 @@ unsigned Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 			// checkForAvailablecommandSlots() should not have returned true if there was not enough space
 			assert(t2cResult == true);
 
-			// invalidate the cache
-			nextAvailableCommand = NULL;
-
 			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "]" << decodedTransaction);
 		}		
 
 		// execute commands for this time, reevaluate what the next command is since this may have changed after decoding the transaction
 		const Command *nextCommand = readNextCommand();
 
-		if (nextAvailableCommand != NULL)
-			assert(nextCommand == nextAvailableCommand);
-
-		assert(readNextCommand(false) == nextCommand && nextCommand == nextAvailableCommand);
-
 		if (nextCommand && (earliestExecuteTime(nextCommand) <= time))
 		{
-			Command *executingCommand = getNextCommand();
-			if (!executingCommand)
-				assert(readNextCommand());
+			Command *executingCommand = getNextCommand(nextCommand);
+			
 			assert(executingCommand == nextCommand);
 
 			executeCommand(executingCommand);					

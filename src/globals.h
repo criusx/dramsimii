@@ -168,6 +168,7 @@ namespace DRAMSimII
 
 #define tick int64_t
 #define TICK_MAX static_cast<tick>(integer_traits<tick>::const_max)
+#define TICK_MIN static_cast<tick>(integer_traits<tick>::const_min)
 #define PHYSICAL_ADDRESS uint64_t
 #define PHYSICAL_ADDRESS_MAX static_cast<PHYSICAL_ADDRESS>(integer_traits<PHYSICAL_ADDRESS>::const_max)
 	//#define TICK_MAX std::numeric_limits<boost::uint64_t>::max()

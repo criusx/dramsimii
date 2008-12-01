@@ -25,17 +25,17 @@ using namespace DRAMSimII;
 /// <summary>
 /// find the protocol gap between a command and current system state
 /// </summary>
-tick Channel::minProtocolGap(const Command *this_c) const
+tick Channel::minProtocolGap(const Command *currentCommand) const
 { 
 	tick min_gap = 0;
 
-	const unsigned this_rank = this_c->getAddress().getRank();
+	const unsigned currentRankID = currentCommand->getAddress().getRank();
 
-	const Rank &currentRank = rank[this_rank];
+	const Rank &currentRank = rank[currentRankID];
 
-	const Bank &currentBank = currentRank.bank[this_c->getAddress().getBank()];
+	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
 
-	switch(this_c->getCommandType())
+	switch(currentCommand->getCommandType())
 	{
 	case ACTIVATE:
 		{
@@ -164,7 +164,7 @@ tick Channel::minProtocolGap(const Command *this_c) const
 			// FIXME: change to use iterators
 			for (unsigned rank_id = 0; rank_id < rank.size() ; rank_id++)
 			{
-				if (rank_id != this_rank)
+				if (rank_id != currentRankID)
 				{
 					if (rank[rank_id].getLastCASTime() > otherRankLastCASTime)
 					{
@@ -248,7 +248,7 @@ tick Channel::minProtocolGap(const Command *this_c) const
 	}
 
 	//return max(min_gap,timingSpecification.tCMD());
-	return max(min_gap,max(lastCommandIssueTime - time + (tick)timingSpecification.tCMD(), (tick)0));
+	return max(min_gap,max(lastCommandIssueTime - time + (tick)timingSpecification.tCMD(),(tick)0));
 }
 
 /// @brief Returns the soonest time that this command may execute
@@ -257,9 +257,9 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 { 
 	tick nextTime;
 
-	const unsigned this_rank = currentCommand->getAddress().getRank();
+	const unsigned thisRank = currentCommand->getAddress().getRank();
 
-	const Rank &currentRank = rank[this_rank];
+	const Rank &currentRank = rank[thisRank];
 
 	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
 
@@ -296,7 +296,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 			nextTime = max(max(max(tRFCLimit,tRCLimit) , tRPLimit) , max(tRRDLimit , tFAWLimit));
 
-			//DEBUG_TIMING_LOG(this_c->getCommandType() << " ras[" << setw(2) << t_ras_gap << "] rrd[" << setw(2) << t_rrd_gap << "] faw[" << setw(2) << t_faw_gap << "] cas[" << setw(2) << t_cas_gap << "] rrd[" << setw(2) << t_rrd_gap << "] rp[" << setw(2) << t_rp_gap << "] min[" << setw(2) << min_gap << "]");
+			//DEBUG_TIMING_LOG(currentCommand->getCommandType() << " ras[" << setw(2) << t_ras_gap << "] rrd[" << setw(2) << t_rrd_gap << "] faw[" << setw(2) << t_faw_gap << "] cas[" << setw(2) << t_cas_gap << "] rrd[" << setw(2) << t_rrd_gap << "] rp[" << setw(2) << t_rp_gap << "] min[" << setw(2) << min_gap << "]");
 		}
 		break;
 
@@ -380,19 +380,19 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 			// find the most recent CAS/CASW time and length
 			// FIXME: change to use iterators
-			for (unsigned rank_id = 0; rank_id < rank.size() ; rank_id++)
+			for (unsigned rankID = 0; rankID < rank.size() ; rankID++)
 			{
-				if (rank_id != this_rank)
+				if (rankID != thisRank)
 				{
-					if (rank[rank_id].getLastCASTime() > otherRankLastCASTime)
+					if (rank[rankID].getLastCASTime() > otherRankLastCASTime)
 					{
-						otherRankLastCASTime = rank[rank_id].getLastCASTime();
-						otherRankLastCASLength = rank[rank_id].getLastCASLength();
+						otherRankLastCASTime = rank[rankID].getLastCASTime();
+						otherRankLastCASLength = rank[rankID].getLastCASLength();
 					}
-					if (rank[rank_id].getLastCASWTime() > otherRankLastCASWTime)
+					if (rank[rankID].getLastCASWTime() > otherRankLastCASWTime)
 					{
-						otherRankLastCASWTime = rank[rank_id].getLastCASWTime();
-						otherRankLastCASWLength = rank[rank_id].getLastCASWLength();
+						otherRankLastCASWTime = rank[rankID].getLastCASWTime();
+						otherRankLastCASWLength = rank[rankID].getLastCASWLength();
 					}
 				}
 			}
@@ -462,5 +462,6 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	}
 
 	//return max(nextTime, time + timingSpecification.tCMD());
-	return max(nextTime, max(time, lastCommandIssueTime + timingSpecification.tCMD()));
+	//return max(nextTime, max(time, lastCommandIssueTime + timingSpecification.tCMD()));
+	return max(nextTime, max(time , lastCommandIssueTime + timingSpecification.tCMD()));
 }

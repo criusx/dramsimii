@@ -48,7 +48,7 @@ namespace DRAMSimII
 		tick time;										///< channel time, allow for channel concurrency			
 		tick lastRefreshTime;							///< tells me when last refresh was done
 		tick lastCommandIssueTime;						///< the last time a command was executed on this channel
-		mutable const Command *nextAvailableCommand;	///< the next command that was chosen by the algorithm, cached here
+		//mutable const Command *nextAvailableCommand;	///< the next command that was chosen by the algorithm, cached here
 		unsigned lastRankID;							///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
@@ -76,7 +76,7 @@ namespace DRAMSimII
 		unsigned getChannelID() const { return channelID; }					///< return the ordinal of this channel
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
 		bool transaction2commands(Transaction *);
-		Command *getNextCommand();		
+		Command *getNextCommand(const Command *useThisCommand = NULL);		
 		void doPowerCalculation(const tick systemTime);
 		void executeCommand(Command *thisCommand);
 		tick nextTransactionDecodeTime() const;
@@ -84,7 +84,7 @@ namespace DRAMSimII
 		virtual tick nextTick() const;
 
 		// functions that may differ for architectures that inherit this		
-		virtual const Command *readNextCommand(bool useCache = true) const;
+		virtual const Command *readNextCommand() const;
 		virtual unsigned moveChannelToTime(const tick endTime, tick& transFinishTime);
 		virtual tick minProtocolGap(const Command *thisCommand) const;
 		virtual tick earliestExecuteTime(const Command *thisCommand) const;
