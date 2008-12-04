@@ -22,6 +22,9 @@
 using std::ostream;
 using std::endl;
 using std::map;
+using std::ios;
+using std::setprecision;
+using std::setiosflags;
 using namespace DRAMSimII;
 
 Statistics::Statistics(const Settings& settings):
@@ -35,6 +38,7 @@ readCount(0),
 writeCount(0),
 readBytesTransferred(0),
 writeBytesTransferred(0),
+timePerEpoch((float)settings.epoch / settings.dataRate),
 commandDelay(),
 commandExecution()
 {}
@@ -133,7 +137,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << statsLog.workingSet.size() << endl;
 
 	os << "----Bandwidth----" << endl;
-	os << statsLog.readBytesTransferred << " " << statsLog.writeBytesTransferred << endl;
+	os << setprecision(10)  << (float)statsLog.readBytesTransferred / statsLog.timePerEpoch << " " << (float)statsLog.writeBytesTransferred / statsLog.timePerEpoch << endl;
 
 	return os;
 }

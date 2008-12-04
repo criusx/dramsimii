@@ -143,7 +143,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Program Files\boost\boost_1_35_0&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
+				AdditionalIncludeDirectories="C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Program Files\boost\boost_1_36_0&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_RELEASE;_CONSOLE"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -161,7 +161,7 @@
 				CompileAs="2"
 				DisableSpecificWarnings="4530"
 				ShowIncludes="false"
-				EnablePREfast="true"
+				EnablePREfast="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -177,7 +177,7 @@
 				AdditionalDependencies="libxml2.lib"
 				ShowProgress="1"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_35_0\lib&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_36_0\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="0"

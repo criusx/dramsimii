@@ -47,12 +47,13 @@ namespace DRAMSimII
 		unsigned writeCount;
 		unsigned readBytesTransferred;						///< the number of bytes read from DRAMs this epoch
 		unsigned writeBytesTransferred;						///< the number of bytes written to DRAMs this epoch
+		float timePerEpoch;									///< the number of seconds that have elapsed per epoch
 		std::map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
 		std::map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
 		std::map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
 		std::map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
 		std::map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
-		std::map<PHYSICAL_ADDRESS, tick> workingSet;	///< stores all the addresses seen in an epoch to calculate the working set
+		std::map<PHYSICAL_ADDRESS, tick> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
 
 	public:
 
@@ -73,7 +74,7 @@ namespace DRAMSimII
 
 		explicit Statistics();
 		friend class boost::serialization::access;
-		
+
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned version )
 		{

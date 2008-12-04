@@ -86,13 +86,6 @@ Command *Channel::getNextCommand(const Command *useThisCommand)
 //////////////////////////////////////////////////////////////////////
 const Command *Channel::readNextCommand() const
 {	
-	// look at the most recently retired command in this channel's history
-	const Command *lastCommand = historyQueue.back();
-
-	const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
-	const unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
-	const CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : WRITE_AND_PRECHARGE;
-
 	switch (systemConfig.getCommandOrderingAlgorithm())
 	{
 	case GREEDY:
@@ -183,11 +176,11 @@ const Command *Channel::readNextCommand() const
 					if (const Command *challengerCommand = currentBank->front())
 					{
 						const tick executeTime = earliestExecuteTime(challengerCommand);
-
 #ifdef DEBUG
 						assert(executeTime == time + minProtocolGap(challengerCommand));
 #endif
-						if ((challengerCommand->getEnqueueTime() < oldestExecutableCommandTime) && (executeTime <= time + timingSpecification.tCMD()))
+						// choose the oldest command that can be executed
+						if ((challengerCommand->getEnqueueTime() < oldestExecutableCommandTime) && (executeTime <= time))
 						{
 							// if it's a refresh_all command and we haven't proved that all the queues aren't refresh_all commands, search
 							if (challengerCommand->getCommandType() == REFRESH_ALL)
@@ -263,17 +256,17 @@ const Command *Channel::readNextCommand() const
 			{
 				assert(oldestExecutableBank->nextCommandType() == REFRESH_ALL || rank[oldestExecutableBank->front()->getAddress().getRank()].bank[oldestExecutableBank->front()->getAddress().getBank()].front() == oldestExecutableBank->front());
 
-				return  oldestExecutableBank->front();
+				return oldestExecutableBank->front();
 			}
 			// if there was a command found
 			else if (oldestCommandTime < TICK_MAX)
 			{
 				assert(oldestBank->front()->getCommandType() == REFRESH_ALL || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
 
-				return  oldestBank->front();
+				return oldestBank->front();
 			}
 			else
-				return  NULL;
+				return NULL;
 		}
 		break;
 
@@ -281,6 +274,12 @@ const Command *Channel::readNextCommand() const
 	case RANK_ROUND_ROBIN:
 		{
 			TransactionType transactionType;
+			// look at the most recently retired command in this channel's history
+			const Command *lastCommand = historyQueue.back();
+
+			const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
+			const unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
+			const CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : WRITE_AND_PRECHARGE;
 
 			// attempt to group RAS/CAS pairs together
 			switch (lastCommandType)
@@ -292,12 +291,9 @@ const Command *Channel::readNextCommand() const
 					const Command *nextCommand = rank[lastRankID].bank[lastBankID].front();
 
 					if ((nextCommand) &&
-						((nextCommand->getCommandType() == WRITE_AND_PRECHARGE) ||
-						(nextCommand->getCommandType() == READ_AND_PRECHARGE) ||
-						(nextCommand->getCommandType() == READ) ||
-						(nextCommand->getCommandType() == WRITE)))
+						(nextCommand->isRead() || nextCommand->isWrite()))
 					{
-						return  rank[lastRankID].bank[lastBankID].front();
+						return nextCommand;
 					}
 					else
 					{
@@ -416,19 +412,23 @@ const Command *Channel::readNextCommand() const
 		{			
 			TransactionType transactionType;
 
+			// look at the most recently retired command in this channel's history
+			const Command *lastCommand = historyQueue.back();
+
+			const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
+			const unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
+			const CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : WRITE_AND_PRECHARGE;
+
 			switch (lastCommandType)
 			{
 			case ACTIVATE:
 				{
-					const Command *temp_c = rank[lastRankID].bank[lastBankID].front();
+					const Command *nextCommand = rank[lastRankID].bank[lastBankID].front();
 
-					if ((temp_c) &&
-						((temp_c->getCommandType() == WRITE_AND_PRECHARGE) ||
-						(temp_c->getCommandType() == READ_AND_PRECHARGE) ||
-						(temp_c->getCommandType() == READ) ||
-						(temp_c->getCommandType() == WRITE)))
+					if ((nextCommand) &&
+						(nextCommand->isWrite() || nextCommand->isRead()))
 					{
-						return rank[lastRankID].bank[lastBankID].front();
+						return nextCommand;
 					}
 					else
 					{

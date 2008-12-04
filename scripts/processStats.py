@@ -87,7 +87,7 @@ def main():
     #set mxtics
     #set logscale y
     set xlabel "Time (epochs)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
-    set ylabel "Bandwidth (bytes transferred)"
+    set ylabel "Bandwidth (bytes per second)"
     set title "System Bandwidth"  offset character 0, -1, 0 font "" norotate 
     set style fill  solid 1.00 border 0
     set style data histograms    
