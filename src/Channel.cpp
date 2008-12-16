@@ -754,7 +754,7 @@ Transaction *Channel::createNextRefresh()
 
 	address.setAddress(channelID,earliestRank,0,0,0);
 
-	Transaction *newRefreshTransaction = new Transaction(AUTO_REFRESH_TRANSACTION, earliestTime, 8,address,UINT_MAX);
+	Transaction *newRefreshTransaction = new Transaction(AUTO_REFRESH_TRANSACTION, earliestTime, 8,address, 0, 0, UINT_MAX);
 
 	refreshCounter[earliestRank] = refreshCounter[earliestRank] + timingSpecification.tREFI();
 
@@ -816,7 +816,7 @@ const Transaction *Channel::readNextRefresh() const
 	address.setAddress(channelID,earliestRank,0,0,0);
 
 	static Transaction newRefreshTransaction;
-	::new(&newRefreshTransaction)Transaction(AUTO_REFRESH_TRANSACTION, 0, 8,address,UINT_MAX);
+	::new(&newRefreshTransaction)Transaction(AUTO_REFRESH_TRANSACTION, 0, 8, address, 0, 0, UINT_MAX);
 
 	return &newRefreshTransaction;
 

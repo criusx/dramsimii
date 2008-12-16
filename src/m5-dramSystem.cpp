@@ -450,7 +450,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		cerr << "0x" << hex << pkt->getSize() << endl;
 #endif
 
-
 	// any packet which doesn't need a response and isn't a write
 	//if (pkt->needsResponse())
 	if (pkt->needsResponse() || pkt->isWrite())
@@ -508,9 +507,27 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		}
 		else
 		{
-			Transaction *trans = new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),memory->currentTransactionID);
-
-			bool result = memory->ds->enqueue(trans);
+			//Transaction *trans = new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),pkt->req->getPC(),pkt->req->getThreadNum(),memory->currentTransactionID);
+			//Transaction *trans = ;
+			//cerr << pkt->req->getCpuNum() << pkt->req->getThreadNum() << endl;
+			/*
+			cerr << pkt->cmd.isRead() << " "
+				<< pkt->cmd.isWrite() << " " 
+				//<< pkt->cmd.isRequest() << " " 
+				//<< pkt->cmd.isResponse() << " " 
+				//<< pkt->cmd.needsExclusive() << " " 
+				<< pkt->cmd.needsResponse() << " "
+				//<< pkt->cmd.isInvalidate() << " " 
+				//<< pkt->cmd.hasData() << " "
+				//<< pkt->cmd.isReadWrite() << " " 
+				//<< pkt->cmd.isLocked() << " " 
+				//<< pkt->cmd.isPrint() << " "
+				;
+			if ((pkt->cmd.isRead() || pkt->cmd.isWrite()) && pkt->cmd.needsResponse())
+				cerr << pkt->req->getPC() << " " << pkt->req->getThreadNum() << " " << pkt->req->getCpuNum();
+			cerr << endl;
+			*/
+			bool result = memory->ds->enqueue(new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),pkt->needsResponse() ? pkt->req->getPC() : 0x00, pkt->needsResponse() ? pkt->req->getThreadNum() : 0x00,memory->currentTransactionID));
 
 			assert(result == true);
 

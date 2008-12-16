@@ -36,12 +36,14 @@ arrivalTime(0xcdcdcdcd),
 enqueueTime(0xcdcdcdcd),
 completionTime(0xcdcdcdcd),
 decodeTime(0xcdcdcdcd),
+PC(0x00),
+threadNum(0),
 addr(0xcdcdcdcd),
 originalTransaction(UINT_MAX)
 {}
 
 
-Transaction::Transaction(const TransactionType type, const tick arrivalTime,const unsigned burstLength, const Address &address, const unsigned originalTrans):
+Transaction::Transaction(const TransactionType type, const tick arrivalTime,const unsigned burstLength, const Address &address, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
 eventNumber(eventCounter++),
 type(type),
 status(0),
@@ -50,6 +52,8 @@ arrivalTime(arrivalTime),
 enqueueTime(0xcdcdcdcd),
 completionTime(0xcdcdcdcd),
 decodeTime(0xcdcdcdcd),
+PC(programCounter),
+threadNum(threadNumber),
 addr(address),
 originalTransaction(originalTrans)
 {}
@@ -65,12 +69,14 @@ arrivalTime(rs.arrivalTime),
 enqueueTime(rs.enqueueTime),
 completionTime(rs.completionTime),
 decodeTime(rs.decodeTime),
+PC(rs.PC),
+threadNum(rs.threadNum),
 addr(rs.addr),
 originalTransaction(rs.originalTransaction)
 {}
 
 /// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
-Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, const unsigned originalTrans):
+Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
 eventNumber(eventCounter++),
 type(transType),
 status(0),
@@ -79,6 +85,8 @@ arrivalTime(arrivalTime),
 enqueueTime(0xcdcdcdcd),
 completionTime(0xcdcdcdcd),
 decodeTime(0xcdcdcdcd),
+PC(programCounter),
+threadNum(threadNumber),
 addr(physicalAddress),
 originalTransaction(originalTrans)
 {}

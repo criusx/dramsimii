@@ -36,6 +36,31 @@ namespace DRAMSimII
 	class Statistics
 	{
 
+	public:
+		class DelayCounter
+		{
+		private:
+			uint64_t accumulatedLatency;				///< the total latency for this address
+			unsigned count;								///< the total number of times this address has been seen
+		public:
+			DelayCounter():
+			  accumulatedLatency(0),
+				  count(0) {}
+
+			  void countUp()
+			  {
+				  count++;
+			  }
+
+			  void delay(unsigned value)
+			  {
+				  accumulatedLatency += value;
+			  }
+
+			  tick getAccumulatedLatency() const { return accumulatedLatency; }
+			  unsigned getCount() const { return count; }
+		};
+
 	protected:
 		unsigned validTransactionCount;
 		unsigned startNumber;
@@ -48,11 +73,14 @@ namespace DRAMSimII
 		unsigned readBytesTransferred;						///< the number of bytes read from DRAMs this epoch
 		unsigned writeBytesTransferred;						///< the number of bytes written to DRAMs this epoch
 		float timePerEpoch;									///< the number of seconds that have elapsed per epoch
+		unsigned rowHits;									///< the number of row hits this epoch
+		unsigned rowMisses;									///< the number of row misses this epoch
 		std::map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
 		std::map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
 		std::map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
 		std::map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
 		std::map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
+		std::map<PHYSICAL_ADDRESS, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
 		std::map<PHYSICAL_ADDRESS, tick> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
 
 	public:
@@ -65,6 +93,10 @@ namespace DRAMSimII
 		void collectTransactionStats(const Transaction*);	
 		void collectCommandStats(const Command*);
 		inline void setValidTransactionCount(int vtc) {validTransactionCount = vtc;}
+		void reportHit() { rowHits++; }
+		unsigned getHitCount() const { return rowHits;}
+		void reportMiss() { rowMisses++; }
+		unsigned getMissCount() const { return rowMisses; }
 		friend std::ostream &operator<<(std::ostream &, const Statistics &);
 
 		// overloads

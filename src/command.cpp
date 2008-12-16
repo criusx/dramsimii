@@ -256,6 +256,10 @@ ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 ostream &DRAMSimII::operator<<(ostream &os, const Command &currentCommand)
 {
 	os << currentCommand.commandType << currentCommand.addr << " S[" << std::dec << currentCommand.startTime << "] Q[" << std::dec << currentCommand.enqueueTime << "] E[" << std::dec << currentCommand.completionTime << std::dec << "] T[" << currentCommand.completionTime - currentCommand.startTime << "] DLY[" << std::dec << currentCommand.startTime - currentCommand.enqueueTime << "]";
+	// TODO: add data to the transactions for printing purposes
+	/*if (currentCommand.isWrite())
+		os	<< "D[" << std::hex << currentCommand.hostTransaction->;
+		*/
 	return os;
 }
 

@@ -413,7 +413,7 @@ Transaction *InputStream::getNextIncomingTransaction()
 			} 
 			else
 			{
-				Transaction *tempTransaction = new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address,NULL) ;
+				Transaction *tempTransaction = new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address, 0, 0, NULL) ;
 				// FIXME: ignores return type
 				//convertAddress(tempTransaction->getAddresses());
 
@@ -627,7 +627,7 @@ Transaction *InputStream::getNextRandomRequest()
 
 		nextAddress.setAddress(nextChannel,nextRank,nextBank,nextRow,nextColumn);
 
-		return new Transaction(type,time, burstLength, nextAddress, UINT_MAX);
+		return new Transaction(type,time, burstLength, nextAddress, 0, 0, UINT_MAX);
 	}
 	else
 		return NULL;

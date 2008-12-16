@@ -80,13 +80,21 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 		if (currentTransaction->getType() == READ_TRANSACTION)
 		{
 			readCount++;
-			readBytesTransferred += currentTransaction->getLength();
+			readBytesTransferred += currentTransaction->getLength() * 8;
 		}
 		else
 		{
-			writeBytesTransferred += currentTransaction->getLength();
+			// 64bit bus for most DDRx architectures
+			writeBytesTransferred += currentTransaction->getLength() * 8;
 			writeCount++;
-		}		
+		}	
+
+		// ignore write / tlb transactions that don't have a specific PC
+		if (currentTransaction->getProgramCounter() > 0x00)
+		{
+			pcOccurrence[currentTransaction->getProgramCounter()].countUp();
+			pcOccurrence[currentTransaction->getProgramCounter()].delay(currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime());
+		}
 	}
 }
 
@@ -139,6 +147,15 @@ ostream &DRAMSimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << "----Bandwidth----" << endl;
 	os << setprecision(10)  << (float)statsLog.readBytesTransferred / statsLog.timePerEpoch << " " << (float)statsLog.writeBytesTransferred / statsLog.timePerEpoch << endl;
 
+	os << "----Average Transaction Latency Per PC Value----" << endl;
+	for (map<PHYSICAL_ADDRESS, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); currentValue++)
+	{
+		os << std::hex << (*currentValue).first << " " << std::noshowpoint << (float)(*currentValue).second.getAccumulatedLatency() / (float)(*currentValue).second.getCount() << " " << std::dec << (*currentValue).second.getCount() << endl;
+	}
+	
+	os << "----Row Hit/Miss Counts----" << endl;
+	os << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
+
 	return os;
 }
 
@@ -150,6 +167,7 @@ void Statistics::clear()
 	transactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
+	rowHits = rowMisses = 0;
 	readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
 }
 

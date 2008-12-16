@@ -28,7 +28,6 @@
 namespace DRAMSimII
 {
 	/// @brief a request to read or write some portion of memory, atomically
-	//template<class OriginalTransactionType>
 	class Transaction
 	{
 	protected:
@@ -43,8 +42,9 @@ namespace DRAMSimII
 		tick enqueueTime;					///< time when the transaction enters the MC queue
 		tick completionTime;				///< time when transaction has completed in DRAM ticks
 		tick decodeTime;					///< when the transaction was split up into several commands
+		PHYSICAL_ADDRESS PC;				///< the program counter associated with this transaction
+		int threadNum;						///< the thread number associated with this transaction
 		const Address addr;						///< the physical, virtual, and mapped representations of the address for this transaction
-		//const OriginalTransactionType *originalTransaction;	///< utility pointer in the event that this transaction represents another version of a transaction
 		const unsigned originalTransaction;	///< utility counter id in the event that this transaction represents another version of a transaction
 
 	public:
@@ -55,6 +55,7 @@ namespace DRAMSimII
 		tick getEnqueueTime() const { return enqueueTime; }							///< get its enqueue time
 		tick getDecodeTime() const { return decodeTime; }							///< get its decode time
 		tick getCompletionTime() const { return completionTime; }					///< get the completion time
+		PHYSICAL_ADDRESS getProgramCounter() const { return PC; }					///< get the program counter for this transaction
 		unsigned getLength() const { return length; }								///< get the number of bytes requested
 		TransactionType getType() const { return type; }							///< get what type of transaction this is
 		unsigned getEventNumber() const { return eventNumber; }						///< which event number this is
@@ -67,11 +68,10 @@ namespace DRAMSimII
 		void setArrivalTime(const tick value) { arrivalTime = value; }
 		void setDecodeTime(const tick value) { decodeTime = value; }
 		void setCompletionTime(const tick value) { completionTime = value; }
-		//void setOriginalTransaction(const unsigned value) { originalTransaction = value; }
-
+		
 		// constructors
-		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const unsigned originalTrans);		
-		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, const unsigned originalTrans);
+		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, PHYSICAL_ADDRESS PC, int threadNumber, const unsigned originalTrans);		
+		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, PHYSICAL_ADDRESS PC, int threadNumber, const unsigned originalTrans);
 		explicit Transaction(const Transaction &rhs);
 		explicit Transaction();
 	
@@ -91,8 +91,6 @@ namespace DRAMSimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned int version)
 		{
-			//ar & freeTransactionPool;
-			//ar & eventCounter;
 			ar & const_cast<unsigned&>(eventNumber) & const_cast<TransactionType&>(type) & status;
 			ar & const_cast<unsigned&>(length) & arrivalTime & enqueueTime & completionTime;
 			ar & decodeTime & const_cast<Address&>(addr) & const_cast<unsigned&>(originalTransaction);

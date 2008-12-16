@@ -251,6 +251,9 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// if there is enough space to insert the commands that this transaction becomes
 		else
 		{
+			// close page always misses
+			statistics.reportMiss();
+
 			// command one, the RAS command to activate the row
 			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), ACTIVATE));
 
@@ -309,6 +312,9 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			&& (time - destinationBank.back()->getEnqueueTime() < systemConfig.getSeniorityAgeLimit()) // not starving the last command
 			&& destinationBank.back()->getCommandType() != REFRESH_ALL) // ends with CAS+P or PRE
 		{
+			// found existing command to piggyback on
+			statistics.reportHit();
+
 			// ignore other command types
 			if (systemConfig.isAutoPrecharge())
 			{
@@ -335,6 +341,9 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// if there is enough space to insert the commands that this transaction becomes
 		else
 		{
+			// didn't find place to issue command
+			statistics.reportMiss();
+
 			// command one, the RAS command to activate the row
 			destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), ACTIVATE));
 
@@ -382,11 +391,17 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// try to do a normal open page insert on this transaction
 			if (destinationBank.openPageInsert(incomingTransaction, time))
 			{
+				// found place to insert, hit
+				statistics.reportHit();
+
 				incomingTransaction->setDecodeTime(time);
 				return true;
 			}
 			else
 			{
+				// did not find place to insert
+				statistics.reportMiss();
+
 				// even STRICT ORDER allows you to look at the tail of the queue to see if that's the precharge
 				// command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
 				// also prevent against starvation

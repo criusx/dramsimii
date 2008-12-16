@@ -61,24 +61,26 @@ try:
 			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops',
 			#'-Weffc++',
 			#'-Wsign-compare',
-			#'-Wdeprecated', 
-			'-ffast-math', '-fomit-frame-pointer', '-finline-functions', '-march=native','-Wno-unused-variable'],
-			CPPDEFINES = ['M5DEBUG'])	
+			#'-Wdeprecated',
+			'-ffast-math', '-fomit-frame-pointer', '-finline-functions', '-march=native','-Wno-unused-variable']
+			#,CPPDEFINES = ['M5DEBUG']
+			)
 	elif 'prof' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		#print viableTargets
 		env.Append(
 			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops',
 			#'-Weffc++',
 			#'-Wsign-compare',
-			#'-Wdeprecated', 
-			'-ffast-math', '-finline-functions', '-march=native','-Wno-unused-variable'],
-			CPPDEFINES = ['M5DEBUG'])	
+			#'-Wdeprecated',
+			'-ffast-math', '-finline-functions', '-march=native','-Wno-unused-variable']
+			#,CPPDEFINES = ['M5DEBUG']
+			)
 		try:
 			env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-g'))
 		except ValueError:
 			pass
 
-	else:	
+	else:
 		raise IndexError
 except IndexError:
 	# then this must be a debug build
@@ -86,7 +88,7 @@ except IndexError:
 		CCFLAGS = ['-I/usr/include/libxml2'],
 		CPPDEFINES = ['M5DEBUG', 'DEBUG'])
 
-	
+
 SimObject('M5dramSystem.py')
 
 Source('Address.cpp')

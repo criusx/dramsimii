@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE( circular_buffer_test)
 BOOST_AUTO_TEST_CASE( test_queue)
 {
 	// transaction tests
-	Transaction t(READ_TRANSACTION,0xface, 8, PHYSICAL_ADDRESS_MAX,NULL);
+	Transaction t(READ_TRANSACTION,0xface, 8, PHYSICAL_ADDRESS_MAX, 0, 0, NULL);
 	Queue<std::string> queueA(5);
 	bool result = queueA.push(new std::string("abc"));
 	BOOST_CHECK(result == true);
@@ -232,8 +232,10 @@ BOOST_AUTO_TEST_CASE( test_queue)
 			READ_TRANSACTION,
 			std::rand(),
 			std::rand()%9,
-			*(new Address(std::rand()))
-			,NULL)),
+			*(new Address(std::rand())),
+			0,
+			0,
+			NULL)),
 			std::rand(),
 			true,true,8
 			)
