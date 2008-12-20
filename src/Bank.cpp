@@ -21,7 +21,7 @@ using std::cerr;
 using std::endl;
 using std::endl;
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 Bank::Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
@@ -163,7 +163,7 @@ void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 /// @param value the transaction to be inserted
 /// @return true if the transaction was converted and inserted successfully, false otherwise
 //////////////////////////////////////////////////////////////////////
-bool Bank::openPageInsert(DRAMSimII::Transaction *value, tick time)
+bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 {
 	if (!perBankQueue.isFull())
 	{
@@ -251,7 +251,7 @@ bool Bank::openPageInsertAvailable(const Transaction *value, const tick time) co
 
 Bank& Bank::operator =(const Bank& rhs)
 {
-	//::new(this)DRAMSimII::Bank(rhs.timing,rhs.systemConfig);
+	//::new(this)DRAMsimII::Bank(rhs.timing,rhs.systemConfig);
 	//timing = rhs.timing;		
 	//systemConfig = rhs.systemConfig;
 	perBankQueue = rhs.perBankQueue;
@@ -283,7 +283,7 @@ bool Bank::operator==(const Bank& rhs) const
 		CASCount == rhs.CASCount && totalCASCount == rhs.totalCASCount && CASWCount == rhs.CASWCount && totalCASWCount == rhs.totalCASWCount);
 }
 
-std::ostream& DRAMSimII::operator<<(std::ostream& in, const Bank& pc)
+std::ostream& DRAMsimII::operator<<(std::ostream& in, const Bank& pc)
 {
 	in << "PBQ" << endl << pc.perBankQueue;
 	in << "last RAS [" << pc.lastRASTime << "] act[" <<

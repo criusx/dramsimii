@@ -39,7 +39,7 @@ To do list:
 
 
 // global vars and functions
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	// class forward declarations
 	class Command;
@@ -59,17 +59,17 @@ namespace DRAMSimII
 	void unitTests(const Settings &settings);
 
 	// overloaded insertion operator functions for printing various aspects of the dram system
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::CommandType&);
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::Command&);
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::Address&);
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::Transaction&);
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::AddressMappingScheme&);
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::TransactionType );
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::fbdFrame&);	
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::PowerConfig&);
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::Address &);
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::AddressMappingScheme&);
-	std::ostream& operator<<(std::ostream&, const DRAMSimII::InputStream&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandType&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::AddressMappingScheme&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionType );
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::fbdFrame&);	
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address &);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::AddressMappingScheme&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
 
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)

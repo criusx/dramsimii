@@ -16,14 +16,14 @@
 
 #include "simulationParameters.h"
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 SimulationParameters::SimulationParameters(const Settings& settings):
 requestCount(settings.requestCount),
 inputType(RANDOM)
 {}
 
-std::ostream& DRAMSimII::operator<<(std::ostream& in, const SimulationParameters& params)
+std::ostream& DRAMsimII::operator<<(std::ostream& in, const SimulationParameters& params)
 {	
 	in << "ReqCount[" << params.requestCount << "] Input[" << params.inputType << "]" << std::endl;
 	return in;

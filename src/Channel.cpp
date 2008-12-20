@@ -37,7 +37,7 @@ using std::hex;
 using std::dec;
 using std::min;
 using std::max;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 using namespace std;
 
@@ -525,7 +525,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 	// report these results
 	//boost::thread(sendPower())
-	boost::thread(boost::bind(&DRAMSimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray, systemTime));
+	boost::thread(boost::bind(&DRAMsimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray, systemTime));
 
 	//powerOutStream << "++++++++++++++++++++++ total ++++++++++++++++++++++" << endl;
 
@@ -831,7 +831,7 @@ const Transaction *Channel::readNextRefresh() const
 Channel& Channel::operator =(const Channel &rhs)
 {
 	//Settings settings;
-	//::new(this)DRAMSimII::Channel(settings,rhs.systemConfig,rhs.statistics, rhs.powerModel, rhs.rank, rhs.timingSpecification);
+	//::new(this)DRAMsimII::Channel(settings,rhs.systemConfig,rhs.statistics, rhs.powerModel, rhs.rank, rhs.timingSpecification);
 	time = rhs.time;
 	lastRefreshTime = rhs.lastRefreshTime;
 	lastCommandIssueTime = rhs.lastCommandIssueTime;
@@ -869,7 +869,7 @@ bool Channel::operator ==(const Channel& rhs) const
 /// @return the input stream but with a string representing the channel state appended
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-std::ostream& DRAMSimII::operator<<(std::ostream& os, const DRAMSimII::Channel& r)
+std::ostream& DRAMsimII::operator<<(std::ostream& os, const DRAMsimII::Channel& r)
 {
 	os << "T[" << r.time << "] ch[" << r.channelID << endl;
 	os << r.timingSpecification << endl;

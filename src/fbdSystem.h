@@ -42,7 +42,7 @@
 #include "SystemConfiguration.h"
 
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief a specialty type of dramSystem
 	class fbdSystem: public System

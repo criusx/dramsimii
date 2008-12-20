@@ -17,7 +17,7 @@
 #include "fbdFrame.h"
 
 using namespace std;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 // initialize the static member
 Queue<fbdFrame> fbdFrame::freeFramePool(4*COMMAND_QUEUE_SIZE,true);
@@ -43,7 +43,7 @@ void fbdFrame::operator delete(void *mem)
 	freeFramePool.releaseItem(frame);
 }
 
-std::ostream &DRAMSimII::operator<<(std::ostream &os, const DRAMSimII::fbdFrame &frame)
+std::ostream &DRAMsimII::operator<<(std::ostream &os, const DRAMsimII::fbdFrame &frame)
 {
 	return os;
 }

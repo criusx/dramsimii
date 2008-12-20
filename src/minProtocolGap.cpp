@@ -20,7 +20,7 @@
 
 using std::vector;
 using std::max;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 /// <summary>
 /// find the protocol gap between a command and current system state

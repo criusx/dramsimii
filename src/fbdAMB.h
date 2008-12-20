@@ -21,7 +21,7 @@
 #include "globals.h"
 #include "queue.h"
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief the fully buffered DIMM advanced memory buffer
 	class AMB

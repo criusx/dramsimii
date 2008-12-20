@@ -42,7 +42,7 @@
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/vector.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief represents a DRAM system, the memory controller(s) and associated channels
 	/// @details contains a representation for a DRAM system, with the memory controller(s), channels, ranks, banks
@@ -114,7 +114,7 @@ namespace DRAMSimII
 		}
 
 		template<class Archive>
-		friend inline void save_construct_data(Archive &ar, const DRAMSimII::System *t, const unsigned version)
+		friend inline void save_construct_data(Archive &ar, const DRAMsimII::System *t, const unsigned version)
 		{
 			const SystemConfiguration *const sysConfig = &(t->systemConfig);
 			ar << sysConfig;
@@ -129,7 +129,7 @@ namespace DRAMSimII
 		}
 
 		template<class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMSimII::System * t, const unsigned version)
+		friend inline void load_construct_data(Archive & ar, DRAMsimII::System * t, const unsigned version)
 		{
 			SystemConfiguration *sysConfig;
 			ar >> sysConfig;
@@ -142,7 +142,7 @@ namespace DRAMSimII
 			InputStream *inputStream;
 			ar >> inputStream;
 
-			new(t)DRAMSimII::System(*sysConfig, *channel, *simParameters, *statistics, *inputStream);
+			new(t)DRAMsimII::System(*sysConfig, *channel, *simParameters, *statistics, *inputStream);
 		}
 	};
 }

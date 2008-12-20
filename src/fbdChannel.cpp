@@ -17,7 +17,7 @@
 #include "fbdChannel.h"
 
 using namespace std;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 fbdChannel::fbdChannel(const Settings& settings, const SystemConfiguration &sysConfig, Statistics &stats):
 Channel(settings, sysConfig, stats),

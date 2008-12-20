@@ -24,7 +24,7 @@
 #include "Channel.h"
 #include "queue.h"
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief a fully buffered DIMM channel
 	class fbdChannel: Channel

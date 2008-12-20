@@ -32,7 +32,7 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief represents a logical rank and associated statistics
 	class Rank
@@ -110,23 +110,23 @@ namespace DRAMSimII
 		}
 
 		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const DRAMSimII::Rank* t, const unsigned version)
+		friend inline void save_construct_data(Archive& ar, const DRAMsimII::Rank* t, const unsigned version)
 		{
-			const DRAMSimII::TimingSpecification* const timing = &(t->timing);
+			const DRAMsimII::TimingSpecification* const timing = &(t->timing);
 			ar << timing;
-			const std::vector<DRAMSimII::Bank>* const bank = &(t->bank);
+			const std::vector<DRAMsimII::Bank>* const bank = &(t->bank);
 			ar << bank;			
 		}
 
 		template <class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMSimII::Rank *t, const unsigned version)
+		friend inline void load_construct_data(Archive & ar, DRAMsimII::Rank *t, const unsigned version)
 		{
-			DRAMSimII::TimingSpecification* timing;
+			DRAMsimII::TimingSpecification* timing;
 			ar >> timing;
-			std::vector<DRAMSimII::Bank>* newBank;
+			std::vector<DRAMsimII::Bank>* newBank;
 			ar >> newBank;
 			
-			::new(t)DRAMSimII::Rank(*timing, *newBank);
+			::new(t)DRAMsimII::Rank(*timing, *newBank);
 		}		
 	};
 }

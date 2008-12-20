@@ -25,7 +25,7 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief a request to read or write some portion of memory, atomically
 	class Transaction

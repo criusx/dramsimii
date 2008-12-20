@@ -29,7 +29,10 @@
 
 using boost::iostreams::filtering_ostream;
 
-// modified, writes to cerr or a compressed output file
-filtering_ostream DRAMSimII::timingOutStream;
-filtering_ostream DRAMSimII::powerOutStream;
-filtering_ostream DRAMSimII::statsOutStream;
+namespace DRAMsimII
+{
+	// modified, writes to cerr or a compressed output file
+	filtering_ostream timingOutStream;
+	filtering_ostream powerOutStream;
+	filtering_ostream statsOutStream;
+}

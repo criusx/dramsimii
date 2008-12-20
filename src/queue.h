@@ -27,7 +27,7 @@
 #include <vector>
 
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	// forward declaration
 	template <typename T>

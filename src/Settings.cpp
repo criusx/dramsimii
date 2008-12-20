@@ -24,7 +24,7 @@
 #include "Settings.h"
 
 using namespace std;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 
 // for unit tests, should not be instantiated

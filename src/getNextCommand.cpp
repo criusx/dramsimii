@@ -22,7 +22,7 @@ using std::vector;
 using std::cerr;
 using std::endl;
 using std::max;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 //////////////////////////////////////////////////////////////////////
 /// @brief chooses and dequeues the next command to execute

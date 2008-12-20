@@ -25,7 +25,7 @@
 #include "transaction.h"
 #include "command.h"
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief Algorithm specific data structures should go in here.
 	class Algorithm
@@ -62,14 +62,14 @@ namespace DRAMSimII
 		}
 
 		template<class Archive>
-		friend inline void save_construct_data(Archive &ar, const DRAMSimII::Algorithm *t, const unsigned version)
+		friend inline void save_construct_data(Archive &ar, const DRAMsimII::Algorithm *t, const unsigned version)
 		{}
 
 		template<class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMSimII::Algorithm * t, const unsigned version)
+		friend inline void load_construct_data(Archive & ar, DRAMsimII::Algorithm * t, const unsigned version)
 		{
-			DRAMSimII::Settings settings;
-			new(t)DRAMSimII::Algorithm(settings);
+			DRAMsimII::Settings settings;
+			new(t)DRAMsimII::Algorithm(settings);
 		}
 	};
 }

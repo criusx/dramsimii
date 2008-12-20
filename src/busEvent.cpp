@@ -16,7 +16,7 @@
 
 #include "busEvent.h"
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 BusEvent::BusEvent():
 attributes(CONTROL_TRANSACTION),

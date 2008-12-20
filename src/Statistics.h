@@ -30,7 +30,7 @@
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/map.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief stores statistics about this memory system, primarily relating to counts of transactions/commands 
 	class Statistics

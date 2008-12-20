@@ -16,6 +16,12 @@
 
 #include "Statistics.h"
 #include "globals.h"
+#ifdef M5
+#include "base/statistics.hh"
+#include "base/stats/statdb.hh"
+#include "base/stats/types.hh"
+#include "sim/async.hh"
+#endif
 #include <iomanip>
 #include <iostream>
 
@@ -25,7 +31,8 @@ using std::map;
 using std::ios;
 using std::setprecision;
 using std::setiosflags;
-using namespace DRAMSimII;
+using std::string;
+using namespace DRAMsimII;
 
 Statistics::Statistics(const Settings& settings):
 validTransactionCount(0),
@@ -108,7 +115,7 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 	}
 }
 
-ostream &DRAMSimII::operator<<(ostream &os, const Statistics &statsLog)
+ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 {
 	//os << "RR[" << setw(6) << setprecision(6) << (double)statsLog.end_time/max(1,statsLog.bo4_count + statsLog.bo8_count) << "] ";
 	//os << "BWE[" << setw(6) << setprecision(6) << ((double)statsLog.bo8_count * 8.0 + statsLog.bo4_count * 4.0) * 100.0 / max(statsLog.end_time,(tick)1) << "]" << endl;
@@ -156,6 +163,34 @@ ostream &DRAMSimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << "----Row Hit/Miss Counts----" << endl;
 	os << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
 
+#ifdef M5
+	Stats::Database::stat_list_t::iterator i = Stats::Database::stats().begin();
+	Stats::Database::stat_list_t::iterator end = Stats::Database::stats().end();
+	os << "----IPC----" << endl;
+	while (i != end) 
+	{
+		Stats::StatData *data = *i;
+		if (data->name.find("ipc") != string::npos)
+		{
+			//cerr << data->name << " " << endl;
+			//if (typeid(*data) == typeid(Stats::Formula))
+			//	cerr << "Formula" << endl;
+			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().begin();
+			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().end();
+			while (start != end)
+			{
+				os << *start << endl;
+				start++;
+				// only considering single-threaded for now
+				break;
+			}
+			//cerr << ((Stats::FormulaData *)data)->str();
+		}
+
+		++i;
+	}		
+#endif
+
 	return os;
 }
 
@@ -169,6 +204,9 @@ void Statistics::clear()
 	workingSet.clear();
 	rowHits = rowMisses = 0;
 	readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
+#ifdef M5
+	async_event = async_statreset = true;
+#endif // M5DEBUG
 }
 
 bool Statistics::operator==(const Statistics& right) const

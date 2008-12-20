@@ -27,7 +27,7 @@
 #include <map>
 #include <string>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {	
 	/// @brief stores power configuration parameters for this DRAM system necessary to calculate power consumed
 	/// @author Joe Gross

@@ -23,7 +23,7 @@
 using std::max;
 using std::cerr;
 using std::endl;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 //////////////////////////////////////////////////////////////////////
 /// @brief automatically runs the simulations according to the set parameters

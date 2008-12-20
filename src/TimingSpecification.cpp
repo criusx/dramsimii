@@ -23,7 +23,7 @@
 using std::ostream;
 using std::cerr;
 using std::endl;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 // no arg constructor for deserialization and unit testing
 TimingSpecification::TimingSpecification():
@@ -184,7 +184,7 @@ bool TimingSpecification::operator==(const TimingSpecification &right) const
 		t_refi == right.t_refi && t_ost == right.t_ost);
 
 }
-ostream &DRAMSimII::operator<<(ostream &os, const TimingSpecification &this_a)
+ostream &DRAMsimII::operator<<(ostream &os, const TimingSpecification &this_a)
 {
 	os << "rtrs[" << this_a.t_rtrs << "] ";
 	return os;

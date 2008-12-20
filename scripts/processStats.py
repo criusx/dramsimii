@@ -80,6 +80,15 @@ def main():
     #set style fill solid 1.00 border 0
     set format x "0x1%%x"
     set style fill solid 1.00 noborder
+    ''', terminal + basicSetup + '''
+    set yrange [0 : *] noreverse nowriteback
+    set ytics out
+    set xlabel "Time" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set ylabel "Instructions Per Cycle"
+    set title "Average IPC vs. Time\\n%s"  offset character 0, -1, 0 font "" norotate
+    set style fill solid 1.00 noborder
+    set output "averageIPC.''' + extension + '''"
+    plot '-' using 1 title "Average IPC" with boxes
     '''
     ]
 
@@ -89,9 +98,7 @@ def main():
     cmdCounter = 0
     workingSetCounter = 0
     rwTotalCounter = 0
-    bandwidthCounter = 0
     latencyVsPC = 0
-    pcCounter = 0
     rwTotalOutfile = []
     # what type we are writing to
     writing = 0
@@ -107,13 +114,18 @@ def main():
     bandwidthValues.append([])
     bandwidthValues.append([])
     outFileBZ2 = sys.argv[1].split('.gz')[0] + ".tar.bz2"
+
     process = Popen(["zcat " + sys.argv[1] ], stdout=PIPE, shell=True)
     process2 = Popen(["wc -l"], stdin=process.stdout, stdout=PIPE, shell=True)
     process2.wait()
+
     lineCount = int(process2.stdout.readline())
     started = False
     printString = ""
     writeLines = 0
+
+    # counter to keep track of how many lines are written to each file
+    linesWritten = 0
 
     try:
         compressedstream = gzip.open(sys.argv[1], 'rb')
@@ -121,23 +133,35 @@ def main():
         for line in compressedstream:
             counter += 1
             if (counter % 5000 == 0):
-
                 for a in printString:
                     sys.stdout.write("\b \b")
-                    printString = "%3.2f%%" % ((float(counter) / lineCount) * 100)
-                    sys.stdout.write(printString)
-                    sys.stdout.flush()
-
+                printString = "%3.2f%%" % ((float(counter) / lineCount) * 100)
+                sys.stdout.write(printString)
+                sys.stdout.flush()
 
             if line[0] == '-':
                 if writing == 1:
+                    if (linesWritten == 0):
+                        gnuplot[0].stdin.write("0 1.01\n");
+                    linesWritten = 0
                     gnuplot[0].stdin.write("e\nunset output\n")
                 elif writing == 4:
+                    if (linesWritten == 0):
+                        gnuplot[1].stdin.write("0 1.01\n");
+                    linesWritten = 0
                     gnuplot[1].stdin.write("e\nunset output\n")
                 elif writing == 6:
+                    if (linesWritten == 0):
+                        gnuplot[2].stdin.write("0 1.01\n");
+                    linesWritten = 0
                     gnuplot[2].stdin.write("e\nunset output\n")
                 elif writing == 8:
+                    if (linesWritten == 0):
+                        gnuplot[5].stdin.write("0 1.01\n");
+                    linesWritten = 0
                     gnuplot[5].stdin.write("e\nunset output\n")
+                elif writing == 9:
+                    linesWritten = 0
 
                 writing = 0
                 line = line.strip()
@@ -186,38 +210,39 @@ def main():
                         gnuplot[5].stdin.write("set output './%s'\nplot '-' using 1:2:(1)   with boxes\n" % outFile)
                         latencyVsPC += 1
                         fileList.append(outFile)
-                        pcCounter = 0
                         writing = 8
-
+                    elif line == "----IPC----":
+                        writing = 9
             # data in this section
             else:
                 if writing == 1:
                     gnuplot[0].stdin.write(line)
+                    linesWritten += 1
                 elif writing == 2:
                     if len(line) > 1:
                         workingSetCounter += 1
                         workingSetOutfile.append(`workingSetCounter` + ' ' + line)
                 elif writing == 4:
                     gnuplot[1].stdin.write(line)
+                    linesWritten += 1
                 elif writing == 5:
-                    rwTotalOutfile.append(`rwTotalCounter` + '' + line)
+                    rwTotalOutfile.append(`rwTotalCounter` + ' ' + line)
                 elif writing == 6:
                     gnuplot[2].stdin.write(line)
+                    linesWritten += 1
                 elif writing == 7:
                     newLine = line.strip().split(" ")
                     bandwidthValues[0].append(newLine[0])
                     bandwidthValues[1].append(newLine[1])
-                    bandwidthCounter += 1
+                    #bandwidthCounter += 1
                 elif writing == 8:
                     splitLine = line.split(" ")
-                    #gnuplot[5].stdin.write(splitLine[0] + " %d\n" % (float(splitLine[1]) * float(splitLine[2])))
-                    #gnuplot[5].stdin.write(splitLine[0] + " %d\n" % float(splitLine[1]) )
-                    #gnuplot[5].stdin.write( "%d %d\n" % (pcCounter, (float(splitLine[1]) * float(splitLine[2]))))
-                    #gnuplot[5].stdin.write(`pcCounter` + " %d\n" % float(splitLine[1]) )
                     gnuplot[5].stdin.write("%d %d\n" % (int(splitLine[0], 16) - 4294967296, (float(splitLine[1]) * float(splitLine[2]))))
-                    #gnuplot[5].stdin.write("%d %d\n" % (long(splitLine[0],16),(float(splitLine[1]) * float(splitLine[2]))))
-                    #print long(splitLine[0],16)
-                    pcCounter += 1
+                    linesWritten += 1
+                elif writing == 9:
+                    if (linesWritten < 1):
+                        gnuplot[6].stdin.write(line)
+                    linesWritten += 1
 
     except IOError, strerror:
         print "I/O error", strerror
@@ -235,16 +260,18 @@ def main():
         elif writing == 8:
             gnuplot[5].stdin.write("e\nunset output\n")
 
+        gnuplot[6].stdin.write("e\nunset output\n")
+
         outFile = "workingSet" + "." + extension
         gnuplot[3].stdin.write("set output './%s'\nplot '-' using 1:2:(1) with boxes\n" % outFile)
         gnuplot[3].stdin.write(string.join(workingSetOutfile, "\n") + "e\n")
 
-        #gnuplot[4].stdin.write("e\n")
         for u in bandwidthValues:
             gnuplot[4].stdin.write("\n".join(u) + "\ne\n")
 
-            fileList.append("workingSet" + "." + extension)
-            fileList.append("bandwidth" + "." + extension)
+        fileList.append("workingSet" + "." + extension)
+        fileList.append("bandwidth" + "." + extension)
+        fileList.append("averageIPC" + "." + extension)
 
         for b in gnuplot:
             b.stdin.write('exit\n')

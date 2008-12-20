@@ -25,7 +25,7 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief represents a DRAM command from the memory controller to the DRAMs
 	class Command
@@ -88,7 +88,7 @@ namespace DRAMSimII
 		void setAutoPrecharge(const bool autoPrecharge) const;
 
 		// friends
-		friend std::ostream &DRAMSimII::operator<<(std::ostream &, const DRAMSimII::Command &);	
+		friend std::ostream &DRAMsimII::operator<<(std::ostream &, const DRAMsimII::Command &);	
 
 		// overloads
 		bool operator==(const Command& right) const;

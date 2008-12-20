@@ -21,7 +21,7 @@
 
 #include "powerConfig.h"
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 PowerConfig::PowerConfig(const Settings& settings):
 VDD(settings.VDD),
@@ -123,7 +123,7 @@ bool PowerConfig::operator==(const PowerConfig& rhs) const
 
 using std::endl;
 
-std::ostream& DRAMSimII::operator<<(std::ostream& in, const PowerConfig& pc)
+std::ostream& DRAMsimII::operator<<(std::ostream& in, const PowerConfig& pc)
 {
 	in << "PowerConfig" << endl;
 	in << "VDD" << pc.VDD << endl;

@@ -21,7 +21,7 @@
 
 #include <debug.h>
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 SSTdramSystem::SSTdramSystem(string cfgstr, const vector<DRAM*> &d):
 SW2(cfgstr, d),

@@ -30,7 +30,7 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/serialization.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief this class logically represents a bank
 	/// @details contains per bank queues as well as stats about when events happened
@@ -149,23 +149,23 @@ namespace DRAMSimII
 		}
 
 		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const DRAMSimII::Bank* t, const unsigned int file_version)
+		friend inline void save_construct_data(Archive& ar, const DRAMsimII::Bank* t, const unsigned int file_version)
 		{
-			const DRAMSimII::TimingSpecification* const timing = &(t->timing);
+			const DRAMsimII::TimingSpecification* const timing = &(t->timing);
 			ar << timing;
-			const DRAMSimII::SystemConfiguration* const systemConfig = &(t->systemConfig);
+			const DRAMsimII::SystemConfiguration* const systemConfig = &(t->systemConfig);
 			ar << systemConfig;			
 		}
 
 		template <class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMSimII::Bank *t, const unsigned version)
+		friend inline void load_construct_data(Archive & ar, DRAMsimII::Bank *t, const unsigned version)
 		{
-			DRAMSimII::TimingSpecification* timing;		///< a reference to the timing specification
+			DRAMsimII::TimingSpecification* timing;		///< a reference to the timing specification
 			ar >> timing;
-			DRAMSimII::SystemConfiguration* systemConfig;	///< reference to the system config to obtain specs
+			DRAMsimII::SystemConfiguration* systemConfig;	///< reference to the system config to obtain specs
 			ar >> systemConfig;
 
-			::new(t)DRAMSimII::Bank(*timing,*systemConfig);
+			::new(t)DRAMsimII::Bank(*timing,*systemConfig);
 		}
 	};
 

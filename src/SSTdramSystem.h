@@ -24,7 +24,7 @@
 class SSTdramSystem : public SW2
 {
 protected:
-	DRAMSimII::System *ds;				///< the DRAMSimII object
+	DRAMsimII::System *ds;				///< the DRAMsimII object
 	tick nextStats;						///< the next time at which stats should be collected
 
 	// random number stuff

@@ -21,7 +21,7 @@ using std::vector;
 using std::max;
 using std::endl;
 using std::cerr;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 Rank::Rank(const Settings& settings, const TimingSpecification &timing, const SystemConfiguration &systemConfig):
 timing(timing),
@@ -250,7 +250,7 @@ bool Rank::refreshAllReady() const
 
 Rank& Rank::operator =(const Rank& rhs)
 {
-	//::new(this)DRAMSimII::Rank(rhs.timing,rhs.bank);
+	//::new(this)DRAMsimII::Rank(rhs.timing,rhs.bank);
 	lastRefreshTime = rhs.lastRefreshTime;
 	lastPrechargeTime = rhs.lastPrechargeTime;
 	lastCASTime = rhs.lastCASTime;
@@ -276,7 +276,7 @@ bool Rank::operator==(const Rank& right) const
 		banksPrecharged == right.banksPrecharged && lastActivateTimes == right.lastActivateTimes && bank == right.bank);
 }
 
-std::ostream& DRAMSimII::operator<<(std::ostream &os, const Rank &r)
+std::ostream& DRAMsimII::operator<<(std::ostream &os, const Rank &r)
 {
 	os << r.lastRefreshTime << endl;
 	os << r.lastPrechargeTime << endl;

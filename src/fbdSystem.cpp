@@ -16,7 +16,7 @@
 
 #include "fbdSystem.h"
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 fbdSystem::fbdSystem(const Settings& settings):
 System(settings), // inherited class

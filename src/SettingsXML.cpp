@@ -26,7 +26,7 @@
 #include "Settings.h"
 
 using namespace std;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 Settings::Settings(const int argc, const char **argv):
 systemType(BASELINE_CONFIG)

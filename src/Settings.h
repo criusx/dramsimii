@@ -27,7 +27,7 @@
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/list.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief stores the settings to be used to initialize a dramSystem object
 	class Settings

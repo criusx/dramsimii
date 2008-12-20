@@ -20,7 +20,7 @@ using std::ostream;
 using std::dec;
 using std::hex;
 using std::setw;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 // initialize the static members
 Queue<Transaction> Transaction::freeTransactionPool(4*COMMAND_QUEUE_SIZE,true);
@@ -121,7 +121,7 @@ bool Transaction::operator !=(const Transaction& right) const
 }
 
 /// prints the key attributes of a transaction
-ostream &DRAMSimII::operator<<(ostream &os, const Transaction& this_t)
+ostream &DRAMsimII::operator<<(ostream &os, const Transaction& this_t)
 {	
 	os << "Q[" << setw(8) << dec << this_t.getEnqueueTime() << "] ";
 	os << "D[" << setw(8) << dec << this_t.getDecodeTime() << "] ";
@@ -135,7 +135,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const Transaction& this_t)
 }
 
 /// decodes and prints the transaction type
-ostream &DRAMSimII::operator<<(ostream &os, const TransactionType type)
+ostream &DRAMsimII::operator<<(ostream &os, const TransactionType type)
 {
 	switch (type)
 	{

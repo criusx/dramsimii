@@ -17,7 +17,7 @@
 #include <assert.h>
 #include "event.h"
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 // initialize the static member
 Queue<Event> Event::freeEventPool(4*COMMAND_QUEUE_SIZE,true);

@@ -22,7 +22,7 @@
 using std::cerr;
 using std::endl;
 using std::vector;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 //////////////////////////////////////////////////////////////////////
 /// @brief determines if there are enough command slots for the transaction to be decoded

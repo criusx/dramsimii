@@ -38,7 +38,7 @@
 #include <boost/serialization/vector.hpp>
 
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief represents a DRAM channel, has individual timing parameters, ranks, banks, clock, etc.
 	class Channel
@@ -138,37 +138,37 @@ namespace DRAMSimII
 		}
 
 		template<class Archive>
-		friend inline void save_construct_data(Archive &ar, const DRAMSimII::Channel *t, const unsigned version)
+		friend inline void save_construct_data(Archive &ar, const DRAMsimII::Channel *t, const unsigned version)
 		{			
-			const DRAMSimII::SystemConfiguration* const sysC = &(t->systemConfig);
+			const DRAMsimII::SystemConfiguration* const sysC = &(t->systemConfig);
 			ar << sysC;
-			const DRAMSimII::Statistics* const stats = &(t->statistics);
+			const DRAMsimII::Statistics* const stats = &(t->statistics);
 			ar << stats;
-			const DRAMSimII::PowerConfig* const power = &(t->powerModel);
+			const DRAMsimII::PowerConfig* const power = &(t->powerModel);
 			ar << power;
-			const std::vector<DRAMSimII::Rank>* const rank = &(t->rank);
+			const std::vector<DRAMsimII::Rank>* const rank = &(t->rank);
 			ar << rank;
-			const DRAMSimII::TimingSpecification* const timing = &(t->timingSpecification);
+			const DRAMsimII::TimingSpecification* const timing = &(t->timingSpecification);
 			ar << timing;
 		}
 
 		template<class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMSimII::Channel * t, const unsigned version)
+		friend inline void load_construct_data(Archive & ar, DRAMsimII::Channel * t, const unsigned version)
 		{
-			DRAMSimII::SystemConfiguration* sysC;
+			DRAMsimII::SystemConfiguration* sysC;
 			ar >> sysC;
-			DRAMSimII::Statistics* stats;
+			DRAMsimII::Statistics* stats;
 			ar >> stats;
-			DRAMSimII::PowerConfig* power;
+			DRAMsimII::PowerConfig* power;
 			ar >> power;
-			std::vector<DRAMSimII::Rank>* newRank;
+			std::vector<DRAMsimII::Rank>* newRank;
 			ar >> newRank;
-			DRAMSimII::TimingSpecification* timing;
+			DRAMsimII::TimingSpecification* timing;
 			ar >> timing;
 			Settings settings;
 
 
-			new(t)DRAMSimII::Channel(settings, *sysC, *stats, *power, *newRank, *timing);
+			new(t)DRAMsimII::Channel(settings, *sysC, *stats, *power, *newRank, *timing);
 		}
 	};
 }

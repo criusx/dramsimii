@@ -26,7 +26,7 @@ using std::cerr;
 using std::endl;
 using std::setbase;
 using std::setw;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 
 // static member declaration
@@ -553,7 +553,7 @@ void Address::setAddress(const unsigned channel, const unsigned rank, const unsi
 	reverseAddressTranslation();
 }
 
-std::ostream &DRAMSimII::operator <<(std::ostream &os, const Address &this_a)
+std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address &this_a)
 {
 	os << "addr[0x" << setbase(16) << this_a.physicalAddress <<
 		"] chan[" << setbase(16) << this_a.channel << "] rank[" <<
@@ -563,7 +563,7 @@ std::ostream &DRAMSimII::operator <<(std::ostream &os, const Address &this_a)
 	return os;
 }
 
-std::ostream &DRAMSimII::operator <<(std::ostream &os, const AddressMappingScheme &this_ams)
+std::ostream &DRAMsimII::operator <<(std::ostream &os, const AddressMappingScheme &this_ams)
 {
 	switch (this_ams)
 	{

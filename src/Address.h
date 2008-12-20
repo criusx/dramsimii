@@ -25,7 +25,7 @@
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/list.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief This class logically represents several interpretations of a memory address
 	/// @details A class to store various representations of an address
@@ -82,8 +82,8 @@ namespace DRAMSimII
 		void static initialize(const SystemConfiguration &systemConfig);
 
 		// friend
-		friend std::ostream &DRAMSimII::operator<<(std::ostream &os, const Address &this_a);
-		friend std::ostream &DRAMSimII::operator<<(std::ostream &os, const Transaction &this_t);
+		friend std::ostream &DRAMsimII::operator<<(std::ostream &os, const Address &this_a);
+		friend std::ostream &DRAMsimII::operator<<(std::ostream &os, const Transaction &this_t);
 		friend class boost::serialization::access;
 
 		// overloads

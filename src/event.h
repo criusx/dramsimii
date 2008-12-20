@@ -23,7 +23,7 @@
 #include "command.h"
 #include "transaction.h"
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief pending event queue
 	class Event

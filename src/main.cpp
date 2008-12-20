@@ -24,7 +24,7 @@
 using std::cerr;
 using std::endl;
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 int main(int argc,const char **argv, char *envp[])
 {
@@ -33,7 +33,7 @@ int main(int argc,const char **argv, char *envp[])
 #ifdef DEBUG
 	cerr << TICK_MAX << endl;
 	cerr << PHYSICAL_ADDRESS_MAX << endl;
-	//DRAMSimII::unitTests(settings);
+	//DRAMsimII::unitTests(settings);
 #endif
 
 	if (settings.systemType == FBD_CONFIG)

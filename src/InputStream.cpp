@@ -34,7 +34,7 @@ using std::cerr;
 using std::endl;
 using std::string;
 using std::ostream;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 #define COMPRESS_INCOMING_TRANSACTIONS 8
 
@@ -636,7 +636,7 @@ Transaction *InputStream::getNextRandomRequest()
 
 
 
-ostream& DRAMSimII::operator<<(ostream& os, const InputStream& is)
+ostream& DRAMsimII::operator<<(ostream& os, const InputStream& is)
 {
 	os << "type[" << is.type << "]" << endl;
 	os << is.systemConfig << endl;

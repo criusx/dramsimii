@@ -21,7 +21,7 @@
 #include "globals.h"
 #include "Address.h"
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	// bus_event_t is used with the file I/O interface to get bus events from input trace files
 

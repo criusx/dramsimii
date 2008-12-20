@@ -21,7 +21,7 @@
 using std::cerr;
 using std::endl;
 using std::ostream;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 // initialize the static member
 Queue<Command> Command::freeCommandPool(4*COMMAND_QUEUE_SIZE,true);
@@ -194,7 +194,7 @@ bool Command::operator==(const Command& right) const
 }
 
 
-ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
+ostream &DRAMsimII::operator<<(ostream &os, const CommandType &command)
 {
 	switch(command)
 	{
@@ -253,7 +253,7 @@ ostream &DRAMSimII::operator<<(ostream &os, const CommandType &command)
 	return os;
 }
 
-ostream &DRAMSimII::operator<<(ostream &os, const Command &currentCommand)
+ostream &DRAMsimII::operator<<(ostream &os, const Command &currentCommand)
 {
 	os << currentCommand.commandType << currentCommand.addr << " S[" << std::dec << currentCommand.startTime << "] Q[" << std::dec << currentCommand.enqueueTime << "] E[" << std::dec << currentCommand.completionTime << std::dec << "] T[" << currentCommand.completionTime - currentCommand.startTime << "] DLY[" << std::dec << currentCommand.startTime - currentCommand.enqueueTime << "]";
 	// TODO: add data to the transactions for printing purposes

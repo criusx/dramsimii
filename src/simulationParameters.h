@@ -25,7 +25,7 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/serialization.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief the parameters for the simulation, including where the requests come from and how many requests to simulate
 	class SimulationParameters 
@@ -55,14 +55,14 @@ namespace DRAMSimII
 		}
 
 		template<class Archive>
-		friend void inline load_construct_data(Archive& ar, DRAMSimII::SimulationParameters* t, const unsigned version)
+		friend void inline load_construct_data(Archive& ar, DRAMsimII::SimulationParameters* t, const unsigned version)
 		{
 			Settings settings;
-			::new(t)DRAMSimII::SimulationParameters(settings);
+			::new(t)DRAMsimII::SimulationParameters(settings);
 		}
 
 		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const DRAMSimII::SimulationParameters* t, const unsigned version)
+		friend inline void save_construct_data(Archive& ar, const DRAMsimII::SimulationParameters* t, const unsigned version)
 		{
 		}
 

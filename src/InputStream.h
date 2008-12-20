@@ -30,7 +30,7 @@
 #include <boost/random.hpp>
 #include <boost/random/variate_generator.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief creates transactions in standalone mode, whether random or from a trace file
 	class InputStream
@@ -95,7 +95,7 @@ namespace DRAMSimII
 
 		// operator overloads
 		bool operator==(const InputStream& rhs) const;
-		friend std::ostream& operator<<(std::ostream&, const DRAMSimII::InputStream&);
+		friend std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
 
 	private:
 		double ascii2multiplier(const std::string &input) const;

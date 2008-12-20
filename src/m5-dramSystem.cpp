@@ -34,7 +34,7 @@ using std::endl;
 using std::cerr;
 using std::string;
 using std::ostream;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 //#define TESTNEW
 
@@ -104,7 +104,9 @@ void M5dramSystem::moveToTime(const tick now)
 				static tick returnCount;
 
 				if (++returnCount % 10000 == 0)
+				{
 					cerr << returnCount << "\r";
+				}
 			}
 			else
 			{				
@@ -420,14 +422,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 	assert(pkt->isRequest());
 
-	if (pkt->memInhibitAsserted()) 
-	{
-		// snooper will supply based on copy of packet
-		// still target's responsibility to delete packet
-		cerr << "deleted memInhibitAsserted" << endl;
-		delete pkt;
-		return true;
-	}
+	
 
 #if defined(M5DEBUG) && defined(DEBUG) && !defined(NDEBUG)
 	timingOutStream << "extWake [" << curTick << "]/[" << currentMemCycle << "]";
@@ -449,10 +444,44 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	if (pkt->getSize() != 0x40)
 		cerr << "0x" << hex << pkt->getSize() << endl;
 #endif
-
+#if 0
+	cerr << 
+		(pkt->isRead() == true ? "R ":"") <<
+		(pkt->isWrite() ? "W ":"") <<
+		(pkt->isRequest() == true ? "RQ ": "") <<
+		(pkt->isResponse() == true ? "RSP " : "") <<
+		(pkt->needsExclusive() == true ? "NX " : "") <<
+		(pkt->needsResponse() == true ? "NR " : "")<<
+		(pkt->isInvalidate()== true ? "I " : "") <<
+		(pkt->hasData()== true  ? "D ":"") <<
+		(pkt->isReadWrite()== true  ? "RW":"") <<
+		(pkt->isLocked()== true  ? "L ":"")<<
+		(pkt->isError()== true  ? "E ":"")<<
+		(pkt->isPrint()== true  ? "P ":"") <<
+		endl;
+#endif
+	if (pkt->memInhibitAsserted()) 
+	{
+		// snooper will supply based on copy of packet
+		// still target's responsibility to delete packet
+		cerr << "deleted memInhibitAsserted" << endl;
+		delete pkt;
+		return true;
+	}
 	// any packet which doesn't need a response and isn't a write
-	//if (pkt->needsResponse())
-	if (pkt->needsResponse() || pkt->isWrite())
+	else if (!pkt->isRead() && pkt->needsResponse()) 
+	{
+		//upgrade or invalidate
+		if (pkt->needsResponse()) 
+		{
+			//cerr << "Inv" << endl;
+			pkt->makeAtomicResponse();
+			schedSendTiming(pkt,curTick+1);			
+			//delete pkt;
+		}
+		return true;
+	}
+	else if (pkt->needsResponse() || pkt->isWrite())
 	{
 		TransactionType packetType = PREFETCH_TRANSACTION;
 
@@ -461,7 +490,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		else if (pkt->isWrite())
 			packetType = WRITE_TRANSACTION;
 
-
+		
 		assert((pkt->isRead() && pkt->needsResponse()) || (!pkt->isRead() && !pkt->needsResponse()));
 
 		//memory->doAtomicAccess(pkt); // maybe try to do the access prior to simulating timing?
@@ -527,6 +556,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 				cerr << pkt->req->getPC() << " " << pkt->req->getThreadNum() << " " << pkt->req->getCpuNum();
 			cerr << endl;
 			*/
+			//async_statdump = async_statreset = true;
 			bool result = memory->ds->enqueue(new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),pkt->needsResponse() ? pkt->req->getPC() : 0x00, pkt->needsResponse() ? pkt->req->getThreadNum() : 0x00,memory->currentTransactionID));
 
 			assert(result == true);
@@ -618,7 +648,7 @@ Tick M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
 	M5_TIMING_LOG("M5dramSystem recvAtomic()");
 
 	// because this is simply a read or write, go to the M5 memory object exclusively
-	// and ignore the timing from DRAMSimII
+	// and ignore the timing from DRAMsimII
 	/// @todo have DS2 also account for this but avoid doing timing calculations
 	return memory->doAtomicAccess(pkt);
 }

@@ -63,7 +63,7 @@ try:
 			#'-Wsign-compare',
 			#'-Wdeprecated',
 			'-ffast-math', '-fomit-frame-pointer', '-finline-functions', '-march=native','-Wno-unused-variable']
-			#,CPPDEFINES = ['M5DEBUG']
+			,CPPDEFINES = ['M5']
 			)
 	elif 'prof' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		#print viableTargets
@@ -86,7 +86,7 @@ except IndexError:
 	# then this must be a debug build
 	env.Append(
 		CCFLAGS = ['-I/usr/include/libxml2'],
-		CPPDEFINES = ['M5DEBUG', 'DEBUG'])
+		CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5'])
 
 
 SimObject('M5dramSystem.py')

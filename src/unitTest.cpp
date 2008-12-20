@@ -42,10 +42,10 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/serialization/vector.hpp>
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 using namespace boost::serialization;
 
-//BOOST_CLASS_TRACKING(DRAMSimII::System,boost::serialization::track_never)
+//BOOST_CLASS_TRACKING(DRAMsimII::System,boost::serialization::track_never)
 //BOOST_CLASS_TRACKING(PowerConfig,track_always)
 //BOOST_CLASS_TRACKING(TimingSpecification,track_always)
 //BOOST_CLASS_TRACKING(SystemConfiguration,track_always)
@@ -53,7 +53,7 @@ using namespace boost::serialization;
 //BOOST_CLASS_TRACKING(TimingSpecification,track_never)
 //BOOST_CLASS_TRACKING(SystemConfiguration,track_never)
 
-//BOOST_CLASS_TRACKING(DRAMSimII::Queue<DRAMSimII::Address>,boost::serialization::track_never)
+//BOOST_CLASS_TRACKING(DRAMsimII::Queue<DRAMsimII::Address>,boost::serialization::track_never)
 
 template<class T>
 void backup(const char *filename,const T& item)

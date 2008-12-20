@@ -26,7 +26,7 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	// t_pp (min prec to prec of any bank) ignored
 	/// @brief contains all the specs for this channel's DIMMs

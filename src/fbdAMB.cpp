@@ -16,7 +16,7 @@
 
 #include "fbdAMB.h"
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 AMB::AMB(void)
 {

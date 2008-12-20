@@ -43,7 +43,9 @@ if args:
     print "Error: script doesn't take any positional arguments"
     sys.exit(1)
 
-if len(options.benchmark) > 1:
+#print options
+
+if options.benchmark != 0:
 
     if options.benchmark == 'perlbench':
         process = specbench.perlbench
@@ -156,6 +158,11 @@ else:
 
 	cmdLine = executable[len(executable) - 1] + " " + options.options + " <" + options.input
 
+options.detailed = True
+options.l2cache = True
+
+ #options.stats-file = cmdLine
+print options
 
 if options.detailed:
     #check for SMT workload
@@ -187,7 +194,7 @@ np = options.num_cpus
 system = System(cpu=[CPUClass(cpu_id=i) for i in xrange(np)],
                 #physmem = PhysicalMemory(range=AddrRange("512MB")),
   		#  physmem = M5dramSystem(settingsFile = "/home/crius/m5/src/mem/DRAMSimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml", outFilename = "seNew.gz", range=AddrRange("512MB")),
-  		physmem=M5dramSystem(settingsFile=options.DRAMsimConfig, outFilename=executable.pop(), commandLine=cmdLine, range=AddrRange("512MB")),
+  		physmem=M5dramSystem(settingsFile=options.DRAMsimConfig, outFilename=executable.pop(), commandLine=cmdLine, range=AddrRange("1024MB")),
                 membus=Bus(), mem_mode=test_mem_mode)
 
 system.physmem.port = system.membus.port

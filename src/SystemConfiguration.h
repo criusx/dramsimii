@@ -27,7 +27,7 @@
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/list.hpp>
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief stores the system configuration options for a dramSystem
 	class SystemConfiguration
@@ -114,18 +114,18 @@ namespace DRAMSimII
 		}
 
 		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const DRAMSimII::SystemConfiguration *t, const unsigned version)
+		friend inline void save_construct_data(Archive& ar, const DRAMsimII::SystemConfiguration *t, const unsigned version)
 		{
 			ar << t->epoch;
 		}
 
 		template <class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMSimII::SystemConfiguration *t, const unsigned version)
+		friend inline void load_construct_data(Archive & ar, DRAMsimII::SystemConfiguration *t, const unsigned version)
 		{
 			Settings s;
 			ar >> s.epoch;			
 			 
-			new(t)DRAMSimII::SystemConfiguration(s);
+			new(t)DRAMsimII::SystemConfiguration(s);
 		}
 
 	};

@@ -20,7 +20,7 @@
 #include "SystemConfiguration.h"
 
 using std::ostream;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 SystemConfiguration::SystemConfiguration(const Settings& settings):
 commandOrderingAlgorithm(settings.commandOrderingAlgorithm),
@@ -52,7 +52,7 @@ readPercentage(settings.readPercentage),
 sessionID(settings.sessionID)
 {}
 
-SystemConfiguration& SystemConfiguration::operator =(const DRAMSimII::SystemConfiguration &rs)
+SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConfiguration &rs)
 {
 	if (this == &rs)
 	{
@@ -118,7 +118,7 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
 		sessionID==right.sessionID);
 }
 
-ostream &DRAMSimII::operator<<(ostream &os, const SystemConfiguration &this_a)
+ostream &DRAMsimII::operator<<(ostream &os, const SystemConfiguration &this_a)
 {
 	os << "CH[" << this_a.channelCount << "] ";
 	os << "RK[" << this_a.rankCount << "] ";

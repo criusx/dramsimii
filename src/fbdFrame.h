@@ -21,7 +21,7 @@
 #include "globals.h"
 #include "command.h"
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	/// @brief represents a fully buffered DIMM frame, containing 3x commands or 1x command + 1x data
 	class fbdFrame
@@ -89,7 +89,7 @@ namespace DRAMSimII
 
 
 		// friends
-		friend std::ostream &DRAMSimII::operator<<(std::ostream &, const DRAMSimII::fbdFrame &);	
+		friend std::ostream &DRAMsimII::operator<<(std::ostream &, const DRAMsimII::fbdFrame &);	
 	};
 }
 #endif

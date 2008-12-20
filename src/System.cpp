@@ -61,7 +61,7 @@ using std::ifstream;
 using std::setfill;
 using std::setprecision;
 using std::min;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 namespace bf = boost::filesystem;
 
 //////////////////////////////////////////////////////////////////////
@@ -306,6 +306,7 @@ void System::checkStats()
 	{		
 		DEBUG_TIMING_LOG("aggregate stats");
 		doPowerCalculation();
+
 		printStatistics();
 	}
 
@@ -444,8 +445,6 @@ void System::doPowerCalculation()
 	//#pragma omp for
 
 	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
-
-
 }
 
 bool System::operator==(const System &rhs) const
@@ -462,7 +461,7 @@ bool System::operator==(const System &rhs) const
 /// @param thisSystem the reference to the dramSystem to be printed
 /// @return reference to the ostream passed in with information appended
 //////////////////////////////////////////////////////////////////////
-ostream &DRAMSimII::operator<<(ostream &os, const System &thisSystem)
+ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 {
 	os << "SYS[";
 	switch(thisSystem.systemConfig.getConfigType())

@@ -21,7 +21,7 @@
 using std::max;
 using std::cerr;
 using std::endl;
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 #if 0
 /// <summary>

@@ -18,7 +18,7 @@
 #define ENUMTYPES_H
 #pragma once
 
-namespace DRAMSimII
+namespace DRAMsimII
 {
 	// This section defines the refresh policy
 	enum RefreshPolicy

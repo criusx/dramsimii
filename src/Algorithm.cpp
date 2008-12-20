@@ -16,7 +16,7 @@
 
 #include "Algorithm.h"
 
-using namespace DRAMSimII;
+using namespace DRAMsimII;
 
 Algorithm::Algorithm(const Settings& settings):
 WHCC(settings.rankCount * settings.bankCount * 2)
