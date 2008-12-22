@@ -23,7 +23,7 @@ perlbench.output = 'attrs.out'
 #401.bzip2
 bzip2 = LiveProcess()
 bzip2.executable = binary_dir + '401.bzip2/exe/bzip2_base' + suffix
-data = data_dir + '401.bzip2/data/all/input/input.program'
+data = data_dir + '401.bzip2/data/all/input/input.combined'
 bzip2.cmd = [bzip2.executable] + [data, '1']
 bzip2.output = 'input.program.out'
 
@@ -94,7 +94,7 @@ namd = LiveProcess()
 namd.executable = binary_dir + '444.namd/exe/namd_base' + suffix
 input = data_dir + '444.namd/data/all/input/namd.input'
 namd.cmd = [namd.executable] + ['--input', input, '--iterations', '1', '--output', 'namd.out']
-namd.output = 'namd.stdout'
+#namd.output = 'namd.stdout'
 
 #445.gobmk
 gobmk = LiveProcess()
@@ -136,8 +136,8 @@ calculix.output = 'beampic.log'
 #456.hmmer
 hmmer = LiveProcess()
 hmmer.executable = binary_dir + '456.hmmer/exe/hmmer_base' + suffix
-data = data_dir + '456.hmmer/data/test/input/bombesin.hmm'
-hmmer.cmd = [hmmer.executable] + ['--fixed', '0', '--mean', '325', '--num', '5000', '--sd', '200', '--seed', '0', data]
+data = data_dir + '456.hmmer/data/ref/input/nph3.hmm'
+hmmer.cmd = [hmmer.executable] + ['--fixed', '0', '--mean', '425', '--num', '85000', '--sd', '300', '--seed', '0', data]
 hmmer.output = 'bombesin.out'
 
 #458.sjeng
@@ -157,8 +157,8 @@ GemsFDTD.cwd = data_dir + '459.GemsFDTD/data/test/input/'
 #462.libquantum
 libquantum = LiveProcess()
 libquantum.executable = binary_dir + '462.libquantum/exe/libquantum_base' + suffix
-libquantum.cmd = [libquantum.executable], '127', '5'
-libquantum.output = 'test.out'
+libquantum.cmd = [libquantum.executable], '129', '5'
+#libquantum.output = 'test.out'
 
 #464.h264ref
 h264ref = LiveProcess()
@@ -170,7 +170,7 @@ h264ref.output = 'foreman_test_encoder_baseline.out'
 #470.lbm
 lbm = LiveProcess()
 lbm.executable = binary_dir + '470.lbm/exe/lbm_base' + suffix
-data = data_dir + '470.lbm/data/test/input/100_100_130_cf_a.of'
+data = data_dir + '470.lbm/data/ref/input/100_100_130_ldc.of'
 lbm.cmd = [lbm.executable] + ['20', 'reference.dat', '0', '1' , data]
 lbm.output = 'lbm.out'
 

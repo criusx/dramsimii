@@ -135,7 +135,7 @@ def main():
             if (counter % 5000 == 0):
                 for a in printString:
                     sys.stdout.write("\b \b")
-                printString = "%3.2f%%" % ((float(counter) / lineCount) * 100)
+                printString = "%3.2f%%" % ((float(counter+1) / lineCount) * 100)
                 sys.stdout.write(printString)
                 sys.stdout.flush()
 
