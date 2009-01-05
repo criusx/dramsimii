@@ -16,16 +16,16 @@ suffix = '.alpha-gcc410-glibc236'
 
 #400.perlbench
 perlbench = LiveProcess()
-perlbench.executable = binary_dir + '400.perlbench/exe/' + 'perlbench_base' + suffix
-perlbench.cmd = [perlbench.executable] + ['-I' + data_dir + '/400.perlbench/data/all/input/lib', binary_dir + '400.perlbench/data/ref/input/checkspam.pl', '2500', '5', '25', '11', '150', '1', '1', '1', '1']
+perlbench.executable = os.path.join(binary_dir , '400.perlbench/exe/perlbench_base' + suffix)
+perlbench.cmd = [perlbench.executable] + ['-I' + os.path.join(data_dir, '/400.perlbench/data/all/input/lib'), os.path.join(binary_dir, '400.perlbench/data/ref/input/checkspam.pl'), '2500', '5', '25', '11', '150', '1', '1', '1', '1']
 perlbench.output = 'attrs.out'
 
 #401.bzip2
 bzip2 = LiveProcess()
-bzip2.executable = binary_dir + '401.bzip2/exe/bzip2_base' + suffix
-data = data_dir + '401.bzip2/data/all/input/input.combined'
+bzip2.executable = os.path.join(binary_dir, '401.bzip2/exe/bzip2_base' + suffix)
+data = os.path.join(data_dir, '401.bzip2/data/all/input/input.combined')
 bzip2.cmd = [bzip2.executable] + [data, '1']
-bzip2.output = 'input.program.out'
+bzip2.output = 'bzip2.out'
 
 #403.gcc
 gcc = LiveProcess()
@@ -37,7 +37,7 @@ gcc.output = 'ccc.out'
 
 #410.bwaves
 bwaves = LiveProcess()
-bwaves.executable = binary_dir + '410.bwaves/exe/bwaves_base' + suffix
+bwaves.executable = os.path.join(binary_dir, '410.bwaves/exe/bwaves_base' + suffix)
 bwaves.cmd = [bwaves.executable]
 
 #416.gamess
@@ -49,60 +49,60 @@ gamess.output = 'exam29.output'
 
 #429.mcf
 mcf = LiveProcess()
-mcf.executable = binary_dir + '429.mcf/exe/mcf_base' + suffix
-data = data_dir + '429.mcf/data/test/input/inp.in'
+mcf.executable = os.path.join(binary_dir, '429.mcf/exe/mcf_base' + suffix)
+data = os.path.join(data_dir, '429.mcf/data/test/input/inp.in')
 mcf.cmd = [mcf.executable] + [data]
-mcf.output = 'inp.out'
+#mcf.output  = 'inp.out'
 
 #433.milc
 milc = LiveProcess()
-milc.executable = binary_dir + '433.milc/exe/milc_base' + suffix
-stdin = data_dir + '433.milc/data/test/input/su3imp.in'
+milc.executable = os.path.join(binary_dir, '433.milc/exe/milc_base' + suffix)
+stdin = os.path.join(data_dir, '433.milc/data/test/input/su3imp.in')
 milc.cmd = [milc.executable]
 milc.input = stdin
-milc.output = 'su3imp.out'
+#milc.output = 'su3imp.out'
 
 #434.zeusmp
 zeusmp = LiveProcess()
-zeusmp.executable = binary_dir + '434.zeusmp/exe/zeusmp_base' + suffix
+zeusmp.executable = os.path.join(binary_dir, '434.zeusmp/exe/zeusmp_base' + suffix)
 zeusmp.cmd = [zeusmp.executable]
-zeusmp.output = 'zeusmp.stdout'
+#zeusmp.output = 'zeusmp.stdout'
 
 #435.gromacs
 gromacs = LiveProcess()
-gromacs.executable = binary_dir + '435.gromacs/exe/gromacs_base' + suffix
-data = data_dir + '435.gromacs/data/test/input/gromacs.tpr'
+gromacs.executable = os.path.join(binary_dir, '435.gromacs/exe/gromacs_base' + suffix)
+data = os.path.join(data_dir, '435.gromacs/data/test/input/gromacs.tpr')
 gromacs.cmd = [gromacs.executable] + ['-silent', '-deffnm', data, '-nice', '0']
 
 #436.cactusADM
 cactusADM = LiveProcess()
-cactusADM.executable = binary_dir + '436.cactusADM/exe/cactusADM_base' + suffix
-data = data_dir + '436.cactusADM/data/test/input/benchADM.par'
+cactusADM.executable = os.path.join(binary_dir, '436.cactusADM/exe/cactusADM_base' + suffix)
+data = os.path.join(data_dir, '436.cactusADM/data/test/input/benchADM.par')
 cactusADM.cmd = [cactusADM.executable] + [data]
-cactusADM.output = 'benchADM.out'
+#cactusADM.output = 'benchADM.out'
 
 #437.leslie3d
 leslie3d = LiveProcess()
-leslie3d.executable = binary_dir + '437.leslie3d/exe/leslie3d_base' + suffix
-stdin = data_dir + '437.leslie3d/data/test/input/leslie3d.in'
+leslie3d.executable = os.path.join(binary_dir, '437.leslie3d/exe/leslie3d_base' + suffix)
+stdin = os.path.join(data_dir, '437.leslie3d/data/test/input/leslie3d.in')
 leslie3d.cmd = [leslie3d.executable]
 leslie3d.input = stdin
-leslie3d.output = 'leslie3d.stdout'
+#leslie3d.output = 'leslie3d.stdout'
 
 #444.namd
 namd = LiveProcess()
-namd.executable = binary_dir + '444.namd/exe/namd_base' + suffix
-input = data_dir + '444.namd/data/all/input/namd.input'
+namd.executable = os.path.join(binary_dir, '444.namd/exe/namd_base' + suffix)
+input = os.path.join(data_dir, '444.namd/data/all/input/namd.input')
 namd.cmd = [namd.executable] + ['--input', input, '--iterations', '1', '--output', 'namd.out']
 #namd.output = 'namd.stdout'
 
 #445.gobmk
 gobmk = LiveProcess()
-gobmk.executable = binary_dir + '445.gobmk/exe/gobmk_base' + suffix
-stdin = data_dir + '445.gobmk/data/ref/input/13x13.tst'
+gobmk.executable = os.path.join(binary_dir, '445.gobmk/exe/gobmk_base' + suffix)
+stdin = os.path.join(data_dir, '445.gobmk/data/ref/input/13x13.tst')
 gobmk.cmd = [gobmk.executable] + ['--quiet', '--mode', 'gtp']
 gobmk.input = stdin
-gobmk.output = 'capture.out'
+#gobmk.output = 'capture.out'
 
 #447.dealII
 dealII = LiveProcess()
@@ -176,8 +176,9 @@ lbm.output = 'lbm.out'
 
 #471.omnetpp
 omnetpp = LiveProcess()
-omnetpp.executable = binary_dir + '471.omnetpp/exe/omnetpp_base' + suffix
-data = data_dir + '471.omnetpp/data/test/input/omnetpp.ini'
+omnetpp.executable = os.path.join(binary_dir, '471.omnetpp/exe/omnetpp_base' + suffix)
+data = os.path.join(data_dir, '471.omnetpp/data/ref/input/omnetpp.ini')
+omnetpp.cwd = os.path.join(data_dir,'471.omnetpp/data/ref/input/')
 omnetpp.cmd = [omnetpp.executable] + [data]
 omnetpp.output = 'omnetpp.log'
 
@@ -203,7 +204,7 @@ sphinx3.cwd = data_dir + '482.sphinx3/data/ref/input/'
 
 #483.xalancbmk
 xalancbmk = LiveProcess()
-xalancbmk.executable = binary_dir + '483.Xalan/exe/Xalan_base' + suffix
+xalancbmk.executable = binary_dir + '483.xalancbmk/exe/Xalan_base' + suffix
 xalancbmk.cmd = [xalancbmk.executable] + ['-v', 'test.xml', 'xalanc.xsl']
 xalancbmk.output = 'test.out'
 

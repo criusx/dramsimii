@@ -128,6 +128,9 @@ void Settings::setKeyValue(const string nodeName, const string nodeValue )
 	case output_file_dir_token:
 		outFileDir = nodeValue;
 		break;	
+	case dbreporting_token:
+		dbReporting = nodeValue == "true" ? true : false;
+		break;
 	case epoch_token:
 		toNumeric<unsigned>(epoch,nodeValue,std::dec);
 		break;

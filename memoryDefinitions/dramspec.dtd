@@ -28,7 +28,7 @@
 	type CDATA #REQUIRED
 	xmlns:xsi CDATA #IMPLIED
 	xsi:noNamespaceSchemaLocation CDATA #IMPLIED
->
+	>
 <!ELEMENT eventQueueDepth (#PCDATA)>
 <!ELEMENT epoch (#PCDATA)>
 <!ELEMENT historyQueueDepth (#PCDATA)>
@@ -38,7 +38,8 @@
 <!ELEMENT frequencySpec (#PCDATA)>
 <!ELEMENT outFile (#PCDATA)>
 <!ELEMENT outFileDirectory (#PCDATA)>
-<!ATTLIST outFile type CDATA #REQUIRED>
+<!ATTLIST outFile type (gz|bz|cout|uncompressed|none) #REQUIRED>
+<!ATTLIST outFile dbreporting (true|false) #REQUIRED >
 <!ELEMENT perBankQueueDepth (#PCDATA)>
 <!ELEMENT PdqRD (#PCDATA)>
 <!ELEMENT PdqWR (#PCDATA)>

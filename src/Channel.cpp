@@ -61,6 +61,7 @@ systemConfig(sysConfig),
 statistics(stats),
 powerModel(settings),
 algorithm(settings),
+dbReporting(settings.dbReporting),
 rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig))
 {
 	// assign an id to each channel (normally done with commands)
@@ -107,6 +108,7 @@ statistics(stats),
 powerModel(rhs.powerModel),
 algorithm(rhs.algorithm),
 channelID(rhs.channelID),
+dbReporting(rhs.dbReporting),
 // to initialize the references
 rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification, systemConfig))
 {
@@ -132,6 +134,7 @@ statistics(stats),
 powerModel(power),
 algorithm(settings),
 channelID(UINT_MAX),
+dbReporting(settings.dbReporting),
 rank(newRank)
 {}
 
@@ -155,6 +158,7 @@ statistics(rhs.statistics),
 powerModel(rhs.powerModel),
 algorithm(rhs.algorithm),
 channelID(rhs.channelID),
+dbReporting(rhs.dbReporting),
 rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConfig))
 {
 	// TODO: copy over values in ranks now that reference members are init
@@ -524,8 +528,10 @@ void Channel::doPowerCalculation(const tick systemTime)
 	powerModel.setLastCalculation(time);
 
 	// report these results
-	//boost::thread(sendPower())
-	boost::thread(boost::bind(&DRAMsimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray, systemTime));
+	if (dbReporting)
+	{
+		boost::thread(boost::bind(&DRAMsimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray, systemTime));
+	}
 
 	//powerOutStream << "++++++++++++++++++++++ total ++++++++++++++++++++++" << endl;
 

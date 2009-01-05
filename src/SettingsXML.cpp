@@ -168,6 +168,16 @@ systemType(BASELINE_CONFIG)
 						}
 
 						xmlFree(attr);
+
+						attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"dbreporting");
+
+						if (attr)
+						{
+							const string type = (const char *)attr;
+							setKeyValue("dbreporting",type);
+						}
+
+						xmlFree(attr);
 					}					
 				}
 				break;

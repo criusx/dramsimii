@@ -60,6 +60,7 @@ namespace DRAMsimII
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
 		Algorithm algorithm;							///< the algorithms used for transaction, command, etc. ordering
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
+		bool dbReporting;								///< whether or not to report results to a db
 		std::vector<Rank> rank;							///< vector of the array of ranks
 
 	public:
@@ -132,9 +133,8 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned int version)
 		{
-			ar & time & lastRefreshTime & lastCommandIssueTime & lastRankID
-				& transactionQueue & refreshCounter &
-				historyQueue & completionQueue & algorithm & channelID;			
+			ar & time & lastRefreshTime & lastCommandIssueTime & lastRankID & transactionQueue
+				& refreshCounter &historyQueue & completionQueue & algorithm & channelID & dbReporting;			
 		}
 
 		template<class Archive>

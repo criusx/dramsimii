@@ -217,9 +217,9 @@ nextStats(settings.epoch)
 
 	powerOutStream << "----" << settings.commandLine << "----" << endl;
 
-	statsOutStream << "----epoch " << settings.epoch << "----" << endl;
+	statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << " ----" << endl;
 
-	powerOutStream << "----epoch " << settings.epoch << "----" << endl;
+	powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << " ----" << endl;
 
 	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
 

@@ -105,7 +105,7 @@
 		<shortBurstRatio>.50</shortBurstRatio>
 		<readPercentage>.5</readPercentage>
 		<!-- type may be gz, bz, cout, uncompressed, none -->
-		<outFile type="gz">standardOutFile.gz</outFile>
+		<outFile type="gz" dbreporting="false">standardOutFile.gz</outFile>
 		<!-- the directory that the output files will be written to -->
 		<outFileDirectory>.</outFileDirectory>
 		<requestCount>75000000</requestCount>

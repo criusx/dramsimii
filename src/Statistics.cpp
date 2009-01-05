@@ -120,48 +120,46 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	//os << "RR[" << setw(6) << setprecision(6) << (double)statsLog.end_time/max(1,statsLog.bo4_count + statsLog.bo8_count) << "] ";
 	//os << "BWE[" << setw(6) << setprecision(6) << ((double)statsLog.bo8_count * 8.0 + statsLog.bo4_count * 4.0) * 100.0 / max(statsLog.end_time,(tick)1) << "]" << endl;
 
-	os << "----R W Total----" << endl;
-	os << statsLog.readCount << " " << statsLog.writeCount << " " << statsLog.readCount + statsLog.writeCount << endl;
+	//os << "----R W Total----" << endl;
+	//os << statsLog.readCount << " " << statsLog.writeCount << " " << statsLog.readCount + statsLog.writeCount << endl;
 
-	os << "----Transaction Delay----" << endl;
+	os << "----Transaction Delay " << statsLog.transactionDecodeDelay.size() << "----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
-	os << "----Command Turnaround----" << endl;
+	os << "----Command Turnaround " << statsLog.commandTurnaround.size() << "----" << endl;
 	for (map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandTurnaround.begin(); currentValue != statsLog.commandTurnaround.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
-	os << "----Command Delay----" << endl;
+	os << "----Command Delay " << statsLog.commandDelay.size() << "----" << endl;
 	for (map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandDelay.begin(); currentValue != statsLog.commandDelay.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
-	os << "----CMD Execution Time----" << endl;
+	os << "----CMD Execution Time " << statsLog.commandExecution.size() << "----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.commandExecution.begin(); currentValue != statsLog.commandExecution.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
-	os << "----Transaction Latency----" << endl;
+	os << "----Transaction Latency " << statsLog.transactionExecution.size() << "----" << endl;
 	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
-	os << "----Working Set----" << endl;
-	os << statsLog.workingSet.size() << endl;
 
-	os << "----Bandwidth----" << endl;
-	os << setprecision(10)  << (float)statsLog.readBytesTransferred / statsLog.timePerEpoch << " " << (float)statsLog.writeBytesTransferred / statsLog.timePerEpoch << endl;
+	os << "----Working Set----" << endl << statsLog.workingSet.size() << endl;
 
-	os << "----Average Transaction Latency Per PC Value----" << endl;
+	os << "----Bandwidth----" << endl << setprecision(10)  << (float)statsLog.readBytesTransferred / statsLog.timePerEpoch << " " << (float)statsLog.writeBytesTransferred / statsLog.timePerEpoch << endl;
+
+	os << "----Average Transaction Latency Per PC Value " << statsLog.pcOccurrence.size() << "----" << endl;
 	for (map<PHYSICAL_ADDRESS, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); currentValue++)
 	{
 		os << std::hex << (*currentValue).first << " " << std::noshowpoint << (float)(*currentValue).second.getAccumulatedLatency() / (float)(*currentValue).second.getCount() << " " << std::dec << (*currentValue).second.getCount() << endl;
 	}
 	
-	os << "----Row Hit/Miss Counts----" << endl;
-	os << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
+	os << "----Row Hit/Miss Counts----" << endl << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
 
 #ifdef M5
 	Stats::Database::stat_list_t::iterator i = Stats::Database::stats().begin();

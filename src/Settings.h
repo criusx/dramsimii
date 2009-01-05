@@ -73,6 +73,7 @@ namespace DRAMsimII
 		bool postedCAS;
 		bool readWriteGrouping;
 		bool autoPrecharge;
+		bool dbReporting;
 		unsigned clockGranularity;
 		unsigned cachelinesPerRow;
 		unsigned channelCount;
@@ -134,6 +135,8 @@ namespace DRAMsimII
 				return comment_token;
 			else if (input == "type")
 				return dram_type_token;
+			else if (input == "dbreporting")
+				return dbreporting_token;
 			else if (input == "datarate")
 				return datarate_token;
 			else if (input == "dramspec")
