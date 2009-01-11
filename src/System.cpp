@@ -215,7 +215,11 @@ nextStats(settings.epoch)
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 		"]" << endl;
 
-	powerOutStream << "----" << settings.commandLine << "----" << endl;
+	powerOutStream << "----Command Line: " << settings.commandLine << " ch[" << settings.channelCount <<
+		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
+		"] col[" << settings.columnCount << "] t_{RAS}[" << settings.tRAS <<
+		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
+		"]" << endl;
 
 	statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << " ----" << endl;
 

@@ -478,7 +478,6 @@ void Channel::doPowerCalculation(const tick systemTime)
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
 		float percentActive = max(0.0F,1.0F - (k->getPrechargeTime() / (float)(time - powerModel.getLastCalculation())));
 
-
 		//assert(RDschPct + WRschPct < 1.0F);
 
 		float PsysACTSTBY = factorA * factorB * powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive;

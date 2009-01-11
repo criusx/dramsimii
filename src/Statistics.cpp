@@ -164,15 +164,16 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 #ifdef M5
 	Stats::Database::stat_list_t::iterator i = Stats::Database::stats().begin();
 	Stats::Database::stat_list_t::iterator end = Stats::Database::stats().end();
-	os << "----IPC----" << endl;
-	while (i != end) 
+	
+	for (;i != end;++i) 
 	{
 		Stats::StatData *data = *i;
-		if (data->name.find("ipc") != string::npos)
+		if (data->name.find("ipc_total") != string::npos)
 		{
 			//cerr << data->name << " " << endl;
 			//if (typeid(*data) == typeid(Stats::Formula))
 			//	cerr << "Formula" << endl;
+			os << "----IPC----" << endl;
 			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().begin();
 			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().end();
 			while (start != end)
@@ -180,12 +181,27 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 				os << *start << endl;
 				start++;
 				// only considering single-threaded for now
-				break;
+				//break;
 			}
 			//cerr << ((Stats::FormulaData *)data)->str();
 		}
+		if ((data->name.find("cache") != string::npos))
+			//&& ((data->name.find("hit") != string::npos) || (data->name.find("miss") != string::npos)))
+		{
+			if (typeid(data) == typeid(Stats::FormulaStatData<Stats::FormulaBase> *))
+			{
+				os << "----M5 Stat:" << data->name << " ";
 
-		++i;
+				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().begin();
+				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().end();
+				while (start != end)
+				{
+					os << *start << " " << endl;
+					start++;
+				}
+				os << "----" << endl;
+			}
+		}		
 	}		
 #endif
 
