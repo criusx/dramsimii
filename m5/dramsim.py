@@ -33,6 +33,7 @@ parser.add_option("-f", "--DRAMsimConfig",
 		  help="The DRAMsimII config file.")
 parser.add_option("-b", "--benchmark",
 					default=0, help="Choose the number from the following:\nperlbench\nbzip2\ngcc\nbwaves\ngamess\nmcf\nmilc\nzeusmp\ngromacs\ncactusADM\nleslie3d\nnamd\ngobmk\ndealII\nsoplex\npovray\ncalculix\nhmmer\nsjeng\nGemsFDTD\nlibquantum\nh264ref\ntonto\nlbm\nomnetpp\nastar\nwrf\nsphinx3\nxalancbmk\n998.specrand_i\n999.specrand_f")
+parser.add_option("--simple", action="store_true")
 
 
 execfile(os.path.join(config_root, "common", "Options.py"))
@@ -158,8 +159,12 @@ else:
 
 	cmdLine = executable[len(executable) - 1] + " " + options.options + " <" + options.input
 
-options.detailed = True
-options.l2cache = True
+if options.simple == True:
+    options.detailed = False
+    options.l2cache = False
+else:
+    options.detailed = True
+    options.l2cache = True
 
  #options.stats-file = cmdLine
 print options
@@ -186,7 +191,7 @@ if options.detailed:
 
 (CPUClass, test_mem_mode, FutureClass) = Simulation.setCPUClass(options)
 
-CPUClass.clock = '2GHz'
+CPUClass.clock = '3GHz'
 
 np = options.num_cpus
 
@@ -201,10 +206,10 @@ system.physmem.port = system.membus.port
 
 for i in xrange(np):
     if options.caches:
-        system.cpu[i].addPrivateSplitL1Caches(L1Cache(size='32kB'),
-                                              L1Cache(size='64kB'))
+        system.cpu[i].addPrivateSplitL1Caches(L1Cache(size='64kB', assoc=2),
+                                              L1Cache(size='64kB', assoc=2))
     if options.l2cache:
-        system.l2 = L2Cache(size='2MB')
+        system.l2 = L2Cache(size='1MB', assoc=16)
         system.tol2bus = Bus()
         system.l2.cpu_side = system.tol2bus.port
         system.l2.mem_side = system.membus.port

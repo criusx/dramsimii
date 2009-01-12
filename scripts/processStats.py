@@ -5,7 +5,6 @@ import gzip
 import sys
 import os
 import string
-import subprocess
 from threading import Thread
 import Queue
 import tempfile
@@ -14,6 +13,7 @@ import math
 import bz2
 import re
 from subprocess import Popen, PIPE, STDOUT
+from array import array
 
 #globals
 workerThreads = 3
@@ -53,7 +53,7 @@ class WeightedAverage:
 
 class RingBuffer:
     def __init__(self, size):
-        self.data = [0.0 for i in xrange(size)]
+        self.data = array('f',[0.0 for i in xrange(size)])
 
     def append(self, x):
         self.data.pop(0)
@@ -73,9 +73,10 @@ def processPower(filename):
     tempPath = tempfile.mkdtemp(prefix="processStats")
 
     # setup the script headers
-    scripts = [terminal + '''
+    scripts = ['''
+    %s
     unset border
-    set key outside center top horizontal reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
+    set key outside center top horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
     set autoscale xfixmin
     set autoscale xfixmax
     set yrange [0:*] noreverse nowriteback
@@ -91,7 +92,7 @@ def processPower(filename):
     set style fill  solid 1.00 noborder
     set style data histograms
     set style histogram rowstacked title offset 0,0,0
-    ''','''
+    ''' % terminal,'''
     set size 1.0, 0.27
     set origin 0.0, 0.0
     set autoscale xfixmin
@@ -100,7 +101,7 @@ def processPower(filename):
     unset title
     set ytics out
     set xtics out
-    set key outside center bottom horizontal reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
+    set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
     set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
     set xlabel "Time (s)" font "VeraMono,12"
 
@@ -113,10 +114,12 @@ def processPower(filename):
     writing = 0
     p = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
 
+    # list of arrays
     values = []
-    averageValues = []
-    instantValues = []
-    windowValues = []
+    averageValues = array('f')
+    instantValues = array('f')
+    windowValues = array('f')
+    times = array('f')
     powerWindow = RingBuffer(IPCWindow)
     totalPower = 0.0
     epochPower = 0.0
@@ -137,14 +140,16 @@ def processPower(filename):
         splitter = re.compile('([\[\]])')
         splitter2 = re.compile(' ')
 
-        for line in compressedstream:
+        line = compressedstream.readline()
+
+        while line:
             if line[0] == '-':
               # normal lines
                 if line[1] == 'P':
                     startVal = line.find("{")
                     if startVal > 0:
                         endVal = line.find("}")
-                        lineValue = line[startVal + 1:endVal]
+                        lineValue = float(line[startVal + 1:endVal])
                         values[writing].append(lineValue)
 
                         writing = (writing + 1) % (valuesPerEpoch)
@@ -153,11 +158,10 @@ def processPower(filename):
                         totalPower += thisPower
                         if writing == 0:
                             epochNumber += 1
-                            currentTime = epochNumber * epochTime
-                            averageValues.append("%f %f" % (currentTime, totalPower / epochNumber))
-                            instantValues.append("%f %f" % (currentTime, epochPower))
+                            averageValues.append(totalPower / epochNumber)
+                            instantValues.append(epochPower)
                             powerWindow.append(epochPower)
-                            windowValues.append("%f %f" % (currentTime, powerWindow.average()))
+                            windowValues.append(powerWindow.average())
                             epochPower = 0.0
 
                 elif line.startswith('----Epoch'):
@@ -194,27 +198,35 @@ def processPower(filename):
                     # plus the RD and WR values
                     valuesPerEpoch = channels * (ranks + 2)
                     for i in range(valuesPerEpoch):
-                        values.append([])
+                        values.append(array('f'))
+            line = compressedstream.readline()
     except IOError, strerror:
         print "I/O error", strerror
     except OSError, strerror:
         print "OS error", strerror
+    except IndexError, strerror:
+        print "IndexError",strerror
 
     for u in values:
         for v in u:
-            p.stdin.write("%s\n" % v)
+            p.stdin.write("%f\n" % v)
         p.stdin.write("e\n")
 
     p.stdin.write(scripts[1])
 
+    epochNumber = 0
     for u in averageValues:
-        p.stdin.write("%s\n" % u)
+        p.stdin.write("%f %f\n" % (epochNumber * epochTime, u))
+        epochNumber += 1
     p.stdin.write("e\n")
+    epochNumber = 0
     for u in instantValues:
-        p.stdin.write("%s\n" % u)
+        p.stdin.write("%f %f\n" % (epochNumber * epochTime, u))
+        epochNumber += 1
     p.stdin.write("e\n")
-    for u in windowValues:
-        p.stdin.write("%s\n" % u)
+
+    for i in range(0,len(windowValues)):
+        p.stdin.write("%f %f\n" % (max(i - IPCWindow / 2.0, i / 2.0) * epochTime, windowValues[i]))
     p.stdin.write("e\n")
 
     p.stdin.write("unset multiplot\nunset output\nexit\n")
@@ -291,9 +303,9 @@ def processStats(filename):
     set style histogram rowstacked title offset 0,0,0
     set output "bandwidth.''' + extension + '''"
     set multiplot
-    set size 1.0, 0.75
-    set origin 0.0, 0.25
-    set xlabel "Time (epochs)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    unset xtics
+    set size 1.0, 0.66
+    set origin 0.0, 0.33
     set ylabel "Bandwidth (bytes per second)"
     set title "System Bandwidth\\n%s"  offset character 0, -1, 0 font "" norotate
     plot '-' using 2 title "Read Bytes", '-' using 2 title "Write Bytes", '-' using 1:2 title "Average Bandwidth" with lines linetype 1001
@@ -337,16 +349,53 @@ def processStats(filename):
     set style fill solid 1.00 noborder
     plot '-' using 1:2 title "Latency" with impulses, '-' using 1:2 title "Cumulative Average Latency" with lines lw 1.25, '-' using 1:2 title "Moving Average" with lines lw 1.25
     '''
-
     smallIPCGraph = basicSetup + '''
-    set size 1.0, 0.25
+    set size 1.0, 0.35
     set origin 0.0, 0.0
     set yrange [0 : *] noreverse nowriteback
     set xlabel "Time (s)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "IPC"
+    set format y "%-6f"
     set title "IPC vs. Time"  offset character 0, -1, 0 font "" norotate
     set style fill solid 1.00 noborder
     plot '-' using 1:2 title "IPC" with impulses, '-' using 1:2 title "Cumulative Average IPC" with lines, '-' using 1:2 title "Moving Average IPC" with lines
+    '''
+    cacheGraphA = '''
+    %s
+    %s
+    set output "cacheData.%s"
+    set y2tics
+    set format x
+    set yrange [0 : 1] noreverse nowriteback
+    set multiplot
+    set size 1.0, 0.333
+    set origin 0.0, 0.666
+    unset xlabel
+    set ylabel "Miss Rate"
+    set y2label "Access Count"
+    set title "Miss Rate of L1 ICache\\n%s"  offset character 0, -1, 0 font "" norotate
+    plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
+    ''' % (terminal, basicSetup, extension, "%s")
+
+    cacheGraphB = '''
+    set size 1.0, 0.333
+    set origin 0.0, 0.333
+    set yrange [0 : *] noreverse nowriteback
+    unset xlabel
+    set ylabel "Miss Rate"
+    set y2label "Access Count"
+    set title "Miss Rate of L1 DCache"  offset character 0, -1, 0 font "" norotate
+    plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
+    '''
+    cacheGraphC = '''
+    set size 1.0, 0.333
+    set origin 0.0, 0.0
+    set yrange [0 : *] noreverse nowriteback
+    set xlabel "Time (s)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set ylabel "Miss Rate"
+    set y2label "Access Count"
+    set title "Miss Rate of L2 Cache"  offset character 0, -1, 0 font "" norotate
+    plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
     '''
 
     commandTurnaroundCounter = 0
@@ -366,10 +415,10 @@ def processStats(filename):
     gnuplot = []
 
     averageTransactionLatency = WeightedAverage()
-    transactionLatency = []
-    movingTransactionLatency = []
+    transactionLatency = array('f')
+    movingTransactionLatency = array('f')
     movingTransactionBuffer = RingBuffer(IPCWindow)
-    cumulativeTransactionLatency = []
+    cumulativeTransactionLatency = array('f')
     totalTransactionLatency = 0.1
     transCounter = 0
 
@@ -378,22 +427,35 @@ def processStats(filename):
     hitTotal = 0.0
     hitMissBuffer = RingBuffer(IPCWindow)
     hitMissValues = []
-    hitMissValues.append([])
-    hitMissValues.append([])
-    hitMissValues.append([])
-    hitMissValues.append([])
+    hitMissValues.append(array('f'))
+    hitMissValues.append(array('f'))
+    hitMissValues.append(array('f'))
+    hitMissValues.append(array('f'))
+
+    iCacheHits = array('i')
+    iCacheMisses = array('i')
+    iCacheMissLatency = array('l')
+    dCacheHits = array('i')
+    dCacheMisses = array('i')
+    dCacheMissLatency = array('l')
+    l2CacheHits = array('i')
+    l2CacheMisses = array('i')
+    l2CacheMissLatency = array('l')
+    l2MshrHits = array('i')
+    l2MshrMisses = array('i')
+    l2MshrMissLatency = array('l')
 
     bandwidthCounter = 0
     bandwidthTotal = 0.0
     bandwidthValues = []
-    bandwidthValues.append([])
-    bandwidthValues.append([])
-    bandwidthValues.append([])
+    bandwidthValues.append(array('l'))
+    bandwidthValues.append(array('l'))
+    bandwidthValues.append(array('f'))
 
     ipcValues = []
-    ipcValues.append([])
-    ipcValues.append([])
-    ipcValues.append([])
+    ipcValues.append(array('f'))
+    ipcValues.append(array('f'))
+    ipcValues.append(array('f'))
     ipcBuffer = RingBuffer(IPCWindow)
     ipcTotal = 0.0
 
@@ -417,9 +479,11 @@ def processStats(filename):
             compressedstream = gzip.open(filename, 'rb')
         elif filename.endswith("bz2"):
             compressedstream = bz2.open(filename, 'rb')
+        else:
+            return
 
-        for line in compressedstream:
-
+        line = compressedstream.readline()
+        while line:
             if line[0] == '-':
                 if processPerEpochGraphs:
                     if writing == 1:
@@ -447,13 +511,12 @@ def processStats(filename):
 
                 if writing == 1:
                         # append the values for this time
-                        transactionLatency.append("%f %f" % (transCounter * epochTime, averageTransactionLatency.average()))
+                        transactionLatency.append(averageTransactionLatency.average())
                         # append the moving average
                         movingTransactionBuffer.append(averageTransactionLatency.average())
-                        movingTransactionLatency.append("%f %f" % (transCounter * epochTime, movingTransactionBuffer.average()))
+                        movingTransactionLatency.append(movingTransactionBuffer.average())
                         totalTransactionLatency += averageTransactionLatency.average()
-                        cumulativeTransactionLatency.append("%f %f" % (transCounter * epochTime,totalTransactionLatency / transCounter))
-                        #print averageTransactionLatency.average()
+                        cumulativeTransactionLatency.append(totalTransactionLatency / transCounter)
 
                 writing = 0
                 #line = line.strip()
@@ -470,6 +533,42 @@ def processStats(filename):
                             gnuplot.append(p)
                         started = True
                         print commandLine
+                elif line.startswith("----M5 Stat:"):
+
+                    splitLine = line.split()
+                    #print splitLine[0], splitLine[1], splitLine[2], splitLine[3]
+                    try:
+                        value = int(splitLine[3])
+                    except ValueError:
+                        value = long(float(splitLine[3]))
+
+                    if splitLine[2] == "system.cpu.dcache.overall_hits":
+                        dCacheHits.append(value)
+                    elif splitLine[2] == "system.cpu.dcache.overall_miss_latency":
+                        dCacheMissLatency.append(value)
+                    elif splitLine[2] == "system.cpu.dcache.overall_misses":
+                        dCacheMisses.append(value)
+                    elif splitLine[2] == "system.cpu.icache.overall_hits":
+                        iCacheHits.append(value)
+                    elif splitLine[2] == "system.cpu.icache.overall_miss_latency":
+                        iCacheMissLatency.append(value)
+                    elif splitLine[2] == "system.cpu.icache.overall_misses":
+                        iCacheMisses.append(value)
+                    elif splitLine[2] == "system.l2.overall_hits":
+                        l2CacheHits.append(value)
+                    elif splitLine[2] == "system.l2.overall_miss_latency":
+                        l2CacheMissLatency.append(value)
+                    elif splitLine[2] == "system.l2.overall_misses":
+                        l2CacheMisses.append(value)
+                    elif splitLine[2] == "system.l2.overall_mshr_hits":
+                        l2MshrHits.append(value)
+                    elif splitLine[2] == "system.l2.overall_mshr_miss_latency":
+                        l2MshrMissLatency.append(value)
+                    elif splitLine[2] == "system.l2.overall_mshr_misses":
+                        l2MshrMisses.append(value)
+                    else:
+                        print "missed something: %s" % splitLine[2]
+
                 elif line[4] == 'E':
                     epochTime = float(line.split()[1])
                 else:
@@ -531,38 +630,37 @@ def processStats(filename):
 
                 elif writing == 7:
                     newLine = line.strip().split()
-                    bandwidthValues[0].append("%f %s" % (bandwidthCounter * epochTime,newLine[0]))
-                    bandwidthValues[1].append("%f %s" % (bandwidthCounter * epochTime,newLine[1]))
+                    bandwidthValues[0].append(long(float(newLine[0])))
+                    bandwidthValues[1].append(long(float(newLine[1])))
                     bandwidthTotal += float(newLine[0]) + float(newLine[1])
                     bandwidthCounter += 1
-                    bandwidthValues[2].append("%f %f" % (bandwidthCounter * epochTime,bandwidthTotal / bandwidthCounter))
+                    bandwidthValues[2].append(bandwidthTotal / bandwidthCounter)
 
                 elif writing == 9:
                     if (ipcLinesWritten < 1):
                         # append the values for this time
-                        ipcValues[0].append("%f %s" % (ipcCounter * epochTime,line))
-                        # append the moving average
                         currentValue = float(line)
+                        ipcValues[0].append(currentValue)
+                        # append the moving average
                         ipcTotal += currentValue
                         ipcCounter += 1
-                        ipcValues[1].append("%f %f" % (ipcCounter * epochTime, ipcTotal / ipcCounter))
+                        ipcValues[1].append(ipcTotal / ipcCounter)
                         ipcBuffer.append(currentValue)
-                        if ipcCounter > (IPCWindow / 2):
-                            ipcValues[2].append("%f %f" % ((ipcCounter - IPCWindow / 2)  * epochTime, ipcBuffer.average()))
+                        ipcValues[2].append(ipcBuffer.average())
                     ipcLinesWritten += 1
 
                 elif writing == 10:
                     newLine = line.strip().split()
                     hitCount = max(float(newLine[0]),1)
                     missCount = max(float(newLine[1]),1)
-                    hitMissValues[0].append("%f %f" % (hitMissCounter * epochTime, missCount / (hitCount + missCount)))
-                    hitMissValues[1].append("%f %f" % (hitMissCounter * epochTime, hitCount / (hitCount + missCount)))
+                    hitMissValues[0].append(missCount / (hitCount + missCount))
+                    hitMissValues[1].append(hitCount / (hitCount + missCount))
                     hitMissCounter += 1
                     hitMissTotal += hitCount + missCount
                     hitTotal += hitCount
-                    hitMissValues[2].append("%f %f" % (hitMissCounter * epochTime , hitTotal / hitMissTotal))
+                    hitMissValues[2].append(hitTotal / hitMissTotal)
                     hitMissBuffer.append(hitCount / (hitCount + missCount))
-                    hitMissValues[3].append("%f %f" % (hitMissCounter * epochTime, hitMissBuffer.average()))
+                    hitMissValues[3].append(hitMissBuffer.average())
 
                 if processPerEpochGraphs:
                     if writing == 1:
@@ -575,13 +673,16 @@ def processStats(filename):
                         splitLine = line.split()
                         gnuplot[5].stdin.write("%d %d\n" % (int(splitLine[0], 16) - 4294967296, (float(splitLine[1]) * float(splitLine[2]))))
 
+            line = compressedstream.readline()
 
         compressedstream.close()
 
     except IOError, strerror:
-        print "I/O error", strerror
+        print "I/O error", strerror, "\nThis archive is probably truncated."
     except OSError, strerror:
         print "OS error", strerror
+    except IndexError, strerror:
+        print "IndexError",strerror
 
     if started == True:
         # close any files being written
@@ -594,56 +695,113 @@ def processStats(filename):
         elif writing == 8:
             gnuplot[5].stdin.write("e\nunset output\n")
 
+        # make the bandwidth graph
         for t in bandwidthValues:
-            for u in t:
-                gnuplot[4].stdin.write("%s\n" % u)
+            for i in range(0, len(t)):
+                 gnuplot[4].stdin.write("%f %f\n" % (i * epochTime, t[i]))
             gnuplot[4].stdin.write("e\n")
 
         gnuplot[4].stdin.write(smallIPCGraph)
 
-        for t in ipcValues:
-            for u in t:
-                gnuplot[6].stdin.write("%s\n" % u)
-            gnuplot[6].stdin.write("e\n")
+        # make the ipc graph
+        minRange = min(len(ipcValues[0]),len(ipcValues[1]),len(ipcValues[2]))
 
-        gnuplot[6].stdin.write("unset multiplot\nunset output\n")
+        for i in range(0,minRange):
+            gnuplot[4].stdin.write("%f %f\n" % (epochTime * i, ipcValues[0][i]))
+        gnuplot[4].stdin.write("e\n")
 
-        for t in ipcValues:
-            for u in t:
-                gnuplot[6].stdin.write("%s\n" % u)
-            gnuplot[6].stdin.write("e\n")
+        for i in range(0,minRange):
+            gnuplot[4].stdin.write("%f %f\n" % (epochTime * i, ipcValues[1][i]))
+        gnuplot[4].stdin.write("e\n")
+
+        for i in range(0,minRange):
+            gnuplot[4].stdin.write("%f %f\n" % (epochTime * max(i - IPCWindow / 2.0, i / 2.0), ipcValues[2][i]))
+        gnuplot[4].stdin.write("e\n")
+
+        gnuplot[4].stdin.write("unset multiplot\nunset output\n")
+
+        # make the cache graph
+        gnuplot[4].stdin.write(cacheGraphA % commandLine)
+
+        for i in range(0, min(len(iCacheMisses),len(iCacheHits))):
+            gnuplot[4].stdin.write("%f %f\n" % (i * epochTime, 1.0 * (iCacheMisses[i] + iCacheHits[i]) ))
+        gnuplot[4].stdin.write("e\n")
+
+        for i in range(0, min(len(iCacheMisses),len(iCacheHits))):
+            gnuplot[4].stdin.write("%f %f\n" % (i * epochTime, iCacheMisses[i] / (iCacheMisses[i] + iCacheHits[i] + 1.0)))
+        gnuplot[4].stdin.write("e\n")
+
+        gnuplot[4].stdin.write(cacheGraphB)
+        for i in range(0, min(len(dCacheMisses),len(dCacheHits))):
+            gnuplot[4].stdin.write("%f %f\n" % (i * epochTime, 1.0 * (dCacheMisses[i] + dCacheHits[i])))
+        gnuplot[4].stdin.write("e\n")
+
+        for i in range(0, min(len(dCacheMisses),len(dCacheHits))):
+            gnuplot[4].stdin.write("%f %f\n" % (i * epochTime, dCacheMisses[i] / (dCacheMisses[i] + dCacheHits[i] + 1.0)))
+        gnuplot[4].stdin.write("e\n")
+
+        gnuplot[4].stdin.write(cacheGraphC)
+
+        for i in range(0, min(len(l2CacheMisses),len(l2CacheHits))):
+            gnuplot[4].stdin.write("%f %f\n" % (i * epochTime, 1.0 * (l2CacheMisses[i] + l2CacheHits[i]) ))
+        gnuplot[4].stdin.write("e\n")
+
+
+        for i in range(0, min(len(l2CacheMisses),len(l2CacheHits))):
+            gnuplot[4].stdin.write("%f %f\n" % (i * epochTime, l2CacheMisses[i] / (l2CacheMisses[i] + l2CacheHits[i] + 1.0)))
+        gnuplot[4].stdin.write("e\n")
+
+        gnuplot[4].stdin.write("unset multiplot\nunset output\n")
+
+        # make the ipc graph
+        minRange = min(len(ipcValues[0]),len(ipcValues[1]),len(ipcValues[2]))
+
+        for i in range(0,minRange):
+            gnuplot[6].stdin.write("%f %f\n" % (epochTime * i, ipcValues[0][i]))
+        gnuplot[6].stdin.write("e\n")
+
+        for i in range(0,minRange):
+            gnuplot[6].stdin.write("%f %f\n" % (epochTime * i, ipcValues[1][i]))
+        gnuplot[6].stdin.write("e\n")
+
+        for i in range(0,minRange):
+            gnuplot[6].stdin.write("%f %f\n" % (epochTime * max(i - IPCWindow / 2.0, i / 2.0), ipcValues[2][i]))
+        gnuplot[6].stdin.write("e\n")
 
         gnuplot[6].stdin.write(averageTransactionLatencyScript % commandLine)
 
-        for u in transactionLatency:
-            gnuplot[6].stdin.write("%s\n" % u)
+        # make the transaction latency graph
+        minRange = min(len(transactionLatency),len(cumulativeTransactionLatency),len(movingTransactionLatency))
+
+        for i in range(0,minRange):
+            gnuplot[6].stdin.write("%f %f\n" % (epochTime * i, transactionLatency[i]))
         gnuplot[6].stdin.write("e\n")
 
-        for u in movingTransactionLatency:
-            gnuplot[6].stdin.write("%s\n" % u)
+        for i in range(0,minRange):
+            gnuplot[6].stdin.write("%f %f\n" % (epochTime * i, cumulativeTransactionLatency[i]))
         gnuplot[6].stdin.write("e\n")
 
-        for u in cumulativeTransactionLatency:
-            gnuplot[6].stdin.write("%s\n" % u)
+        for i in range(0,minRange):
+            gnuplot[6].stdin.write("%f %f\n" % (epochTime * max(i - IPCWindow / 2.0, i / 2.0), movingTransactionLatency[i]))
         gnuplot[6].stdin.write("e\n")
 
         gnuplot[6].stdin.write("unset multiplot\nunset output\n")
 
+        # make the hit-miss graph
+        minRange = min(len(hitMissValues[0]),len(hitMissValues[1]),len(hitMissValues[2]),len(hitMissValues[3]))
 
-        #for u in hitMissValues:
-        #gnuplot[7].stdin.write("\n".join(u) + "\ne\n")
-        for t in hitMissValues[1]:
-            gnuplot[7].stdin.write("%s\n" % t)
-
-        gnuplot[7].stdin.write("e\n")
-
-        for t in hitMissValues[2]:
-            gnuplot[7].stdin.write("%s\n" % t)
+        for i in range(0, minRange):
+            gnuplot[7].stdin.write("%f %f\n" % (epochTime * i, hitMissValues[1][i]))
 
         gnuplot[7].stdin.write("e\n")
 
-        for t in hitMissValues[3]:
-            gnuplot[7].stdin.write("%s\n" % t)
+        for i in range(0, minRange):
+            gnuplot[7].stdin.write("%f %f\n" % (epochTime * i, hitMissValues[2][i]))
+
+        gnuplot[7].stdin.write("e\n")
+
+        for i in range(0, minRange):
+            gnuplot[7].stdin.write("%f %f\n" % (epochTime * max(i - IPCWindow / 2.0, i / 2.0), hitMissValues[3][i]))
 
         gnuplot[7].stdin.write("e\n")
 
@@ -656,9 +814,11 @@ def processStats(filename):
         fileList.append(os.path.join(tempPath,"bandwidth." + extension))
         fileList.append(os.path.join(tempPath,"averageIPCandLatency." + extension))
         fileList.append(os.path.join(tempPath,"rowHitRate." + extension))
+        fileList.append(os.path.join(tempPath,"cacheData." + extension))
+
 
         for b in gnuplot:
-            b.stdin.write('exit\n')
+            b.stdin.write('\nexit\n')
             b.wait()
 
     # make a big file of them all
@@ -694,7 +854,6 @@ def worker():
         workQueue.task_done()
 
 def main():
-
     for i in range(workerThreads):
         t = Thread(target=worker)
         t.setDaemon(True)
@@ -710,19 +869,19 @@ def main():
 if __name__ == "__main__":
      os.environ["GDFONTPATH"] = "/usr/share/fonts/truetype/ttf-bitstream-vera"
 
-     #main()
+     main()
      # This is the main function for profiling
      # We've renamed our original main() above to real_main()
-     import cProfile, pstats, StringIO
-     prof = cProfile.Profile()
-     prof = prof.runctx("main()", globals(), locals())
-     stream = StringIO.StringIO()
-     stats = pstats.Stats(prof, stream=stream)
-     stats.sort_stats("time")  # Or cumulative
-     stats.print_stats()  # 80 = how many to print
+     #import cProfile, pstats, StringIO
+     #prof = cProfile.Profile()
+     #prof = prof.runctx("main()", globals(), locals())
+     #stream = StringIO.StringIO()
+     #stats = pstats.Stats(prof, stream=stream)
+     #stats.sort_stats("time")  # Or cumulative
+     #stats.print_stats()  # 80 = how many to print
      # The rest is optional.
-     stats.print_callees()
-     stats.print_callers()
+     #stats.print_callees()
+     #stats.print_callers()
      #print stream.getvalue()
      #logging.info("Profile data:\n%s", stream.getvalue())
 

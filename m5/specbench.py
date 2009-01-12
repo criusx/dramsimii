@@ -99,9 +99,10 @@ namd.cmd = [namd.executable] + ['--input', input, '--iterations', '1', '--output
 #445.gobmk
 gobmk = LiveProcess()
 gobmk.executable = os.path.join(binary_dir, '445.gobmk/exe/gobmk_base' + suffix)
-stdin = os.path.join(data_dir, '445.gobmk/data/ref/input/13x13.tst')
+stdin = os.path.join(data_dir, '445.gobmk/data/test/input/connection.tst')
 gobmk.cmd = [gobmk.executable] + ['--quiet', '--mode', 'gtp']
 gobmk.input = stdin
+gobmk.cwd = os.path.join(data_dir, "445.gobmk/data/all/input")
 #gobmk.output = 'capture.out'
 
 #447.dealII

@@ -21,6 +21,7 @@
 #include "base/stats/statdb.hh"
 #include "base/stats/types.hh"
 #include "sim/async.hh"
+#include "base/stats/text.hh"
 #endif
 #include <iomanip>
 #include <iostream>
@@ -185,18 +186,32 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			}
 			//cerr << ((Stats::FormulaData *)data)->str();
 		}
-		if ((data->name.find("cache") != string::npos))
+		if ((data->name.find("dcache.overall_hits") != string::npos) ||
+			(data->name.find("dcache.overall_misses") != string::npos) ||
+			(data->name.find("dcache.overall_miss_latency") != string::npos) ||
+			(data->name.find("icache.overall_hits") != string::npos) ||
+			(data->name.find("icache.overall_misses") != string::npos) ||
+			(data->name.find("icache.overall_miss_latency") != string::npos) ||
+			(data->name.find("l2.overall_hits") != string::npos) ||
+			(data->name.find("l2.overall_misses") != string::npos) ||
+			(data->name.find("l2.overall_mshr_hits") != string::npos) ||
+			(data->name.find("l2.overall_mshr_misses") != string::npos) ||
+			(data->name.find("l2.overall_mshr_miss_latency") != string::npos) ||
+			(data->name.find("l2.overall_miss_latency") != string::npos) )
+			//|| (data->name.find("l2") != string::npos))
 			//&& ((data->name.find("hit") != string::npos) || (data->name.find("miss") != string::npos)))
 		{
-			if (typeid(data) == typeid(Stats::FormulaStatData<Stats::FormulaBase> *))
+			//std::cerr << data->name << endl;
+			//if (typeid(*i) == typeid(Stats::FormulaStatData<Stats::FormulaBase> *) ||typeid(*i) == typeid(Stats::Formula *))
 			{
-				os << "----M5 Stat:" << data->name << " ";
+				os << "----M5 Stat: " << data->name << " ";
 
 				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().begin();
 				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().end();
 				while (start != end)
 				{
-					os << *start << " " << endl;
+					//std::cerr << *start << " ";
+					os << *start << " ";
 					start++;
 				}
 				os << "----" << endl;
@@ -219,7 +234,9 @@ void Statistics::clear()
 	rowHits = rowMisses = 0;
 	readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
 #ifdef M5
+	//async_statdump = 
 	async_event = async_statreset = true;
+	
 #endif // M5DEBUG
 }
 
