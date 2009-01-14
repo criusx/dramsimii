@@ -397,12 +397,34 @@ def processStats(filename):
     set title "Miss Rate of L2 Cache"  offset character 0, -1, 0 font "" norotate
     plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
     '''
+    pcVsLatencyGraph = terminal + basicSetup + '''
+    set yrange [1 : *] noreverse nowriteback
+    set logscale y
+    set xlabel "PC Value" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set ylabel "Total Latency (cycles)"
+    set title "Total Latency Due to Reads vs. PC Value\\n%s"  offset character 0, -1, 0 font "" norotate
+    #set style fill solid 1.00 border 0
+    set format x "0x1%%x"
+    set style fill solid 1.00 noborder
+    set output "latencyVsPc.%s"
+    plot '-' using 1:2:(1) t "Total Latency" with boxes
+    '''
+    transactionGraph = terminal + basicSetup + '''
+    set yrange [1 : *] noreverse nowriteback
+    set logscale y
+    set format x
+    set style fill solid 1.00 noborder
+    set xlabel "Execution Time (cycles)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set ylabel "Number of Transactions with this Execution Time"
+    set title "Total Transaction Latency\\n%s"  offset character 0, -1, 0 font "" norotate
+    set output "transactionLatencyDistribution.%s"
+    plot '-' using 1:2:(1) t "Total Latency" with boxes
+    '''
 
     commandTurnaroundCounter = 0
     cmdCounter = 0
     workingSetCounter = 0
     rwTotalCounter = 0
-    latencyVsPC = 0
     ipcCounter = 0
 
     # what type we are writing to
@@ -414,12 +436,16 @@ def processStats(filename):
     # one instance of gnuplot per script that needs this
     gnuplot = []
 
+    latencyVsPC = 0
+    latencyVsPCDict = {}
+
     averageTransactionLatency = WeightedAverage()
     transactionLatency = array('f')
     movingTransactionLatency = array('f')
     movingTransactionBuffer = RingBuffer(IPCWindow)
     cumulativeTransactionLatency = array('f')
     totalTransactionLatency = 0.1
+    distTransactionLatency = {}
     transCounter = 0
 
     hitMissCounter = 0
@@ -590,7 +616,7 @@ def processStats(filename):
                             gnuplot[1].stdin.write("set output './%s'\nplot '-' using 1:2:(1)  with boxes\n" % outFile)
                             cmdCounter += 1
                             fileList.append(os.path.join(tempPath,outFile))
-                            writing = 4
+                        writing = 4
                         #if cmdCounter > 50:
                         #    break
                     #elif line == '----R W Total----':
@@ -601,7 +627,7 @@ def processStats(filename):
                             gnuplot[2].stdin.write("set output './%s'\nplot '-' using 1:2:(1)   with boxes\n" % outFile)
                             commandTurnaroundCounter += 1
                             fileList.append(os.path.join(tempPath,outFile))
-                            writing = 6
+                        writing = 6
                     elif line[4] == 'B':
                         writing = 7
                     elif line[4] == 'A':
@@ -610,24 +636,34 @@ def processStats(filename):
                             gnuplot[5].stdin.write("set output './%s'\nplot '-' using 1:2:(1)   with boxes\n" % outFile)
                             latencyVsPC += 1
                             fileList.append(os.path.join(tempPath,outFile))
-                            writing = 8
+                        writing = 8
                     elif line[4] == 'I':
                         ipcLinesWritten = 0
                         writing = 9
                     elif line[4] == 'R':
                         writing = 10
+
+
             # data in this section
             else:
                 # transaction latency
                 if writing == 1:
                     splitLine = line.split()
-                    averageTransactionLatency.add(int(splitLine[1]), int(splitLine[0]))
+                    latency = int(splitLine[1])
+                    quantity = int(splitLine[0])
+                    averageTransactionLatency.add(latency, quantity)
+                    try:
+                        distTransactionLatency[latency] += quantity
+                    except KeyError:
+                        distTransactionLatency[latency] = quantity
 
+                # working set
                 elif writing == 2:
                     if len(line) > 1:
                         gnuplot[3].stdin.write("%f %s" % (workingSetCounter * epochTime,line))
                         workingSetCounter += 1
 
+                # bandwidth
                 elif writing == 7:
                     newLine = line.strip().split()
                     bandwidthValues[0].append(long(float(newLine[0])))
@@ -635,6 +671,16 @@ def processStats(filename):
                     bandwidthTotal += float(newLine[0]) + float(newLine[1])
                     bandwidthCounter += 1
                     bandwidthValues[2].append(bandwidthTotal / bandwidthCounter)
+
+                # PC vs latency
+                elif writing == 8:
+                    splitLine = line.split()
+                    PC = int(splitLine[0],16) - 4294967296
+                    numberAccesses = float(splitLine[1])
+                    try:
+                        latencyVsPCDict[PC] += numberAccesses
+                    except KeyError:
+                        latencyVsPCDict[PC] = numberAccesses
 
                 elif writing == 9:
                     if (ipcLinesWritten < 1):
@@ -673,6 +719,8 @@ def processStats(filename):
                         splitLine = line.split()
                         gnuplot[5].stdin.write("%d %d\n" % (int(splitLine[0], 16) - 4294967296, (float(splitLine[1]) * float(splitLine[2]))))
 
+            #if workingSetCounter > 500:
+            #    break
             line = compressedstream.readline()
 
         compressedstream.close()
@@ -694,6 +742,22 @@ def processStats(filename):
             gnuplot[2].stdin.write("e\nunset output\n")
         elif writing == 8:
             gnuplot[5].stdin.write("e\nunset output\n")
+
+        # make the PC vs latency graph
+        gnuplot[0].stdin.write(pcVsLatencyGraph % (commandLine, extension))
+
+        for u in latencyVsPCDict:
+            gnuplot[0].stdin.write("%d %f\n" % (u, latencyVsPCDict[u]))
+
+        gnuplot[0].stdin.write("e\nunset output\n")
+
+        # make the transaction latency graph
+        gnuplot[0].stdin.write(transactionGraph % (commandLine, extension))
+
+        for u in distTransactionLatency:
+            gnuplot[0].stdin.write("%d %f\n" % (u, distTransactionLatency[u]))
+
+        gnuplot[0].stdin.write("e\nunset output\n")
 
         # make the bandwidth graph
         for t in bandwidthValues:
@@ -815,7 +879,8 @@ def processStats(filename):
         fileList.append(os.path.join(tempPath,"averageIPCandLatency." + extension))
         fileList.append(os.path.join(tempPath,"rowHitRate." + extension))
         fileList.append(os.path.join(tempPath,"cacheData." + extension))
-
+        fileList.append(os.path.join(tempPath,"latencyVsPc." + extension))
+        fileList.append(os.path.join(tempPath,"transactionLatencyDistribution." + extension))
 
         for b in gnuplot:
             b.stdin.write('\nexit\n')

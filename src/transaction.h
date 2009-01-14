@@ -71,6 +71,7 @@ namespace DRAMsimII
 		
 		// constructors
 		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, PHYSICAL_ADDRESS PC, int threadNumber, const unsigned originalTrans);		
+		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const unsigned originalTrans);
 		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, PHYSICAL_ADDRESS PC, int threadNumber, const unsigned originalTrans);
 		explicit Transaction(const Transaction &rhs);
 		explicit Transaction();

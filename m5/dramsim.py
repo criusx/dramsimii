@@ -40,6 +40,15 @@ execfile(os.path.join(config_root, "common", "Options.py"))
 
 (options, args) = parser.parse_args()
 
+if options.simple == True:
+    options.detailed = False
+    options.l2cache = False
+    options.caches = False
+else:
+    options.detailed = True
+    options.l2cache = True
+    options.caches = True
+
 if args:
     print "Error: script doesn't take any positional arguments"
     sys.exit(1)
@@ -159,12 +168,6 @@ else:
 
 	cmdLine = executable[len(executable) - 1] + " " + options.options + " <" + options.input
 
-if options.simple == True:
-    options.detailed = False
-    options.l2cache = False
-else:
-    options.detailed = True
-    options.l2cache = True
 
  #options.stats-file = cmdLine
 print options

@@ -43,9 +43,9 @@ originalTransaction(UINT_MAX)
 {}
 
 
-Transaction::Transaction(const TransactionType type, const tick arrivalTime,const unsigned burstLength, const Address &address, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
+Transaction::Transaction(const TransactionType transType, const tick arrivalTime,const unsigned burstLength, const Address &address, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
 eventNumber(eventCounter++),
-type(type),
+type(transType),
 status(0),
 length(burstLength),
 arrivalTime(arrivalTime),
@@ -58,6 +58,20 @@ addr(address),
 originalTransaction(originalTrans)
 {}
 
+Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const unsigned originalTrans):
+eventNumber(eventCounter++),
+type(transType),
+status(0),
+length(burstLength),
+arrivalTime(arrivalTime),
+enqueueTime(0xcdcdcdcd),
+completionTime(0xcdcdcdcd),
+decodeTime(0xcdcdcdcd),
+PC(0),
+threadNum(0),
+addr(address),
+originalTransaction(originalTrans)
+{}
 
 /// copy constructor to duplicate a transaction
 Transaction::Transaction(const Transaction &rs):

@@ -346,6 +346,7 @@ void System::updateSystemTime()
 //////////////////////////////////////////////////////////////////////
 bool System::enqueue(Transaction *currentTransaction)
 {
+	assert(currentTransaction->getType() != AUTO_REFRESH_TRANSACTION);
 	// map the PA of this transaction to this system, assuming the transaction is within range
 	// convert addresses of transactions that are not refreshes
 	if (currentTransaction->getAddresses().getPhysicalAddress() != PHYSICAL_ADDRESS_MAX)
