@@ -37,7 +37,6 @@ class WeightedAverage:
         self.count = 0
 
     def add(self, count, value):
-        #print "val %d cnt %d" % ( value,count)
         self.total += count * value
         self.count += count
 
@@ -68,6 +67,10 @@ class RingBuffer:
         else:
             return 0.0
 
+    def finishAverage(self):
+        self.data.pop(0)
+        return self.average()
+
 def processPower(filename):
     # remember the temp directory
     tempPath = tempfile.mkdtemp(prefix="processStats")
@@ -88,9 +91,10 @@ def processPower(filename):
     set size 1.0, 0.75
     set origin 0.0, 0.25
     unset xtics
-    set boxwidth 1.00 relative
+    set boxwidth 0.95 relative
     set style fill  solid 1.00 noborder
     set style data histograms
+    #set style data filledcurves below x1
     set style histogram rowstacked title offset 0,0,0
     ''' % terminal,'''
     set size 1.0, 0.27
@@ -140,9 +144,10 @@ def processPower(filename):
         splitter = re.compile('([\[\]])')
         splitter2 = re.compile(' ')
 
-        line = compressedstream.readline()
+        #line = compressedstream.readline()
 
-        while line:
+        #while line:
+        for line in compressedstream:
             if line[0] == '-':
               # normal lines
                 if line[1] == 'P':
@@ -199,7 +204,7 @@ def processPower(filename):
                     valuesPerEpoch = channels * (ranks + 2)
                     for i in range(valuesPerEpoch):
                         values.append(array('f'))
-            line = compressedstream.readline()
+            #line = compressedstream.readline()
     except IOError, strerror:
         print "I/O error", strerror
     except OSError, strerror:
@@ -227,6 +232,8 @@ def processPower(filename):
 
     for i in range(0,len(windowValues)):
         p.stdin.write("%f %f\n" % (max(i - IPCWindow / 2.0, i / 2.0) * epochTime, windowValues[i]))
+    for i in range(len(windowValues),len(windowValues) + IPCWindow / 2):
+        p.stdin.write("%f %f\n" % (max(i - IPCWindow / 2.0, i / 2.0) * epochTime, powerWindow.finishAverage()))
     p.stdin.write("e\n")
 
     p.stdin.write("unset multiplot\nunset output\nexit\n")
@@ -300,6 +307,7 @@ def processStats(filename):
     set yrange [1 : *] noreverse nowriteback
     set style fill solid 1.00 noborder
     set style data histograms
+    #set style data impulses
     set style histogram rowstacked title offset 0,0,0
     set output "bandwidth.''' + extension + '''"
     set multiplot
@@ -498,7 +506,7 @@ def processStats(filename):
 
     # counter to keep track of how many lines are written to each file
     #linesWritten = 0
-    #print 'Generate graphs'
+    print 'Generate graphs'
 
     try:
         if filename.endswith("gz"):
@@ -508,8 +516,9 @@ def processStats(filename):
         else:
             return
 
-        line = compressedstream.readline()
-        while line:
+        #line = compressedstream.readline()
+        #while line:
+        for line in compressedstream:
             if line[0] == '-':
                 if processPerEpochGraphs:
                     if writing == 1:
@@ -685,7 +694,10 @@ def processStats(filename):
                 elif writing == 9:
                     if (ipcLinesWritten < 1):
                         # append the values for this time
-                        currentValue = float(line)
+                        if line == "nan":
+                            currentValue = 0.0
+                        else:
+                            currentValue = float(line)
                         ipcValues[0].append(currentValue)
                         # append the moving average
                         ipcTotal += currentValue
@@ -719,9 +731,9 @@ def processStats(filename):
                         splitLine = line.split()
                         gnuplot[5].stdin.write("%d %d\n" % (int(splitLine[0], 16) - 4294967296, (float(splitLine[1]) * float(splitLine[2]))))
 
-            #if workingSetCounter > 500:
-            #    break
-            line = compressedstream.readline()
+            if workingSetCounter > 5000:
+                break
+            #line = compressedstream.readline()
 
         compressedstream.close()
 
@@ -732,6 +744,7 @@ def processStats(filename):
     except IndexError, strerror:
         print "IndexError",strerror
 
+    print "b"
     if started == True:
         # close any files being written
         if writing == 1:
@@ -742,6 +755,12 @@ def processStats(filename):
             gnuplot[2].stdin.write("e\nunset output\n")
         elif writing == 8:
             gnuplot[5].stdin.write("e\nunset output\n")
+
+        # finish up the moving averages
+        for i in range(0, IPCWindow / 2):
+            movingTransactionLatency.append(movingTransactionBuffer.finishAverage())
+            ipcValues[2].append(ipcBuffer.finishAverage())
+            hitMissValues[3].append(hitMissBuffer.finishAverage())
 
         # make the PC vs latency graph
         gnuplot[0].stdin.write(pcVsLatencyGraph % (commandLine, extension))
@@ -778,7 +797,7 @@ def processStats(filename):
             gnuplot[4].stdin.write("%f %f\n" % (epochTime * i, ipcValues[1][i]))
         gnuplot[4].stdin.write("e\n")
 
-        for i in range(0,minRange):
+        for i in range(0,minRange + IPCWindow / 2):
             gnuplot[4].stdin.write("%f %f\n" % (epochTime * max(i - IPCWindow / 2.0, i / 2.0), ipcValues[2][i]))
         gnuplot[4].stdin.write("e\n")
 
@@ -828,7 +847,7 @@ def processStats(filename):
             gnuplot[6].stdin.write("%f %f\n" % (epochTime * i, ipcValues[1][i]))
         gnuplot[6].stdin.write("e\n")
 
-        for i in range(0,minRange):
+        for i in range(0,minRange + IPCWindow / 2):
             gnuplot[6].stdin.write("%f %f\n" % (epochTime * max(i - IPCWindow / 2.0, i / 2.0), ipcValues[2][i]))
         gnuplot[6].stdin.write("e\n")
 
@@ -845,7 +864,7 @@ def processStats(filename):
             gnuplot[6].stdin.write("%f %f\n" % (epochTime * i, cumulativeTransactionLatency[i]))
         gnuplot[6].stdin.write("e\n")
 
-        for i in range(0,minRange):
+        for i in range(0,minRange + IPCWindow / 2):
             gnuplot[6].stdin.write("%f %f\n" % (epochTime * max(i - IPCWindow / 2.0, i / 2.0), movingTransactionLatency[i]))
         gnuplot[6].stdin.write("e\n")
 
@@ -864,7 +883,7 @@ def processStats(filename):
 
         gnuplot[7].stdin.write("e\n")
 
-        for i in range(0, minRange):
+        for i in range(0, minRange + IPCWindow / 2):
             gnuplot[7].stdin.write("%f %f\n" % (epochTime * max(i - IPCWindow / 2.0, i / 2.0), hitMissValues[3][i]))
 
         gnuplot[7].stdin.write("e\n")
@@ -882,6 +901,7 @@ def processStats(filename):
         fileList.append(os.path.join(tempPath,"latencyVsPc." + extension))
         fileList.append(os.path.join(tempPath,"transactionLatencyDistribution." + extension))
 
+        print "c"
         for b in gnuplot:
             b.stdin.write('\nexit\n')
             b.wait()
@@ -911,12 +931,15 @@ workQueue = Queue.Queue()
 def worker():
     #while not workQueue.empty():
     while True:
-        item = workQueue.get()
-        if item.endswith("stats.gz") or item.endswith("stats.bz2"):
-            processStats(item)
-        elif item.endswith("power.gz") or item.endswith("power.bz2"):
-            processPower(item)
-        workQueue.task_done()
+        try:
+            item = workQueue.get()
+            if item.endswith("stats.gz") or item.endswith("stats.bz2"):
+                processStats(item)
+            elif item.endswith("power.gz") or item.endswith("power.bz2"):
+                processPower(item)
+            workQueue.task_done()
+        except str:
+            print str
 
 def main():
     for i in range(workerThreads):

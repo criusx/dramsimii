@@ -1,18 +1,18 @@
 # Copyright (C) 2008 University of Maryland.
 # This file is part of DRAMsimII.
-# 
+#
 # DRAMsimII is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # DRAMsimII is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Lesser General Public License
-# along with DRAMsimII.  If not, see <http:#www.gnu.org/licenses/>.
+# along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 from m5.params import *
 from m5.proxy import *
@@ -22,6 +22,7 @@ from PhysicalMemory import *
 
 class M5dramSystem(PhysicalMemory):
 	type = 'M5dramSystem'
+	extraParameters = Param.String("","extra parameters to override the config file")
 	#abstract = True
 	#compressed = Param.Bool(False, "This memory stores compressed data.")
 	#do_writes = Param.Bool(False, "update memory")
@@ -33,7 +34,7 @@ class M5dramSystem(PhysicalMemory):
 	outFilename = Param.String("","output file name")
 	commandLine = Param.String("","command line used in this run")
 	dramType = Param.String("ddr2","dram type")
-	rowBufferManagementPolicy = Param.String("close_page","")
+	rowBufferManagementPolicy = Param.String("closePageOptimized","")
 	autoPrecharge = Param.String("true","");
 	datarate = Param.String("200","");
 	refreshTime = Param.String("64000","")

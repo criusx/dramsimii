@@ -21,7 +21,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
+#define USEXML
 #include "globals.h"
 #include "Settings.h"
 
@@ -90,6 +90,8 @@ systemType(BASELINE_CONFIG)
 		xmlFile.close();
 
 		entireXmlFile[entireXmlFileLength] = 0;
+
+		//xmlDocPtr doc = xmlReadFile(settingsFile.c_str(),NULL, XML_PARSE_DTDVALID);
 #ifdef USEREADERFORMEMORY
 		reader = xmlReaderForMemory(
 			entireXmlFile,entireXmlFileLength,
@@ -134,7 +136,8 @@ systemType(BASELINE_CONFIG)
 					{
 						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
 						string attrS = (const char *)attr;
-						setKeyValue(nodeName,attrS);
+						bool result = setKeyValue(nodeName,attrS);
+						assert(result);
 						xmlFree(attr);
 					}
 					else if (nodeName == "inputFile")
@@ -151,7 +154,8 @@ systemType(BASELINE_CONFIG)
 								if (xmlTextReaderNodeType(reader) == XML_TEXT_NODE)
 								{	
 									nodeValue = (const char *)xmlTextReaderConstValue(reader);
-									setKeyValue(type,nodeValue);		
+									bool result = setKeyValue(type,nodeValue);		
+									assert(result);
 								}								
 							}							
 						}
@@ -164,7 +168,8 @@ systemType(BASELINE_CONFIG)
 						if (attr)
 						{
 							const string type = (const char *)attr;
-							setKeyValue("outFileType",type);
+							bool result = setKeyValue("outFileType",type);
+							assert(result);
 						}
 
 						xmlFree(attr);
@@ -174,7 +179,8 @@ systemType(BASELINE_CONFIG)
 						if (attr)
 						{
 							const string type = (const char *)attr;
-							setKeyValue("dbreporting",type);
+							bool result = setKeyValue("dbreporting",type);
+							assert(result);
 						}
 
 						xmlFree(attr);
@@ -186,7 +192,8 @@ systemType(BASELINE_CONFIG)
 				{
 					nodeValue = (const char *)xmlTextReaderConstValue(reader);
 
-					setKeyValue(nodeName, nodeValue);
+					bool result = setKeyValue(nodeName, nodeValue);
+					assert(result);
 
 				}
 			case XML_CDATA_SECTION_NODE:

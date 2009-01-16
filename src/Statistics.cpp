@@ -88,12 +88,12 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 		if (currentTransaction->getType() == READ_TRANSACTION)
 		{
 			readCount++;
-			readBytesTransferred += currentTransaction->getLength() * 8;
+			readBytesTransferred += currentTransaction->getLength();
 		}
 		else
 		{
 			// 64bit bus for most DDRx architectures
-			writeBytesTransferred += currentTransaction->getLength() * 8;
+			writeBytesTransferred += currentTransaction->getLength();
 			writeCount++;
 		}	
 

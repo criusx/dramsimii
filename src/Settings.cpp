@@ -110,11 +110,22 @@ IDD4R(UINT_MAX),
 IDD5(UINT_MAX)
 {}
 
-void Settings::setKeyValue(const string nodeName, const string nodeValue )
+//////////////////////////////////////////////////////////////////////////
+/// @brief sets a parameter based on a name and value
+/// @details looks for and attempts to parse a parameter name and value
+/// using the name and value passed in
+/// @return true if the parameter was recognized and the value converted
+/// false otherwise
+//////////////////////////////////////////////////////////////////////////
+bool Settings::setKeyValue(const string nodeName, const string value)
 {
+	string nodeValue = value;
+	std::transform(nodeValue.begin(),nodeValue.end(),nodeValue.begin(),std::ptr_fun((int (*)( int ))std::tolower));
+
 	switch (dramTokenizer(nodeName))
 	{
 	case unknown_token:
+		return false;
 		break;
 	case cpu_to_memory_clock_ratio:
 		toNumeric<float>(cpuToMemoryClockRatio,nodeValue,std::dec);
@@ -305,11 +316,11 @@ void Settings::setKeyValue(const string nodeName, const string nodeValue )
 	case refresh_policy_token:
 		if (nodeValue == "none" || nodeValue == "no refresh")
 			refreshPolicy = NO_REFRESH;
-		else if (nodeValue == "bankConcurrent")
+		else if (nodeValue == "bankconcurrent")
 			refreshPolicy = BANK_CONCURRENT;
-		else if (nodeValue == "bankStaggeredHidden")
+		else if (nodeValue == "bankstaggeredhidden")
 			refreshPolicy = BANK_STAGGERED_HIDDEN;
-		else if (nodeValue == "refreshOneChanAllRankAllBank")
+		else if (nodeValue == "refreshonechanallrankallbank")
 			refreshPolicy = ONE_CHANNEL_ALL_RANK_ALL_BANK;
 		else
 			refreshPolicy = NO_REFRESH;
@@ -327,7 +338,7 @@ void Settings::setKeyValue(const string nodeName, const string nodeValue )
 	case transaction_ordering_policy_token:
 		if (nodeValue == "strict")
 			transactionOrderingAlgorithm = STRICT;
-		else if (nodeValue == "RIFF" || nodeValue == "riff")
+		else if (nodeValue == "riff")
 			transactionOrderingAlgorithm = RIFF;
 		else
 			transactionOrderingAlgorithm = STRICT;						
@@ -335,11 +346,11 @@ void Settings::setKeyValue(const string nodeName, const string nodeValue )
 	case command_ordering_algorithm_token:
 		if (nodeValue == "strict")
 			commandOrderingAlgorithm = STRICT_ORDER;
-		else if (nodeValue == "bankRoundRobin")
+		else if (nodeValue == "bankroundrobin")
 			commandOrderingAlgorithm = BANK_ROUND_ROBIN;
-		else if (nodeValue == "rankRoundRobin")
+		else if (nodeValue == "rankroundrobin")
 			commandOrderingAlgorithm = RANK_ROUND_ROBIN;
-		else if (nodeValue == "wangHop")
+		else if (nodeValue == "wanghop")
 			commandOrderingAlgorithm = WANG_RANK_HOP;
 		else if (nodeValue == "greedy")
 			commandOrderingAlgorithm = GREEDY;
@@ -349,17 +360,17 @@ void Settings::setKeyValue(const string nodeName, const string nodeValue )
 		}
 		break;
 	case addr_mapping_scheme_token:
-		if (nodeValue == "burgerBase")
+		if (nodeValue == "burgerbase")
 			addressMappingScheme = BURGER_BASE_MAP;
-		else if (nodeValue == "closePageBaseline")
+		else if (nodeValue == "closepagebaseline")
 			addressMappingScheme = CLOSE_PAGE_BASELINE;
 		else if (nodeValue == "intel845g")
 			addressMappingScheme = INTEL845G_MAP;
-		else if (nodeValue == "sdramBase")
+		else if (nodeValue == "sdrambase")
 			addressMappingScheme = SDRAM_BASE_MAP;
-		else if (nodeValue == "sdramClosePage")
+		else if (nodeValue == "sdramclosepage")
 			addressMappingScheme = SDRAM_CLOSE_PAGE_MAP;
-		else if (nodeValue == "sdramHiperf")
+		else if (nodeValue == "sdramhiperf")
 			addressMappingScheme = SDRAM_HIPERF_MAP;
 		else
 			addressMappingScheme = SDRAM_HIPERF_MAP;
@@ -368,11 +379,11 @@ void Settings::setKeyValue(const string nodeName, const string nodeValue )
 		autoPrecharge = (nodeValue == "true") ? true : false;
 		break;
 	case row_buffer_management_policy_token:
-		if (nodeValue == "openPage")
+		if (nodeValue == "openpage")
 			rowBufferManagementPolicy = OPEN_PAGE;
-		else if (nodeValue == "closePage")
+		else if (nodeValue == "closepage")
 			rowBufferManagementPolicy = CLOSE_PAGE;
-		else if (nodeValue == "closePageOptimized")
+		else if (nodeValue == "closepageoptimized")
 			rowBufferManagementPolicy = CLOSE_PAGE_OPTIMIZED;
 		else
 			rowBufferManagementPolicy = AUTO_PAGE;
@@ -419,16 +430,16 @@ void Settings::setKeyValue(const string nodeName, const string nodeValue )
 			arrivalDistributionModel = NORMAL_DISTRIBUTION;
 		else
 		{
-			cerr << "unrecognized distribution model: \"" << nodeValue << "\", defaulting to uniform";
+			cerr << "warn: Unrecognized distribution model: \"" << nodeValue << "\", defaulting to uniform";
 			arrivalDistributionModel = NORMAL_DISTRIBUTION;
 		}
 		break;
 	case output_file_type_token:
-		if (nodeValue == "gz" || nodeValue == "GZ")
+		if (nodeValue == "gz")
 			outFileType = GZ;
-		else if (nodeValue == "bz" || nodeValue == "BZ" || nodeValue == "bzip" || nodeValue == "bzip2" || nodeValue == "bz2")
+		else if (nodeValue == "bz" || nodeValue == "bzip" || nodeValue == "bzip2")
 			outFileType = BZ;
-		else if (nodeValue == "cout" || nodeValue == "stdout" || nodeValue == "COUT")
+		else if (nodeValue == "cout" || nodeValue == "stdout")
 			outFileType = COUT;
 		else if (nodeValue == "uncompressed" || nodeValue == "plain")
 			outFileType = UNCOMPRESSED;
@@ -436,6 +447,8 @@ void Settings::setKeyValue(const string nodeName, const string nodeValue )
 			outFileType = NONE;
 		break;
 	default:
+		return false;
 		break;
 	}
+	return true;
 }

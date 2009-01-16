@@ -34,6 +34,8 @@ parser.add_option("-f", "--DRAMsimConfig",
 parser.add_option("-b", "--benchmark",
 					default=0, help="Choose the number from the following:\nperlbench\nbzip2\ngcc\nbwaves\ngamess\nmcf\nmilc\nzeusmp\ngromacs\ncactusADM\nleslie3d\nnamd\ngobmk\ndealII\nsoplex\npovray\ncalculix\nhmmer\nsjeng\nGemsFDTD\nlibquantum\nh264ref\ntonto\nlbm\nomnetpp\nastar\nwrf\nsphinx3\nxalancbmk\n998.specrand_i\n999.specrand_f")
 parser.add_option("--simple", action="store_true")
+parser.add_option("--mp",
+                  default="", help="Override default memory parameters with this switch")
 
 
 execfile(os.path.join(config_root, "common", "Options.py"))
@@ -59,97 +61,95 @@ if options.benchmark != 0:
 
     if options.benchmark == 'perlbench':
         process = specbench.perlbench
-        cmdLine = '400.perlbench'
     elif options.benchmark == 'bzip2':
         process = specbench.bzip2
-        cmdLine = '401.bzip2'
     elif options.benchmark == 'gcc':
         process = specbench.gcc
-        cmdLine = '403.gcc'
+
     elif options.benchmark == 'bwaves':
         process = specbench.bwaves
-        cmdLine = '410.bwaves'
+
     elif options.benchmark == 'gamess':
         process = specbench.gamess
-        cmdLine = '416.gamess'
+
     elif options.benchmark == 'mcf':
         process = specbench.mcf
-        cmdLine = '429.mcf'
+
     elif options.benchmark == 'milc':
         process = specbench.milc
-        cmdLine = '433.milc'
+
     elif options.benchmark == 'zeusmp':
         process = specbench.zeusmp
-        cmdLine = '434.zeusmp'
+
     elif options.benchmark == 'gromacs':
         process = specbench.gromacs
-        cmdLine = '435.gromacs'
+
     elif options.benchmark == 'cactusADM':
         process = specbench.cactusADM
-        cmdLine = '436.cactusADM'
+
     elif options.benchmark == 'leslie3d':
         process = specbench.leslie3d
-        cmdLine = '437.leslie3d'
+
     elif options.benchmark == 'namd':
         process = specbench.namd
-        cmdLine = '444.namd'
+
     elif options.benchmark == 'gobmk':
         process = specbench.gobmk;
-        cmdLine = '445.gobmk'
+
     elif options.benchmark == 'dealII':
         process = specbench.dealII
-        cmdLine = '447.dealII'
+
     elif options.benchmark == 'soplex':
         process = specbench.soplex
-        cmdLine = '450.soplex'
+
     elif options.benchmark == 'povray':
         process = specbench.povray
-        cmdLine = '453.povray'
+
     elif options.benchmark == 'calculix':
         process = specbench.calculix
-        cmdLine = '454.calculix'
+
     elif options.benchmark == 'hmmer':
         process = specbench.hmmer
-        cmdLine = '456.hmmer'
+
     elif options.benchmark == 'sjeng':
         process = specbench.sjeng
-        cmdLine = '458.sjeng'
+
     elif options.benchmark == 'GemsFDTD':
         process = specbench.GemsFDTD
-        cmdLine = '459.GemsFDTD'
+
     elif options.benchmark == 'libquantum':
         process = specbench.libquantum
-        cmdLine = '462.libquantum'
+
     elif options.benchmark == 'h264ref':
         process = specbench.h264ref
-        cmdLine = '464.h264ref'
+
     elif options.benchmark == 'tonto':
         process = specbench.tonto
         cmdLine = '465.tonto'
     elif options.benchmark == 'lbm':
         process = specbench.lbm
-        cmdLine = '470.lbm'
+
     elif options.benchmark == 'omnetpp':
         process = specbench.omnetpp
-        cmdLine = '471.omnetpp'
+
     elif options.benchmark == 'astar':
         process = specbench.astar
-        cmdLine = '473.astar'
+
     elif options.benchmark == 'wrf':
         process = specbench.wrf
-        cmdLine = '481.wrf'
+
     elif options.benchmark == 'sphinx3':
         process = specbench.sphinx3
-        cmdLine = '482.sphinx'
+
     elif options.benchmark == 'xalancbmk':
         process = specbench.xalancbmk
-        cmdLine = '483.xalancbmk'
+
     elif options.benchmark == 'specrand_i':
         process = specbench.specrand_i
-        cmdLine = '998.specrandI'
+
     elif options.benchmark == 'specrand_f':
         process = specbench.specrand_f
-        cmdLine = '999.specRandF'
+
     else:
         print "Unknown benchmark.\n"
         sys.exit()
@@ -158,19 +158,20 @@ if options.benchmark != 0:
 	#cmdLine = executable[len(executable) - 1] + " " + string.join(process.cmd[1:]," ") +" <" + process.input
 #    cmdLine = options.benchmark
 else:
-	process = LiveProcess()
-	process.executable = options.cmd
-	process.cmd = [options.cmd] + options.options.split()
-	if options.input != "":
-		process.input = options.input
+    process = LiveProcess()
+    process.executable = options.cmd
+    process.cmd = [options.cmd] + options.options.split()
+    if options.input != "":
+        process.input = options.input
 
-	executable = options.cmd.split("/")
+    executable = options.cmd.split("/")
 
-	cmdLine = executable[len(executable) - 1] + " " + options.options + " <" + options.input
+    if options.input != "":
+        cmdInput = " <%s" % options.input
+    else:
+        cmdInput = ""
+	cmdLine = executable[len(executable) - 1] + " " + options.options + cmdInput
 
-
- #options.stats-file = cmdLine
-print options
 
 if options.detailed:
     #check for SMT workload
@@ -198,11 +199,12 @@ CPUClass.clock = '3GHz'
 
 np = options.num_cpus
 
-
 system = System(cpu=[CPUClass(cpu_id=i) for i in xrange(np)],
-                #physmem = PhysicalMemory(range=AddrRange("512MB")),
-  		#  physmem = M5dramSystem(settingsFile = "/home/crius/m5/src/mem/DRAMSimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml", outFilename = "seNew.gz", range=AddrRange("512MB")),
-  		physmem=M5dramSystem(settingsFile=options.DRAMsimConfig, outFilename=executable.pop(), commandLine=cmdLine, range=AddrRange("1024MB")),
+      physmem=M5dramSystem(extraParameters=options.mp,
+                           settingsFile=options.DRAMsimConfig,
+                           outFilename=executable.pop(),
+                           commandLine=cmdLine,
+                           range=AddrRange("1024MB")),
                 membus=Bus(), mem_mode=test_mem_mode)
 
 system.physmem.port = system.membus.port

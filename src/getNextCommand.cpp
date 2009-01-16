@@ -42,14 +42,14 @@ Command *Channel::getNextCommand(const Command *useThisCommand)
 	if (useThisCommand)
 	{
 		Rank &currentRank = rank[useThisCommand->getAddress().getRank()];
-		
+
 		// if it was a refresh all command, then dequeue all n banks worth of commands
 		if (useThisCommand->getCommandType() == REFRESH_ALL)
 		{			
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin();true;)
 			{
 				Command *tempCommand = currentBank->pop();
-				
+
 				assert(tempCommand->getCommandType() == REFRESH_ALL);
 				assert(tempCommand != NULL);
 
@@ -340,21 +340,10 @@ const Command *Channel::readNextCommand() const
 						// before switching to the next bank, see if all the queues are refreshes in any rank
 						for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 						{
-							bool notAllRefresh = false;
-
-							for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+							if (currentRank->refreshAllReady())
 							{
-								// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-								if (currentBank->nextCommandType() != REFRESH_ALL)
-								{
-									notAllRefresh = true;
-									break;
-								}
+								return currentRank->bank[currentBankID].front();
 							}
-
-							// are all the commands refreshes? if so then return this
-							if (!notAllRefresh)
-								return currentRank->bank[currentBankID].front(); // which bank doesn't really matter
 						}
 						noPendingRefreshes = true;
 					}
@@ -381,7 +370,7 @@ const Command *Channel::readNextCommand() const
 				const Command *potentialCommand = rank[currentRankID].bank[currentBankID].front();
 
 				// refresh commands are considered elsewhere
-				if (potentialCommand && potentialCommand->getCommandType() != REFRESH_ALL && (allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= time + timingSpecification.tCMD() )))
+				if (potentialCommand && potentialCommand->getCommandType() != REFRESH_ALL && (allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD() )))
 				{
 					if (!systemConfig.isReadWriteGrouping())
 					{
@@ -390,15 +379,15 @@ const Command *Channel::readNextCommand() const
 					else // have to follow read/write grouping considerations 
 					{
 						// look at the second command
-						const Command *followingCommand = rank[lastRankID].bank[lastBankID].read(1);	
+						const Command *followingCommand = rank[currentRankID].bank[currentBankID].read(1);	
 
 						if (followingCommand)
 							if ((followingCommand->isRead() && (transactionType == READ_TRANSACTION)) ||
 								(followingCommand->isWrite() && (transactionType == WRITE_TRANSACTION)))
 							{
-								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
-								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
-								return rank[lastRankID].bank[lastBankID].front();
+								assert(rank[currentRankID].bank[currentBankID].front()->getAddress().getBank() == currentBankID);
+								assert(rank[currentRankID].bank[currentBankID].front()->getAddress().getRank() == currentRankID);
+								return rank[currentRankID].bank[currentBankID].front();
 							}
 					}
 
@@ -458,12 +447,14 @@ const Command *Channel::readNextCommand() const
 			unsigned currentBankID = lastBankID;
 			TransactionType originalTransactionType = transactionType;
 			bool noPendingRefreshes = false;
+			bool allowNotReadyCommands = false;
 
 			while (true)
 			{
 				// select the next bank
 				currentBankID = (currentBankID + 1) % systemConfig.getBankCount();
 
+				// came back to the original bank ID, switch ranks
 				if (lastBankID == currentBankID)
 				{
 					if (!noPendingRefreshes)
@@ -471,24 +462,15 @@ const Command *Channel::readNextCommand() const
 						// before switching to the next bank, see if all the queues are refreshes in any rank
 						for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 						{
-							bool notAllRefresh = false;
-
-							for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+							if (currentRank->refreshAllReady())
 							{
-								// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-								if (currentBank->nextCommandType() != REFRESH_ALL)
-								{
-									notAllRefresh = true;
-									break;
-								}
+								return currentRank->bank[currentBankID].front();
 							}
-							// are all the commands refreshes? if so then return this
-							if (!notAllRefresh)
-								return currentRank->bank[lastBankID].front(); // which bank doesn't really matter
 						}
 						noPendingRefreshes = true;
 					}
 
+					// then switch to the next rank
 					currentRankID = (currentRankID + 1) % systemConfig.getRankCount();
 
 					if (lastRankID == currentRankID)
@@ -496,30 +478,35 @@ const Command *Channel::readNextCommand() const
 						transactionType = (transactionType == WRITE_TRANSACTION) ? READ_TRANSACTION : WRITE_TRANSACTION;
 						// however, if this type has already been searched for, then there are no commands, so quit
 						if (transactionType == originalTransactionType)
-							break;
+						{
+							if (allowNotReadyCommands)
+								return  NULL;
+							else
+								allowNotReadyCommands = true;
+						}
 					}
 				}
 
-				const Command *potentialCommand = rank[lastRankID].bank[lastBankID].front();
+				const Command *potentialCommand = rank[currentRankID].bank[currentBankID].front();
 
-				if (potentialCommand && potentialCommand->getCommandType() != REFRESH_ALL)
+				if (potentialCommand && potentialCommand->getCommandType() != REFRESH_ALL && (allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD() )))
 				{	
-					if(systemConfig.isReadWriteGrouping() == false)
+					if(!systemConfig.isReadWriteGrouping())
 					{
 						return potentialCommand;
 					}
 					else // have to follow read_write grouping considerations
 					{
 						// look at the second command
-						const Command *nextCommand =  rank[lastRankID].bank[lastBankID].read(1);
+						const Command *nextCommand = rank[currentRankID].bank[currentBankID].read(1);
 
 						if (nextCommand)
 							if ((nextCommand->isRead() && (transactionType == READ_TRANSACTION)) ||
 								(nextCommand->isWrite() && (transactionType == WRITE_TRANSACTION)))
 							{
-								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getBank() == lastBankID);
-								assert(rank[lastRankID].bank[lastBankID].front()->getAddress().getRank() == lastRankID);
-								return rank[lastRankID].bank[lastBankID].front();
+								assert(rank[currentRankID].bank[currentBankID].front()->getAddress().getBank() == currentBankID);
+								assert(rank[currentRankID].bank[currentBankID].front()->getAddress().getRank() == currentRankID);
+								return rank[currentRankID].bank[currentBankID].front();
 							}
 					}
 
