@@ -17,7 +17,6 @@
 #include <boost/serialization/map.hpp>
 #include <boost/archive/text_oarchive.hpp> 
 #include <boost/archive/text_iarchive.hpp>
-#include <boost/algorithm/string.hpp>
 #include <sstream>
 #include <stdlib.h>
 #include <cmath>
@@ -151,38 +150,14 @@ currentTransactionID(0)
 
 	const char *settingsMap[2] = {"--settings", p->settingsFile.c_str()};
 
-	Settings settings(2,settingsMap);
+	Settings settings(2,settingsMap, p->extraParameters);
 
 	settings.inFile = "";
 	if (p->outFilename.length() > 0)
 		settings.outFile = p->outFilename;
 
 	if (p->commandLine.length() > 0)
-		settings.commandLine = p->commandLine;
-
-	if (((string)p->extraParameters).length() > 0)
-	{
-		std::vector<string> params;
-		split(params, p->extraParameters, is_any_of(" "), token_compress_on);
-
-		if (params.size() > 0)
-		{
-			if (params.size() % 2 != 0)
-			{
-				cerr << "Invalid memory override format, should be {<parameter name> <value>}+" << endl;
-				cerr << params.size() << endl;
-				exit(-14);
-			}
-
-			for (vector<string>::size_type i = 0; i < params.size(); i += 2)
-			{
-				if (!settings.setKeyValue(params[i], params[i+1]))
-					cerr << "warn: Unrecognized key/value pair (" << params[i] << "," << params[i+1] << ")" << endl;
-				else
-					cerr << "note: setting " << params[i] << "=" << params[i+1] << endl;
-			}
-		}
-	}
+		settings.commandLine = p->commandLine;	
 
 	// if this is a normal system or a fbd system
 	if (settings.systemType == FBD_CONFIG)

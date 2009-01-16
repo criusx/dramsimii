@@ -26,6 +26,12 @@
 using namespace std;
 using namespace DRAMsimII;
 
+namespace DRAMsimII
+{
+	std::map<std::string, FileIOToken> Settings::tokenizeMap = Settings::createTokenizer();
+	std::map<FileIOToken, std::string> Settings::lookupMap = Settings::lookupSetup();
+}
+
 
 // for unit tests, should not be instantiated
 Settings::Settings():
@@ -122,9 +128,12 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 	string nodeValue = value;
 	std::transform(nodeValue.begin(),nodeValue.end(),nodeValue.begin(),std::ptr_fun((int (*)( int ))std::tolower));
 
-	switch (dramTokenizer(nodeName))
+	const FileIOToken token = dramTokenizer(nodeName);
+	
+	switch (token)
 	{
 	case unknown_token:
+		cerr << nodeName << " failed" << endl;
 		return false;
 		break;
 	case cpu_to_memory_clock_ratio:

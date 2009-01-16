@@ -15,20 +15,72 @@
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <boost/random.hpp>
+#include <boost/algorithm/string.hpp>
 #include <libxml/xmlreader.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
 #include <iostream>
 #include <fstream>
 #include <string>
-#define USEXML
 #include "globals.h"
 #include "Settings.h"
 
 using namespace std;
 using namespace DRAMsimII;
+using boost::is_any_of;
+using boost::token_compress_on;
+using boost::split;
 
-Settings::Settings(const int argc, const char **argv):
+
+
+bool updateKeyValue(const string &nodeName, const string &nodeValue, xmlDocPtr doc)
+{
+	FileIOToken token = unknown_token;
+	if (Settings::tokenize(nodeName, token) == false)
+		return false;
+	else
+	{
+		string realName;
+		if (Settings::detokenize(token, realName) == true)
+		{
+			xmlXPathContextPtr context = xmlXPathNewContext(doc);
+			if (context == NULL)
+			{
+				cerr << "Problem updating nodes." << endl;				
+				return false;
+			}
+			string lookupValue = "//" + realName;
+			xmlXPathObjectPtr path = xmlXPathEvalExpression((const xmlChar *)lookupValue.c_str(), context);
+			if (path == NULL)
+			{
+				cerr << "Problem creating node path." << endl;
+				xmlXPathFreeContext(context);
+				return false;
+			}
+			//updateNodes(path->nodesetval,(const xmlChar *)nodeValue.c_str());
+			int size = (path->nodesetval) ? path->nodesetval->nodeNr : 0;
+
+			for (int i = size - 1; i >= 0; i--)
+			{
+				assert(path->nodesetval->nodeTab[i]);
+
+				xmlNodeSetContent(path->nodesetval->nodeTab[i], (const xmlChar *)nodeValue.c_str());
+			}
+
+			xmlXPathFreeObject(path);
+			xmlXPathFreeContext(context);
+
+			return true;
+		}
+		else
+			return false;
+	}
+}
+
+
+Settings::Settings(const int argc, const char **argv, const string extraSettings):
 systemType(BASELINE_CONFIG)
 {
 	// if there are not enough arguments or one is for help, print the help msg and quit
@@ -76,6 +128,8 @@ systemType(BASELINE_CONFIG)
 
 	xmlTextReader *reader = NULL;
 
+	xmlDocPtr doc = NULL;
+
 	char *entireXmlFile = NULL;
 	ifstream::pos_type entireXmlFileLength = 0;
 
@@ -91,7 +145,12 @@ systemType(BASELINE_CONFIG)
 
 		entireXmlFile[entireXmlFileLength] = 0;
 
-		//xmlDocPtr doc = xmlReadFile(settingsFile.c_str(),NULL, XML_PARSE_DTDVALID);
+		doc = xmlParseFile(settingsFile.c_str());
+		if (doc == NULL)
+		{
+			cout << "Unable to open settings file \"" << settingsFile << "\"" << endl;
+			exit(-2);
+		}
 #ifdef USEREADERFORMEMORY
 		reader = xmlReaderForMemory(
 			entireXmlFile,entireXmlFileLength,
@@ -205,7 +264,7 @@ systemType(BASELINE_CONFIG)
 		{
 			cerr << "There was an error reading/parsing " << settingsFile << "." << endl;
 			exit(-2);
-		}
+		}/*
 		else
 		{
 			if (entireXmlFileLength > 0)
@@ -215,11 +274,49 @@ systemType(BASELINE_CONFIG)
 				cerr << "Could not create output for settings file" << endl;
 				exit(-2);
 			}
-		}
+		}*/
 		// close the reader
 		xmlFreeTextReader(reader);
 		xmlMemoryDump();
 	}
+
+	// then update with the extra settings
+	if ((extraSettings).length() > 0)
+	{
+		std::vector<string> params;
+		split(params, extraSettings, is_any_of(" "), token_compress_on);
+
+		if (params.size() > 0)
+		{
+			if (params.size() % 2 != 0)
+			{
+				cerr << "Invalid memory override format, should be {<parameter name> <value>}+" << endl;
+				cerr << params.size() << endl;
+				exit(-14);
+			}
+
+			for (vector<string>::size_type i = 0; i < params.size(); i += 2)
+			{
+				if (!setKeyValue(params[i], params[i+1]) || !updateKeyValue(params[i],params[i+1], doc))
+					cerr << "warn: Unrecognized key/value pair (" << params[i] << "," << params[i+1] << ")" << endl;
+				else
+					cerr << "note: setting " << params[i] << "=" << params[i+1] << endl;
+			}
+		}
+	}
+
+	/* dump the resulting document */
+	//xmlDocDump(stdout, doc);
+	int len;
+	xmlChar *buffer;
+	xmlDocDumpMemory(doc, &buffer,&len);
+	settingsOutputFile.append((const char *)buffer);
+	xmlFree(buffer);
+
+
+	/* free the document */
+	xmlFreeDoc(doc); 
+
 
 	boost::mt19937 generator(std::time(0));
 	// Define a uniform random number distribution which produces "double"
@@ -227,5 +324,4 @@ systemType(BASELINE_CONFIG)
 	boost::uniform_int<> uni_dist(0,INT_MAX);
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > uni(generator, uni_dist);	
 	sessionID = toString(uni());
-
 }

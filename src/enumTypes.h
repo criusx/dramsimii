@@ -216,6 +216,7 @@ namespace DRAMsimII
 		t_cac_token,
 		t_cas_token,
 		t_cmd_token,
+		t_dqs_token,
 		t_cwd_token,
 		t_faw_token,
 		t_ras_token,
