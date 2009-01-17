@@ -16,6 +16,10 @@
 
 #include <boost/random.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/program_options/option.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/variables_map.hpp>
+#include <boost/program_options/parsers.hpp>
 #include <libxml/xmlreader.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -24,6 +28,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include "globals.h"
 #include "Settings.h"
 
@@ -79,50 +84,46 @@ bool updateKeyValue(const string &nodeName, const string &nodeValue, xmlDocPtr d
 	}
 }
 
+namespace opt = boost::program_options;
 
-Settings::Settings(const int argc, const char **argv, const string extraSettings):
+
+Settings::Settings(int argc, char **argv):
 systemType(BASELINE_CONFIG)
 {
-	// if there are not enough arguments or one is for help, print the help msg and quit
-	bool printHelp = false;
-	const string help = "help";
-	for (int i = argc - 1; i > 0; --i)
+
+	opt::options_description desc("Basic options");
+	desc.add_options()
+		("help", "help message")
+		("config-file",opt::value<string>(),"The configuration file")
+		("modifier", opt::value<string>(), "Modifiers to the settings file");
+
+	opt::variables_map vm;
+	
+	opt::store(opt::parse_command_line(argc, argv, desc), vm);
+	opt::notify(vm);
+
+	if (vm.count("help"))
 	{
-		if (help == argv[i])
-		{
-			printHelp = true;
-			break;
-		}
+		cout << "Usage: " << argv[0] << "(--help | --config-file <configuration file> {--modifier \"<modifiers string>}\")" << endl;
+		cout << "Where modifiers strings look like (parameter value)+" << endl;
 	}
-	if ((argc < 2) || printHelp)
-	{
-		cout << "Usage: " << argv[0] << " -options optionswitch" << endl;
-		cout << "-input_type [k6|mase|random]" << endl;
-		cout << "-trace_file TRACE_FILENAME" << endl;
-		cout << "-dram:spd_input SPD_FILENAME" << endl;
-		cout << "-output_file OUTPUT_FILENAME" << endl;
-		cout << "-debug" << endl;
-		exit(0);
-	}
-	// first find the settings file
-	const string settings = "--settings";
 	string settingsFile = "";
-	for (int i = argc - 1; i >= 0; --i)
+	if (vm.count("config-file"))
 	{
-		if (settings == argv[i])
-		{
-			settingsFile = argv[i+1];
-			break;
-		}
+		settingsFile = vm["config-file"].as<string>();
 	}
-	if (settingsFile == "")
+	else
 	{
-		cout << "No settings file specified, use --settings <filename.xml> " << endl;
-		exit (-1);
+		cout << "A configuration file MUST be specified (--config-file <filename>)" << endl;
+		exit(-1);
+	}
+	string extraSettings = "";
+	if (vm.count("modifier"))
+	{
+		extraSettings = vm["modifier"].as<string>();
 	}
 
 	//#define USEREADERFORMEMORY
-
 
 	ifstream xmlFile(settingsFile.c_str(),ios::in|ios::ate);
 

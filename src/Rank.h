@@ -102,7 +102,7 @@ namespace DRAMsimII
 		friend class boost::serialization::access;
 
 		template<class Archive>
-		void serialize( Archive & ar, const unsigned verison)
+		void serialize( Archive & ar, const unsigned version)
 		{
 			ar & lastRefreshTime & lastPrechargeTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength; 
 			ar & lastCASWLength & rankID & lastBankID & banksPrecharged;

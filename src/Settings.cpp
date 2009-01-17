@@ -126,7 +126,8 @@ IDD5(UINT_MAX)
 bool Settings::setKeyValue(const string nodeName, const string value)
 {
 	string nodeValue = value;
-	std::transform(nodeValue.begin(),nodeValue.end(),nodeValue.begin(),std::ptr_fun((int (*)( int ))std::tolower));
+	//std::transform(nodeValue.begin(),nodeValue.end(),nodeValue.begin(),std::ptr_fun((int (*)( int ))std::tolower));
+	boost::algorithm::to_lower(nodeValue);
 
 	const FileIOToken token = dramTokenizer(nodeName);
 	
@@ -140,13 +141,13 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 		toNumeric<float>(cpuToMemoryClockRatio,nodeValue,std::dec);
 		break;
 	case input_file_token:
-		inFile = nodeValue;
+		inFile = value;
 		break;
 	case output_file_token:
-		outFile = nodeValue;
+		outFile = value;
 		break;
 	case output_file_dir_token:
-		outFileDir = nodeValue;
+		outFileDir = value;
 		break;	
 	case dbreporting_token:
 		dbReporting = nodeValue == "true" ? true : false;

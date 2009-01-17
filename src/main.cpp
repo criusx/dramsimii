@@ -17,7 +17,6 @@
 #include <iostream>
 #include <fstream>
 
-
 #include "globals.h"
 #include "System.h"
 
@@ -26,13 +25,13 @@ using std::endl;
 
 using namespace DRAMsimII;
 
-int main(int argc,const char **argv, char *envp[])
+int main(int argc,char **argv, char *envp[])
 {
 	const Settings settings(argc, argv);
 
 #ifdef DEBUG
-	cerr << TICK_MAX << endl;
-	cerr << PHYSICAL_ADDRESS_MAX << endl;
+	//cerr << TICK_MAX << endl;
+	//cerr << PHYSICAL_ADDRESS_MAX << endl;
 	//DRAMsimII::unitTests(settings);
 #endif
 

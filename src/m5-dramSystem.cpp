@@ -148,9 +148,9 @@ currentTransactionID(0)
 {	
 	timingOutStream << "M5dramSystem constructor" << endl;
 
-	const char *settingsMap[2] = {"--settings", p->settingsFile.c_str()};
+	const char *settingsMap[] = {"--config-file", p->settingsFile.c_str(), "--modifiers",p->extraParameters.c_str()};
 
-	Settings settings(2,settingsMap, p->extraParameters);
+	Settings settings(4,const_cast<char **>(settingsMap));
 
 	settings.inFile = "";
 	if (p->outFilename.length() > 0)

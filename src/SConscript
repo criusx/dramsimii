@@ -35,6 +35,10 @@ if not conf.CheckLib('boost_filesystem'):
 	print 'Boost filesystem library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-filesystem*"'
 	Exit(1)
+if not conf.CheckLib('boost_program_options'):
+	print 'Boost program options library not found, please install this.'
+	print 'e.g. sudo apt-get install libboost-program-options-dev*"'
+	Exit(1)
 #if not conf.CheckCHeader('xmlreader.h'):
 #	print 'Missing xmlreader.h from libxml2'
 #	Exit(1)

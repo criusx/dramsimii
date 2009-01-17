@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE( serialize_vector )
 
 BOOST_AUTO_TEST_CASE( rank_copy_test )
 {
-	const Settings settings(master_test_suite().argc, (const char **)master_test_suite().argv);
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 	const TimingSpecification timing(settings);
 	const SystemConfiguration sysConfig(settings);
 
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE( test_queue)
 
 BOOST_AUTO_TEST_CASE( test_system_serialization )
 {
-	const Settings settings(master_test_suite().argc, (const char **)master_test_suite().argv);
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 	
 	System *ds3 = new System(settings);	
 
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE( test_system_serialization )
 
 BOOST_AUTO_TEST_CASE( serialize_inputstream )
 {
-	const Settings settings(master_test_suite().argc, (const char **)master_test_suite().argv);
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 	const SystemConfiguration sc1(settings);
 
 	Statistics st1(settings);
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE( serialize_inputstream )
 
 BOOST_AUTO_TEST_CASE( test_serialization )
 {
-	const Settings settings(master_test_suite().argc, (const char **)master_test_suite().argv);
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 #if 0
 	const Settings settings2;
 

@@ -239,13 +239,12 @@ const Command *Channel::readNextCommand() const
 									oldestBank = currentBank;
 								}
 
-							}
-
-							else
-							{
-								oldestExecutableCommandTime = challengerCommand->getEnqueueTime();
-								oldestExecutableBank = currentBank;
-							}
+ 							}
+// 							else
+// 							{
+// 								oldestExecutableCommandTime = challengerCommand->getEnqueueTime();
+// 								oldestExecutableBank = currentBank;
+// 							}
 						}
 					}
 				}
@@ -258,7 +257,7 @@ const Command *Channel::readNextCommand() const
 
 				return oldestExecutableBank->front();
 			}
-			// if there was a command found
+			// if there was a command found but is not yet ready to execute
 			else if (oldestCommandTime < TICK_MAX)
 			{
 				assert(oldestBank->front()->getCommandType() == REFRESH_ALL || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
