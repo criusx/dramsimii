@@ -486,6 +486,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 		powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] {" << setprecision(5) << 
 			PsysACTSTBY << "} mW P(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
+		assert(k->getPrechargeTime() <= time - powerModel.getLastCalculation());
 
 		float tRRDsch = ((float)time - powerModel.getLastCalculation()) / perRankRASCount;
 
@@ -504,7 +505,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 		//	" A(" << totalRAS << ") tRRDsch(" << setprecision(5) << tRRDsch / ((float)systemConfig.Frequency() * 1.0E-9F) << "ns) lastCalc[" << powerModel.lastCalculation << "] time[" << 
 		//	time << "]" << endl;
 
-		k->setPrechargeTime(1);
+		k->resetPrechargeTime(time);
 	}
 
 	float RDschPct = totalCAS * powerModel.gettBurst() / (float)(time - powerModel.getLastCalculation());
@@ -524,8 +525,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 	powerOutStream << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << 
 		PsysWR << "} mW" << endl;
-	powerModel.setLastCalculation(time);
-
+	
 	// report these results
 	if (dbReporting)
 	{
@@ -574,6 +574,8 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 	powerOutStream << "+Psys(WR) ch[" << channelID << "] {" << setprecision(5) << 
 		factorA * factorB * (powerModel.getIDD4W() - powerModel.getIDD3N()) * WRschPct << "} mW" << endl;
+
+	powerModel.setLastCalculation(time);
 
 	//powerOutStream.flush();
 }

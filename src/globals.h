@@ -70,6 +70,8 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address &);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::AddressMappingScheme&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
+	std::ostream& operator<<(std::ostream&, const CommandOrderingAlgorithm coa);
+	std::ostream& operator<<(std::ostream&, const RowBufferPolicy rbp);
 
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)

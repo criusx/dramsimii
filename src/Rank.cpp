@@ -111,10 +111,9 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 	{
 		prechargeTime += currentTime - lastPrechargeTime;
 		totalPrechargeTime += currentTime - lastPrechargeTime;
-	}
-	if (banksPrecharged == bank.size())
 		for (vector<Bank>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
 			assert(!curBnk->isActivated());
+	}	
 	banksPrecharged--;
 	assert(banksPrecharged >= 0 && banksPrecharged < bank.size());
 	// update the bank to reflect this change also

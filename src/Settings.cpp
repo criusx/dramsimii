@@ -382,6 +382,10 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 			addressMappingScheme = SDRAM_CLOSE_PAGE_MAP;
 		else if (nodeValue == "sdramhiperf")
 			addressMappingScheme = SDRAM_HIPERF_MAP;
+		else if (nodeValue == "closepagehighlocality")
+			addressMappingScheme = CLOSE_PAGE_HIGH_LOCALITY;
+		else if (nodeValue == "closepagelowlocality")
+			addressMappingScheme = CLOSE_PAGE_LOW_LOCALITY;
 		else
 			addressMappingScheme = SDRAM_HIPERF_MAP;
 		break;
@@ -461,4 +465,52 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 		break;
 	}
 	return true;
+}
+
+ostream &DRAMsimII::operator<<(ostream &os, const CommandOrderingAlgorithm coa)
+{
+	switch (coa)
+	{
+	case STRICT_ORDER:
+		os << "STR";
+		break;
+	case RANK_ROUND_ROBIN:
+		os << "RRR";
+		break;
+	case BANK_ROUND_ROBIN:
+		os << "BRR";
+		break;
+	case GREEDY:
+		os << "GRD";
+		break;
+	case WANG_RANK_HOP:
+		os << "CPRH";
+		break;
+	}
+
+	return os;
+}
+
+ostream &DRAMsimII::operator<<(ostream &os, const RowBufferPolicy rbp)
+{
+	switch (rbp)
+	{
+	case AUTO_PAGE:
+		os << "AUTO";
+		break;
+	case OPEN_PAGE:
+		os << "OPEN";
+		break;
+	case CLOSE_PAGE:
+		os << "CLOS";
+		break;
+	case CLOSE_PAGE_OPTIMIZED:
+		os << "CLSO";
+		break;
+	default:
+		os << "UNKN";
+		break;
+	}
+
+	return os;
 }

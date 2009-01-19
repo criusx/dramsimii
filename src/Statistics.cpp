@@ -114,6 +114,9 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 		commandExecution[currentCommand->getCompletionTime() - currentCommand->getStartTime()]++;
 		commandTurnaround[currentCommand->getCompletionTime() - currentCommand->getEnqueueTime()]++;
 	}
+	channelUtilization[currentCommand->getAddress().getChannel()]++;
+	rankUtilization[currentCommand->getAddress().getRank()]++;
+	bankUtilization[currentCommand->getAddress().getBank()]++;
 }
 
 ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
@@ -161,6 +164,18 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	
 	os << "----Row Hit/Miss Counts----" << endl << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
+
+	os << "----Channel Utilization----" << endl;
+	for (map<unsigned,unsigned>::const_iterator i = statsLog.channelUtilization.begin(); i != statsLog.channelUtilization.end(); i++)
+		os << (unsigned)(*i).first << " " << (unsigned)(*i).second << std::endl;
+	os << "----Rank Utilization----" << endl;
+	for (map<unsigned,unsigned>::const_iterator i = statsLog.rankUtilization.begin(); i != statsLog.rankUtilization.end(); i++)
+		os << (*i).first << " " << (*i).second << endl;
+	os << "----Bank Utilization----" << endl;
+	for (map<unsigned,unsigned>::const_iterator i = statsLog.bankUtilization.begin(); i != statsLog.bankUtilization.end(); i++)
+		os << (*i).first << " " << (*i).second << endl;
+	
+
 
 #ifdef M5
 	Stats::Database::stat_list_t::iterator i = Stats::Database::stats().begin();
@@ -233,6 +248,9 @@ void Statistics::clear()
 	workingSet.clear();
 	rowHits = rowMisses = 0;
 	readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
+	channelUtilization.clear();
+	rankUtilization.clear();
+	bankUtilization.clear();
 #ifdef M5
 	//async_statdump = 
 	async_event = async_statreset = true;

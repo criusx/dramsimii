@@ -213,17 +213,19 @@ nextStats(settings.epoch)
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"]" << endl;
+		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
+		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M]" << endl;
 
 	powerOutStream << "----Command Line: " << settings.commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"]" << endl;
+		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
+		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M]" << endl;
 
-	statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << " ----" << endl;
+	statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 
-	powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << " ----" << endl;
+	powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 
 	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
 

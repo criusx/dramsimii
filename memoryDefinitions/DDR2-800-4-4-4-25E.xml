@@ -9,7 +9,7 @@
 		<clockGranularity>2</clockGranularity>
 		<channels>4</channels>
 		<channelWidth>8</channelWidth>
-		<!--burgerBase, closePageBaseline, intel845g, sdramBase, sdramClosePage, sdramHiperf-->
+		<!--burgerBase, closePageBaseline, intel845g, sdramBase, sdramClosePage, sdramHiperf, closePageLowLocality, closePageHighLocality -->
 		<physicalAddressMappingPolicy>closePageBaseline</physicalAddressMappingPolicy>
 		<!-- openPage, closePage, closePageOptimized -->
 		<rowBufferPolicy>closePageOptimized</rowBufferPolicy>

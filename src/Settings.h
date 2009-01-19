@@ -262,6 +262,8 @@ namespace DRAMsimII
 			theMap["inputfile"] = input_file_token;
 			theMap["outfile"] = output_file_token;
 			theMap["outfiledirectory"] = output_file_dir_token;
+			theMap["outfiledir"] = output_file_dir_token;
+			theMap["outputdir"] = output_file_dir_token;
 			theMap["outfiletype"] = output_file_type_token;
 			theMap["random"] = random_distribution_token;
 			theMap["auto_refresh_policy"] = refresh_policy_token;

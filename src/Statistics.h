@@ -82,6 +82,9 @@ namespace DRAMsimII
 		std::map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
 		std::map<PHYSICAL_ADDRESS, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
 		std::map<PHYSICAL_ADDRESS, tick> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
+		std::map<unsigned,unsigned> channelUtilization;
+		std::map<unsigned,unsigned> rankUtilization;
+		std::map<unsigned,unsigned> bankUtilization;
 
 	public:
 

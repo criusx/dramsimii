@@ -59,98 +59,102 @@ if args:
 
 if options.benchmark != 0:
 
-    if options.benchmark == 'perlbench':
-        process = specbench.perlbench
-    elif options.benchmark == 'bzip2':
-        process = specbench.bzip2
-    elif options.benchmark == 'gcc':
-        process = specbench.gcc
-
-    elif options.benchmark == 'bwaves':
-        process = specbench.bwaves
-
-    elif options.benchmark == 'gamess':
-        process = specbench.gamess
-
-    elif options.benchmark == 'mcf':
-        process = specbench.mcf
-
-    elif options.benchmark == 'milc':
-        process = specbench.milc
-
-    elif options.benchmark == 'zeusmp':
-        process = specbench.zeusmp
-
-    elif options.benchmark == 'gromacs':
-        process = specbench.gromacs
-
-    elif options.benchmark == 'cactusADM':
-        process = specbench.cactusADM
-
-    elif options.benchmark == 'leslie3d':
-        process = specbench.leslie3d
-
-    elif options.benchmark == 'namd':
-        process = specbench.namd
-
-    elif options.benchmark == 'gobmk':
-        process = specbench.gobmk;
-
-    elif options.benchmark == 'dealII':
-        process = specbench.dealII
-
-    elif options.benchmark == 'soplex':
-        process = specbench.soplex
-
-    elif options.benchmark == 'povray':
-        process = specbench.povray
-
-    elif options.benchmark == 'calculix':
-        process = specbench.calculix
-
-    elif options.benchmark == 'hmmer':
-        process = specbench.hmmer
-
-    elif options.benchmark == 'sjeng':
-        process = specbench.sjeng
-
-    elif options.benchmark == 'GemsFDTD':
-        process = specbench.GemsFDTD
-
-    elif options.benchmark == 'libquantum':
-        process = specbench.libquantum
-
-    elif options.benchmark == 'h264ref':
-        process = specbench.h264ref
-
-    elif options.benchmark == 'tonto':
-        process = specbench.tonto
-        cmdLine = '465.tonto'
-    elif options.benchmark == 'lbm':
-        process = specbench.lbm
-
-    elif options.benchmark == 'omnetpp':
-        process = specbench.omnetpp
-
-    elif options.benchmark == 'astar':
-        process = specbench.astar
-
-    elif options.benchmark == 'wrf':
-        process = specbench.wrf
-
-    elif options.benchmark == 'sphinx3':
-        process = specbench.sphinx3
-
-    elif options.benchmark == 'xalancbmk':
-        process = specbench.xalancbmk
-
-    elif options.benchmark == 'specrand_i':
-        process = specbench.specrand_i
-
-    elif options.benchmark == 'specrand_f':
-        process = specbench.specrand_f
-
-    else:
+#===============================================================================
+#    if options.benchmark == 'perlbench':
+#        process = specbench.perlbench
+#    elif options.benchmark == 'bzip2':
+#        process = specbench.bzip2
+#    elif options.benchmark == 'gcc':
+#        process = specbench.gcc
+#
+#    elif options.benchmark == 'bwaves':
+#        process = specbench.bwaves
+#
+#    elif options.benchmark == 'gamess':
+#        process = specbench.gamess
+#
+#    elif options.benchmark == 'mcf':
+#        process = specbench.mcf
+#
+#    elif options.benchmark == 'milc':
+#        process = specbench.milc
+#
+#    elif options.benchmark == 'zeusmp':
+#        process = specbench.zeusmp
+#
+#    elif options.benchmark == 'gromacs':
+#        process = specbench.gromacs
+#
+#    elif options.benchmark == 'cactusADM':
+#        process = specbench.cactusADM
+#
+#    elif options.benchmark == 'leslie3d':
+#        process = specbench.leslie3d
+#
+#    elif options.benchmark == 'namd':
+#        process = specbench.namd
+#
+#    elif options.benchmark == 'gobmk':
+#        process = specbench.gobmk;
+#
+#    elif options.benchmark == 'dealII':
+#        process = specbench.dealII
+#
+#    elif options.benchmark == 'soplex':
+#        process = specbench.soplex
+#
+#    elif options.benchmark == 'povray':
+#        process = specbench.povray
+#
+#    elif options.benchmark == 'calculix':
+#        process = specbench.calculix
+#
+#    elif options.benchmark == 'hmmer':
+#        process = specbench.hmmer
+#
+#    elif options.benchmark == 'sjeng':
+#        process = specbench.sjeng
+#
+#    elif options.benchmark == 'GemsFDTD':
+#        process = specbench.GemsFDTD
+#
+#    elif options.benchmark == 'libquantum':
+#        process = specbench.libquantum
+#
+#    elif options.benchmark == 'h264ref':
+#        process = specbench.h264ref
+#
+#    elif options.benchmark == 'tonto':
+#        process = specbench.tonto
+#        cmdLine = '465.tonto'
+#    elif options.benchmark == 'lbm':
+#        process = specbench.lbm
+#
+#    elif options.benchmark == 'omnetpp':
+#        process = specbench.omnetpp
+#
+#    elif options.benchmark == 'astar':
+#        process = specbench.astar
+#
+#    elif options.benchmark == 'wrf':
+#        process = specbench.wrf
+#
+#    elif options.benchmark == 'sphinx3':
+#        process = specbench.sphinx3
+#
+#    elif options.benchmark == 'xalancbmk':
+#        process = specbench.xalancbmk
+#
+#    elif options.benchmark == 'specrand_i':
+#        process = specbench.specrand_i
+#
+#    elif options.benchmark == 'specrand_f':
+#        process = specbench.specrand_f
+#===============================================================================
+    try:
+        process = liveProcessDict[options.benchmark]
+        cmdLine = cmdLineDict[options.benchmark]
+    except KeyError:
         print "Unknown benchmark.\n"
         sys.exit()
 

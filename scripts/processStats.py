@@ -144,9 +144,6 @@ def processPower(filename):
         splitter = re.compile('([\[\]])')
         splitter2 = re.compile(' ')
 
-        #line = compressedstream.readline()
-
-        #while line:
         for line in compressedstream:
             if line[0] == '-':
               # normal lines
@@ -173,12 +170,10 @@ def processPower(filename):
                     splitLine = splitter2.split(line)
                     epochTime = float(splitLine[1])
 
-                    # old way, remove next time
-                elif line.startswith('----'):
-                    p.stdin.write("set title \"{/=12 Power Consumed vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % line[4:len(line) - 5])
                 elif line.startswith('----Command Line:'):
-                    commandLine = line.split(":")[1]
-                    p.stdin.write("set title \"{/=12 Power Consumed vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % line[4:len(line) - 5])
+                    commandLine = line.strip().split(":")[1]
+                    print commandLine
+                    p.stdin.write("set title \"{/=12 Power Consumed vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
 
                 elif line[1] == '+':
                     p.stdin.write('set output "' + basefilename + "." + extension + '\n')
@@ -195,7 +190,7 @@ def processPower(filename):
                            p.stdin.write('"-" using 1 title "%s ch[%d]rk[%d]"' % ("P_{sys}(ACT-STBY)" if b % 2 == 0 else "P_{sys}(ACT)", a, b))
                            p.stdin.write(",")
                         for b in range(2):
-                            p.stdin.write('"-" using 1 title "P_{sys}ch[%d](%s)"' % (a, "RD" if b % 2 == 0 else "WR"))
+                            p.stdin.write('"-" using 1 title "P_{sys} ch[%d](%s)"' % (a, "RD" if b % 2 == 0 else "WR"))
                             if (a < channels - 1) or (b < 1):
                                 p.stdin.write(",")
                         if (a == channels - 1):
@@ -204,7 +199,7 @@ def processPower(filename):
                     valuesPerEpoch = channels * (ranks + 2)
                     for i in range(valuesPerEpoch):
                         values.append(array('f'))
-            #line = compressedstream.readline()
+
     except IOError, strerror:
         print "I/O error", strerror
     except OSError, strerror:
@@ -506,7 +501,7 @@ def processStats(filename):
 
     # counter to keep track of how many lines are written to each file
     #linesWritten = 0
-    print 'Generate graphs'
+    #print 'Generate graphs'
 
     try:
         if filename.endswith("gz"):
@@ -744,7 +739,6 @@ def processStats(filename):
     except IndexError, strerror:
         print "IndexError",strerror
 
-    print "b"
     if started == True:
         # close any files being written
         if writing == 1:
@@ -901,7 +895,6 @@ def processStats(filename):
         fileList.append(os.path.join(tempPath,"latencyVsPc." + extension))
         fileList.append(os.path.join(tempPath,"transactionLatencyDistribution." + extension))
 
-        print "c"
         for b in gnuplot:
             b.stdin.write('\nexit\n')
             b.wait()

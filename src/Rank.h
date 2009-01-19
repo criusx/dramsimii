@@ -87,7 +87,7 @@ namespace DRAMsimII
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
 		void setLastBankID(const unsigned value) { lastBankID = value; }
-		void setPrechargeTime(const tick value) { prechargeTime = value; }
+		void resetPrechargeTime(tick time) { prechargeTime = 1; lastPrechargeTime = time;}
 
 		// overloads
 		Rank& operator=(const Rank &rs);

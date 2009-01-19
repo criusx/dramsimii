@@ -92,10 +92,12 @@ systemType(BASELINE_CONFIG)
 {
 
 	opt::options_description desc("Basic options");
+	string settingsFile;
+	string extraSettings;
 	desc.add_options()
 		("help", "help message")
-		("config-file",opt::value<string>(),"The configuration file")
-		("modifier", opt::value<string>(), "Modifiers to the settings file");
+		("config-file",opt::value<string>(&settingsFile),"The configuration file")
+		("modifiers", opt::value<string>(&extraSettings)->default_value(""), "Modifiers to the settings file");
 
 	opt::variables_map vm;
 	
@@ -104,23 +106,14 @@ systemType(BASELINE_CONFIG)
 
 	if (vm.count("help"))
 	{
-		cout << "Usage: " << argv[0] << "(--help | --config-file <configuration file> {--modifier \"<modifiers string>}\")" << endl;
+		cout << "Usage: " << argv[0] << "(--help | --config-file <configuration file> {--modifiers \"<modifiers string>}\")" << endl;
 		cout << "Where modifiers strings look like (parameter value)+" << endl;
 	}
-	string settingsFile = "";
-	if (vm.count("config-file"))
-	{
-		settingsFile = vm["config-file"].as<string>();
-	}
-	else
+	
+	if (!vm.count("config-file"))
 	{
 		cout << "A configuration file MUST be specified (--config-file <filename>)" << endl;
 		exit(-1);
-	}
-	string extraSettings = "";
-	if (vm.count("modifier"))
-	{
-		extraSettings = vm["modifier"].as<string>();
 	}
 
 	//#define USEREADERFORMEMORY
