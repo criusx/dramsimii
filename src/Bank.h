@@ -102,6 +102,7 @@ namespace DRAMsimII
 		CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : INVALID_COMMAND; }
 		unsigned freeCommandSlots() const { return perBankQueue.freecount(); }
 		bool openPageInsert(Transaction *value, const tick time);
+		bool closePageOptimalInsert(Transaction *value, const tick time);
 		bool openPageInsertAvailable(const Transaction *value, const tick time) const;
 		bool isFull() const { return perBankQueue.isFull(); }
 

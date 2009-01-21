@@ -79,6 +79,7 @@ namespace DRAMsimII
 		bool isPostedCAS() const { return postedCAS; }
 		bool isRead() const { return ((commandType == READ) || (commandType == READ_AND_PRECHARGE)); }
 		bool isWrite() const { return ((commandType == WRITE) || (commandType == WRITE_AND_PRECHARGE)); }
+		bool isReadOrWrite() const { return isRead() || isWrite(); }
 
 		// mutators
 		Transaction *removeHost() { Transaction* host = hostTransaction; hostTransaction = NULL; return host; }

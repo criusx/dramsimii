@@ -627,10 +627,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\runSimulations.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Settings.cpp"
 				>
 			</File>

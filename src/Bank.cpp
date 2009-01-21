@@ -248,6 +248,32 @@ bool Bank::openPageInsertAvailable(const Transaction *value, const tick time) co
 	}
 }
 
+bool Bank::closePageOptimalInsert(Transaction *incomingTransaction, const tick time)
+{
+	for (int index = perBankQueue.size() - 1; index >= 0; --index)
+	{
+		// don't starve commands
+		if (time - perBankQueue[index]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+			break;
+		// see if there is an available command to piggyback on
+		if (perBankQueue[index]->isReadOrWrite() && 
+			perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddresses().getRow())
+		{
+			if (systemConfig.isAutoPrecharge())
+			{
+				perBankQueue[index]->setAutoPrecharge(false);
+			}
+			else
+			{
+				assert(perBankQueue[index + 1]->getCommandType() == PRECHARGE);
+			}
+
+			return perBankQueue.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);;
+		}
+	}
+	return false;
+}
+
 
 Bank& Bank::operator =(const Bank& rhs)
 {

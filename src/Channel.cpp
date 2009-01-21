@@ -186,13 +186,13 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 
 Channel::~Channel()
 {
-// 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
-// 	{
-// 		for (std::vector<Transaction *>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
-// 		{
-// 			delete *i;
-// 		}
-// 	}
+	// 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
+	// 	{
+	// 		for (std::vector<Transaction *>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
+	// 		{
+	// 			delete *i;
+	// 		}
+	// 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -214,7 +214,7 @@ unsigned Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 		time = max(min(endTime,min(nextTransactionDecodeTime(),nextCommandExecuteTime())),time);
 		assert(time <= endTime);
 		assert(time >= oldTime);
-		
+
 		// has room to decode an available transaction
 		if (checkForAvailableCommandSlots(readTransaction(true)))
 		{
@@ -235,7 +235,7 @@ unsigned Channel::moveChannelToTime(const tick endTime, tick& transFinishTime)
 		if (nextCommand && (earliestExecuteTime(nextCommand) <= time))
 		{
 			Command *executingCommand = getNextCommand(nextCommand);
-			
+
 			assert(executingCommand == nextCommand);
 
 			executeCommand(executingCommand);					
@@ -577,7 +577,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 	powerOutStream << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << 
 		PsysWR << "} mW" << endl;
-	
+
 	// report these results
 	if (dbReporting)
 	{
@@ -1140,7 +1140,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// are available
 			for (vector<Bank>::const_iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
-				if (currentBank->freeCommandSlots() < 1)
+				if (currentBank->isFull())
 					return false;
 			}
 			// then add the command to all queues
@@ -1163,55 +1163,65 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// R C1 P => R C1 C2 P
 		// R C1+P => R C1 C2+P 
 		// TODO: look for the last non-refresh command in the per-bank queue
-		else if (destinationBank.back()
-			&& destinationBank.back()->getAddress().getRow() == incomingTransaction->getAddresses().getRow() // rows match
-			&& (time - destinationBank.back()->getEnqueueTime() < systemConfig.getSeniorityAgeLimit()) // not starving the last command
-			&& destinationBank.back()->getCommandType() != REFRESH_ALL) // ends with CAS+P or PRE
-		{
-			// found existing command to piggyback on
-			statistics.reportHit();
-
-			// ignore other command types
-			if (systemConfig.isAutoPrecharge())
-			{
-				// adjust existing commands
-				destinationBank.back()->setAutoPrecharge(false);
-
-				// insert new command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));				
-			}
-			else // no CAS+P available
-			{
-				assert(destinationBank.back()->getCommandType() == PRECHARGE);
-
-				// insert new command
-				destinationBank.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()), destinationBank.size() - 1);
-
-			}
-		}
-		else if ((!systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 3) ||
-			(systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 2))
-		{
-			return false;
-		}
-		// if there is enough space to insert the commands that this transaction becomes
 		else
 		{
-			// didn't find place to issue command
-			statistics.reportMiss();
-
-			// command one, the RAS command to activate the row
-			destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), ACTIVATE));
-
-			// command two, CAS or CAS+Precharge			
-			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
-
-			// possible command three, Precharge
-			if (!systemConfig.isAutoPrecharge())
-			{				
-				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), PRECHARGE));
+			if (destinationBank.closePageOptimalInsert(incomingTransaction,time))
+			{
+				statistics.reportHit();
+				return true;
 			}
-		}		
+			/*if (destinationBank.back()
+				&& destinationBank.back()->getAddress().getRow() == incomingTransaction->getAddresses().getRow() // rows match
+				&& (time - destinationBank.back()->getEnqueueTime() < systemConfig.getSeniorityAgeLimit()) // not starving the last command
+				&& destinationBank.back()->getCommandType() != REFRESH_ALL) // ends with CAS+P or PRE
+			{
+				// found existing command to piggyback on
+				statistics.reportHit();
+
+				// ignore other command types
+				if (systemConfig.isAutoPrecharge())
+				{
+					// adjust existing commands
+					destinationBank.back()->setAutoPrecharge(false);
+
+					// insert new command
+					destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));				
+				}
+				else // no CAS+P available
+				{
+					assert(destinationBank.back()->getCommandType() == PRECHARGE);
+
+					// insert new command
+					destinationBank.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()), destinationBank.size() - 1);
+
+				}
+			}*/
+
+			// do normal insertion if optimal insertion doesn't work
+			if ((!systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 3) ||
+				(systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 2))
+			{
+				return false;
+			}
+			// if there is enough space to insert the commands that this transaction becomes
+			else
+			{
+				// didn't find place to issue command
+				statistics.reportMiss();
+
+				// command one, the RAS command to activate the row
+				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), ACTIVATE));
+
+				// command two, CAS or CAS+Precharge			
+				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
+
+				// possible command three, Precharge
+				if (!systemConfig.isAutoPrecharge())
+				{				
+					destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), PRECHARGE));
+				}
+			}		
+		}
 		break;
 
 		// open page systems may, in the best case, add a CAS command to an already open row
