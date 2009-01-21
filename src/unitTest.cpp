@@ -246,6 +246,68 @@ BOOST_AUTO_TEST_CASE( test_queue)
 	Queue<Command> q6(0);
 	restore("queueTest",q6);
 	BOOST_CHECK_EQUAL(q5,q6);
+
+	Queue<int> q7(15);
+	for (int a = 6; a > 0; --a)
+	{
+		for (int i = 5; i > 0; --i)
+		{
+			bool result = q7.push(new int(5));
+			BOOST_ASSERT(result);
+		}	
+		q7.insert(new int(4),0);
+		q7.insert(new int(6),q7.size());
+		q7.insert(new int(1),3);
+		q7.insert(new int(7),0);
+		q7.insert(new int(8),3);
+		int *val;
+		BOOST_CHECK_EQUAL(*q7.front() , 7);
+		//delete val;
+		val = q7.pop();
+		BOOST_CHECK_EQUAL(*q7.front() , 4);
+		delete val;
+		val = q7.pop();
+		BOOST_CHECK_EQUAL(*q7.front() , 5);
+		delete val;
+		val = q7.pop();
+		BOOST_CHECK_EQUAL(*q7.front() , 8);
+		delete val;
+		val = q7.pop();
+		BOOST_CHECK_EQUAL(*q7.front() , 5);
+		delete val;
+		val = q7.pop();
+		BOOST_CHECK_EQUAL(*q7.front() , 1);
+		delete val;
+		val = q7.pop();
+		BOOST_CHECK_EQUAL(*q7.front() , 5);
+		delete val;
+		val = q7.pop();
+		BOOST_CHECK_EQUAL(*q7.front() , 5);
+		delete val;
+		val = q7.pop();
+		BOOST_CHECK_EQUAL(*q7.front() , 5);
+		delete val;
+		val = q7.pop();
+		BOOST_CHECK_EQUAL(*q7.front() , 6);
+		delete val;
+		val = q7.pop();
+		delete val;
+		BOOST_CHECK_EQUAL(q7.size() , 0);
+	}
+
+	for (int a = 5; a > 0; --a)
+	{
+		result = q7.push(new int(5));
+		BOOST_ASSERT(result);
+		result = q7.push_front(new int(-5));
+		BOOST_ASSERT(result);
+		result = q7.insert(new int(-1),std::abs(a - 3));
+		BOOST_ASSERT(result);
+		BOOST_CHECK_EQUAL(*q7.front(), -5);
+		BOOST_CHECK_EQUAL(*q7.back(), 5);
+		BOOST_CHECK_EQUAL(*q7.at(std::abs(a - 3)), -1);
+	}
+	BOOST_CHECK_EQUAL(q7.size(), 15);
 }
 
 

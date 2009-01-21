@@ -103,8 +103,10 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 		t_wtr = settings.tWTR;
 		t_ost = 5;					// 2.5 cycles to turn off, 2 to turn on
 
-		assert(t_rcd + t_burst + t_rtp - t_ccd >= t_ras);
-		assert(t_rcd + t_cwd + t_burst + t_wr >= t_ras);		
+		// will delay internally if tRAS is not met
+		//assert(t_rcd + t_rtp + t_burst - t_ccd >= t_ras);
+		assert(t_rcd + t_cwd + t_burst + t_wr >= t_ras);	
+		
 		assert(t_al <= t_rcd);
 		assert(t_al >= 0 && t_al <= 8); // must be 0..4 cycles, or 0..8 beats
 		assert(t_al + t_cmd == t_rcd);

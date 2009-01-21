@@ -90,7 +90,7 @@ namespace DRAMsimII
 		friend class boost::serialization::access;
 
 		template<class Archive>
-		void serialize( Archive & ar, const unsigned int version)
+		void serialize(Archive & ar, const unsigned int version)
 		{
 			ar & const_cast<unsigned&>(eventNumber) & const_cast<TransactionType&>(type) & status;
 			ar & const_cast<unsigned&>(length) & arrivalTime & enqueueTime & completionTime;

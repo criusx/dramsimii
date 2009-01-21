@@ -206,6 +206,7 @@ namespace DRAMsimII
 		refresh_time_token,
 		request_count_token,
 		refresh_queue_depth_token,
+		riff_token,
 		row_buffer_management_policy_token,
 		row_count_token,
 		row_size_token,

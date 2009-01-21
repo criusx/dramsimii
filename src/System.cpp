@@ -42,6 +42,7 @@ using boost::iostreams::gzip_params;
 #include "System.h"
 
 using std::for_each;
+using std::max;
 using std::bind2nd;
 using std::mem_fun_ref;
 using boost::iostreams::null_sink;
@@ -211,14 +212,14 @@ nextStats(settings.epoch)
 
 	statsOutStream << "----Command Line: " << settings.commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
-		"] col[" << settings.columnCount << "] t_{RAS}[" << settings.tRAS <<
+		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M]" << endl;
 
 	powerOutStream << "----Command Line: " << settings.commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
-		"] col[" << settings.columnCount << "] t_{RAS}[" << settings.tRAS <<
+		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M]" << endl;
@@ -226,6 +227,10 @@ nextStats(settings.epoch)
 	statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 
 	powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
+
+	statsOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
+
+	powerOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
 
 	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
 
@@ -349,31 +354,14 @@ void System::updateSystemTime()
 bool System::enqueue(Transaction *currentTransaction)
 {
 	assert(currentTransaction->getType() != AUTO_REFRESH_TRANSACTION);
-	// map the PA of this transaction to this system, assuming the transaction is within range
-	// convert addresses of transactions that are not refreshes
-	if (currentTransaction->getAddresses().getPhysicalAddress() != PHYSICAL_ADDRESS_MAX)
-	{
-		//bool success = convertAddress(currentTransaction->getAddresses());
-		//assert(success);
-	}
 
 	// attempt to insert the transaction into the per-channel transaction queue
-	if (!channel[currentTransaction->getAddresses().getChannel()].enqueue(currentTransaction))
-	{
-#ifdef M5DEBUG
-		M5_TIMING_LOG("!+T(" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueDepth() << ")")
+	bool result = channel[currentTransaction->getAddresses().getChannel()].enqueue(currentTransaction);
+
+#ifdef M5DEBUG	
+	M5_TIMING_LOG((result ? "" : "!") << "+T(" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueDepth() << ")")
 #endif
-		return false;
-	}
-	else
-	{
-#ifdef M5DEBUG
-		M5_TIMING_LOG("+T(" << currentTransaction->getAddresses().getChannel() << ")[" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "]")
-#endif
-		// if the transaction was successfully enqueued, set its enqueue time
-		currentTransaction->setEnqueueTime(channel[currentTransaction->getAddresses().getChannel()].getTime());
-		return true;
-	}
+		return result;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -453,6 +441,67 @@ void System::doPowerCalculation()
 
 	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
 }
+
+
+//////////////////////////////////////////////////////////////////////
+/// @brief automatically runs the simulations according to the set parameters
+/// @details runs either until the trace file runs out or the request count reaches zero\n
+/// will print power and general stats at regular intervals\n
+/// pulls data from either a trace file or generates random requests according to parameters
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////
+void System::runSimulations(const unsigned requestCount)
+{
+	Transaction *inputTransaction = NULL;
+
+	tick newTime = 0;
+
+	for (unsigned i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0; )
+	{		
+		if (!inputTransaction)
+		{
+			inputTransaction = inputStream.getNextIncomingTransaction();
+
+			if (!inputTransaction)
+				break;
+
+			newTime = channel[inputTransaction->getAddresses().getChannel()].getTime();
+			// if the previous transaction was delayed, thus making this arrival be in the past
+			// prevent new arrivals from arriving in the past
+			//inputTransaction->setEnqueueTime(max(inputTransaction->getEnqueueTime(),channel[inputTransaction->getAddresses().channel].getTime()));
+		}
+
+		// in case this transaction tried to arrive while the queue was full
+
+
+		tick nearFinish = 0;
+
+		// as long as transactions keep happening prior to this time
+		//if (moveAllChannelsToTime(min(inputTransaction->getEnqueueTime(),nextTick()),nearFinish))
+		if (moveAllChannelsToTime(max(newTime, inputTransaction->getArrivalTime()),nearFinish) < UINT_MAX)
+		{
+			cerr << "not right, no host transactions here" << endl;
+		}
+
+		// attempt to enqueue external transactions
+		// as internal transactions (REFRESH) are enqueued automatically
+		if (time >= inputTransaction->getArrivalTime()) 
+		{
+			if (enqueue(inputTransaction))
+			{
+				inputTransaction = NULL;
+				i--;
+			}
+			else
+			{
+				// figure that the cpu <=> mch bus runs at the mostly the same speed
+				//inputTransaction->setEnqueueTime(inputTransaction->getEnqueueTime() + channel[0].getTimingSpecification().tCMD());
+				newTime = max(channel[inputTransaction->getAddresses().getChannel()].nextTick(), newTime);
+			}
+		}
+	}
+}
+
 
 bool System::operator==(const System &rhs) const
 {

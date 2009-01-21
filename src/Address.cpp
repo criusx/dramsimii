@@ -28,7 +28,6 @@ using std::setbase;
 using std::setw;
 using namespace DRAMsimII;
 
-
 // static member declaration
 unsigned Address::channelAddressDepth;
 unsigned Address::rankAddressDepth;
@@ -694,23 +693,23 @@ std::ostream &DRAMsimII::operator <<(std::ostream &os, const AddressMappingSchem
 		break;
 	case SDRAM_HIPERF_MAP:
 	case OPEN_PAGE_BASELINE:
-		os << "HIO";
+		os << "OPBAS";
 		break;
 	case SDRAM_BASE_MAP:
-		os << "BAS";
+		os << "SDBAS";
 		break;
 	case CLOSE_PAGE_BASELINE:
 	case SDRAM_CLOSE_PAGE_MAP:
-		os << "HIC";
+		os << "CPBAS";
 		break;
 	case INTEL845G_MAP:
-		os << "845";
+		os << "845G";
 		break;
 	case CLOSE_PAGE_LOW_LOCALITY:
-		os << "LOL";
+		os << "LOLOC";
 		break;
 	case CLOSE_PAGE_HIGH_LOCALITY:
-		os << "HIL";
+		os << "HILOC";
 	}
 	return os;
 }

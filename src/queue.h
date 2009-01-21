@@ -157,6 +157,26 @@ namespace DRAMsimII
 			}
 		}
 
+		/// @brief add an item to the front of the queue efficiently
+		bool push_front(T *item)
+		{
+			assert(item != NULL);
+			if (count == maxCount)
+				return false;
+			else if (item == NULL)
+			{
+				std::cerr << "Input pointer is NULL" << std::endl;
+				return false;
+			}
+			else
+			{
+				count++;
+				head = ((int)head > 0) ? head - 1 : maxCount - 1;
+				entry[head] = item;
+				return true;
+			}
+		}
+
 		/// @brief treat this queue like an object pool and retrieve an item
 		/// @detail if there is no available object, then create one
 		/// @return rhs new item which may or may not be initialized
@@ -271,7 +291,7 @@ namespace DRAMsimII
 		/// @detail Allows insertion into the middle or at any end
 		bool insert(T *item, const int offset)
 		{
-			assert(offset <= (((int)count) - 1));
+			assert(offset <= (int)count);
 
 			if (count == maxCount)
 				return false;
@@ -290,9 +310,9 @@ namespace DRAMsimII
 
 				count++;
 
-				entry[(head+offset) % maxCount] = item;
+				entry[(head + offset) % maxCount] = item;
 
-				tail = (tail+1) % maxCount;	// advance tail_ptr
+				tail = (tail + 1) % maxCount;	// advance tail_ptr
 
 				return true;
 			}

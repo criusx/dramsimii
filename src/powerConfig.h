@@ -61,6 +61,7 @@ namespace DRAMsimII
 		const unsigned DQperDRAM;	///< number of DQ per DRAM
 		const unsigned DQSperDRAM;///< number of DQS per DRAM
 		const unsigned DMperDRAM;	///< number of DM per DRAM
+		const unsigned DQperRank;	///< the number of pins per rank, useful to know how many DRAMs there are per rank
 
 		const unsigned frequency;	///< frequency of the system
 		const unsigned specFrequency;	///< frequency specified in the data sheets
@@ -94,10 +95,11 @@ namespace DRAMsimII
 		const double getPdqWR() const { return PdqWR; }
 		const double getPdqRDoth() const { return PdqRDoth; }
 		const double getPdqWRoth() const { return PdqWRoth; }
-		const unsigned gettRC() const { return tRC; }
-		const unsigned getDQperDRAM() const { return DQperDRAM; }
-		const unsigned getDQSperDRAM() const { return DQSperDRAM; }
-		const unsigned getDMperDRAM() const { return DMperDRAM; }
+		unsigned gettRC() const { return tRC; }
+		unsigned getDQperDRAM() const { return DQperDRAM; }
+		unsigned getDQSperDRAM() const { return DQSperDRAM; }
+		unsigned getDMperDRAM() const { return DMperDRAM; }
+		unsigned getDQperRank() const { return DQperRank; }
 		const int getIDD0() const { return IDD0; }
 		const int getIDD2N() const { return IDD2N; }
 		const int getIDD2P() const { return IDD2P; }		
@@ -131,7 +133,7 @@ namespace DRAMsimII
 				const_cast<double&>(PdsACT) & const_cast<double&>(PdsACT_STBY) & const_cast<double&>(PdsRD) & const_cast<double&>(PdsWR)&
 				const_cast<double&>(PdstermW) & const_cast<double&>(PdqRD) & const_cast<double&>(PdqWR) & const_cast<double&>(PdqRDoth) & const_cast<double&>(PdqWRoth) & 
 				const_cast<unsigned&>(DQperDRAM) & const_cast<unsigned&>(DQSperDRAM) & const_cast<unsigned&>(DMperDRAM) & const_cast<unsigned&>(frequency) & const_cast<unsigned&>(specFrequency) &
-				const_cast<unsigned&>(tBurst) & const_cast<unsigned&>(tRC) & const_cast<unsigned&>(tRAS) & lastCalculation;
+				const_cast<unsigned&>(tBurst) & const_cast<unsigned&>(tRC) & const_cast<unsigned&>(tRAS) & const_cast<unsigned&>(DQperRank) & lastCalculation;
 		}
 
 	};

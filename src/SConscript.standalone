@@ -4,6 +4,7 @@ Import('env')
 
 conf = Configure(env)
 
+
 if not conf.CheckLib('boost_serialization'):
 	print 'Boost serialization library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-serialization*"'
@@ -27,110 +28,77 @@ if not conf.CheckLib('boost_unit_test_framework'):
 if not conf.CheckLib('boost_signals'):
 	print 'Boost signals library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-signals*"'
-	Exit(1)	
+	Exit(1)
+if not conf.CheckCXXHeader('vector'):
+   print 'vector must be installed!'
+   Exit(1)
+if not conf.CheckLib('boost_filesystem'):
+	print 'Boost filesystem library not found, please install this.'
+	print 'e.g. sudo apt-get install "libboost-filesystem*"'
+	Exit(1)
+if not conf.CheckLib('boost_program_options'):
+	print 'Boost program options library not found, please install this.'
+	print 'e.g. sudo apt-get install libboost-program-options-dev*"'
+	Exit(1)
 if not conf.CheckLib('xml2'):
-	print 'libXml2 not found, please install this.'
-	print 'e.g. sudo apt-get install "libxml2-*"'
+	print "Need libxml2 to compile this."
+	print "e.g. sudo apt-get install \".*libxml2.*\""
 	Exit(1)
 
 
-sourceFile = Split("""
-			reporting/soapC.cpp
-			reporting/soapClient.cpp
-			reporting/stdsoap2.cpp
-			Address.cpp
-			Bank.cpp
-			busEvent.cpp
-			command.cpp
-			Algorithm.cpp
-			Channel.cpp			
-			Statistics.cpp
-			System.cpp
-			Settings.cpp
-			SettingsXML.cpp
-			SystemConfiguration.cpp
-			TimingSpecification.cpp
-			event.cpp
-			executeCommand.cpp
-			fbdAMB.cpp
-			fbdChannel.cpp
-			fbdFrame.cpp
-			fbdSystem.cpp
-			getNextCommand.cpp
-			globals.cpp
-			InputStream.cpp			
-			powerConfig.cpp
-			minProtocolGap.cpp
-			Rank.cpp
-			runSimulations.cpp
-			simulationParameters.cpp
-			transaction.cpp
-			transaction2commands.cpp
-			main.cpp""")
-			
-sourcesTest = Split("""
-			reporting/soapC.cpp
-			reporting/soapClient.cpp
-			reporting/stdsoap2.cpp
-			Address.cpp
-			Bank.cpp
-			busEvent.cpp
-			command.cpp
-			Algorithm.cpp
-			Channel.cpp			
-			Statistics.cpp
-			System.cpp
-			Settings.cpp
-			SettingsXML.cpp
-			SystemConfiguration.cpp
-			TimingSpecification.cpp
-			event.cpp
-			executeCommand.cpp
-			fbdAMB.cpp
-			fbdChannel.cpp
-			fbdFrame.cpp
-			fbdSystem.cpp
-			getNextCommand.cpp
-			globals.cpp
-			InputStream.cpp			
-			powerConfig.cpp
-			minProtocolGap.cpp
-			Rank.cpp
-			runSimulations.cpp
-			simulationParameters.cpp
-			transaction.cpp
-			transaction2commands.cpp
-			unitTest.cpp""")
 
+sourceBase = """
+			reporting/soapC.cpp
+			reporting/soapClient.cpp
+			reporting/stdsoap2.cpp
+			Address.cpp
+			Bank.cpp
+			busEvent.cpp
+			command.cpp
+			Algorithm.cpp
+			Channel.cpp
+			Statistics.cpp
+			System.cpp
+			Settings.cpp
+			SettingsXML.cpp
+			SystemConfiguration.cpp
+			TimingSpecification.cpp
+			event.cpp
+			fbdAMB.cpp
+			fbdChannel.cpp
+			fbdFrame.cpp
+			fbdSystem.cpp
+			globals.cpp
+			InputStream.cpp
+			powerConfig.cpp
+			Rank.cpp
+			simulationParameters.cpp
+			transaction.cpp"""
+
+sourceFile = Split(sourceBase + "\nmain.cpp")
+sourcesTest = Split(sourceBase + "\nunitTest.cpp")
+
+env = conf.Finish()
 
 ROOT = Dir('.').abspath
 SRCDIR = os.path.join(ROOT,'src')
 
-envDebug = Environment(CCFLAGS = '-g -O -Weffc++ -DDEBUG',
-			OBJSUFFIX = ".og",
-			CPPPATH = '/usr/include/libxml2/')
+envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
+envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
+envProf = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.op')
+envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ot')
+envProfgen = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opg')
+envProfuse = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opu')
 
-envOpt = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64',
-			OBJSUFFIX = ".of",
-			CPPPATH = '/usr/include/libxml2/')
+envDebug.Append(CCFLAGS = '-g -O -Weffc++ -DDEBUG')
+envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64')
+envProf.Append(CCFLAGS = '-g -O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64')
+envTest.Append(CCFLAGS = '-g -O -Weffc++ -DDEBUG')
+envProfgen.Append(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate')
+envProfgen.Append(LIBS = 'gcov')
+envProfuse.Append(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-use')
+envProfuse.Append(LIBS = 'gcov')
 
-envProf = Environment(CCFLAGS = '-g -O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64',
-			OBJSUFFIX = ".prof",
-			CPPPATH = '/usr/include/libxml2/')
-			
-envTest = Environment(CCFLAGS = '-g -O -Weffc++ -DDEBUG',
-			OBJSUFFIX = ".ot",
-			CPPPATH = '/usr/include/libxml2/')
-
-envProfgen = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate',
-			OBJSUFFIX = ".opg",
-			CPPPATH = '/usr/include/libxml2/')
-
-envProfuse = Environment(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-use',
-			OBJSUFFIX = ".opu",
-			CPPPATH = '/usr/include/libxml2/')
-
-                  
 # This function adds the specified sources to the given build
 # environment, and returns a list of all the corresponding SCons
 # Object nodes (including an extra one for date.cc).  We explicitly
@@ -143,35 +111,14 @@ def make_objs(sourceFiles, env):
     #date_obj = env.Object('base/date.cc')
     #env.Depends(date_obj, objs)
     #objs.append(date_obj)
-    return objs                  
+    return objs
 
-# Function to create a new build environment as clone of current
-# environment 'env' with modified object suffix and optional stripped
-# binary.  Additional keyword arguments are appended to corresponding
-# build environment vars.
-def makeEnv(label, objsfx, strip = False, **kwargs):
-    newEnv = env.Copy(OBJSUFFIX=objsfx)
-    newEnv.Label = label
-    newEnv.Append(**kwargs)
-    exe = 'm5.' + label  # final executable
-    bin = exe + '.bin'   # executable w/o appended Python zip archive
-    newEnv.Program(bin, make_objs(sources, newEnv))
-    if strip:
-        stripped_bin = bin + '.stripped'
-        newEnv.Command(stripped_bin, bin, 'strip $SOURCE -o $TARGET')
-        bin = stripped_bin
-    #targets = newEnv.Concat(exe, [bin, 'python/m5py.zip'])
-    newEnv.M5Binary = targets[0]
-    envList.append(newEnv)
-
-#makeEnv('opt', '.o', CCFLAGS = Split('-g -O3'),CPPDEFINES = ['TRACING_ON=1'])
-
-debug = envDebug.Program('dramSimII.debug',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
-opt = envOpt.Program('dramSimII.opt',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
-test = envTest.Program('dramSimII.test',sourcesTest, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
-prof = envProf.Program('dramSimII.prof',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework'])
-profgen = envProfgen.Program('dramSimII.profgen',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework', 'gcov'])
-profuse = envProfuse.Program('dramSimII.profuse',sourceFile, LIBS=['boost_thread', 'boost_iostreams', 'libxml2', 'boost_serialization', 'boost_unit_test_framework', 'gcov'])
+debug = envDebug.Program('dramSimII.debug',sourceFile)
+opt = envOpt.Program('dramSimII.opt',sourceFile)
+test = envTest.Program('dramSimII.test',sourcesTest)
+prof = envProf.Program('dramSimII.prof',sourceFile)
+profgen = envProfgen.Program('dramSimII.profgen', sourceFile)
+profuse = envProfuse.Program('dramSimII.profuse', sourceFile)
 
 envDebug.Install(os.path.abspath('..') + "/bin", debug)
 envOpt.Install(os.path.abspath('..') + "/bin", opt)

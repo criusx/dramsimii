@@ -173,6 +173,7 @@ namespace DRAMsimII
 			theMap[t_ras_token] = "tRAS";
 			theMap[t_rc_token] = "tRC";
 			theMap[t_rcd_token] = "tRCD";
+			theMap[riff_token] = "RIFF";
 			theMap[t_rfc_token] = "tRFC";
 			theMap[t_rrd_token] = "tRRD";
 			theMap[t_rp_token] = "tRP";
@@ -273,6 +274,7 @@ namespace DRAMsimII
 			theMap["refreshpolicy"] = refresh_policy_token;
 			theMap["refresh_time"] = refresh_time_token;
 			theMap["refreshtime"] = refresh_time_token;
+			theMap["riff"] = riff_token;
 			theMap["posted_cas"] = posted_cas_token;
 			theMap["postedcas"] = posted_cas_token;
 			theMap["channel_count"] = chan_count_token;
