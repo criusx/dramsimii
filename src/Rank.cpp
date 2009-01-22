@@ -33,6 +33,8 @@ prechargeTime(0),
 totalPrechargeTime(0),
 lastCASLength(0),
 lastCASWLength(0),
+CASLength(0),
+CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
 banksPrecharged(settings.bankCount),
@@ -50,6 +52,8 @@ prechargeTime(rhs.prechargeTime),
 totalPrechargeTime(rhs.totalPrechargeTime),
 lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
+CASLength(rhs.CASLength),
+CASWLength(rhs.CASWLength),
 rankID(rhs.rankID),
 lastBankID(rhs.lastBankID),
 banksPrecharged(rhs.banksPrecharged),
@@ -67,6 +71,8 @@ prechargeTime(rhs.prechargeTime),
 totalPrechargeTime(rhs.totalPrechargeTime),
 lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
+CASLength(rhs.CASLength),
+CASWLength(rhs.CASWLength),
 rankID(rhs.rankID),
 lastBankID(rhs.lastBankID),
 banksPrecharged(rhs.banksPrecharged),
@@ -91,6 +97,8 @@ prechargeTime(0),
 totalPrechargeTime(0),
 lastCASLength(0),
 lastCASWLength(0),
+CASLength(0),
+CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(0),
 banksPrecharged(0),
@@ -157,7 +165,10 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 	bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
 
 	lastCASTime = currentTime + timing.tAL();
+
 	lastCASLength = currentCommand->getLength();
+
+	CASLength += currentCommand->getLength();
 
 	lastBankID = currentCommand->getAddress().getBank();
 }
@@ -168,7 +179,10 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 	bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);
 
 	lastCASWTime = currentTime + timing.tAL();
+
 	lastCASWLength = currentCommand->getLength();
+
+	CASWLength += currentCommand->getLength();
 
 	lastBankID = currentCommand->getAddress().getBank();
 }
@@ -263,6 +277,8 @@ Rank& Rank::operator =(const Rank& rhs)
 	banksPrecharged = rhs.banksPrecharged;
 	lastActivateTimes = rhs.lastActivateTimes;
 	bank = rhs.bank;
+	CASLength = rhs.CASLength;
+	CASWLength = rhs.CASWLength;
 
 	return *this;
 }
@@ -272,7 +288,7 @@ bool Rank::operator==(const Rank& right) const
 	return (timing == right.timing && lastRefreshTime == right.lastRefreshTime && lastPrechargeTime == right.lastPrechargeTime &&
 		lastCASTime == right.lastCASTime && lastCASWTime == right.lastCASWTime && prechargeTime == right.prechargeTime && totalPrechargeTime == right.totalPrechargeTime &&
 		lastCASLength == right.lastCASLength && lastCASWLength == right.lastCASWLength && rankID == right.rankID && lastBankID == right.lastBankID &&
-		banksPrecharged == right.banksPrecharged && lastActivateTimes == right.lastActivateTimes && bank == right.bank);
+		banksPrecharged == right.banksPrecharged && lastActivateTimes == right.lastActivateTimes && bank == right.bank && CASLength == right.CASLength && CASWLength == right.CASWLength);
 }
 
 std::ostream& DRAMsimII::operator<<(std::ostream &os, const Rank &r)

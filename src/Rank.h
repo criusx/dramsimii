@@ -49,6 +49,8 @@ namespace DRAMsimII
 		tick totalPrechargeTime;	///< total time that all banks are precharged, all time
 		unsigned lastCASLength;		///< the length of the last CAS
 		unsigned lastCASWLength;	///< the length of the last CASW
+		unsigned CASLength;				///< total cycles the bus spent sending data
+		unsigned CASWLength;			///< the total cycles the bus spent receiving data
 		unsigned rankID;			///< the ordinal number of this rank
 		unsigned lastBankID;		///< id of the last accessed bank of this rank
 		unsigned banksPrecharged;	///< the number of banks in the precharge state
@@ -83,11 +85,15 @@ namespace DRAMsimII
 		unsigned getLastBankID() const { return lastBankID; }
 		unsigned getLastCASLength() const { return lastCASLength; }
 		unsigned getLastCASWLength() const { return lastCASWLength; }
+		unsigned getReadCycles() const { return CASLength; }
+		unsigned getWriteCycles() const { return CASWLength; }
+
 		
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
 		void setLastBankID(const unsigned value) { lastBankID = value; }
 		void resetPrechargeTime(tick time) { prechargeTime = 1; lastPrechargeTime = time;}
+		void resetCycleCounts() { CASLength = CASWLength = 0; }
 
 		// overloads
 		Rank& operator=(const Rank &rs);
@@ -106,7 +112,7 @@ namespace DRAMsimII
 		{
 			ar & lastRefreshTime & lastPrechargeTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength; 
 			ar & lastCASWLength & rankID & lastBankID & banksPrecharged;
-			ar & lastActivateTimes;		
+			ar & lastActivateTimes & CASWLength & CASLength;		
 		}
 
 		template <class Archive>

@@ -50,6 +50,9 @@ namespace DRAMsimII
 		const double PdsRD;		///< read power
 		const double PdsWR;		///< write power
 
+		const double voltageScaleFactor;	///< derating based on voltage
+		const double frequencyScaleFactor;	///< derating based on frequency
+
 		// termination power, based on system design
 		const double PdstermW;	///< termination power for writes
 		const double PdqRD;		///< power per DQ, determined by system design
@@ -93,13 +96,15 @@ namespace DRAMsimII
 		double getPdsACT() const { return PdsACT; }
 		const double getPdqRD() const { return PdqRD; }
 		const double getPdqWR() const { return PdqWR; }
+		const double getPdsRD() const { return PdsRD; }
+		const double getPdsWR() const { return PdsWR; }
 		const double getPdqRDoth() const { return PdqRDoth; }
 		const double getPdqWRoth() const { return PdqWRoth; }
 		unsigned gettRC() const { return tRC; }
 		unsigned getDQperDRAM() const { return DQperDRAM; }
 		unsigned getDQSperDRAM() const { return DQSperDRAM; }
 		unsigned getDMperDRAM() const { return DMperDRAM; }
-		unsigned getDQperRank() const { return DQperRank; }
+		unsigned getDevicesPerRank() const { return DQperRank; }
 		const int getIDD0() const { return IDD0; }
 		const int getIDD2N() const { return IDD2N; }
 		const int getIDD2P() const { return IDD2P; }		
@@ -110,6 +115,8 @@ namespace DRAMsimII
 		const int getIDD5() const { return IDD5; }
 		const unsigned gettBurst() const { return tBurst; }
 		const unsigned gettRAS() const { return tRAS; }
+		const double getVoltageScaleFactor() const { return voltageScaleFactor;}
+		const double getFrequencyScaleFactor() const { return frequencyScaleFactor; }
 
 		// mutators
 		void setLastCalculation(const tick lastTime) { lastCalculation = lastTime; }
@@ -133,7 +140,8 @@ namespace DRAMsimII
 				const_cast<double&>(PdsACT) & const_cast<double&>(PdsACT_STBY) & const_cast<double&>(PdsRD) & const_cast<double&>(PdsWR)&
 				const_cast<double&>(PdstermW) & const_cast<double&>(PdqRD) & const_cast<double&>(PdqWR) & const_cast<double&>(PdqRDoth) & const_cast<double&>(PdqWRoth) & 
 				const_cast<unsigned&>(DQperDRAM) & const_cast<unsigned&>(DQSperDRAM) & const_cast<unsigned&>(DMperDRAM) & const_cast<unsigned&>(frequency) & const_cast<unsigned&>(specFrequency) &
-				const_cast<unsigned&>(tBurst) & const_cast<unsigned&>(tRC) & const_cast<unsigned&>(tRAS) & const_cast<unsigned&>(DQperRank) & lastCalculation;
+				const_cast<unsigned&>(tBurst) & const_cast<unsigned&>(tRC) & const_cast<unsigned&>(tRAS) & const_cast<unsigned&>(DQperRank) & lastCalculation &
+				const_cast<double&>(frequencyScaleFactor) & const_cast<double&>(voltageScaleFactor);
 		}
 
 	};

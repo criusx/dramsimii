@@ -15,6 +15,7 @@
 		<rowBufferPolicy>closePageOptimized</rowBufferPolicy>
 		<ranks>4</ranks>
 		<banks>8</banks>
+		<!-- bits per row-->
 		<rows>16384</rows>
 		<rowSize>16</rowSize>
 		<!-- columns * columnSize = pageSize -->
@@ -77,7 +78,7 @@
 		<PdqRDoth>0</PdqRDoth>
 		<PdqWRoth>0</PdqWRoth>
 		<!--pins on the dram devices-->
-		<DQperDRAM>16</DQperDRAM>
+		<DQperDRAM>8</DQperDRAM>
 		<DQSperDRAM>4</DQSperDRAM>
 		<DMperDRAM>2</DMperDRAM>
 		<frequencySpec>800000000</frequencySpec>
@@ -85,19 +86,19 @@
 		<systemVDD>1.8</systemVDD>
 		<!--all are in mA-->
 		<!--maximum active precharge current-->
-		<IDD0>150</IDD0>
+		<IDD0>90</IDD0>
 		<!--maximum precharge power-down standby current-->
 		<IDD2P>7</IDD2P>
 		<!--maximum precharge standby current-->
-		<IDD2N>50</IDD2N>
+		<IDD2N>60</IDD2N>
 		<!--maximum active power-down standby current-->
-		<IDD3P>40</IDD3P>
+		<IDD3P>50</IDD3P>
 		<!--maximum active standby current-->
 		<IDD3N>60</IDD3N>
 		<!--maximum read burst current-->
-		<IDD4R>160</IDD4R>
+		<IDD4R>145</IDD4R>
 		<!--maximum write burst current-->
-		<IDD4W>160</IDD4W>
+		<IDD4W>145</IDD4W>
 		<!--maximum burst refresh current-->
 		<IDD5A>235</IDD5A>
 	</power>

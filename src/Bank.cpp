@@ -140,13 +140,16 @@ void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 	lastCASTime = currentTime + timing.tAL();
 
 	lastCASLength = currentCommand->getLength();
+	
 	CASCount++;
 }
 
 void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
-{
+{	
 	lastCASWTime = currentTime + timing.tAL();
+
 	lastCASWLength = currentCommand->getLength();
+
 	CASWCount++;
 }
 

@@ -185,17 +185,19 @@ def processPower(filename):
                     p.stdin.write('plot ')
 
                     for a in range(channels):
-                        for b in range(2 * ranks):
-                           p.stdin.write('"-" using 1 title "%s ch[%d]rk[%d]"' % ("P_{sys}(ACT-STBY)" if b % 2 == 0 else "P_{sys}(ACT)", a, b))
-                           p.stdin.write(",")
                         for b in range(2):
-                            p.stdin.write('"-" using 1 title "P_{sys} ch[%d](%s)"' % (a, "RD" if b % 2 == 0 else "WR"))
+                           p.stdin.write('"-" using 1 title "P_{sys}(%s) ch[%d]"' % ("ACT-STBY" if b % 2 == 0 else "ACT", a))
+                           p.stdin.write(",")
+                        p.stdin.write('"-" using 1 title "P_{sys}(PRE-STBY) ch[%d]"' % a)
+                        p.stdin.write(",")
+                        for b in range(2):
+                            p.stdin.write('"-" using 1 title "P_{sys}(%s) ch[%d]"' % ("RD" if b % 2 == 0 else "WR", a))
                             if (a < channels - 1) or (b < 1):
                                 p.stdin.write(",")
                         #if (a == channels - 1):
                     p.stdin.write("\n")
                     # plus the RD and WR values
-                    valuesPerEpoch = channels * (2 * ranks + 2)
+                    valuesPerEpoch = channels * 5
                     for i in range(valuesPerEpoch):
                         values.append(array('f'))
 

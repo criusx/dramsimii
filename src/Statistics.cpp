@@ -25,6 +25,7 @@
 #endif
 #include <iomanip>
 #include <iostream>
+#include <vector>
 
 using std::ostream;
 using std::endl;
@@ -33,6 +34,7 @@ using std::ios;
 using std::setprecision;
 using std::setiosflags;
 using std::string;
+
 using namespace DRAMsimII;
 
 Statistics::Statistics(const Settings& settings):
@@ -240,6 +242,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 void Statistics::clear()
 {
+	using std::vector;
+
 	commandTurnaround.clear();
 	commandDelay.clear();	
 	commandExecution.clear();
@@ -253,8 +257,7 @@ void Statistics::clear()
 	bankUtilization.clear();
 #ifdef M5
 	//async_statdump = 
-	async_event = async_statreset = true;
-	
+	async_event = async_statreset = true;	
 #endif // M5DEBUG
 }
 

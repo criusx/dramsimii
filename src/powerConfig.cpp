@@ -34,10 +34,12 @@ IDD3N(settings.IDD3N),
 IDD4R(settings.IDD4R),
 IDD4W(settings.IDD4W),
 IDD5(settings.IDD5),
-PdsACT((IDD0 - ((IDD3N * settings.tRAS + IDD2N * (settings.tRC - settings.tRAS))/settings.tRC))*settings.VDD),
-PdsACT_STBY(IDD3N * VDD),
-PdsRD((IDD4R - IDD3N) * VDD),
-PdsWR((IDD4W - IDD3N) * VDD),
+PdsACT((settings.IDD0 - ((settings.IDD3N * settings.tRAS + settings.IDD2N * (settings.tRC - settings.tRAS))/settings.tRC)) * settings.VDD),
+PdsACT_STBY(settings.IDD3N * settings.VDD),
+PdsRD((settings.IDD4R - settings.IDD3N) * settings.VDD),
+PdsWR((settings.IDD4W - settings.IDD3N) * settings.VDD),
+voltageScaleFactor((settings.VDD * settings.VDD) / (settings.maxVCC * settings.maxVCC)),
+frequencyScaleFactor((float)settings.dataRate / (float)settings.frequencySpec),
 PdstermW(settings.PdqWR * (settings.DQperDRAM + settings.DQSperDRAM + settings.DMperDRAM)),
 PdqRD(settings.PdqRD),
 PdqWR(settings.PdqWR),
@@ -74,6 +76,8 @@ PdsACT(-1.0F),
 PdsACT_STBY(-1.0F),
 PdsRD(-1.0F),
 PdsWR(-1.0F),
+voltageScaleFactor(-1.0),
+frequencyScaleFactor(-1.0),
 PdstermW(-1.0F),
 PdqRD(-1.0F),
 PdqWR(-1.0F),
@@ -102,10 +106,9 @@ bool PowerConfig::operator==(const PowerConfig& rhs) const
 		PdqWRoth == rhs.PdqWRoth && DQperDRAM == rhs.DQperDRAM && DQSperDRAM == rhs.DQSperDRAM &&
 		DMperDRAM == rhs.DMperDRAM && DQperRank == rhs.DQperRank && frequency == rhs.frequency &&
 		specFrequency == rhs.specFrequency && tBurst == rhs.tBurst && tRC == rhs.tRC &&
-		tRAS == rhs.tRAS && lastCalculation==rhs.lastCalculation);
+		tRAS == rhs.tRAS && lastCalculation==rhs.lastCalculation && voltageScaleFactor == rhs.voltageScaleFactor &&
+		frequencyScaleFactor == rhs.frequencyScaleFactor);
 }
-
-
 
 std::ostream& DRAMsimII::operator<<(std::ostream& in, const PowerConfig& pc)
 {
