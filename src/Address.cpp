@@ -114,8 +114,8 @@ bool Address::reverseAddressTranslation()
 			unsigned columnLowDepth = log2(cacheLineSize) - columnSizeDepth;
 			unsigned columnHighDepth = columnAddressDepth - columnLowDepth;
 
-			unsigned columnHigh = column >> columnLowDepth;
-			unsigned columnLow = column & (columnHigh << columnLowDepth);
+			PHYSICAL_ADDRESS columnHigh = column >> columnLowDepth;
+			PHYSICAL_ADDRESS columnLow = column & (columnHigh << columnLowDepth);
 
 			physicalAddress = 0x00;
 			unsigned shiftAmount = columnSizeDepth;

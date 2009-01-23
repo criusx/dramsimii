@@ -42,7 +42,7 @@ namespace DRAMsimII
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
 
 		tick lastRefreshTime;		///< the time of the last refresh
-		tick lastPrechargeTime;		///< the time of the last precharge
+		tick lastPrechargeAnyBankTime;		///< the time of the last precharge
 		tick lastCASTime;			///< the time of the last CAS
 		tick lastCASWTime;			///< the time of the last CASW
 		tick prechargeTime;			///< total time that all banks in this rank are precharged in this epoch
@@ -81,7 +81,7 @@ namespace DRAMsimII
 		tick getLastRefreshTime() const { return lastRefreshTime; }
 		tick getLastCASTime() const { return lastCASTime; }
 		tick getLastCASWTime() const { return lastCASWTime; }
-		tick getLastPrechargeTime() const { return lastPrechargeTime; }
+		tick getLastPrechargeTime() const { return lastPrechargeAnyBankTime; }
 		unsigned getLastBankID() const { return lastBankID; }
 		unsigned getLastCASLength() const { return lastCASLength; }
 		unsigned getLastCASWLength() const { return lastCASWLength; }
@@ -92,7 +92,7 @@ namespace DRAMsimII
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
 		void setLastBankID(const unsigned value) { lastBankID = value; }
-		void resetPrechargeTime(tick time) { prechargeTime = 1; lastPrechargeTime = time;}
+		void resetPrechargeTime(tick time) { prechargeTime = 1; lastPrechargeAnyBankTime = time;}
 		void resetCycleCounts() { CASLength = CASWLength = 0; }
 
 		// overloads
@@ -110,7 +110,7 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned version)
 		{
-			ar & lastRefreshTime & lastPrechargeTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength; 
+			ar & lastRefreshTime & lastPrechargeAnyBankTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength; 
 			ar & lastCASWLength & rankID & lastBankID & banksPrecharged;
 			ar & lastActivateTimes & CASWLength & CASLength;		
 		}

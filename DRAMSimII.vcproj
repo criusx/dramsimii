@@ -161,7 +161,7 @@
 				CompileAs="2"
 				DisableSpecificWarnings="4530"
 				ShowIncludes="false"
-				EnablePREfast="false"
+				EnablePREfast="true"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

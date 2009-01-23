@@ -219,6 +219,7 @@ for i in xrange(np):
                                               L1Cache(size='64kB', assoc=2))
     if options.l2cache:
         system.l2 = L2Cache(size='1MB', assoc=16, latency="7ns")
+        #, prefetch_policy = 'tagged', prefetch_miss = False, prefetch_access = True)
         system.tol2bus = Bus()
         system.l2.cpu_side = system.tol2bus.port
         system.l2.mem_side = system.membus.port

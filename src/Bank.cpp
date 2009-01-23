@@ -30,7 +30,7 @@ perBankQueue(settings.perBankQueueDepth),
 lastRASTime(-100),
 lastCASTime(-100),
 lastCASWTime(-100),
-lastPrechargeTime(-100),
+lastPrechargeTime(0),
 lastRefreshAllTime(-100),
 lastCASLength(8),
 lastCASWLength(8),
@@ -98,6 +98,7 @@ void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	// make sure activates follow precharges
 	assert(activated == false);
+	assert(currentTime >= lastPrechargeTime + timing.tRP());
 
 	activated = true;
 

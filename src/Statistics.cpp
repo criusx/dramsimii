@@ -72,7 +72,7 @@ commandExecution()
 
 void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 {
-	if (currentTransaction->getType() != AUTO_REFRESH_TRANSACTION)
+	if (currentTransaction->isRead() || currentTransaction->isWrite())
 	{
 		if (currentTransaction->getLength() == 8)
 		{
@@ -82,12 +82,16 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 		{
 			++burstOf4Count;
 		}
-		transactionExecution[currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime()]++;
+		if (currentTransaction->isRead())
+		{
+			transactionExecution[currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime()]++;
+			assert(currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime() > 4);
+		}
 		transactionDecodeDelay[currentTransaction->getDecodeTime() - currentTransaction->getEnqueueTime()]++;
 
 		// gather working set information for this epoch, exclude the entries which alias to the same column		
 		workingSet[currentTransaction->getAddresses().getPhysicalAddress() >> columnDepth]++;
-		if (currentTransaction->getType() == READ_TRANSACTION)
+		if (currentTransaction->isRead())
 		{
 			readCount++;
 			readBytesTransferred += currentTransaction->getLength();
