@@ -72,27 +72,24 @@ def processPower(filename):
 
     # setup the script headers
     scripts = ['''
-    %s
     unset border
     set key outside center top horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
     set autoscale xfixmin
     set autoscale xfixmax
     set yrange [0:*] noreverse nowriteback
-
     set ytics out
-
     set multiplot
     set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
-    set size 1.0, 0.75
-    set origin 0.0, 0.25
+    set size 1.0, 0.67
+    set origin 0.0, 0.33
     unset xtics
     set boxwidth 0.95 relative
     set style fill  solid 1.00 noborder
     set style data histograms
     #set style data filledcurves below x1
     set style histogram rowstacked title offset 0,0,0
-    ''' % terminal,'''
-    set size 1.0, 0.27
+    ''','''
+    set size 1.0, 0.35
     set origin 0.0, 0.0
     set autoscale xfixmin
     set autoscale xfixmax
@@ -108,10 +105,28 @@ def processPower(filename):
     unset x2tics
 
     plot '-' u 1:2 t "Cumulative Average" w lines lw 2.00, '-' u 1:2 t "Total Power" w boxes, '-' u 1:2 t "Running Average" w lines lw 2.00
+    ''','''
+    unset border
+    set size 1.0, 1.0
+    set origin 0.0, 0.0
+    set key outside center top horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
+    set autoscale xfixmin
+    set autoscale xfixmax
+    set yrange [0:*] noreverse nowriteback
+    set title
+    set ytics out
+    set xtics out
+    set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
+    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
+    set xlabel "Time (s)" font "VeraMono,12"
+    unset x2tics
     ''']
 
     writing = 0
     p = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
+    p.stdin.write("%s\n" % terminal)
+    p2 = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
+    p2.stdin.write("%s\n%s\n" % (terminal, scripts[2]))
 
     # list of arrays
     values = []
@@ -167,6 +182,9 @@ def processPower(filename):
                     commandLine = line.strip().split(":")[1]
                     print commandLine
                     p.stdin.write("set title \"{/=12 Power Consumed vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
+                    p2.stdin.write("set title \"{/=12 Energy vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
+                    p2.stdin.write('set output "' + basefilename + "Energy." + extension + '\n')
+                    p2.stdin.write('''plot '-' u 1:2 t "Energy (P t)" w lines lw 2.00, '-' u 1:2 t "Energy Delay Prod (P t^{2})" w lines lw 2.00, '-' u 1:2 t "IBM Energy (P^{2} t^{2})" w lines lw 2.00, '-' u 1:2 t "IBM Energy2 (P^{2}t^{3})" w lines lw 2.00\n''')
 
                 elif line[1] == '+':
                     p.stdin.write('set output "' + basefilename + "." + extension + '\n')
@@ -209,6 +227,31 @@ def processPower(filename):
         p.stdin.write("e\n")
 
     p.stdin.write(scripts[1])
+
+    epochNumber = 0.0
+    for u in instantValues:
+        p2.stdin.write("%f %f\n" % (epochNumber, u * epochTime))
+        epochNumber += epochTime
+    p2.stdin.write("e\n")
+
+    epochNumber = 0.0
+    for u in instantValues:
+        p2.stdin.write("%f %f\n" % (epochNumber, u * epochTime * epochTime))
+        epochNumber += epochTime
+    p2.stdin.write("e\n")
+
+    epochNumber = 0.0
+    for u in instantValues:
+        p2.stdin.write("%f %f\n" % (epochNumber, u * u * epochTime * epochTime))
+        epochNumber += epochTime
+    p2.stdin.write("e\n")
+
+    epochNumber = 0.0
+    for u in instantValues:
+        p2.stdin.write("%f %f\n" % (epochNumber, u * u * epochTime * epochTime * epochTime))
+        epochNumber += epochTime
+    p2.stdin.write("e\nunset output\n")
+
 
     epochNumber = 0.0
     for u in averageValues:

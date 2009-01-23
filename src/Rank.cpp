@@ -110,8 +110,7 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	// RAS time history queue, per rank
 	const tick thisRASTime = currentTime;
-	//assert(currentTime > lastPrechargeAnyBankTime + timing.tRP());
-
+	
 	lastActivateTimes.push_front(thisRASTime);
 	lastBankID = currentCommand->getAddress().getBank();
 
@@ -119,7 +118,7 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 	if (banksPrecharged == bank.size())
 	{
 		prechargeTime += max(currentTime - lastPrechargeAnyBankTime,(tick)0);
-		totalPrechargeTime += currentTime - lastPrechargeAnyBankTime;
+		totalPrechargeTime += max(currentTime - lastPrechargeAnyBankTime, (tick)0);
 		for (vector<Bank>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
 			assert(!curBnk->isActivated());
 	}	
