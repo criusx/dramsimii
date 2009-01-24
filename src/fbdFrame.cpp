@@ -20,7 +20,7 @@ using namespace std;
 using namespace DRAMsimII;
 
 // initialize the static member
-Queue<fbdFrame> fbdFrame::freeFramePool(4*COMMAND_QUEUE_SIZE,true);
+Queue<fbdFrame> fbdFrame::freeFramePool(4*POOL_SIZE,true);
 
 fbdFrame::fbdFrame(tick time): 
 executeTime(time)

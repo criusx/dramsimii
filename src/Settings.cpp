@@ -203,6 +203,9 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 	case idd2p_token:
 		toNumeric<unsigned>(IDD2P,nodeValue,std::dec);
 		break;
+	case average_interarrival_cycle_count:
+		toNumeric<unsigned>(averageInterarrivalCycleCount,nodeValue,std::dec);
+		break;
 	case idd0_token:
 		toNumeric<unsigned>(IDD0,nodeValue,std::dec);
 		break;

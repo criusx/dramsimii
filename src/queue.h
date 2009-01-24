@@ -89,7 +89,7 @@ namespace DRAMsimII
 		{
 			if (preallocate)
 			{      
-				while (entry.size() < size)
+				while (count < size)
 				{
 					push(::new T());
 				}
@@ -175,21 +175,6 @@ namespace DRAMsimII
 				entry[head] = item;
 				return true;
 			}
-		}
-
-		/// @brief treat this queue like an object pool and retrieve an item
-		/// @detail if there is no available object, then create one
-		/// @return rhs new item which may or may not be initialized
-		T *acquireItem()
-		{
-			if (count == 0)
-			{
-				T* item = ::new T;
-				assert(item != NULL);
-				return item;
-			}
-			else
-				return pop();
 		}
 
 		/// @brief remove the item at the front of the queue
@@ -285,6 +270,21 @@ namespace DRAMsimII
 				::delete item;
 				item = NULL;
 			}
+		}
+
+		/// @brief treat this queue like an object pool and retrieve an item
+		/// @detail if there is no available object, then create one
+		/// @return rhs new item which may or may not be initialized
+		T *acquireItem()
+		{
+			if (count == 0)
+			{
+				T* item = ::new T;
+				assert(item != NULL);
+				return item;
+			}
+			else
+				return pop();
 		}
 
 		/// @brief this function makes this queue rhs non-FIFO queue.  

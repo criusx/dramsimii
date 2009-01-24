@@ -52,7 +52,7 @@ readPercentage(settings.readPercentage),
 shortBurstRatio(settings.shortBurstRatio),
 arrivalThreshold(0.0F),
 cpuToMemoryRatio(settings.cpuToMemoryClockRatio),
-averageInterarrivalCycleCount(10),
+averageInterarrivalCycleCount(settings.averageInterarrivalCycleCount),
 interarrivalDistributionModel(settings.arrivalDistributionModel),
 traceFilename(settings.inFile),
 randomNumberGenerator(std::time(0)),
@@ -117,6 +117,52 @@ rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 	}
 }
 
+InputStream::InputStream(const InputStream& rhs):
+type(rhs.type),
+systemConfig(rhs.systemConfig),
+channel(rhs.channel),
+channelLocality(rhs.channelLocality),
+rankLocality(rhs.rankLocality),
+bankLocality(rhs.bankLocality),
+time(rhs.time),
+rowLocality(rhs.rowLocality),
+readPercentage(rhs.readPercentage),
+shortBurstRatio(rhs.shortBurstRatio),
+arrivalThreshold(rhs.arrivalThreshold),
+cpuToMemoryRatio(rhs.cpuToMemoryRatio),
+averageInterarrivalCycleCount(rhs.averageInterarrivalCycleCount),
+interarrivalDistributionModel(rhs.interarrivalDistributionModel),
+// TODO: serialize tracefile position
+randomNumberGenerator(rhs.randomNumberGenerator),
+rngDistributionModel(rhs.rngDistributionModel),
+rngIntDistributionModel(rhs.rngIntDistributionModel),
+rngGenerator(rhs.rngGenerator),
+rngIntGenerator(rhs.rngIntGenerator)
+{}
+
+InputStream::InputStream(const InputStream& rhs, const SystemConfiguration &systemConfigVal, const vector<Channel> &systemChannel):
+type(rhs.type),
+systemConfig(systemConfigVal),
+channel(channel),
+channelLocality(rhs.channelLocality),
+rankLocality(rhs.rankLocality),
+bankLocality(rhs.bankLocality),
+time(rhs.time),
+rowLocality(rhs.rowLocality),
+readPercentage(rhs.readPercentage),
+shortBurstRatio(rhs.shortBurstRatio),
+arrivalThreshold(rhs.arrivalThreshold),
+cpuToMemoryRatio(rhs.cpuToMemoryRatio),
+averageInterarrivalCycleCount(rhs.averageInterarrivalCycleCount),
+interarrivalDistributionModel(rhs.interarrivalDistributionModel),
+// TODO: serialize tracefile position
+randomNumberGenerator(rhs.randomNumberGenerator),
+rngDistributionModel(rhs.rngDistributionModel),
+rngIntDistributionModel(rhs.rngIntDistributionModel),
+rngGenerator(rhs.rngGenerator),
+rngIntGenerator(rhs.rngIntGenerator)
+{}
+
 //////////////////////////////////////////////////////////////////////
 /// @brief generates a number using a Poisson random variable
 /// @details from the book "Numerical Recipes in C: The Art of Scientific Computing"
@@ -454,7 +500,9 @@ double InputStream::ascii2multiplier(const string &input) const
 		return 0.0;
 		break;
 	}
-}bool InputStream::operator==(const InputStream& rhs) const
+}
+
+bool InputStream::operator==(const InputStream& rhs) const
 {
 	return type == rhs.type && systemConfig == rhs.systemConfig && channel == rhs.channel &&
 		channelLocality == rhs.channelLocality && rankLocality == rhs.rankLocality && bankLocality == rhs.bankLocality &&
@@ -464,69 +512,15 @@ double InputStream::ascii2multiplier(const string &input) const
 		interarrivalDistributionModel == rhs.interarrivalDistributionModel;
 }
 
-InputStream::InputStream(const InputStream& rhs):
-type(rhs.type),
-systemConfig(rhs.systemConfig),
-channel(rhs.channel),
-channelLocality(rhs.channelLocality),
-rankLocality(rhs.rankLocality),
-bankLocality(rhs.bankLocality),
-time(rhs.time),
-rowLocality(rhs.rowLocality),
-readPercentage(rhs.readPercentage),
-shortBurstRatio(rhs.shortBurstRatio),
-arrivalThreshold(rhs.arrivalThreshold),
-cpuToMemoryRatio(rhs.cpuToMemoryRatio),
-averageInterarrivalCycleCount(rhs.averageInterarrivalCycleCount),
-interarrivalDistributionModel(rhs.interarrivalDistributionModel),
-// TODO: serialize tracefile position
-randomNumberGenerator(rhs.randomNumberGenerator),
-rngDistributionModel(rhs.rngDistributionModel),
-rngIntDistributionModel(rhs.rngIntDistributionModel),
-rngGenerator(rhs.rngGenerator),
-rngIntGenerator(rhs.rngIntGenerator)
-{}
-
-InputStream::InputStream(const InputStream& rhs, const SystemConfiguration &systemConfigVal, const vector<Channel> &systemChannel):
-type(rhs.type),
-systemConfig(systemConfigVal),
-channel(channel),
-channelLocality(rhs.channelLocality),
-rankLocality(rhs.rankLocality),
-bankLocality(rhs.bankLocality),
-time(rhs.time),
-rowLocality(rhs.rowLocality),
-readPercentage(rhs.readPercentage),
-shortBurstRatio(rhs.shortBurstRatio),
-arrivalThreshold(rhs.arrivalThreshold),
-cpuToMemoryRatio(rhs.cpuToMemoryRatio),
-averageInterarrivalCycleCount(rhs.averageInterarrivalCycleCount),
-interarrivalDistributionModel(rhs.interarrivalDistributionModel),
-// TODO: serialize tracefile position
-randomNumberGenerator(rhs.randomNumberGenerator),
-rngDistributionModel(rhs.rngDistributionModel),
-rngIntDistributionModel(rhs.rngIntDistributionModel),
-rngGenerator(rhs.rngGenerator),
-rngIntGenerator(rhs.rngIntGenerator)
-{}
-
 Transaction *InputStream::getNextRandomRequest()
 {
 	if (type == RANDOM)
 	{
-		float randVar;
-
-		static Address nextAddress;
-
-		//Transaction *thisTransaction = new Transaction();
-
-		randVar = rngGenerator();
-
 		static unsigned nextChannel;
 
 		// check against last transaction to see what the chan_id was, and whether we need to change channels or not
 		// choose a random channel that's not this one
-		if (channelLocality < randVar)
+		if (channelLocality < rngGenerator())
 		{
 			nextChannel = (nextChannel + (rngIntGenerator() % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
 		}
@@ -540,9 +534,7 @@ Transaction *InputStream::getNextRandomRequest()
 		// or keep to this rank_id 
 		unsigned nextRank = channel[nextChannel].getLastRankID();
 
-		randVar = rngGenerator();
-
-		if (rankLocality < randVar)
+		if (rankLocality < rngGenerator())
 		{
 			// choose a rank that's not this one
 			nextRank = (nextRank + 1 + (rngIntGenerator() % (systemConfig.getRankCount() - 1))) % systemConfig.getRankCount();
@@ -551,9 +543,7 @@ Transaction *InputStream::getNextRandomRequest()
 
 		unsigned nextBank = channel[nextChannel].getRank(nextRank).getLastBankID();
 
-		randVar = rngGenerator();
-
-		if (bankLocality < randVar)
+		if (bankLocality < rngGenerator())
 		{
 			// choose a new bank that's not this one
 			nextBank =  (nextBank + 1 + (rngIntGenerator() % (systemConfig.getBankCount() - 1))) % systemConfig.getBankCount();
@@ -562,31 +552,16 @@ Transaction *InputStream::getNextRandomRequest()
 
 		unsigned nextRow = channel[nextChannel].getRank(nextRank).bank[nextBank].getOpenRowID();
 
-		randVar = rngGenerator();
-
-		if (rowLocality < randVar)
+		if (rowLocality < rngGenerator())
 		{
 			// choose a new row that's not this one
 			nextRow = (nextRow + 1 + (rngIntGenerator() % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
 		}
 		// else leave it as is
+		
+		TransactionType nextType = (readPercentage > rngGenerator()) ? READ_TRANSACTION : WRITE_TRANSACTION;
 
-		TransactionType type;
-
-		randVar = rngGenerator();
-
-		if (readPercentage > randVar)
-		{
-			type = READ_TRANSACTION;
-		}
-		else
-		{
-			type = WRITE_TRANSACTION;
-		}
-
-		randVar = rngGenerator();
-
-		unsigned burstLength = shortBurstRatio > randVar ? 4 : 8;
+		unsigned burstLength = (shortBurstRatio > rngGenerator()) ? 4 : 8;
 
 		unsigned nextColumn = rngIntGenerator() & (systemConfig.getColumnCount() - 1);
 
@@ -594,11 +569,8 @@ Transaction *InputStream::getNextRandomRequest()
 
 		while (true)
 		{
-			randVar = rngGenerator();
-
-			if (arrivalThreshold < randVar) // interarrival probability function
+			if (arrivalThreshold < rngGenerator()) // interarrival probability function
 			{
-
 				// Gaussian distribution function
 				if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
 				{
@@ -621,13 +593,11 @@ Transaction *InputStream::getNextRandomRequest()
 
 		// set arrival time
 
-		static tick oldTime;
-		//cerr << time - oldTime << endl;
-		oldTime = time;
+		static Address nextAddress;
 
 		nextAddress.setAddress(nextChannel,nextRank,nextBank,nextRow,nextColumn);
 
-		return new Transaction(type,time, burstLength, nextAddress, 0, 0, UINT_MAX);
+		return new Transaction(nextType, time, burstLength, nextAddress, 0, 0, UINT_MAX);
 	}
 	else
 		return NULL;

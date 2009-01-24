@@ -84,6 +84,7 @@
 						<xs:sequence>
 							<xs:element name="shortBurstRatio" type="xs:float" />
 							<xs:element name="readPercentage" type="xs:float" />
+							<xs:element name="averageInterarrivalCycleCount" type="xs:int" />
 							<xs:element name="outFile">
 								<xs:complexType>
 									<xs:simpleContent>
@@ -94,7 +95,7 @@
 								</xs:complexType>
 							</xs:element>
 							<xs:element name="outFileDirectory" type="xs:string">
-								
+
 							</xs:element>
 							<xs:element name="requestCount">
 								<xs:complexType>

@@ -20,7 +20,7 @@
 using namespace DRAMsimII;
 
 // initialize the static member
-Queue<Event> Event::freeEventPool(4*COMMAND_QUEUE_SIZE,true);
+Queue<Event> Event::freeEventPool(4*POOL_SIZE,true);
 
 
 Event::Event():

@@ -23,7 +23,7 @@ using std::setw;
 using namespace DRAMsimII;
 
 // initialize the static members
-Queue<Transaction> Transaction::freeTransactionPool(4*COMMAND_QUEUE_SIZE,true);
+Queue<Transaction> Transaction::freeTransactionPool(4*POOL_SIZE,true);
 unsigned Transaction::eventCounter(0);
 
 /// constructor to make a transaction with no values set
@@ -36,9 +36,9 @@ arrivalTime(0xcdcdcdcd),
 enqueueTime(0xcdcdcdcd),
 completionTime(0xcdcdcdcd),
 decodeTime(0xcdcdcdcd),
-PC(0x00),
+PC(0x0),
 threadNum(0),
-addr(0xcdcdcdcd),
+addr(0x0),
 originalTransaction(UINT_MAX)
 {}
 

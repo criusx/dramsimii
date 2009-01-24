@@ -9,6 +9,7 @@
 <!ELEMENT IDD5A (#PCDATA)>
 <!ELEMENT autoPrecharge (#PCDATA)>
 <!ELEMENT autoRefreshPolicy (#PCDATA)>
+<!ELEMENT averageInterarrivalCycleCount (#PCDATA)>
 <!ELEMENT banks (#PCDATA)>
 <!ELEMENT cacheLineSize (#PCDATA)>
 <!ELEMENT channelWidth (#PCDATA)>
@@ -59,7 +60,7 @@
 <!ELEMENT rows (#PCDATA)>
 <!ELEMENT seniorityAgeLimit (#PCDATA)>
 <!ELEMENT shortBurstRatio (#PCDATA)>
-<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, outFile, outFileDirectory, requestCount, inputFile, cpuToMemoryClockRatio, epoch)>
+<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, averageInterarrivalCycleCount, outFile, outFileDirectory, requestCount, inputFile, cpuToMemoryClockRatio, epoch)>
 <!ELEMENT systemConfigurationType (#PCDATA)>
 <!ELEMENT systemVDD (#PCDATA)>
 <!ELEMENT tAL (#PCDATA)>

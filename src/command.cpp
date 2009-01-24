@@ -16,7 +16,6 @@
 
 #include <assert.h>
 #include "command.h"
-#include "transaction.h"
 
 using std::cerr;
 using std::endl;
@@ -24,7 +23,7 @@ using std::ostream;
 using namespace DRAMsimII;
 
 // initialize the static member
-Queue<Command> Command::freeCommandPool(4*COMMAND_QUEUE_SIZE,true);
+Queue<Command> Command::freeCommandPool(8*POOL_SIZE,true);
 
 Command::Command():
 commandType(RETIRE_COMMAND),
@@ -33,18 +32,6 @@ enqueueTime(0),
 completionTime(0),
 addr(),
 hostTransaction(NULL),
-//link_comm_tran_comp_time(0),
-//amb_proc_comp_time(0),
-//dimm_comm_tran_comp_time(0),
-//dram_proc_comp_time(0),
-//dimm_data_tran_comp_time(0),
-//amb_down_proc_comp_time(0),
-//link_data_tran_comp_time(0),
-//bundle_id(0),
-//tran_id(0),
-//data_word(0),
-//data_word_position(0),
-//refresh(0),
 postedCAS(false),
 length(0)
 {}
@@ -57,19 +44,6 @@ enqueueTime(rhs.enqueueTime),
 completionTime(rhs.completionTime),
 addr(rhs.addr),
 hostTransaction(rhs.hostTransaction ? new Transaction(*rhs.hostTransaction) : NULL),
-//hostTransaction(rhs.hostTransaction), // assume that this is managed elsewhere
-//link_comm_tran_comp_time(rhs.link_comm_tran_comp_time),
-//amb_proc_comp_time(rhs.amb_down_proc_comp_time),
-//dimm_comm_tran_comp_time(rhs.dimm_comm_tran_comp_time),
-//dram_proc_comp_time(rhs.dram_proc_comp_time),
-//dimm_data_tran_comp_time(rhs.dimm_data_tran_comp_time),
-//amb_down_proc_comp_time(rhs.amb_down_proc_comp_time),
-//link_data_tran_comp_time(rhs.link_data_tran_comp_time),
-//bundle_id(rhs.bundle_id),
-//tran_id(rhs.tran_id),
-//data_word(rhs.data_word),
-//data_word_position(rhs.data_word_position),
-//refresh(rhs.refresh),
 postedCAS(rhs.postedCAS),
 length(rhs.length)
 {
@@ -256,13 +230,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const CommandType &command)
 ostream &DRAMsimII::operator<<(ostream &os, const Command &currentCommand)
 {
 	os << currentCommand.commandType << currentCommand.addr << " S[" << std::dec << currentCommand.startTime << "] Q[" << std::dec << currentCommand.enqueueTime << "] E[" << std::dec << currentCommand.completionTime << std::dec << "] T[" << currentCommand.completionTime - currentCommand.startTime << "] DLY[" << std::dec << currentCommand.startTime - currentCommand.enqueueTime << "]";
-	// TODO: add data to the transactions for printing purposes
-	/*if (currentCommand.isWrite())
-		os	<< "D[" << std::hex << currentCommand.hostTransaction->;
-		*/
 	return os;
 }
-
 
 void Command::operator delete(void *mem)
 {

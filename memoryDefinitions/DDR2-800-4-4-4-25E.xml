@@ -7,7 +7,7 @@
 		<datarate>800000000</datarate>
 		<!-- set to 2 for DDR, DDR2, DDR3, etc. -->
 		<clockGranularity>2</clockGranularity>
-		<channels>4</channels>
+		<channels>2</channels>
 		<channelWidth>8</channelWidth>
 		<!--burgerBase, closePageBaseline, intel845g, sdramBase, sdramClosePage, sdramHiperf, closePageLowLocality, closePageHighLocality -->
 		<physicalAddressMappingPolicy>closePageBaseline</physicalAddressMappingPolicy>
@@ -65,7 +65,7 @@
 		<eventQueueDepth>8</eventQueueDepth>
 		<refreshQueueDepth>8</refreshQueueDepth>
 		<!-- used to determine how long a refresh transaction may be deprioritized relative to normal transactions -->
-		<seniorityAgeLimit>256</seniorityAgeLimit>
+		<seniorityAgeLimit>512</seniorityAgeLimit>
 		<!--attempts to group reads and writes together in time-->
 		<readWriteGrouping>false</readWriteGrouping>
 		<!--able to issue CAS+Pre commands, effective with close page-->
@@ -105,6 +105,7 @@
 	<simulationParameters>
 		<shortBurstRatio>.50</shortBurstRatio>
 		<readPercentage>.5</readPercentage>
+		<averageInterarrivalCycleCount>4</averageInterarrivalCycleCount>
 		<!-- type may be gz, bz, cout, uncompressed, none -->
 		<outFile type="gz" dbreporting="false">standardOutFile.gz</outFile>
 		<!-- the directory that the output files will be written to -->

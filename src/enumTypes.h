@@ -161,6 +161,7 @@ namespace DRAMsimII
 		SECOND,
 		addr_mapping_scheme_token,
 		auto_precharge_token,
+		average_interarrival_cycle_count,
 		bank_count_token,
 		cachelines_per_row_token,
 		cacheline_size_token,

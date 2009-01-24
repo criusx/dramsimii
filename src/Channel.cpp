@@ -339,16 +339,16 @@ void Channel::retireCommand(Command *newestCommand)
 //////////////////////////////////////////////////////////////////////////
 bool Channel::enqueue(Transaction *incomingTransaction)
 {
-	bool result;
-
 	//static unsigned success = 1;
+
+	if (transactionQueue.isFull())
+		return false;
 
 	incomingTransaction->setEnqueueTime(time);
 
 	assert(incomingTransaction->getAddresses().getChannel() == channelID);
 
-	if (transactionQueue.isFull())
-		return false;
+	bool result;
 
 	/// @todo probably should set the enqueue time = time here
 	switch (systemConfig.getTransactionOrderingAlgorithm())
@@ -357,29 +357,19 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 		result = transactionQueue.push(incomingTransaction);
 		break;
 	case RIFF:
+		/// @todo add priority insertion here
 		// search from back to front
 		// insert right after a conflict, any transaction over the seniority limit or any read
 		if (incomingTransaction->isRead())
 		{
 			for (int currentIndex = transactionQueue.size() - 1; currentIndex >= 0; --currentIndex)
 			{
-				if (transactionQueue[currentIndex]->isWrite())
+				// prevent against starvation and RAW errors
+				if (transactionQueue[currentIndex]->isRead() ||
+					(time - transactionQueue[currentIndex]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit()) ||
+					transactionQueue[currentIndex]->getAddresses() == incomingTransaction->getAddresses())
 				{
-					// prevent against starvation and RAW errors
-					if ((time - transactionQueue[currentIndex]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit()) ||
-						transactionQueue[currentIndex]->getAddresses() == incomingTransaction->getAddresses())
-					{
-						result = transactionQueue.insert(incomingTransaction, currentIndex + 1);					
-						assert(result);
-						//if (currentIndex < transactionQueue.size() - 1)
-						//	success++;
-						return result;
-					}
-				}
-				else // isRead() == true
-				{
-					assert(transactionQueue[currentIndex]->isRead());
-					result = transactionQueue.insert(incomingTransaction, currentIndex + 1);
+					result = transactionQueue.insert(incomingTransaction, currentIndex + 1);					
 					assert(result);
 					//if (currentIndex < transactionQueue.size() - 1)
 					//	success++;

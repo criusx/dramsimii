@@ -40,7 +40,7 @@ namespace DRAMsimII
 		class DelayCounter
 		{
 		private:
-			uint64_t accumulatedLatency;				///< the total latency for this address
+			tick accumulatedLatency;				///< the total latency for this address
 			unsigned count;								///< the total number of times this address has been seen
 		public:
 			DelayCounter():

@@ -55,6 +55,7 @@ namespace DRAMsimII
 		std::string commandLine;
 		OutputFileType outFileType;
 		unsigned requestCount;
+		unsigned averageInterarrivalCycleCount;
 		RefreshPolicy refreshPolicy;
 		DRAMType dramType;
 		unsigned dataRate; // frequency
@@ -182,6 +183,7 @@ namespace DRAMsimII
 			theMap[t_wr_token] = "tWR";
 			theMap[t_wtr_token] = "tWTR";
 			theMap[posted_cas_token] = "postedCAS";
+			theMap[average_interarrival_cycle_count] = "averageInterarrivalCycleCount";
 			theMap[t_al_token] = "tAL";
 			theMap[refresh_policy_token] = "autoRefreshPolicy";
 			theMap[refresh_time_token] = "refreshTime";
@@ -261,6 +263,7 @@ namespace DRAMsimII
 			theMap["commandorderingpolicy"] = command_ordering_algorithm_token;
 			theMap["requestcount"] = request_count_token;
 			theMap["inputfile"] = input_file_token;
+			theMap["averageinterarrivalcyclecount"] = average_interarrival_cycle_count;
 			theMap["outfile"] = output_file_token;
 			theMap["outfiledirectory"] = output_file_dir_token;
 			theMap["outfiledir"] = output_file_dir_token;

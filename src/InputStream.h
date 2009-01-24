@@ -59,7 +59,7 @@ namespace DRAMsimII
 		boost::uniform_int<> rngIntDistributionModel; ///< generates a distribution of integers
 		mutable boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rngGenerator;
 		boost::variate_generator<boost::mt19937&, boost::uniform_int<> > rngIntGenerator;
-
+		
 	public: 
 
 		// constructors	

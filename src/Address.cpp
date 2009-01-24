@@ -222,11 +222,6 @@ bool Address::addressTranslation()
 		bufferA  = tempAddress << rowAddressDepth;
 		row = bufferA ^ bufferB;		
 
-		if (tempAddress != 0)				/* If there is still "stuff" left, the input address is out of range */
-		{
-			cerr << "Address out of range[" << std::hex << physicalAddress << "] of available physical memory" << endl;
-			return false;
-		}
 		break;
 
 	case SDRAM_HIPERF_MAP:
@@ -313,11 +308,6 @@ bool Address::addressTranslation()
 		bufferA  = tempAddress << rowAddressDepth;
 		row = bufferA ^ bufferB;	
 
-		if (tempAddress != 0) // If there is still "stuff" left, the input address is out of range
-		{
-			cerr << "address out of range[" << physicalAddress << "] of available physical memory" << endl << this << endl;
-			return false;
-		}
 		break;
 
 	case SDRAM_BASE_MAP:		
@@ -394,11 +384,6 @@ bool Address::addressTranslation()
 		bufferA  = tempAddress << rankAddressDepth;
 		rank = bufferA ^ bufferB;     		/* strip out the rank address */
 
-		if(tempAddress != 0)
-		{				/* If there is still "stuff" left, the input address is out of range */
-			cerr << "address out of range[" << physicalAddress << "] of available physical memory" << endl;
-			return false;
-		}
 		break;
 
 	case INTEL845G_MAP:
@@ -450,10 +435,7 @@ bool Address::addressTranslation()
 		rank = bufferA ^ bufferB;		/* strip out the rank id */
 
 		channel = 0;				/* Intel 845G has only a single channel dram controller */
-		if(tempAddress != 0){				/* If there is still "stuff" left, the input address is out of range */
-			cerr << "address out of range[" << physicalAddress << "] of available physical memory" << endl;
-			return false;
-		}
+
 		break;
 
 	case CLOSE_PAGE_BASELINE:
@@ -524,12 +506,6 @@ bool Address::addressTranslation()
 		// strip out the row address
 		row = bufferB ^ (tempAddress << rowAddressDepth);
 
-		// If there is still "stuff" left, the input address is out of range
-		if (tempAddress)
-		{
-			cerr << "Mem address out of range[" << std::hex << physicalAddress << "] of available physical memory." << endl;
-			return false;
-		}
 		break;
 
 	case CLOSE_PAGE_LOW_LOCALITY:
@@ -582,12 +558,6 @@ bool Address::addressTranslation()
 
 		column = (columnHigh << columnIdDepth) | columnLow;
 
-		// If there is still "stuff" left, the input address is out of range
-		if (tempAddress)
-		{
-			cerr << "Memory address out of range[" << std::hex << physicalAddress << "] of available physical memory." << endl;
-			return false;
-		}
 		break;
 
 	case CLOSE_PAGE_HIGH_LOCALITY:
@@ -638,14 +608,8 @@ bool Address::addressTranslation()
 		// strip out the rank address 
 		rank = bufferB ^ (tempAddress << rankAddressDepth);	
 
-		column = (columnHigh << columnIdDepth) | columnLow;
+		column = (columnHigh << columnIdDepth) | columnLow;	
 
-		// If there is still "stuff" left, the input address is out of range
-		if (tempAddress)
-		{
-			cerr << "Memory address out of range[" << std::hex << physicalAddress << "] of available physical memory." << endl;
-			return false;
-		}
 		break;
 
 		// don't know what this policy is.. Map everything to 0 
@@ -658,6 +622,13 @@ bool Address::addressTranslation()
 		column  = 0;
 		return false;
 		break;
+	}
+
+	// If there is still "stuff" left, the input address is out of range
+	if (tempAddress)
+	{
+		cerr << "Memory address out of range[" << std::hex << physicalAddress << "] of available physical memory." << endl;
+		return false;
 	}
 
 	return true;
@@ -717,9 +688,7 @@ std::ostream &DRAMsimII::operator <<(std::ostream &os, const AddressMappingSchem
 // overloads
 bool Address::operator==(const Address& right) const
 {
-	return (channelAddressDepth == right.channelAddressDepth && rankAddressDepth == right.rankAddressDepth && bankAddressDepth == right.bankAddressDepth &&
-		rowAddressDepth == right.rowAddressDepth && columnAddressDepth == right.columnAddressDepth && columnSizeDepth == right.columnSizeDepth &&
-		mappingScheme == right.mappingScheme && virtualAddress == right.virtualAddress && physicalAddress == right.physicalAddress && channel == right.channel &&
+	return (virtualAddress == right.virtualAddress && physicalAddress == right.physicalAddress && channel == right.channel &&
 		rank == right.rank && bank == right.bank && row == right.row && column == right.column);
 
 }

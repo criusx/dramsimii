@@ -34,7 +34,6 @@
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/access.hpp>
-#include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>
 
 
@@ -48,7 +47,6 @@ namespace DRAMsimII
 		tick time;										///< channel time, allow for channel concurrency			
 		tick lastRefreshTime;							///< tells me when last refresh was done
 		tick lastCommandIssueTime;						///< the last time a command was executed on this channel
-		//mutable const Command *nextAvailableCommand;	///< the next command that was chosen by the algorithm, cached here
 		unsigned lastRankID;							///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
@@ -99,8 +97,8 @@ namespace DRAMsimII
 		tick getTime() const { return time; }
 		unsigned getLastRankID() const { return lastRankID; }
 
-		Transaction *getTransaction();			// remove and return the oldest transaction
-		const Transaction *readTransaction(bool) const;	// read the oldest transaction without affecting the queue
+		Transaction *getTransaction();																
+		const Transaction *readTransaction(bool) const;												
 		Transaction *createNextRefresh();
 		const Transaction *readNextRefresh() const;
 		const tick nextRefresh() const;
@@ -113,7 +111,7 @@ namespace DRAMsimII
 
 		// mutators
 		void setTime(tick value) { time = value; }						///< update the time for this channel
-		void setChannelID(const unsigned value) { channelID = value; }			///< set the channel ordinal
+		void setChannelID(const unsigned value) { channelID = value; }	///< set the channel ordinal
 		TransactionType setReadWriteType(const int,const int) const;	///< determine whether a read or write transaction should be generated
 
 		// overloads
@@ -123,7 +121,7 @@ namespace DRAMsimII
 
 	private:
 		bool sendPower(float PsysRD, float PsysWR, std::vector<int> rankArray, std::vector<float> PsysACTSTBYArray, std::vector<float> PsysACTArray, const tick currentTime) const;
-	
+
 		// serialization
 		explicit Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power,const std::vector<Rank> &rank, const TimingSpecification &timing);
 		explicit Channel();
