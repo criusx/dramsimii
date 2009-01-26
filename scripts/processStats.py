@@ -14,6 +14,7 @@ import bz2
 import re
 from subprocess import Popen, PIPE, STDOUT
 from array import array
+import shutil
 
 #globals
 workerThreads = 3
@@ -21,6 +22,8 @@ workerThreads = 3
 Window = 20
 
 processPerEpochGraphs = False
+
+thumbnailResolution = "640x480"
 
 #terminal = 'set terminal png font "VeraMono,10" transparent nointerlace truecolor  size 1700, 1024 nocrop enhanced\n'
 #extension = 'png'
@@ -68,7 +71,18 @@ class PriorMovingAverage:
 
 def processPower(filename):
     # remember the temp directory
-    tempPath = tempfile.mkdtemp(prefix="processStats")
+    #tempPath = tempfile.mkdtemp(prefix="processStats")
+
+    tempPath = os.path.join(os.getcwd(), filename[0:filename.find("-power")])
+
+    try:
+        if not os.path.exists(tempPath):
+            os.mkdir(tempPath)
+        elif not os.access(tempPath, os.W_OK):
+            print "Cannot write to output dir: " + tempPath
+    except:
+        print "Could not create output dir: " + tempPath
+        return
 
     # setup the script headers
     scripts = ['''
@@ -128,6 +142,8 @@ def processPower(filename):
     p2 = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
     p2.stdin.write("%s\n%s\n" % (terminal, scripts[2]))
 
+    filesGenerated = []
+
     # list of arrays
     values = []
     averageValues = array('f')
@@ -142,12 +158,12 @@ def processPower(filename):
 
     try:
         if filename.endswith("gz"):
-            basefilename = filename.split('.gz')[0]
-            outFileBZ2 = os.path.join(os.getcwd(),  filename.split('.gz')[0] + ".tar.bz2")
+            basefilename = os.path.join(tempPath, filename.split('.gz')[0])
+            outFileBZ2 = os.path.join(tempPath,  filename.split('.gz')[0] + ".tar.bz2")
             compressedstream = gzip.open(filename, 'rb')
         else:
-            basefilename = filename.split('.bz2')[0]
-            outFileBZ2 = os.path.join(os.getcwd(),  filename.split('.bz2')[0] + ".tar.bz2")
+            basefilename = os.path.join(tempPath, filename.split('.bz2')[0])
+            outFileBZ2 = os.path.join(tempPath,  filename.split('.bz2')[0] + ".tar.bz2")
             compressedstream = bz2.open(filename, 'rb')
 
         splitter = re.compile('([\[\]])')
@@ -183,11 +199,15 @@ def processPower(filename):
                     print commandLine
                     p.stdin.write("set title \"{/=12 Power Consumed vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
                     p2.stdin.write("set title \"{/=12 Energy vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
-                    p2.stdin.write('set output "' + basefilename + "Energy." + extension + '\n')
+                    fileName = os.path.join(tempPath,"energy." + extension)
+                    filesGenerated.append(fileName)
+                    p2.stdin.write('set output "' + fileName + '"\n')
                     p2.stdin.write('''plot '-' u 1:2 t "Energy (P t)" w lines lw 2.00, '-' u 1:2 t "Energy Delay Prod (P t^{2})" w lines lw 2.00, '-' u 1:2 t "IBM Energy (P^{2} t^{2})" w lines lw 2.00, '-' u 1:2 t "IBM Energy2 (P^{2}t^{3})" w lines lw 2.00\n''')
 
                 elif line[1] == '+':
-                    p.stdin.write('set output "' + basefilename + "." + extension + '\n')
+                    fileName = os.path.join(tempPath,"power." + extension)
+                    filesGenerated.append(fileName)
+                    p.stdin.write('set output "%s"\n' % fileName)
                     p.stdin.write(scripts[0])
 
                     splitLine = splitter.split(line)
@@ -252,7 +272,6 @@ def processPower(filename):
         epochNumber += epochTime
     p2.stdin.write("e\nunset output\n")
 
-
     epochNumber = 0.0
     for u in averageValues:
         p.stdin.write("%f %f\n" % (epochNumber, u))
@@ -273,14 +292,25 @@ def processPower(filename):
     p.stdin.write("unset multiplot\nunset output\nexit\n")
     p.wait()
 
-    files = os.listdir(tempPath)
+    #files = os.listdir(tempPath)
+    for x in filesGenerated:
+        if x.endswith(extension):
+            file = os.path.join(tempPath,x)
+            os.system("convert -resize %s %s %s-thumb.png" % (thumbnailResolution, file, file[:-4]))
+    #    fullPath = os.path.join(tempPath,x)
+        #os.remove(fullPath)
 
-    for x in files:
-        fullPath = os.path.join(tempPath,x)
-        os.remove(fullPath)
 
-    os.rmdir(tempPath)
+    #os.rmdir(tempPath)
 
+    #htmlFile = os.path.join(os.path.abspath(sys.path[0]),"template.html")
+
+    #shutil.copy(htmlFile, os.path.join(tempPath,basefilename[0:basefilename.find("-power")] + ".html"))
+
+    o = open(os.path.join(tempPath,basefilename[0:basefilename.find("-power")] + ".html"),"w")
+    template = open(os.path.join(os.path.abspath(sys.path[0]),"template.html")).read()
+    o.write(re.sub("@@@", commandLine,template))
+    o.close()
 
     # make a big file of them all
     #os.system("tar cjf " + outFileBZ2 + " --remove-files " + string.join(fileList, ' '))
@@ -288,11 +318,22 @@ def processPower(filename):
 
 def processStats(filename):
     # remember the temp directory
-    tempPath = tempfile.mkdtemp(prefix="processStats")
+    #tempPath = tempfile.mkdtemp(prefix="processStats")
 
     # start counting lines
     #process = Popen(["zcat " + filename ], stdout=PIPE, shell=True)
     #process2 = Popen(["wc -l"], stdin=process.stdout, stdout=PIPE, shell=True)
+
+    tempPath = os.path.join(os.getcwd(), filename[0:filename.find("-stats")])
+
+    try:
+        if not os.path.exists(tempPath):
+            os.mkdir(tempPath)
+        elif not os.access(tempPath, os.W_OK):
+            print "Cannot write to output dir: " + tempPath
+    except:
+        print "Could not create output dir: " + tempPath
+        return
 
 
     basicSetup = '''
@@ -531,6 +572,11 @@ def processStats(filename):
     # counter to keep track of how many lines are written to each file
     #linesWritten = 0
     #print 'Generate graphs'
+
+    if filename.endswith("gz"):
+        basefilename = os.path.join(tempPath, filename.split('.gz')[0])
+    else:
+        basefilename = os.path.join(tempPath, filename.split('.bz2')[0])
 
     try:
         if filename.endswith("gz"):
@@ -792,7 +838,7 @@ def processStats(filename):
 
         for u in distTransactionLatency:
             gnuplot[0].stdin.write("%d %f\n" % (u * period, distTransactionLatency[u]))
-            print period * u
+            #print period * u
 
         gnuplot[0].stdin.write("e\nunset output\n")
 
@@ -924,19 +970,34 @@ def processStats(filename):
 
     # make a big file of them all
     #print 'Compress graphs'
-    outputFile = tarfile.open(outFileBZ2,'w:bz2')
+    outputFile = tarfile.open(os.path.join(tempPath,outFileBZ2),'w:bz2')
     for name in fileList:
         outputFile.add(name, os.path.basename(name))
 
     outputFile.close()
 
-    files = os.listdir(tempPath)
+    for x in fileList:
+        if x.endswith(extension):
+            file = os.path.join(tempPath,x)
+            os.system("convert -resize %s %s %s-thumb.png" % (thumbnailResolution, file,file[:-4]))
 
-    for x in files:
-        fullPath = os.path.join(tempPath,x)
-        os.remove(fullPath)
+    #files = os.listdir(tempPath)
 
-    os.rmdir(tempPath)
+
+    #htmlFile = os.path.join(os.path.abspath(sys.path[0]),"template.html")
+
+    #shutil.copy(htmlFile, os.path.join(tempPath,basefilename[0:basefilename.find("-stats")] + ".html"))
+    o = open(os.path.join(tempPath,basefilename[0:basefilename.find("-stats")] + ".html"),"w")
+    template = open(os.path.join(os.path.abspath(sys.path[0]),"template.html")).read()
+    o.write(re.sub("@@@", commandLine,template))
+    o.close()
+
+
+    #for x in files:
+    #    fullPath = os.path.join(tempPath,x)
+    #    os.remove(fullPath)
+
+    #os.rmdir(tempPath)
     #os.system("tar cjf " + outFileBZ2 + " --totals " + " ".join(fileList))
 
     #os.chdir(originalPath)
@@ -963,10 +1024,44 @@ def main():
         t.setDaemon(True)
         t.start()
 
+    files = {}
     for u in sys.argv:
-        if u.endswith("gz") or u.endswith("bz2"):
-            #print u
+        if u.endswith("power.gz") or u.endswith("power.bz2") or u.endswith("stats.gz") or u.endswith("stats.bz2"):
+            v = u[0:u.rfind("-")]
+            commandLine = v
+
+            if u.endswith("gz"):
+                compressedstream = gzip.open(u, 'rb')
+            else:
+                compressedstream = bz2.open(u, 'rb')
+            lineCounter = 0
+            try:
+                for line in compressedstream:
+                    if line.startswith('----Command Line:'):
+                        commandLine = line.strip().split(":")[1]
+                        break
+                    lineCounter += 1
+                    if lineCounter > 30:
+                        break
+            except IOError, strerror:
+                pass
+            except OSError, strerror:
+                pass
+            finally:
+                compressedstream.close()
+
+
+
+            files[v] = '<a href="%s/%s.html">%s</a><br />' % (v,v,commandLine)
             workQueue.put(u)
+
+    o = open("result.html","w")
+    data = open(os.path.join(os.path.abspath(sys.path[0]),"template2.html")).read()
+    filelist = ""
+    for x in files:
+        filelist += files[x]
+    o.write(re.sub("@@@", filelist,data))
+    o.close()
 
     workQueue.join()
 

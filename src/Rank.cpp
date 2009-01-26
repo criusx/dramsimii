@@ -142,6 +142,7 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 		lastPrechargeAnyBankTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), currentBank.getLastRASTime() + timing.tRAS());
 		break;
 	case WRITE_AND_PRECHARGE:
+		// obeys minimum timing, but also supports tRAS lockout
 		lastPrechargeAnyBankTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), currentBank.getLastRASTime() + timing.tRAS());
 		//lastPrechargeAnyBankTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), currentBank.getLastRASTime() + timing.tRAS());
 		break;

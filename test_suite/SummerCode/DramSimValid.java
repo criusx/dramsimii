@@ -4,16 +4,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import java.io.InputStreamReader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-import javax.swing.JOptionPane;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,9 +19,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+
 public class DramSimValid
 {
-
   private static HashMap<String, Integer> timingParameters;
   private DramChannel[] chans;
   private ArrayList<DramCommand> commands;
@@ -38,7 +34,7 @@ public class DramSimValid
   public DramSimValid(String filename, String timingFile, String outFilename)
     throws IOException
   {
-  errorsFound = 0;
+    errorsFound = 0;
     parseParameters(timingFile);
     System.out.println(checkParameters());
 
@@ -100,6 +96,11 @@ public class DramSimValid
       }
       nl = doc.getElementsByTagName("channels");
       chans = new DramChannel[Integer.parseInt(nl.item(0).getTextContent())];
+      
+    }
+    catch (NumberFormatException e)
+    {
+      e.printStackTrace();
     }
     catch (Exception e)
     {
@@ -200,6 +201,11 @@ public class DramSimValid
     try
     {
       gOut.write(errors.getBytes());
+    }    
+    catch (ArrayIndexOutOfBoundsException e)
+    {
+      e.printStackTrace();
+      System.out.println(com.getChan());
     }
     catch (IOException e)
     {

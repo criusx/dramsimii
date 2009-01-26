@@ -364,7 +364,7 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 		{
 			for (int currentIndex = transactionQueue.size() - 1; currentIndex >= 0; --currentIndex)
 			{
-				// prevent against starvation and RAW errors
+				// prevent against starvation and RAW errors, reads do not switch their ordering
 				if (transactionQueue[currentIndex]->isRead() ||
 					(time - transactionQueue[currentIndex]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit()) ||
 					transactionQueue[currentIndex]->getAddresses() == incomingTransaction->getAddresses())

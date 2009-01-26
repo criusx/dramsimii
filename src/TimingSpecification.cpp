@@ -51,7 +51,9 @@ t_refi(-1)
 {}
 
 
-TimingSpecification::TimingSpecification(const Settings& settings)
+TimingSpecification::TimingSpecification(const Settings& settings):
+t_buffer_delay(settings.tBufferDelay),
+t_refi(settings.tREFI)
 {
 	switch(settings.dramType)
 	{
@@ -92,6 +94,7 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 		t_rc = settings.tRC;
 		t_ras = settings.tRAS;		
 		//assert(t_rcd + t_burst + t_rtp - t_ccd == t_rc);
+		assert(settings.tCWD + 2 == settings.tCAS);
 		t_cwd = t_cas - 2;			// protocol specific, cannot be changed
 		t_int_burst = 4;			// protocol specific, cannot be changed
 		t_faw = settings.tFAW;		
@@ -103,7 +106,8 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 		t_wtr = settings.tWTR;
 		t_ost = 5;					// 2.5 cycles to turn off, 2 to turn on
 
-		// will delay internally if tRAS is not met
+		// DRAM will delay internally if tRAS is not met
+		// this MHC will account for any issues
 		//assert(t_rcd + t_rtp + t_burst - t_ccd >= t_ras);
 		assert(t_rcd + t_cwd + t_burst + t_wr >= t_ras);	
 		
@@ -169,12 +173,7 @@ TimingSpecification::TimingSpecification(const Settings& settings)
 
 	default:
 		break;
-	}
-
-	// set the minimum length of time a command must take to be decoded
-	t_buffer_delay = settings.tBufferDelay;
-	// set the refresh interval, issue a refresh command every tREFI
-	t_refi = settings.tREFI;
+	}	
 }
 
 bool TimingSpecification::operator==(const TimingSpecification &right) const 

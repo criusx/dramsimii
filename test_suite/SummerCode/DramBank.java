@@ -26,8 +26,7 @@ public class DramBank
     { //Prev = A
       if (previousCommand.getType().equals("RAS"))
       { //Next = A
-        if (com.getS() - previousCommand.getE() > 
-            DramSimValid.getTimingParameter("tRC"))
+        if (com.getS() - previousCommand.getE() > DramSimValid.getTimingParameter("tRC"))
         {
           return "tRc constraint violated by Command: " + com.toString();
         }

@@ -519,6 +519,7 @@ bool System::operator==(const System &rhs) const
 //////////////////////////////////////////////////////////////////////
 ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 {
+
 	os << "SYS[";
 	switch(thisSystem.systemConfig.getConfigType())
 	{
@@ -556,8 +557,16 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 	//os << "BQD[" << this_a.systemConfig.getPerBankQueueDepth() << "] ";
 	os << "BLR[" << setprecision(0) << floor(100*(thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] ";
 	os << "RP[" << (int)(100*thisSystem.systemConfig.getReadPercentage()) << "] ";
-
+#if 0
 	os << thisSystem.statistics;
+
+	os << "----Command Line: " << settings.commandLine << " ch[" << thisSystem.systemConfig.getChannelCount() <<
+		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
+		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
+		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
+		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
+		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M]" << endl;
+#endif
 	os << thisSystem.systemConfig;
 
 	return os;

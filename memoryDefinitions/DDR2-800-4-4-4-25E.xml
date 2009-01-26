@@ -26,7 +26,7 @@
 		<tCAS>5</tCAS>
 		<tCMD>2</tCMD>
 		<!--  should be equal to tCAS - 2 beats -->
-		<tCWD>4</tCWD>
+		<tCWD>3</tCWD>
 		<tFAW>28</tFAW>
 		<!--time between a row access and data restoration in the data array-->
 		<tRAS>32</tRAS>

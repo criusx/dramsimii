@@ -3,7 +3,8 @@ public class DramCommand
 {
 
   private String command;
-  private String F, type, addr, col, row;
+  private String addr, type;
+  private int F, col, row;
   private int MG, rank, bank, S, Q, E, T, DLY, chan, originalStart;
 
   //This constructor takes a CAS+P command and returns only the CAS part or the Pre part depending on type
@@ -26,9 +27,7 @@ public class DramCommand
         col = casp.getCol();
         S = casp.getS() + DramSimValid.getTimingParameter("tAL");
         Q = casp.getQ();
-        E = 
-            DramSimValid.getTimingParameter("tCAS") + DramSimValid.getTimingParameter("tBurst") + 
-            S;
+        E = DramSimValid.getTimingParameter("tCAS") + DramSimValid.getTimingParameter("tBurst") + S;
         T = E - S;
         DLY = S - Q;
         break;
@@ -46,9 +45,9 @@ public class DramCommand
                            DramSimValid.getTimingParameter("tBurst") + "\t" +
                            DramSimValid.getTimingParameter("tRTP") + "\t" +
                            DramSimValid.getTimingParameter("tCCD"));*/
+        // DRAM will internally delay until tRAS is met
         int minimumTimeToWait = 
-          DramSimValid.getTimingParameter("tAL") + DramSimValid.getTimingParameter("tBurst") + 
-          DramSimValid.getTimingParameter("tRTP") - 
+          DramSimValid.getTimingParameter("tAL") + DramSimValid.getTimingParameter("tBurst") + DramSimValid.getTimingParameter("tRTP") - 
           DramSimValid.getTimingParameter("tCCD");
         //Assumes Pre starts after the minimum time to wait after the CAS starts
         S = casp.getS() + minimumTimeToWait;
@@ -63,44 +62,42 @@ public class DramCommand
 
   public DramCommand(String l)
   {
-    l = l.substring(2);
-    command = l;
-    F = l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim();
-    l = l.substring(l.indexOf(']') + 2);
-    MG = 
-        Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim());
-    l = l.substring(l.indexOf(']') + 2);
-    type = l.substring(0, l.indexOf("addr")).trim();
-    l = l.substring(type.length());
-    addr = l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim();
-    l = l.substring(l.indexOf(']') + 2);
-    chan = 
-        Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim());
-    l = l.substring(l.indexOf(']') + 2);
-    rank = 
-        Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim());
-    l = l.substring(l.indexOf(']') + 2);
-    bank = 
-        Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim());
-    l = l.substring(l.indexOf(']') + 2);
-    row = l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim();
-    l = l.substring(l.indexOf(']') + 2);
-    col = l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim();
-    l = l.substring(l.indexOf(']') + 2);
-    originalStart = 
-        S = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim());
-    l = l.substring(l.indexOf(']') + 2);
-    Q = 
-        Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim());
-    l = l.substring(l.indexOf(']') + 2);
-    E = 
-        Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim());
-    l = l.substring(l.indexOf(']') + 2);
-    T = 
-        Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim());
-    l = l.substring(l.indexOf(']') + 2);
-    DLY = 
-        Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim());
+    try
+    {
+      l = l.substring(2);
+      command = l;
+      F = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
+      l = l.substring(l.indexOf(']') + 2);
+      MG = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
+      l = l.substring(l.indexOf(']') + 2);
+      type = l.substring(0, l.indexOf("addr")).trim();
+      l = l.substring(type.length());
+      addr = l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim();
+      l = l.substring(l.indexOf(']') + 2);
+      chan = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
+      l = l.substring(l.indexOf(']') + 2);
+      rank = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
+      l = l.substring(l.indexOf(']') + 2);
+      bank = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
+      l = l.substring(l.indexOf(']') + 2);
+      row = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
+      l = l.substring(l.indexOf(']') + 2);
+      col = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
+      l = l.substring(l.indexOf(']') + 2);
+      originalStart = S = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
+      l = l.substring(l.indexOf(']') + 2);
+      Q = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
+      l = l.substring(l.indexOf(']') + 2);
+      E = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
+      l = l.substring(l.indexOf(']') + 2);
+      T = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
+      l = l.substring(l.indexOf(']') + 2);
+      DLY = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
+    }
+    catch (NumberFormatException e)
+    {
+      e.printStackTrace();
+    }
   }
 
   public DramCommand getCAS()
@@ -112,8 +109,7 @@ public class DramCommand
     { //Assumes CASW ends after data restore
       dc.type = "CASW";
       dc.E = 
-          this.getS() + DramSimValid.getTimingParameter("tCWD") + DramSimValid.getTimingParameter("tBurst") + 
-          DramSimValid.getTimingParameter("tWR");
+          this.getS() + DramSimValid.getTimingParameter("tCWD") + DramSimValid.getTimingParameter("tBurst") + DramSimValid.getTimingParameter("tWR");
       dc.T = dc.E - dc.S;
       return dc;
     }
@@ -130,8 +126,7 @@ public class DramCommand
     else
     { //Assumes Pre starts after minimum time to wait and pre ends after array is precharged tRP
       int minimumTimeToWait = 
-        DramSimValid.getTimingParameter("tAL") + DramSimValid.getTimingParameter("tBurst") + 
-        DramSimValid.getTimingParameter("tCWD") + 
+        DramSimValid.getTimingParameter("tAL") + DramSimValid.getTimingParameter("tBurst") + DramSimValid.getTimingParameter("tCWD") + 
         DramSimValid.getTimingParameter("tWR");
       //Assumes Pre starts after the minimum time to wait after the CAS starts
       dc.S = this.getS() + minimumTimeToWait;
@@ -146,10 +141,9 @@ public class DramCommand
 
   public String toString()
   {
-    return "F=" + F + " MG=" + MG + " type=" + type + " addr=" + addr + 
-      " chan=" + chan + " rank=" + rank + " bank=" + bank + " row=" + row + 
-      " col=" + col + " OS=" + originalStart + " S=" + S + " Q=" + Q + 
-      " E=" + E + " T=" + T + " DLY=" + DLY;
+    return "F=" + F + " MG=" + MG + " type=" + type + " addr=" + addr + " chan=" + chan + " rank=" + rank + " bank=" + 
+      bank + " row=" + row + " col=" + col + " OS=" + originalStart + " S=" + S + " Q=" + Q + " E=" + E + " T=" + T + 
+      " DLY=" + DLY;
   }
 
   public String getCommand()
@@ -157,7 +151,7 @@ public class DramCommand
     return command;
   }
 
-  public String getCol()
+  public int getCol()
   {
     return col;
   }
@@ -209,10 +203,10 @@ public class DramCommand
 
   public int getChan()
   {
-    return chan;
+    return chan ;
   }
 
-  public String getF()
+  public int getF()
   {
     return F;
   }
@@ -222,7 +216,7 @@ public class DramCommand
     return MG;
   }
 
-  public String getRow()
+  public int getRow()
   {
     return row;
   }
