@@ -101,7 +101,7 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
 		dramType==right.dramType &&
 		rowBufferManagementPolicy==right.rowBufferManagementPolicy &&
 		addressMappingScheme==right.addressMappingScheme &&
-		datarate==right.datarate &&
+		AlmostEqual<double>(datarate,right.datarate,0.0005) &&
 		postedCAS==right.postedCAS &&
 		readWriteGrouping==right.readWriteGrouping &&
 		autoPrecharge==right.autoPrecharge &&
@@ -113,8 +113,8 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
 		rowCount==right.rowCount &&
 		columnCount==right.columnCount &&
 		epoch==right.epoch &&
-		shortBurstRatio==right.shortBurstRatio &&
-		readPercentage==right.readPercentage &&
+		AlmostEqual<double>(shortBurstRatio,right.shortBurstRatio,0.0005) &&
+		AlmostEqual<double>(readPercentage,right.readPercentage,0.0005) &&
 		sessionID==right.sessionID);
 }
 

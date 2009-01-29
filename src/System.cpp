@@ -273,6 +273,9 @@ nextStats(0)
 	channel = chan;
 }
 
+System::~System()
+{}
+
 bool System::fileExists(stringstream& fileName) const
 {
 	bf::path newPath(fileName.str().c_str());
@@ -456,7 +459,7 @@ void System::runSimulations(const unsigned requestCount)
 
 	tick newTime = 0;
 
-	for (unsigned i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0; )
+	for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0; )
 	{		
 		if (!inputTransaction)
 		{

@@ -143,7 +143,7 @@ rngIntGenerator(rhs.rngIntGenerator)
 InputStream::InputStream(const InputStream& rhs, const SystemConfiguration &systemConfigVal, const vector<Channel> &systemChannel):
 type(rhs.type),
 systemConfig(systemConfigVal),
-channel(channel),
+channel(systemChannel),
 channelLocality(rhs.channelLocality),
 rankLocality(rhs.rankLocality),
 bankLocality(rhs.bankLocality),
@@ -176,7 +176,7 @@ float InputStream::Poisson(float xm) const
 
 	if (xm < 12.0) 
 	{
-		if (xm != oldm) 
+		if (!AlmostEqual<float>(xm,oldm,COMP_ACC)) 
 		{
 			oldm = xm;
 			g = exp(-xm);
@@ -191,7 +191,7 @@ float InputStream::Poisson(float xm) const
 	}
 	else
 	{
-		if (xm != oldm)
+		if (!AlmostEqual<float>(xm,oldm,COMP_ACC))
 		{
 			oldm = xm;
 			sq = sqrt(2.0 * xm);
@@ -209,7 +209,7 @@ float InputStream::Poisson(float xm) const
 
 			em = floor(em);
 			t = 0.9 * (1.0 + y*y) * exp(em * alxm - gammaLn(em+1.0) -g);
-			
+
 		} while (rngGenerator() > t);
 	}
 	return em;
@@ -259,7 +259,7 @@ float InputStream::boxMuller(const float m, const float s) const
 		y2 = x2 * w;
 		use_last = true;
 	}
-	
+
 	return floor(m + y1 * s);
 }
 
@@ -505,13 +505,21 @@ double InputStream::ascii2multiplier(const string &input) const
 bool InputStream::operator==(const InputStream& rhs) const
 {
 	return type == rhs.type && systemConfig == rhs.systemConfig && channel == rhs.channel &&
-		channelLocality == rhs.channelLocality && rankLocality == rhs.rankLocality && bankLocality == rhs.bankLocality &&
-		time == rhs.time && rowLocality == rhs.rowLocality && readPercentage == rhs.readPercentage &&
-		shortBurstRatio == rhs.shortBurstRatio && arrivalThreshold == rhs.arrivalThreshold &&
-		cpuToMemoryRatio == rhs.cpuToMemoryRatio && averageInterarrivalCycleCount == rhs.averageInterarrivalCycleCount &&
-		interarrivalDistributionModel == rhs.interarrivalDistributionModel;
+		AlmostEqual<float>(channelLocality,rhs.channelLocality,COMP_ACC) && AlmostEqual<float>(rankLocality,rhs.rankLocality,COMP_ACC) &&
+		AlmostEqual<float>(bankLocality,rhs.bankLocality,COMP_ACC) && time == rhs.time && AlmostEqual<float>(rowLocality,rhs.rowLocality,COMP_ACC) &&
+		AlmostEqual<float>(readPercentage,rhs.readPercentage,COMP_ACC) && interarrivalDistributionModel == rhs.interarrivalDistributionModel &&
+		AlmostEqual<float>(shortBurstRatio, rhs.shortBurstRatio,COMP_ACC) && AlmostEqual<float>(arrivalThreshold, rhs.arrivalThreshold,COMP_ACC) &&
+		AlmostEqual<float>(cpuToMemoryRatio, rhs.cpuToMemoryRatio, COMP_ACC) && averageInterarrivalCycleCount == rhs.averageInterarrivalCycleCount;
 }
 
+
+//////////////////////////////////////////////////////////////////////
+/// @brief get a random request
+/// @details create a random transaction according to the parameters in systemConfig
+/// use the probabilities specified to generate a mapped request
+/// @author Joe Gross
+/// @return a pointer to the transaction that was generated
+//////////////////////////////////////////////////////////////////////
 Transaction *InputStream::getNextRandomRequest()
 {
 	if (type == RANDOM)
@@ -558,7 +566,7 @@ Transaction *InputStream::getNextRandomRequest()
 			nextRow = (nextRow + 1 + (rngIntGenerator() % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
 		}
 		// else leave it as is
-		
+
 		TransactionType nextType = (readPercentage > rngGenerator()) ? READ_TRANSACTION : WRITE_TRANSACTION;
 
 		unsigned burstLength = (shortBurstRatio > rngGenerator()) ? 4 : 8;
@@ -621,136 +629,3 @@ ostream& DRAMsimII::operator<<(ostream& os, const InputStream& is)
 
 	return os;
 }
-
-
-
-//////////////////////////////////////////////////////////////////////
-/// @brief get a random request
-/// @details create a random transaction according to the parameters in systemConfig
-/// use the probabilities specified to generate a mapped request
-/// @author Joe Gross
-/// @return a pointer to the transaction that was generated
-//////////////////////////////////////////////////////////////////////
-#if 0
-Transaction *InputStream::getNextRandomRequest()
-{
-	if (type == RANDOM)
-	{
-		unsigned int randVar;
-
-		static Address nextAddress;
-
-		//Transaction *thisTransaction = new Transaction();
-
-		rand_s(&randVar);
-
-		static unsigned nextChannel;
-
-		// check against last transaction to see what the chan_id was, and whether we need to change channels or not
-		// choose a random channel that's not this one
-		if (channelLocality * UINT_MAX < randVar)
-		{
-			nextChannel = (nextChannel + (randVar % (systemConfig.getChannelCount() - 1))) % systemConfig.getChannelCount();
-		}
-		// choose a random channel from any of them
-		else
-		{
-			nextChannel = randVar % systemConfig.getChannelCount();
-		}
-
-		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
-		// or keep to this rank_id 
-		unsigned nextRank = channel[nextChannel].getLastRankID();
-
-		rand_s(&randVar);
-
-		if (rankLocality * UINT_MAX < randVar)
-		{
-			// choose a rank that's not this one
-			nextRank = (nextRank + 1 + (randVar % (systemConfig.getRankCount() - 1))) % systemConfig.getRankCount();
-		}
-		// else choose the same rank again
-
-		unsigned nextBank = channel[nextChannel].getRank(nextRank).getLastBankID();
-
-		rand_s(&randVar);
-
-		if (bankLocality * UINT_MAX < randVar)
-		{
-			// choose a new bank that's not this one
-			nextBank =  (nextBank + 1 + (randVar % (systemConfig.getBankCount() - 1))) % systemConfig.getBankCount();
-		}
-		// else leave it as is
-
-		unsigned nextRow = channel[nextChannel].getRank(nextRank).bank[nextBank].getOpenRowID();
-
-		rand_s(&randVar);
-
-		if (rowLocality * UINT_MAX < randVar)
-		{
-			// choose a new row that's not this one
-			nextRow = (nextRow + 1 + (randVar % (systemConfig.getRowCount() - 1))) % systemConfig.getRowCount();
-		}
-		// else leave it as is
-
-		TransactionType type;
-
-		rand_s(&randVar);
-
-		if (readPercentage * UINT_MAX > randVar)
-		{
-			type = READ_TRANSACTION;
-		}
-		else
-		{
-			type = WRITE_TRANSACTION;
-		}
-
-		rand_s(&randVar);
-
-		unsigned burstLength = shortBurstRatio * UINT_MAX > randVar ? 4 : 8;
-
-		unsigned nextColumn = randVar & systemConfig.getColumnCount();
-
-		while (true)
-		{
-			rand_s(&randVar);
-
-			if (arrivalThreshold * UINT_MAX < randVar) // interarrival probability function
-			{
-
-				// Gaussian distribution function
-				if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
-				{
-					arrivalThreshold = 1.0F - (1.0F / abs(boxMuller(averageInterarrivalCycleCount, 10)));
-				}
-				// Poisson distribution function
-				else if (interarrivalDistributionModel == POISSON_DISTRIBUTION)
-				{
-					arrivalThreshold = 1.0F - (1.0F / Poisson(averageInterarrivalCycleCount));
-				}
-				break;
-			}
-			else
-			{
-				time = time + 1;
-			}
-		}
-
-		// set arrival time
-
-		static tick oldTime;
-		cerr << time - oldTime << endl;
-		oldTime = time;
-
-		nextAddress.channel = nextChannel;
-		nextAddress.rank = nextRank;
-		nextAddress.bank = nextBank;
-		nextAddress.row = nextRow;
-		nextAddress.column = nextColumn;
-		return new Transaction(type,time, burstLength, nextAddress, NULL);
-	}
-	else
-		return NULL;
-}
-#endif

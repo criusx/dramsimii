@@ -141,7 +141,9 @@ public class DramChannel
             if (prev.getType().equals("RAS"))
             { //A P s s
               if (now.getS() - prev.getS() < timingParameters.get("tRAS"))
-                errors += "A P s s (tRAS=\" + timingParameters.get(\"tRAS\") + \") restraint violated by\nPrev Command: " + prev + "\nNext Command: " + now + "\n";
+                errors += 
+                    "A P s s (tRAS=\" + timingParameters.get(\"tRAS\") + \") restraint violated by\nPrev Command: " + 
+                    prev + "\nNext Command: " + now + "\n";
             }
             else if (prev.getType().equals("CAS"))
             { //R P s s
@@ -175,7 +177,9 @@ public class DramChannel
             if (prev.getType().equals("RAS"))
             { //A A s d
               if (now.getS() - prev.getS() < timingParameters.get("tRRD"))
-                errors += "A A s d (tRRD=" + timingParameters.get("tRRD") + ") restraint violated by\nPrev Command: " + prev + "\nNext Command: " + now + "\n";
+                errors += 
+                    "A A s d (tRRD=" + timingParameters.get("tRRD") + ") restraint violated by\nPrev Command: " + prev + 
+                    "\nNext Command: " + now + "\n";
             }
 
             //End of check of all * A s d restraints {A A s d, P A s d}

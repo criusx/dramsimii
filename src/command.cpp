@@ -106,6 +106,7 @@ Command::~Command()
 	if (hostTransaction)
 	{
 		delete hostTransaction;
+		// don't want to checkpoint this
 		hostTransaction = NULL;
 	}
 }

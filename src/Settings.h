@@ -54,7 +54,7 @@ namespace DRAMsimII
 		std::string outFileDir;
 		std::string commandLine;
 		OutputFileType outFileType;
-		unsigned requestCount;
+		tick requestCount;
 		unsigned averageInterarrivalCycleCount;
 		RefreshPolicy refreshPolicy;
 		DRAMType dramType;

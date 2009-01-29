@@ -19,7 +19,7 @@ import shutil
 #globals
 workerThreads = 3
 
-Window = 20
+Window = 8
 
 processPerEpochGraphs = False
 
@@ -114,15 +114,11 @@ def processPower(filename):
     set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
     set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
     set xlabel "Time (s)" font "VeraMono,12"
-
     set boxwidth 0.95 relative
     unset x2tics
-
     plot '-' u 1:2 t "Cumulative Average" w lines lw 2.00, '-' u 1:2 t "Total Power" w boxes, '-' u 1:2 t "Running Average" w lines lw 2.00
     ''','''
     unset border
-    set size 1.0, 1.0
-    set origin 0.0, 0.0
     set key outside center top horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
     set autoscale xfixmin
     set autoscale xfixmax
@@ -131,16 +127,24 @@ def processPower(filename):
     set ytics out
     set xtics out
     set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
-    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
-    set xlabel "Time (s)" font "VeraMono,12"
     unset x2tics
+    set output "%s"
+    set multiplot
+    set size 1.0, 0.5
+    set origin 0.0, 0.5
+    set ylabel "Energy" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
+    set xlabel "Time (s)" font "VeraMono,12"
+    ''','''
+    set size 1.0, 0.5
+    set origin 0.0, 0.0
+    set title
+    plot '-' u 1:2 t "Energy Delay Prod (P t^{2})" w lines lw 2.00, '-' u 1:2 t "IBM Energy2 (P^{2}t^{3})" w lines lw 2.00
     ''']
 
     writing = 0
     p = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
     p.stdin.write("%s\n" % terminal)
     p2 = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
-    p2.stdin.write("%s\n%s\n" % (terminal, scripts[2]))
 
     filesGenerated = []
 
@@ -197,12 +201,15 @@ def processPower(filename):
                 elif line.startswith('----Command Line:'):
                     commandLine = line.strip().split(":")[1]
                     print commandLine
+
                     p.stdin.write("set title \"{/=12 Power Consumed vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
-                    p2.stdin.write("set title \"{/=12 Energy vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
+
                     fileName = os.path.join(tempPath,"energy." + extension)
                     filesGenerated.append(fileName)
-                    p2.stdin.write('set output "' + fileName + '"\n')
-                    p2.stdin.write('''plot '-' u 1:2 t "Energy (P t)" w lines lw 2.00, '-' u 1:2 t "Energy Delay Prod (P t^{2})" w lines lw 2.00, '-' u 1:2 t "IBM Energy (P^{2} t^{2})" w lines lw 2.00, '-' u 1:2 t "IBM Energy2 (P^{2}t^{3})" w lines lw 2.00\n''')
+
+                    p2.stdin.write("%s\n%s\n" % (terminal, scripts[2] % fileName))
+                    p2.stdin.write("set title \"{/=12 Energy vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
+                    p2.stdin.write('''plot '-' u 1:2 t "Energy (P t)" w lines lw 2.00, '-' u 1:2 t "IBM Energy (P^{2} t^{2})" w lines lw 2.00\n''')
 
                 elif line[1] == '+':
                     fileName = os.path.join(tempPath,"power." + extension)
@@ -240,6 +247,7 @@ def processPower(filename):
     except IndexError, strerror:
         print "IndexError",strerror
 
+
     # write the divided power data
     for u in values:
         for v in u:
@@ -256,13 +264,14 @@ def processPower(filename):
 
     epochNumber = 0.0
     for u in instantValues:
-        p2.stdin.write("%f %f\n" % (epochNumber, u * epochTime * epochTime))
+        p2.stdin.write("%f %f\n" % (epochNumber, u * u * epochTime * epochTime))
         epochNumber += epochTime
     p2.stdin.write("e\n")
 
+    p2.stdin.write(scripts[3])
     epochNumber = 0.0
     for u in instantValues:
-        p2.stdin.write("%f %f\n" % (epochNumber, u * u * epochTime * epochTime))
+        p2.stdin.write("%f %f\n" % (epochNumber, u * epochTime * epochTime))
         epochNumber += epochTime
     p2.stdin.write("e\n")
 
@@ -270,7 +279,7 @@ def processPower(filename):
     for u in instantValues:
         p2.stdin.write("%f %f\n" % (epochNumber, u * u * epochTime * epochTime * epochTime))
         epochNumber += epochTime
-    p2.stdin.write("e\nunset output\n")
+    p2.stdin.write("e\nunset multiplot\nunset output\n")
 
     epochNumber = 0.0
     for u in averageValues:
@@ -292,24 +301,21 @@ def processPower(filename):
     p.stdin.write("unset multiplot\nunset output\nexit\n")
     p.wait()
 
-    #files = os.listdir(tempPath)
     for x in filesGenerated:
         if x.endswith(extension):
             file = os.path.join(tempPath,x)
             os.system("convert -resize %s %s %s-thumb.png" % (thumbnailResolution, file, file[:-4]))
-    #    fullPath = os.path.join(tempPath,x)
-        #os.remove(fullPath)
-
-
-    #os.rmdir(tempPath)
-
-    #htmlFile = os.path.join(os.path.abspath(sys.path[0]),"template.html")
-
-    #shutil.copy(htmlFile, os.path.join(tempPath,basefilename[0:basefilename.find("-power")] + ".html"))
+            os.system("gzip -c -9 -f %s > %s" % (file, file + "z"))
+            os.remove(file)
 
     o = open(os.path.join(tempPath,basefilename[0:basefilename.find("-power")] + ".html"),"w")
     template = open(os.path.join(os.path.abspath(sys.path[0]),"template.html")).read()
     o.write(re.sub("@@@", commandLine,template))
+    o.close()
+
+    o = open(os.path.join(tempPath,".htaccess"),"w")
+    accessFile = open(os.path.join(os.path.abspath(sys.path[0]),".htaccess")).read()
+    o.write(accessFile)
     o.close()
 
     # make a big file of them all
@@ -415,8 +421,9 @@ def processStats(filename):
     ''', terminal + basicSetup + '''
     set yrange [0 : *] noreverse nowriteback
     set xlabel "Time (s)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
-    set ylabel "Hit Rate"
-    set title "Hit Rate of Open Rows vs. Time\\n%s"  offset character 0, -1, 0 font "" norotate
+    #set logscale y
+    set ylabel "Reuse Rate"
+    set title "Reuse Rate of Open Rows vs. Time\\n%s"  offset character 0, -1, 0 font "" norotate
     set output "rowHitRate.''' + extension + '''"
     plot '-' using 1:2 title "Hit Rate" with filledcurve below x1, '-' using 1:2 title "Cumulative Average Hit Rate" with lines lw 1.250, '-' using 1:2 title "Moving Average" with lines lw 1.250
     '''
@@ -427,9 +434,11 @@ def processStats(filename):
     set yrange [0 : *] noreverse nowriteback
     set xlabel "Time (s)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "Latency (ns)"
+    set y2label "Access Count"
+    set y2tics
     set title "Transaction Latency\\n%s"  offset character 0, -1, 0 font "" norotate
     set style fill solid 1.00 noborder
-    plot '-' using 1:2 title "Latency" with impulses, '-' using 1:2 title "Cumulative Average Latency" with lines lw 1.25, '-' using 1:2 title "Moving Average" with lines lw 1.25
+    plot '-' using 1:2 title "Latency" with impulses, '-' using 1:2 title "Cumulative Average Latency" with lines lw 1.25, '-' using 1:2 title "Moving Average" with lines lw 1.25, '-' using 1:2 t "Accesses" axes x2y2 with lines lw 1.25
     '''
     smallIPCGraph = basicSetup + '''
     set size 1.0, 0.35
@@ -492,17 +501,21 @@ def processStats(filename):
     plot '-' using 1:2:(1) t "Total Latency" with boxes
     '''
     transactionGraph = terminal + basicSetup + '''
-    set yrange [1 : *] noreverse nowriteback
+    #set yrange [1 : *] noreverse nowriteback
+    #unset autoscale
+    #set autoscale yfixmax
+    set xrange [1 : *] noreverse nowriteback
     set logscale y
     set format x
     set style fill solid 1.00 noborder
-    set logscale x
+    #set logscale x
+    #set y2label "Access Count"
     set boxwidth 0.95 relative
     set xlabel "Execution Time (ns)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "Number of Transactions with this Execution Time"
     set title "Read Transaction Latency\\n%s"  offset character 0, -1, 0 font "" norotate
     set output "transactionLatencyDistribution.%s"
-    plot '-' using 1:2:(1) t "Total Latency" with boxes
+    plot '-' using 1:2 t "Total Latency" with boxes
     '''
 
     commandTurnaroundCounter = 0
@@ -528,6 +541,8 @@ def processStats(filename):
     movingTransactionLatency = array('f')
     movingTransactionBuffer = PriorMovingAverage(Window)
     cumulativeTransactionLatency = array('f')
+    perEpochTransactionCount = 0
+    transactionCount = array('i')
     totalTransactionLatency = 0.1
     distTransactionLatency = {}
     transCounter = 0
@@ -621,6 +636,9 @@ def processStats(filename):
                         movingTransactionBuffer.append(averageTransactionLatency.average)
                         movingTransactionLatency.append(movingTransactionBuffer.average)
                         totalTransactionLatency += averageTransactionLatency.average
+                        transactionCount.append(perEpochTransactionCount)
+                        #print perEpochTransactionCount
+                        perEpochTransactionCount = 0
                         cumulativeTransactionLatency.append(totalTransactionLatency / transCounter)
 
                 writing = 0
@@ -729,9 +747,10 @@ def processStats(filename):
                 # transaction latency
                 if writing == 1:
                     splitLine = line.split()
-                    latency = int(splitLine[1])
-                    quantity = int(splitLine[0])
+                    latency = int(splitLine[0])
+                    quantity = int(splitLine[1])
                     averageTransactionLatency.add(latency, quantity)
+                    perEpochTransactionCount += quantity
                     try:
                         distTransactionLatency[latency] += quantity
                     except KeyError:
@@ -784,7 +803,7 @@ def processStats(filename):
                     missCount = max(float(newLine[1]),1)
                     hitMissValues[0].append(missCount / (hitCount + missCount))
                     hitMissValues[1].append(hitCount / (hitCount + missCount))
-                    hitMissTotal.add(hitCount + missCount, 1)
+                    hitMissTotal.add(hitCount / (hitCount + missCount), 1)
                     hitMissValues[2].append(hitMissTotal.average)
                     hitMissBuffer.append(hitCount / (hitCount + missCount))
                     hitMissValues[3].append(hitMissBuffer.average)
@@ -838,6 +857,7 @@ def processStats(filename):
 
         for u in distTransactionLatency:
             gnuplot[0].stdin.write("%d %f\n" % (u * period, distTransactionLatency[u]))
+            #print u, distTransactionLatency[u]
             #print period * u
 
         gnuplot[0].stdin.write("e\nunset output\n")
@@ -918,7 +938,8 @@ def processStats(filename):
         gnuplot[6].stdin.write(averageTransactionLatencyScript % commandLine)
 
         # make the transaction latency graph
-        minRange = min(len(transactionLatency),len(cumulativeTransactionLatency),len(movingTransactionLatency))
+        minRange = min(len(transactionLatency),len(cumulativeTransactionLatency),
+                       len(movingTransactionLatency), len(transactionCount))
 
         for i in range(0,minRange):
             gnuplot[6].stdin.write("%f %f\n" % (epochTime * i, period * transactionLatency[i]))
@@ -930,6 +951,11 @@ def processStats(filename):
 
         for i in range(0,minRange):
             gnuplot[6].stdin.write("%f %f\n" % (epochTime * i , period * movingTransactionLatency[i]))
+        gnuplot[6].stdin.write("e\n")
+
+        for i in range(0,minRange):
+            gnuplot[6].stdin.write("%f %f\n" % (epochTime * i , transactionCount[i]))
+            #print transactionCount[i]
         gnuplot[6].stdin.write("e\n")
 
         gnuplot[6].stdin.write("unset multiplot\nunset output\n")
@@ -980,6 +1006,8 @@ def processStats(filename):
         if x.endswith(extension):
             file = os.path.join(tempPath,x)
             os.system("convert -resize %s %s %s-thumb.png" % (thumbnailResolution, file,file[:-4]))
+            os.system("gzip -c -9 -f %s > %s" % (file, file + "z"))
+            os.remove(file)
 
     #files = os.listdir(tempPath)
 
@@ -991,6 +1019,12 @@ def processStats(filename):
     template = open(os.path.join(os.path.abspath(sys.path[0]),"template.html")).read()
     o.write(re.sub("@@@", commandLine,template))
     o.close()
+
+    o = open(os.path.join(tempPath,".htaccess"),"w")
+    accessFile = open(os.path.join(os.path.abspath(sys.path[0]),".htaccess")).read()
+    o.write(accessFile)
+    o.close()
+
 
 
     #for x in files:
@@ -1035,10 +1069,28 @@ def main():
             else:
                 compressedstream = bz2.open(u, 'rb')
             lineCounter = 0
+
             try:
                 for line in compressedstream:
+
                     if line.startswith('----Command Line:'):
                         commandLine = line.strip().split(":")[1]
+                        urlString = '<a href="%s/%s.html">%%s</a>' % (v,v)
+
+                        commandLine = re.sub("_{}", "", commandLine).split()
+                        #line = "<tr>"
+                        line = ""
+                        for x in commandLine:
+                            start = x.find('[')
+                            end = x.find(']')
+                            if start == -1 or end == -1:
+                                benchmarkName = x
+                            else:
+                                benchmarkName = x[start+1:end]
+                            line += "<td>" + urlString % benchmarkName + "</td>"
+                        line += "</tr>"
+                        files[v] = line
+                        workQueue.put(u)
                         break
                     lineCounter += 1
                     if lineCounter > 30:
@@ -1052,14 +1104,16 @@ def main():
 
 
 
-            files[v] = '<a href="%s/%s.html">%s</a><br />' % (v,v,commandLine)
-            workQueue.put(u)
+
 
     o = open("result.html","w")
     data = open(os.path.join(os.path.abspath(sys.path[0]),"template2.html")).read()
     filelist = ""
+    lineCount = 0
+
     for x in files:
-        filelist += files[x]
+        lineCount = (lineCount + 1 ) % 2
+        filelist += ("<tr>" if lineCount == 0 else '<tr class="odd">') + files[x]
     o.write(re.sub("@@@", filelist,data))
     o.close()
 

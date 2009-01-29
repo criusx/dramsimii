@@ -31,7 +31,7 @@ namespace DRAMsimII
 	class SimulationParameters 
 	{
 	protected:
-		unsigned requestCount;		///< the number of requests to simulate
+		tick requestCount;		///< the number of requests to simulate
 		InputType inputType;		///< the input type
 
 	public:
@@ -39,7 +39,7 @@ namespace DRAMsimII
 		SimulationParameters(const Settings& settings);
 
 		// functions
-		unsigned getRequestCount() {return requestCount;}
+		tick getRequestCount() {return requestCount;}
 
 		// friends
 		friend std::ostream& operator<<(std::ostream& , const SimulationParameters& );

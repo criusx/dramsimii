@@ -73,7 +73,6 @@ void M5dramSystem::moveToTime(const tick now)
 
 	// if transactions are returned, then send them back,
 	// else if time is not brought up to date, then a refresh transaction has finished
-	//while ((packet = (Packet *)ds->moveAllChannelsToTime(now, finishTime)) || finishTime < now)
 	unsigned transactionID;
 	while (((transactionID = ds->moveAllChannelsToTime(now, finishTime)) < UINT_MAX) || ds->getTime() < now)
 	{

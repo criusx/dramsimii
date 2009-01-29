@@ -90,6 +90,13 @@ namespace DRAMsimII
 		return ss.str();
 	}
 
+	template <class T>
+	inline bool AlmostEqual(T nVal1, T nVal2, double nEpsilon)
+	{
+		bool bRet = (((nVal2 - nEpsilon) < nVal1) && (nVal1 < (nVal2 + nEpsilon)));
+		return bRet;
+	}
+
 	// global var forward
 	extern boost::iostreams::filtering_ostream timingOutStream;
 	extern boost::iostreams::filtering_ostream powerOutStream;
@@ -160,6 +167,8 @@ namespace DRAMsimII
 #define ABS(a) ((a) < 0 ? (-a) : (a))
 
 #define PI 3.1415926535897932384626433832795
+
+#define COMP_ACC 0.00005
 
 #define POOL_SIZE 32
 }

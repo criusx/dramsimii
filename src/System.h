@@ -89,6 +89,7 @@ namespace DRAMsimII
 		// constructors	
 		explicit System(const Settings& settings);
 		explicit System(const System& rhs);
+		virtual ~System();
 
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const System &);	

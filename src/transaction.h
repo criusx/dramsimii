@@ -59,7 +59,7 @@ namespace DRAMsimII
 		unsigned getLength() const { return length; }								///< get the number of bytes requested
 		TransactionType getType() const { return type; }							///< get what type of transaction this is
 		unsigned getEventNumber() const { return eventNumber; }						///< which event number this is
-		const unsigned getOriginalTransaction() const { return originalTransaction; }	///< get the external transaction that this is a representation for
+		unsigned getOriginalTransaction() const { return originalTransaction; }	///< get the external transaction that this is a representation for
 		bool isRead() const { return ((type == IFETCH_TRANSACTION) || (type == READ_TRANSACTION) || (type == PREFETCH_TRANSACTION)); }
 		bool isWrite() const { return (type == WRITE_TRANSACTION); }
 

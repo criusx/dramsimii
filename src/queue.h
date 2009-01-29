@@ -245,9 +245,9 @@ namespace DRAMsimII
 		}
 
 		/// @brief get rhs pointer to the item at this offset without removing it
-		T *read(const unsigned offset) const
+		T *read(const int offset) const
 		{
-			if ((offset >= count) || (offset < 0))
+			if ((offset >= (int)count) || (offset < 0))
 				return NULL;
 			else
 				return entry[(head + offset) % maxCount];
@@ -338,7 +338,7 @@ namespace DRAMsimII
 
 		const T* at(const unsigned value) const
 		{
-			assert(value >= 0 && value < count);
+			assert(value < count);
 			return read(value);
 		}
 

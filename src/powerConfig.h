@@ -75,48 +75,42 @@ namespace DRAMsimII
 
 		tick lastCalculation;	///< the last time at which a power calculation was made
 
-		//tick allBanksPrecharged;
-		//tick RDsch; // number of clock cycles spent sending data
-		//tick WRsch; // number of clock cycles spent receiving data
-
 
 	public:
 		// constructors
 		PowerConfig(const Settings& settings);
 		~PowerConfig();
-		//void recordCommand(const command *, const dramChannel &channel, const dramTimingSpecification &timing);
-		//void doPowerCalculation(dramChannel * const chan);
-
+		
 		// accessors
-		const float getVDD() const { return VDD; }
-		const float getVDDmax() const { return VDDmax; }
-		const unsigned getFrequency() const { return frequency; }
-		const unsigned getSpecFrequency() const { return specFrequency; }
-		unsigned getLastCalculation() const { return lastCalculation; }
+		float getVDD() const { return VDD; }
+		float getVDDmax() const { return VDDmax; }
+		unsigned getFrequency() const { return frequency; }
+		unsigned getSpecFrequency() const { return specFrequency; }
+		tick getLastCalculation() const { return lastCalculation; }
 		double getPdsACT() const { return PdsACT; }
-		const double getPdqRD() const { return PdqRD; }
-		const double getPdqWR() const { return PdqWR; }
-		const double getPdsRD() const { return PdsRD; }
-		const double getPdsWR() const { return PdsWR; }
-		const double getPdqRDoth() const { return PdqRDoth; }
-		const double getPdqWRoth() const { return PdqWRoth; }
+		double getPdqRD() const { return PdqRD; }
+		double getPdqWR() const { return PdqWR; }
+		double getPdsRD() const { return PdsRD; }
+		double getPdsWR() const { return PdsWR; }
+		double getPdqRDoth() const { return PdqRDoth; }
+		double getPdqWRoth() const { return PdqWRoth; }
 		unsigned gettRC() const { return tRC; }
 		unsigned getDQperDRAM() const { return DQperDRAM; }
 		unsigned getDQSperDRAM() const { return DQSperDRAM; }
 		unsigned getDMperDRAM() const { return DMperDRAM; }
 		unsigned getDevicesPerRank() const { return DQperRank; }
-		const int getIDD0() const { return IDD0; }
-		const int getIDD2N() const { return IDD2N; }
-		const int getIDD2P() const { return IDD2P; }		
-		const int getIDD3N() const { return IDD3N; }
-		const int getIDD3P() const { return IDD3P; }
-		const int getIDD4R() const { return IDD4R; }
-		const int getIDD4W() const { return IDD4W; }
-		const int getIDD5() const { return IDD5; }
-		const unsigned gettBurst() const { return tBurst; }
-		const unsigned gettRAS() const { return tRAS; }
-		const double getVoltageScaleFactor() const { return voltageScaleFactor;}
-		const double getFrequencyScaleFactor() const { return frequencyScaleFactor; }
+		int getIDD0() const { return IDD0; }
+		int getIDD2N() const { return IDD2N; }
+		int getIDD2P() const { return IDD2P; }		
+		int getIDD3N() const { return IDD3N; }
+		int getIDD3P() const { return IDD3P; }
+		int getIDD4R() const { return IDD4R; }
+		int getIDD4W() const { return IDD4W; }
+		int getIDD5() const { return IDD5; }
+		unsigned gettBurst() const { return tBurst; }
+		unsigned gettRAS() const { return tRAS; }
+		double getVoltageScaleFactor() const { return voltageScaleFactor;}
+		double getFrequencyScaleFactor() const { return frequencyScaleFactor; }
 
 		// mutators
 		void setLastCalculation(const tick lastTime) { lastCalculation = lastTime; }

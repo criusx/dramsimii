@@ -11,4 +11,7 @@ env = Environment(ENV = os.environ,  # inherit user's environment vars
 
 Export('env')
 
+# Find default configuration & binary.
+Default(os.environ.get('DEFAULT_BINARY', 'dramSimII.debug'))
+
 SConscript('src/SConscript.standalone', build_dir = 'build', duplicate = 0)

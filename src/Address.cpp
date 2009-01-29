@@ -681,6 +681,10 @@ std::ostream &DRAMsimII::operator <<(std::ostream &os, const AddressMappingSchem
 		break;
 	case CLOSE_PAGE_HIGH_LOCALITY:
 		os << "HILOC";
+		break;
+	default:
+		os << "UNKWN";
+		break;
 	}
 	return os;
 }

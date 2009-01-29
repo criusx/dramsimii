@@ -4,7 +4,6 @@ Import('env')
 
 conf = Configure(env)
 
-
 if not conf.CheckLib('boost_serialization'):
 	print 'Boost serialization library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-serialization*"'
@@ -83,21 +82,6 @@ env = conf.Finish()
 ROOT = Dir('.').abspath
 SRCDIR = os.path.join(ROOT,'src')
 
-envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
-envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
-envProf = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.op')
-envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ot')
-envProfgen = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opg')
-envProfuse = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opu')
-
-envDebug.Append(CCFLAGS = '-g -O -Weffc++ -DDEBUG')
-envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64')
-envProf.Append(CCFLAGS = '-g -O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64')
-envTest.Append(CCFLAGS = '-g -O -Weffc++ -DDEBUG')
-envProfgen.Append(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate')
-envProfgen.Append(LIBS = 'gcov')
-envProfuse.Append(CCFLAGS = '-O3 -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-use')
-envProfuse.Append(LIBS = 'gcov')
 
 # This function adds the specified sources to the given build
 # environment, and returns a list of all the corresponding SCons
@@ -113,16 +97,60 @@ def make_objs(sourceFiles, env):
     #objs.append(date_obj)
     return objs
 
-debug = envDebug.Program('dramSimII.debug',sourceFile)
-opt = envOpt.Program('dramSimII.opt',sourceFile)
-test = envTest.Program('dramSimII.test',sourcesTest)
-prof = envProf.Program('dramSimII.prof',sourceFile)
-profgen = envProfgen.Program('dramSimII.profgen', sourceFile)
-profuse = envProfuse.Program('dramSimII.profuse', sourceFile)
+platform = ARGUMENTS.get("DEFAULT_BINARY",Platform())
 
-envDebug.Install(os.path.abspath('..') + "/bin", debug)
-envOpt.Install(os.path.abspath('..') + "/bin", opt)
-envTest.Install(os.path.abspath('..') + "/bin", test)
-envProf.Install(os.path.abspath('..') + "/bin", prof)
-envProfgen.Install(os.path.abspath('..') + "/bin", profgen)
-envProfuse.Install(os.path.abspath('..') + "/bin", profuse)
+if platform == 'debug':
+	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
+	envDebug.Append(CCFLAGS = '-g -O -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
+	debug = envDebug.Program('dramSimII.debug',sourceFile)
+	envDebug.Install(os.path.abspath('..') + "/bin", debug)
+elif platform == 'test':
+	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ot')
+	envTest.Append(CCFLAGS = '-g -O -Wall -Wextra -Weffc++ -DDEBUG')
+	test = envTest.Program('dramSimII.test',sourcesTest)
+	envTest.Install(os.path.abspath('..') + "/bin", test)
+elif platform == 'prof':
+	envProf = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.op')
+	envProf.Append(CCFLAGS = '-g -O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64')
+	prof = envProf.Program('dramSimII.prof',sourceFile)
+	envProf.Install(os.path.abspath('..') + "/bin", prof)
+elif platform == 'profgen':
+	envProfgen = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opg')
+	envProfgen.Append(CCFLAGS = '-O3 -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate')
+	profgen = envProfgen.Program('dramSimII.profgen', sourceFile)
+	envProfgen.Install(os.path.abspath('..') + "/bin", profgen)
+elif platform == 'profuse':
+	envProfuse = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opu')
+	envProfuse.Append(LIBS = 'gcov')
+	profuse = envProfuse.Program('dramSimII.profuse', sourceFile)
+	envProfuse.Install(os.path.abspath('..') + "/bin", profuse)
+elif platform == 'all':
+	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
+	envDebug.Append(CCFLAGS = '-g -O -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
+	debug = envDebug.Program('dramSimII.debug',sourceFile)
+	envDebug.Install(os.path.abspath('..') + "/bin", debug)
+	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ot')
+	envTest.Append(CCFLAGS = '-g -O -Wall -Wextra -Weffc++ -DDEBUG')
+	test = envTest.Program('dramSimII.test',sourcesTest)
+	envTest.Install(os.path.abspath('..') + "/bin", test)
+	envProf = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.op')
+	envProf.Append(CCFLAGS = '-g -O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64')
+	prof = envProf.Program('dramSimII.prof',sourceFile)
+	envProf.Install(os.path.abspath('..') + "/bin", prof)
+	envProfgen = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opg')
+	envProfgen.Append(CCFLAGS = '-O3 -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate')
+	profgen = envProfgen.Program('dramSimII.profgen', sourceFile)
+	envProfgen.Install(os.path.abspath('..') + "/bin", profgen)
+	envProfuse = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opu')
+	envProfuse.Append(LIBS = 'gcov')
+	profuse = envProfuse.Program('dramSimII.profuse', sourceFile)
+	envProfuse.Install(os.path.abspath('..') + "/bin", profuse)
+	envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
+	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64')
+	opt = envOpt.Program('dramSimII.opt',sourceFile)
+	envOpt.Install(os.path.abspath('..') + "/bin", opt)
+else:
+	envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
+	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64')
+	opt = envOpt.Program('dramSimII.opt',sourceFile)
+	envOpt.Install(os.path.abspath('..') + "/bin", opt)

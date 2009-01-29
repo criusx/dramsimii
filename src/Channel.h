@@ -66,8 +66,8 @@ namespace DRAMsimII
 		explicit Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats);
 		Channel(const Channel&);
 		explicit Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats);
-		virtual ~Channel();		
-
+		virtual ~Channel();
+		
 		// functions
 		bool enqueue(Transaction *in);
 		bool isFull() const { return transactionQueue.isFull(); }	///< determines whether there is room for more transactions
@@ -101,7 +101,7 @@ namespace DRAMsimII
 		const Transaction *readTransaction(bool) const;												
 		Transaction *createNextRefresh();
 		const Transaction *readNextRefresh() const;
-		const tick nextRefresh() const;
+		tick nextRefresh() const;
 
 
 		Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }
@@ -120,7 +120,7 @@ namespace DRAMsimII
 		friend std::ostream& operator<<(std::ostream& , const Channel& );
 
 	private:
-		bool sendPower(float PsysRD, float PsysWR, std::vector<int> rankArray, std::vector<float> PsysACTSTBYArray, std::vector<float> PsysACTArray, const tick currentTime) const;
+		bool sendPower(double PsysRD, double PsysWR, std::vector<int> rankArray, std::vector<double> PsysACTSTBYArray, std::vector<double> PsysACTArray, const tick currentTime) const;
 
 		// serialization
 		explicit Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power,const std::vector<Rank> &rank, const TimingSpecification &timing);

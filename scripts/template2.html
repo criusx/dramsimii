@@ -4,9 +4,153 @@
         
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
+        <style type="text/css">
+            /*
+              project: CSS - table design
+              type: stylesheet
+              description: golden style
+              edited: 14.09.2005, Michael Horn
+             */
+            div#links
+            {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            table
+            {
+                margin-left: auto;
+                margin-right: auto;
+                border-collapse: collapse;
+                border: 2px solid #996;
+                font: normal 80%/140% verdana, arial, helvetica, sans-serif;
+                font-size:small;
+                color: #333;
+                background: #fffff0;
+            }
+            
+            caption
+            {
+                padding: 0 .4em .4em;
+                text-align: left;
+                font-size: 1em;
+                font-weight: bold;
+                text-transform: uppercase;
+                background-color:white;
+                color: #333;
+                background: transparent;
+            }
+            
+            td, th
+            {
+                display:table-cell;
+                border: 1px solid #cc9;
+                padding: .3em;
+                vertical-align: top;
+            }
+            
+            thead th, tfoot th
+            {
+                border: 1px solid #cc9;
+                text-align: center;
+                font-size: 1em;
+                font-weight: bold;
+                color: #444;
+                background: #dbd9c0;
+            }
+            
+            #map
+            {
+                width:auto;
+                height:450px;
+                text-align:center;
+            }
+            
+            tbody td a
+            {
+                background: transparent;
+                /*background-color:white;*/
+                color: #72724c;
+                text-decoration: none;
+                /*border-bottom: 1px dotted #cc9;*/
+            }
+            
+            tbody td a:hover
+            {
+                background: transparent;
+                /*background-color:white;*/
+                color: #666;
+                border-bottom: 1px dotted #72724c;
+            }
+            
+            tbody th a
+            {
+                background: transparent;
+                /*background-color:white;*/
+                color: #72724c;
+                text-decoration: none;
+                font-weight:bold;
+                /*border-bottom: 1px dotted #cc9;*/
+            }
+            
+            tbody th a:hover
+            {
+                background: transparent;
+                background-color:white;
+                color: #666;
+                /*border-bottom: 1px dotted #72724c;*/
+            }
+            
+            tfoot td
+            {
+                border: 1px solid #996;
+            }
+            
+            .odd
+            {
+                color: #333;
+                background: #f7f5dc;
+            }
+            
+            tbody tr:hover
+            {
+                color: #333;
+                background: #ddf;
+            }
+            
+            tbody tr:hover th,
+            
+            tbody tr.odd:hover th
+            {
+                color: #333;
+                background: #ddd59b;
+            }</style>
         <title>Images</title>
     </head>
     <body style="text-align:center">
-        <div id="links"> @@@ </div>
+        <div id="links">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Benchmark</td>
+                        <td>Channels</td>
+                        <td>Ranks</td>
+                        <td>Banks</td>
+                        <td>Rows</td>
+                        <td>Columns</td>
+                        <td>DRAM Width</td>
+                        <td>t<sub>RAS</sub></td>
+                        <td>t<sub>CAS</sub></td>
+                        <td>t<sub>RCD</sub></td>
+                        <td>t<sub>RC</sub></td>
+                        <td>Address Mapping Policy</td>
+                        <td>Command Ordering Algorithm</td>
+                        <td>Row Buffer Management Policy</td>
+                        <td>Datarate</td>
+                    </tr>
+                </thead>
+                <tbody> @@@</tbody>
+            </table>
+        </div>
     </body>
 </html>

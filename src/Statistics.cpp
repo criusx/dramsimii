@@ -254,8 +254,7 @@ void Statistics::clear()
 	transactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
-	rowHits = rowMisses = 0;
-	readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
+	rowHits = rowMisses = readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
 	channelUtilization.clear();
 	rankUtilization.clear();
 	bankUtilization.clear();

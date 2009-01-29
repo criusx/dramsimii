@@ -123,14 +123,20 @@ systemType(BASELINE_CONFIG)
 	xmlTextReader *reader = NULL;
 
 	xmlDocPtr doc = NULL;
-
-	char *entireXmlFile = NULL;
-	ifstream::pos_type entireXmlFileLength = 0;
-
+	
 	if (xmlFile.is_open())
-	{
+	{		
+		doc = xmlParseFile(settingsFile.c_str());
+		if (doc == NULL)
+		{
+			cout << "Unable to open settings file \"" << settingsFile << "\"" << endl;
+			exit(-2);
+		}
+#ifdef USEREADERFORMEMORY
+		ifstream::pos_type entireXmlFileLength = 0;
+
 		entireXmlFileLength = xmlFile.tellg();
-		entireXmlFile = new char[entireXmlFileLength];
+		char *entireXmlFile = new char[entireXmlFileLength];
 
 		xmlFile.seekg(0,ios::beg);
 		xmlFile.read(entireXmlFile,entireXmlFileLength);
@@ -139,23 +145,18 @@ systemType(BASELINE_CONFIG)
 
 		entireXmlFile[entireXmlFileLength] = 0;
 
-		doc = xmlParseFile(settingsFile.c_str());
-		if (doc == NULL)
-		{
-			cout << "Unable to open settings file \"" << settingsFile << "\"" << endl;
-			exit(-2);
-		}
-#ifdef USEREADERFORMEMORY
 		reader = xmlReaderForMemory(
 			entireXmlFile,entireXmlFileLength,
 			NULL,NULL,
 			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);	
+		delete entireXmlFile;
 #else
 		reader = xmlReaderForFile( 
 			settingsFile.c_str(), 
 			NULL, 
 			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID); 
 #endif
+		
 
 	}
 
@@ -251,6 +252,10 @@ systemType(BASELINE_CONFIG)
 				}
 			case XML_CDATA_SECTION_NODE:
 				break;
+
+			default:
+				//cerr << "Unknown XML node type" << endl;
+				break;
 			}
 		}
 
@@ -258,17 +263,8 @@ systemType(BASELINE_CONFIG)
 		{
 			cerr << "There was an error reading/parsing " << settingsFile << "." << endl;
 			exit(-2);
-		}/*
-		else
-		{
-			if (entireXmlFileLength > 0)
-				settingsOutputFile.append(entireXmlFile, entireXmlFileLength);
-			else
-			{
-				cerr << "Could not create output for settings file" << endl;
-				exit(-2);
-			}
-		}*/
+		}
+
 		// close the reader
 		xmlFreeTextReader(reader);
 		xmlMemoryDump();
@@ -299,18 +295,15 @@ systemType(BASELINE_CONFIG)
 		}
 	}
 
-	/* dump the resulting document */
-	//xmlDocDump(stdout, doc);
+	// dump the resulting document
 	int len;
 	xmlChar *buffer;
 	xmlDocDumpMemory(doc, &buffer,&len);
 	settingsOutputFile.append((const char *)buffer);
 	xmlFree(buffer);
 
-
-	/* free the document */
+	// free the document
 	xmlFreeDoc(doc); 
-
 
 	boost::mt19937 generator(std::time(0));
 	// Define a uniform random number distribution which produces "double"

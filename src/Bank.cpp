@@ -86,10 +86,29 @@ CASWCount(rhs.CASWCount),
 totalCASWCount(rhs.totalCASWCount)
 {}
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief deserialization constructor 
+//////////////////////////////////////////////////////////////////////////
 Bank::Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
-systemConfig(systemConfigVal)
+systemConfig(systemConfigVal),
+perBankQueue(0),
+lastRASTime(0),
+lastCASTime(0),
+lastCASWTime(0),
+lastPrechargeTime(0),
+lastRefreshAllTime(0),
+lastCASLength(0),
+lastCASWLength(0),
+openRowID(0),
+activated(0),
+RASCount(0),
+totalRASCount(0),
+CASCount(0),
+totalCASCount(0),
+CASWCount(0),
+totalCASWCount(0)
+
 {}
 
 
@@ -254,11 +273,9 @@ bool Bank::openPageInsertAvailable(const Transaction *value, const tick time) co
 
 bool Bank::closePageOptimalInsert(Transaction *incomingTransaction, const tick time)
 {
+	// go from the end to the beginning to ensure no starvation or RAW/WAR errors
 	for (int index = perBankQueue.size() - 1; index >= 0; --index)
-	{
-		// don't starve commands
-		if (time - perBankQueue[index]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
-			break;
+	{	
 		// see if there is an available command to piggyback on
 		if (perBankQueue[index]->isReadOrWrite() && 
 			perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddresses().getRow())
@@ -269,11 +286,15 @@ bool Bank::closePageOptimalInsert(Transaction *incomingTransaction, const tick t
 			}
 			else
 			{
+				// check that things are in order
 				assert(perBankQueue[index + 1]->getCommandType() == PRECHARGE);
 			}
 
 			return perBankQueue.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);;
 		}
+		// don't starve commands
+		if (time - perBankQueue[index]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+			break;
 	}
 	return false;
 }

@@ -185,15 +185,8 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 }
 
 Channel::~Channel()
-{
-	// 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
-	// 	{
-	// 		for (std::vector<Transaction *>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
-	// 		{
-	// 			delete *i;
-	// 		}
-	// 	}
-}
+{}
+
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief Moves the specified channel to at least the time given
@@ -494,19 +487,19 @@ void Channel::doPowerCalculation(const tick systemTime)
 	// the counts for the operations this epoch
 	unsigned totalRAS = 1;
 	
-	float PsysACTTotal = 0.0F;
-	float PsysRD = 0.0F;
-	float PsysWR = 0.0F;
-	float PsysACT_STBY = 0.0F;
-	float PsysPRE_STBY = 0.0F;
-	float PsysPRE_PDN = 0.0F;
-	float PsysACT_PDN = 0.0F;
-	float PsysACT = 0.0F;
+	double PsysACTTotal = 0.0F;
+	double PsysRD = 0.0F;
+	double PsysWR = 0.0F;
+	double PsysACT_STBY = 0.0F;
+	double PsysPRE_STBY = 0.0F;
+	double PsysPRE_PDN = 0.0F;
+	double PsysACT_PDN = 0.0F;
+	double PsysACT = 0.0F;
 
 	float tRRDsch = 0.0F;
 
 	vector<int> rankArray;
-	vector<float> PsysACTSTBYArray, PsysACTArray;
+	vector<double> PsysACTSTBYArray, PsysACTArray;
 
 	for (vector<Rank>::iterator k = rank.begin(); k != rank.end(); k++)
 	{
@@ -526,13 +519,13 @@ void Channel::doPowerCalculation(const tick systemTime)
 		}
 	
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
-		float percentActive = 1.0F - (k->getPrechargeTime() / (float)(time - powerModel.getLastCalculation()));
+		double percentActive = 1.0F - (k->getPrechargeTime() / (double)(time - powerModel.getLastCalculation()));
 		assert(percentActive >= 0.0F && percentActive <= 1.0F);
 		assert(k->getPrechargeTime() <= time - powerModel.getLastCalculation());
 
 		/// @todo actually simulate CKE, per rank
-		float CKE_LO_PRE = 0.95F;
-		float CKE_LO_ACT = 0.01F;
+		double CKE_LO_PRE = 0.95F;
+		double CKE_LO_ACT = 0.01F;
 
 		// calculate PsysACT-STBY
 		PsysACT_STBY += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * 
@@ -552,21 +545,24 @@ void Channel::doPowerCalculation(const tick systemTime)
 		PsysACT_PDN += powerModel.getVoltageScaleFactor() * powerModel.getIDD3P() * powerModel.getVDDmax() * percentActive * (1 - CKE_LO_ACT);
 
 		// calculate PsysACT
-		tRRDsch = ((float)time - powerModel.getLastCalculation()) / perRankRASCount;
+		tRRDsch = ((double)(time - powerModel.getLastCalculation())) / perRankRASCount;
 
-		PsysACT += powerModel.getDevicesPerRank() * ((float)powerModel.gettRC() / (float)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
+		if (tRRDsch > 200.0F)
+			cerr << time << " " << powerModel.getLastCalculation() << " " << perRankRASCount << endl;
+
+		PsysACT += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
 
 		PsysACTArray.push_back(PsysACT);
 		
-		PsysACTTotal += ((float)powerModel.gettRC() / (float)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
+		PsysACTTotal += ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
 
 		// calculate PdsRD
-		float RDschPct = k->getReadCycles() / (float)(time - powerModel.getLastCalculation());
+		double RDschPct = k->getReadCycles() / (double)(time - powerModel.getLastCalculation());
 
 		PsysRD += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsRD() * RDschPct;
 
 		// calculate PdsWR
-		float WRschPct = k->getWriteCycles() / (float)(time - powerModel.getLastCalculation());
+		double WRschPct = k->getWriteCycles() / (double)(time - powerModel.getLastCalculation());
 
 		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct; 
 
@@ -613,21 +609,21 @@ void Channel::doPowerCalculation(const tick systemTime)
 			perRankRASCount += l->getTotalRASCount();
 		}
 
-		float percentActive = 1.0F - (float)(k->getTotalPrechargeTime())/(float)time;
+		float percentActive = 1.0F - (double)(k->getTotalPrechargeTime())/(double)time;
 
 		powerOutStream << "+Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] {" << setprecision(5) << 
 			powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive << "} mW P(" << k->getTotalPrechargeTime() << "/" << time  << ")" << endl;
 
-		float tRRDsch = ((float)time) / perRankRASCount;
+		float tRRDsch = ((double)time) / perRankRASCount;
 
 		powerOutStream << "+Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] {"<< setprecision(5) << 
-			powerModel.getDevicesPerRank() * ((float)powerModel.gettRC() / (float)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT() << "} mW" << endl;
+			powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT() << "} mW" << endl;
 
-		PsysACTTotal += powerModel.getDevicesPerRank() * ((float)powerModel.gettRC() / (float)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
+		PsysACTTotal += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
 	}
 
-	float RDschPct = entireCAS * timingSpecification.tBurst() / (float)(time);
-	float WRschPct = entireCAS * timingSpecification.tBurst() / (float)(time);
+	double RDschPct = entireCAS * timingSpecification.tBurst() / (double)(time);
+	double WRschPct = entireCAS * timingSpecification.tBurst() / (double)(time);
 
 	//cerr << RDschPct * 100 << "%\t" << WRschPct * 100 << "%"<< endl;
 
@@ -647,7 +643,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 /// @brief sends power calculations off to a remote server, should be run incomingTransaction a separate thread
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vector<float> PsysACTSTBYArray, vector<float> PsysACTArray, const tick currentTime) const 
+bool Channel::sendPower(double PsysRD, double PsysWR, vector<int> rankArray, vector<double> PsysACTSTBYArray, vector<double> PsysACTArray, const tick currentTime) const 
 {
 	DRAMsimWSSoapHttp service;
 	_ns2__submitEpochResultElement submit;
@@ -662,10 +658,16 @@ bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vecto
 
 	submit.rank = rankArray;
 
-	submit.PsysACTSTBY = PsysACTSTBYArray;
-	submit.PsysACT = PsysACTArray;
-	submit.PsysRD = PsysRD;
-	submit.PsysWR = PsysWR;
+	vector<float> ACTSTBYArray(PsysACTSTBYArray.size());
+	for (vector<float>::size_type i = 0; i < PsysACTSTBYArray.size(); ++i)
+		ACTSTBYArray[i] = PsysACTSTBYArray[i];
+	vector<float> ACTArray(PsysACTArray.size());
+	for (vector<float>::size_type i = 0; i < PsysACTArray.size() ; ++i)
+		ACTArray[i] = PsysACTArray[i];
+	submit.PsysACTSTBY = ACTSTBYArray;
+	submit.PsysACT = ACTArray;
+	submit.PsysRD = (float)PsysRD;
+	submit.PsysWR = (float)PsysWR;
 	_ns2__submitEpochResultResponseElement response;
 	int retVal = service.__ns1__submitEpochResult(&submit,&response);
 	return (retVal == 0);
@@ -677,7 +679,7 @@ bool Channel::sendPower(float PsysRD, float PsysWR, vector<int> rankArray, vecto
 /// @return the time at which the next refresh should be issued for this channel
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-const tick Channel::nextRefresh() const
+tick Channel::nextRefresh() const
 {
 	assert(rank.size() >= 1);
 
@@ -1183,33 +1185,6 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				statistics.reportHit();
 				return true;
 			}
-			/*if (destinationBank.back()
-				&& destinationBank.back()->getAddress().getRow() == incomingTransaction->getAddresses().getRow() // rows match
-				&& (time - destinationBank.back()->getEnqueueTime() < systemConfig.getSeniorityAgeLimit()) // not starving the last command
-				&& destinationBank.back()->getCommandType() != REFRESH_ALL) // ends with CAS+P or PRE
-			{
-				// found existing command to piggyback on
-				statistics.reportHit();
-
-				// ignore other command types
-				if (systemConfig.isAutoPrecharge())
-				{
-					// adjust existing commands
-					destinationBank.back()->setAutoPrecharge(false);
-
-					// insert new command
-					destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));				
-				}
-				else // no CAS+P available
-				{
-					assert(destinationBank.back()->getCommandType() == PRECHARGE);
-
-					// insert new command
-					destinationBank.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()), destinationBank.size() - 1);
-
-				}
-			}*/
-
 			// do normal insertion if optimal insertion doesn't work
 			if ((!systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 3) ||
 				(systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 2))
@@ -1960,6 +1935,10 @@ void Channel::executeCommand(Command *thisCommand)
 		break;
 
 	case INVALID_COMMAND:
+		break;
+
+	default:
+		cerr << "Unknown command type" << endl;
 		break;
 	}	
 
