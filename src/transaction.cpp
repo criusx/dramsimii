@@ -28,17 +28,17 @@ unsigned Transaction::eventCounter(0);
 
 /// constructor to make a transaction with no values set
 Transaction::Transaction():
-eventNumber(0xcdcdcdcd),
+eventNumber(0),
 type(CONTROL_TRANSACTION),
-status(0xcdcdcdcd),
-length(0xcdcdcdcd),
-arrivalTime(0xcdcdcdcd),
-enqueueTime(0xcdcdcdcd),
-completionTime(0xcdcdcdcd),
-decodeTime(0xcdcdcdcd),
-PC(0x0),
+status(0),
+length(0),
+arrivalTime(0),
+enqueueTime(0),
+completionTime(0),
+decodeTime(0),
+PC(0),
 threadNum(0),
-addr(0x0),
+addr(0),
 originalTransaction(UINT_MAX)
 {}
 
@@ -49,9 +49,9 @@ type(transType),
 status(0),
 length(burstLength),
 arrivalTime(arrivalTime),
-enqueueTime(0xcdcdcdcd),
-completionTime(0xcdcdcdcd),
-decodeTime(0xcdcdcdcd),
+enqueueTime(0),
+completionTime(0),
+decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
 addr(address),
@@ -64,9 +64,9 @@ type(transType),
 status(0),
 length(burstLength),
 arrivalTime(arrivalTime),
-enqueueTime(0xcdcdcdcd),
-completionTime(0xcdcdcdcd),
-decodeTime(0xcdcdcdcd),
+enqueueTime(0),
+completionTime(0),
+decodeTime(0),
 PC(0),
 threadNum(0),
 addr(address),
@@ -96,9 +96,9 @@ type(transType),
 status(0),
 length(burstLength),
 arrivalTime(arrivalTime),
-enqueueTime(0xcdcdcdcd),
-completionTime(0xcdcdcdcd),
-decodeTime(0xcdcdcdcd),
+enqueueTime(0),
+completionTime(0),
+decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
 addr(physicalAddress),
@@ -106,13 +106,14 @@ originalTransaction(originalTrans)
 {}
 
 /// overrides the new operator to draw from the transaction pool instead
-void * Transaction::operator new(size_t size)
+void *Transaction::operator new(size_t size)
 {
 	assert(size == sizeof(Transaction));
-	Transaction *newTrans = freeTransactionPool.acquireItem();
+	//Transaction *newTrans = freeTransactionPool.acquireItem();
+	return freeTransactionPool.acquireItem();
 	//newTrans->getAddresses().setPhysicalAddress(0);
 	//::new(newTrans)Transaction(0);
-	return newTrans;
+	//return newTrans;
 }
 
 /// override the delete operator to send transactions back to the pool

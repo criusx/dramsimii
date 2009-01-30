@@ -108,7 +108,6 @@ CASCount(0),
 totalCASCount(0),
 CASWCount(0),
 totalCASWCount(0)
-
 {}
 
 
@@ -290,7 +289,11 @@ bool Bank::closePageOptimalInsert(Transaction *incomingTransaction, const tick t
 				assert(perBankQueue[index + 1]->getCommandType() == PRECHARGE);
 			}
 
-			return perBankQueue.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);;
+			bool result = perBankQueue.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);
+			assert(perBankQueue[index + 1]->getAddress() == incomingTransaction->getAddresses());
+			assert(result);
+			return result;
+
 		}
 		// don't starve commands
 		if (time - perBankQueue[index]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())

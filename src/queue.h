@@ -258,14 +258,16 @@ namespace DRAMsimII
 		/// and one would like to store them when they are not in use
 		void releaseItem(T *item)
 		{
+			
 #if 0
-			for (std::vector<T *>::iterator i = entry.begin(); i != entry.end(); i++)
+			// look around to see if this was already in there, slows things down a lot, so use only when this might be a problem
+			for (typename std::vector<T *>::iterator i = entry.begin(); i != entry.end(); i++)
 			{
 				assert(item != *i);
 			}
 #endif
-
-			if(!push(item))
+			assert(pool);
+			if (!push(item))
 			{
 				::delete item;
 				item = NULL;
@@ -277,6 +279,8 @@ namespace DRAMsimII
 		/// @return rhs new item which may or may not be initialized
 		T *acquireItem()
 		{
+			assert(pool);
+
 			if (count == 0)
 			{
 				T* item = ::new T;

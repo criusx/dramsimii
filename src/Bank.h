@@ -126,7 +126,7 @@ namespace DRAMsimII
 		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
 		Bank(const Bank&, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
 		Bank(const Bank&);
-
+		
 		// overloads
 		bool operator==(const Bank& rhs) const;
 		Bank &operator=(const Bank& rhs);

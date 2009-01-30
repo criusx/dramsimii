@@ -227,6 +227,11 @@ namespace DRAMsimII
 			theMap[request_count_token] = "requestCount";
 			theMap[cpu_to_memory_clock_ratio] = "cpuToMemoryClockRatio";
 			theMap[epoch_token] = "epoch";
+			theMap[output_file_type_token] = "outFile/@type";
+			theMap[dbreporting_token] = "outFile/@dbreporting";
+			theMap[dram_type_token] = "dramspec/@type";
+			theMap[input_type_token] = "inputFile/@type";
+
 
 			return theMap;
 		}

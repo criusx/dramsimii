@@ -97,13 +97,18 @@ def make_objs(sourceFiles, env):
     #objs.append(date_obj)
     return objs
 
-platform = ARGUMENTS.get("DEFAULT_BINARY",Platform())
+platform = ARGUMENTS.get("build",Platform())
 
 if platform == 'debug':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
 	envDebug.Append(CCFLAGS = '-g -O -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
 	debug = envDebug.Program('dramSimII.debug',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
+if platform == 'debugsimple':
+	envDebugSimple = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogs')
+	envDebugSimple.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
+	debugSimple = envDebugSimple.Program('dramSimII.debugsimple',sourceFile)
+	envDebugSimple.Install(os.path.abspath('..') + "/bin", debugSimple)
 elif platform == 'test':
 	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ot')
 	envTest.Append(CCFLAGS = '-g -O -Wall -Wextra -Weffc++ -DDEBUG')

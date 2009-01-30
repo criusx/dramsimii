@@ -56,7 +56,9 @@ bool updateKeyValue(const string &nodeName, const string &nodeValue, xmlDocPtr d
 				cerr << "Problem updating nodes." << endl;				
 				return false;
 			}
+			//string lookupValue = (realName.find('@') < 0) ? "//" + realName : realName;
 			string lookupValue = "//" + realName;
+
 			xmlXPathObjectPtr path = xmlXPathEvalExpression((const xmlChar *)lookupValue.c_str(), context);
 			if (path == NULL)
 			{

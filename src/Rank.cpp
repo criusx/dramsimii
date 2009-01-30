@@ -106,6 +106,7 @@ lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(newBank)
 {}
 
+
 void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	// RAS time history queue, per rank

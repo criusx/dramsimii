@@ -22,7 +22,6 @@
 #include "Bank.h"
 #include "Settings.h"
 #include "TimingSpecification.h"
-#include "queue.h"
 
 #include <vector>
 

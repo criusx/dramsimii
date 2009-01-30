@@ -185,7 +185,18 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 }
 
 Channel::~Channel()
-{}
+{
+	while (Command *temp = getNextCommand())
+	{
+		delete temp;
+	}
+	using std::vector;
+	for (vector<Rank>::const_iterator i = rank.begin(); i != rank.end(); i++)
+	{
+		for (vector<Bank>::const_iterator j = i->bank.begin(); j != i->bank.end(); j++)
+			assert(j->size() == 0);
+	}
+}
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -1127,7 +1138,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 
 			// command one, the RAS command to activate the row
 			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), ACTIVATE));
-
+			
 			// command two, CAS or CAS+Precharge
 			destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
 
@@ -1165,6 +1176,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			{
 				bool result = currentBank->push(refreshCommand);
 				assert (result);
+				assert(currentBank->back() == refreshCommand);
 			}
 		}
 		// need at least one free command slot
@@ -1199,14 +1211,17 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 
 				// command one, the RAS command to activate the row
 				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), ACTIVATE));
+				assert(destinationBank.back()->getAddress() ==  incomingTransaction->getAddresses());
 
 				// command two, CAS or CAS+Precharge			
 				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
+				assert(destinationBank.back()->getAddress() ==  incomingTransaction->getAddresses());
 
 				// possible command three, Precharge
 				if (!systemConfig.isAutoPrecharge())
 				{				
 					destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), PRECHARGE));
+					assert(destinationBank.back()->getAddress() ==  incomingTransaction->getAddresses());
 				}
 			}		
 		}
@@ -1376,6 +1391,8 @@ const Command *Channel::readNextCommand() const
 				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 				{
 					const Command *challengerCommand = currentBank->front();
+					assert(challengerCommand == NULL || challengerCommand->getCommandType() == REFRESH_ALL || rank[challengerCommand->getAddress().getRank()].bank[challengerCommand->getAddress().getBank()].front() == challengerCommand);
+
 
 					if (isRefreshCommand && challengerCommand && challengerCommand->getCommandType() == REFRESH_ALL && currentRank->refreshAllReady())
 					{

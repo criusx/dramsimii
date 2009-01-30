@@ -30,7 +30,7 @@ commandType(RETIRE_COMMAND),
 startTime(0),
 enqueueTime(0),
 completionTime(0),
-addr(),
+addr(0),
 hostTransaction(NULL),
 postedCAS(false),
 length(0)
@@ -105,6 +105,7 @@ Command::~Command()
 {
 	if (hostTransaction)
 	{
+		//::delete hostTransaction;
 		delete hostTransaction;
 		// don't want to checkpoint this
 		hostTransaction = NULL;
@@ -147,6 +148,16 @@ void *Command::operator new(size_t size)
 	assert(size == sizeof(Command));
 	return freeCommandPool.acquireItem();
 }
+
+
+void Command::operator delete(void *mem)
+{
+	Command *cmd = static_cast<Command*>(mem);
+	//assert(!cmd->getHost());
+	cmd->~Command();
+	freeCommandPool.releaseItem(cmd);
+}
+
 
 bool Command::operator==(const Command& right) const
 {
@@ -238,11 +249,4 @@ ostream &DRAMsimII::operator<<(ostream &os, const Command &currentCommand)
 		"] T[" << std::dec << currentCommand.completionTime - currentCommand.startTime << 
 		"] DLY[" << std::dec << currentCommand.startTime - currentCommand.enqueueTime << "]";
 	return os;
-}
-
-void Command::operator delete(void *mem)
-{
-	Command *cmd(static_cast<Command*>(mem));
-	cmd->~Command();
-	freeCommandPool.releaseItem(cmd);
 }
