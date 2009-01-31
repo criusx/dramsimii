@@ -31,6 +31,7 @@
 namespace DRAMsimII
 {
 	// class forward declarations
+	class Event;
 	class Command;
 	class Address;
 	class Transaction;
@@ -49,6 +50,7 @@ namespace DRAMsimII
 
 	// overloaded insertion operator functions for printing various aspects of the dram system
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandType&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Event&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction&);

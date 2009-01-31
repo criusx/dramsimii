@@ -144,7 +144,7 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Program Files\boost\boost_1_36_0&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
-				PreprocessorDefinitions="WIN32;_RELEASE;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_RELEASE;_CONSOLE;NDEBUG"
 				StringPooling="true"
 				MinimalRebuild="true"
 				ExceptionHandling="1"

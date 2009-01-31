@@ -135,12 +135,13 @@ namespace DRAMsimII
 
 	private:
 
-		// serialization
+		
 		// friends
 		friend class boost::serialization::access;
 
 		explicit Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
-
+		
+		// serialization
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned version)
 		{
@@ -161,9 +162,9 @@ namespace DRAMsimII
 		template <class Archive>
 		friend inline void load_construct_data(Archive & ar, DRAMsimII::Bank *t, const unsigned version)
 		{
-			DRAMsimII::TimingSpecification* timing;		///< a reference to the timing specification
+			DRAMsimII::TimingSpecification* timing;	
 			ar >> timing;
-			DRAMsimII::SystemConfiguration* systemConfig;	///< reference to the system config to obtain specs
+			DRAMsimII::SystemConfiguration* systemConfig;	
 			ar >> systemConfig;
 
 			::new(t)DRAMsimII::Bank(*timing,*systemConfig);

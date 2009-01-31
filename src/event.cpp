@@ -19,25 +19,16 @@
 
 using namespace DRAMsimII;
 
-// initialize the static member
-Queue<Event> Event::freeEventPool(4*POOL_SIZE,true);
+unsigned Event::eventCounter(0);
 
+using std::ostream;
 
-Event::Event():
-eventType(NO_EVENT),
-time(0),
-eventPointer(NULL)
-{}
-
-
-void * Event::operator new(size_t size)
+ostream &DRAMsimII::operator<<(ostream &os, const Event &event)
 {
-	assert(size == sizeof(Command));
-	return freeEventPool.acquireItem();
-}
-
-void Event::operator delete(void *mem)
-{
-	Event *cmd = static_cast<Event*>(mem);
-	freeEventPool.releaseItem(cmd);
+	return os << event.address <<
+		" Q[" << std::dec << event.getEnqueueTime() << 
+		"] S[" << std::dec << event.getStartTime() << 
+		"] E[" << std::dec << event.getCompletionTime() << 
+		"] EXE[" << std::dec << event.getExecuteTime() << 
+		"] DLY[" << std::dec << event.getDelayTime() << "]";
 }

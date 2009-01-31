@@ -171,6 +171,123 @@ BOOST_AUTO_TEST_CASE( circular_buffer_test)
 	BOOST_CHECK(cb1 == cb6);
 }
 
+BOOST_AUTO_TEST_CASE( test_transactions)
+{
+	Settings s;
+	s.channelCount = 4;
+	s.rankCount = 4;
+	s.bankCount = 16;
+	s.rowCount = 1024;
+	s.columnCount = 16384;
+	s.dramType = DDR2;
+	s.addressMappingScheme = CLOSE_PAGE_BASELINE;
+	Address::initialize(s);
+	Address addr(0x00fdbca3);
+	Address addr2(0x0000f0d0);
+
+	Transaction *t = new Transaction();
+
+	Transaction *t2 = new Transaction(READ_TRANSACTION,1337,64,addr, 0xdeadbeef, 2000, 44);
+
+	BOOST_CHECK(*t != *t2);
+
+	Transaction *t3 = new Transaction(*t2);
+
+	BOOST_CHECK(*t2 == *t3);
+
+	Transaction *t4 = new Transaction(WRITE_TRANSACTION,234234223,33, addr2,  33);
+
+	delete t3;
+
+	t3 = new Transaction(*t4);
+
+	//Transaction t5 = *t4;
+
+	BOOST_CHECK(*t3 == *t4);
+
+	//BOOST_CHECK(*t4 == t5);
+
+	t4->setArrivalTime(234230);
+	t4->setEnqueueTime(234232);
+	t4->setDecodeTime(234234);
+	t4->setStartTime(234238);
+	t4->setCompletionTime(234242);
+	BOOST_CHECK(t4->getExecuteTime() == 4);
+	BOOST_CHECK(t4->getDelayTime() == 6);
+	BOOST_CHECK(t4->getLatency() == 10);
+	BOOST_CHECK(t4->getDecodeDelay() == 2);
+
+	std::cerr << *t << std::endl;
+	std::cerr << *t2 << std::endl;
+	std::cerr << *t3 << std::endl;
+	std::cerr << *t4 << std::endl;
+
+
+}
+
+BOOST_AUTO_TEST_CASE( test_commands)
+{
+	Settings s;
+	s.channelCount = 4;
+	s.rankCount = 4;
+	s.bankCount = 16;
+	s.rowCount = 1024;
+	s.columnCount = 16384;
+	s.dramType = DDR2;
+	s.addressMappingScheme = CLOSE_PAGE_BASELINE;
+	Address::initialize(s);
+	Address addr(0x00fdfbca);
+	Address addr2(0x0000f0ad0);
+
+	Command *t = new Command();
+
+	Transaction *trans = new Transaction(READ_TRANSACTION,3400,8,addr2,42);
+
+	Command *t2 = new Command(*trans,1234,true,false,4);
+
+	BOOST_CHECK(t2->getAddress() == trans->getAddress());
+
+	BOOST_CHECK(*t != *t2);
+
+	Command *t3 = new Command(*t2);
+
+	BOOST_CHECK(*t2 == *t3);
+
+	Command *t4 = new Command(*trans,1235,true,false,4);
+
+	delete t3;
+
+	t3 = new Command(*t4);
+
+	//Transaction t5 = *t4;
+	//delete t3->removeHost();
+	//t4->removeHost();
+	t3->setEnqueueTime(1234);
+
+	BOOST_CHECK(*t3 != *t4);
+
+	t4->setEnqueueTime(1234);
+
+	BOOST_CHECK(*t3 == *t4);
+
+	//BOOST_CHECK(*t4 == t5);
+
+	t4->setArrivalTime(234230);
+	t4->setEnqueueTime(234232);
+	t4->setStartTime(234238);
+	t4->setCompletionTime(234242);
+	BOOST_CHECK(t4->getExecuteTime() == 4);
+	BOOST_CHECK(t4->getDelayTime() == 6);
+	BOOST_CHECK(t4->getLatency() == 10);
+
+	std::cerr << *t << std::endl;
+	std::cerr << *t2 << std::endl;
+	std::cerr << *t3 << std::endl;
+	std::cerr << *t4 << std::endl;
+
+
+}
+
 BOOST_AUTO_TEST_CASE( test_queue)
 {
 	// transaction tests

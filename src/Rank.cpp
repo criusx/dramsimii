@@ -29,10 +29,14 @@ lastRefreshTime(-100),
 lastPrechargeAnyBankTime(0),
 lastCASTime(-100),
 lastCASWTime(-100),
+otherLastCASTime(-100),
+otherLastCASWTime(-100),
 prechargeTime(0),
 totalPrechargeTime(0),
 lastCASLength(0),
 lastCASWLength(0),
+otherLastCASLength(0),
+otherLastCASWLength(0),
 CASLength(0),
 CASWLength(0),
 rankID(UINT_MAX),
@@ -48,10 +52,14 @@ lastRefreshTime(rhs.lastRefreshTime),
 lastPrechargeAnyBankTime(rhs.lastPrechargeAnyBankTime),
 lastCASTime(rhs.lastCASTime),
 lastCASWTime(rhs.lastCASWTime),
+otherLastCASTime(rhs.otherLastCASTime),
+otherLastCASWTime(rhs.otherLastCASWTime),
 prechargeTime(rhs.prechargeTime),
 totalPrechargeTime(rhs.totalPrechargeTime),
 lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
+otherLastCASLength(rhs.otherLastCASLength),
+otherLastCASWLength(rhs.otherLastCASWLength),
 CASLength(rhs.CASLength),
 CASWLength(rhs.CASWLength),
 rankID(rhs.rankID),
@@ -67,10 +75,14 @@ lastRefreshTime(rhs.lastRefreshTime),
 lastPrechargeAnyBankTime(rhs.lastPrechargeAnyBankTime),
 lastCASTime(rhs.lastCASTime),
 lastCASWTime(rhs.lastCASWTime),
+otherLastCASTime(rhs.otherLastCASTime),
+otherLastCASWTime(rhs.otherLastCASWTime),
 prechargeTime(rhs.prechargeTime),
 totalPrechargeTime(rhs.totalPrechargeTime),
 lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
+otherLastCASLength(rhs.otherLastCASLength),
+otherLastCASWLength(rhs.otherLastCASWLength),
 CASLength(rhs.CASLength),
 CASWLength(rhs.CASWLength),
 rankID(rhs.rankID),
@@ -93,12 +105,16 @@ lastRefreshTime(-100),
 lastPrechargeAnyBankTime(0),
 lastCASTime(-100),
 lastCASWTime(-100),
+otherLastCASTime(-100),
+otherLastCASWTime(-100),
 prechargeTime(0),
 totalPrechargeTime(0),
 lastCASLength(0),
 lastCASWLength(0),
 CASLength(0),
 CASWLength(0),
+otherLastCASLength(0),
+otherLastCASWLength(0),
 rankID(UINT_MAX),
 lastBankID(0),
 banksPrecharged(0),
@@ -280,6 +296,10 @@ Rank& Rank::operator =(const Rank& rhs)
 	bank = rhs.bank;
 	CASLength = rhs.CASLength;
 	CASWLength = rhs.CASWLength;
+	otherLastCASTime = rhs.otherLastCASTime;
+	otherLastCASWTime = rhs.otherLastCASWTime;
+	otherLastCASLength = rhs.otherLastCASLength;
+	otherLastCASWLength = rhs.otherLastCASWLength;
 
 	return *this;
 }
@@ -289,7 +309,9 @@ bool Rank::operator==(const Rank& right) const
 	return (timing == right.timing && lastRefreshTime == right.lastRefreshTime && lastPrechargeAnyBankTime == right.lastPrechargeAnyBankTime &&
 		lastCASTime == right.lastCASTime && lastCASWTime == right.lastCASWTime && prechargeTime == right.prechargeTime && totalPrechargeTime == right.totalPrechargeTime &&
 		lastCASLength == right.lastCASLength && lastCASWLength == right.lastCASWLength && rankID == right.rankID && lastBankID == right.lastBankID &&
-		banksPrecharged == right.banksPrecharged && lastActivateTimes == right.lastActivateTimes && bank == right.bank && CASLength == right.CASLength && CASWLength == right.CASWLength);
+		banksPrecharged == right.banksPrecharged && lastActivateTimes == right.lastActivateTimes && bank == right.bank && CASLength == right.CASLength &&
+		CASWLength == right.CASWLength && otherLastCASTime == right.otherLastCASTime && otherLastCASWTime == right.otherLastCASWTime &&
+		otherLastCASLength == right.otherLastCASLength && otherLastCASWLength == right.otherLastCASWLength);
 }
 
 std::ostream& DRAMsimII::operator<<(std::ostream &os, const Rank &r)

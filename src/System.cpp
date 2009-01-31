@@ -359,10 +359,10 @@ bool System::enqueue(Transaction *currentTransaction)
 	assert(currentTransaction->getType() != AUTO_REFRESH_TRANSACTION);
 
 	// attempt to insert the transaction into the per-channel transaction queue
-	bool result = channel[currentTransaction->getAddresses().getChannel()].enqueue(currentTransaction);
+	bool result = channel[currentTransaction->getAddress().getChannel()].enqueue(currentTransaction);
 
 #ifdef M5DEBUG	
-	M5_TIMING_LOG((result ? "" : "!") << "+T(" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddresses().getChannel()].getTransactionQueueDepth() << ")")
+	M5_TIMING_LOG((result ? "" : "!") << "+T(" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ")")
 #endif
 		return result;
 }
@@ -468,10 +468,10 @@ void System::runSimulations(const unsigned requestCount)
 			if (!inputTransaction)
 				break;
 
-			newTime = channel[inputTransaction->getAddresses().getChannel()].getTime();
+			newTime = channel[inputTransaction->getAddress().getChannel()].getTime();
 			// if the previous transaction was delayed, thus making this arrival be in the past
 			// prevent new arrivals from arriving in the past
-			//inputTransaction->setEnqueueTime(max(inputTransaction->getEnqueueTime(),channel[inputTransaction->getAddresses().channel].getTime()));
+			//inputTransaction->setEnqueueTime(max(inputTransaction->getEnqueueTime(),channel[inputTransaction->getAddress().channel].getTime()));
 		}
 
 		// in case this transaction tried to arrive while the queue was full
@@ -499,7 +499,7 @@ void System::runSimulations(const unsigned requestCount)
 			{
 				// figure that the cpu <=> mch bus runs at the mostly the same speed
 				//inputTransaction->setEnqueueTime(inputTransaction->getEnqueueTime() + channel[0].getTimingSpecification().tCMD());
-				newTime = max(channel[inputTransaction->getAddresses().getChannel()].nextTick(), newTime);
+				newTime = max(channel[inputTransaction->getAddress().getChannel()].nextTick(), newTime);
 			}
 		}
 	}

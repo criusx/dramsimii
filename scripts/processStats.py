@@ -17,7 +17,7 @@ from array import array
 import shutil
 
 #globals
-workerThreads = 3
+workerThreads = 2
 
 Window = 8
 

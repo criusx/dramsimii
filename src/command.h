@@ -22,6 +22,7 @@
 #include "Address.h"
 #include "queue.h"
 #include "transaction.h"
+#include "event.h"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
@@ -29,16 +30,12 @@
 namespace DRAMsimII
 {
 	/// @brief represents a DRAM command from the memory controller to the DRAMs
-	class Command
+	class Command: public Event
 	{
 	protected:
 		static Queue<Command> freeCommandPool; ///< command objects are stored here to avoid allocating memory after initialization
 
 		mutable CommandType commandType;///< what type of command this is
-		tick startTime;					///< the time at which the command started
-		tick enqueueTime;				///< the time when this command was placed into the per bank queues
-		tick completionTime;			///< the time when this command completed
-		Address addr;					///< the addresses where this command is targeted
 		Transaction *hostTransaction;	///< backward pointer to the original transaction
 
 		// Variables added for the FB-DIMM
@@ -64,17 +61,10 @@ namespace DRAMsimII
 		explicit Command(const Command&);
 		explicit Command();		
 		explicit Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
-		void *operator new(size_t size);
-		void operator delete(void *);
 		~Command();
 
 		// accessors
 		CommandType getCommandType() const { return commandType; }
-		Address &getAddress() { return addr; }
-		const Address &getAddress() const { return addr; }
-		tick getStartTime() const { return startTime; }
-		tick getEnqueueTime() const { return enqueueTime; }
-		tick getCompletionTime() const { return completionTime; }
 		Transaction *getHost() const { return hostTransaction; }
 		unsigned getLength() const { return length; }
 		bool isPostedCAS() const { return postedCAS; }
@@ -84,9 +74,6 @@ namespace DRAMsimII
 
 		// mutators
 		Transaction *removeHost() { Transaction* host = hostTransaction; hostTransaction = NULL; return host; }
-		void setStartTime(const tick st) { startTime = st; }
-		void setCompletionTime(const tick ct) { completionTime = ct; }
-		void setCommandType(const CommandType ct) { commandType = ct; }
 		void setAutoPrecharge(const bool autoPrecharge) const;
 
 		// friends
@@ -94,18 +81,21 @@ namespace DRAMsimII
 
 		// overloads
 		bool operator==(const Command& right) const;
+		bool operator!=(const Command& right) const;
+		void *operator new(size_t size);
+		void operator delete(void *);
 
 	private:
-		Command& operator=(const Command& right);
-
 		// serialization
 		friend class boost::serialization::access;
 
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned version)
 		{
+			// @todo serialize inherited types
 			//ar & freeCommandPool;
-			ar & commandType & startTime & enqueueTime & completionTime & addr & hostTransaction & postedCAS & length;
+			//ar & commandType & startTime & enqueueTime & completionTime & addr & hostTransaction & postedCAS & length;
+			ar & commandType & hostTransaction & postedCAS & length;
 		}
 	};	
 }

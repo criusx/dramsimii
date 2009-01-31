@@ -40,24 +40,28 @@ namespace DRAMsimII
 
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
 
-		tick lastRefreshTime;		///< the time of the last refresh
+		tick lastRefreshTime;				///< the time of the last refresh
 		tick lastPrechargeAnyBankTime;		///< the time of the last precharge
-		tick lastCASTime;			///< the time of the last CAS
-		tick lastCASWTime;			///< the time of the last CASW
-		tick prechargeTime;			///< total time that all banks in this rank are precharged in this epoch
-		tick totalPrechargeTime;	///< total time that all banks are precharged, all time
-		unsigned lastCASLength;		///< the length of the last CAS
-		unsigned lastCASWLength;	///< the length of the last CASW
-		unsigned CASLength;				///< total cycles the bus spent sending data
-		unsigned CASWLength;			///< the total cycles the bus spent receiving data
-		unsigned rankID;			///< the ordinal number of this rank
-		unsigned lastBankID;		///< id of the last accessed bank of this rank
-		unsigned banksPrecharged;	///< the number of banks in the precharge state
+		tick lastCASTime;					///< the time of the last CAS
+		tick lastCASWTime;					///< the time of the last CASW
+		tick otherLastCASTime;				///< the time of the most recent CAS from any other rank on this channel
+		tick otherLastCASWTime;				///< the time of the most recent CASW from any other rank on this channel
+		tick prechargeTime;					///< total time that all banks in this rank are precharged in this epoch
+		tick totalPrechargeTime;			///< total time that all banks are precharged, all time
+		unsigned lastCASLength;				///< the length of the last CAS
+		unsigned lastCASWLength;			///< the length of the last CASW
+		unsigned otherLastCASLength;		///< the length of the last CAS on any other rank
+		unsigned otherLastCASWLength;		///< the length of the last CASW on any other rank
+		unsigned CASLength;					///< total cycles the bus spent sending data
+		unsigned CASWLength;				///< the total cycles the bus spent receiving data
+		unsigned rankID;					///< the ordinal number of this rank
+		unsigned lastBankID;				///< id of the last accessed bank of this rank
+		unsigned banksPrecharged;			///< the number of banks in the precharge state
 
 	public:
 
 		boost::circular_buffer<tick> lastActivateTimes; ///< ras time queue. useful to determine if t_faw is met
-		std::vector<Bank> bank;		///< the banks within this rank
+		std::vector<Bank> bank;							///< the banks within this rank
 
 		// functions
 		bool refreshAllReady() const;
@@ -80,10 +84,14 @@ namespace DRAMsimII
 		tick getLastRefreshTime() const { return lastRefreshTime; }
 		tick getLastCASTime() const { return lastCASTime; }
 		tick getLastCASWTime() const { return lastCASWTime; }
+		tick getOtherLastCASTime() const { return otherLastCASTime; }
+		tick getOtherLastCASWTime() const { return otherLastCASWTime; }
 		tick getLastPrechargeTime() const { return lastPrechargeAnyBankTime; }
 		unsigned getLastBankID() const { return lastBankID; }
 		unsigned getLastCASLength() const { return lastCASLength; }
 		unsigned getLastCASWLength() const { return lastCASWLength; }
+		unsigned getOtherLastCASLength() const { return otherLastCASLength; }
+		unsigned getOtherLastCASWLength() const { return otherLastCASWLength; }
 		unsigned getReadCycles() const { return CASLength; }
 		unsigned getWriteCycles() const { return CASWLength; }
 
@@ -93,6 +101,8 @@ namespace DRAMsimII
 		void setLastBankID(const unsigned value) { lastBankID = value; }
 		void resetPrechargeTime(tick time) { prechargeTime = 1; lastPrechargeAnyBankTime = time;}
 		void resetCycleCounts() { CASLength = CASWLength = 0; }
+		void setOtherLastCAS(const tick value, const unsigned length) { assert(value > otherLastCASTime); otherLastCASTime = value; otherLastCASLength = length;}
+		void setOtherLastCASW(const tick value, const unsigned length) { assert(value > otherLastCASWTime); otherLastCASWTime = value; otherLastCASWLength = length;}
 
 		// overloads
 		Rank& operator=(const Rank &rs);
@@ -111,7 +121,7 @@ namespace DRAMsimII
 		{
 			ar & lastRefreshTime & lastPrechargeAnyBankTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength; 
 			ar & lastCASWLength & rankID & lastBankID & banksPrecharged;
-			ar & lastActivateTimes & CASWLength & CASLength;		
+			ar & lastActivateTimes & CASWLength & CASLength & otherLastCASTime & otherLastCASWTime & otherLastCASLength & otherLastCASWLength;		
 		}
 
 		template <class Archive>

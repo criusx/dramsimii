@@ -350,7 +350,7 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 
 	incomingTransaction->setEnqueueTime(time);
 
-	assert(incomingTransaction->getAddresses().getChannel() == channelID);
+	assert(incomingTransaction->getAddress().getChannel() == channelID);
 
 	bool result;
 
@@ -371,7 +371,7 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 				// prevent against starvation and RAW errors, reads do not switch their ordering
 				if (transactionQueue[currentIndex]->isRead() ||
 					(time - transactionQueue[currentIndex]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit()) ||
-					transactionQueue[currentIndex]->getAddresses() == incomingTransaction->getAddresses())
+					transactionQueue[currentIndex]->getAddress() == incomingTransaction->getAddress())
 				{
 					result = transactionQueue.insert(incomingTransaction, currentIndex + 1);					
 					assert(result);
@@ -921,11 +921,11 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 		return false;
 	}
 	// ensure that this transaction belongs on this channel
-	assert (incomingTransaction->getAddresses().getChannel() == channelID || incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION);
+	assert (incomingTransaction->getAddress().getChannel() == channelID || incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION);
 
-	const Bank &destinationBank = rank[incomingTransaction->getAddresses().getRank()].bank[incomingTransaction->getAddresses().getBank()];
+	const Bank &destinationBank = rank[incomingTransaction->getAddress().getRank()].bank[incomingTransaction->getAddress().getBank()];
 
-	unsigned availableCommandSlots = (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION) ? 0 : rank[incomingTransaction->getAddresses().getRank()].bank[incomingTransaction->getAddresses().getBank()].freeCommandSlots();
+	unsigned availableCommandSlots = (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION) ? 0 : rank[incomingTransaction->getAddress().getRank()].bank[incomingTransaction->getAddress().getBank()].freeCommandSlots();
 
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
@@ -936,7 +936,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 		// refresh transactions become only one command and are handled differently
 		if (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 		{
-			const Rank &destinationRank = rank[incomingTransaction->getAddresses().getRank()];
+			const Rank &destinationRank = rank[incomingTransaction->getAddress().getRank()];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
@@ -958,11 +958,11 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 			return false;
 		}
 		break;
-	case CLOSE_PAGE_OPTIMIZED:
+	case CLOSE_PAGE_AGGRESSIVE:
 		// refresh transactions become only one command and are handled differently
 		if (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 		{
-			const Rank &destinationRank = rank[incomingTransaction->getAddresses().getRank()];
+			const Rank &destinationRank = rank[incomingTransaction->getAddress().getRank()];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
@@ -979,7 +979,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 			return false;
 		}
 		else if (destinationBank.back() 
-			&& destinationBank.back()->getAddress().getRow() == incomingTransaction->getAddresses().getRow() // rows match
+			&& destinationBank.back()->getAddress().getRow() == incomingTransaction->getAddress().getRow() // rows match
 			&& (time - destinationBank.back()->getEnqueueTime() < systemConfig.getSeniorityAgeLimit()) // not starving the last command
 			&& destinationBank.back()->getCommandType() != REFRESH_ALL) // ends with CAS+P or PRE
 		{
@@ -1007,7 +1007,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 			// refresh transactions become only one command and are handled differently
 			if (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 			{
-				const Rank &currentRank = rank[incomingTransaction->getAddresses().getRank()];
+				const Rank &currentRank = rank[incomingTransaction->getAddress().getRank()];
 				// make sure that there is room in all the queues for one command
 				// refresh commands refresh a row, but kill everything currently in the sense amps
 				// therefore, we need to make sure that the refresh commands happen when all banks
@@ -1025,7 +1025,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 			bool bypass_allowed = true;
 
 			// go from tail to head
-			for (int tail_offset = rank[incomingTransaction->getAddresses().getRank()].bank[incomingTransaction->getAddresses().getBank()].size() - 1; (tail_offset >= 0) && (bypass_allowed == true); --tail_offset)
+			for (int tail_offset = rank[incomingTransaction->getAddress().getRank()].bank[incomingTransaction->getAddress().getBank()].size() - 1; (tail_offset >= 0) && (bypass_allowed == true); --tail_offset)
 			{	
 				const Command *currentCommand = destinationBank.read(tail_offset);
 
@@ -1035,7 +1035,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 				}
 				// goes right before the PRE command to ensure that the original order is preserved
 				else if ((currentCommand->getCommandType() == PRECHARGE) &&
-					(currentCommand->getAddress().getRow() == incomingTransaction->getAddresses().getRow()))
+					(currentCommand->getAddress().getRow() == incomingTransaction->getAddress().getRow()))
 				{
 					// can piggyback on other R-C-C...C-P sequences
 					if (availableCommandSlots < 1)
@@ -1086,9 +1086,9 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		return false;
 	}
 	// ensure that this transaction belongs on this channel
-	assert (incomingTransaction->getAddresses().getChannel() == channelID || incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION);
+	assert (incomingTransaction->getAddress().getChannel() == channelID || incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION);
 
-	Bank &destinationBank = rank[incomingTransaction->getAddresses().getRank()].bank[incomingTransaction->getAddresses().getBank()];
+	Bank &destinationBank = rank[incomingTransaction->getAddress().getRank()].bank[incomingTransaction->getAddress().getBank()];
 
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
@@ -1101,7 +1101,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		if (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 		{
 			// check to see if every per bank command queue has room for one command
-			Rank &currentRank = rank[incomingTransaction->getAddresses().getRank()];
+			Rank &currentRank = rank[incomingTransaction->getAddress().getRank()];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
@@ -1153,13 +1153,13 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		break;
 
 		// will either convert a CAS+P into CAS, CAS+P by appending a new command or will add a CAS before a PRE (when autoprecharge is not available)
-	case CLOSE_PAGE_OPTIMIZED:
+	case CLOSE_PAGE_AGGRESSIVE:
 
 		// refresh transactions become only one command and are handled differently
 		if (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 		{
 			// check to see if every per bank command queue has room for one command
-			Rank &currentRank = rank[incomingTransaction->getAddresses().getRank()];
+			Rank &currentRank = rank[incomingTransaction->getAddress().getRank()];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
@@ -1211,17 +1211,17 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 
 				// command one, the RAS command to activate the row
 				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), ACTIVATE));
-				assert(destinationBank.back()->getAddress() ==  incomingTransaction->getAddresses());
+				assert(destinationBank.back()->getAddress() ==  incomingTransaction->getAddress());
 
 				// command two, CAS or CAS+Precharge			
 				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
-				assert(destinationBank.back()->getAddress() ==  incomingTransaction->getAddresses());
+				assert(destinationBank.back()->getAddress() ==  incomingTransaction->getAddress());
 
 				// possible command three, Precharge
 				if (!systemConfig.isAutoPrecharge())
 				{				
 					destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), PRECHARGE));
-					assert(destinationBank.back()->getAddress() ==  incomingTransaction->getAddresses());
+					assert(destinationBank.back()->getAddress() ==  incomingTransaction->getAddress());
 				}
 			}		
 		}
@@ -1235,7 +1235,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		if (incomingTransaction->getType() == AUTO_REFRESH_TRANSACTION)
 		{
 			// check to see if every per bank command queue has room for one command
-			Rank &currentRank = rank[incomingTransaction->getAddresses().getRank()];
+			Rank &currentRank = rank[incomingTransaction->getAddress().getRank()];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
@@ -1251,7 +1251,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			for (vector<Bank>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
 			{
 				bool result = i->push(refreshCommand);
-				//bool result = i->push(new Command(incomingTransaction->getAddresses(), REFRESH_ALL, time, incomingTransaction, false));
+				//bool result = i->push(new Command(incomingTransaction->getAddress(), REFRESH_ALL, time, incomingTransaction, false));
 				assert (result);
 			}
 		}
@@ -1846,6 +1846,8 @@ void Channel::executeCommand(Command *thisCommand)
 
 	currentRank.setLastBankID(thisCommand->getAddress().getBank());
 
+	const unsigned rankID = currentRank.getRankID();
+
 	//int t_al = this_command->isPostedCAS() ? timingSpecification.tAL() : 0;
 
 	// update the channel's idea of what time it is and set the start time for the command
@@ -1855,10 +1857,11 @@ void Channel::executeCommand(Command *thisCommand)
 
 	//thisCommand->setStartTime(max(earliestExecuteTime(thisCommand), thisCommand->getEnqueueTime()));
 
-	thisCommand->setStartTime(time + timingSpecification.tCMD());
+	//thisCommand->setStartTime(time + timingSpecification.tCMD());
+	thisCommand->setStartTime(time);
 
 	assert(thisCommand->getStartTime() >= earliestExecuteTime(thisCommand));
-	assert(thisCommand->getStartTime() >= thisCommand->getEnqueueTime() + timingSpecification.tCMD());
+	//assert(thisCommand->getStartTime() >= thisCommand->getEnqueueTime() + timingSpecification.tCMD());
 
 	// set this channel's time to the start time of this command
 	//time = thisCommand->getStartTime();
@@ -1878,6 +1881,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case READ_AND_PRECHARGE:
 
+		// precharge may be issued first because timings are based on time, not the last time at which a read command was issued
 		currentRank.issuePRE(time, thisCommand);
 		// lack of break is intentional
 
@@ -1890,10 +1894,17 @@ void Channel::executeCommand(Command *thisCommand)
 		//thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
+				
+		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
+		{
+			if (i->getRankID() != rankID)
+				i->setOtherLastCAS(time + timingSpecification.tAL(),thisCommand->getLength());
+		}
 		break;
 
 	case WRITE_AND_PRECHARGE:
 
+		// precharge may be issued first because timings are based on time, not the last time at which a read command was issued
 		currentRank.issuePRE(time, thisCommand);		
 		// missing break is intentional
 
@@ -1906,6 +1917,12 @@ void Channel::executeCommand(Command *thisCommand)
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() );
 		//thisCommand->getHost()->setCompletionTime(time);
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
+
+		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
+		{
+			if (i->getRankID() != rankID)
+				i->setOtherLastCASW(time + timingSpecification.tAL(),thisCommand->getLength());
+		}
 		break;
 
 	case PRECHARGE:
@@ -2197,11 +2214,12 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 /// @details Looks at all of the timing parameters and decides when the this command may soonest execute
 tick Channel::earliestExecuteTime(const Command *currentCommand) const
 { 
-	tick nextTime;
+	tick nextTime;	
 
-	const unsigned rankID = currentCommand->getAddress().getRank();
+	const Rank &currentRank = rank[currentCommand->getAddress().getRank()];
 
-	const Rank &currentRank = rank[rankID];
+	const unsigned rankID = currentRank.getRankID();
+	assert (rankID == currentCommand->getAddress().getRank());
 
 	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
 
@@ -2249,15 +2267,20 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
-			tick otherRankLastCASTime = time - 1000;
-			int otherRankLastCASLength = timingSpecification.tBurst();
-			tick otherRankLastCASWTime = time - 1000;
-			int otherRankLastCASWLength = timingSpecification.tBurst();
+#if 0
+			tick otherRankLastCASTime = -100;
+			unsigned otherRankLastCASLength = 0;
+			tick otherRankLastCASWTime = -100;
+			unsigned otherRankLastCASWLength = 0;
+			//tick otherRankLastCASTime = time - 1000;
+			//int otherRankLastCASLength = timingSpecification.tBurst();
+			//tick otherRankLastCASWTime = time - 1000;
+			//int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent cas(w) time and length
 			for (vector<Rank>::const_iterator thisRank = rank.begin(); thisRank != rank.end(); thisRank++)
 			{
-				if (thisRank->getRankID() != currentRank.getRankID())
+				if (rankID != thisRank->getRankID())
 				{
 					if (thisRank->getLastCASTime() > otherRankLastCASTime)
 					{
@@ -2270,7 +2293,12 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 						otherRankLastCASWLength = thisRank->getLastCASWLength();
 					}
 				}
-			}			
+			}	
+			assert(otherRankLastCASTime == currentRank.getOtherLastCASTime());
+			assert(otherRankLastCASWTime == currentRank.getOtherLastCASWTime());
+			assert(otherRankLastCASLength == currentRank.getOtherLastCASLength());
+			assert(otherRankLastCASWLength == currentRank.getOtherLastCASWLength());
+#endif
 
 			// respect last CAS of same rank
 			// DW 3/9/2006 add these two lines
@@ -2285,12 +2313,12 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
 			tCASLimit = max(tCASLimit,currentRank.getLastCASWTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR());
 
-			if (rank.size() > 1) 
+			//if (rank.size() > 1) 
 			{
 				//respect most recent CAS of different rank
-				tCASLimit = max(tCASLimit, otherRankLastCASTime + otherRankLastCASLength + timingSpecification.tRTRS());
+				tCASLimit = max(tCASLimit, currentRank.getOtherLastCASTime() + currentRank.getOtherLastCASLength() + timingSpecification.tRTRS());
 				//respect timing of READ follow WRITE, different ranks
-				tCASLimit = max(tCASLimit, otherRankLastCASWTime + timingSpecification.tCWD() + otherRankLastCASWLength + timingSpecification.tRTRS() - timingSpecification.tCAS());
+				tCASLimit = max(tCASLimit, currentRank.getOtherLastCASWTime() + timingSpecification.tCWD() + currentRank.getOtherLastCASWLength() + timingSpecification.tRTRS() - timingSpecification.tCAS());
 			}
 
 			nextTime = max(tRCDLimit,tCASLimit);
@@ -2310,10 +2338,16 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			//respect last RAS of same rank
 			tick tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
 
-			tick otherRankLastCASTime = time - 1000;
-			int otherRankLastCASLength = timingSpecification.tBurst();
-			tick otherRankLastCASWTime = time - 1000;
-			int otherRankLastCASWLength = timingSpecification.tBurst();
+#if 0
+			tick otherRankLastCASTime = -100;
+			unsigned otherRankLastCASLength = 0;
+			tick otherRankLastCASWTime = -100;
+			unsigned otherRankLastCASWLength = 0;
+			//tick otherRankLastCASTime = time - 1000;
+			//int otherRankLastCASLength = timingSpecification.tBurst();
+			//tick otherRankLastCASWTime = time - 1000;
+			//int otherRankLastCASWLength = timingSpecification.tBurst();
+
 
 			// find the most recent CAS/CASW time and length
 			for (vector<Rank>::const_iterator rankIndex = rank.begin(); rankIndex != rank.end(); rankIndex++)
@@ -2332,6 +2366,11 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 					}
 				}
 			}
+			assert(otherRankLastCASTime == currentRank.getOtherLastCASTime());
+			assert(otherRankLastCASWTime == currentRank.getOtherLastCASWTime());
+			assert(otherRankLastCASLength == currentRank.getOtherLastCASLength());
+			assert(otherRankLastCASWLength == currentRank.getOtherLastCASWLength());
+#endif
 			// DW 3/9/2006 add these two lines
 			//cas_length = max(timing_specification.t_int_burst,this_r.last_cas_length);
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
@@ -2342,7 +2381,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			tick tCASLimit = max(time,currentRank.getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
 
 			// respect last cas to different ranks
-			tCASLimit = max(tCASLimit,otherRankLastCASTime + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD());
+			tCASLimit = max(tCASLimit,currentRank.getOtherLastCASTime() + timingSpecification.tCAS() + currentRank.getOtherLastCASLength() + timingSpecification.tRTRS() - timingSpecification.tCWD());
 
 			// respect last cas write to same rank
 			// DW 3/9/2006 replace the line after next with the next line			
@@ -2351,7 +2390,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 			// respect last CASW to different ranks
 			// TODO: should this not also be -tAL?
-			tCASLimit = max(tCASLimit,otherRankLastCASWTime + otherRankLastCASWLength + timingSpecification.tOST());
+			tCASLimit = max(tCASLimit,currentRank.getOtherLastCASWTime() + currentRank.getOtherLastCASWLength() + timingSpecification.tOST());
 
 			nextTime = max(tRASLimit,tCASLimit);
 		}

@@ -402,8 +402,8 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 			rowBufferManagementPolicy = OPEN_PAGE;
 		else if (nodeValue == "closepage")
 			rowBufferManagementPolicy = CLOSE_PAGE;
-		else if (nodeValue == "closepageoptimized")
-			rowBufferManagementPolicy = CLOSE_PAGE_OPTIMIZED;
+		else if (nodeValue == "closepageaggressive" || nodeValue == "closepageoptimized")
+			rowBufferManagementPolicy = CLOSE_PAGE_AGGRESSIVE;
 		else
 			rowBufferManagementPolicy = AUTO_PAGE;
 		break;
@@ -509,8 +509,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const RowBufferPolicy rbp)
 	case CLOSE_PAGE:
 		os << "CLOS";
 		break;
-	case CLOSE_PAGE_OPTIMIZED:
-		os << "CLSO";
+	case CLOSE_PAGE_AGGRESSIVE:
+		os << "CPAG";
 		break;
 	default:
 		os << "UNKN";

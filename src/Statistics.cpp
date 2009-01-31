@@ -65,6 +65,7 @@ readCount(0),
 writeCount(0),
 readBytesTransferred(0),
 writeBytesTransferred(0),
+timePerEpoch(0),
 commandDelay(),
 commandExecution()
 {}
@@ -84,13 +85,13 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 		}
 		if (currentTransaction->isRead())
 		{
-			transactionExecution[currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime()]++;
-			assert(currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime() > 4);
+			transactionExecution[currentTransaction->getLatency()]++;
+			assert(currentTransaction->getLatency() > 4);
 		}
-		transactionDecodeDelay[currentTransaction->getDecodeTime() - currentTransaction->getEnqueueTime()]++;
+		transactionDecodeDelay[currentTransaction->getDecodeDelay()]++;
 
 		// gather working set information for this epoch, exclude the entries which alias to the same column		
-		workingSet[currentTransaction->getAddresses().getPhysicalAddress() >> columnDepth]++;
+		workingSet[currentTransaction->getAddress().getPhysicalAddress() >> columnDepth]++;
 		if (currentTransaction->isRead())
 		{
 			readCount++;
@@ -107,7 +108,7 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 		if (currentTransaction->getProgramCounter() > 0x00)
 		{
 			pcOccurrence[currentTransaction->getProgramCounter()].countUp();
-			pcOccurrence[currentTransaction->getProgramCounter()].delay(currentTransaction->getCompletionTime() - currentTransaction->getEnqueueTime());
+			pcOccurrence[currentTransaction->getProgramCounter()].delay(currentTransaction->getLatency());
 		}
 	}
 }
@@ -116,9 +117,9 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 {
 	if (currentCommand->getCommandType() != REFRESH_ALL)
 	{
-		commandDelay[currentCommand->getStartTime() - currentCommand->getEnqueueTime()]++;
-		commandExecution[currentCommand->getCompletionTime() - currentCommand->getStartTime()]++;
-		commandTurnaround[currentCommand->getCompletionTime() - currentCommand->getEnqueueTime()]++;
+		commandDelay[currentCommand->getDelayTime()]++;
+		commandExecution[currentCommand->getExecuteTime()]++;
+		commandTurnaround[currentCommand->getLatency()]++;
 	}
 	channelUtilization[currentCommand->getAddress().getChannel()]++;
 	rankUtilization[currentCommand->getAddress().getRank()]++;
@@ -161,7 +162,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	os << "----Working Set----" << endl << statsLog.workingSet.size() << endl;
 
-	os << "----Bandwidth----" << endl << setprecision(10)  << (float)statsLog.readBytesTransferred / statsLog.timePerEpoch << " " << (float)statsLog.writeBytesTransferred / statsLog.timePerEpoch << endl;
+	os << "----Bandwidth----" << endl << setprecision(10) << (float)statsLog.readBytesTransferred / statsLog.timePerEpoch << " " << (float)statsLog.writeBytesTransferred / statsLog.timePerEpoch << endl;
 
 	os << "----Average Transaction Latency Per PC Value " << statsLog.pcOccurrence.size() << "----" << endl;
 	for (map<PHYSICAL_ADDRESS, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); currentValue++)
@@ -219,11 +220,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			(data->name.find("l2.overall_mshr_misses") != string::npos) ||
 			(data->name.find("l2.overall_mshr_miss_latency") != string::npos) ||
 			(data->name.find("l2.overall_miss_latency") != string::npos) )
-			//|| (data->name.find("l2") != string::npos))
-			//&& ((data->name.find("hit") != string::npos) || (data->name.find("miss") != string::npos)))
 		{
-			//std::cerr << data->name << endl;
-			//if (typeid(*i) == typeid(Stats::FormulaStatData<Stats::FormulaBase> *) ||typeid(*i) == typeid(Stats::Formula *))
 			{
 				os << "----M5 Stat: " << data->name << " ";
 
@@ -231,11 +228,10 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().end();
 				while (start != end)
 				{
-					//std::cerr << *start << " ";
 					os << *start << " ";
 					start++;
 				}
-				os << "----" << endl;
+				os << endl;
 			}
 		}		
 	}		

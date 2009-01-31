@@ -202,7 +202,7 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
+			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddress().getRow())) 
 			{
 				bool result = perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), currentIndex);
 				assert(result);
@@ -250,7 +250,7 @@ bool Bank::openPageInsertAvailable(const Transaction *value, const tick time) co
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddresses().getRow())) 
+			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddress().getRow())) 
 			{
 				return true;
 			}
@@ -277,7 +277,7 @@ bool Bank::closePageOptimalInsert(Transaction *incomingTransaction, const tick t
 	{	
 		// see if there is an available command to piggyback on
 		if (perBankQueue[index]->isReadOrWrite() && 
-			perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddresses().getRow())
+			perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddress().getRow())
 		{
 			if (systemConfig.isAutoPrecharge())
 			{
@@ -290,7 +290,7 @@ bool Bank::closePageOptimalInsert(Transaction *incomingTransaction, const tick t
 			}
 
 			bool result = perBankQueue.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);
-			assert(perBankQueue[index + 1]->getAddress() == incomingTransaction->getAddresses());
+			assert(perBankQueue[index + 1]->getAddress() == incomingTransaction->getAddress());
 			assert(result);
 			return result;
 

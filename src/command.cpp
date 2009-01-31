@@ -26,11 +26,12 @@ using namespace DRAMsimII;
 Queue<Command> Command::freeCommandPool(8*POOL_SIZE,true);
 
 Command::Command():
+Event(),
 commandType(RETIRE_COMMAND),
-startTime(0),
-enqueueTime(0),
-completionTime(0),
-addr(0),
+//startTime(0),
+//enqueueTime(0),
+//completionTime(0),
+//addr(0),
 hostTransaction(NULL),
 postedCAS(false),
 length(0)
@@ -38,11 +39,12 @@ length(0)
 
 
 Command::Command(const Command &rhs):
+Event(rhs),
 commandType(rhs.commandType),
-startTime(rhs.startTime),
-enqueueTime(rhs.enqueueTime),
-completionTime(rhs.completionTime),
-addr(rhs.addr),
+//startTime(rhs.startTime),
+//enqueueTime(rhs.enqueueTime),
+//completionTime(rhs.completionTime),
+//addr(rhs.addr),
 hostTransaction(rhs.hostTransaction ? new Transaction(*rhs.hostTransaction) : NULL),
 postedCAS(rhs.postedCAS),
 length(rhs.length)
@@ -58,10 +60,11 @@ length(rhs.length)
 }
 
 Command::Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
-startTime(-1),
-enqueueTime(enqueueTime),
-completionTime(-1),
-addr(hostTransaction.getAddresses()),
+Event(hostTransaction.getAddress(),enqueueTime),
+//startTime(-1),
+//enqueueTime(enqueueTime),
+//completionTime(-1),
+//addr(hostTransaction.getAddresses()),
 hostTransaction(type == READ ? &hostTransaction : NULL), // this link is only needed for CAS commands
 postedCAS(postedCAS),
 length(commandLength)
@@ -162,8 +165,8 @@ void Command::operator delete(void *mem)
 bool Command::operator==(const Command& right) const
 {
 	if (commandType == right.commandType && startTime == right.startTime &&
-		enqueueTime == right.enqueueTime && completionTime == right.completionTime && addr == right.addr && 
-		postedCAS == right.postedCAS && length == right.length)
+		enqueueTime == right.enqueueTime && completionTime == right.completionTime && //addr == right.addr && 
+		postedCAS == right.postedCAS && length == right.length && this->Event::operator==(right))
 	{
 		if ((hostTransaction && !right.hostTransaction) || 
 			(!hostTransaction && right.hostTransaction))
@@ -177,6 +180,12 @@ bool Command::operator==(const Command& right) const
 	}
 	else
 		return false;
+}
+
+
+bool Command::operator !=(const Command& right) const
+{
+	return !(*this == right);
 }
 
 
@@ -241,12 +250,5 @@ ostream &DRAMsimII::operator<<(ostream &os, const CommandType &command)
 
 ostream &DRAMsimII::operator<<(ostream &os, const Command &currentCommand)
 {
-	os << currentCommand.commandType <<
-		currentCommand.addr <<
-		" S[" << std::dec << currentCommand.startTime << 
-		"] Q[" << std::dec << currentCommand.enqueueTime << 
-		"] E[" << std::dec << currentCommand.completionTime << 
-		"] T[" << std::dec << currentCommand.completionTime - currentCommand.startTime << 
-		"] DLY[" << std::dec << currentCommand.startTime - currentCommand.enqueueTime << "]";
-	return os;
+	return os << currentCommand.commandType << (Event&)(currentCommand);	
 }

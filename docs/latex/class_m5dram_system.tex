@@ -1,18 +1,11 @@
 \section{M5dramSystem Class Reference}
 \label{class_m5dram_system}\index{M5dramSystem@{M5dramSystem}}
-wrapper class to allow M5 to work with DRAMSimII  
+wrapper class to allow M5 to work with DRAMsimII  
 
 
 {\tt \#include $<$m5-dramSystem.h$>$}
 
-Collaboration diagram for M5dramSystem:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=400pt]{class_m5dram_system__coll__graph}
-\end{center}
-\end{figure}
-\subsection*{Public Types}
+Collaboration diagram for M5dramSystem:\subsection*{Public Types}
 \begin{CompactItemize}
 \item 
 typedef M5dramSystemParams {\bf Params}\label{class_m5dram_system_bc049789b7ba009ac06888952383d456}
@@ -39,9 +32,9 @@ std::vector$<$ MemoryPort $\ast$ $>$ {\bf ports}\label{class_m5dram_system_c74ac
 int {\bf lastPortIndex}\label{class_m5dram_system_8dec460f8036d2885f730687e207624c}
 
 \begin{CompactList}\small\item\em the last port accessed \item\end{CompactList}\item 
-{\bf DRAMSimII::System} $\ast$ {\bf ds}\label{class_m5dram_system_e4e67af7601cc345bc08d3de8475be65}
+{\bf DRAMsimII::System} $\ast$ {\bf ds}\label{class_m5dram_system_ce32ccab57bc7bb099862cb701cc6a34}
 
-\begin{CompactList}\small\item\em pointer to the DRAMSimII class \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em pointer to the DRAMsimII class \item\end{CompactList}\item 
 bool {\bf needRetry}\label{class_m5dram_system_b1c16d57a7d7a3a07c8c0250be821432}
 
 \begin{CompactList}\small\item\em if the memory system needs to issue a retry statement before any more requests will come in \item\end{CompactList}\item 
@@ -54,7 +47,7 @@ int {\bf cpuRatio}\label{class_m5dram_system_2fbee1e022242e218e235df762bcd82a}
 
 
 \subsection{Detailed Description}
-wrapper class to allow M5 to work with DRAMSimII 
+wrapper class to allow M5 to work with DRAMsimII 
 
 The documentation for this class was generated from the following file:\begin{CompactItemize}
 \item 

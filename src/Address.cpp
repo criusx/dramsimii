@@ -647,12 +647,11 @@ void Address::setAddress(const unsigned channel, const unsigned rank, const unsi
 
 std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address &this_a)
 {
-	os << "addr[0x" << setbase(16) << this_a.physicalAddress <<
+	return os << "addr[0x" << setbase(16) << this_a.physicalAddress <<
 		"] chan[" << setbase(16) << this_a.channel << "] rank[" <<
 		this_a.rank << "] bank[" << setw(2) << setbase(16) << this_a.bank <<
 		"] row[" << setw(4) << setbase(16) << this_a.row << "] col[" <<
 		setbase(16) << this_a.column << "]";
-	return os;
 }
 
 std::ostream &DRAMsimII::operator <<(std::ostream &os, const AddressMappingScheme &mappingScheme)

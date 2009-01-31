@@ -4,5 +4,5 @@ digraph G
   edge [fontname="FreeSans",fontsize=10,labelfontname="FreeSans",labelfontsize=10];
   node [fontname="FreeSans",fontsize=10,shape=record];
   rankdir=LR;
-  Node1 [label="DRAMSimII::Address",height=0.2,width=0.4,color="black",URL="$class_d_r_a_m_sim_i_i_1_1_address.html",tooltip="This class logically represents several interpretations of a memory address."];
+  Node1 [label="DRAMsimII::Address",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_address.html",tooltip="This class logically represents several interpretations of a memory address."];
 }

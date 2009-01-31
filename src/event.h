@@ -19,9 +19,10 @@
 #pragma once
 
 #include "globals.h"
-#include "queue.h"
-#include "command.h"
-#include "transaction.h"
+#include "Address.h"
+
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/utility.hpp>
 
 namespace DRAMsimII
 {
@@ -29,16 +30,100 @@ namespace DRAMsimII
 	class Event
 	{
 	private:
-		static Queue<Event> freeEventPool;
+		static unsigned eventCounter;			///< keeps track of how many transactions are created
 
-	public:
-		EventType eventType;	///< what kind of event is this?
-		tick time;				///< the time that this event happens
-		void *eventPointer;		///< point to a transaction or command to be enqueued or executed
+	protected:
+		tick arrivalTime;						///< the time that this event was created
+		tick enqueueTime;						///< the time that this event was put into a queue
+		tick startTime;							///< when this actually started
+		tick completionTime;					///< when this finished
 
-		Event();
-		void *operator new(size_t size);
-		void operator delete(void *);
+		const unsigned eventNumber;				///< the nth event
+		const Address address;					///< the address that this event involves
+
+		Event():
+		arrivalTime(0),
+			enqueueTime(0),
+			startTime(0),
+			completionTime(0),
+			eventNumber(eventCounter++),
+			address(0x0)
+		{}
+		
+		Event(const Address &add, const tick enqTime):
+		arrivalTime(0),
+			enqueueTime(enqTime),
+			startTime(0),
+			completionTime(0),
+			eventNumber(eventCounter++),
+			address(add)
+		{}
+
+		Event(const tick arrTime,const Address &add):
+		arrivalTime(arrTime),
+			enqueueTime(0),
+			startTime(0),
+			completionTime(0),
+			eventNumber(eventCounter++),
+			address(add)
+		{}
+
+		Event(const tick arrTime,const PHYSICAL_ADDRESS add):
+		arrivalTime(arrTime),
+			enqueueTime(0),
+			startTime(0),
+			completionTime(0),
+			eventNumber(eventCounter++),
+			address(add)
+		{}
+
+		Event(const Event &rhs):
+		arrivalTime(rhs.arrivalTime),
+			enqueueTime(rhs.enqueueTime),
+			startTime(rhs.startTime),
+			completionTime(rhs.completionTime),
+			eventNumber(eventCounter++),
+			address(rhs.address)
+		{}
+
+	public:		
+		// accessors
+		tick getArrivalTime() const { return arrivalTime; }
+		tick getEnqueueTime() const { return enqueueTime; }
+		tick getStartTime() const { return startTime; }
+		tick getCompletionTime() const { return completionTime; }
+		unsigned getEventNumber() const { return eventNumber; }
+		const Address &getAddress() const { return address; }
+
+		// functions
+		tick getExecuteTime() const { return completionTime - startTime; }
+		tick getDelayTime() const { return startTime - enqueueTime; }
+		tick getLatency() const { return completionTime - enqueueTime; }
+
+		// mutators
+		void setArrivalTime(const tick at) { arrivalTime = at; }
+		void setEnqueueTime(const tick et) { enqueueTime = et; }
+		void setStartTime(const tick st) { startTime = st; }
+		void setCompletionTime(const tick ct) { completionTime = ct; }
+		
+		// friends
+		friend std::ostream &DRAMsimII::operator<<(std::ostream &, const DRAMsimII::Event &);	
+	
+		bool operator==(const Event& right) const
+		{
+			return (arrivalTime == right.arrivalTime && enqueueTime == right.enqueueTime && startTime == right.startTime && completionTime == right.completionTime && address == right.getAddress());
+		}
+private:
+		// serialization
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned version)
+		{
+			ar & startTime & enqueueTime & completionTime & const_cast<Address&>(address);
+		}
+
+
 	};
 }
 #endif

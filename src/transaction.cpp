@@ -24,84 +24,88 @@ using namespace DRAMsimII;
 
 // initialize the static members
 Queue<Transaction> Transaction::freeTransactionPool(4*POOL_SIZE,true);
-unsigned Transaction::eventCounter(0);
 
 /// constructor to make a transaction with no values set
 Transaction::Transaction():
-eventNumber(0),
+Event(),
+//eventNumber(0),
 type(CONTROL_TRANSACTION),
-status(0),
+//status(0),
 length(0),
-arrivalTime(0),
-enqueueTime(0),
-completionTime(0),
+//arrivalTime(0),
+//enqueueTime(0),
+//completionTime(0),
 decodeTime(0),
 PC(0),
 threadNum(0),
-addr(0),
+//addr(0),
 originalTransaction(UINT_MAX)
 {}
 
 
 Transaction::Transaction(const TransactionType transType, const tick arrivalTime,const unsigned burstLength, const Address &address, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
-eventNumber(eventCounter++),
+Event(arrivalTime,address),
+//eventNumber(eventCounter++),
 type(transType),
-status(0),
+//status(0),
 length(burstLength),
-arrivalTime(arrivalTime),
-enqueueTime(0),
-completionTime(0),
+//arrivalTime(arrivalTime),
+//enqueueTime(0),
+//completionTime(0),
 decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
-addr(address),
+//addr(address),
 originalTransaction(originalTrans)
 {}
 
 Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const unsigned originalTrans):
-eventNumber(eventCounter++),
+Event(arrivalTime,address),
+//eventNumber(eventCounter++),
 type(transType),
-status(0),
+//status(0),
 length(burstLength),
-arrivalTime(arrivalTime),
-enqueueTime(0),
-completionTime(0),
+//arrivalTime(arrivalTime),
+//enqueueTime(0),
+//completionTime(0),
 decodeTime(0),
 PC(0),
 threadNum(0),
-addr(address),
+//addr(address),
 originalTransaction(originalTrans)
 {}
 
 /// copy constructor to duplicate a transaction
 Transaction::Transaction(const Transaction &rs):
-eventNumber(rs.eventNumber),
+Event(rs),
+//eventNumber(rs.eventNumber),
 type(rs.type),
-status(rs.status),
+//status(rs.status),
 length(rs.length),
-arrivalTime(rs.arrivalTime),
-enqueueTime(rs.enqueueTime),
-completionTime(rs.completionTime),
+//arrivalTime(rs.arrivalTime),
+//enqueueTime(rs.enqueueTime),
+//completionTime(rs.completionTime),
 decodeTime(rs.decodeTime),
 PC(rs.PC),
 threadNum(rs.threadNum),
-addr(rs.addr),
+//addr(rs.addr),
 originalTransaction(rs.originalTransaction)
 {}
 
 /// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
 Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
-eventNumber(eventCounter++),
+Event(arrivalTime,physicalAddress),
+//eventNumber(eventCounter++),
 type(transType),
-status(0),
+//status(0),
 length(burstLength),
-arrivalTime(arrivalTime),
-enqueueTime(0),
-completionTime(0),
+//arrivalTime(arrivalTime),
+//enqueueTime(0),
+//completionTime(0),
 decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
-addr(physicalAddress),
+//addr(physicalAddress),
 originalTransaction(originalTrans)
 {}
 
@@ -125,9 +129,9 @@ void Transaction::operator delete(void *mem)
 
 bool Transaction::operator==(const Transaction& right) const
 {
-	return (/*eventNumber == right.eventNumber &&*/ type == right.type && status == right.status && length == right.length &&
+	return (/*eventNumber == right.eventNumber &&*/ type == right.type && /*status == right.status && */length == right.length &&
 		arrivalTime == right.arrivalTime && enqueueTime == right.enqueueTime && completionTime == right.completionTime &&
-		decodeTime == right.decodeTime && addr == right.addr && originalTransaction == right.originalTransaction);
+		decodeTime == right.decodeTime && this->Event::operator==(right) && originalTransaction == right.originalTransaction);
 }
 
 bool Transaction::operator !=(const Transaction& right) const
@@ -136,16 +140,9 @@ bool Transaction::operator !=(const Transaction& right) const
 }
 
 /// prints the key attributes of a transaction
-ostream &DRAMsimII::operator<<(ostream &os, const Transaction& this_t)
+ostream &DRAMsimII::operator<<(ostream &os, const Transaction& thisTransaction)
 {	
-	os << "Q[" << setw(8) << dec << this_t.getEnqueueTime() << "] ";
-	os << "D[" << setw(8) << dec << this_t.getDecodeTime() << "] ";
-	os << "E[" << setw(8) << dec << this_t.getCompletionTime() << "] ";
-	os << this_t.getType();
-	if (this_t.type == AUTO_REFRESH_TRANSACTION)
-		os << " R[" << this_t.addr.rank << "] ";
-	else
-		os << "PA[0x" << hex << this_t.getAddresses().physicalAddress << "]";
+	os << thisTransaction.getType() << (Event&)thisTransaction;
 	return os;
 }
 

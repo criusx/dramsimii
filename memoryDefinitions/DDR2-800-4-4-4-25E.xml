@@ -11,8 +11,8 @@
 		<channelWidth>8</channelWidth>
 		<!--burgerBase, closePageBaseline, intel845g, sdramBase, sdramClosePage, sdramHiperf, closePageLowLocality, closePageHighLocality -->
 		<physicalAddressMappingPolicy>closePageBaseline</physicalAddressMappingPolicy>
-		<!-- openPage, closePage, closePageOptimized -->
-		<rowBufferPolicy>closePageOptimized</rowBufferPolicy>
+		<!-- openPage, closePage, closePageAggressive -->
+		<rowBufferPolicy>closePageAggressive</rowBufferPolicy>
 		<ranks>4</ranks>
 		<banks>8</banks>
 		<!-- bits per row-->
@@ -104,7 +104,7 @@
 	</power>
 	<simulationParameters>
 		<shortBurstRatio>.50</shortBurstRatio>
-		<readPercentage>.5</readPercentage>
+		<readPercentage>.75</readPercentage>
 		<averageInterarrivalCycleCount>4</averageInterarrivalCycleCount>
 		<!-- type may be gz, bz, cout, uncompressed, none -->
 		<outFile type="gz" dbreporting="false">standardOutFile.gz</outFile>
