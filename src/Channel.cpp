@@ -76,23 +76,18 @@ rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig))
 		// stagger the times that each rank will be refreshed so they don't all arrive incomingTransaction a burst
 		unsigned step = settings.tREFI / settings.rankCount;
 
-		//Address addr;
-
 		for (unsigned j = 0; j < refreshCounter.size(); ++j)
 		{
-			//addr.setRank(j);
-			//addr.setBank(0);
-			//newTrans->setEnqueueTime(j * (step +1));
-			//refreshCounter[j] = new Transaction(AUTO_REFRESH_TRANSACTION,j * (step + 1), 8, addr, NULL);
 			refreshCounter[j] = j * (step + 1);
-			//refreshCounter[j]->setEnqueueTime(refreshCounter[j]->getArrivalTime());
 		}
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
 /// normal copy constructor
 /// @brief the copy constructor for building unitialized copies of a channel
 /// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats):
 time(rhs.time),
 lastRefreshTime(rhs.lastRefreshTime),
@@ -116,9 +111,11 @@ rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification
 	rank = rhs.rank;
 }
 
+//////////////////////////////////////////////////////////////////////////
 /// deserialization constructor
 /// @brief the constructor to build copies of a channel once it's been deserialized, needs further initialization before it's ready
 /// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
 time(0),
 lastRefreshTime(0),
@@ -164,26 +161,14 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 	// TODO: copy over values incomingTransaction ranks now that reference members are init
 	// assign an id to each channel (normally done with commands)
 	rank = rhs.rank;
-
-	// initialize the refresh counters per rank
-	// because the vector copy constructor doesn't make deep copies
-	// 	if (rhs.systemConfig.getRefreshPolicy() != NO_REFRESH)
-	// 	{
-	// 		for (unsigned j = 0; j < rhs.refreshCounter.size(); ++j)
-	// 		{
-	// 			if (rhs.refreshCounter[j])
-	// 				refreshCounter[j] = new Transaction(*rhs.refreshCounter[j]);
-	// 		}
-	// 	}
-
-#if 0
-	for (unsigned i = 0; i < rank.size(); i++)
-	{
-		rank[i].setRankID(i);
-	}	
-#endif
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief channel destructor
+/// @details need to remove all the commands in the queues before destructing the channel
+/// because some refresh commands are simultaneously in two or more queues and will be 
+/// duplicated in the command pool if they are not removed properly
+//////////////////////////////////////////////////////////////////////////
 Channel::~Channel()
 {
 	while (Command *temp = getNextCommand())
@@ -197,7 +182,6 @@ Channel::~Channel()
 			assert(j->size() == 0);
 	}
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief Moves the specified channel to at least the time given
@@ -343,8 +327,6 @@ void Channel::retireCommand(Command *newestCommand)
 //////////////////////////////////////////////////////////////////////////
 bool Channel::enqueue(Transaction *incomingTransaction)
 {
-	//static unsigned success = 1;
-
 	if (transactionQueue.isFull())
 		return false;
 
@@ -361,7 +343,6 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 		result = transactionQueue.push(incomingTransaction);
 		break;
 	case RIFF:
-		/// @todo add priority insertion here
 		// search from back to front
 		// insert right after a conflict, any transaction over the seniority limit or any read
 		if (incomingTransaction->isRead())
@@ -375,8 +356,6 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 				{
 					result = transactionQueue.insert(incomingTransaction, currentIndex + 1);					
 					assert(result);
-					//if (currentIndex < transactionQueue.size() - 1)
-					//	success++;
 					return result;
 				}				
 			}
@@ -393,9 +372,6 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 		exit(-1);		
 		break;
 	}
-
-	//if (success % 10000 == 0)
-	//	cerr << success << endl;
 
 	return result;
 }
@@ -434,10 +410,12 @@ tick Channel::nextCommandExecuteTime() const
 	// then check to see when the next command occurs
 	if (const Command *tempCommand = readNextCommand())
 	{
-		int tempGap = minProtocolGap(tempCommand);
 		tick tempCommandExecuteTime = earliestExecuteTime(tempCommand);
-		assert(time + tempGap == tempCommandExecuteTime);
+#ifndef NDEBUG
+		int tempGap = minProtocolGap(tempCommand);
 
+		assert(time + tempGap == tempCommandExecuteTime);
+#endif
 		nextTime = tempCommandExecuteTime;
 	}
 	return nextTime;
@@ -447,36 +425,36 @@ tick Channel::nextCommandExecuteTime() const
 /// @brief counts the number of reads and writes so far and returns whichever had more
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-TransactionType Channel::setReadWriteType(const int rank_id,const int bank_count) const
+TransactionType Channel::setReadWriteType(const int rankID,const int bankCount) const
 {
-	int read_count = 0;
-	int write_count = 0;
-	int empty_count = 0;
+	int readCount = 0;
+	int writeCount = 0;
+	int emptyCount = 0;
 
-	for(int i = 0; i < bank_count; ++i)
+	for(int i = 0; i < bankCount; ++i)
 	{
-		const Command *temp_c = rank[rank_id].bank[i].read(1);
+		const Command *currentCommand = rank[rankID].bank[i].read(1);
 
-		if(temp_c != NULL)
+		if (currentCommand)
 		{
-			if (temp_c->getCommandType() == READ_AND_PRECHARGE)
+			if (currentCommand->getCommandType() == READ_AND_PRECHARGE)
 			{
-				read_count++;
+				readCount++;
 			}
 			else
 			{
-				write_count++;
+				writeCount++;
 			}
 		}
 		else
 		{
-			empty_count++;
+			emptyCount++;
 		}
 	}
 
-	DEBUG_LOG("Rank[" << rank_id << "] Read[" << read_count << "] Write[" << write_count << "] Empty[" << empty_count << "]");
+	DEBUG_LOG("Rank[" << rankID << "] Read[" << readCount << "] Write[" << writeCount << "] Empty[" << emptyCount << "]");
 
-	if (read_count >= write_count)
+	if (readCount >= writeCount)
 		return READ_TRANSACTION;
 	else
 		return WRITE_TRANSACTION;
@@ -810,7 +788,6 @@ Transaction *Channel::getTransaction()
 	}
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 /// @brief get the next refresh command and remove it from the queue
 /// @detail returns a pointer to a refresh transaction that represents what the next refresh \n
@@ -905,7 +882,6 @@ const Transaction *Channel::readNextRefresh() const
 
 }
 
-
 //////////////////////////////////////////////////////////////////////
 /// @brief determines if there are enough command slots for the transaction to be decoded
 /// @details this will ensure that a given transaction can be broken into and inserted as commands in this channel
@@ -978,10 +954,8 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 		{
 			return false;
 		}
-		else if (destinationBank.back() 
-			&& destinationBank.back()->getAddress().getRow() == incomingTransaction->getAddress().getRow() // rows match
-			&& (time - destinationBank.back()->getEnqueueTime() < systemConfig.getSeniorityAgeLimit()) // not starving the last command
-			&& destinationBank.back()->getCommandType() != REFRESH_ALL) // ends with CAS+P or PRE
+		// must know that there is >0 slots open or the result may not be accurate
+		else if (destinationBank.closePageAggressiveInsertCheck(incomingTransaction, time))
 		{
 			return true;
 		}		
@@ -1192,7 +1166,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// TODO: look for the last non-refresh command in the per-bank queue
 		else
 		{
-			if (destinationBank.closePageOptimalInsert(incomingTransaction,time))
+			if (destinationBank.closePageAggressiveInsert(incomingTransaction,time))
 			{
 				statistics.reportHit();
 				return true;
@@ -1266,36 +1240,23 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				incomingTransaction->setDecodeTime(time);
 				return true;
 			}
-			else
+			else if (destinationBank.freeCommandSlots() >= 3)
 			{
 				// did not find place to insert
 				statistics.reportMiss();
 
-				// even STRICT ORDER allows you to look at the tail of the queue to see if that's the precharge
-				// command that you need. If so, insert CAS COMMAND in front of PRECHARGE COMMAND
-				// also prevent against starvation
-#if 0
-				if ((systemConfig.getCommandOrderingAlgorithm() == STRICT_ORDER) 
-					|| ((time - temp_c->getEnqueueTime()) > (int)systemConfig.getSeniorityAgeLimit()))
-				{
-					break;
-				}
-#endif
-
-				// if this command was not able to be combined with another, create a new series of commands
-				if (destinationBank.freeCommandSlots() < 3)
-				{
-					return false;
-				}
-
+				// last, the precharge command
+				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst(),PRECHARGE));
+				
 				// RAS command
 				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), false, timingSpecification.tBurst(), ACTIVATE));
 
 				// CAS command
 				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst()));
-
-				// last, the precharge command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst(),PRECHARGE));
+			}
+			else
+			{
+				return false;
 			}
 		}
 		break;
@@ -1397,7 +1358,7 @@ const Command *Channel::readNextCommand() const
 					if (isRefreshCommand && challengerCommand && challengerCommand->getCommandType() == REFRESH_ALL && currentRank->refreshAllReady())
 					{
 						tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
-#ifdef DEBUG
+#ifndef NDEBUG
 						int minGap = minProtocolGap(challengerCommand);
 
 						if (time + minGap != challengerExecuteTime)
@@ -1416,7 +1377,7 @@ const Command *Channel::readNextCommand() const
 						if (challengerCommand && challengerCommand->getCommandType() != REFRESH_ALL)
 						{
 							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
-#ifdef DEBUG
+#ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
 							if (time + minGap != challengerExecuteTime)
@@ -1442,7 +1403,7 @@ const Command *Channel::readNextCommand() const
 				assert(candidateCommand->getCommandType() == REFRESH_ALL || rank[candidateCommand->getAddress().getRank()].bank[candidateCommand->getAddress().getBank()].front() == candidateCommand);
 
 #ifdef DEBUG_GREEDY
-				timingOutStream << "R[" << candidateCommand->getAddress().rank << "] B[" << candidateCommand->getAddress().bank << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]" << endl;
+				timingOutStream << "rk[" << candidateCommand->getAddress().rank << "] rk[" << candidateCommand->getAddress().bank << "]\tWinner: " << *candidateCommand << "gap[" << candidateGap << "] now[" << time << "]" << endl;
 #endif
 			}
 
@@ -1468,7 +1429,7 @@ const Command *Channel::readNextCommand() const
 					if (const Command *challengerCommand = currentBank->front())
 					{
 						const tick executeTime = earliestExecuteTime(challengerCommand);
-#ifdef DEBUG
+#ifndef NDEBUG
 						assert(executeTime == time + minProtocolGap(challengerCommand));
 #endif
 						// choose the oldest command that can be executed
@@ -1661,7 +1622,9 @@ const Command *Channel::readNextCommand() const
 				const Command *potentialCommand = rank[currentRankID].bank[currentBankID].front();
 
 				// refresh commands are considered elsewhere
-				if (potentialCommand && potentialCommand->getCommandType() != REFRESH_ALL && (allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD() )))
+				if (potentialCommand &&
+					potentialCommand->getCommandType() != REFRESH_ALL &&
+					(allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD() )))
 				{
 					if (!systemConfig.isReadWriteGrouping())
 					{
@@ -1822,7 +1785,7 @@ const Command *Channel::readNextCommand() const
 	default:
 		{
 			cerr << "This configuration and algorithm combination is not supported" << endl;
-			exit(0);
+			exit(-2);
 		}
 		break;
 	}
@@ -2210,16 +2173,19 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 	return max(min_gap,max(lastCommandIssueTime - time + (tick)timingSpecification.tCMD(),(tick)0));
 }
 
+//////////////////////////////////////////////////////////////////////////
 /// @brief Returns the soonest time that this command may execute
+/// @details refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk by Jacob/Wang
 /// @details Looks at all of the timing parameters and decides when the this command may soonest execute
+//////////////////////////////////////////////////////////////////////////
 tick Channel::earliestExecuteTime(const Command *currentCommand) const
 { 
 	tick nextTime;	
 
 	const Rank &currentRank = rank[currentCommand->getAddress().getRank()];
 
-	const unsigned rankID = currentRank.getRankID();
-	assert (rankID == currentCommand->getAddress().getRank());
+	//const unsigned rankID = currentRank.getRankID();
+	//assert (rankID == currentCommand->getAddress().getRank());
 
 	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
 
@@ -2234,7 +2200,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 			const tick lastRASTime = currentRank.lastActivateTimes.front(); 
 
-			// respect the row-to-row activation delay
+			// respect the row-to-row activation delay for different banks within a rank
 			tick tRRDLimit = lastRASTime + timingSpecification.tRRD();				
 
 			// respect tRP of same bank

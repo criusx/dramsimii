@@ -93,9 +93,9 @@ namespace DRAMsimII
 		Rank& getRank(const unsigned rankNum) { return rank[rankNum]; }								///< get a reference to this channel's rank n
 		const Rank& getRank(const unsigned rankNum) const { return rank[rankNum]; }					///< get a const reference to this channel's rank n
 		std::vector<Rank>& getRank() { return rank; }												///< get a reference to this channel's ranks
-		const std::vector<Rank>& getRank() const { return rank; }
-		tick getTime() const { return time; }
-		unsigned getLastRankID() const { return lastRankID; }
+		const std::vector<Rank>& getRank() const { return rank; }									///< get a const reference to this channel's ranks
+		tick getTime() const { return time; }														///< get the time that this channel is at
+		unsigned getLastRankID() const { return lastRankID; }										///< get the last rank id a command was issued to
 
 		Transaction *getTransaction();																
 		const Transaction *readTransaction(bool) const;												
@@ -104,9 +104,9 @@ namespace DRAMsimII
 		tick nextRefresh() const;
 
 
-		Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }
-		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }
-		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }
+		Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }				///< get the oldest item from the transaction completion queue
+		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }				///< determine how many items are in the transaction completion queue
+		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }			///< determine how large the transaction completion queue is
 		Rank& operator[](unsigned rank_num) { return rank[rank_num]; }
 
 		// mutators

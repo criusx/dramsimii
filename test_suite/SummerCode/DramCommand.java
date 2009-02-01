@@ -1,18 +1,21 @@
+import java.util.HashMap;
 
 public class DramCommand
 {
 
   private String command;
+  private static HashMap<Integer, Long> lastActivateTime = new HashMap<Integer, Long>();
   private String addr, type;
   private int F, col, row;
-  private int MG, rank, bank, S, Q, E, T, DLY, chan, originalStart;
+  private int MG, rank, bank, chan;
+  private long originalStart, start, enqueue, end, T, DLY;
 
   //This constructor takes a CAS+P command and returns only the CAS part or the Pre part depending on type
   //if type = 0 return CAS else return Pre
 
   private DramCommand(DramCommand casp, int type)
   {
-    originalStart = casp.getS();
+    originalStart = casp.getStart();
     switch (type)
     {
       case 0: //Return CAS Assumes end time is end of data burst
@@ -25,11 +28,11 @@ public class DramCommand
         bank = casp.getBank();
         row = casp.getRow();
         col = casp.getCol();
-        S = casp.getS() + DramSimValid.getTimingParameter("tAL");
-        Q = casp.getQ();
-        E = DramSimValid.getTimingParameter("tCAS") + DramSimValid.getTimingParameter("tBurst") + S;
-        T = E - S;
-        DLY = S - Q;
+        start = casp.getStart() + DramSimValid.getTimingParameter("tAL");
+        enqueue = casp.getEnqueue();
+        end = DramSimValid.getTimingParameter("tCAS") + DramSimValid.getTimingParameter("tBurst") + start;
+        T = end - start;
+        DLY = start - enqueue;
         break;
       default: //return Pre Assume end of Pre is at end of array precharge tRP
         F = casp.getF();
@@ -46,16 +49,18 @@ public class DramCommand
                            DramSimValid.getTimingParameter("tRTP") + "\t" +
                            DramSimValid.getTimingParameter("tCCD"));*/
         // DRAM will internally delay until tRAS is met
-        int minimumTimeToWait = 
+        int codedAddress = (((10 * chan) + rank) * 100) + bank;
+        long RASlockoutTime = lastActivateTime.get(codedAddress) + DramSimValid.getTimingParameter("tRAS");
+        long minimumTimeToWait = 
           DramSimValid.getTimingParameter("tAL") + DramSimValid.getTimingParameter("tBurst") + DramSimValid.getTimingParameter("tRTP") - 
           DramSimValid.getTimingParameter("tCCD");
         //Assumes Pre starts after the minimum time to wait after the CAS starts
-        S = casp.getS() + minimumTimeToWait;
-        Q = casp.getQ();
+        start = Math.max(casp.getStart() + minimumTimeToWait, RASlockoutTime);
+        enqueue = casp.getEnqueue();
         //Assumes Pre ends after tRP
-        E = S + DramSimValid.getTimingParameter("tRP");
-        T = E - S;
-        DLY = S - Q;
+        end = start + DramSimValid.getTimingParameter("tRP");
+        T = end - start;
+        DLY = start - enqueue;
     }
 
   }
@@ -84,15 +89,21 @@ public class DramCommand
       l = l.substring(l.indexOf(']') + 2);
       col = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
       l = l.substring(l.indexOf(']') + 2);
-      originalStart = S = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
+      enqueue = Long.parseLong(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
       l = l.substring(l.indexOf(']') + 2);
-      Q = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
+      originalStart = start = Long.parseLong(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
       l = l.substring(l.indexOf(']') + 2);
-      E = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
+      end = Long.parseLong(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
       l = l.substring(l.indexOf(']') + 2);
       T = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
       l = l.substring(l.indexOf(']') + 2);
       DLY = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 10);
+
+      if (type.compareToIgnoreCase("RAS") == 0)
+      {
+        int codedAddress = (((10 * chan) + rank) * 100) + bank;
+        lastActivateTime.put(codedAddress, start);
+      }
     }
     catch (NumberFormatException e)
     {
@@ -108,9 +119,9 @@ public class DramCommand
     else
     { //Assumes CASW ends after data restore
       dc.type = "CASW";
-      dc.E = 
-          this.getS() + DramSimValid.getTimingParameter("tCWD") + DramSimValid.getTimingParameter("tBurst") + DramSimValid.getTimingParameter("tWR");
-      dc.T = dc.E - dc.S;
+      dc.end = 
+          this.getStart() + DramSimValid.getTimingParameter("tCWD") + DramSimValid.getTimingParameter("tBurst") + DramSimValid.getTimingParameter("tWR");
+      dc.T = dc.end - dc.start;
       return dc;
     }
 
@@ -129,12 +140,12 @@ public class DramCommand
         DramSimValid.getTimingParameter("tAL") + DramSimValid.getTimingParameter("tBurst") + DramSimValid.getTimingParameter("tCWD") + 
         DramSimValid.getTimingParameter("tWR");
       //Assumes Pre starts after the minimum time to wait after the CAS starts
-      dc.S = this.getS() + minimumTimeToWait;
-      dc.Q = this.getQ();
+      dc.start = this.getStart() + minimumTimeToWait;
+      dc.enqueue = this.getEnqueue();
       //Assumes Pre ends after tRP
-      dc.E = dc.S + DramSimValid.getTimingParameter("tRP");
-      dc.T = dc.E - dc.S;
-      dc.DLY = dc.S - dc.Q;
+      dc.end = dc.start + DramSimValid.getTimingParameter("tRP");
+      dc.T = dc.end - dc.start;
+      dc.DLY = dc.start - dc.enqueue;
     }
     return dc;
   }
@@ -142,8 +153,8 @@ public class DramCommand
   public String toString()
   {
     return "F=" + F + " MG=" + MG + " type=" + type + " addr=" + addr + " chan=" + chan + " rank=" + rank + " bank=" + 
-      bank + " row=" + row + " col=" + col + " OS=" + originalStart + " S=" + S + " Q=" + Q + " E=" + E + " T=" + T + 
-      " DLY=" + DLY;
+      bank + " row=" + row + " col=" + col + " OS=" + originalStart + " S=" + start + " Q=" + enqueue + " E=" + end + 
+      " T=" + T + " DLY=" + DLY;
   }
 
   public String getCommand()
@@ -166,19 +177,19 @@ public class DramCommand
     return bank;
   }
 
-  public int getDLY()
+  public long getDLY()
   {
     return DLY;
   }
 
-  public int getE()
+  public long getEnd()
   {
-    return E;
+    return end;
   }
 
-  public int getQ()
+  public long getEnqueue()
   {
-    return Q;
+    return enqueue;
   }
 
   public int getRank()
@@ -186,12 +197,12 @@ public class DramCommand
     return rank;
   }
 
-  public int getS()
+  public long getStart()
   {
-    return S;
+    return start;
   }
 
-  public int getT()
+  public long getT()
   {
     return T;
   }
@@ -203,7 +214,7 @@ public class DramCommand
 
   public int getChan()
   {
-    return chan ;
+    return chan;
   }
 
   public int getF()

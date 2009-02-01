@@ -41,7 +41,7 @@ CASLength(0),
 CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
-banksPrecharged(settings.bankCount),
+banksPrecharged(settings.rowBufferManagementPolicy == OPEN_PAGE ? 0 : settings.bankCount),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(systemConfig.getBankCount(),Bank(settings, timing, systemConfig))
 {}
@@ -154,14 +154,9 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 
 	switch (currentCommand->getCommandType())
 	{
-	case READ_AND_PRECHARGE:
-		//lastPrechargeAnyBankTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), currentBank.getLastRASTime() + timing.tRAS());
-		lastPrechargeAnyBankTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), currentBank.getLastRASTime() + timing.tRAS());
-		break;
+	case READ_AND_PRECHARGE:		
 	case WRITE_AND_PRECHARGE:
-		// obeys minimum timing, but also supports tRAS lockout
-		lastPrechargeAnyBankTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), currentBank.getLastRASTime() + timing.tRAS());
-		//lastPrechargeAnyBankTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), currentBank.getLastRASTime() + timing.tRAS());
+		lastPrechargeAnyBankTime = max(lastPrechargeAnyBankTime, currentBank.getLastPrechargeTime());
 		break;
 	case PRECHARGE:
 		lastPrechargeAnyBankTime = currentTime;

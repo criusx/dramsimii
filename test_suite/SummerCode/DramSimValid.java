@@ -1,3 +1,4 @@
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -5,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +31,7 @@ public class DramSimValid
   private int lengthOfWindow; //In cycles
   private String errors, outFile;
   private long currentB, totalB;
-  private GZIPOutputStream gOut;
+  private OutputStream gOut;
   private int errorsFound;
 
   public DramSimValid(String filename, String timingFile, String outFilename)
@@ -96,7 +99,7 @@ public class DramSimValid
       }
       nl = doc.getElementsByTagName("channels");
       chans = new DramChannel[Integer.parseInt(nl.item(0).getTextContent())];
-      
+
     }
     catch (NumberFormatException e)
     {
@@ -118,7 +121,8 @@ public class DramSimValid
     try
     {
       FileOutputStream fOut = new FileOutputStream(outFile);
-      gOut = new GZIPOutputStream(fOut);
+      //gOut = new GZIPOutputStream(fOut);
+      gOut = new BufferedOutputStream(fOut);
     }
     catch (FileNotFoundException e)
     {
@@ -134,8 +138,12 @@ public class DramSimValid
     try
     {
       // GZIPInputStream gzStream = new GZIPInputStream(fis, 32768);
-      BufferedReader gzStream = 
-        new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))));
+
+      BufferedReader gzStream;
+      if (file.endsWith("gz"))
+        gzStream = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))));
+      else
+        gzStream = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
       //byte[] b = new byte[1];
       //String line = "";
       String line = gzStream.readLine();
@@ -188,7 +196,7 @@ public class DramSimValid
     //System.out.println(com.getType()+ " {S,E}: {" +com.getS() + "," + com.getE() + "} s:" 
     //	+ commands.size()+ " chan:"+com.getChan());
     commands.add(0, com);
-    while (commands.get(commands.size() - 1).getS() + lengthOfWindow < com.getS())
+    while (commands.get(commands.size() - 1).getStart() + lengthOfWindow < com.getStart())
     {
       commands.remove(commands.size() - 1);
     }
@@ -201,7 +209,7 @@ public class DramSimValid
     try
     {
       gOut.write(errors.getBytes());
-    }    
+    }
     catch (ArrayIndexOutOfBoundsException e)
     {
       e.printStackTrace();

@@ -102,25 +102,10 @@ namespace DRAMsimII
 		CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : INVALID_COMMAND; }
 		unsigned freeCommandSlots() const { return perBankQueue.freecount(); }
 		bool openPageInsert(Transaction *value, const tick time);
-		bool closePageOptimalInsert(Transaction *value, const tick time);
-		bool openPageInsertAvailable(const Transaction *value, const tick time) const;
+		bool closePageAggressiveInsert(Transaction *value, const tick time);
+		bool openPageInsertCheck(const Transaction *value, const tick time) const;
+		bool closePageAggressiveInsertCheck(const Transaction *value, const tick time) const;
 		bool isFull() const { return perBankQueue.isFull(); }
-
-		// mutators
-		void setLastRASTime(const tick value) { lastRASTime = value; }
-		void setLastCASTime(const tick value) { lastCASTime = value; }
-		void setLastCASWTime(const tick value) { lastCASWTime = value; }
-		void setLastPrechargeTime(const tick value) { lastPrechargeTime = value; }
-		void setLastRefreshAllTime(const tick value) { lastRefreshAllTime = value; }
-		void setLastCASLength(const unsigned value) { lastCASLength = value; }
-		void setLastCASWLength(const unsigned value) { lastCASWLength = value; }
-		void setActivated(const bool value) { activated = value; }
-		void incRASCount() { RASCount++; }
-		void clrRASCount() { RASCount = 0; }
-		void incCASCount() { CASCount++; }
-		void clrCASCount() { CASCount = 0; }
-		void incCASWCount() { CASWCount++; }
-		void clrCASWCount() { CASWCount = 0; }
 
 		// constructors
 		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
@@ -134,7 +119,6 @@ namespace DRAMsimII
 		friend std::ostream& operator<<(std::ostream& , const Bank& );
 
 	private:
-
 		
 		// friends
 		friend class boost::serialization::access;

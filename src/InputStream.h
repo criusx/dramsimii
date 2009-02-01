@@ -47,7 +47,7 @@ namespace DRAMsimII
 		float rowLocality;							///< row locality for random generator
 		float readPercentage;						///< the percentage of accesses that are reads. should replace with access_distribution[]
 		float shortBurstRatio;						///< long burst or short burst?
-		float arrivalThreshold;
+		float arrivalThreshold;						///< the minimum threshold at which to decide that a transaction has arrived
 		float cpuToMemoryRatio;						///< the ratio of the cpu clock to the memory clock
 		unsigned averageInterarrivalCycleCount;		///< used by random number generator
 		DistributionType interarrivalDistributionModel;	///< the model used to predict and determine when the next arrival will happen

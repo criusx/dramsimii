@@ -23,6 +23,9 @@ using std::endl;
 
 using namespace DRAMsimII;
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief constructor with timing spec and system config values
+//////////////////////////////////////////////////////////////////////////
 Bank::Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
 systemConfig(systemConfigVal),
@@ -35,7 +38,7 @@ lastRefreshAllTime(-100),
 lastCASLength(8),
 lastCASWLength(8),
 openRowID(0),
-activated(false),
+activated(settings.rowBufferManagementPolicy == OPEN_PAGE), // close page starts with RAS, open page starts with Pre
 RASCount(0),
 totalRASCount(0),
 CASCount(0),
@@ -44,6 +47,9 @@ CASWCount(0),
 totalCASWCount(0)
 {}
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief copy constructor with timing spec and sysconfig information
+//////////////////////////////////////////////////////////////////////////
 Bank::Bank(const Bank &b, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
 systemConfig(systemConfigVal),
@@ -56,7 +62,7 @@ lastRefreshAllTime(b.lastRefreshAllTime),
 lastCASLength(b.lastCASLength),
 lastCASWLength(b.lastCASWLength),
 openRowID(b.openRowID),
-activated(false),
+activated(b.activated),
 RASCount(b.RASCount),
 totalRASCount(b.totalRASCount),
 CASCount(b.CASCount),
@@ -65,6 +71,9 @@ CASWCount(b.CASWCount),
 totalCASWCount(b.totalCASWCount)
 {}
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief copy constructor
+//////////////////////////////////////////////////////////////////////////
 Bank::Bank(const Bank &rhs):
 timing(rhs.timing),
 systemConfig(rhs.systemConfig),
@@ -110,12 +119,13 @@ CASWCount(0),
 totalCASWCount(0)
 {}
 
-
-/// this logically issues a RAS command and updates all variables to reflect this
+//////////////////////////////////////////////////////////////////////////
+/// @brief this logically issues a RAS command and updates all variables to reflect this
+//////////////////////////////////////////////////////////////////////////
 void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	// make sure activates follow precharges
-	assert(activated == false);
+	assert(!activated);
 	assert(currentTime >= lastPrechargeTime + timing.tRP());
 
 	activated = true;
@@ -125,22 +135,21 @@ void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 	RASCount++;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief issue a precharge command to this bank
+//////////////////////////////////////////////////////////////////////////
 void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 {
-	// make sure precharges follow activates
-	assert(activated == true);
-
 	switch (currentCommand->getCommandType())
 	{
 	case READ_AND_PRECHARGE:
 		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), lastRASTime + timing.tRAS());
 		// see figure 11.28 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
-		//lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), lastRASTime + timing.tRAS());
 		lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), lastRASTime + timing.tRAS());
 		break;
 	case WRITE_AND_PRECHARGE:
 		// see figure 11.29 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
-		//lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), lastRASTime + timing.tRAS());
+		// obeys minimum timing, but also supports tRAS lockout
 		lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), lastRASTime + timing.tRAS());
 		break;
 	case PRECHARGE:
@@ -151,11 +160,19 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 		break;
 	}	
 
+	// make sure precharges follow activates
+	// technically, you can pre after pre, but there's no good reason for this
+	assert(activated == true);
 	activated = false;
 }
 
+//////////////////////////////////////////////////////////////////////////
+// @brief issue a CAS command to this bank
+//////////////////////////////////////////////////////////////////////////
 void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
+	assert(activated && openRowID == currentCommand->getAddress().getRow());
+	
 	lastCASTime = currentTime + timing.tAL();
 
 	lastCASLength = currentCommand->getLength();
@@ -163,8 +180,13 @@ void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 	CASCount++;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief issue a CASW command to this bank
+//////////////////////////////////////////////////////////////////////////
 void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 {	
+	assert(activated && openRowID == currentCommand->getAddress().getRow());
+
 	lastCASWTime = currentTime + timing.tAL();
 
 	lastCASWLength = currentCommand->getLength();
@@ -172,6 +194,9 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 	CASWCount++;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief issue a refresh command to this bank
+//////////////////////////////////////////////////////////////////////////
 void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 {
 	lastRefreshAllTime = currentTime;
@@ -202,9 +227,9 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddress().getRow())) 
+			else if ((currentCommand->isReadOrWrite()) && (currentCommand->getAddress().getRow() == value->getAddress().getRow())) 
 			{
-				bool result = perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), currentIndex);
+				bool result = perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()), currentIndex + 1);
 				assert(result);
 
 				return true;
@@ -215,6 +240,15 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 			{
 				return false;
 			}
+		}
+		// if the correct row is already open, just insert there
+		// already guaranteed not to have RAW/WAR errors
+		if (activated && openRowID == value->getAddress().getRow())
+		{
+			bool result = perBankQueue.push_front(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()));
+			assert(result);
+
+			return true;
 		}
 		return false;
 	}
@@ -233,7 +267,7 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 /// @param value the transaction to test
 /// @return true if it is able to be inserted, false otherwise
 //////////////////////////////////////////////////////////////////////
-bool Bank::openPageInsertAvailable(const Transaction *value, const tick time) const
+bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 {
 	if (!perBankQueue.isFull())
 	{
@@ -270,7 +304,11 @@ bool Bank::openPageInsertAvailable(const Transaction *value, const tick time) co
 	}
 }
 
-bool Bank::closePageOptimalInsert(Transaction *incomingTransaction, const tick time)
+//////////////////////////////////////////////////////////////////////////
+/// @brief see if there is room to insert a command using the Close Page Aggressive algorithm and then insert
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
+bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tick time)
 {
 	// go from the end to the beginning to ensure no starvation or RAW/WAR errors
 	for (int index = perBankQueue.size() - 1; index >= 0; --index)
@@ -302,7 +340,36 @@ bool Bank::closePageOptimalInsert(Transaction *incomingTransaction, const tick t
 	return false;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief see if there is room to insert a command using the Close Page Aggressive algorithm
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
+bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction, const tick time) const
+{
+	// go from the end to the beginning to ensure no starvation or RAW/WAR errors
+	for (int index = perBankQueue.size() - 1; index >= 0; --index)
+	{	
+		// see if there is an available command to piggyback on
+		if (perBankQueue[index]->isReadOrWrite() && 
+			perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddress().getRow())
+		{
+			if (!systemConfig.isAutoPrecharge())
+			{
+				// check that things are in order
+				assert(perBankQueue[index + 1]->getCommandType() == PRECHARGE);
+			}
+			return true;
+		}
+		// don't starve commands
+		if (time - perBankQueue[index]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+			break;
+	}
+	return false;
+}
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief assignment operator to copy non-reference values
+//////////////////////////////////////////////////////////////////////////
 Bank& Bank::operator =(const Bank& rhs)
 {
 	//::new(this)DRAMsimII::Bank(rhs.timing,rhs.systemConfig);
@@ -328,6 +395,9 @@ Bank& Bank::operator =(const Bank& rhs)
 	return *this;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief equality operator to check values for equality
+//////////////////////////////////////////////////////////////////////////
 bool Bank::operator==(const Bank& rhs) const
 {
 	return (timing == rhs.timing && systemConfig == rhs.systemConfig && perBankQueue == rhs.perBankQueue && lastRASTime == rhs.lastRASTime &&
@@ -337,11 +407,11 @@ bool Bank::operator==(const Bank& rhs) const
 		CASCount == rhs.CASCount && totalCASCount == rhs.totalCASCount && CASWCount == rhs.CASWCount && totalCASWCount == rhs.totalCASWCount);
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief insertion operator to serialize the object in summary
+//////////////////////////////////////////////////////////////////////////
 std::ostream& DRAMsimII::operator<<(std::ostream& in, const Bank& pc)
 {
-	in << "PBQ" << endl << pc.perBankQueue;
-	in << "last RAS [" << pc.lastRASTime << "] act[" <<
+	return in << "PBQ" << endl << pc.perBankQueue << "last RAS [" << pc.lastRASTime << "] act[" <<
 		pc.activated << "] open row[" << pc.openRowID << "]" << endl;	
-
-	return in;
 }

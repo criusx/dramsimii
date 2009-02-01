@@ -68,7 +68,7 @@
 		<seniorityAgeLimit>512</seniorityAgeLimit>
 		<!--attempts to group reads and writes together in time-->
 		<readWriteGrouping>false</readWriteGrouping>
-		<!--able to issue CAS+Pre commands, effective with close page-->
+		<!--able to issue CAS+Pre commands, effective with close page, unavailable in open page RBMP -->
 		<autoPrecharge>true</autoPrecharge>
 	</timing>
 	<power>

@@ -28,10 +28,6 @@ Queue<Command> Command::freeCommandPool(8*POOL_SIZE,true);
 Command::Command():
 Event(),
 commandType(RETIRE_COMMAND),
-//startTime(0),
-//enqueueTime(0),
-//completionTime(0),
-//addr(0),
 hostTransaction(NULL),
 postedCAS(false),
 length(0)
@@ -41,10 +37,6 @@ length(0)
 Command::Command(const Command &rhs):
 Event(rhs),
 commandType(rhs.commandType),
-//startTime(rhs.startTime),
-//enqueueTime(rhs.enqueueTime),
-//completionTime(rhs.completionTime),
-//addr(rhs.addr),
 hostTransaction(rhs.hostTransaction ? new Transaction(*rhs.hostTransaction) : NULL),
 postedCAS(rhs.postedCAS),
 length(rhs.length)
@@ -61,10 +53,6 @@ length(rhs.length)
 
 Command::Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(hostTransaction.getAddress(),enqueueTime),
-//startTime(-1),
-//enqueueTime(enqueueTime),
-//completionTime(-1),
-//addr(hostTransaction.getAddresses()),
 hostTransaction(type == READ ? &hostTransaction : NULL), // this link is only needed for CAS commands
 postedCAS(postedCAS),
 length(commandLength)

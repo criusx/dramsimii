@@ -28,84 +28,54 @@ Queue<Transaction> Transaction::freeTransactionPool(4*POOL_SIZE,true);
 /// constructor to make a transaction with no values set
 Transaction::Transaction():
 Event(),
-//eventNumber(0),
 type(CONTROL_TRANSACTION),
-//status(0),
 length(0),
-//arrivalTime(0),
-//enqueueTime(0),
-//completionTime(0),
 decodeTime(0),
 PC(0),
 threadNum(0),
-//addr(0),
 originalTransaction(UINT_MAX)
 {}
 
 
 Transaction::Transaction(const TransactionType transType, const tick arrivalTime,const unsigned burstLength, const Address &address, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
 Event(arrivalTime,address),
-//eventNumber(eventCounter++),
 type(transType),
-//status(0),
 length(burstLength),
-//arrivalTime(arrivalTime),
-//enqueueTime(0),
-//completionTime(0),
 decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
-//addr(address),
 originalTransaction(originalTrans)
 {}
 
 Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const unsigned originalTrans):
 Event(arrivalTime,address),
-//eventNumber(eventCounter++),
 type(transType),
-//status(0),
 length(burstLength),
-//arrivalTime(arrivalTime),
-//enqueueTime(0),
-//completionTime(0),
 decodeTime(0),
 PC(0),
 threadNum(0),
-//addr(address),
 originalTransaction(originalTrans)
 {}
 
 /// copy constructor to duplicate a transaction
 Transaction::Transaction(const Transaction &rs):
 Event(rs),
-//eventNumber(rs.eventNumber),
 type(rs.type),
-//status(rs.status),
 length(rs.length),
-//arrivalTime(rs.arrivalTime),
-//enqueueTime(rs.enqueueTime),
-//completionTime(rs.completionTime),
 decodeTime(rs.decodeTime),
 PC(rs.PC),
 threadNum(rs.threadNum),
-//addr(rs.addr),
 originalTransaction(rs.originalTransaction)
 {}
 
 /// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
 Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
 Event(arrivalTime,physicalAddress),
-//eventNumber(eventCounter++),
 type(transType),
-//status(0),
 length(burstLength),
-//arrivalTime(arrivalTime),
-//enqueueTime(0),
-//completionTime(0),
 decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
-//addr(physicalAddress),
 originalTransaction(originalTrans)
 {}
 
