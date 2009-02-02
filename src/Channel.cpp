@@ -537,7 +537,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 		tRRDsch = ((double)(time - powerModel.getLastCalculation())) / perRankRASCount;
 
 		if (tRRDsch > 200.0F)
-			cerr << time << " " << powerModel.getLastCalculation() << " " << perRankRASCount << endl;
+			cerr << "t=" << time << ", last t=" << powerModel.getLastCalculation() << ", #RAS=" << perRankRASCount << endl;
 
 		PsysACT += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
 

@@ -112,6 +112,7 @@
 		<outFileDirectory>.</outFileDirectory>
 		<requestCount>75000000</requestCount>
 		<!-- type may be "mase","k6","mapped","random," if random, then the value is the distrubution model, which may be 'uniform', 'gaussian' , 'poisson', 'normal' -->
+		<!-- may be plain text, gzipped or bzipped -->
 		<inputFile type="random">gaussian</inputFile>
 		<!--inputFile type="mase">equake.trc</inputFile-->
 		<!-- used in scaling CPU ticks to memory system ticks -->

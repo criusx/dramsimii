@@ -23,6 +23,9 @@
 #include <fstream>
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/iostreams/filtering_streambuf.hpp>
+#include <boost/iostreams/device/file_descriptor.hpp>
+#include <boost/iostreams/device/file.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
 #include "InputStream.h"
@@ -36,9 +39,11 @@ using std::string;
 using std::ostream;
 using namespace DRAMsimII;
 
-#define COMPRESS_INCOMING_TRANSACTIONS 8
+#define COMPRESS_INCOMING_TRANSACTIONS 0
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief standard constructor
+//////////////////////////////////////////////////////////////////////////
 InputStream::InputStream(const Settings& settings,const SystemConfiguration &systemConfigVal, const vector<Channel> &systemChannel):
 type(settings.inFileType),
 systemConfig(systemConfigVal),
@@ -61,6 +66,9 @@ rngIntDistributionModel(0u,16383u),
 rngGenerator(randomNumberGenerator, rngDistributionModel),
 rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 {
+	using namespace boost::algorithm;
+	using boost::iostreams::file_source;
+	using namespace boost::filesystem;
 	if (interarrivalDistributionModel == UNIFORM_DISTRIBUTION)
 		arrivalThreshold = 1.0 - (1.0 / (double)averageInterarrivalCycleCount);
 	else if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
@@ -68,9 +76,9 @@ rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 	if (arrivalThreshold > 1.0F)
 		arrivalThreshold = 1.0F / arrivalThreshold;
 
-	if (!settings.inFile.empty() && (settings.inFileType != RANDOM))
+	if (!settings.inFile.empty() && (type != RANDOM))
 	{
-		traceFile.open(settings.inFile.c_str());
+		//traceFile.open(settings.inFile.c_str());
 
 		if (!traceFile.good())
 		{
@@ -80,16 +88,34 @@ rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 #ifdef WIN32
 			boost::replace_all(inFileWithPath,"/","\\");
 #endif // WIN32
-			traceFile.open(inFileWithPath.c_str());
-			if (!traceFile.is_open())
+#ifndef WIN32
+			if (ends_with(traceFilename,"gz"))
+				traceFile.push(gzip_decompressor());
+			else if (ends_with(traceFilename,"bz2") || ends_with(traceFilename,"bz"))
+				traceFile.push(bzip2_decompressor());
+#endif
+
+			if (!exists(inFileWithPath))
+			{
+				cerr << "Unable to open trace file \"" << inFileWithPath << "\"" << endl;
+				exit(-9);
+			}
+			
+			traceFile.push(file_source(inFileWithPath.c_str()));
+
+			if (!traceFile.is_complete())
 			{
 				cerr << "Unable to open trace file \"" << settings.inFile << "\"" << endl;
 				exit(-9);
 			}
+						
 		}
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief deserialization constructor
+//////////////////////////////////////////////////////////////////////////
 InputStream::InputStream(const SystemConfiguration &systemConfig, const vector<Channel> &systemChannel, DistributionType arrivalDistributionModel, string filename):
 systemConfig(systemConfig),
 channel(systemChannel),
@@ -100,23 +126,48 @@ rngIntDistributionModel(0u,16383u),
 rngGenerator(randomNumberGenerator, rngDistributionModel),
 rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
 {
-	if (!filename.empty())
+	using namespace boost::algorithm;
+	using boost::iostreams::file_source;
+	if (interarrivalDistributionModel == UNIFORM_DISTRIBUTION)
+		arrivalThreshold = 1.0 - (1.0 / (double)averageInterarrivalCycleCount);
+	else if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
+		arrivalThreshold = 1.0 - (1.0 / boxMuller((double)averageInterarrivalCycleCount, 10));
+	if (arrivalThreshold > 1.0F)
+		arrivalThreshold = 1.0F / arrivalThreshold;
+
+	if (!traceFilename.empty() && (type != RANDOM))
 	{
-		traceFile.open(filename.c_str());
+		//traceFile.open(settings.inFile.c_str());
 
 		if (!traceFile.good())
 		{
-			string inFileWithPath = "./traceFiles/" + filename;
-			traceFile.open(inFileWithPath.c_str());
-			if (!traceFile.good())
+			boost::filesystem::path cwd(boost::filesystem::current_path());
+			cwd = cwd / "traceFiles" / traceFilename;
+			string inFileWithPath = cwd.string();
+#ifdef WIN32
+			boost::replace_all(inFileWithPath,"/","\\");
+#endif // WIN32
+#ifndef WIN32
+			if (ends_with(traceFilename,"gz"))
+				traceFile.push(gzip_decompressor());
+			else if (ends_with(traceFilename,"bz2") || ends_with(traceFilename,"bz"))
+				traceFile.push(bzip2_decompressor());
+#endif
+
+			traceFile.push(file_source(inFileWithPath.c_str()));
+
+			if (!traceFile.is_complete())
 			{
-				cerr << "Unable to reopen trace file \"" << filename << "\"" << endl;
+				cerr << "Unable to open trace file \"" << traceFilename << "\"" << endl;
 				exit(-9);
 			}
 		}
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief copy constructor
+//////////////////////////////////////////////////////////////////////////
 InputStream::InputStream(const InputStream& rhs):
 type(rhs.type),
 systemConfig(rhs.systemConfig),
@@ -352,10 +403,6 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 
 			switch (control)
 			{
-			case unknown_token:
-				cerr << "Unknown Token Found " << input << endl;
-				return false;
-				break;
 			case FETCH:
 				thisEvent.attributes = IFETCH_TRANSACTION;
 				break;
@@ -365,6 +412,10 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 			case MEM_WR:
 				thisEvent.attributes = WRITE_TRANSACTION;
 				break;
+			case unknown_token:
+				cerr << "Unknown Token Found " << input << endl;
+				return false;
+				break;			
 			default:
 				cerr << "Unexpected transaction type: " << input;
 				exit(-7);
@@ -459,7 +510,7 @@ Transaction *InputStream::getNextIncomingTransaction()
 			} 
 			else
 			{
-				Transaction *tempTransaction = new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address, 0, 0, NULL) ;
+				Transaction *tempTransaction = new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address, 0, 0);
 				// FIXME: ignores return type
 				//convertAddress(tempTransaction->getAddresses());
 
@@ -605,7 +656,7 @@ Transaction *InputStream::getNextRandomRequest()
 
 		nextAddress.setAddress(nextChannel,nextRank,nextBank,nextRow,nextColumn);
 
-		return new Transaction(nextType, time, burstLength, nextAddress, 0, 0, UINT_MAX);
+		return new Transaction(nextType, time, burstLength, nextAddress, 0, 0);
 	}
 	else
 		return NULL;

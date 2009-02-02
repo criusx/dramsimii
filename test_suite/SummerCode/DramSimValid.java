@@ -1,4 +1,3 @@
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import java.io.OutputStream;
 
 import java.util.ArrayList;
@@ -121,8 +119,8 @@ public class DramSimValid
     try
     {
       FileOutputStream fOut = new FileOutputStream(outFile);
-      //gOut = new GZIPOutputStream(fOut);
-      gOut = new BufferedOutputStream(fOut);
+      gOut = new GZIPOutputStream(fOut);
+      //gOut = new BufferedOutputStream(fOut);
     }
     catch (FileNotFoundException e)
     {
@@ -146,8 +144,8 @@ public class DramSimValid
         gzStream = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
       //byte[] b = new byte[1];
       //String line = "";
-      String line = gzStream.readLine();
-      while (line != null)
+      String line;
+      while ((line = gzStream.readLine()) != null)
       {
         if (line.startsWith("C F"))
         {
@@ -177,7 +175,6 @@ public class DramSimValid
         {
           System.out.print(currentB + "/" + totalB + "/" + errorsFound + "\r");
         }
-        line = gzStream.readLine();
       }
     }
     catch (IOException ie)

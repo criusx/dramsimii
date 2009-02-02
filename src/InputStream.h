@@ -53,7 +53,7 @@ namespace DRAMsimII
 		DistributionType interarrivalDistributionModel;	///< the model used to predict and determine when the next arrival will happen
 		std::string traceFilename;
 
-		std::ifstream traceFile;
+		boost::iostreams::filtering_istream traceFile;
 		boost::mt19937 randomNumberGenerator;
 		boost::uniform_real<> rngDistributionModel;	///< generates a random distribution from the set of [0:1)
 		boost::uniform_int<> rngIntDistributionModel; ///< generates a distribution of integers

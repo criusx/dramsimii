@@ -83,10 +83,10 @@ length(commandLength)
 		commandType = type;
 	}
 
-	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction.getType() == WRITE_TRANSACTION) ||
-		(commandType == READ_AND_PRECHARGE && hostTransaction.getType() == READ_TRANSACTION) ||
-		(commandType == READ && hostTransaction.getType() == READ_TRANSACTION) ||
-		(commandType == WRITE && hostTransaction.getType() == WRITE_TRANSACTION) ||
+	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction.isWrite()) ||
+		(commandType == READ_AND_PRECHARGE && hostTransaction.isRead()) ||
+		(commandType == READ && hostTransaction.isRead()) ||
+		(commandType == WRITE && hostTransaction.isWrite()) ||
 		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
 		(commandType == REFRESH_ALL && hostTransaction.getType() == AUTO_REFRESH_TRANSACTION)
 		);

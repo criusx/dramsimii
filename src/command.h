@@ -68,7 +68,7 @@ namespace DRAMsimII
 		Transaction *getHost() const { return hostTransaction; }
 		unsigned getLength() const { return length; }
 		bool isPostedCAS() const { return postedCAS; }
-		bool isRead() const { return ((commandType == READ) || (commandType == READ_AND_PRECHARGE)); }
+		bool isRead() const { return ((commandType == READ) || (commandType == READ_AND_PRECHARGE) || (commandType == IFETCH_TRANSACTION)); }
 		bool isWrite() const { return ((commandType == WRITE) || (commandType == WRITE_AND_PRECHARGE)); }
 		bool isReadOrWrite() const { return isRead() || isWrite(); }
 

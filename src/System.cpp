@@ -99,8 +99,8 @@ nextStats(settings.epoch)
 		case GZ:
 #ifndef WIN32
 			timingOutStream.push(gzip_compressor(gzip_params(9)));
-			powerOutStream.push(gzip_compressor());
-			statsOutStream.push(gzip_compressor());
+			powerOutStream.push(gzip_compressor(gzip_params(9)));
+			statsOutStream.push(gzip_compressor(gzip_params(9)));
 			suffix = ".gz";
 			break;
 #endif
@@ -215,14 +215,16 @@ nextStats(settings.epoch)
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
-		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M]" << endl;
+		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << 
+		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
 	powerOutStream << "----Command Line: " << settings.commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
-		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M]" << endl;
+		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << 
+		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
 	statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 

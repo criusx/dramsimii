@@ -68,6 +68,27 @@ class PriorMovingAverage:
     def get(self):
         return self.data
 
+def gziplines(filename):
+    from subprocess import Popen, PIPE
+    if filename.endswith("gz"):
+      #compressedstream = gzip.open(filename, 'rb')
+      compressedstream = Popen(['zcat',filename], stdout=PIPE)
+    elif filename.endswith("bz2"):
+        #compressedstream = bz2.open(filename, 'rb')
+        compressedstream = Popen(['bzcat',filename], stdout=PIPE)
+    else:
+        compressedstream = Popen(['cat',filename], stdout=PIPE)
+
+    for line in compressedstream.stdout:
+        yield line
+
+def thumbnail(filelist, tempPath):
+    for x in filelist:
+        if x.endswith(extension):
+            file = os.path.join(tempPath,x)
+            os.system("convert -resize %s %s %s-thumb.png" % (thumbnailResolution, file, file[:-4]))
+            os.system("gzip -c -9 -f %s > %s" % (file, file + "z"))
+            os.remove(file)
 
 def processPower(filename):
     # remember the temp directory
@@ -162,18 +183,16 @@ def processPower(filename):
 
     try:
         if filename.endswith("gz"):
-            basefilename = os.path.join(tempPath, filename.split('.gz')[0])
             outFileBZ2 = os.path.join(tempPath,  filename.split('.gz')[0] + ".tar.bz2")
-            compressedstream = gzip.open(filename, 'rb')
+            basefilename = os.path.join(tempPath, filename.split('.gz')[0])
         else:
-            basefilename = os.path.join(tempPath, filename.split('.bz2')[0])
             outFileBZ2 = os.path.join(tempPath,  filename.split('.bz2')[0] + ".tar.bz2")
-            compressedstream = bz2.open(filename, 'rb')
+            basefilename = os.path.join(tempPath, filename.split('.bz2')[0])
 
         splitter = re.compile('([\[\]])')
         splitter2 = re.compile(' ')
 
-        for line in compressedstream:
+        for line in gziplines(filename):
             if line[0] == '-':
               # normal lines
                 if line[1] == 'P':
@@ -301,12 +320,7 @@ def processPower(filename):
     p.stdin.write("unset multiplot\nunset output\nexit\n")
     p.wait()
 
-    for x in filesGenerated:
-        if x.endswith(extension):
-            file = os.path.join(tempPath,x)
-            os.system("convert -resize %s %s %s-thumb.png" % (thumbnailResolution, file, file[:-4]))
-            os.system("gzip -c -9 -f %s > %s" % (file, file + "z"))
-            os.remove(file)
+    thumbnail(filesGenerated, tempPath)
 
     o = open(os.path.join(tempPath,basefilename[0:basefilename.find("-power")] + ".html"),"w")
     template = open(os.path.join(os.path.abspath(sys.path[0]),"template.html")).read()
@@ -594,16 +608,9 @@ def processStats(filename):
         basefilename = os.path.join(tempPath, filename.split('.bz2')[0])
 
     try:
-        if filename.endswith("gz"):
-            compressedstream = gzip.open(filename, 'rb')
-        elif filename.endswith("bz2"):
-            compressedstream = bz2.open(filename, 'rb')
-        else:
-            return
-
         #line = compressedstream.readline()
         #while line:
-        for line in compressedstream:
+        for line in gziplines(filename):
             if line[0] == '-':
                 if processPerEpochGraphs:
                     if writing == 1:
@@ -823,7 +830,7 @@ def processStats(filename):
                 break
             #line = compressedstream.readline()
 
-        compressedstream.close()
+        #compressedstream.close()
 
     except IOError, strerror:
         print "I/O error", strerror, "\nThis archive is probably truncated."
@@ -1002,12 +1009,7 @@ def processStats(filename):
 
     outputFile.close()
 
-    for x in fileList:
-        if x.endswith(extension):
-            file = os.path.join(tempPath,x)
-            os.system("convert -resize %s %s %s-thumb.png" % (thumbnailResolution, file,file[:-4]))
-            os.system("gzip -c -9 -f %s > %s" % (file, file + "z"))
-            os.remove(file)
+    thumbnail(fileList, tempPath)
 
     #files = os.listdir(tempPath)
 
@@ -1024,12 +1026,6 @@ def processStats(filename):
     accessFile = open(os.path.join(os.path.abspath(sys.path[0]),".htaccess")).read()
     o.write(accessFile)
     o.close()
-
-
-
-    #for x in files:
-    #    fullPath = os.path.join(tempPath,x)
-    #    os.remove(fullPath)
 
     #os.rmdir(tempPath)
     #os.system("tar cjf " + outFileBZ2 + " --totals " + " ".join(fileList))
