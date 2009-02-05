@@ -32,7 +32,7 @@ namespace DRAMsimII
 	{
 	protected:
 		tick requestCount;		///< the number of requests to simulate
-		InputType inputType;		///< the input type
+		InputStream::InputType inputType;		///< the input type
 
 	public:
 		// constructors

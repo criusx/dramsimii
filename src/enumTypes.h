@@ -37,21 +37,7 @@ namespace DRAMsimII
 		CLOSE_PAGE_AGGRESSIVE
 	};
 
-	// This section defines the address mapping scheme
-	// The scheme dictates how a memory address is converted
-	// to rank, bank, row, col, byte
-	enum AddressMappingScheme
-	{
-		BURGER_BASE_MAP,
-		CLOSE_PAGE_BASELINE,
-		INTEL845G_MAP,
-		OPEN_PAGE_BASELINE,
-		SDRAM_BASE_MAP,
-		SDRAM_CLOSE_PAGE_MAP,
-		SDRAM_HIPERF_MAP,
-		CLOSE_PAGE_LOW_LOCALITY,
-		CLOSE_PAGE_HIGH_LOCALITY
-	};
+	
 
 	enum SystemConfigurationType
 	{
@@ -84,23 +70,7 @@ namespace DRAMsimII
 		RIFF, ///< read and instruction fetch first
 		STRICT ///< FIFO
 	};
-
-	enum InputType
-	{
-		K6_TRACE,
-		MASE_TRACE,
-		RANDOM,
-		MAPPED,
-		ALPHASIM,
-		GEMS
-	};
-
-	enum InputStatus
-	{
-		FAILURE,
-		SUCCESS
-	};
-
+	
 	enum DRAMType
 	{
 		DDR,
@@ -108,39 +78,6 @@ namespace DRAMsimII
 		DDR3,
 		DRDRAM,
 		SDRAM
-	};
-
-	enum TransactionType
-	{
-		IFETCH_TRANSACTION,
-		WRITE_TRANSACTION,
-		READ_TRANSACTION,
-		PREFETCH_TRANSACTION,
-		AUTO_REFRESH_TRANSACTION,
-		PER_BANK_REFRESH_TRANSACTION,
-		AUTO_PRECHARGE_TRANSACTION,
-		CONTROL_TRANSACTION
-	};
-
-	enum CommandType
-	{
-		ACTIVATE,							///< open this row
-		READ,								///< read from the open row
-		READ_AND_PRECHARGE,					///< read from the open row and then close it
-		WRITE,								///< write this value to the open row
-		WRITE_AND_PRECHARGE,				///< write this value and then close the row
-		RETIRE_COMMAND,						///< ?
-		PRECHARGE,							///< close this open row
-		PRECHARGE_ALL,						///< precharge each bank in the rank, end of a refresh
-		ACTIVATE_ALL,						///< activate a row in each bank in the rank, half of a refresh
-		DRIVE_COMMAND,						///< ?
-		DATA_COMMAND,						///< for FBD, holds data instead of a command
-		CAS_WITH_DRIVE_COMMAND,				///< ?
-		REFRESH_ALL,						///< refresh all banks in the rank
-		SELF_REFRESH,						///< put the rank into self refresh mode
-		DESELECT,							///< command inhibit, does not allow new commands to be executed
-		NOOP,								///< the no operation command
-		INVALID_COMMAND						///< no command, or not a valid command at this time
 	};
 
 	enum FileIOToken
@@ -250,22 +187,6 @@ namespace DRAMsimII
 		idd4r_token,
 		idd4w_token,
 		idd5_token
-	};
-
-	enum DistributionType
-	{
-		UNIFORM_DISTRIBUTION,
-		GAUSSIAN_DISTRIBUTION,
-		POISSON_DISTRIBUTION,
-		NORMAL_DISTRIBUTION
-	};
-
-	enum EventType
-	{
-		TRANSACTION_ENQUEUE,	// put transaction into channel queue
-		DRAM_COMMAND_ENQUEUE,	// put DRAM command into per-bank queue
-		DRAM_COMMAND_EXECUTE,	// schedule DRAM command for execution
-		NO_EVENT
 	};
 
 	enum FrameType

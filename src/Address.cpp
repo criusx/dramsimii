@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "globals.h"
 #include "Address.h"
-#include "enumTypes.h"
+#include "globals.h"
+
+//#include "enumTypes.h"
+#include "Settings.h"
 #include "SystemConfiguration.h"
 
 #include <iostream>
@@ -36,7 +38,7 @@ unsigned Address::rowAddressDepth;
 unsigned Address::columnAddressDepth;
 unsigned Address::columnSizeDepth;
 unsigned Address::cacheLineSize;
-AddressMappingScheme Address::mappingScheme;
+Address::AddressMappingScheme Address::mappingScheme;
 
 Address::Address():
 virtualAddress(UINT_MAX),
@@ -614,12 +616,10 @@ bool Address::addressTranslation()
 
 		// don't know what this policy is.. Map everything to 0 
 	default:
-		cerr << "Unknown address mapping scheme, mapping chan, rank, bank to zero: " << mappingScheme << endl;
-		channel = 0;				
-		rank = 0;
-		bank = 0;
-		row  = 0;
-		column  = 0;
+		cerr << "Unknown address mapping scheme, mapping chan, rank, bank to zero: ";
+		cerr << mappingScheme;
+		cerr << endl;
+		channel = rank = bank = row = column = 0;				
 		return false;
 		break;
 	}
@@ -645,40 +645,40 @@ void Address::setAddress(const unsigned channel, const unsigned rank, const unsi
 	reverseAddressTranslation();
 }
 
-std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address &this_a)
+std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address& thisAddress)
 {
-	return os << "addr[0x" << setbase(16) << this_a.physicalAddress <<
-		"] chan[" << setbase(16) << this_a.channel << "] rank[" <<
-		this_a.rank << "] bank[" << setw(2) << setbase(16) << this_a.bank <<
-		"] row[" << setw(4) << setbase(16) << this_a.row << "] col[" <<
-		setbase(16) << this_a.column << "]";
+	return os << "addr[0x" << setbase(16) << thisAddress.physicalAddress <<
+		"] chan[" << setbase(16) << thisAddress.channel << "] rank[" <<
+		thisAddress.rank << "] bank[" << setbase(16) << thisAddress.bank <<
+		"] row[" << setbase(16) << thisAddress.row << "] col[" <<
+		setbase(16) << thisAddress.column << "]";
 }
 
-std::ostream &DRAMsimII::operator <<(std::ostream &os, const AddressMappingScheme &mappingScheme)
-{
+std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address::AddressMappingScheme &mappingScheme)
+{	
 	switch (mappingScheme)
 	{
-	case BURGER_BASE_MAP:
+	case Address::BURGER_BASE_MAP:
 		os << "BBM";
 		break;
-	case SDRAM_HIPERF_MAP:
-	case OPEN_PAGE_BASELINE:
+	case Address::SDRAM_HIPERF_MAP:
+	case Address::OPEN_PAGE_BASELINE:
 		os << "OPBAS";
 		break;
-	case SDRAM_BASE_MAP:
+	case Address::SDRAM_BASE_MAP:
 		os << "SDBAS";
 		break;
-	case CLOSE_PAGE_BASELINE:
-	case SDRAM_CLOSE_PAGE_MAP:
+	case Address::CLOSE_PAGE_BASELINE:
+	case Address::SDRAM_CLOSE_PAGE_MAP:
 		os << "CPBAS";
 		break;
-	case INTEL845G_MAP:
+	case Address::INTEL845G_MAP:
 		os << "845G";
 		break;
-	case CLOSE_PAGE_LOW_LOCALITY:
+	case Address::CLOSE_PAGE_LOW_LOCALITY:
 		os << "LOLOC";
 		break;
-	case CLOSE_PAGE_HIGH_LOCALITY:
+	case Address::CLOSE_PAGE_HIGH_LOCALITY:
 		os << "HILOC";
 		break;
 	default:

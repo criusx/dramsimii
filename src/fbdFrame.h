@@ -29,9 +29,9 @@ namespace DRAMsimII
 	private:
 		static Queue<fbdFrame> freeFramePool; // frame objects are stored here to avoid allocating memory after initialization
 
-		enum FrameType frameType;
+		FrameType frameType;
 		const Command *slots[3];
-		enum CommandType commandSlotType[3];
+		Command::CommandType commandSlotType[3];
 		tick arrivalTime;
 		tick executeTime;			// the time that the A command of this frame should arrive at the every DIMM
 
@@ -50,7 +50,7 @@ namespace DRAMsimII
 			slots[0] = value;
 			if (!value)
 				// can be empty or a command, but never data
-				commandSlotType[0] = INVALID_COMMAND;
+				commandSlotType[0] = Command::INVALID_COMMAND;
 			else
 				commandSlotType[0] = value->getCommandType();
 		}
@@ -59,7 +59,7 @@ namespace DRAMsimII
 			slots[1] = value; 
 			if (!value)
 				// assume that an empty command is data
-				commandSlotType[1] = DATA_COMMAND;
+				commandSlotType[1] = Command::DATA_COMMAND;
 			else
 				commandSlotType[1] = value->getCommandType();
 		}
@@ -67,7 +67,7 @@ namespace DRAMsimII
 		{
 			slots[2] = value;
 			if (!value)
-				commandSlotType[2] = DATA_COMMAND;
+				commandSlotType[2] = Command::DATA_COMMAND;
 			else
 				commandSlotType[2] = value->getCommandType();
 		}
@@ -83,9 +83,9 @@ namespace DRAMsimII
 		const Command* readCommandB() const { return slots[1]; }
 		const Command* readCommandC() const { return slots[2]; }
 
-		enum CommandType getCommandAType() const { return commandSlotType[0]; }
-		enum CommandType getCommandBType() const { return commandSlotType[1]; }
-		enum CommandType getCommandCType() const { return commandSlotType[2]; }
+		Command::CommandType getCommandAType() const { return commandSlotType[0]; }
+		Command::CommandType getCommandBType() const { return commandSlotType[1]; }
+		Command::CommandType getCommandCType() const { return commandSlotType[2]; }
 
 
 		// friends

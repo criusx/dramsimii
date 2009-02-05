@@ -19,7 +19,7 @@
 #pragma once
 
 #include "globals.h"
-#include "Settings.h"
+//#include "Settings.h"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
@@ -27,12 +27,30 @@
 
 namespace DRAMsimII
 {
+	
 	/// @brief This class logically represents several interpretations of a memory address
 	/// @details A class to store various representations of an address
 	/// The same address may be represented as a virtual address, physical address, 
 	/// or as channel, rank, bank, column and row identifiers
 	class Address
 	{
+	public:
+		// This section defines the address mapping scheme
+		// The scheme dictates how a memory address is converted
+		// to rank, bank, row, col, byte
+		enum AddressMappingScheme
+		{
+			BURGER_BASE_MAP,
+			CLOSE_PAGE_BASELINE,
+			INTEL845G_MAP,
+			OPEN_PAGE_BASELINE,
+			SDRAM_BASE_MAP,
+			SDRAM_CLOSE_PAGE_MAP,
+			SDRAM_HIPERF_MAP,
+			CLOSE_PAGE_LOW_LOCALITY,
+			CLOSE_PAGE_HIGH_LOCALITY
+		};
+
 	protected:
 		static unsigned channelAddressDepth;
 		static unsigned rankAddressDepth;
@@ -81,10 +99,9 @@ namespace DRAMsimII
 		void static initialize(const Settings &dramSettings);
 		void static initialize(const SystemConfiguration &systemConfig);
 
-		// friend
-		friend std::ostream &DRAMsimII::operator<<(std::ostream &os, const Address &this_a);
-		friend std::ostream &DRAMsimII::operator<<(std::ostream &os, const Transaction &this_t);
+		// friend		
 		friend class boost::serialization::access;
+		friend std::ostream &DRAMsimII::operator<<(std::ostream &os, const Address&);
 
 		// overloads
 		bool operator==(const Address& right) const;
@@ -97,5 +114,7 @@ namespace DRAMsimII
 			ar & mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column;
 		}
 	};
+std::ostream& operator<<(std::ostream&, const Address::AddressMappingScheme&);
+	
 }
 #endif

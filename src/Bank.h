@@ -22,6 +22,7 @@
 #include "command.h"
 #include "Settings.h"
 #include "transaction.h"
+#include "command.h"
 #include "TimingSpecification.h"
 #include "SystemConfiguration.h"
 #include "queue.h"
@@ -99,13 +100,14 @@ namespace DRAMsimII
 		const inline Command *front() const { return perBankQueue.front(); }
 		const Command *back() const { return perBankQueue.back(); }
 		unsigned size() const { return perBankQueue.size(); }
-		CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : INVALID_COMMAND; }
+		Command::CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : Command::INVALID_COMMAND; }
 		unsigned freeCommandSlots() const { return perBankQueue.freecount(); }
 		bool openPageInsert(Transaction *value, const tick time);
 		bool closePageAggressiveInsert(Transaction *value, const tick time);
 		bool openPageInsertCheck(const Transaction *value, const tick time) const;
 		bool closePageAggressiveInsertCheck(const Transaction *value, const tick time) const;
 		bool isFull() const { return perBankQueue.isFull(); }
+		bool isEmpty() const { return perBankQueue.isEmpty(); }
 
 		// constructors
 		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);

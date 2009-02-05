@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <assert.h>
 #include "event.h"
 
 using namespace DRAMsimII;
@@ -23,12 +22,12 @@ unsigned Event::eventCounter(0);
 
 using std::ostream;
 
-ostream &DRAMsimII::operator<<(ostream &os, const Event &event)
+ostream &DRAMsimII::operator<<(ostream &os, const Event& currentEvent)
 {
-	return os << event.address <<
-		" Q[" << std::dec << event.getEnqueueTime() << 
-		"] S[" << std::dec << event.getStartTime() << 
-		"] E[" << std::dec << event.getCompletionTime() << 
-		"] EXE[" << std::dec << event.getExecuteTime() << 
-		"] DLY[" << std::dec << event.getDelayTime() << "]";
+	return os << currentEvent.address <<
+		" Q[" << std::dec << currentEvent.enqueueTime << 
+		"] S[" << std::dec << currentEvent.startTime << 
+		"] E[" << std::dec << currentEvent.completionTime << 
+		"] EXE[" << std::dec << currentEvent.getExecuteTime() << 
+		"] DLY[" << std::dec << currentEvent.getDelayTime() << "]";
 }

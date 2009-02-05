@@ -17,7 +17,10 @@
 #ifndef DRAMSETTINGS
 #define DRAMSETTINGS
 
-#include "globals.h"
+#include "InputStream.h"
+#include "Address.h"
+#include "enumTypes.h"
+//#include "globals.h"
 
 #include <string>
 #include <iostream>
@@ -48,8 +51,8 @@ namespace DRAMsimII
 		unsigned epoch;
 		std::string inFile;
 		std::string sessionID;
-		DistributionType arrivalDistributionModel;
-		InputType inFileType;
+		InputStream::DistributionType arrivalDistributionModel;
+		InputStream::InputType inFileType;
 		std::string outFile;
 		std::string outFileDir;
 		std::string commandLine;
@@ -77,7 +80,7 @@ namespace DRAMsimII
 		unsigned refreshTime;
 		unsigned seniorityAgeLimit;
 		RowBufferPolicy rowBufferManagementPolicy;
-		AddressMappingScheme addressMappingScheme;
+		Address::AddressMappingScheme addressMappingScheme;
 		bool postedCAS;
 		bool readWriteGrouping;
 		bool autoPrecharge;
@@ -231,6 +234,7 @@ namespace DRAMsimII
 			theMap[dbreporting_token] = "outFile/@dbreporting";
 			theMap[dram_type_token] = "dramspec/@type";
 			theMap[input_type_token] = "inputFile/@type";
+			theMap[random_distribution_token] = "inputFile";
 
 
 			return theMap;
@@ -258,6 +262,8 @@ namespace DRAMsimII
 			theMap["physicaladdressmappingpolicy"] = addr_mapping_scheme_token;
 			theMap["addr_mapping_scheme"] = addr_mapping_scheme_token;
 			theMap["addressmappingscheme"] = addr_mapping_scheme_token;
+			theMap["addressmappingpolicy"] = addr_mapping_scheme_token;
+			theMap["physicaladdressmappingpolicy"] = addr_mapping_scheme_token;
 			theMap["transaction_ordering_policy"] = transaction_ordering_policy_token;
 			theMap["transactionorderingpolicy"] = transaction_ordering_policy_token;
 			theMap["command_ordering_algorithm"] = command_ordering_algorithm_token;
@@ -270,6 +276,7 @@ namespace DRAMsimII
 			theMap["requestcount"] = request_count_token;
 			theMap["inputfile"] = input_file_token;
 			theMap["averageinterarrivalcyclecount"] = average_interarrival_cycle_count;
+			theMap["interarrivalcyclecount"] = average_interarrival_cycle_count;
 			theMap["outfile"] = output_file_token;
 			theMap["outfiledirectory"] = output_file_dir_token;
 			theMap["outfiledir"] = output_file_dir_token;

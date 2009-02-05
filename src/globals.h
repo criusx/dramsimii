@@ -31,9 +31,10 @@
 namespace DRAMsimII
 {
 	// class forward declarations
+	
+	class Address;
 	class Event;
 	class Command;
-	class Address;
 	class Transaction;
 	class System;
 	class Channel;
@@ -45,21 +46,20 @@ namespace DRAMsimII
 	class PowerConfig;
 	class Bank;
 	class Rank;
+	class BusEvent;
 
 	void unitTests(const Settings &settings);
 
 	// overloaded insertion operator functions for printing various aspects of the dram system
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandType&);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::Event&);
+	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Event&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction&);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::AddressMappingScheme&);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionType );
+	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Address::AddressMappingScheme&);
+	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction::TransactionType );
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::fbdFrame&);	
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address &);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::AddressMappingScheme&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
 	std::ostream& operator<<(std::ostream&, const CommandOrderingAlgorithm coa);
 	std::ostream& operator<<(std::ostream&, const RowBufferPolicy rbp);

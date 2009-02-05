@@ -31,6 +31,19 @@ namespace DRAMsimII
 	/// @brief a request to read or write some portion of memory, atomically
 	class Transaction: public Event
 	{
+	public:
+		enum TransactionType
+		{
+			IFETCH_TRANSACTION,
+			WRITE_TRANSACTION,
+			READ_TRANSACTION,
+			PREFETCH_TRANSACTION,
+			AUTO_REFRESH_TRANSACTION,
+			PER_BANK_REFRESH_TRANSACTION,
+			AUTO_PRECHARGE_TRANSACTION,
+			CONTROL_TRANSACTION
+		};
+
 	protected:
 		static Queue<Transaction> freeTransactionPool;	///< transactions are stored here to avoid allocating memory after initialization
 		
@@ -52,6 +65,7 @@ namespace DRAMsimII
 		unsigned getOriginalTransaction() const { return originalTransaction; }		///< get the external transaction that this is a representation for
 		bool isRead() const { return ((type == IFETCH_TRANSACTION) || (type == READ_TRANSACTION) || (type == PREFETCH_TRANSACTION)); }
 		bool isWrite() const { return (type == WRITE_TRANSACTION); }
+		bool isRefresh() const { return (type == AUTO_REFRESH_TRANSACTION); }
 		
 		// mutators
 		void setDecodeTime(const tick value) { decodeTime = value; }
@@ -86,5 +100,9 @@ namespace DRAMsimII
 			ar & const_cast<unsigned&>(originalTransaction);
 		}
 	};
+
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction::TransactionType );
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction&);
+
 }
 #endif

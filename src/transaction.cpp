@@ -16,6 +16,8 @@
 
 #include "transaction.h"
 
+#include <iomanip>
+
 using std::ostream;
 using std::dec;
 using std::hex;
@@ -112,37 +114,36 @@ bool Transaction::operator !=(const Transaction& right) const
 /// prints the key attributes of a transaction
 ostream &DRAMsimII::operator<<(ostream &os, const Transaction& thisTransaction)
 {	
-	os << thisTransaction.getType() << (Event&)thisTransaction;
-	return os;
+	return os << thisTransaction.getType() << ((Event&)thisTransaction);
 }
 
 /// decodes and prints the transaction type
-ostream &DRAMsimII::operator<<(ostream &os, const TransactionType type)
+ostream &DRAMsimII::operator<<(ostream &os, const Transaction::TransactionType type)
 {
 	switch (type)
 	{
-	case IFETCH_TRANSACTION:
+	case Transaction::IFETCH_TRANSACTION:
 		os << "FETCH  ";
 		break;
-	case WRITE_TRANSACTION:
+	case Transaction::WRITE_TRANSACTION:
 		os << "WRITE  ";
 		break;
-	case READ_TRANSACTION:
+	case Transaction::READ_TRANSACTION:
 		os << "READ   ";
 		break;
-	case PREFETCH_TRANSACTION:
+	case Transaction::PREFETCH_TRANSACTION:
 		os << "PREFET ";
 		break;
-	case AUTO_REFRESH_TRANSACTION:
+	case Transaction::AUTO_REFRESH_TRANSACTION:
 		os << "REFRSH ";
 		break;
-	case PER_BANK_REFRESH_TRANSACTION:
+	case Transaction::PER_BANK_REFRESH_TRANSACTION:
 		os << "BNKREF ";
 		break;
-	case AUTO_PRECHARGE_TRANSACTION:
+	case Transaction::AUTO_PRECHARGE_TRANSACTION:
 		os << "AUTOPR ";
 		break;
-	case CONTROL_TRANSACTION:
+	case Transaction::CONTROL_TRANSACTION:
 		os << "CTRL   ";
 		break;
 	default:

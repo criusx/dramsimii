@@ -19,7 +19,7 @@
 using namespace DRAMsimII;
 
 BusEvent::BusEvent():
-attributes(CONTROL_TRANSACTION),
+attributes(Transaction::CONTROL_TRANSACTION),
 address(),
 timestamp(0)
 {}

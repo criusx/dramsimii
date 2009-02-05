@@ -20,6 +20,7 @@
 
 #include "globals.h"
 #include "Address.h"
+#include "transaction.h"
 
 namespace DRAMsimII
 {
@@ -29,7 +30,7 @@ namespace DRAMsimII
 	class BusEvent /* 6 DWord per event */
 	{
 	public:
-		TransactionType attributes;
+		Transaction::TransactionType attributes;
 		// read/write/Fetch type stuff. Not overloaded with other stuff
 		Address address; // assume to be <= 32 bits for now
 		tick timestamp; // time stamp will now have a large dynamic range, but only 53 bit precision

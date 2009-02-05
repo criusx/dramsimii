@@ -32,6 +32,28 @@ namespace DRAMsimII
 	/// @brief represents a DRAM command from the memory controller to the DRAMs
 	class Command: public Event
 	{
+	public:
+		enum CommandType
+		{
+			ACTIVATE,							///< open this row
+			READ,								///< read from the open row
+			READ_AND_PRECHARGE,					///< read from the open row and then close it
+			WRITE,								///< write this value to the open row
+			WRITE_AND_PRECHARGE,				///< write this value and then close the row
+			RETIRE_COMMAND,						///< ?
+			PRECHARGE,							///< close this open row
+			PRECHARGE_ALL,						///< precharge each bank in the rank, end of a refresh
+			ACTIVATE_ALL,						///< activate a row in each bank in the rank, half of a refresh
+			DRIVE_COMMAND,						///< ?
+			DATA_COMMAND,						///< for FBD, holds data instead of a command
+			CAS_WITH_DRIVE_COMMAND,				///< ?
+			REFRESH_ALL,						///< refresh all banks in the rank
+			SELF_REFRESH,						///< put the rank into self refresh mode
+			DESELECT,							///< command inhibit, does not allow new commands to be executed
+			NOOP,								///< the no operation command
+			INVALID_COMMAND						///< no command, or not a valid command at this time
+		};
+
 	protected:
 		static Queue<Command> freeCommandPool; ///< command objects are stored here to avoid allocating memory after initialization
 
@@ -61,6 +83,7 @@ namespace DRAMsimII
 		explicit Command(const Command&);
 		explicit Command();		
 		explicit Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
+		explicit Command(Transaction& hostTransaction, const Address &addr, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
 		~Command();
 
 		// accessors
@@ -68,8 +91,10 @@ namespace DRAMsimII
 		Transaction *getHost() const { return hostTransaction; }
 		unsigned getLength() const { return length; }
 		bool isPostedCAS() const { return postedCAS; }
-		bool isRead() const { return ((commandType == READ) || (commandType == READ_AND_PRECHARGE) || (commandType == IFETCH_TRANSACTION)); }
+		bool isRead() const { return ((commandType == READ) || (commandType == READ_AND_PRECHARGE)); }
 		bool isWrite() const { return ((commandType == WRITE) || (commandType == WRITE_AND_PRECHARGE)); }
+		bool isPrecharge() const { return ((commandType == READ_AND_PRECHARGE) || (commandType == WRITE_AND_PRECHARGE) || (commandType == PRECHARGE)); }
+		bool isRefresh() const { return (commandType == REFRESH_ALL); }
 		bool isReadOrWrite() const { return isRead() || isWrite(); }
 
 		// mutators
@@ -77,7 +102,7 @@ namespace DRAMsimII
 		void setAutoPrecharge(const bool autoPrecharge) const;
 
 		// friends
-		friend std::ostream &DRAMsimII::operator<<(std::ostream &, const DRAMsimII::Command &);	
+		friend std::ostream &DRAMsimII::operator<<(std::ostream &,const Command &);	
 
 		// overloads
 		bool operator==(const Command& right) const;
@@ -98,5 +123,7 @@ namespace DRAMsimII
 			ar & commandType & hostTransaction & postedCAS & length;
 		}
 	};	
+
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);
 }
 #endif

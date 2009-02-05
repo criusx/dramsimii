@@ -112,7 +112,7 @@ namespace DRAMsimII
 		// mutators
 		void setTime(tick value) { time = value; }						///< update the time for this channel
 		void setChannelID(const unsigned value) { channelID = value; }	///< set the channel ordinal
-		TransactionType setReadWriteType(const int,const int) const;	///< determine whether a read or write transaction should be generated
+		Transaction::TransactionType setReadWriteType(const int,const int) const;	///< determine whether a read or write transaction should be generated
 
 		// overloads
 		Channel& operator =(const Channel& rs);

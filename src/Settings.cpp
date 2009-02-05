@@ -39,8 +39,8 @@ settingsOutputFile(""),
 epoch(UINT_MAX),
 inFile(""),
 sessionID(""),
-arrivalDistributionModel(NORMAL_DISTRIBUTION),
-inFileType(MASE_TRACE),
+arrivalDistributionModel(InputStream::NORMAL_DISTRIBUTION),
+inFileType(InputStream::MASE_TRACE),
 outFile(""),
 outFileDir(""),
 commandLine(""),
@@ -66,7 +66,7 @@ refreshQueueDepth(0),
 refreshTime(0),
 seniorityAgeLimit(0),
 rowBufferManagementPolicy(OPEN_PAGE),
-addressMappingScheme(BURGER_BASE_MAP),
+addressMappingScheme(Address::BURGER_BASE_MAP),
 postedCAS(false),
 readWriteGrouping(true),
 autoPrecharge(false),
@@ -376,23 +376,23 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 		break;
 	case addr_mapping_scheme_token:
 		if (nodeValue == "burgerbase")
-			addressMappingScheme = BURGER_BASE_MAP;
+			addressMappingScheme = Address::BURGER_BASE_MAP;
 		else if (nodeValue == "closepagebaseline")
-			addressMappingScheme = CLOSE_PAGE_BASELINE;
+			addressMappingScheme = Address::CLOSE_PAGE_BASELINE;
 		else if (nodeValue == "intel845g")
-			addressMappingScheme = INTEL845G_MAP;
+			addressMappingScheme = Address::INTEL845G_MAP;
 		else if (nodeValue == "sdrambase")
-			addressMappingScheme = SDRAM_BASE_MAP;
+			addressMappingScheme = Address::SDRAM_BASE_MAP;
 		else if (nodeValue == "sdramclosepage")
-			addressMappingScheme = SDRAM_CLOSE_PAGE_MAP;
+			addressMappingScheme = Address::SDRAM_CLOSE_PAGE_MAP;
 		else if (nodeValue == "sdramhiperf")
-			addressMappingScheme = SDRAM_HIPERF_MAP;
+			addressMappingScheme = Address::SDRAM_HIPERF_MAP;
 		else if (nodeValue == "closepagehighlocality")
-			addressMappingScheme = CLOSE_PAGE_HIGH_LOCALITY;
+			addressMappingScheme = Address::CLOSE_PAGE_HIGH_LOCALITY;
 		else if (nodeValue == "closepagelowlocality")
-			addressMappingScheme = CLOSE_PAGE_LOW_LOCALITY;
+			addressMappingScheme = Address::CLOSE_PAGE_LOW_LOCALITY;
 		else
-			addressMappingScheme = SDRAM_HIPERF_MAP;
+			addressMappingScheme = Address::SDRAM_HIPERF_MAP;
 		break;
 	case auto_precharge_token:
 		autoPrecharge = (nodeValue == "true") ? true : false;
@@ -430,27 +430,27 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 		break;
 	case input_type_token:
 		if (nodeValue == "mase")
-			inFileType = MASE_TRACE;
+			inFileType = InputStream::MASE_TRACE;
 		else if (nodeValue == "k6")
-			inFileType = K6_TRACE;
+			inFileType = InputStream::K6_TRACE;
 		else if (nodeValue == "mapped")
-			inFileType = MAPPED;
+			inFileType = InputStream::MAPPED;
 		else if (nodeValue == "random")
-			inFileType = RANDOM;
+			inFileType = InputStream::RANDOM;
 		break;
 	case random_distribution_token:
 		if (nodeValue == "uniform")
-			arrivalDistributionModel = UNIFORM_DISTRIBUTION;
+			arrivalDistributionModel = InputStream::UNIFORM_DISTRIBUTION;
 		else if (nodeValue == "poisson")
-			arrivalDistributionModel = POISSON_DISTRIBUTION;
+			arrivalDistributionModel = InputStream::POISSON_DISTRIBUTION;
 		else if (nodeValue == "gaussian")
-			arrivalDistributionModel = GAUSSIAN_DISTRIBUTION;
+			arrivalDistributionModel = InputStream::GAUSSIAN_DISTRIBUTION;
 		else if (nodeValue == "normal")
-			arrivalDistributionModel = NORMAL_DISTRIBUTION;
+			arrivalDistributionModel = InputStream::NORMAL_DISTRIBUTION;
 		else
 		{
 			cerr << "warn: Unrecognized distribution model: \"" << nodeValue << "\", defaulting to uniform";
-			arrivalDistributionModel = NORMAL_DISTRIBUTION;
+			arrivalDistributionModel = InputStream::NORMAL_DISTRIBUTION;
 		}
 		break;
 	case output_file_type_token:

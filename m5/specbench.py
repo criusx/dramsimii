@@ -68,6 +68,20 @@ mcf.cmd = [mcf.executable] + [data]
 cmdLineDict["mcf"] = '429.mcf.test.inp'
 liveProcessDict["mcf"] = mcf
 
+mcfref = LiveProcess()
+mcfref.executable = mcf.executable
+data = os.path.join(data_dir, '429.mcf/data/ref/input/inp.in')
+mcfref.cmd = [mcfref.executable] + [data]
+cmdLineDict["mcfref"] = '429.mcf.ref'
+liveProcessDict["mcfref"] = mcfref
+
+mcftrain = LiveProcess()
+mcftrain.executable = mcf.executable
+data = os.path.join(data_dir, '429.mcf/data/train/input/inp.in')
+mcftrain.cmd = [mcftrain.executable] + [data]
+cmdLineDict["mcftrain"] = '429.mcf.train'
+liveProcessDict["mcftrain"] = mcftrain
+
 #433.milc
 milc = LiveProcess()
 milc.executable = os.path.join(binary_dir, '433.milc/exe/milc_base' + suffix)

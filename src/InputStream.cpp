@@ -27,8 +27,13 @@
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include "InputStream.h"
+#include "Settings.h"
+#include "busEvent.h"
+#include "SystemConfiguration.h"
+#include "Channel.h"
 
 using std::vector;
 using std::dec;
@@ -38,6 +43,18 @@ using std::endl;
 using std::string;
 using std::ostream;
 using namespace DRAMsimII;
+
+#ifndef WIN32
+#include <boost/iostreams/filter/bzip2.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
+using boost::iostreams::bzip2_decompressor;
+using boost::iostreams::gzip_decompressor;
+using boost::iostreams::gzip_params;
+#endif
+
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+
 
 #define COMPRESS_INCOMING_TRANSACTIONS 0
 
@@ -56,59 +73,75 @@ rowLocality(1.0F / settings.rowCount),
 readPercentage(settings.readPercentage),
 shortBurstRatio(settings.shortBurstRatio),
 arrivalThreshold(0.0F),
-cpuToMemoryRatio(settings.cpuToMemoryClockRatio),
+cpuToMemoryRatio(settings.dataRate * 1E-9),
 averageInterarrivalCycleCount(settings.averageInterarrivalCycleCount),
 interarrivalDistributionModel(settings.arrivalDistributionModel),
 traceFilename(settings.inFile),
 randomNumberGenerator(std::time(0)),
 rngDistributionModel(0,1),
 rngIntDistributionModel(0u,16383u),
+gaussianDistribution(settings.averageInterarrivalCycleCount,8),
 rngGenerator(randomNumberGenerator, rngDistributionModel),
-rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
+rngIntGenerator(randomNumberGenerator, rngIntDistributionModel),
+arrivalGenerator(randomNumberGenerator, gaussianDistribution)
 {
-	using namespace boost::algorithm;
 	using boost::iostreams::file_source;
 	using namespace boost::filesystem;
+	using boost::algorithm::ends_with;
+
 	if (interarrivalDistributionModel == UNIFORM_DISTRIBUTION)
 		arrivalThreshold = 1.0 - (1.0 / (double)averageInterarrivalCycleCount);
 	else if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
-		arrivalThreshold = 1.0 - (1.0 / boxMuller((double)averageInterarrivalCycleCount, 10));
+		arrivalThreshold = 1.0 - (1.0 / boxMuller((double)averageInterarrivalCycleCount, 10));	
 	if (arrivalThreshold > 1.0F)
 		arrivalThreshold = 1.0F / arrivalThreshold;
 
-	if (!settings.inFile.empty() && (type != RANDOM))
+	if (!traceFilename.empty() && (type != RANDOM))
 	{
-		//traceFile.open(settings.inFile.c_str());
-
-		if (!traceFile.good())
-		{
-			boost::filesystem::path cwd(boost::filesystem::current_path());
-			cwd = cwd / "traceFiles" / settings.inFile;
-			string inFileWithPath = cwd.string();
-#ifdef WIN32
-			boost::replace_all(inFileWithPath,"/","\\");
-#endif // WIN32
+		if (!traceFile.is_complete() || !traceFile.good())
+		{			
 #ifndef WIN32
 			if (ends_with(traceFilename,"gz"))
 				traceFile.push(gzip_decompressor());
 			else if (ends_with(traceFilename,"bz2") || ends_with(traceFilename,"bz"))
 				traceFile.push(bzip2_decompressor());
 #endif
-
-			if (!exists(inFileWithPath))
+			path inFileWithPath(traceFilename);
+			// first check the absolute path
+			if (!exists(inFileWithPath) || !is_regular(inFileWithPath))
 			{
-				cerr << "Unable to open trace file \"" << inFileWithPath << "\"" << endl;
-				exit(-9);
+				inFileWithPath = current_path() / traceFilename;
+
+				// then check the traceFiles dir
+				if (!exists(inFileWithPath) || !is_regular(inFileWithPath))
+				{
+					inFileWithPath = current_path() / "traceFiles" / settings.inFile;
+
+					if (!exists(inFileWithPath) || !is_regular(inFileWithPath))
+					{
+						cerr << "Unable to open trace file \"" << settings.inFile << "\"" << endl;
+						exit(-9);
+					}
+					else
+					{
+						traceFile.push(file_source(inFileWithPath.string().c_str()));
+					}
+				}
+				else
+				{
+					traceFile.push(file_source(inFileWithPath.string().c_str()));
+				}
+			}
+			else
+			{
+				traceFile.push(file_source(inFileWithPath.string().c_str()));
 			}
 			
-			traceFile.push(file_source(inFileWithPath.c_str()));
-
 			if (!traceFile.is_complete())
 			{
 				cerr << "Unable to open trace file \"" << settings.inFile << "\"" << endl;
 				exit(-9);
 			}
-						
 		}
 	}
 }
@@ -123,8 +156,10 @@ interarrivalDistributionModel(arrivalDistributionModel),
 randomNumberGenerator(std::time(0)),
 rngDistributionModel(0,1),
 rngIntDistributionModel(0u,16383u),
+gaussianDistribution(averageInterarrivalCycleCount, 8),
 rngGenerator(randomNumberGenerator, rngDistributionModel),
-rngIntGenerator(randomNumberGenerator, rngIntDistributionModel)
+rngIntGenerator(randomNumberGenerator, rngIntDistributionModel),
+arrivalGenerator(randomNumberGenerator, gaussianDistribution)
 {
 	using namespace boost::algorithm;
 	using boost::iostreams::file_source;
@@ -187,8 +222,10 @@ interarrivalDistributionModel(rhs.interarrivalDistributionModel),
 randomNumberGenerator(rhs.randomNumberGenerator),
 rngDistributionModel(rhs.rngDistributionModel),
 rngIntDistributionModel(rhs.rngIntDistributionModel),
+gaussianDistribution(rhs.gaussianDistribution),
 rngGenerator(rhs.rngGenerator),
-rngIntGenerator(rhs.rngIntGenerator)
+rngIntGenerator(rhs.rngIntGenerator),
+arrivalGenerator(rhs.arrivalGenerator)
 {}
 
 InputStream::InputStream(const InputStream& rhs, const SystemConfiguration &systemConfigVal, const vector<Channel> &systemChannel):
@@ -210,8 +247,10 @@ interarrivalDistributionModel(rhs.interarrivalDistributionModel),
 randomNumberGenerator(rhs.randomNumberGenerator),
 rngDistributionModel(rhs.rngDistributionModel),
 rngIntDistributionModel(rhs.rngIntDistributionModel),
+gaussianDistribution(rhs.gaussianDistribution),
 rngGenerator(rhs.rngGenerator),
-rngIntGenerator(rhs.rngIntGenerator)
+rngIntGenerator(rhs.rngIntGenerator),
+arrivalGenerator(rhs.arrivalGenerator)
 {}
 
 //////////////////////////////////////////////////////////////////////
@@ -324,7 +363,7 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 	case K6_TRACE:	
 		{
 			//int base_control;
-			enum TransactionType attributes;
+			Transaction::TransactionType attributes;
 			int burst_length = 4; // Socket 7 cachelines are 32 byte long, burst of 4
 			int burst_count = 0;
 			bool bursting = true;
@@ -352,11 +391,11 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 
 				if (control == MEM_WR)
 				{
-					attributes = WRITE_TRANSACTION;
+					attributes = Transaction::WRITE_TRANSACTION;
 				}
 				else
 				{
-					attributes = READ_TRANSACTION;
+					attributes = Transaction::READ_TRANSACTION;
 				}
 
 				traceFile >> input;
@@ -372,7 +411,7 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 					bursting = false;
 					timestamp = static_cast<tick>(static_cast<double>(timestamp) * ascii2multiplier(input));
 					thisEvent.address.setPhysicalAddress(0x3FFFFFFF & address); // mask out top addr bit
-					thisEvent.attributes = CONTROL_TRANSACTION;
+					thisEvent.attributes = Transaction::CONTROL_TRANSACTION;
 					thisEvent.timestamp = timestamp;
 					burst_count = 1;
 				}
@@ -392,25 +431,25 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 			thisEvent.address.setPhysicalAddress(tempPA);
 
 			//thisEvent.timestamp /= 40000;
-			thisEvent.timestamp /= cpuToMemoryRatio;
+
+			//thisEvent.timestamp /= cpuToMemoryRatio;
+			thisEvent.timestamp *= cpuToMemoryRatio;
 			if(!traceFile.good()) /// found starting Hex address 
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;
 				return false;
 			}
 
-			FileIOToken control = Settings::dramTokenizer(input);
-
-			switch (control)
+			switch (Settings::dramTokenizer(input))
 			{
 			case FETCH:
-				thisEvent.attributes = IFETCH_TRANSACTION;
+				thisEvent.attributes = Transaction::IFETCH_TRANSACTION;
 				break;
 			case MEM_RD:
-				thisEvent.attributes = READ_TRANSACTION;
+				thisEvent.attributes = Transaction::READ_TRANSACTION;
 				break;
 			case MEM_WR:
-				thisEvent.attributes = WRITE_TRANSACTION;
+				thisEvent.attributes = Transaction::WRITE_TRANSACTION;
 				break;
 			case unknown_token:
 				cerr << "Unknown Token Found " << input << endl;
@@ -446,13 +485,13 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 				return false;
 				break;
 			case FETCH:
-				thisEvent.attributes = IFETCH_TRANSACTION;
+				thisEvent.attributes = Transaction::IFETCH_TRANSACTION;
 				break;
 			case MEM_RD:
-				thisEvent.attributes = READ_TRANSACTION;
+				thisEvent.attributes = Transaction::READ_TRANSACTION;
 				break;
 			case MEM_WR:
-				thisEvent.attributes = WRITE_TRANSACTION;
+				thisEvent.attributes = Transaction::WRITE_TRANSACTION;
 				break;
 			default:
 				cerr << "Unexpected transaction type: " << input;
@@ -462,6 +501,8 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 		}
 		break;
 	default:
+		cerr << "Unknown address trace type" << endl;
+		exit(-8);
 		break;
 	}
 
@@ -470,7 +511,7 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 	return true;
 }
 
-enum InputType InputStream::toInputToken(const string &input) const
+InputStream::InputType InputStream::toInputToken(const string &input) const
 {
 	if (input == "k6" || input == "K6")
 		return K6_TRACE;
@@ -618,7 +659,7 @@ Transaction *InputStream::getNextRandomRequest()
 		}
 		// else leave it as is
 
-		TransactionType nextType = (readPercentage > rngGenerator()) ? READ_TRANSACTION : WRITE_TRANSACTION;
+		Transaction::TransactionType nextType = (readPercentage > rngGenerator()) ? Transaction::READ_TRANSACTION : Transaction::WRITE_TRANSACTION;
 
 		unsigned burstLength = (shortBurstRatio > rngGenerator()) ? 4 : 8;
 
@@ -626,33 +667,54 @@ Transaction *InputStream::getNextRandomRequest()
 
 		assert(arrivalThreshold <= 1.0F);
 
-		while (true)
+		unsigned nextTime = 0;
+
+		switch (interarrivalDistributionModel)
 		{
-			if (arrivalThreshold < rngGenerator()) // interarrival probability function
+		case GAUSSIAN_DISTRIBUTION:
+			while (true)
 			{
-				// Gaussian distribution function
-				if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
+				if (arrivalThreshold < rngGenerator()) // interarrival probability function
 				{
 					arrivalThreshold = 1.0F - (1.0F / abs(boxMuller(averageInterarrivalCycleCount, 10)));
 					assert(arrivalThreshold <= 1.0F);
+					break;
 				}
-				// Poisson distribution function
-				else if (interarrivalDistributionModel == POISSON_DISTRIBUTION)
+				else
+				{
+					nextTime++;
+				}
+			}
+			break;
+		case POISSON_DISTRIBUTION:
+			while (true)
+			{
+				if (arrivalThreshold < rngGenerator()) // interarrival probability function
 				{
 					arrivalThreshold = 1.0F - (1.0F / Poisson(averageInterarrivalCycleCount));
 					assert(arrivalThreshold <= 1.0F);
+					break;
 				}
-				break;
+				else
+				{
+					nextTime++;
+				}
 			}
-			else
-			{
-				time = time + 1;
-			}
+			break;
+		case UNIFORM_DISTRIBUTION:
+		case LOGNORMAL_DISTRIBUTION:
+		case NORMAL_DISTRIBUTION:
+			nextTime = (int)std::max(0.0,arrivalGenerator());
+			break;
+
 		}
+
 
 		// set arrival time
 
 		static Address nextAddress;
+
+		time += nextTime;
 
 		nextAddress.setAddress(nextChannel,nextRank,nextBank,nextRow,nextColumn);
 

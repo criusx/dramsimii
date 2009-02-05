@@ -33,10 +33,10 @@ WHCC(settings.rankCount * settings.bankCount * 2)
 	casCount[3] = 0;
 	WHCCOffset[0] = 0;
 	WHCCOffset[1] = 0;
-	transactionType[0] = READ_TRANSACTION;
-	transactionType[1] = READ_TRANSACTION;
-	transactionType[2] = READ_TRANSACTION;
-	transactionType[3] = READ_TRANSACTION;
+	transactionType[0] = Transaction::READ_TRANSACTION;
+	transactionType[1] = Transaction::READ_TRANSACTION;
+	transactionType[2] = Transaction::READ_TRANSACTION;
+	transactionType[3] = Transaction::READ_TRANSACTION;
 #if 0
 	Command *temp_c;
 

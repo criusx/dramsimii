@@ -142,17 +142,17 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 {
 	switch (currentCommand->getCommandType())
 	{
-	case READ_AND_PRECHARGE:
+	case Command::READ_AND_PRECHARGE:
 		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), lastRASTime + timing.tRAS());
 		// see figure 11.28 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
 		lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), lastRASTime + timing.tRAS());
 		break;
-	case WRITE_AND_PRECHARGE:
+	case Command::WRITE_AND_PRECHARGE:
 		// see figure 11.29 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
 		// obeys minimum timing, but also supports tRAS lockout
 		lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), lastRASTime + timing.tRAS());
 		break;
-	case PRECHARGE:
+	case Command::PRECHARGE:
 		lastPrechargeTime = currentTime;
 		break;
 	default:
@@ -171,7 +171,8 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
-	assert(activated && openRowID == currentCommand->getAddress().getRow());
+	//assert(activated);
+	assert(openRowID == currentCommand->getAddress().getRow());
 	
 	lastCASTime = currentTime + timing.tAL();
 
@@ -185,7 +186,8 @@ void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 {	
-	assert(activated && openRowID == currentCommand->getAddress().getRow());
+	//assert(activated);
+	assert(openRowID == currentCommand->getAddress().getRow());
 
 	lastCASWTime = currentTime + timing.tAL();
 
@@ -199,6 +201,7 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 {
+	assert(!activated);
 	lastRefreshAllTime = currentTime;
 }
 
@@ -284,7 +287,7 @@ bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-			else if ((currentCommand->getCommandType() == PRECHARGE) && (currentCommand->getAddress().getRow() == value->getAddress().getRow())) 
+			else if (currentCommand->isReadOrWrite() && (currentCommand->getAddress().getRow() == value->getAddress().getRow())) 
 			{
 				return true;
 			}
@@ -294,6 +297,12 @@ bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 			{
 				return false;
 			}
+		}
+		// if the correct row is already open, just insert there
+		// already guaranteed not to have RAW/WAR errors
+		if (activated && openRowID == value->getAddress().getRow())
+		{	
+			return true;
 		}
 		return false;
 	}
@@ -324,7 +333,7 @@ bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tic
 			else
 			{
 				// check that things are in order
-				assert(perBankQueue[index + 1]->getCommandType() == PRECHARGE);
+				assert(perBankQueue[index + 1]->isPrecharge());
 			}
 
 			bool result = perBankQueue.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);
@@ -356,7 +365,7 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 			if (!systemConfig.isAutoPrecharge())
 			{
 				// check that things are in order
-				assert(perBankQueue[index + 1]->getCommandType() == PRECHARGE);
+				assert(perBankQueue[index + 1]->isPrecharge());
 			}
 			return true;
 		}

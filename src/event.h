@@ -18,7 +18,7 @@
 #define EVENT_H
 #pragma once
 
-#include "globals.h"
+//#include "globals.h"
 #include "Address.h"
 
 #include <boost/serialization/base_object.hpp>
@@ -107,8 +107,9 @@ namespace DRAMsimII
 		void setCompletionTime(const tick ct) { completionTime = ct; }
 		
 		// friends
-		friend std::ostream &DRAMsimII::operator<<(std::ostream &, const DRAMsimII::Event &);	
-	
+		friend std::ostream &DRAMsimII::operator<<(std::ostream &, const Event &);		
+		
+		// overloads
 		bool operator==(const Event& right) const
 		{
 			return (arrivalTime == right.arrivalTime && enqueueTime == right.enqueueTime && startTime == right.startTime && completionTime == right.completionTime && address == right.getAddress());

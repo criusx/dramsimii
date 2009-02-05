@@ -77,7 +77,7 @@ namespace DRAMsimII
 		unsigned moveAllChannelsToTime(const tick endTime, tick& transFinishTime);
 		bool enqueue(Transaction* trans);
 		void enqueueTimeShift(Transaction* trans);
-		InputStatus waitForTransactionToFinish(Transaction *trans);
+		InputStream::InputStatus waitForTransactionToFinish(Transaction *trans);
 		virtual tick nextTick() const;
 		void runSimulations(const unsigned requestCount = 0);
 

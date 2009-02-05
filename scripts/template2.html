@@ -69,16 +69,16 @@
             tbody td a
             {
                 background: transparent;
-                /*background-color:white;*/
+            /* background-color:white; */
                 color: #72724c;
                 text-decoration: none;
-                /*border-bottom: 1px dotted #cc9;*/
+            /* border-bottom: 1px dotted #cc9; */
             }
             
             tbody td a:hover
             {
                 background: transparent;
-                /*background-color:white;*/
+            /* background-color:white; */
                 color: #666;
                 border-bottom: 1px dotted #72724c;
             }
@@ -86,11 +86,11 @@
             tbody th a
             {
                 background: transparent;
-                /*background-color:white;*/
+            /* background-color:white; */
                 color: #72724c;
                 text-decoration: none;
                 font-weight:bold;
-                /*border-bottom: 1px dotted #cc9;*/
+            /* border-bottom: 1px dotted #cc9; */
             }
             
             tbody th a:hover
@@ -98,7 +98,7 @@
                 background: transparent;
                 background-color:white;
                 color: #666;
-                /*border-bottom: 1px dotted #72724c;*/
+            /* border-bottom: 1px dotted #72724c; */
             }
             
             tfoot td
@@ -125,30 +125,50 @@
                 color: #333;
                 background: #ddd59b;
             }</style>
+        <script type="text/javascript" src="./js/jquery-1.3.1.min.js"> </script>
+        <script type="text/javascript" src="./js/jquery.tablesorter.min.js"> </script>
+
+        <script type="text/javascript">
+            $(document) .ready(function ()
+            {
+                
+                // call the tablesorter plugin
+                $("table") .tablesorter(
+                {
+                    widgets: [ 'zebra' ],
+                    // define a custom text extraction function
+                    textExtraction: function (node)
+                    {
+                        // extract data from markup and return it
+                        return node.childNodes[0].innerHTML;
+                    }
+                });
+            });</script>
+
         <title>Images</title>
     </head>
     <body style="text-align:center">
         <div id="links">
-            <table>
+            <table id="resultsTable">
                 <thead>
                     <tr>
-                        <td>Benchmark</td>
-                        <td>Channels</td>
-                        <td>Ranks</td>
-                        <td>Banks</td>
-                        <td>Rows</td>
-                        <td>Columns</td>
-                        <td>DRAM Width</td>
-                        <td>t<sub>RAS</sub></td>
-                        <td>t<sub>CAS</sub></td>
-                        <td>t<sub>RCD</sub></td>
-                        <td>t<sub>RC</sub></td>
-                        <td>Address Mapping Policy</td>
-                        <td>Command Ordering Algorithm</td>
-                        <td>Row Buffer Management Policy</td>
-                        <td>Datarate</td>
-                        <td>Per Bank Queue Depth</td>
-                        <td>t<sub>FAW</sub></td>
+                        <th>Benchmark</th>
+                        <th>Channels</th>
+                        <th>Ranks</th>
+                        <th>Banks</th>
+                        <th>Rows</th>
+                        <th>Columns</th>
+                        <th>DRAM Width</th>
+                        <th>t<sub>RAS</sub></th>
+                        <th>t<sub>CAS</sub></th>
+                        <th>t<sub>RCD</sub></th>
+                        <th>t<sub>RC</sub></th>
+                        <th>Address Mapping Policy</th>
+                        <th>Command Ordering Algorithm</th>
+                        <th>Row Buffer Management Policy</th>
+                        <th>Datarate</th>
+                        <th>Per Bank Queue Depth</th>
+                        <th>t<sub>FAW</sub></th>
                     </tr>
                 </thead>
                 <tbody> @@@</tbody>

@@ -205,6 +205,7 @@ namespace DRAMsimII
 			else
 			{
 				T* theItem = entry[tail];
+				entry[tail] = NULL;
 				count--;
 				tail = tail - 1 >= 0 ? tail - 1 : entry.size() - 1; // decrease the tail pointer
 				return theItem;

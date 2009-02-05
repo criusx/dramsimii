@@ -104,10 +104,12 @@ void M5dramSystem::moveToTime(const tick now)
 
 				static tick returnCount;
 
+#if 0
 				if (++returnCount % 10000 == 0)
 				{
 					cerr << returnCount << "\r";
 				}
+#endif
 			}
 			else
 			{				
@@ -484,12 +486,12 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	}
 	else if (pkt->needsResponse() || pkt->isWrite())
 	{
-		TransactionType packetType = PREFETCH_TRANSACTION;
+		Transaction::TransactionType packetType = Transaction::PREFETCH_TRANSACTION;
 
 		if (pkt->isRead())
-			packetType = READ_TRANSACTION;
+			packetType = Transaction::READ_TRANSACTION;
 		else if (pkt->isWrite())
-			packetType = WRITE_TRANSACTION;
+			packetType = Transaction::WRITE_TRANSACTION;
 
 		
 		assert((pkt->isRead() && pkt->needsResponse()) || (!pkt->isRead() && !pkt->needsResponse()));

@@ -153,14 +153,8 @@ nextStats(settings.epoch)
 			stringstream statsFilename;		
 			stringstream settingsFilename;
 			
-			timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
-			powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
-			statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-			settingsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";
-			
-			while (fileExists(timingFilename) || fileExists(powerFilename) || fileExists(statsFilename) || fileExists(settingsFilename))
+			do
 			{
-				counter++;
 				timingFilename.str("");
 				powerFilename.str("");
 				statsFilename.str("");
@@ -168,14 +162,15 @@ nextStats(settings.epoch)
 				timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
 				powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
 				statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-				settingsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";				
-			}
+				settingsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";	
+				counter++;
+
+			} while (fileExists(timingFilename) || fileExists(powerFilename) || fileExists(statsFilename) || fileExists(settingsFilename));
 			
 			timingOutStream.push(file_sink(timingFilename.str().c_str()));
 			powerOutStream.push(file_sink(powerFilename.str().c_str()));
 			statsOutStream.push(file_sink(statsFilename.str().c_str()));
 			ofstream settingsOutStream(settingsFilename.str().c_str());
-
 
 			if (!timingOutStream.good())
 			{
@@ -204,13 +199,17 @@ nextStats(settings.epoch)
 			}
 		}
 	}
+	string commandLine(settings.commandLine);
+
+	if (commandLine.length() < 1)
+	{
+		if (settings.inFileType == InputStream::RANDOM)
+			commandLine = "Random";
+		else if (settings.inFileType == InputStream::MASE_TRACE)
+			commandLine = "maseTrace";
+	}
 	// else printing to these streams goes nowhere
-
-	statsOutStream<< "+ total" << endl << "- epoch" << endl;
-
-	powerOutStream << "+ total" << endl << "- epoch" << endl;
-
-	statsOutStream << "----Command Line: " << settings.commandLine << " ch[" << settings.channelCount <<
+	statsOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
@@ -218,7 +217,7 @@ nextStats(settings.epoch)
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << 
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
-	powerOutStream << "----Command Line: " << settings.commandLine << " ch[" << settings.channelCount <<
+	powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
@@ -358,7 +357,7 @@ void System::updateSystemTime()
 //////////////////////////////////////////////////////////////////////
 bool System::enqueue(Transaction *currentTransaction)
 {
-	assert(currentTransaction->getType() != AUTO_REFRESH_TRANSACTION);
+	assert(!currentTransaction->isRefresh());
 
 	// attempt to insert the transaction into the per-channel transaction queue
 	bool result = channel[currentTransaction->getAddress().getChannel()].enqueue(currentTransaction);

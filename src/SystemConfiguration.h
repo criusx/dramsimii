@@ -20,6 +20,7 @@
 
 #include "globals.h"
 #include "Settings.h"
+#include "Address.h"
 
 #include <fstream>
 
@@ -44,7 +45,7 @@ namespace DRAMsimII
 		unsigned seniorityAgeLimit;										///< the oldest a command may be before it takes top priority
 		DRAMType dramType; 
 		RowBufferPolicy rowBufferManagementPolicy;						///< row buffer management policy? OPEN/CLOSE, etc 
-		AddressMappingScheme addressMappingScheme;						///< addr mapping scheme for physical to DRAM addr 
+		Address::AddressMappingScheme addressMappingScheme;						///< addr mapping scheme for physical to DRAM addr 
 		double datarate;												///< the operating frequency of the system
 		bool postedCAS;													///< TRUE/FALSE, so the CAS command may be stored and run later
 		bool readWriteGrouping;											///< whether or not reads and writes should be grouped closely
@@ -67,7 +68,7 @@ namespace DRAMsimII
 		
 		// accessors
 		RowBufferPolicy getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }
-		AddressMappingScheme getAddressMappingScheme() const { return addressMappingScheme; }
+		Address::AddressMappingScheme getAddressMappingScheme() const { return addressMappingScheme; }
 		CommandOrderingAlgorithm getCommandOrderingAlgorithm() const { return commandOrderingAlgorithm; }
 		TransactionOrderingAlgorithm getTransactionOrderingAlgorithm() const { return transactionOrderingAlgorithm; }
 		SystemConfigurationType getConfigType() const { return configType; }

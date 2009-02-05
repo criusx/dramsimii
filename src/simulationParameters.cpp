@@ -20,7 +20,7 @@ using namespace DRAMsimII;
 
 SimulationParameters::SimulationParameters(const Settings& settings):
 requestCount(settings.requestCount),
-inputType(RANDOM)
+inputType(InputStream::RANDOM)
 {}
 
 std::ostream& DRAMsimII::operator<<(std::ostream& in, const SimulationParameters& params)

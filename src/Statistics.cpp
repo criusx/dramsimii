@@ -115,7 +115,7 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 
 void Statistics::collectCommandStats(const Command *currentCommand)
 {
-	if (currentCommand->getCommandType() != REFRESH_ALL)
+	if (!currentCommand->isRefresh())
 	{
 		commandDelay[currentCommand->getDelayTime()]++;
 		commandExecution[currentCommand->getExecuteTime()]++;

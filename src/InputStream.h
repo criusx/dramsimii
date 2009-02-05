@@ -19,22 +19,47 @@
 #pragma once
 
 #include "globals.h"
-#include "busEvent.h"
-#include "Settings.h"
-#include "SystemConfiguration.h"
-#include "Channel.h"
 
 #include <fstream>
 #include <map>
 #include <vector>
 #include <boost/random.hpp>
 #include <boost/random/variate_generator.hpp>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
 
 namespace DRAMsimII
 {
 	/// @brief creates transactions in standalone mode, whether random or from a trace file
 	class InputStream
 	{
+	public:
+		enum InputType
+		{
+			K6_TRACE,
+			MASE_TRACE,
+			RANDOM,
+			MAPPED,
+			ALPHASIM,
+			GEMS
+		};
+
+		enum DistributionType
+		{
+			UNIFORM_DISTRIBUTION,
+			GAUSSIAN_DISTRIBUTION,
+			POISSON_DISTRIBUTION,
+			NORMAL_DISTRIBUTION,
+			LOGNORMAL_DISTRIBUTION
+		};
+
+		enum InputStatus
+		{
+			FAILURE,
+			SUCCESS
+		};
+
 	protected:
 
 		InputType type;								///< trace type or random number generator
@@ -57,8 +82,10 @@ namespace DRAMsimII
 		boost::mt19937 randomNumberGenerator;
 		boost::uniform_real<> rngDistributionModel;	///< generates a random distribution from the set of [0:1)
 		boost::uniform_int<> rngIntDistributionModel; ///< generates a distribution of integers
+		boost::normal_distribution<> gaussianDistribution; ///< creates a Gaussian distribution
 		mutable boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rngGenerator;
 		boost::variate_generator<boost::mt19937&, boost::uniform_int<> > rngIntGenerator;
+		boost::variate_generator<boost::mt19937, boost::normal_distribution<> > arrivalGenerator;
 		
 	public: 
 
@@ -149,5 +176,8 @@ namespace DRAMsimII
 			//t->traceFile.seekg(location);
 		}
 	};
+
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
+
 }
 #endif

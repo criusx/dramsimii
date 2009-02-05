@@ -111,10 +111,10 @@ prechargeTime(0),
 totalPrechargeTime(0),
 lastCASLength(0),
 lastCASWLength(0),
-CASLength(0),
-CASWLength(0),
 otherLastCASLength(0),
 otherLastCASWLength(0),
+CASLength(0),
+CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(0),
 banksPrecharged(0),
@@ -154,11 +154,11 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 
 	switch (currentCommand->getCommandType())
 	{
-	case READ_AND_PRECHARGE:		
-	case WRITE_AND_PRECHARGE:
+	case Command::READ_AND_PRECHARGE:		
+	case Command::WRITE_AND_PRECHARGE:
 		lastPrechargeAnyBankTime = max(lastPrechargeAnyBankTime, currentBank.getLastPrechargeTime());
 		break;
-	case PRECHARGE:
+	case Command::PRECHARGE:
 		lastPrechargeAnyBankTime = currentTime;
 		break;
 	default:
@@ -219,7 +219,7 @@ void Rank::issueREF(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////
 Command *Rank::getCommand(const unsigned thisBank)
 {
-	if (bank[thisBank].nextCommandType() == REFRESH_ALL)
+	if (bank[thisBank].nextCommandType() == Command::REFRESH_ALL)
 	{
 		if (refreshAllReady())
 		{
@@ -232,7 +232,7 @@ Command *Rank::getCommand(const unsigned thisBank)
 
 				tempCommand = currentBank->pop();
 
-				assert(tempCommand->getCommandType() == REFRESH_ALL);
+				assert(tempCommand->isRefresh());
 			}
 
 			return tempCommand;
@@ -265,7 +265,7 @@ bool Rank::refreshAllReady() const
 	for (vector<Bank>::const_iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
 	{
 		// if any queue is empty or the head of any queue isn't a refresh command, then the rank isn't ready for a refresh all command
-		if (currentBank->nextCommandType() != REFRESH_ALL)
+		if (currentBank->nextCommandType() != Command::REFRESH_ALL)
 		{
 			return false;
 		}

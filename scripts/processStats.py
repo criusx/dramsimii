@@ -15,6 +15,8 @@ import re
 from subprocess import Popen, PIPE, STDOUT
 from array import array
 import shutil
+import cProfile, pstats, StringIO
+
 
 #globals
 workerThreads = 2
@@ -33,6 +35,8 @@ extension = 'svg'
 
 #terminal = 'set terminal postscript eps enhanced color font "VeraMono, 10"'
 #extension = 'eps'
+
+powerRegex = re.compile('(?<={)[\d.]+')
 
 class CumulativePriorMovingAverage:
     def __init__(self):
@@ -70,6 +74,7 @@ class PriorMovingAverage:
 
 def gziplines(filename):
     from subprocess import Popen, PIPE
+
     if filename.endswith("gz"):
       #compressedstream = gzip.open(filename, 'rb')
       compressedstream = Popen(['zcat',filename], stdout=PIPE)
@@ -86,7 +91,7 @@ def thumbnail(filelist, tempPath):
     for x in filelist:
         if x.endswith(extension):
             file = os.path.join(tempPath,x)
-            os.system("convert -resize %s %s %s-thumb.png" % (thumbnailResolution, file, file[:-4]))
+            os.system('convert -resize ' + thumbnailResolution + " " + file + " " + '%s-thumb.png' % file[:-4])
             os.system("gzip -c -9 -f %s > %s" % (file, file + "z"))
             os.remove(file)
 
@@ -196,22 +201,20 @@ def processPower(filename):
             if line[0] == '-':
               # normal lines
                 if line[1] == 'P':
-                    startVal = line.find("{")
-                    if startVal > 0:
-                        endVal = line.find("}")
-                        if endVal > 0:
-                            thisPower = float(line[startVal + 1:endVal])
-                            values[writing].append(thisPower)
+                    powerNumber = powerRegex.search(line)
+                    if powerNumber:
+                        thisPower = float(powerNumber.group(0))
+                        values[writing].append(thisPower)
 
-                            writing = (writing + 1) % (valuesPerEpoch)
-                            epochPower += thisPower
-                            if writing == 0:
-                                cumulativePower.add(1.0, epochPower)
-                                averageValues.append(cumulativePower.average)
-                                instantValues.append(epochPower)
-                                powerMovingAverage.append(epochPower)
-                                windowValues.append(powerMovingAverage.average)
-                                epochPower = 0.0
+                        writing = (writing + 1) % (valuesPerEpoch)
+                        epochPower += thisPower
+                        if writing == 0:
+                            cumulativePower.add(1.0, epochPower)
+                            averageValues.append(cumulativePower.average)
+                            instantValues.append(epochPower)
+                            powerMovingAverage.append(epochPower)
+                            windowValues.append(powerMovingAverage.average)
+                            epochPower = 0.0
 
                 elif line.startswith('----Epoch'):
                     splitLine = splitter2.split(line)
@@ -298,7 +301,7 @@ def processPower(filename):
     for u in instantValues:
         p2.stdin.write("%f %f\n" % (epochNumber, u * u * epochTime * epochTime * epochTime))
         epochNumber += epochTime
-    p2.stdin.write("e\nunset multiplot\nunset output\n")
+    p2.stdin.write("e\nunset multiplot\nunset output\nexit\n")
 
     epochNumber = 0.0
     for u in averageValues:
@@ -323,12 +326,16 @@ def processPower(filename):
     thumbnail(filesGenerated, tempPath)
 
     o = open(os.path.join(tempPath,basefilename[0:basefilename.find("-power")] + ".html"),"w")
-    template = open(os.path.join(os.path.abspath(sys.path[0]),"template.html")).read()
+    templateF = open(os.path.join(os.path.abspath(sys.path[0]),"template.html"))
+    template = templateF.read()
+    templateF.close()
     o.write(re.sub("@@@", commandLine,template))
     o.close()
 
     o = open(os.path.join(tempPath,".htaccess"),"w")
-    accessFile = open(os.path.join(os.path.abspath(sys.path[0]),".htaccess")).read()
+    accessFileF = open(os.path.join(os.path.abspath(sys.path[0]),".htaccess"))
+    accessFile = accessFileF.read()
+    accessFileF.close()
     o.write(accessFile)
     o.close()
 
@@ -585,7 +592,7 @@ def processStats(filename):
     ipcBuffer = PriorMovingAverage(Window)
     ipcTotal = CumulativePriorMovingAverage()
 
-    outFileBZ2 = os.path.join(os.getcwd(),  filename.split('.gz')[0] + ".tar.bz2")
+    #outFileBZ2 = os.path.join(os.getcwd(),  filename.split('.gz')[0] + ".tar.bz2")
 
     started = False
     ipcLinesWritten = 0
@@ -1003,29 +1010,31 @@ def processStats(filename):
 
     # make a big file of them all
     #print 'Compress graphs'
-    outputFile = tarfile.open(os.path.join(tempPath,outFileBZ2),'w:bz2')
-    for name in fileList:
-        outputFile.add(name, os.path.basename(name))
+    #outputFile = tarfile.open(os.path.join(tempPath,outFileBZ2),'w:bz2')
+    #for name in fileList:
+    #    outputFile.add(name, os.path.basename(name))
 
-    outputFile.close()
+    #outputFile.close()
 
     thumbnail(fileList, tempPath)
 
     #files = os.listdir(tempPath)
-
-
     #htmlFile = os.path.join(os.path.abspath(sys.path[0]),"template.html")
 
     #shutil.copy(htmlFile, os.path.join(tempPath,basefilename[0:basefilename.find("-stats")] + ".html"))
     o = open(os.path.join(tempPath,basefilename[0:basefilename.find("-stats")] + ".html"),"w")
-    template = open(os.path.join(os.path.abspath(sys.path[0]),"template.html")).read()
+    templateF = open(os.path.join(os.path.abspath(sys.path[0]),"template.html"))
+    template = templateF.read()
     o.write(re.sub("@@@", commandLine,template))
     o.close()
+    templateF.close()
 
     o = open(os.path.join(tempPath,".htaccess"),"w")
-    accessFile = open(os.path.join(os.path.abspath(sys.path[0]),".htaccess")).read()
+    accessFileF = open(os.path.join(os.path.abspath(sys.path[0]),".htaccess"))
+    accessFile = accessFileF.read()
     o.write(accessFile)
     o.close()
+    accessFileF.close()
 
     #os.rmdir(tempPath)
     #os.system("tar cjf " + outFileBZ2 + " --totals " + " ".join(fileList))
@@ -1041,6 +1050,13 @@ def worker():
         try:
             item = workQueue.get()
             if item.endswith("stats.gz") or item.endswith("stats.bz2"):
+                #prof = cProfile.Profile().runctx("processStats(item)", globals(), locals())
+                #stream = StringIO.StringIO()
+                #stats = pstats.Stats(prof, stream=stream)
+                #stats.sort_stats("time")  # Or cumulative
+                #stats.print_stats()  # 80 = how many to print
+                #print stream.getvalue()
+
                 processStats(item)
             elif item.endswith("power.gz") or item.endswith("power.bz2"):
                 processPower(item)
@@ -1084,7 +1100,6 @@ def main():
                             else:
                                 benchmarkName = x[start+1:end]
                             line += "<td>" + urlString % benchmarkName + "</td>"
-                        line += "</tr>"
                         files[v] = line
                         workQueue.put(u)
                         break
@@ -1098,22 +1113,19 @@ def main():
             finally:
                 compressedstream.close()
 
-
-
-
-
     o = open("result.html","w")
     data = open(os.path.join(os.path.abspath(sys.path[0]),"template2.html")).read()
     filelist = ""
-    lineCount = 0
 
     for x in files:
-        lineCount = (lineCount + 1 ) % 2
-        filelist += ("<tr>" if lineCount == 0 else '<tr class="odd">') + files[x]
+        filelist += "<tr> %s </tr>" % files[x]
     o.write(re.sub("@@@", filelist,data))
     o.close()
 
+    os.system("cp -r %s ." % os.path.join(os.path.abspath(sys.path[0]),"js"))
+
     workQueue.join()
+
 
 if __name__ == "__main__":
      os.environ["GDFONTPATH"] = "/usr/share/fonts/truetype/ttf-bitstream-vera"
@@ -1123,8 +1135,6 @@ if __name__ == "__main__":
 
      # This is the main function for profiling
      # We've renamed our original main() above to real_main()
-     #import cProfile, pstats, StringIO
-     #prof = cProfile.Profile()
      #prof = prof.runctx("main()", globals(), locals())
      #stream = StringIO.StringIO()
      #stats = pstats.Stats(prof, stream=stream)
