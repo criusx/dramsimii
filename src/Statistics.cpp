@@ -31,6 +31,7 @@ using std::ostream;
 using std::endl;
 using std::map;
 using std::ios;
+using std::tr1::unordered_map;
 using std::setprecision;
 using std::setiosflags;
 using std::string;
@@ -92,6 +93,7 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 
 		// gather working set information for this epoch, exclude the entries which alias to the same column		
 		workingSet[currentTransaction->getAddress().getPhysicalAddress() >> columnDepth]++;
+
 		if (currentTransaction->isRead())
 		{
 			readCount++;
@@ -135,27 +137,27 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	//os << statsLog.readCount << " " << statsLog.writeCount << " " << statsLog.readCount + statsLog.writeCount << endl;
 
 	os << "----Transaction Delay " << statsLog.transactionDecodeDelay.size() << "----" << endl;
-	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); currentValue++)
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----Command Turnaround " << statsLog.commandTurnaround.size() << "----" << endl;
-	for (map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandTurnaround.begin(); currentValue != statsLog.commandTurnaround.end(); currentValue++)
+	for (unordered_map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandTurnaround.begin(); currentValue != statsLog.commandTurnaround.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----Command Delay " << statsLog.commandDelay.size() << "----" << endl;
-	for (map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandDelay.begin(); currentValue != statsLog.commandDelay.end(); currentValue++)
+	for (unordered_map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandDelay.begin(); currentValue != statsLog.commandDelay.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----CMD Execution Time " << statsLog.commandExecution.size() << "----" << endl;
-	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.commandExecution.begin(); currentValue != statsLog.commandExecution.end(); currentValue++)
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.commandExecution.begin(); currentValue != statsLog.commandExecution.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 	os << "----Transaction Latency " << statsLog.transactionExecution.size() << "----" << endl;
-	for (map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); currentValue++)
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); currentValue++)
 	{
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
@@ -165,7 +167,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << "----Bandwidth----" << endl << setprecision(10) << (float)statsLog.readBytesTransferred / statsLog.timePerEpoch << " " << (float)statsLog.writeBytesTransferred / statsLog.timePerEpoch << endl;
 
 	os << "----Average Transaction Latency Per PC Value " << statsLog.pcOccurrence.size() << "----" << endl;
-	for (map<PHYSICAL_ADDRESS, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); currentValue++)
+	for (std::map<PHYSICAL_ADDRESS, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); currentValue++)
 	{
 		os << std::hex << (*currentValue).first << " " << std::noshowpoint << (float)(*currentValue).second.getAccumulatedLatency() / (float)(*currentValue).second.getCount() << " " << std::dec << (*currentValue).second.getCount() << endl;
 	}
@@ -173,13 +175,13 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << "----Row Hit/Miss Counts----" << endl << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
 
 	os << "----Channel Utilization----" << endl;
-	for (map<unsigned,unsigned>::const_iterator i = statsLog.channelUtilization.begin(); i != statsLog.channelUtilization.end(); i++)
+	for (unordered_map<unsigned,unsigned>::const_iterator i = statsLog.channelUtilization.begin(); i != statsLog.channelUtilization.end(); i++)
 		os << (unsigned)(*i).first << " " << (unsigned)(*i).second << std::endl;
 	os << "----Rank Utilization----" << endl;
-	for (map<unsigned,unsigned>::const_iterator i = statsLog.rankUtilization.begin(); i != statsLog.rankUtilization.end(); i++)
+	for (unordered_map<unsigned,unsigned>::const_iterator i = statsLog.rankUtilization.begin(); i != statsLog.rankUtilization.end(); i++)
 		os << (*i).first << " " << (*i).second << endl;
 	os << "----Bank Utilization----" << endl;
-	for (map<unsigned,unsigned>::const_iterator i = statsLog.bankUtilization.begin(); i != statsLog.bankUtilization.end(); i++)
+	for (unordered_map<unsigned,unsigned>::const_iterator i = statsLog.bankUtilization.begin(); i != statsLog.bankUtilization.end(); i++)
 		os << (*i).first << " " << (*i).second << endl;
 	
 
@@ -264,8 +266,10 @@ bool Statistics::operator==(const Statistics& right) const
 {
 	return (validTransactionCount == right.validTransactionCount && startNumber == right.startNumber && endNumber == right.endNumber &&
 		burstOf8Count == right.burstOf8Count && burstOf4Count == right.burstOf4Count && columnDepth == right.columnDepth && 
-		commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
-		transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && 
-		workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount && 
+		/// @todo restore comparisons once tr1 implementations support this
+		//commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
+		//transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && 
+		//channelUtilization == right.channelUtilization && rankUtilization == right.rankUtilization && bankUtilization == right.bankUtilization &&
+		pcOccurrence == right.pcOccurrence && workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount && 
 		readBytesTransferred == right.readBytesTransferred && writeBytesTransferred == right.writeBytesTransferred);
 }

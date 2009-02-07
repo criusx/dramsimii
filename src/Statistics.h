@@ -25,6 +25,11 @@
 
 #include <fstream>
 #include <map>
+#ifdef WIN32
+#include <unordered_map>
+#else
+#include <tr1/unordered_map>
+#endif
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
@@ -59,6 +64,12 @@ namespace DRAMsimII
 
 			  tick getAccumulatedLatency() const { return accumulatedLatency; }
 			  unsigned getCount() const { return count; }
+
+			  bool operator==(const DelayCounter &right) const
+			  {
+				  return accumulatedLatency == right.accumulatedLatency && 
+					  count == right.count;
+			  }
 		};
 
 	protected:
@@ -70,21 +81,22 @@ namespace DRAMsimII
 		unsigned columnDepth;
 		unsigned readCount;
 		unsigned writeCount;
-		unsigned readBytesTransferred;						///< the number of bytes read from DRAMs this epoch
-		unsigned writeBytesTransferred;						///< the number of bytes written to DRAMs this epoch
-		float timePerEpoch;									///< the number of seconds that have elapsed per epoch
-		unsigned rowHits;									///< the number of row hits this epoch
-		unsigned rowMisses;									///< the number of row misses this epoch
-		std::map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
-		std::map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
-		std::map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
-		std::map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
-		std::map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
+		unsigned readBytesTransferred;									///< the number of bytes read from DRAMs this epoch
+		unsigned writeBytesTransferred;									///< the number of bytes written to DRAMs this epoch
+		float timePerEpoch;												///< the number of seconds that have elapsed per epoch
+		unsigned rowHits;												///< the number of row hits this epoch
+		unsigned rowMisses;												///< the number of row misses this epoch
+		std::tr1::unordered_map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
+		std::tr1::unordered_map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
+		std::tr1::unordered_map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
+		std::tr1::unordered_map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
+		std::tr1::unordered_map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
+		// still some bugs supporting 64-bit numbers
 		std::map<PHYSICAL_ADDRESS, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
 		std::map<PHYSICAL_ADDRESS, tick> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
-		std::map<unsigned,unsigned> channelUtilization;
-		std::map<unsigned,unsigned> rankUtilization;
-		std::map<unsigned,unsigned> bankUtilization;
+		std::tr1::unordered_map<unsigned,unsigned> channelUtilization;		///< the channels that are used
+		std::tr1::unordered_map<unsigned,unsigned> rankUtilization;		///< the ranks that are used
+		std::tr1::unordered_map<unsigned,unsigned> bankUtilization;		///< the banks that are used
 
 	public:
 

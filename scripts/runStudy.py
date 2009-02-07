@@ -22,7 +22,7 @@ m5Exe = 'm5.fast'
 outputDir = '/home/crius/results/mappingStudy10'
 memorySettings = '/home/crius/m5-stable/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
 commandLine = '%s --config-file %s --modifiers "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
-m5CommandLine = '%s /home/crius/m5-stable/configs/example/dramsim.py -f %s -b mcftrain --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
+m5CommandLine = '%s /home/crius/m5-stable/configs/example/dramsim.py -f %s -b mcf --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
 channels = [2]
 ranks = [4, 8]
 banks = [8, 16]
@@ -50,13 +50,13 @@ def main():
                                 for h in requests:
                                     currentCommandLine = cmdLine % (executable, memorySettings, a, b, c,
                                                                         d, e, f, g, h, outputDir)
-                                    submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyC"''' % (currentCommandLine, outputDir, outputDir)
+                                    submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyCmcf"''' % (currentCommandLine, outputDir, outputDir)
                                     os.system(submitCommandLine)
                                     #print submitCommandLine
 
 
 if __name__ == "__main__":
-     os.environ["GDFONTPATH"] = "/usr/share/fonts/truetype/ttf-bitstream-vera"
+     #os.environ["GDFONTPATH"] = "/usr/share/fonts/truetype/ttf-bitstream-vera"
 
      main()
      # This is the main function for profiling

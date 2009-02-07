@@ -23,21 +23,20 @@ namespace DRAMsimII
 	// This section defines the refresh policy
 	enum RefreshPolicy
 	{
-		NO_REFRESH, 
-		BANK_CONCURRENT, 
-		BANK_STAGGERED_HIDDEN,
-		ONE_CHANNEL_ALL_RANK_ALL_BANK
+		NO_REFRESH, // do not simulate refresh operations
+		BANK_CONCURRENT, //
+		BANK_STAGGERED_HIDDEN, //
+		ONE_CHANNEL_ALL_RANK_ALL_BANK // standard refresh, close banks, issue refresh command to activate/precharge a bank based upon the DRAM refresh counter
 	};
 
 	enum RowBufferPolicy
 	{
 		AUTO_PAGE, // same as OPEN PAGE, but close page after timer expires
 		OPEN_PAGE, // keep page open indefinitely
-		CLOSE_PAGE,
-		CLOSE_PAGE_AGGRESSIVE
+		OPEN_PAGE_AGGRESSIVE, // improve upon simple open page
+		CLOSE_PAGE, // close a row after an operation
+		CLOSE_PAGE_AGGRESSIVE // improve upon regular close page
 	};
-
-	
 
 	enum SystemConfigurationType
 	{
@@ -55,6 +54,12 @@ namespace DRAMsimII
 		WANG_RANK_HOP // Patented stuff. davewang202@yahoo.com ;)
 	};
 
+	enum TransactionOrderingAlgorithm
+	{
+		RIFF, ///< read and instruction fetch first
+		STRICT ///< FIFO
+	};
+
 	enum OutputFileType
 	{
 		COUT, ///< print to stdout
@@ -65,12 +70,6 @@ namespace DRAMsimII
 	};
 
 
-	enum TransactionOrderingAlgorithm
-	{
-		RIFF, ///< read and instruction fetch first
-		STRICT ///< FIFO
-	};
-	
 	enum DRAMType
 	{
 		DDR,

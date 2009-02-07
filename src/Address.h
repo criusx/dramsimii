@@ -52,14 +52,16 @@ namespace DRAMsimII
 		};
 
 	protected:
-		static unsigned channelAddressDepth;
-		static unsigned rankAddressDepth;
-		static unsigned bankAddressDepth;
-		static unsigned rowAddressDepth;
-		static unsigned columnAddressDepth;
-		static unsigned columnSizeDepth;
-		static unsigned cacheLineSize;
-		static AddressMappingScheme mappingScheme;
+		static unsigned channelAddressDepth;	///< the number of bits to represent all channels
+		static unsigned rankAddressDepth;		///< the number of bits to represent all ranks
+		static unsigned bankAddressDepth;		///< the number of bits to represent all banks
+		static unsigned rowAddressDepth;		///< the number of bits to represent all rows
+		static unsigned columnAddressDepth;		///< the number of bits to represent all columns
+		static unsigned columnSizeDepth;		///< the minimum block that can be addressed
+		//static unsigned cacheLineSize;			///< the size of a cacheline in the cpu
+		static unsigned columnLowAddressDepth;	///< the number of bits to represent the lower portion of a column
+		static unsigned columnHighAddressDepth; ///< the number of bits to represent the upper portion of a column
+		static AddressMappingScheme mappingScheme;	///< the mapping scheme to convert physical to logical addresses
 
 		unsigned virtualAddress;			///< the virtual address
 		PHYSICAL_ADDRESS physicalAddress;	///< the physical address
@@ -110,8 +112,8 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned version )
 		{
-			ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth & columnAddressDepth & columnSizeDepth & cacheLineSize;
-			ar & mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column;
+			ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth & columnAddressDepth & columnSizeDepth;
+			ar & mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column & columnLowAddressDepth & columnHighAddressDepth;
 		}
 	};
 std::ostream& operator<<(std::ostream&, const Address::AddressMappingScheme&);

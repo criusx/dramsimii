@@ -163,6 +163,7 @@ namespace DRAMsimII
 #define tick boost::int64_t
 #define TICK_MAX static_cast<tick>(boost::integer_traits<tick>::const_max)
 #define TICK_MIN static_cast<tick>(boost::integer_traits<tick>::const_min)
+// x86-64 defines long mode as having a physical address space of 64-bits, although most current implementations use only 48
 #define PHYSICAL_ADDRESS boost::uint64_t
 #define PHYSICAL_ADDRESS_MAX static_cast<PHYSICAL_ADDRESS>(boost::integer_traits<PHYSICAL_ADDRESS>::const_max)
 

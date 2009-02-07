@@ -251,7 +251,7 @@ liveProcessDict["omnetpp"] = omnetpp
 #473.astar
 astar = LiveProcess()
 astar.executable = binary_dir + '473.astar/exe/astar_base' + suffix
-astar.cmd = [astar.executable] + ['lake.cfg']
+astar.cmd = [astar.executable] + [os.path.join(binary_dir, '473.astar/data/test/input/lake.cfg')]
 #astar.output = 'lake.out'
 cmdLineDict["astar"] = '473.astar.lake'
 liveProcessDict["astar"] = astar
@@ -259,7 +259,8 @@ liveProcessDict["astar"] = astar
 #481.wrf
 wrf = LiveProcess()
 wrf.executable = binary_dir + '481.wrf/exe/wrf_base' + suffix
-wrf.cmd = [wrf.executable] + [data_dir + '481.wrf/data/ref/input/namelist.input']
+wrf.cmd = [wrf.executable] + [os.path.join(data_dir, '481.wrf/data/ref/input/namelist.input')]
+print wrf.cmd
 #wrf.output = 'rsl.out.0000'
 wrf.cwd = os.path.join(data_dir, '481.wrf/data/ref/input/')
 cmdLineDict["wrf"] = '481.wrf.namelist'

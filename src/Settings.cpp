@@ -506,6 +506,9 @@ ostream &DRAMsimII::operator<<(ostream &os, const RowBufferPolicy rbp)
 	case OPEN_PAGE:
 		os << "OPEN";
 		break;
+	case OPEN_PAGE_AGGRESSIVE:
+		os << "OPA";
+		break;
 	case CLOSE_PAGE:
 		os << "CLOS";
 		break;

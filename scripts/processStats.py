@@ -27,14 +27,18 @@ processPerEpochGraphs = False
 
 thumbnailResolution = "640x480"
 
-#terminal = 'set terminal png font "VeraMono,10" transparent nointerlace truecolor  size 1700, 1024 nocrop enhanced\n'
+#terminal = 'set terminal png font "Arial,10" transparent nointerlace truecolor  size 1700, 1024 nocrop enhanced\n'
 #extension = 'png'
 
-terminal = 'set terminal svg size 1600,768 dynamic enhanced fname "VeraMono" fsize 10\n'
+terminal = 'set terminal svg size 1600,768 dynamic enhanced fname "Arial" fsize 10\n'
 extension = 'svg'
 
-#terminal = 'set terminal postscript eps enhanced color font "VeraMono, 10"'
+#terminal = 'set terminal postscript eps enhanced color font "Arial, 10"'
 #extension = 'eps'
+
+decoder = { "OPBAS":"Open Page Baseline", "SDBAS": "SDRAM Baseline", "CPBAS":"Close Page Baseline", "LOLOC":"Low Locality", "HILOC":"High Locality",
+           "GRD":"Greedy", "STR":"Strict","BRR":"Bank Round Robin","RRR":"Rank Round Robin", "CLSO":"Close Page Aggressive","OPEN":"Open Page","CPAG":"Close Page Aggressive",
+           "CLOS":"Close Page","OPA":"Open Page Aggressive"}
 
 powerRegex = re.compile('(?<={)[\d.]+')
 
@@ -119,7 +123,7 @@ def processPower(filename):
     set yrange [0:*] noreverse nowriteback
     set ytics out
     set multiplot
-    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
+    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 textcolor lt -1 rotate by 90
     set size 1.0, 0.67
     set origin 0.0, 0.33
     unset xtics
@@ -138,8 +142,8 @@ def processPower(filename):
     set ytics out
     set xtics out
     set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
-    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
-    set xlabel "Time (s)" font "VeraMono,12"
+    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 textcolor lt -1 rotate by 90
+    set xlabel "Time (s)"
     set boxwidth 0.95 relative
     unset x2tics
     plot '-' u 1:2 t "Cumulative Average" w lines lw 2.00, '-' u 1:2 t "Total Power" w boxes, '-' u 1:2 t "Running Average" w lines lw 2.00
@@ -158,8 +162,8 @@ def processPower(filename):
     set multiplot
     set size 1.0, 0.5
     set origin 0.0, 0.5
-    set ylabel "Energy" offset character .05, 0,0 font "VeraMono,12" textcolor lt -1 rotate by 90
-    set xlabel "Time (s)" font "VeraMono,12"
+    set ylabel "Energy" offset character .05, 0,0 textcolor lt -1 rotate by 90
+    set xlabel "Time (s)"
     ''','''
     set size 1.0, 0.5
     set origin 0.0, 0.0
@@ -169,8 +173,9 @@ def processPower(filename):
 
     writing = 0
     p = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
-    p.stdin.write("%s\n" % terminal)
+    p.stdin.write(terminal)
     p2 = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
+    p2.stdin.write(terminal)
 
     filesGenerated = []
 
@@ -190,9 +195,12 @@ def processPower(filename):
         if filename.endswith("gz"):
             outFileBZ2 = os.path.join(tempPath,  filename.split('.gz')[0] + ".tar.bz2")
             basefilename = os.path.join(tempPath, filename.split('.gz')[0])
-        else:
+        elif filename.endswith("bz2"):
             outFileBZ2 = os.path.join(tempPath,  filename.split('.bz2')[0] + ".tar.bz2")
             basefilename = os.path.join(tempPath, filename.split('.bz2')[0])
+        else:
+            outFileBZ2 = os.path.join(tempPath,  filename + ".tar.bz2")
+            basefilename = filename
 
         splitter = re.compile('([\[\]])')
         splitter2 = re.compile(' ')
@@ -224,13 +232,13 @@ def processPower(filename):
                     commandLine = line.strip().split(":")[1]
                     print commandLine
 
-                    p.stdin.write("set title \"{/=12 Power Consumed vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
+                    p.stdin.write("set title \"{/=12 Power Consumed vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n" % commandLine)
 
                     fileName = os.path.join(tempPath,"energy." + extension)
                     filesGenerated.append(fileName)
 
-                    p2.stdin.write("%s\n%s\n" % (terminal, scripts[2] % fileName))
-                    p2.stdin.write("set title \"{/=12 Energy vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"VeraMono,14\" norotate\n" % commandLine)
+                    p2.stdin.write("%s\n" % (scripts[2] % fileName))
+                    p2.stdin.write("set title \"{/=12 Energy vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n" % commandLine)
                     p2.stdin.write('''plot '-' u 1:2 t "Energy (P t)" w lines lw 2.00, '-' u 1:2 t "IBM Energy (P^{2} t^{2})" w lines lw 2.00\n''')
 
                 elif line[1] == '+':
@@ -1099,6 +1107,10 @@ def main():
                                 benchmarkName = x
                             else:
                                 benchmarkName = x[start+1:end]
+                            try:
+                                benchmarkName = decoder[benchmarkName]
+                            except:
+                                pass
                             line += "<td>" + urlString % benchmarkName + "</td>"
                         files[v] = line
                         workQueue.put(u)
@@ -1129,6 +1141,7 @@ def main():
 
 if __name__ == "__main__":
      os.environ["GDFONTPATH"] = "/usr/share/fonts/truetype/ttf-bitstream-vera"
+     os.environ["GNUPLOT_FONTPATH"] = "/usr/share/fonts/truetype/ttf-bitstream-vera"
 
      main()
 
