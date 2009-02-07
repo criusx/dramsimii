@@ -1384,27 +1384,27 @@ const Command *Channel::readNextCommand() const
 					const Command *challengerCommand = currentBank->front();
 					assert(challengerCommand == NULL || challengerCommand->isRefresh() || rank[challengerCommand->getAddress().getRank()].bank[challengerCommand->getAddress().getBank()].front() == challengerCommand);
 
-
-					if (isRefreshCommand && challengerCommand && challengerCommand->isRefresh() && currentRank->refreshAllReady())
+					if (challengerCommand)
 					{
-						tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
+						// see if it is a refresh command
+						if (isRefreshCommand && challengerCommand->isRefresh() && currentRank->refreshAllReady())
+						{
+							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
 #ifndef NDEBUG
-						int minGap = minProtocolGap(challengerCommand);
+							int minGap = minProtocolGap(challengerCommand);
 
-						if (time + minGap != challengerExecuteTime)
-							assert(max(time + minGap, (tick)0) == challengerExecuteTime);
+							if (time + minGap != challengerExecuteTime)
+								assert(max(time + minGap, (tick)0) == challengerExecuteTime);
 #endif
-						if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
-						{						
-							candidateCommand = challengerCommand;
-							// stop searching since all the queues are proved to have refresh commands at the front
-							break;
-						}						
-					}
-					else
-					{
+							if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
+							{						
+								candidateCommand = challengerCommand;
+								// stop searching since all the queues are proved to have refresh commands at the front
+								break;
+							}						
+						}
 						// can ignore refresh commands since it's known that not all the queues have a ref command at the front
-						if (challengerCommand && !challengerCommand->isRefresh())
+						else if (!challengerCommand->isRefresh())
 						{
 							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
 #ifndef NDEBUG

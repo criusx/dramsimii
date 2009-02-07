@@ -359,8 +359,8 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 	for (int index = perBankQueue.size() - 1; index >= 0; --index)
 	{	
 		// see if there is an available command to piggyback on
-		if (perBankQueue[index]->isReadOrWrite() && 
-			perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddress().getRow())
+		if (perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddress().getRow() &&
+			perBankQueue[index]->isReadOrWrite())
 		{
 			if (!systemConfig.isAutoPrecharge())
 			{
