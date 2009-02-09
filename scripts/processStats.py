@@ -7,8 +7,8 @@ import os
 import string
 from threading import Thread
 import Queue
-import tempfile
-import tarfile
+#import tempfile
+#import tarfile
 import math
 import bz2
 import re
@@ -41,6 +41,9 @@ decoder = { "OPBAS":"Open Page Baseline", "SDBAS": "SDRAM Baseline", "CPBAS":"Cl
            "CLOS":"Close Page","OPA":"Open Page Aggressive"}
 
 powerRegex = re.compile('(?<={)[\d.]+')
+channelRegex = re.compile('(?<=ch[)[\d]+')
+rank = re.compile('(?<=rk[)[\d]+')
+bankRegex = re.compile('(?<=bk[)[\d]+')
 
 class CumulativePriorMovingAverage:
     def __init__(self):
@@ -545,6 +548,40 @@ def processStats(filename):
     set title "Read Transaction Latency\\n%s"  offset character 0, -1, 0 font "" norotate
     set output "transactionLatencyDistribution.%s"
     plot '-' using 1:2 t "Total Latency" with boxes
+    '''
+
+    channels = []
+    ranks = []
+    banks = []
+    addressDistroA = '''
+    set output "addressDistribution.%s"
+    set y2tics
+    set yrange [0 : 1] noreverse nowriteback
+    set multiplot
+    set size 1.0, 0.333
+    set origin 0.0, 0.666
+    set ylabel "Percent Access"
+    set title "Channel Distribution Rate\\n%s"  offset character 0, -1, 0 font "" norotate
+    #plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
+    ''' % (extension, "%s")
+
+    addressDistroB = '''
+    set size 1.0, 0.333
+    set origin 0.0, 0.333
+    set yrange [0 : *] noreverse nowriteback
+    unset xlabel
+    set ylabel "Percent Access"
+    set title "Rank Distribution Rate"  offset character 0, -1, 0 font "" norotate
+    plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
+    '''
+    addressDistroC = '''
+    set size 1.0, 0.333
+    set origin 0.0, 0.0
+    set yrange [0 : *] noreverse nowriteback
+    set xlabel "Time (s)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set ylabel "Percent Access"
+    set title "Bank Distrubution Rate"  offset character 0, -1, 0 font "" norotate
+    plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
     '''
 
     commandTurnaroundCounter = 0

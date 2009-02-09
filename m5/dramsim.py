@@ -65,7 +65,8 @@ if options.benchmark != 0:
         print "Unknown benchmark.\n"
         sys.exit()
 
-    executable = process.executable.split("/")
+    #executable = process.executable.split("/")
+    executable = [cmdLineDict[options.benchmark]]
 	#cmdLine = executable[len(executable) - 1] + " " + string.join(process.cmd[1:]," ") +" <" + process.input
 #    cmdLine = options.benchmark
 else:
