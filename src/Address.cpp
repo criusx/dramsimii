@@ -179,6 +179,23 @@ bool Address::reverseAddressTranslation()
 
 		break;
 
+	case CLOSE_PAGE_BASELINE_OPT:
+		{/// @todo finish this
+
+		physicalAddress = columnLow << shift;
+		shift += columnLowAddressDepth;
+		physicalAddress |= channel << shift;
+		shift += channelAddressDepth;
+		physicalAddress |= bank << shift;
+		shift += bankAddressDepth;
+		physicalAddress |= rank << shift;
+		shift += rankAddressDepth;
+		physicalAddress |= columnHigh << shift;
+		shift += columnHighAddressDepth;
+		physicalAddress |= row << shift;
+
+		break;
+		}
 	case CLOSE_PAGE_LOW_LOCALITY:
 
 		physicalAddress = channel << shift;
@@ -407,7 +424,7 @@ bool Address::addressTranslation()
 		*                    row id                         Column id high     rank  bank    col_id  (8B wide)
 		*                                                   1KB     / 8B        id    id      low    Byte Addr
 		*/		
-		buffer = tempAddress;				/* save away original address */
+		buffer = tempAddress;
 		tempAddress >>= columnLowAddressDepth;
 
 		// strip out the column low address
@@ -418,36 +435,105 @@ bool Address::addressTranslation()
 		// strip out the channel address 
 		channel = buffer ^ (tempAddress << channelAddressDepth); 
 
-		buffer = tempAddress;				/* save away original address */
+		buffer = tempAddress;				
 		tempAddress >>= bankAddressDepth;
 		// strip out the bank address 
 		bank = buffer ^ (tempAddress << bankAddressDepth);
 
-		buffer = tempAddress;				/* save away original address */
+		buffer = tempAddress;				
 		tempAddress >>= rankAddressDepth;
 		// strip out the rank address 
 		rank = buffer ^ (tempAddress << rankAddressDepth);		
 
-		buffer = tempAddress;				/* save away original address */
+		buffer = tempAddress;				
 		tempAddress >>= columnHighAddressDepth;
 		// strip out the column hi address
 		columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
 
 		column = (columnHigh << columnLowAddressDepth) | columnLow;
 
-		buffer = tempAddress;				/* save away original address */
+		buffer = tempAddress;				
 		tempAddress >>= rowAddressDepth;
 		// strip out the row address
 		row = buffer ^ (tempAddress << rowAddressDepth);
 
 		break;
 
+	case CLOSE_PAGE_BASELINE_OPT:
+		{
+			/*
+			*               High performance closed page SDRAM Mapping scheme
+			*                                                                    5
+			* |<----------->||<------------>||<------>||<----->||<---->||<---->||<----------------->||<------------------->|
+			*     row_high     col_id(high)     rank     row_lo   bank    chan       col_id(low)           column size
+			*
+			*                							intlog2(cacheline_size)	intlog2(channel_width)
+			*									- intlog2(channel_width)	
+			*									
+			*  Rationale is as follows: From LSB to MSB
+			*  min column size is the channel width, and individual byes within that "unit" is not addressable, so strip it out and throw it away.
+			*  Then strip out a few bits of phys_addr address for the low order bits of col_id.  We basically want consecutive cachelines to
+			*  map to different channels.
+			*  Then strip out the bits for channel id.
+			*  Then strip out the bank_id.
+			*  Then strip out the rank_id.
+			*  Then strip out the bits for the high order bits of the column id.
+			*  What remains must be the row_id
+			*
+			*  As applied to system (1 dram channel, 64 bit wide each. 2 GB system)
+			*    31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+			*       |<------------------------------------->| |<---------------->|  ^  |<--->|  |<--->|  |<--->|
+			*                    row id                         Column id high     rank  bank    col_id  (8B wide)
+			*                                                   1KB     / 8B        id    id      low    Byte Addr
+			*/		
+			buffer = tempAddress;
+			tempAddress >>= columnLowAddressDepth;
+
+			// strip out the column low address
+			columnLow = buffer ^ (tempAddress << columnLowAddressDepth); 
+
+			buffer = tempAddress;			
+			tempAddress >>= channelAddressDepth;
+			// strip out the channel address 
+			channel = buffer ^ (tempAddress << channelAddressDepth); 
+
+			buffer = tempAddress;				
+			tempAddress >>= bankAddressDepth;
+			// strip out the bank address 
+			bank = buffer ^ (tempAddress << bankAddressDepth);
+
+			buffer = tempAddress;
+			tempAddress >>= 3;
+			unsigned rowLow = buffer ^ (tempAddress << 3);
+
+			buffer = tempAddress;				
+			tempAddress >>= rankAddressDepth;
+			// strip out the rank address 
+			rank = buffer ^ (tempAddress << rankAddressDepth);		
+
+			buffer = tempAddress;				
+			tempAddress >>= columnHighAddressDepth;
+			// strip out the column hi address
+			columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
+
+			column = (columnHigh << columnLowAddressDepth) | columnLow;
+
+			buffer = tempAddress;				
+			tempAddress >>= (rowAddressDepth - 3);
+			// strip out the row address
+			unsigned rowHigh = buffer ^ (tempAddress << (rowAddressDepth - 3));
+
+			row = (rowHigh << 3) | rowLow;
+
+			break;
+		}
+
 	case CLOSE_PAGE_LOW_LOCALITY:
 		/*
 		*               High performance closed page SDRAM Mapping scheme for streams with low locality
 		*                                                                    5
-		* |<------------------>| |<------------>| |<---------->|  |<----->| |<----->| |<----------------->| |<------------------->|
-		*       col_id(high)          row           col_id(low)      bank      rank            chan              column size
+		* |<------------------>| |<------------>| |<---------->|  |<----->| |<----->| |<------>| |<------------------->|
+		*       col_id(high)          row           col_id(low)      bank      rank      chan         column size
 		*                							intlog2(cacheline_size)	intlog2(channel_width)
 		*									- intlog2(channel_width)	
 		*/
@@ -509,6 +595,8 @@ bool Address::addressTranslation()
 		// strip out the column hi address
 		columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
 
+		column = (columnHigh << columnLowAddressDepth) | columnLow;	
+
 		buffer = tempAddress;				
 		tempAddress >>= channelAddressDepth;
 		// strip out the channel address 
@@ -523,8 +611,6 @@ bool Address::addressTranslation()
 		tempAddress >>= rankAddressDepth;
 		// strip out the rank address 
 		rank = buffer ^ (tempAddress << rankAddressDepth);	
-
-		column = (columnHigh << columnLowAddressDepth) | columnLow;	
 
 		break;
 
@@ -685,6 +771,9 @@ std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address::AddressMap
 	case Address::CLOSE_PAGE_BASELINE:
 	case Address::SDRAM_CLOSE_PAGE_MAP:
 		os << "CPBAS";
+		break;
+	case Address::CLOSE_PAGE_BASELINE_OPT:
+		os << "CPBOPT";
 		break;
 	case Address::INTEL845G_MAP:
 		os << "845G";

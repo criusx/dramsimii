@@ -47,6 +47,7 @@ namespace DRAMsimII
 			SDRAM_BASE_MAP,
 			SDRAM_CLOSE_PAGE_MAP,
 			SDRAM_HIPERF_MAP,
+			CLOSE_PAGE_BASELINE_OPT,
 			CLOSE_PAGE_LOW_LOCALITY,
 			CLOSE_PAGE_HIGH_LOCALITY
 		};
@@ -59,6 +60,8 @@ namespace DRAMsimII
 		static unsigned columnAddressDepth;		///< the number of bits to represent all columns
 		static unsigned columnSizeDepth;		///< the minimum block that can be addressed
 		//static unsigned cacheLineSize;			///< the size of a cacheline in the cpu
+		static unsigned rowLowAddressDepth;		///< the number of bits to represent the lower portion of the row
+		static unsigned rowHighAddressDepth;	///< the number of bits to represent the upper portion of the row
 		static unsigned columnLowAddressDepth;	///< the number of bits to represent the lower portion of a column
 		static unsigned columnHighAddressDepth; ///< the number of bits to represent the upper portion of a column
 		static AddressMappingScheme mappingScheme;	///< the mapping scheme to convert physical to logical addresses

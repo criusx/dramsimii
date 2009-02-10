@@ -33,6 +33,7 @@ interarrivalCycleCount = [1]
 #perBankQueueDepth = range(8, 16, 4)
 perBankQueueDepth = [12]
 requests = [13500000]
+benchmarks = ['calculix','libquantum',]
 
 def main():
     #executable = os.path.join(dramSimPath,dramSimExe)

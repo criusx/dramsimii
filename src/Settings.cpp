@@ -391,6 +391,8 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 			addressMappingScheme = Address::CLOSE_PAGE_HIGH_LOCALITY;
 		else if (nodeValue == "closepagelowlocality")
 			addressMappingScheme = Address::CLOSE_PAGE_LOW_LOCALITY;
+		else if (nodeValue == "closepagebaselineopt")
+			addressMappingScheme = Address::CLOSE_PAGE_BASELINE_OPT;
 		else
 			addressMappingScheme = Address::SDRAM_HIPERF_MAP;
 		break;

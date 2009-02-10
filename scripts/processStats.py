@@ -41,9 +41,9 @@ decoder = { "OPBAS":"Open Page Baseline", "SDBAS": "SDRAM Baseline", "CPBAS":"Cl
            "CLOS":"Close Page","OPA":"Open Page Aggressive"}
 
 powerRegex = re.compile('(?<={)[\d.]+')
-channelRegex = re.compile('(?<=ch[)[\d]+')
-rank = re.compile('(?<=rk[)[\d]+')
-bankRegex = re.compile('(?<=bk[)[\d]+')
+channelRegex = re.compile('(?<=ch\[)[\d]+')
+rankRegex = re.compile('(?<=rk\[)[\d]+')
+bankRegex = re.compile('(?<=bk\[)[\d]+')
 
 class CumulativePriorMovingAverage:
     def __init__(self):
@@ -124,12 +124,15 @@ def processPower(filename):
     set autoscale xfixmin
     set autoscale xfixmax
     set yrange [0:*] noreverse nowriteback
+    unset x2tics
+    set xrange [0:*]
+    set xlabel "Time (s)"
+    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 textcolor lt -1 rotate by 90
+
     set ytics out
     set multiplot
-    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 textcolor lt -1 rotate by 90
-    set size 1.0, 0.67
-    set origin 0.0, 0.33
-    unset xtics
+    set size 1.0, 0.66
+    set origin 0.0, 0.34
     set boxwidth 0.95 relative
     set style fill  solid 1.00 noborder
     set style data histograms
@@ -138,18 +141,9 @@ def processPower(filename):
     ''','''
     set size 1.0, 0.35
     set origin 0.0, 0.0
-    set autoscale xfixmin
-    set autoscale xfixmax
-    set yrange [0:*] noreverse nowriteback
-    unset title
-    set ytics out
-    set xtics out
-    set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
-    set ylabel "Power Dissipated (mW)" offset character .05, 0,0 textcolor lt -1 rotate by 90
-    set xlabel "Time (s)"
+    set title "Power Dissipated"
     set boxwidth 0.95 relative
-    unset x2tics
-    plot '-' u 1:2 t "Cumulative Average" w lines lw 2.00, '-' u 1:2 t "Total Power" w boxes, '-' u 1:2 t "Running Average" w lines lw 2.00
+    plot '-' u 1:2 sm csp t "Cumulative Average" w lines lw 2.00, '-' u 1:2 t "Total Power" w boxes, '-' u 1:2 sm csp t "Running Average" w lines lw 2.00
     ''','''
     unset border
     set key outside center top horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
@@ -171,7 +165,7 @@ def processPower(filename):
     set size 1.0, 0.5
     set origin 0.0, 0.0
     set title
-    plot '-' u 1:2 t "Energy Delay Prod (P t^{2})" w lines lw 2.00, '-' u 1:2 t "IBM Energy2 (P^{2}t^{3})" w lines lw 2.00
+    plot '-' u 1:2 sm csp t "Energy Delay Prod (P t^{2})" w lines lw 2.00, '-' u 1:2 sm csp t "IBM Energy2 (P^{2}t^{3})" w lines lw 2.00
     ''']
 
     writing = 0
@@ -242,7 +236,7 @@ def processPower(filename):
 
                     p2.stdin.write("%s\n" % (scripts[2] % fileName))
                     p2.stdin.write("set title \"{/=12 Energy vs. Time}\\n{/=10 %s}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n" % commandLine)
-                    p2.stdin.write('''plot '-' u 1:2 t "Energy (P t)" w lines lw 2.00, '-' u 1:2 t "IBM Energy (P^{2} t^{2})" w lines lw 2.00\n''')
+                    p2.stdin.write('''plot '-' u 1:2 sm csp t "Energy (P t)" w lines lw 2.00, '-' u 1:2 sm csp t "IBM Energy (P^{2} t^{2})" w lines lw 2.00\n''')
 
                 elif line[1] == '+':
                     fileName = os.path.join(tempPath,"power." + extension)
@@ -257,17 +251,10 @@ def processPower(filename):
                     p.stdin.write('plot ')
 
                     for a in range(channels):
-                        for b in range(2):
-                           p.stdin.write('"-" using 1 title "P_{sys}(%s) ch[%d]"' % ("ACT-STBY" if b % 2 == 0 else "ACT", a))
-                           p.stdin.write(",")
-                        p.stdin.write('"-" using 1 title "P_{sys}(PRE-STBY) ch[%d]"' % a)
-                        p.stdin.write(",")
-                        for b in range(2):
-                            p.stdin.write('"-" using 1 title "P_{sys}(%s) ch[%d]"' % ("RD" if b % 2 == 0 else "WR", a))
-                            if (a < channels - 1) or (b < 1):
-                                p.stdin.write(",")
-                        #if (a == channels - 1):
-                    p.stdin.write("\n")
+                        for b in ['ACT-STBY', 'ACT', 'PRE-STBY', 'RD', 'WR']:
+                            p.stdin.write('"-" using 1 axes x2y1 title "P_{sys}(%s) ch[%d]",' % (b, a))
+
+                    p.stdin.write("'-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n")
                     # plus the RD and WR values
                     valuesPerEpoch = channels * 5
                     for i in range(valuesPerEpoch):
@@ -286,8 +273,28 @@ def processPower(filename):
         for v in u:
             p.stdin.write("%f\n" % v)
         p.stdin.write("e\n")
+    p.stdin.write("0 0\n%f 0.2\ne\n" % (len(values[0]) * epochTime))
 
     p.stdin.write(scripts[1])
+
+    epochNumber = 0.0
+    for u in averageValues:
+        p.stdin.write("%f %f\n" % (epochNumber, u))
+        epochNumber += epochTime
+    p.stdin.write("e\n")
+    epochNumber = 0.0
+    for u in instantValues:
+        p.stdin.write("%f %f\n" % (epochNumber, u))
+        epochNumber += epochTime
+    p.stdin.write("e\n")
+
+    epochNumber = 0.0
+    for u in windowValues:
+        p.stdin.write("%f %f\n" % (epochNumber, u))
+        epochNumber += epochTime
+    p.stdin.write("e\n")
+
+    p.stdin.write("unset multiplot\nunset output\nexit\n")
 
     epochNumber = 0.0
     for u in instantValues:
@@ -314,25 +321,8 @@ def processPower(filename):
         epochNumber += epochTime
     p2.stdin.write("e\nunset multiplot\nunset output\nexit\n")
 
-    epochNumber = 0.0
-    for u in averageValues:
-        p.stdin.write("%f %f\n" % (epochNumber, u))
-        epochNumber += epochTime
-    p.stdin.write("e\n")
-    epochNumber = 0.0
-    for u in instantValues:
-        p.stdin.write("%f %f\n" % (epochNumber, u))
-        epochNumber += epochTime
-    p.stdin.write("e\n")
-
-    epochNumber = 0.0
-    for u in windowValues:
-        p.stdin.write("%f %f\n" % (epochNumber, u))
-        epochNumber += epochTime
-    p.stdin.write("e\n")
-
-    p.stdin.write("unset multiplot\nunset output\nexit\n")
     p.wait()
+    p2.wait()
 
     thumbnail(filesGenerated, tempPath)
 
@@ -355,12 +345,6 @@ def processPower(filename):
 
 
 def processStats(filename):
-    # remember the temp directory
-    #tempPath = tempfile.mkdtemp(prefix="processStats")
-
-    # start counting lines
-    #process = Popen(["zcat " + filename ], stdout=PIPE, shell=True)
-    #process2 = Popen(["wc -l"], stdin=process.stdout, stdout=PIPE, shell=True)
 
     tempPath = os.path.join(os.getcwd(), filename[0:filename.find("-stats")])
 
@@ -418,17 +402,18 @@ def processStats(filename):
     set output "workingSet.''' + extension + '''"
     plot '-' using 1:2 t "Working Set Size" with boxes
     ''', terminal + basicSetup + '''
-    set yrange [1 : *] noreverse nowriteback
+    set yrange [0 : *] noreverse nowriteback
     set output "bandwidth.''' + extension + '''"
+    set xlabel "Time (s)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
+    set xrange [0:*]
     set multiplot
-    unset xtics
     set size 1.0, 0.66
     set origin 0.0, 0.33
     set style data histograms
     set style histogram rowstacked title offset 0,0,0
     set ylabel "Bandwidth (bytes per second)"
     set title "System Bandwidth\\n%s"  offset character 0, -1, 0 font "" norotate
-    plot '-' using 1 title "Read Bytes", '-' using 1 title "Write Bytes", '-' using 1 title "Average Bandwidth" with lines
+    plot '-' using 1 axes x2y1 title "Read Bytes", '-' using 1 axes x2y1 title "Write Bytes", '-' using 1:2 axes x1y1 sm csp title "Average Bandwidth" with lines
     ''', terminal + basicSetup + '''
     set yrange [1 : *] noreverse nowriteback
     set logscale y
@@ -457,7 +442,7 @@ def processStats(filename):
     set ylabel "Reuse Rate"
     set title "Reuse Rate of Open Rows vs. Time\\n%s"  offset character 0, -1, 0 font "" norotate
     set output "rowHitRate.''' + extension + '''"
-    plot '-' using 1:2 title "Hit Rate" with filledcurve below x1, '-' using 1:2 title "Cumulative Average Hit Rate" with lines lw 1.250, '-' using 1:2 title "Moving Average" with lines lw 1.250
+    plot '-' using 1:2 sm csp title "Hit Rate" with filledcurve below x1, '-' using 1:2 sm csp title "Cumulative Average Hit Rate" with lines lw 1.250, '-' using 1:2 sm csp title "Moving Average" with lines lw 1.250
     '''
     ]
     averageTransactionLatencyScript = basicSetup + '''
@@ -475,13 +460,10 @@ def processStats(filename):
     smallIPCGraph = basicSetup + '''
     set size 1.0, 0.35
     set origin 0.0, 0.0
-    set yrange [0 : *] noreverse nowriteback
-    set xlabel "Time (s)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "IPC"
-    set format y "%-6f"
     set title "IPC vs. Time"  offset character 0, -1, 0 font "" norotate
     set style fill solid 1.00 noborder
-    plot '-' using 1:2 title "IPC" with impulses, '-' using 1:2 title "Cumulative Average IPC" with lines, '-' using 1:2 title "Moving Average IPC" with lines
+    plot '-' using 1:2 title "IPC" with impulses, '-' using 1:2 sm csp title "Cumulative Average IPC" with lines, '-' using 1:2 sm csp title "Moving Average IPC" with lines
     '''
     cacheGraphA = '''
     %s
@@ -551,37 +533,37 @@ def processStats(filename):
     '''
 
     channels = []
+    channelTotals = array('i')
     ranks = []
+    rankTotals = array('i')
     banks = []
+    bankTotals = array('i')
     addressDistroA = '''
     set output "addressDistribution.%s"
-    set y2tics
+    unset y2tics
+    set xtics
+    set xlabel 'Time (s)'
+    set xrange [0:*]
+    set autoscale xfixmax
+    set ylabel "Access %%%%"
     set yrange [0 : 1] noreverse nowriteback
+    set key outside center bottom horizontal reverse Left
+    set style data histograms
+    set style histogram rowstacked
     set multiplot
     set size 1.0, 0.333
     set origin 0.0, 0.666
-    set ylabel "Percent Access"
-    set title "Channel Distribution Rate\\n%s"  offset character 0, -1, 0 font "" norotate
-    #plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
-    ''' % (extension, "%s")
-
+    set title "%%s\\nChannel Distribution Rate" offset character 0, -1, 0 font "" norotate
+    ''' % extension
     addressDistroB = '''
     set size 1.0, 0.333
     set origin 0.0, 0.333
-    set yrange [0 : *] noreverse nowriteback
-    unset xlabel
-    set ylabel "Percent Access"
-    set title "Rank Distribution Rate"  offset character 0, -1, 0 font "" norotate
-    plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
+    set title "Rank Distribution Rate" offset character 0, -1, 0 font "" norotate
     '''
     addressDistroC = '''
     set size 1.0, 0.333
     set origin 0.0, 0.0
-    set yrange [0 : *] noreverse nowriteback
-    set xlabel "Time (s)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
-    set ylabel "Percent Access"
-    set title "Bank Distrubution Rate"  offset character 0, -1, 0 font "" norotate
-    plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
+    set title "Bank Distribution Rate" offset character 0, -1, 0 font "" norotate
     '''
 
     commandTurnaroundCounter = 0
@@ -713,6 +695,14 @@ def processStats(filename):
                             p.stdin.write(i % commandLine.strip())
                             gnuplot.append(p)
                         started = True
+
+                        for i in range(int(channelRegex.search(line).group(0))):
+                            channels.append(array('i'))
+                        for i in range(int(rankRegex.search(line).group(0))):
+                            ranks.append(array('i'))
+                        for i in range(int(bankRegex.search(line).group(0))):
+                            banks.append(array('i'))
+
                         print commandLine
                 elif line.startswith("----M5 Stat:"):
 
@@ -800,6 +790,28 @@ def processStats(filename):
                     elif line.startswith("----Row"):
                         writing = 10
 
+                    elif line.startswith("----Channel"):
+
+                        channelTotals.append(1)
+                        for x in channels:
+                            x.append(0)
+
+                        writing = 11
+                    elif line.startswith("----Rank"):
+
+                        rankTotals.append(1)
+                        for x in ranks:
+                            x.append(0)
+
+                        writing = 12
+
+                    elif line.startswith("----Bank"):
+
+                        bankTotals.append(1)
+                        for x in banks:
+                            x.append(0)
+
+                        writing = 13
 
             # data in this section
             else:
@@ -867,6 +879,21 @@ def processStats(filename):
                     hitMissBuffer.append(hitCount / (hitCount + missCount))
                     hitMissValues[3].append(hitMissBuffer.average)
 
+                elif writing == 11:
+                    newLine = line.strip().split()
+                    channels[int(newLine[0])][-1] = int(newLine[1])
+                    channelTotals[-1] += int(newLine[1])
+
+                elif writing == 12:
+                    newLine = line.strip().split()
+                    ranks[int(newLine[0])][-1] = int(newLine[1])
+                    rankTotals[-1] += int(newLine[1])
+
+                elif writing == 13:
+                    newLine = line.strip().split()
+                    banks[int(newLine[0])][-1] = int(newLine[1])
+                    bankTotals[-1] += int(newLine[1])
+
                 if processPerEpochGraphs:
                     if writing == 1:
                         gnuplot[0].stdin.write(line)
@@ -902,6 +929,44 @@ def processStats(filename):
         elif writing == 8:
             gnuplot[5].stdin.write("e\nunset output\n")
 
+        # make the address distribution graphs
+        gnuplot[1].stdin.write(addressDistroA % commandLine)
+        gnuplot[1].stdin.write('plot ')
+        for a in range(len(channels)):
+            gnuplot[1].stdin.write('"-" using 1 \'%%lf\' axes x2y1 t "ch[%d]",' % a)
+        gnuplot[1].stdin.write('"-" using 1:2 axes x1y1 notitle with points pointsize 0.01\n')
+
+        for x in channels:
+            for y in range(len(x)):
+                gnuplot[1].stdin.write("%lf\n" % (1.0 * x[y] / channelTotals[y]))
+            gnuplot[1].stdin.write("e\n")
+        gnuplot[1].stdin.write('%lf 0.2\ne\n' % (len(channelTotals) * epochTime))
+
+        gnuplot[1].stdin.write(addressDistroB)
+        gnuplot[1].stdin.write('plot ')
+        for a in range(len(ranks)):
+            gnuplot[1].stdin.write('"-" using 1 \'%%lf\' axes x2y1 t "rk[%d]",' % a)
+        gnuplot[1].stdin.write('"-" using 1:2 axes x1y1 notitle with points pointsize 0.01\n')
+
+        for x in ranks:
+            for y in range(len(x)):
+                gnuplot[1].stdin.write("%lf\n" % (1.0 * x[y] / rankTotals[y]))
+            gnuplot[1].stdin.write("e\n")
+        gnuplot[1].stdin.write('%lf 0.4\ne\n' % (len(channelTotals) * epochTime))
+
+        gnuplot[1].stdin.write(addressDistroC)
+        gnuplot[1].stdin.write('plot ')
+        for a in range(len(banks)):
+            gnuplot[1].stdin.write('"-" using 1 \'%%lf\' axes x2y1 t "bk[%d]",' % a)
+        gnuplot[1].stdin.write('"-" using 1:2 axes x1y1 notitle with points pointsize 0.01\n')
+
+        for x in banks:
+            for y in range(len(x)):
+                gnuplot[1].stdin.write("%lf\n" % (1.0 * x[y] / bankTotals[y]))
+            gnuplot[1].stdin.write("e\n")
+        gnuplot[1].stdin.write('%lf 0.6\ne\n' % (len(channelTotals) * epochTime))
+
+        gnuplot[1].stdin.write("unset multiplot\nunset output\n")
 
         # make the PC vs latency graph
         gnuplot[0].stdin.write(pcVsLatencyGraph % (commandLine, extension))
@@ -916,16 +981,24 @@ def processStats(filename):
 
         for u in distTransactionLatency:
             gnuplot[0].stdin.write("%d %f\n" % (u * period, distTransactionLatency[u]))
-            #print u, distTransactionLatency[u]
-            #print period * u
 
         gnuplot[0].stdin.write("e\nunset output\n")
 
         # make the bandwidth graph
-        for t in bandwidthValues:
-            for u in t:
-                 gnuplot[4].stdin.write("%f\n" % u)
-            gnuplot[4].stdin.write("e\n")
+        for t in bandwidthValues[0]:
+            gnuplot[4].stdin.write("%f\n" % t)
+        gnuplot[4].stdin.write("e\n")
+
+        for t in bandwidthValues[1]:
+            gnuplot[4].stdin.write("%f\n" % t)
+        gnuplot[4].stdin.write("e\n")
+
+        count = 0
+        for t in bandwidthValues[2]:
+            gnuplot[4].stdin.write("%f %f\n" % (count * epochTime, t))
+            count += 1
+
+        gnuplot[4].stdin.write("e\n")
 
         gnuplot[4].stdin.write(smallIPCGraph)
 
@@ -971,7 +1044,6 @@ def processStats(filename):
         for i in range(0, min(len(l2CacheMisses),len(l2CacheHits))):
             gnuplot[4].stdin.write("%f %f\n" % (i * epochTime, 1.0 * (l2CacheMisses[i] + l2CacheHits[i]) ))
         gnuplot[4].stdin.write("e\n")
-
 
         for i in range(0, min(len(l2CacheMisses),len(l2CacheHits))):
             gnuplot[4].stdin.write("%f %f\n" % (i * epochTime, l2CacheMisses[i] / (l2CacheMisses[i] + l2CacheHits[i] + 1.0)))
@@ -1048,6 +1120,7 @@ def processStats(filename):
         fileList.append(os.path.join(tempPath,"cacheData." + extension))
         fileList.append(os.path.join(tempPath,"latencyVsPc." + extension))
         fileList.append(os.path.join(tempPath,"transactionLatencyDistribution." + extension))
+        fileList.append(os.path.join(tempPath,"addressDistribution." + extension))
 
         for b in gnuplot:
             b.stdin.write('\nexit\n')

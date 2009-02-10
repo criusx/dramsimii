@@ -180,14 +180,14 @@ BOOST_AUTO_TEST_CASE( test_transactions)
 	s.rowCount = 1024;
 	s.columnCount = 16384;
 	s.dramType = DDR2;
-	s.addressMappingScheme = CLOSE_PAGE_BASELINE;
+	s.addressMappingScheme = Address::CLOSE_PAGE_BASELINE;
 	Address::initialize(s);
 	Address addr(0x00fdbca3);
 	Address addr2(0x0000f0d0);
 
 	Transaction *t = new Transaction();
 
-	Transaction *t2 = new Transaction(READ_TRANSACTION,1337,64,addr, 0xdeadbeef, 2000, 44);
+	Transaction *t2 = new Transaction(Transaction::READ_TRANSACTION,1337,64,addr, 0xdeadbeef, 2000, 44);
 
 	BOOST_CHECK(*t != *t2);
 
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE( test_transactions)
 
 	BOOST_CHECK(*t2 == *t3);
 
-	Transaction *t4 = new Transaction(WRITE_TRANSACTION,234234223,33, addr2,  33);
+	Transaction *t4 = new Transaction(Transaction::WRITE_TRANSACTION,234234223,33, addr2,  33);
 
 	delete t3;
 
@@ -234,14 +234,14 @@ BOOST_AUTO_TEST_CASE( test_commands)
 	s.rowCount = 1024;
 	s.columnCount = 16384;
 	s.dramType = DDR2;
-	s.addressMappingScheme = CLOSE_PAGE_BASELINE;
+	s.addressMappingScheme = Address::CLOSE_PAGE_BASELINE;
 	Address::initialize(s);
 	Address addr(0x00fdfbca);
 	Address addr2(0x0000f0ad0);
 
 	Command *t = new Command();
 
-	Transaction *trans = new Transaction(READ_TRANSACTION,3400,8,addr2,42);
+	Transaction *trans = new Transaction(Transaction::READ_TRANSACTION,3400,8,addr2,42);
 
 	Command *t2 = new Command(*trans,1234,true,false,4);
 
@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE( test_commands)
 BOOST_AUTO_TEST_CASE( test_queue)
 {
 	// transaction tests
-	Transaction t(READ_TRANSACTION,0xface, 8, PHYSICAL_ADDRESS_MAX, 0, 0, NULL);
+	Transaction t(Transaction::READ_TRANSACTION,0xface, 8, PHYSICAL_ADDRESS_MAX, 0, 0, NULL);
 	Queue<std::string> queueA(5);
 	bool result = queueA.push(new std::string("abc"));
 	BOOST_CHECK(result == true);
@@ -323,12 +323,12 @@ BOOST_AUTO_TEST_CASE( test_queue)
 	backup("cmdtest3",q4);
 	restore("cmdtest3",q4);
 
-	q3->push(new Command(t,0xfacedeef,true,true,ACTIVATE));
-	q3->push(new Command(t,0xfbcedeef,true,true,ACTIVATE));
-	q3->push(new Command(t,0xfccedeef,true,true,ACTIVATE));
-	q3->push(new Command(t,0xfdcedeef,true,true,ACTIVATE));
-	q3->push(new Command(t,0xfecedeef,true,true,ACTIVATE));
-	q3->push(new Command(t,0xffcedeef,true,true,ACTIVATE));
+	q3->push(new Command(t,0xfacedeef,true,true,Command::ACTIVATE));
+	q3->push(new Command(t,0xfbcedeef,true,true,Command::ACTIVATE));
+	q3->push(new Command(t,0xfccedeef,true,true,Command::ACTIVATE));
+	q3->push(new Command(t,0xfdcedeef,true,true,Command::ACTIVATE));
+	q3->push(new Command(t,0xfecedeef,true,true,Command::ACTIVATE));
+	q3->push(new Command(t,0xffcedeef,true,true,Command::ACTIVATE));
 	backup("cmdtest2",q3);
 	restore("cmdtest2",q2);
 	BOOST_CHECK_EQUAL(*q3,*q2);
@@ -346,7 +346,7 @@ BOOST_AUTO_TEST_CASE( test_queue)
 		q5.push(
 			new Command(
 			*(new Transaction(
-			READ_TRANSACTION,
+			Transaction::READ_TRANSACTION,
 			std::rand(),
 			std::rand()%9,
 			*(new Address(std::rand())),

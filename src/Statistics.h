@@ -126,8 +126,8 @@ namespace DRAMsimII
 		void serialize( Archive & ar, const unsigned version )
 		{
 			ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
-				writeCount & readBytesTransferred & writeBytesTransferred & commandDelay & commandExecution & 
-				commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;
+				writeCount & readBytesTransferred & writeBytesTransferred;
+			//ar & commandDelay & commandExecution & commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;
 		}
 	};
 }
