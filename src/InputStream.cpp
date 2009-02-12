@@ -179,9 +179,6 @@ arrivalGenerator(randomNumberGenerator, gaussianDistribution)
 			boost::filesystem::path cwd(boost::filesystem::current_path());
 			cwd = cwd / "traceFiles" / traceFilename;
 			string inFileWithPath = cwd.string();
-#ifdef WIN32
-			boost::replace_all(inFileWithPath,"/","\\");
-#endif // WIN32
 #ifndef WIN32
 			if (ends_with(traceFilename,"gz"))
 				traceFile.push(gzip_decompressor());

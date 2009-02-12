@@ -38,6 +38,8 @@ unsigned Address::columnAddressDepth;
 unsigned Address::columnSizeDepth;
 unsigned Address::columnLowAddressDepth;
 unsigned Address::columnHighAddressDepth;
+unsigned Address::rowLowAddressDepth;
+unsigned Address::rowHighAddressDepth;
 Address::AddressMappingScheme Address::mappingScheme;
 
 Address::Address():
@@ -101,6 +103,9 @@ void Address::initialize(const Settings &dramSettings)
 	assert(cachelineDepth > columnSizeDepth);
 	columnLowAddressDepth = cachelineDepth - columnSizeDepth;
 	columnHighAddressDepth = columnAddressDepth - columnLowAddressDepth;
+	assert(rowAddressDepth > 3);
+	rowLowAddressDepth = 3;
+	rowHighAddressDepth = rowAddressDepth - 3;
 }
 
 void Address::initialize(const SystemConfiguration &systemConfig)
@@ -117,7 +122,9 @@ void Address::initialize(const SystemConfiguration &systemConfig)
 	assert(cachelineDepth > columnSizeDepth);
 	columnLowAddressDepth = cachelineDepth - columnSizeDepth;
 	columnHighAddressDepth = columnAddressDepth - columnLowAddressDepth;
-
+	assert(rowAddressDepth > 3);
+	rowLowAddressDepth = 3;
+	rowHighAddressDepth = rowAddressDepth - 3;
 }
 
 bool Address::reverseAddressTranslation()
@@ -159,7 +166,7 @@ bool Address::reverseAddressTranslation()
 		shift += rowAddressDepth;
 		physicalAddress |= rank << shift;
 		//shift += rankAddressDepth;
-		
+
 		break;
 	case SDRAM_CLOSE_PAGE_MAP:
 	case CLOSE_PAGE_BASELINE:
@@ -180,21 +187,24 @@ bool Address::reverseAddressTranslation()
 		break;
 
 	case CLOSE_PAGE_BASELINE_OPT:
-		{/// @todo finish this
+		{
+			unsigned rowLow = row & 0x07;
+			unsigned rowHigh = row >> 3;
+			physicalAddress = columnLow << shift;
+			shift += columnLowAddressDepth;
+			physicalAddress |= channel << shift;
+			shift += channelAddressDepth;
+			physicalAddress |= bank << shift;
+			shift += bankAddressDepth;
+			physicalAddress |= rowLow << shift;
+			shift += 3;
+			physicalAddress |= rank << shift;
+			shift += rankAddressDepth;
+			physicalAddress |= columnHigh << shift;
+			shift += columnHighAddressDepth;
+			physicalAddress |= rowHigh << shift;
 
-		physicalAddress = columnLow << shift;
-		shift += columnLowAddressDepth;
-		physicalAddress |= channel << shift;
-		shift += channelAddressDepth;
-		physicalAddress |= bank << shift;
-		shift += bankAddressDepth;
-		physicalAddress |= rank << shift;
-		shift += rankAddressDepth;
-		physicalAddress |= columnHigh << shift;
-		shift += columnHighAddressDepth;
-		physicalAddress |= row << shift;
-
-		break;
+			break;
 		}
 	case CLOSE_PAGE_LOW_LOCALITY:
 
@@ -227,7 +237,7 @@ bool Address::reverseAddressTranslation()
 		shift += bankAddressDepth;
 		physicalAddress |= rank << shift;
 		//shift += rankAddressDepth;
-		
+
 		break;
 
 	case BURGER_BASE_MAP:
@@ -251,16 +261,16 @@ bool Address::reverseAddressTranslation()
 bool Address::addressTranslation()
 {
 	PHYSICAL_ADDRESS buffer;
-	
+
 	if (!physicalAddress)
 		return false;
 
 	// strip away the byte address portion
 	PHYSICAL_ADDRESS tempAddress = physicalAddress >> columnSizeDepth;
-	
+
 	unsigned columnLow;
 	unsigned columnHigh;
-	
+
 	switch (mappingScheme)
 	{
 	case SDRAM_HIPERF_MAP:

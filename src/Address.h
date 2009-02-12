@@ -19,11 +19,9 @@
 #pragma once
 
 #include "globals.h"
-//#include "Settings.h"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
-#include <boost/serialization/list.hpp>
 
 namespace DRAMsimII
 {

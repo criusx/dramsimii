@@ -101,10 +101,10 @@ void M5dramSystem::moveToTime(const tick now)
 				M5_TIMING_LOG("<-T [@" << dec << static_cast<Tick>(finishTime * getCPURatio()) << "][+" << static_cast<Tick>(finishTime * getCPURatio() - curTick) << "] at" << curTick);
 
 				ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(finishTime * getCPURatio()));
-
+#if 0
 				static tick returnCount;
 
-#if 0
+
 				if (++returnCount % 10000 == 0)
 				{
 					cerr << returnCount << "\r";

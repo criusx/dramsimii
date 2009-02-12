@@ -125,6 +125,7 @@ def processPower(filename):
     set autoscale xfixmax
     set yrange [0:*] noreverse nowriteback
     unset x2tics
+    set mxtics
     set xrange [0:*]
     set xlabel "Time (s)"
     set ylabel "Power Dissipated (mW)" offset character .05, 0,0 textcolor lt -1 rotate by 90
@@ -153,6 +154,7 @@ def processPower(filename):
     set title
     set ytics out
     set xtics out
+    set mxtics
     set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
     unset x2tics
     set output "%s"
@@ -364,6 +366,7 @@ def processStats(filename):
     set origin 0.0, 0.0
     set autoscale xfixmax
     set autoscale xfixmin
+    set mxtics
     set xtics nomirror out
     set key center top horizontal reverse Left
     set style fill solid noborder
@@ -394,7 +397,6 @@ def processStats(filename):
     set title "Command Latency\\n%s"  offset character 0, -1, 0 font "" norotate
     ''', terminal + basicSetup + '''
     set yrange [0 : *] noreverse nowriteback
-    set mxtics
     set style fill  solid 1.00 noborder
     set xlabel "Time (s)"
     set ylabel "Working Set Size" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
@@ -515,15 +517,10 @@ def processStats(filename):
     plot '-' using 1:2:(1) t "Total Latency" with boxes
     '''
     transactionGraph = terminal + basicSetup + '''
-    #set yrange [1 : *] noreverse nowriteback
-    #unset autoscale
-    #set autoscale yfixmax
     set xrange [1 : *] noreverse nowriteback
     set logscale y
     set format x
     set style fill solid 1.00 noborder
-    #set logscale x
-    #set y2label "Access Count"
     set boxwidth 0.95 relative
     set xlabel "Execution Time (ns)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "Number of Transactions with this Execution Time"
@@ -601,19 +598,19 @@ def processStats(filename):
 
     iCacheHits = array('i')
     iCacheMisses = array('i')
-    iCacheMissLatency = array('l')
+    iCacheMissLatency = array('L')
     dCacheHits = array('i')
     dCacheMisses = array('i')
-    dCacheMissLatency = array('l')
+    dCacheMissLatency = array('d')
     l2CacheHits = array('i')
     l2CacheMisses = array('i')
-    l2CacheMissLatency = array('l')
+    l2CacheMissLatency = array('d')
     l2MshrHits = array('i')
     l2MshrMisses = array('i')
-    l2MshrMissLatency = array('l')
+    l2MshrMissLatency = array('d')
 
     bandwidthTotal = CumulativePriorMovingAverage()
-    bandwidthValues = [array('l'),array('l'),array('f')]
+    bandwidthValues = [array('d'),array('d'),array('f')]
 
     ipcValues = [array('f'),array('f'),array('f')]
     ipcBuffer = PriorMovingAverage(Window)
@@ -838,8 +835,9 @@ def processStats(filename):
                     newLine = line.strip().split()
                     readValue = float(newLine[0])
                     writeValue = float(newLine[1])
-                    bandwidthValues[0].append(long(readValue))
-                    bandwidthValues[1].append(long(writeValue))
+                    bandwidthValues[0].append(long(newLine[0]))
+                    bandwidthValues[1].append(long(newLine[1]))
+
                     bandwidthTotal.add(1, float(readValue) + float(writeValue))
                     bandwidthValues[2].append(bandwidthTotal.average)
 
@@ -905,11 +903,6 @@ def processStats(filename):
                         splitLine = line.split()
                         gnuplot[5].stdin.write("%d %d\n" % (int(splitLine[0], 16) - 4294967296, (float(splitLine[1]) * float(splitLine[2]))))
 
-            if workingSetCounter > 5000:
-                break
-            #line = compressedstream.readline()
-
-        #compressedstream.close()
 
     except IOError, strerror:
         print "I/O error", strerror, "\nThis archive is probably truncated."
@@ -979,7 +972,9 @@ def processStats(filename):
         # make the transaction latency graph
         gnuplot[0].stdin.write(transactionGraph % (commandLine, extension))
 
-        for u in distTransactionLatency:
+        sortedKeys = distTransactionLatency.keys()
+        sortedKeys.sort()
+        for u in sortedKeys:
             gnuplot[0].stdin.write("%d %f\n" % (u * period, distTransactionLatency[u]))
 
         gnuplot[0].stdin.write("e\nunset output\n")
@@ -1086,7 +1081,6 @@ def processStats(filename):
 
         for i in range(0,minRange):
             gnuplot[6].stdin.write("%f %f\n" % (epochTime * i , transactionCount[i]))
-            #print transactionCount[i]
         gnuplot[6].stdin.write("e\n")
 
         gnuplot[6].stdin.write("unset multiplot\nunset output\n")
