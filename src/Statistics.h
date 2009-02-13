@@ -73,6 +73,9 @@ namespace DRAMsimII
 		};
 
 	protected:
+		const unsigned channels;
+		const unsigned ranks;
+		const unsigned banks;
 		unsigned validTransactionCount;
 		unsigned startNumber;
 		unsigned endNumber;
@@ -94,9 +97,10 @@ namespace DRAMsimII
 		// still some bugs supporting 64-bit numbers
 		std::map<PHYSICAL_ADDRESS, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
 		std::map<PHYSICAL_ADDRESS, tick> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
-		std::tr1::unordered_map<unsigned,unsigned> channelUtilization;		///< the channels that are used
-		std::tr1::unordered_map<unsigned,unsigned> rankUtilization;		///< the ranks that are used
-		std::tr1::unordered_map<unsigned,unsigned> bankUtilization;		///< the banks that are used
+		std::vector<unsigned> channelUtilization;		///< the channels that are used
+		std::vector<unsigned> rankUtilization;		///< the ranks that are used
+		std::vector<unsigned> bankUtilization;		///< the banks that are used
+		std::vector<unsigned> aggregateBankUtilization; ///< the bank usage per bank
 
 	public:
 
@@ -126,7 +130,8 @@ namespace DRAMsimII
 		void serialize( Archive & ar, const unsigned version )
 		{
 			ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
-				writeCount & readBytesTransferred & writeBytesTransferred;
+				writeCount & readBytesTransferred & writeBytesTransferred & aggregateBankUtilization & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) & 
+				const_cast<unsigned&>(banks) & channelUtilization & rankUtilization & bankUtilization;
 			//ar & commandDelay & commandExecution & commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;
 		}
 	};

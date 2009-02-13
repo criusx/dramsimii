@@ -39,6 +39,9 @@ using std::string;
 using namespace DRAMsimII;
 
 Statistics::Statistics(const Settings& settings):
+channels(settings.channelCount),
+ranks(settings.rankCount),
+banks(settings.bankCount),
 validTransactionCount(0),
 startNumber(0),
 endNumber(0),
@@ -51,11 +54,23 @@ readBytesTransferred(0),
 writeBytesTransferred(0),
 timePerEpoch((float)settings.epoch / settings.dataRate),
 commandDelay(),
-commandExecution()
+commandExecution(),
+commandTurnaround(),
+transactionDecodeDelay(),
+transactionExecution(),
+pcOccurrence(),
+workingSet(),
+channelUtilization(settings.channelCount),
+rankUtilization(settings.rankCount),
+bankUtilization(settings.bankCount),
+aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.bankCount)
 {}
 
 // no arg constructor for deserialization
 Statistics::Statistics():
+channels(0),
+ranks(0),
+banks(0),
 validTransactionCount(UINT_MAX),
 startNumber(UINT_MAX),
 endNumber(UINT_MAX),
@@ -68,7 +83,16 @@ readBytesTransferred(0),
 writeBytesTransferred(0),
 timePerEpoch(0),
 commandDelay(),
-commandExecution()
+commandExecution(),
+commandTurnaround(),
+transactionDecodeDelay(),
+transactionExecution(),
+pcOccurrence(),
+workingSet(),
+channelUtilization(0),
+rankUtilization(0),
+bankUtilization(0),
+aggregateBankUtilization(0)
 {}
 
 
@@ -126,10 +150,14 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 	channelUtilization[currentCommand->getAddress().getChannel()]++;
 	rankUtilization[currentCommand->getAddress().getRank()]++;
 	bankUtilization[currentCommand->getAddress().getBank()]++;
+	aggregateBankUtilization[currentCommand->getAddress().getChannel() * (ranks * banks) + 
+		currentCommand->getAddress().getRank() * banks +
+		currentCommand->getAddress().getBank()]++;
 }
 
 ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 {
+	using std::vector;
 	//os << "RR[" << setw(6) << setprecision(6) << (double)statsLog.end_time/max(1,statsLog.bo4_count + statsLog.bo8_count) << "] ";
 	//os << "BWE[" << setw(6) << setprecision(6) << ((double)statsLog.bo8_count * 8.0 + statsLog.bo4_count * 4.0) * 100.0 / max(statsLog.end_time,(tick)1) << "]" << endl;
 
@@ -175,16 +203,26 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << "----Row Hit/Miss Counts----" << endl << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
 
 	os << "----Channel Utilization----" << endl;
-	for (unordered_map<unsigned,unsigned>::const_iterator i = statsLog.channelUtilization.begin(); i != statsLog.channelUtilization.end(); i++)
-		os << (unsigned)(*i).first << " " << (unsigned)(*i).second << std::endl;
+	for (vector<unsigned>::size_type i = 0; i < statsLog.channelUtilization.size(); i++)
+		os << i << " " << statsLog.channelUtilization[i] << std::endl;
 	os << "----Rank Utilization----" << endl;
-	for (unordered_map<unsigned,unsigned>::const_iterator i = statsLog.rankUtilization.begin(); i != statsLog.rankUtilization.end(); i++)
-		os << (*i).first << " " << (*i).second << endl;
+	for (vector<unsigned>::size_type i = 0; i < statsLog.rankUtilization.size(); i++)
+		os << i << " " << statsLog.rankUtilization[i] << endl;
 	os << "----Bank Utilization----" << endl;
-	for (unordered_map<unsigned,unsigned>::const_iterator i = statsLog.bankUtilization.begin(); i != statsLog.bankUtilization.end(); i++)
-		os << (*i).first << " " << (*i).second << endl;
+	for (vector<unsigned>::size_type i = 0; i < statsLog.bankUtilization.size(); i++)
+		os << i << " " << statsLog.bankUtilization[i] << endl;
+	os << "----Utilization by Rank, Bank----" << endl;
+	for (unsigned i = 0; i < statsLog.channels; i++)
+	{
+		for (unsigned j = 0; j < statsLog.ranks; j++)
+		{
+			for (unsigned k = 0; k < statsLog.banks; k++)
+			{
+				os << "(" << i << "," << j << "," << k << ") " << statsLog.aggregateBankUtilization[i * statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << endl;
+			}
+		}
+	}
 	
-
 
 #ifdef M5
 	Stats::Database::stat_list_t::iterator i = Stats::Database::stats().begin();
@@ -253,9 +291,14 @@ void Statistics::clear()
 	transactionDecodeDelay.clear();
 	workingSet.clear();
 	rowHits = rowMisses = readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
-	channelUtilization.clear();
-	rankUtilization.clear();
-	bankUtilization.clear();
+	for (vector<unsigned>::size_type i = 0; i < channelUtilization.size(); i++)
+		channelUtilization[i] = 0;
+	for (vector<unsigned>::size_type i = 0; i < rankUtilization.size(); i++)
+		rankUtilization[i] = 0;
+	for (vector<unsigned>::size_type i = 0; i < bankUtilization.size(); i++)
+		bankUtilization[i] = 0;
+	for (vector<unsigned>::size_type i = 0; i < aggregateBankUtilization.size(); i++)
+		aggregateBankUtilization[i] = 0;
 #ifdef M5
 	//async_statdump = 
 	async_event = async_statreset = true;	
@@ -269,7 +312,9 @@ bool Statistics::operator==(const Statistics& right) const
 		/// @todo restore comparisons once tr1 implementations support this
 		//commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
 		//transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && 
-		//channelUtilization == right.channelUtilization && rankUtilization == right.rankUtilization && bankUtilization == right.bankUtilization &&
+		channelUtilization == right.channelUtilization && rankUtilization == right.rankUtilization && bankUtilization == right.bankUtilization &&
+		channels == right.channels && ranks == right.ranks && banks == right.banks &&
+		aggregateBankUtilization == right.aggregateBankUtilization &&
 		pcOccurrence == right.pcOccurrence && workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount && 
 		readBytesTransferred == right.readBytesTransferred && writeBytesTransferred == right.writeBytesTransferred);
 }
