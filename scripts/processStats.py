@@ -44,6 +44,7 @@ powerRegex = re.compile('(?<={)[\d.]+')
 channelRegex = re.compile('(?<=ch\[)[\d]+')
 rankRegex = re.compile('(?<=rk\[)[\d]+')
 bankRegex = re.compile('(?<=bk\[)[\d]+')
+combinedRegex = re.compile('\(([\d.]+),([\d.]+),([\d.]+)\) (\d+)')
 
 class CumulativePriorMovingAverage:
     def __init__(self):
@@ -98,8 +99,10 @@ def thumbnail(filelist, tempPath):
     for x in filelist:
         if x.endswith(extension):
             file = os.path.join(tempPath,x)
-            os.system('convert -resize ' + thumbnailResolution + " " + file + " " + '%s-thumb.png' % file[:-4])
-            os.system("gzip -c -9 -f %s > %s" % (file, file + "z"))
+            p1 = Popen(['convert','-limit','memory', '512', '-resize', thumbnailResolution, file, '%s-thumb.png' % file[:-4]])
+            p2 = Popen("gzip -c -9 -f %s > %s" % (file, file + "z"), shell=True)
+            p1.wait()
+            p2.wait()
             os.remove(file)
 
 def processPower(filename):
@@ -120,7 +123,7 @@ def processPower(filename):
     # setup the script headers
     scripts = ['''
     unset border
-    set key outside center top horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
+    set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
     set autoscale xfixmin
     set autoscale xfixmax
     set yrange [0:*] noreverse nowriteback
@@ -147,7 +150,7 @@ def processPower(filename):
     plot '-' u 1:2 sm csp t "Cumulative Average" w lines lw 2.00, '-' u 1:2 t "Total Power" w boxes, '-' u 1:2 sm csp t "Running Average" w lines lw 2.00
     ''','''
     unset border
-    set key outside center top horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
+    set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5
     set autoscale xfixmin
     set autoscale xfixmax
     set yrange [0:*] noreverse nowriteback
@@ -368,7 +371,7 @@ def processStats(filename):
     set autoscale xfixmin
     set mxtics
     set xtics nomirror out
-    set key center top horizontal reverse Left
+    set key outside center bottom horizontal reverse Left
     set style fill solid noborder
     set boxwidth 0.95 relative
     set ytics out
@@ -709,6 +712,8 @@ def processStats(filename):
                         value = int(splitLine[3])
                     except ValueError:
                         value = long(float(splitLine[3]))
+                    except:
+                        value = 0
 
                     if splitLine[2] == "system.cpu.dcache.overall_hits":
                         dCacheHits.append(value)
@@ -810,6 +815,20 @@ def processStats(filename):
 
                         writing = 13
 
+                    elif line.startswith("----Utilization"):
+
+                        channelTotals.append(1)
+                        rankTotals.append(1)
+                        bankTotals.append(1)
+                        for x in channels:
+                            x.append(0)
+                        for x in ranks:
+                            x.append(0)
+                        for x in banks:
+                            x.append(0)
+
+                        writing = 14
+
             # data in this section
             else:
                 # transaction latency
@@ -891,6 +910,20 @@ def processStats(filename):
                     newLine = line.strip().split()
                     banks[int(newLine[0])][-1] = int(newLine[1])
                     bankTotals[-1] += int(newLine[1])
+
+                elif writing == 14:
+                    groups = combinedRegex.match(line).groups()
+                    if len(groups) == 4:
+                        channel = int(groups[0])
+                        rank = int(groups[1])
+                        bank = int(groups[2])
+                        value = int(groups[3])
+                        channels[channel][-1] += value
+                        ranks[rank][-1] += value
+                        banks[bank][-1] += value
+                        channelTotals[-1] += value
+                        rankTotals[-1] += value
+                        bankTotals[-1] += value
 
                 if processPerEpochGraphs:
                     if writing == 1:
@@ -1238,10 +1271,13 @@ def main():
     o.write(re.sub("@@@", filelist,data))
     o.close()
 
-    os.system("cp -r %s ." % os.path.join(os.path.abspath(sys.path[0]),"js"))
+    #os.system("cp -r %s ." % os.path.join(os.path.abspath(sys.path[0]),"js"))
+    try:
+        shutil.copytree(os.path.join(os.path.abspath(sys.path[0]),"js"), os.path.join(os.getcwd(),"js"))
+    except OSError:
+        pass
 
     workQueue.join()
-
 
 if __name__ == "__main__":
      os.environ["GDFONTPATH"] = "/usr/share/fonts/truetype/ttf-bitstream-vera"

@@ -60,9 +60,9 @@ transactionDecodeDelay(),
 transactionExecution(),
 pcOccurrence(),
 workingSet(),
-channelUtilization(settings.channelCount),
-rankUtilization(settings.rankCount),
-bankUtilization(settings.bankCount),
+//channelUtilization(settings.channelCount),
+//rankUtilization(settings.rankCount),
+//bankUtilization(settings.bankCount),
 aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.bankCount)
 {}
 
@@ -89,9 +89,9 @@ transactionDecodeDelay(),
 transactionExecution(),
 pcOccurrence(),
 workingSet(),
-channelUtilization(0),
-rankUtilization(0),
-bankUtilization(0),
+//channelUtilization(0),
+//rankUtilization(0),
+//bankUtilization(0),
 aggregateBankUtilization(0)
 {}
 
@@ -147,9 +147,9 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 		commandExecution[currentCommand->getExecuteTime()]++;
 		commandTurnaround[currentCommand->getLatency()]++;
 	}
-	channelUtilization[currentCommand->getAddress().getChannel()]++;
-	rankUtilization[currentCommand->getAddress().getRank()]++;
-	bankUtilization[currentCommand->getAddress().getBank()]++;
+	//channelUtilization[currentCommand->getAddress().getChannel()]++;
+	//rankUtilization[currentCommand->getAddress().getRank()]++;
+	//bankUtilization[currentCommand->getAddress().getBank()]++;
 	aggregateBankUtilization[currentCommand->getAddress().getChannel() * (ranks * banks) + 
 		currentCommand->getAddress().getRank() * banks +
 		currentCommand->getAddress().getBank()]++;
@@ -201,7 +201,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	
 	os << "----Row Hit/Miss Counts----" << endl << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
-
+#if 0
 	os << "----Channel Utilization----" << endl;
 	for (vector<unsigned>::size_type i = 0; i < statsLog.channelUtilization.size(); i++)
 		os << i << " " << statsLog.channelUtilization[i] << std::endl;
@@ -211,7 +211,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << "----Bank Utilization----" << endl;
 	for (vector<unsigned>::size_type i = 0; i < statsLog.bankUtilization.size(); i++)
 		os << i << " " << statsLog.bankUtilization[i] << endl;
-	os << "----Utilization by Rank, Bank----" << endl;
+#endif
+	os << "----Utilization----" << endl;
 	for (unsigned i = 0; i < statsLog.channels; i++)
 	{
 		for (unsigned j = 0; j < statsLog.ranks; j++)
@@ -291,12 +292,14 @@ void Statistics::clear()
 	transactionDecodeDelay.clear();
 	workingSet.clear();
 	rowHits = rowMisses = readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
+#if 0
 	for (vector<unsigned>::size_type i = 0; i < channelUtilization.size(); i++)
 		channelUtilization[i] = 0;
 	for (vector<unsigned>::size_type i = 0; i < rankUtilization.size(); i++)
 		rankUtilization[i] = 0;
 	for (vector<unsigned>::size_type i = 0; i < bankUtilization.size(); i++)
 		bankUtilization[i] = 0;
+#endif
 	for (vector<unsigned>::size_type i = 0; i < aggregateBankUtilization.size(); i++)
 		aggregateBankUtilization[i] = 0;
 #ifdef M5
@@ -312,7 +315,7 @@ bool Statistics::operator==(const Statistics& right) const
 		/// @todo restore comparisons once tr1 implementations support this
 		//commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
 		//transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && 
-		channelUtilization == right.channelUtilization && rankUtilization == right.rankUtilization && bankUtilization == right.bankUtilization &&
+		//channelUtilization == right.channelUtilization && rankUtilization == right.rankUtilization && bankUtilization == right.bankUtilization &&
 		channels == right.channels && ranks == right.ranks && banks == right.banks &&
 		aggregateBankUtilization == right.aggregateBankUtilization &&
 		pcOccurrence == right.pcOccurrence && workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount && 

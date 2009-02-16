@@ -260,7 +260,6 @@ liveProcessDict["astar"] = astar
 wrf = LiveProcess()
 wrf.executable = binary_dir + '481.wrf/exe/wrf_base' + suffix
 wrf.cmd = [wrf.executable] + [os.path.join(data_dir, '481.wrf/data/ref/input/namelist.input')]
-print wrf.cmd
 #wrf.output = 'rsl.out.0000'
 wrf.cwd = os.path.join(data_dir, '481.wrf/data/ref/input/')
 cmdLineDict["wrf"] = '481.wrf.namelist'
