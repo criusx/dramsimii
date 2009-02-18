@@ -250,6 +250,7 @@ namespace DRAMsimII
 			theMap["dramspec"]=dram_type_token;
 			theMap["tbufferdelay"]=t_buffer_delay_token;
 			theMap["inputtype"]=input_type_token;
+			theMap["infiletype"]=input_type_token;
 			theMap["inputfiletype"]=input_type_token;
 			theMap["epoch"]=epoch_token;
 			theMap["clock_granularity"] = clock_granularity_token;

@@ -206,7 +206,9 @@ nextStats(settings.epoch)
 		if (settings.inFileType == InputStream::RANDOM)
 			commandLine = "Random";
 		else if (settings.inFileType == InputStream::MASE_TRACE)
-			commandLine = "maseTrace";
+		{			
+			commandLine = settings.inFile;
+		}
 	}
 	// else printing to these streams goes nowhere
 	statsOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
