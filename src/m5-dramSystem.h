@@ -11,6 +11,12 @@
 #include "base/stats/statdb.hh"
 #include "base/stats/types.hh"
 
+#ifdef WIN32
+#include <unordered_map>
+#else
+#include <tr1/unordered_map>
+#endif
+
 
 #include "System.h"
 #include "fbdSystem.h"
@@ -40,6 +46,10 @@ private:
 		void process();			///< process to call when a tick event happens
 
 		const char *description();	///< return a string that describes this event
+
+		void schedule(tick when) { mainEventQueue.schedule(this,when);}
+
+		void deschedule() { mainEventQueue.deschedule(this);}
 	};
 
 	/// allows this to receive packets and attach to a bus
@@ -88,13 +98,11 @@ protected:
 	bool needRetry;											///< if the memory system needs to issue a retry statement before any more requests will come in
 	unsigned mostRecentChannel;								///< the most recent channel that a request was sent to
 	int cpuRatio;											///< the ratio of the cpu frequency to the memory frequency
-	//float invCpuRatio;										///< the ratio of the memory frequency to the cpu frequency
-	std::map<unsigned,Packet*> transactionLookupTable;
-	unsigned currentTransactionID;
-	
 
-	//virtual Tick calculateLatency(Packet *);
-	//virtual Tick recvTiming(PacketPtr pkt);
+	std::tr1::unordered_map<unsigned,Packet*> transactionLookupTable;
+	unsigned currentTransactionID;
+
+	unsigned int drain(Event *de);
 	void virtual init();
 
 
@@ -109,7 +117,7 @@ public:
 	void getAddressRanges(AddrRangeList &resp, bool &snoop);
 
 	int getCPURatio() const { return cpuRatio; }			///< returns the ratio of the cpu frequency to the memory frequency
-
+	
 	//float getInvCPURatio() const { return invCpuRatio; }	///< returns the ratio of the memory frequency to the cpu frequency
 
 	void moveToTime(tick now);

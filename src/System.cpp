@@ -279,6 +279,10 @@ nextStats(0)
 System::~System()
 {}
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief helper function to determine if a file already exists
+/// @return true if the file already exists, false otherwise
+//////////////////////////////////////////////////////////////////////////
 bool System::fileExists(stringstream& fileName) const
 {
 	bf::path newPath(fileName.str().c_str());
@@ -301,12 +305,11 @@ tick System::nextTick() const
 	// find the next time to wake from among all the channels
 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
-		//tick channelNextWake = currentChan->nextTick();
-		nextWake = min(currentChan->nextTick(),nextWake);
-		//if (channelNextWake < nextWake)
-		//{
-		//	nextWake = channelNextWake;
-		//}
+		tick channelNextWake = currentChan->nextTick();
+		if (channelNextWake < nextWake)
+		{
+			nextWake = channelNextWake;
+		}
 	}
 	assert(nextWake < TICK_MAX);
 	assert(nextWake > time);
@@ -365,9 +368,23 @@ bool System::enqueue(Transaction *currentTransaction)
 	bool result = channel[currentTransaction->getAddress().getChannel()].enqueue(currentTransaction);
 
 #ifdef M5DEBUG	
-	M5_TIMING_LOG((result ? "" : "!") << "+T(" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ")")
+	M5_TIMING_LOG((result ? "" : "!") << "+T ch[" << currentTransaction->getAddress().getChannel() << "](" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ")")
 #endif
 		return result;
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief resets various counters to account for the fact that time starts now
+/// @param time the time to reset things to begin at
+//////////////////////////////////////////////////////////////////////////
+void System::resetToTime(tick time)
+{
+	nextStats = time + systemConfig.getEpoch();
+
+	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+	{
+		i->resetToTime(time);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -378,26 +395,20 @@ bool System::enqueue(Transaction *currentTransaction)
 /// @param transFinishTime the time at which the transaction finished, less than the endTime
 /// @return a transaction which finished somewhere before the end time
 //////////////////////////////////////////////////////////////////////
-unsigned System::moveAllChannelsToTime(const tick endTime, tick& transFinishTime)
+void System::moveAllChannelsToTime(const tick endTime)
 {
-	M5_TIMING_LOG("move forward until: " << endTime );
+	M5_TIMING_LOG("ch to [" << std::dec << endTime << "]");
 
-	unsigned finishedTransaction = UINT_MAX;
-
-	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+	//unsigned finishedTransaction = UINT_MAX;
+	int i;
+//#pragma omp parallel for private(i)
+	for (i = channel.size() - 1; i >= 0; i--)
 	{
-		finishedTransaction = i->moveChannelToTime(endTime, transFinishTime);
-
-		if (finishedTransaction < UINT_MAX)
-		{			
-			break;
-		}
+		channel[i].moveChannelToTime(endTime);
 	}
 
 	updateSystemTime();
 	checkStats();
-
-	return finishedTransaction;
 }
 
 
@@ -448,6 +459,20 @@ void System::doPowerCalculation()
 	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
 }
 
+unsigned System::pendingTransactionCount() const
+{
+	unsigned count = 0;
+	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+		count += i->pendingTransactionCount();
+	return count;
+}
+
+void System::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outputQueue)
+{
+	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+		i->getPendingTransactions(outputQueue);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 /// @brief automatically runs the simulations according to the set parameters
@@ -480,11 +505,12 @@ void System::runSimulations(const unsigned requestCount)
 		// in case this transaction tried to arrive while the queue was full
 
 
-		tick nearFinish = 0;
+		//tick nearFinish = 0;
 
 		// as long as transactions keep happening prior to this time
 		//if (moveAllChannelsToTime(min(inputTransaction->getEnqueueTime(),nextTick()),nearFinish))
-		if (moveAllChannelsToTime(max(newTime, inputTransaction->getArrivalTime()),nearFinish) < UINT_MAX)
+		moveAllChannelsToTime(max(newTime, inputTransaction->getArrivalTime()));
+		if (this->pendingTransactionCount() > 0)
 		{
 			cerr << "not right, no host transactions here" << endl;
 		}

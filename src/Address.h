@@ -101,6 +101,7 @@ namespace DRAMsimII
 		// initialize
 		void static initialize(const Settings &dramSettings);
 		void static initialize(const SystemConfiguration &systemConfig);
+		PHYSICAL_ADDRESS static maxAddress();
 
 		// friend		
 		friend class boost::serialization::access;

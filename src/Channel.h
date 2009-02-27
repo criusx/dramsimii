@@ -31,6 +31,7 @@
 #include "Algorithm.h"
 
 #include <vector>
+#include <queue>
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/access.hpp>
@@ -60,6 +61,7 @@ namespace DRAMsimII
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
 		bool dbReporting;								///< whether or not to report results to a db
 		std::vector<Rank> rank;							///< vector of the array of ranks
+		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
 
 	public:
 		// constructors
@@ -81,12 +83,16 @@ namespace DRAMsimII
 		tick nextTransactionDecodeTime() const;
 		tick nextCommandExecuteTime() const;
 		virtual tick nextTick() const;
+		void resetToTime(const tick time);
+		unsigned pendingTransactionCount() const { return finishedTransactions.size(); }
+		void getPendingTransactions(std::queue<std::pair<unsigned,tick> > &);
 
 		// functions that may differ for architectures that inherit this		
 		virtual const Command *readNextCommand() const;
-		virtual unsigned moveChannelToTime(const tick endTime, tick& transFinishTime);
+		virtual void moveChannelToTime(const tick endTime);
 		virtual tick minProtocolGap(const Command *thisCommand) const;
 		virtual tick earliestExecuteTime(const Command *thisCommand) const;
+		virtual tick earliestExecuteTimeLog(const Command *thisCommand) const;
 
 		// accessors
 		const TimingSpecification& getTimingSpecification() const { return timingSpecification; }	///< returns a reference to access the timing specification

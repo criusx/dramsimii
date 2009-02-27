@@ -29,5 +29,5 @@ ostream &DRAMsimII::operator<<(ostream &os, const Event& currentEvent)
 		"] S[" << std::dec << currentEvent.startTime << 
 		"] E[" << std::dec << currentEvent.completionTime << 
 		"] EXE[" << std::dec << currentEvent.getExecuteTime() << 
-		"] DLY[" << std::dec << currentEvent.getDelayTime() << "]";
+		"] LAT[" << std::dec << currentEvent.getLatency() << "]";
 }

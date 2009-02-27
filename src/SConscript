@@ -52,6 +52,10 @@ if not conf.CheckLib('xml2'):
 	print 'libxml2 not found, please install this.'
 	print 'e.g. sudo apt-get install "libxml2-*"'
 	Exit(1)
+#if not conf.CheckLib('gomp'):
+#	print 'need a compiler that supports OpenMP.'
+#	print 'such as gcc 4.2+, icc 11+, Visual Studio 2005+, etc.'
+#	Exit(1)
 
 #try:
 #	env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))

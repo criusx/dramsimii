@@ -35,4 +35,12 @@ namespace DRAMsimII
 	filtering_ostream timingOutStream;
 	filtering_ostream powerOutStream;
 	filtering_ostream statsOutStream;
+
+	void printTiming(std::ostringstream &out)
+	{
+//#pragma omp critical
+		{
+			timingOutStream << out << std::endl;
+		}
+	}
 }

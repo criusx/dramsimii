@@ -74,17 +74,20 @@ namespace DRAMsimII
 	public:		
 
 		// functions
-		unsigned moveAllChannelsToTime(const tick endTime, tick& transFinishTime);
+		void moveAllChannelsToTime(const tick endTime);
 		bool enqueue(Transaction* trans);
 		void enqueueTimeShift(Transaction* trans);
-		InputStream::InputStatus waitForTransactionToFinish(Transaction *trans);
+		//InputStream::InputStatus waitForTransactionToFinish(Transaction *trans);
 		virtual tick nextTick() const;
 		void runSimulations(const unsigned requestCount = 0);
+		unsigned pendingTransactionCount() const;
+		void getPendingTransactions(std::queue<std::pair<unsigned,tick> > &);
 
 		// accessors
 		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); } ///< returns true if this channel has no more room
 		double Frequency() const { return systemConfig.Frequency(); }	///< accessor to get the frequency of the DRAM system
 		tick getTime() const { return time; }
+		void resetToTime(tick time);
 
 		// constructors	
 		explicit System(const Settings& settings);

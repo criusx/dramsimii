@@ -98,6 +98,7 @@ namespace DRAMsimII
 		std::map<PHYSICAL_ADDRESS, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
 		std::map<PHYSICAL_ADDRESS, tick> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
 		std::vector<unsigned> aggregateBankUtilization; ///< the bank usage per bank
+		std::vector<unsigned> bankLatencyUtilization;	///< the latency due to each bank per unit time
 
 	public:
 
@@ -109,9 +110,17 @@ namespace DRAMsimII
 		void collectTransactionStats(const Transaction*);	
 		void collectCommandStats(const Command*);
 		inline void setValidTransactionCount(int vtc) {validTransactionCount = vtc;}
-		void reportHit() { rowHits++; }
+		void reportHit()
+		{
+//#pragma omp atomic
+			rowHits++; 
+		}
 		unsigned getHitCount() const { return rowHits;}
-		void reportMiss() { rowMisses++; }
+		void reportMiss()
+		{ 
+//#pragma omp atomic
+			rowMisses++;
+		}
 		unsigned getMissCount() const { return rowMisses; }
 		friend std::ostream &operator<<(std::ostream &, const Statistics &);
 
@@ -128,7 +137,7 @@ namespace DRAMsimII
 		{
 			ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
 				writeCount & readBytesTransferred & writeBytesTransferred & aggregateBankUtilization & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) & 
-				const_cast<unsigned&>(banks) & aggregateBankUtilization;
+				const_cast<unsigned&>(banks) & aggregateBankUtilization & bankLatencyUtilization;
 				//channelUtilization & rankUtilization & bankUtilization;
 			//ar & commandDelay & commandExecution & commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;
 		}

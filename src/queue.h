@@ -257,19 +257,22 @@ namespace DRAMsimII
 		/// and one would like to store them when they are not in use
 		void releaseItem(T *item)
 		{
-			
+//#pragma omp critical
+			{
+
 #if 0
-			// look around to see if this was already in there, slows things down a lot, so use only when this might be a problem
-			for (typename std::vector<T *>::iterator i = entry.begin(); i != entry.end(); i++)
-			{
-				assert(item != *i);
-			}
+				// look around to see if this was already in there, slows things down a lot, so use only when this might be a problem
+				for (typename std::vector<T *>::iterator i = entry.begin(); i != entry.end(); i++)
+				{
+					assert(item != *i);
+				}
 #endif
-			assert(pool);
-			if (!push(item))
-			{
-				::delete item;
-				item = NULL;
+				assert(pool);
+				if (!push(item))
+				{
+					::delete item;
+					item = NULL;
+				}
 			}
 		}
 
@@ -279,15 +282,18 @@ namespace DRAMsimII
 		T *acquireItem()
 		{
 			assert(pool);
-
-			if (count == 0)
+			T* newItem;
+//#pragma omp critical
 			{
-				T* item = ::new T;
-				assert(item != NULL);
-				return item;
+				if (count == 0)
+				{
+					newItem = ::new T;
+					assert(newItem != NULL);
+				}
+				else
+					newItem = pop();
 			}
-			else
-				return pop();
+			return newItem;
 		}
 
 		/// @brief this function makes this queue rhs non-FIFO queue.  

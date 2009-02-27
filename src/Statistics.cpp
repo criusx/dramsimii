@@ -23,6 +23,7 @@
 #include "sim/async.hh"
 #include "base/stats/text.hh"
 #endif
+
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -60,10 +61,8 @@ transactionDecodeDelay(),
 transactionExecution(),
 pcOccurrence(),
 workingSet(),
-//channelUtilization(settings.channelCount),
-//rankUtilization(settings.rankCount),
-//bankUtilization(settings.bankCount),
-aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.bankCount)
+aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.bankCount),
+bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.bankCount)
 {}
 
 // no arg constructor for deserialization
@@ -89,81 +88,84 @@ transactionDecodeDelay(),
 transactionExecution(),
 pcOccurrence(),
 workingSet(),
-//channelUtilization(0),
-//rankUtilization(0),
-//bankUtilization(0),
-aggregateBankUtilization(0)
+aggregateBankUtilization(0),
+bankLatencyUtilization(0)
 {}
 
 
 void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 {
-	if (currentTransaction->isRead() || currentTransaction->isWrite())
+//#pragma omp critical
 	{
-		if (currentTransaction->getLength() == 8)
+		if (currentTransaction->isRead() || currentTransaction->isWrite())
 		{
-			++burstOf8Count;
-		}
-		else
-		{
-			++burstOf4Count;
-		}
-		if (currentTransaction->isRead())
-		{
-			transactionExecution[currentTransaction->getLatency()]++;
-			assert(currentTransaction->getLatency() > 4);
-		}
-		transactionDecodeDelay[currentTransaction->getDecodeDelay()]++;
+			if (currentTransaction->getLength() == 8)
+			{
+				++burstOf8Count;
+			}
+			else
+			{
+				++burstOf4Count;
+			}
+			if (currentTransaction->isRead())
+			{
+				//if (currentTransaction->getLatency() > 1024)
+				//	std::cerr << currentTransaction->getLatency() << std::endl;
+				transactionExecution[currentTransaction->getLatency()]++;
+				assert(currentTransaction->getLatency() > 4);
+				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks) + 
+					currentTransaction->getAddress().getRank() * banks +
+					currentTransaction->getAddress().getBank();
+				bankLatencyUtilization[index] += currentTransaction->getLatency();
+				aggregateBankUtilization[index]++;
+				readCount++;
+				readBytesTransferred += currentTransaction->getLength();
+			}
+			else
+			{
+				// 64bit bus for most DDRx architectures
+				writeBytesTransferred += currentTransaction->getLength();
+				writeCount++;
+			}
 
-		// gather working set information for this epoch, exclude the entries which alias to the same column		
-		workingSet[currentTransaction->getAddress().getPhysicalAddress() >> columnDepth]++;
+			transactionDecodeDelay[currentTransaction->getDecodeDelay()]++;
 
-		if (currentTransaction->isRead())
-		{
-			readCount++;
-			readBytesTransferred += currentTransaction->getLength();
-		}
-		else
-		{
-			// 64bit bus for most DDRx architectures
-			writeBytesTransferred += currentTransaction->getLength();
-			writeCount++;
-		}	
+			// gather working set information for this epoch, exclude the entries which alias to the same column		
+			workingSet[currentTransaction->getAddress().getPhysicalAddress() >> columnDepth]++;
 
-		// ignore write / tlb transactions that don't have a specific PC
-		if (currentTransaction->getProgramCounter() > 0x00)
-		{
-			pcOccurrence[currentTransaction->getProgramCounter()].countUp();
-			pcOccurrence[currentTransaction->getProgramCounter()].delay(currentTransaction->getLatency());
+			// ignore write / tlb transactions that don't have a specific PC
+			if (currentTransaction->getProgramCounter() > 0x00)
+			{
+				pcOccurrence[currentTransaction->getProgramCounter()].countUp();
+				pcOccurrence[currentTransaction->getProgramCounter()].delay(currentTransaction->getLatency());
+			}
 		}
 	}
 }
 
 void Statistics::collectCommandStats(const Command *currentCommand)
 {
-	if (!currentCommand->isRefresh())
+//#pragma omp critical
 	{
-		commandDelay[currentCommand->getDelayTime()]++;
-		commandExecution[currentCommand->getExecuteTime()]++;
-		commandTurnaround[currentCommand->getLatency()]++;
+		if (!currentCommand->isRefresh())
+		{
+			commandDelay[currentCommand->getDelayTime()]++;
+			commandExecution[currentCommand->getExecuteTime()]++;
+			commandTurnaround[currentCommand->getLatency()]++;		
+		}
 	}
-	//channelUtilization[currentCommand->getAddress().getChannel()]++;
-	//rankUtilization[currentCommand->getAddress().getRank()]++;
-	//bankUtilization[currentCommand->getAddress().getBank()]++;
-	aggregateBankUtilization[currentCommand->getAddress().getChannel() * (ranks * banks) + 
-		currentCommand->getAddress().getRank() * banks +
-		currentCommand->getAddress().getBank()]++;
 }
 
 ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 {
 	using std::vector;
-	//os << "RR[" << setw(6) << setprecision(6) << (double)statsLog.end_time/max(1,statsLog.bo4_count + statsLog.bo8_count) << "] ";
-	//os << "BWE[" << setw(6) << setprecision(6) << ((double)statsLog.bo8_count * 8.0 + statsLog.bo4_count * 4.0) * 100.0 / max(statsLog.end_time,(tick)1) << "]" << endl;
+#if 0
+	os << "RR[" << setw(6) << setprecision(6) << (double)statsLog.end_time/max(1,statsLog.bo4_count + statsLog.bo8_count) << "] ";
+	os << "BWE[" << setw(6) << setprecision(6) << ((double)statsLog.bo8_count * 8.0 + statsLog.bo4_count * 4.0) * 100.0 / max(statsLog.end_time,(tick)1) << "]" << endl;
 
-	//os << "----R W Total----" << endl;
-	//os << statsLog.readCount << " " << statsLog.writeCount << " " << statsLog.readCount + statsLog.writeCount << endl;
-
+	os << "----R W Total----" << endl;
+	os << statsLog.readCount << " " << statsLog.writeCount << " " << statsLog.readCount + statsLog.writeCount << endl;
+#endif
 	os << "----Transaction Delay " << statsLog.transactionDecodeDelay.size() << "----" << endl;
 	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); currentValue++)
 	{
@@ -201,17 +203,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	
 	os << "----Row Hit/Miss Counts----" << endl << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
-#if 0
-	os << "----Channel Utilization----" << endl;
-	for (vector<unsigned>::size_type i = 0; i < statsLog.channelUtilization.size(); i++)
-		os << i << " " << statsLog.channelUtilization[i] << std::endl;
-	os << "----Rank Utilization----" << endl;
-	for (vector<unsigned>::size_type i = 0; i < statsLog.rankUtilization.size(); i++)
-		os << i << " " << statsLog.rankUtilization[i] << endl;
-	os << "----Bank Utilization----" << endl;
-	for (vector<unsigned>::size_type i = 0; i < statsLog.bankUtilization.size(); i++)
-		os << i << " " << statsLog.bankUtilization[i] << endl;
-#endif
+
 	os << "----Utilization----" << endl;
 	for (unsigned i = 0; i < statsLog.channels; i++)
 	{
@@ -223,6 +215,19 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			}
 		}
 	}
+
+	os << "----Latency Breakdown----" << endl;
+	for (unsigned i = 0; i < statsLog.channels; i++)
+	{
+		for (unsigned j = 0; j < statsLog.ranks; j++)
+		{
+			for (unsigned k = 0; k < statsLog.banks; k++)
+			{
+				os << "(" << i << "," << j << "," << k << ") " << statsLog.bankLatencyUtilization[i * statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << endl;
+			}
+		}
+	}
+
 	
 
 #ifdef M5
@@ -292,16 +297,11 @@ void Statistics::clear()
 	transactionDecodeDelay.clear();
 	workingSet.clear();
 	rowHits = rowMisses = readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
-#if 0
-	for (vector<unsigned>::size_type i = 0; i < channelUtilization.size(); i++)
-		channelUtilization[i] = 0;
-	for (vector<unsigned>::size_type i = 0; i < rankUtilization.size(); i++)
-		rankUtilization[i] = 0;
-	for (vector<unsigned>::size_type i = 0; i < bankUtilization.size(); i++)
-		bankUtilization[i] = 0;
-#endif
 	for (vector<unsigned>::size_type i = 0; i < aggregateBankUtilization.size(); i++)
 		aggregateBankUtilization[i] = 0;
+	for (vector<unsigned>::size_type i = 0; i < bankLatencyUtilization.size(); i++)
+		bankLatencyUtilization[i] = 0;
+	pcOccurrence.clear();
 #ifdef M5
 	//async_statdump = 
 	async_event = async_statreset = true;	

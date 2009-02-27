@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE( circular_buffer_test)
 
 BOOST_AUTO_TEST_CASE( test_transactions)
 {
-	Settings s;
+	Settings s(master_test_suite().argc, (char **)master_test_suite().argv);
 	s.channelCount = 4;
 	s.rankCount = 4;
 	s.bankCount = 16;
@@ -227,7 +227,7 @@ BOOST_AUTO_TEST_CASE( test_transactions)
 
 BOOST_AUTO_TEST_CASE( test_commands)
 {
-	Settings s;
+	Settings s(master_test_suite().argc, (char **)master_test_suite().argv);
 	s.channelCount = 4;
 	s.rankCount = 4;
 	s.bankCount = 16;
@@ -286,6 +286,32 @@ BOOST_AUTO_TEST_CASE( test_commands)
 	std::cerr << *t4 << std::endl;
 
 
+}
+
+#include <boost/random.hpp>
+#include <boost/random/variate_generator.hpp>
+
+
+BOOST_AUTO_TEST_CASE(addressTest)
+{
+	boost::mt19937 rng;
+	boost::uniform_int<PHYSICAL_ADDRESS> rngen(0,Address::maxAddress());
+	boost::variate_generator<boost::mt19937, boost::uniform_int<PHYSICAL_ADDRESS>> vargen(rng,rngen);
+	Settings s(master_test_suite().argc, (char **)master_test_suite().argv);
+	Address::initialize(s);
+
+	Address a;
+	for (unsigned i = 0; i < s.channelCount; i++)
+		for (unsigned j = 0; j < s.rankCount; j++)
+			for (unsigned k = 0; k < s.bankCount; k++)
+				for (unsigned l = 0; l < s.columnCount; l++)
+					for (unsigned m = 0; m < s.rowCount; m++)
+						a.setAddress(i,j,k,l,m);
+	for (unsigned i = 0; i < 1500000000; i++)
+	{
+		Address *add = new Address(vargen());
+		delete add;
+	}
 }
 
 BOOST_AUTO_TEST_CASE( test_queue)

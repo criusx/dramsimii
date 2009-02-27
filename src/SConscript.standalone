@@ -43,6 +43,10 @@ if not conf.CheckLib('xml2'):
 	print "Need libxml2 to compile this."
 	print "e.g. sudo apt-get install \".*libxml2.*\""
 	Exit(1)
+#if not conf.CheckLib('gomp'):
+#	print 'need a compiler that supports OpenMP.'
+#	print 'such as gcc 4.2+, icc 11+, Visual Studio 2005+, etc.'
+#	Exit(1)
 
 
 
@@ -101,10 +105,10 @@ platform = ARGUMENTS.get("build",Platform())
 
 if platform == 'debug':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
-	envDebug.Append(CCFLAGS = '-g -O -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
+	envDebug.Append(CCFLAGS = '-g -O -fopenmp -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
 	debug = envDebug.Program('dramSimII.debug',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
-if platform == 'debugsimple':
+elif platform == 'debugsimple':
 	envDebugSimple = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogs')
 	envDebugSimple.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
 	debugSimple = envDebugSimple.Program('dramSimII.debugsimple',sourceFile)

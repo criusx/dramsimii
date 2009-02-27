@@ -178,8 +178,8 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 
 void *Command::operator new(size_t size)
 {
-	assert(size == sizeof(Command));
-	return freeCommandPool.acquireItem();
+		assert(size == sizeof(Command));
+		return freeCommandPool.acquireItem();
 }
 
 
