@@ -23,6 +23,7 @@ channelRegex = re.compile('(?<=ch\[)[\d]+')
 rankRegex = re.compile('(?<=rk\[)[\d]+')
 bankRegex = re.compile('(?<=bk\[)[\d]+')
 combinedRegex = re.compile('\(([\d.]+),([\d.]+),([\d.]+)\) (\d+)')
+NaN = float('nan')
 
 addressDistroString = '<h2>Address Distribution, Channel %d</h2><a rel="lightbox" href="addressDistribution%d.svgz"><img class="fancyzoom" src="addressDistribution%d-thumb.png" alt="" /></a>'
 
@@ -90,7 +91,8 @@ basicSetup = '''
     set xtics nomirror out
     set key outside center bottom horizontal reverse Left
     set style fill solid noborder
-    set boxwidth 0.95 relative
+    #set boxwidth 0.95 relative
+    set boxwidth 0.95 absolute
     set ytics out
     '''
 
@@ -117,8 +119,11 @@ statsScripts = [terminal + basicSetup + '''
     set title "Command Latency\\n%s"  offset character 0, -1, 0 font "" norotate
     ''', terminal + basicSetup + '''
     set yrange [0 : *] noreverse nowriteback
-    set style fill  solid 1.00 noborder
+    set boxwidth 0.98 relative
+    set style fill solid 1.00 noborder
+    set xrange [0 : *] noreverse nowriteback
     set xlabel "Time (s)"
+    #set logscale y
     set ylabel "Working Set Size" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set title "Working Set Size vs Time\\n%s"  offset character 0, -1, 0 font "" norotate
     set output "workingSet.''' + extension + '''"
@@ -144,6 +149,7 @@ statsScripts = [terminal + basicSetup + '''
     set title "Total Latency vs. PC Value\\n%s"  offset character 0, -1, 0 font "" norotate
     #set style fill solid 1.00 border 0
     set format x "0x1%%x"
+    set xrange [*:*] noreverse nowriteback
     set style fill solid 1.00 noborder
     ''', terminal + basicSetup + '''
     set output "averageIPCandLatency.''' + extension + '''"
@@ -223,24 +229,35 @@ cacheGraphC = '''
     set title "Miss Rate of L2 Cache"  offset character 0, -1, 0 font "" norotate
     plot  '-' using 1:2 title "Access Count" axes x2y2 with impulses, '-' using 1:2 title "Miss Rate" with lines lw 1.0
     '''
-pcVsLatencyGraph = terminal + basicSetup + '''
-    set yrange [1 : *] noreverse nowriteback
+pcVsLatencyGraph0 = terminal + basicSetup + '''
     set logscale y
+    set yrange [1 : *] noreverse nowriteback
     set xlabel "PC Value" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "Total Latency (ns)"
     set title "Total Latency Due to Reads vs. PC Value\\n%s"  offset character 0, -1, 0 font "" norotate
     #set style fill solid 1.00 border 0
-    set format x "0x1%%x"
     set style fill solid 1.00 noborder
+    #set boxwidth 1.00 absolute
+    set format x "0x%%x"
     set output "latencyVsPc.%s"
-    plot '-' using 1:2:(1) t "Total Latency" with boxes
+    set multiplot
+
+    set size 0.5, 1.0
+    set origin 0.0, 0.0
+    plot '-' using 1:2 t "Total Latency" with boxes
+    '''
+pcVsLatencyGraph1 = '''
+    set size 0.5, 1.0
+    set origin 0.5, 0.0
+    set format x "0x1%x"
+    plot '-' using 1:2 t "Total Latency" with boxes
     '''
 transactionGraph = terminal + basicSetup + '''
     set xrange [1 : *] noreverse nowriteback
     set logscale y
     set format x
     set style fill solid 1.00 noborder
-    set boxwidth 0.95 relative
+    #set boxwidth 0.95 relative
     set xlabel "Execution Time (ns)" offset character .05, 0,0 font "" textcolor lt -1 rotate by 90
     set ylabel "Number of Transactions with this Execution Time"
     set title "Read Transaction Latency\\n%s"  offset character 0, -1, 0 font "" norotate

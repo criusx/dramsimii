@@ -31,11 +31,26 @@ class CumulativePriorMovingAverage:
     def add(self, count, value):
         self.count += 1.0
         self.average = self.average + ((count * value - self.average) / self.count)
-        #print self.average, count * value
 
     def clear(self):
         self.average = 0.0
         self.count = 0.0
+
+class WeightedAverage:
+    def __init__(self):
+        self.count = 0
+        self.total = 0
+
+    def add(self, value, count):
+        self.total += value * count
+        self.count += count
+
+    def clear(self):
+        self.total = 0
+        self.count = 0
+
+    def average(self):
+        return self.total / (self.count if self.count > 0 else 1)
 
 
 
@@ -52,7 +67,6 @@ class PriorMovingAverage:
         if len(self.data) == self.size:
             self.data.pop(0)
         self.data.append(x)
-        #print self.average, x,  size, len(self.data), oldestItem
 
     def get(self):
         return self.data
@@ -78,7 +92,10 @@ def thumbnail(filelist, tempPath):
             p2 = Popen("gzip -c -9 -f %s > %s" % (file, file + "z"), shell=True)
             p1.wait()
             p2.wait()
-            os.remove(file)
+            try:
+                os.remove(file)
+            except OSError, msg:
+                print OSError, msg
 
 def processPower(filename):
 
@@ -91,10 +108,8 @@ def processPower(filename):
             print "Cannot write to output dir: " + tempPath
     except:
         print "Could not create output dir: " + tempPath
-        return
-
-    # setup the script headers
-
+        if not os.path.exists(tempPath):
+            return
 
     writing = 0
     p = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
@@ -255,14 +270,14 @@ def processPower(filename):
     thumbnail(filesGenerated, tempPath)
 
     o = open(os.path.join(tempPath, basefilename[0:basefilename.find("-power")] + ".html"), "w")
-    templateF = open(os.path.join(os.path.abspath(sys.path[0]), "template.html"))
+    templateF = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "template.html"))
     template = templateF.read()
     templateF.close()
     o.write(re.sub("@@@", commandLine, template))
     o.close()
 
     o = open(os.path.join(tempPath, ".htaccess"), "w")
-    accessFileF = open(os.path.join(os.path.abspath(sys.path[0]), ".htaccess"))
+    accessFileF = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".htaccess"))
     accessFile = accessFileF.read()
     accessFileF.close()
     o.write(accessFile)
@@ -283,7 +298,8 @@ def processStats(filename):
             print "Cannot write to output dir: " + tempPath
     except:
         print "Could not create output dir: " + tempPath
-        return
+        if not os.path.exists(tempPath):
+            return
 
     channels = []
     channelTotals = array('i')
@@ -300,8 +316,7 @@ def processStats(filename):
     rwTotalCounter = 0
     ipcCounter = 0
 
-    # what type we are writing to
-    writing = 0
+
     # the list of files to be compressed
     fileList = []
 
@@ -312,7 +327,7 @@ def processStats(filename):
     latencyVsPC = 0
     latencyVsPCDict = {}
 
-    averageTransactionLatency = CumulativePriorMovingAverage()
+    averageTransactionLatency = WeightedAverage()
     transactionLatency = array('f')
     movingTransactionLatency = array('f')
     movingTransactionBuffer = PriorMovingAverage(Window)
@@ -359,19 +374,21 @@ def processStats(filename):
     else:
         basefilename = os.path.join(tempPath, filename.split('.bz2')[0])
 
+    # what type we are writing to
+    writing = 0
+
     try:
         for line in gziplines(filename):
             if line[0] == '-':
 
                 if writing == 1:
                     # append the values for this time
-                    transactionLatency.append(averageTransactionLatency.average)
+                    transactionLatency.append(averageTransactionLatency.average())
                     # append the moving average
-                    movingTransactionBuffer.append(averageTransactionLatency.average)
+                    movingTransactionBuffer.append(averageTransactionLatency.average())
                     movingTransactionLatency.append(movingTransactionBuffer.average)
-                    totalTransactionLatency += averageTransactionLatency.average
+                    totalTransactionLatency += averageTransactionLatency.average()
                     transactionCount.append(perEpochTransactionCount)
-                    #print perEpochTransactionCount
                     perEpochTransactionCount = 0
                     cumulativeTransactionLatency.append(totalTransactionLatency / transCounter)
 
@@ -383,9 +400,6 @@ def processStats(filename):
                                 total += rank[i][ - 1]
                             rank[ - 1].append(total if total > 0 else 1)
 
-                writing = 0
-                #line = line.strip()
-
                 if started == False:
                     # extract the command line, set the writers up
                     if line.startswith('----Command Line:'):
@@ -394,6 +408,7 @@ def processStats(filename):
                         for i in statsScripts:
                             p = Popen(['gnuplot'], stdin=PIPE, shell=False, cwd=tempPath)
                             p.stdin.write(i % commandLine.strip())
+                            #p.stdin.write(basicSetup)
                             gnuplot.append(p)
                         started = True
 
@@ -419,7 +434,6 @@ def processStats(filename):
                 elif line.startswith("----M5 Stat:"):
 
                     splitLine = line.split()
-                    #print splitLine[0], splitLine[1], splitLine[2], splitLine[3]
                     try:
                         value = int(splitLine[3])
                     except ValueError:
@@ -518,24 +532,27 @@ def processStats(filename):
 
                         writing = 14
 
+                    else:
+                        writing = 0
+
             # data in this section
             else:
                 # transaction latency
                 if writing == 1:
                     splitLine = line.split()
                     latency = int(splitLine[0])
-                    quantity = int(splitLine[1])
-                    averageTransactionLatency.add(latency, quantity)
-                    perEpochTransactionCount += quantity
+                    count = int(splitLine[1])
+                    averageTransactionLatency.add(latency, count)
+                    perEpochTransactionCount += count
                     try:
-                        distTransactionLatency[latency] += quantity
+                        distTransactionLatency[latency] += count
                     except KeyError:
-                        distTransactionLatency[latency] = quantity
+                        distTransactionLatency[latency] = count
 
-                # working set
+                # working set size
                 elif writing == 2:
-                    if len(line) > 1:
-                        gnuplot[3].stdin.write("%f %s" % (workingSetCounter * epochTime, line))
+                    if len(line) > 2:
+                        gnuplot[3].stdin.write("%f %s\n" % (workingSetCounter * epochTime, line.strip()))
                         workingSetCounter += 1
 
                 # bandwidth
@@ -552,20 +569,30 @@ def processStats(filename):
                 # PC vs latency
                 elif writing == 8:
                     splitLine = line.split()
-                    PC = int(splitLine[0], 16) - 4294967296
-                    numberAccesses = float(splitLine[1])
-                    try:
-                        latencyVsPCDict[PC] += numberAccesses
-                    except KeyError:
-                        latencyVsPCDict[PC] = numberAccesses
+                    # ignore stack addresses for now
+                    if len(splitLine[0]) < 10:
+                        PC = long(splitLine[0], 16)
+                        # - 4294967296
+                        #print "%s %x" % (splitLine[0], PC)
+                        numberAccesses = float(splitLine[1])
+                        try:
+                            latencyVsPCDict[PC] += numberAccesses
+                        except KeyError:
+                            latencyVsPCDict[PC] = numberAccesses
 
+                # IPC
                 elif writing == 9:
                     if (ipcLinesWritten < 1):
                         # append the values for this time
-                        if line == "nan":
+                        try:
+                            if line.startswith('nan'):
+                                currentValue = 0.0
+                            else:
+                                currentValue = float(line)
+                        except:
                             currentValue = 0.0
-                        else:
-                            currentValue = float(line)
+                        # python 2.6 if isnan(currentValue):
+                        # print currentValue, NaN, line
                         ipcValues[0].append(currentValue)
                         # append the moving average
                         ipcTotal.add(1, currentValue)
@@ -574,6 +601,7 @@ def processStats(filename):
                         ipcValues[2].append(ipcBuffer.average)
                     ipcLinesWritten += 1
 
+                # hit and miss values
                 elif writing == 10:
                     newLine = line.strip().split()
                     hitCount = max(float(newLine[0]), 1)
@@ -585,21 +613,25 @@ def processStats(filename):
                     hitMissBuffer.append(hitCount / (hitCount + missCount))
                     hitMissValues[3].append(hitMissBuffer.average)
 
+                # channel breakdown
                 elif writing == 11:
                     newLine = line.strip().split()
                     channels[int(newLine[0])][ - 1] = int(newLine[1])
                     channelTotals[ - 1] += int(newLine[1])
 
+                # rank breakdown
                 elif writing == 12:
                     newLine = line.strip().split()
                     ranks[int(newLine[0])][ - 1] = int(newLine[1])
                     rankTotals[ - 1] += int(newLine[1])
 
+                # bank breakdown
                 elif writing == 13:
                     newLine = line.strip().split()
                     banks[int(newLine[0])][ - 1] = int(newLine[1])
                     bankTotals[ - 1] += int(newLine[1])
 
+                # new style per-bank breakdown
                 elif writing == 14:
                     groups = combinedRegex.match(line).groups()
 
@@ -625,25 +657,16 @@ def processStats(filename):
     except IndexError, strerror:
         print "IndexError", strerror
 
-
-
     if started == True:
         # close any files being written
-        if writing == 1:
-            gnuplot[0].stdin.write("e\nunset output\n")
-        elif writing == 4:
-            gnuplot[1].stdin.write("e\nunset output\n")
-        elif writing == 6:
-            gnuplot[2].stdin.write("e\nunset output\n")
-        elif writing == 8:
-            gnuplot[5].stdin.write("e\nunset output\n")
-        elif writing == 14:
+        if writing == 14:
             for channel in channelDistribution:
                 for rank in channel:
                     total = 0
                     for i in range(len(rank) - 1):
                         total += rank[i][ - 1]
                     rank[ - 1].append(total if total > 0 else 1)
+        #gnuplot[3].stdin.write("\ne\n")
 
 
         channelID = 0
@@ -672,7 +695,6 @@ def processStats(filename):
                     #for each bank
                     for y in range(len(v[z])):
                         gnuplot[5].stdin.write("%f\n" % (1.0 * v[z][y] / v[ - 1][y]))
-                        #print v[z][y], v[-1][y], 1.0 * v[z][y] / v[-1][y] + 0.00001
                     gnuplot[5].stdin.write("e\n")
                 gnuplot[5].stdin.write('%lf 0.2\ne\n' % (len(v[0]) * epochTime))
             gnuplot[5].stdin.write("\nunset multiplot\nunset output\n")
@@ -717,14 +739,29 @@ def processStats(filename):
         gnuplot[1].stdin.write("unset multiplot\nunset output\n")
 
         # make the PC vs latency graph
-        gnuplot[0].stdin.write(pcVsLatencyGraph % (commandLine, extension))
+        sortedKeys = latencyVsPCDict.keys()
+        sortedKeys.sort()
+        lowValues = []
+        highValues = []
+        for u in sortedKeys:
+            if u < 0x100000000:
+                lowValues.append(u)
+            else:
+                highValues.append(u)
 
-        for u in latencyVsPCDict:
-            gnuplot[0].stdin.write("%d %f\n" % (u, period * latencyVsPCDict[u]))
+        gnuplot[0].stdin.write(pcVsLatencyGraph0 % (commandLine, extension))
 
-        gnuplot[0].stdin.write("e\nunset output\n")
+        for u in lowValues:
+            gnuplot[0].stdin.write("%lf %f\n" % (u, period * latencyVsPCDict[u]))
 
-        # make the transaction latency graph
+        gnuplot[0].stdin.write("\ne\n%s\n" % pcVsLatencyGraph1 )
+
+        for u in highValues:
+            gnuplot[0].stdin.write("%lf %f\n" % (u - 4294967296, period * latencyVsPCDict[u]))
+
+        gnuplot[0].stdin.write("e\nunset multiplot\nunset output\n")
+
+        # make the transaction latency distribution graph
         gnuplot[0].stdin.write(transactionGraph % (commandLine, extension))
 
         sortedKeys = distTransactionLatency.keys()
@@ -862,6 +899,7 @@ def processStats(filename):
         gnuplot[3].stdin.write("e\nunset output\n")
         gnuplot[4].stdin.write("unset output\n")
 
+        # make a list of all the files to be processed
         fileList.append(os.path.join(tempPath, "workingSet." + extension))
         fileList.append(os.path.join(tempPath, "bandwidth." + extension))
         fileList.append(os.path.join(tempPath, "averageIPCandLatency." + extension))
@@ -871,6 +909,7 @@ def processStats(filename):
         fileList.append(os.path.join(tempPath, "transactionLatencyDistribution." + extension))
         fileList.append(os.path.join(tempPath, "addressDistribution." + extension))
 
+        # close out gnuplot
         for b in gnuplot:
             b.stdin.write('\nexit\n')
             b.wait()
@@ -890,7 +929,7 @@ def processStats(filename):
 
     #shutil.copy(htmlFile, os.path.join(tempPath,basefilename[0:basefilename.find("-stats")] + ".html"))
     o = open(os.path.join(tempPath, basefilename[0:basefilename.find("-stats")] + ".html"), "w")
-    templateF = open(os.path.join(os.path.abspath(sys.path[0]), "template.html"))
+    templateF = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "template.html"))
     template = templateF.read()
     template = re.sub("@@@", commandLine, template)
     distroStrings = ''
@@ -901,7 +940,7 @@ def processStats(filename):
     templateF.close()
 
     o = open(os.path.join(tempPath, ".htaccess"), "w")
-    accessFileF = open(os.path.join(os.path.abspath(sys.path[0]), ".htaccess"))
+    accessFileF = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".htaccess"))
     accessFile = accessFileF.read()
     o.write(accessFile)
     o.close()
@@ -970,10 +1009,8 @@ def main():
                                 benchmarkName = x
                             else:
                                 benchmarkName = x[start + 1:end]
-                            try:
+                            if decoder.has_key(benchmarkName):
                                 benchmarkName = decoder[benchmarkName]
-                            except:
-                                pass
                             line += "<td>" + urlString % benchmarkName + "</td>"
                         files[v] = line
                         workQueue.put(u)
@@ -989,7 +1026,7 @@ def main():
                 compressedstream.close()
 
     o = open("result.html", "w")
-    data = open(os.path.join(os.path.abspath(sys.path[0]), "template2.html")).read()
+    data = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "template2.html")).read()
     filelist = ""
 
     for x in files:
@@ -999,7 +1036,7 @@ def main():
 
     #os.system("cp -r %s ." % os.path.join(os.path.abspath(sys.path[0]),"js"))
     try:
-        shutil.copytree(os.path.join(os.path.abspath(sys.path[0]), "js"), os.path.join(os.getcwd(), "js"))
+        shutil.copytree(os.path.join(os.path.dirname(os.path.realpath(__file__)), "js"), os.path.join(os.getcwd(), "js"))
     except OSError:
         pass
 

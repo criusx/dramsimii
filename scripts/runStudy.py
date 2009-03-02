@@ -78,18 +78,25 @@ traces = ['mase_256K_64_4G/ammp.trc.gz',
 'mase_256K_64_2G/galgel.trc.gz']
 
 dramSimExe = 'dramSimII.opt'
-dramSimPath = '/home/crius/m5-stable/src/mem/DRAMsimII/build'
-m5Path = '/home/crius/m5-stable/build/ALPHA_SE/'
+dramSimPath = '/home/crius/m5/src/mem/DRAMsimII/build'
+m5Path = '/home/crius/m5/build/ALPHA_SE/'
+m5SEConfigFile = '/home/crius/m5/configs/example/dramsim.py'
+m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
+m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
-outputDir = '/home/crius/results/mappingStudy12'
-memorySettings = '/home/crius/m5-stable/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
+outputDir = '/home/crius/results/mappingStudy13'
+memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
 commandLine = '%s --config-file %s --modifiers "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s %s"'
-
+fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"
+queueName = 'default'
+submitString = '''echo 'time %%s' | qsub -q %s -o %%s -e %%s -N "%%s"''' % (queueName)
 #m5CommandLine = '%s /home/crius/m5-stable/configs/example/dramsim.py -f %s -b mcf --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
-m5CommandLine = '%s /home/crius/m5-stable/configs/example/dramsim.py -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
+m5SECommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"'
+m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s outfiledir %s"'
+m5FSCommandLine = '%s %s -b %%s -F 10000000000 --detailed --caches --l2cache --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript)
 channels = [2]
-ranks = [2, 4, 8]
-banks = [8, 16]
+ranks = [4]
+banks = [16]
 addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'sdramclosepage', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
 #commandOrderingAlgorithm = ['greedy','bankroundrobin','rankroundrobin']
 commandOrderingAlgorithm = ['greedy']
@@ -97,14 +104,15 @@ interarrivalCycleCount = [1]
 #perBankQueueDepth = range(8, 16, 4)
 perBankQueueDepth = [12]
 requests = [13500000]
-benchmarks = ['calculix', 'libquantum', ]
+benchmarks = ['stream', 'libquantum', 'lbm', 'mcf' ]
+#benchmarks = ['stream']
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "tbr")
+        opts, args = getopt.getopt(sys.argv[1:], "tsrf")
     except getopt.GetoptError, err:
         print str(err)
-        print "-t for trace, -b for benchmark, -r for random"
+        print "-t for trace, -s for syscall emulation, -r for random, -f for full-system"
         sys.exit(-2)
 
     ds2executable = os.path.join(dramSimPath, dramSimExe)
@@ -115,35 +123,43 @@ def main():
             for c in banks:
                 for d in addressMappingPolicy:
                     for e in commandOrderingAlgorithm:
-                        for f in interarrivalCycleCount:
                             for g in perBankQueueDepth:
-                                for h in requests:
                                     for opt, arg in opts:
                                         # trace file
                                         if opt == '-t':
                                             for i in traces:
                                                 currentTrace = os.path.join(tracesDir, i)
-                                                currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, f, g, h, outputDir, "inputfiletype mase inputfile %s" % currentTrace)
+                                                currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, g, h, outputDir, "inputfiletype mase inputfile %s" % currentTrace)
                                                 submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
                                                 #print submitCommandLine
                                                 #sys.exit(0)
                                                 os.system(submitCommandLine)
 
-                                        # m5 benchmark
-                                        elif opt == '-b':
-                                            currentCommandLine = m5CommandLine % (executable, memorySettings, a, b, c, d, e, f, g, h, outputDir)
+                                        # syscall emulation
+                                        elif opt == '-s':
+                                            currentCommandLine = m5SECommandLine % (executable, m5SEConfigFile, memorySettings, a, b, c, d, e, g, outputDir)
                                             submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
-                                            print submitCommandLine
+                                            #print submitCommandLine
 
                                             os.system(submitCommandLine)
 
                                         # random input
                                         elif opt == '-r':
-                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, f, g, h, outputDir, requests[0])
-                                            submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
-                                            print submitCommandLine
+                                            for f in interarrivalCycleCount:
+                                                for h in requests:
+                                                    currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, f, g, h, outputDir, requests[0])
+                                                    submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
+                                                    print submitCommandLine
+                                                    sys.exit(-1)
+                                                    os.system(submitCommandLine)
 
-                                            os.system(submitCommandLine)
+                                        # full system
+                                        elif opt == '-f':
+                                            for i in benchmarks:
+                                                currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, b, c, d, e, g, outputDir))
+                                                submitCommand = submitString % (currentCommandLine, outputDir, outputDir, i)
+                                                #print submitCommand
+                                                os.system(submitCommand)
 
                                     #sys.exit(2)
 
