@@ -579,7 +579,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 	case WANG_RANK_HOP:
 		os << "WANG] ";
 		break;
-	case GREEDY:
+	case FIRST_AVAILABLE:
 		os << "GRDY] ";
 		break;
 	default:

@@ -248,6 +248,19 @@ Command *Rank::getCommand(const unsigned thisBank)
 	}
 }
 
+void Rank::resetToTime(const tick time)
+{
+	lastCASTime = time - 1000;
+	lastCASWTime = time - 1000;
+	lastPrechargeAnyBankTime = time - 1000;
+	lastRefreshTime = time - timing.tREFI();
+	for (boost::circular_buffer<tick>::iterator i = lastActivateTimes.begin(); i != lastActivateTimes.end(); i++)
+		*i = time - timing.tRP();
+	for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); i++)
+		i->resetToTime(time);
+
+}
+
 //////////////////////////////////////////////////////////////////////
 /// @brief is there a refresh command ready at each per bank queue
 /// @details if there is a refresh all command at the head of each per

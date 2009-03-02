@@ -30,6 +30,8 @@ import optparse, os, sys
 
 import m5
 
+os.environ['M5_PATH'] = '/home/crius/m5_system_2.0b3'
+
 if not m5.build_env['FULL_SYSTEM']:
     m5.panic("This script requires full-system mode (*_FS).")
 
@@ -41,25 +43,47 @@ from Benchmarks import *
 import Simulation
 from Caches import *
 
-def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settingsFilename="", outFile="", cmdLine=""):
+#update Benchmarks to support our benchmarks
+Benchmarks['lbm'] = [SysConfig('lbm.rcS', '512MB')]
+Benchmarks['stream'] = [SysConfig('stream.rcS', '512MB')]
+Benchmarks['mcf'] = [SysConfig('mcf.rcS', '2000MB')]
+Benchmarks['soplex'] = [SysConfig('soplex.rcS', '512MB')]
+Benchmarks['bzip2'] = [SysConfig('bzip2.rcS', '512MB')]
+Benchmarks['milc'] = [SysConfig('milc.rcS', '512MB')]
+Benchmarks['cactusADM'] = [SysConfig('cactusADM.rcS', '512MB')]
+Benchmarks['namd'] = [SysConfig('namd.rcS', '512MB')]
+Benchmarks['gobmk'] = [SysConfig('gobmk.rcS', '512MB')]
+Benchmarks['dealII'] = [SysConfig('dealII.rcS', '512MB')]
+Benchmarks['povray'] = [SysConfig('povray.rcS', '512MB')]
+Benchmarks['calculix'] = [SysConfig('calculix.rcS', '512MB')]
+Benchmarks['hmmer'] = [SysConfig('hmmer.rcS', '512MB')]
+Benchmarks['sjeng'] = [SysConfig('sjeng.rcS', '512MB')]
+Benchmarks['GemsFDTD'] = [SysConfig('GemsFDTD.rcS', '512MB')]
+Benchmarks['libquantum'] = [SysConfig('libquantum.rcS', '512MB')]
+Benchmarks['omnetpp'] = [SysConfig('omnetpp.rcS', '512MB')]
+Benchmarks['xalancbmk'] = [SysConfig('xalancbmk.rcS', '512MB')]
+
+
+def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settingsFilename=""):
     class BaseTsunami(Tsunami):
         ethernet = NSGigE(pci_bus=0, pci_dev=1, pci_func=0)
         ide = IdeController(disks=[Parent.disk0, Parent.disk2],
                             pci_func=0, pci_dev=0, pci_bus=0)
-
     self = LinuxAlphaSystem()
     if not mdesc:
         # generic system
         mdesc = SysConfig()
     self.readfile = mdesc.script()
     self.iobus = Bus(bus_id=0)
-    self.membus = Bus(bus_id=1)
-    self.bridge = Bridge(delay='50ns', nack_delay='4ns')
+    self.membus = Bus(bus_id=1, clock='2600MHz')
+    self.bridge = Bridge(delay='2ns', nack_delay='1ns')
+    # use the memory size established by the benchmark definition in Benchmarks.py
+    outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0]
     self.physmem = M5dramSystem(extraParameters=extraParameters,
                            	settingsFile=settingsFilename,
                           	outFilename=outFile,
-	                        commandLine=cmdLine,
-        	                range=AddrRange("512MB"))
+	                        commandLine=outFile,
+        	                range=AddrRange(mdesc.mem()))
     self.bridge.side_a = self.iobus.port
     self.bridge.side_b = self.membus.port
     self.physmem.port = self.membus.port
@@ -101,10 +125,8 @@ parser.add_option("-b", "--benchmark", action="store", type="string",
                   help="Specify the benchmark to run. Available benchmarks: %s"\
                   % DefinedBenchmarks)
 parser.add_option("-f", "--DRAMsimConfig",
-		  default=os.path.join(os.getcwd(), "src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml"),
+		  default="/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml",
 		  help="The DRAMsimII config file.")
-#parser.add_option("-b", "--benchmark",
-#					default=0, help="Choose the number from the following:\nperlbench\nbzip2\ngcc\nbwaves\ngamess\nmcf\nmilc\nzeusmp\ngromacs\ncactusADM\nleslie3d\nnamd\ngobmk\ndealII\nsoplex\npovray\ncalculix\nhmmer\nsjeng\nGemsFDTD\nlibquantum\nh264ref\ntonto\nlbm\nomnetpp\nastar\nwrf\nsphinx3\nxalancbmk\n998.specrand_i\n999.specrand_f")
 parser.add_option("--mp",
                   default="", help="Override default memory parameters with this switch")
 
@@ -146,8 +168,9 @@ else:
     else:
         bm = [SysConfig()]
 
+
 if m5.build_env['TARGET_ISA'] == "alpha":
-    test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], "", options.DRAMsimConfig, "", "")
+    test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig)
 elif m5.build_env['TARGET_ISA'] == "mips":
     test_sys = makeLinuxMipsSystem(test_mem_mode, bm[0])
 elif m5.build_env['TARGET_ISA'] == "sparc":
@@ -165,30 +188,24 @@ if options.script is not None:
 
 np = options.num_cpus
 
-if options.l2cache:
-    test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns")
-    test_sys.tol2bus = Bus()
-    test_sys.l2.cpu_side = test_sys.tol2bus.port
-    test_sys.l2.mem_side = test_sys.membus.port
+test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns")
+test_sys.tol2bus = Bus()
+test_sys.l2.cpu_side = test_sys.tol2bus.port
+test_sys.l2.mem_side = test_sys.membus.port
 
 test_sys.cpu = [TestCPUClass(cpu_id=i) for i in xrange(np)]
 
-if options.caches:
-    test_sys.bridge.filter_ranges_a = [AddrRange(0, Addr.max)]
-    test_sys.bridge.filter_ranges_b = [AddrRange(0, size='8GB')]
-    test_sys.iocache = IOCache(mem_side_filter_ranges=[AddrRange(0, Addr.max)],
+test_sys.bridge.filter_ranges_a = [AddrRange(0, Addr.max)]
+test_sys.bridge.filter_ranges_b = [AddrRange(0, size='8GB')]
+test_sys.iocache = IOCache(mem_side_filter_ranges=[AddrRange(0, Addr.max)],
                        cpu_side_filter_ranges=[AddrRange(0x8000000000, Addr.max)])
-    test_sys.iocache.cpu_side = test_sys.iobus.port
-    test_sys.iocache.mem_side = test_sys.membus.port
+test_sys.iocache.cpu_side = test_sys.iobus.port
+test_sys.iocache.mem_side = test_sys.membus.port
 
 for i in xrange(np):
-    if options.caches:
-        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size='64kB', assoc=2),
+    test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size='64kB', assoc=2),
 						L1Cache(size='64kB', assoc=2))
-    if options.l2cache:
-        test_sys.cpu[i].connectMemPorts(test_sys.tol2bus)
-    else:
-        test_sys.cpu[i].connectMemPorts(test_sys.membus)
+    test_sys.cpu[i].connectMemPorts(test_sys.tol2bus)
 
     if options.fastmem:
         test_sys.cpu[i].physmem_port = test_sys.physmem.port

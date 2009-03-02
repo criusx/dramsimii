@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd /benchmarks/453.povray/data/all/input
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/453.povray/exe/povray_base.alpha-gcc410-glibc236 /benchmarks/453.povray/data/ref/input/SPEC-benchmark-ref.ini
+/sbin/m5 exit

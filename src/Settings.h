@@ -235,6 +235,7 @@ namespace DRAMsimII
 			theMap[dram_type_token] = "dramspec/@type";
 			theMap[input_type_token] = "inputFile/@type";
 			theMap[random_distribution_token] = "inputFile";
+			theMap[datarate_token] = "datarate";
 
 
 			return theMap;

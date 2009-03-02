@@ -205,6 +205,14 @@ void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 	lastRefreshAllTime = currentTime;
 }
 
+void Bank::resetToTime(const tick time)
+{
+	lastRASTime = time - timing.tRC();
+	lastPrechargeTime = time - timing.tRP();
+	lastCASTime = time - timing.tCAS() - timing.tBurst();
+	lastCASWTime = time - timing.tCWD() - timing.tWTR() - timing.tBurst();
+}
+
 //////////////////////////////////////////////////////////////////////
 /// @brief attempts to insert a transaction as a single CAS command, taking advantage of existing RAS-PRE commands
 /// @details goes through the entire per bank queue to find a matching precharge command\n

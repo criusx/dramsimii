@@ -886,7 +886,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 		}
 		break;
 
-	case GREEDY:
+	case FIRST_AVAILABLE:
 		{
 			const Command *candidateCommand = NULL;
 

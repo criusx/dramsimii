@@ -367,8 +367,8 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 			commandOrderingAlgorithm = RANK_ROUND_ROBIN;
 		else if (nodeValue == "wanghop")
 			commandOrderingAlgorithm = WANG_RANK_HOP;
-		else if (nodeValue == "greedy")
-			commandOrderingAlgorithm = GREEDY;
+		else if (nodeValue == "greedy" || nodeValue == "firstavailable")
+			commandOrderingAlgorithm = FIRST_AVAILABLE;
 		else {
 			cerr << "Unrecognized ordering algorithm: " << nodeValue << endl;
 			commandOrderingAlgorithm = BANK_ROUND_ROBIN;
@@ -487,7 +487,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const CommandOrderingAlgorithm coa)
 	case BANK_ROUND_ROBIN:
 		os << "BRR";
 		break;
-	case GREEDY:
+	case FIRST_AVAILABLE:
 		os << "GRD";
 		break;
 	case WANG_RANK_HOP:

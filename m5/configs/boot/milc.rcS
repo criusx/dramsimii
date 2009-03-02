@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd /benchmarks/433.milc/data/test/input
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/433.milc/exe/milc_base.alpha-gcc410-glibc236 < su3imp.in
+/sbin/m5 exit

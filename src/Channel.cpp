@@ -889,12 +889,21 @@ const Transaction *Channel::readNextRefresh() const
 
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief reset some stats to account for the fact that fast-forwarding has moved time forward significantly
+/// @param the time at which the timing model begins
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 void Channel::resetToTime(const tick time)
 {
 	// adjust the start time of the refreshes to match the new time
-	for (std::vector<tick>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
+	for (vector<tick>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
 	{
 		*i = *i + time;
+	}
+	for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
+	{
+		i->resetToTime(time);
 	}
 }
 
@@ -1385,7 +1394,7 @@ const Command *Channel::readNextCommand() const
 {	
 	switch (systemConfig.getCommandOrderingAlgorithm())
 	{
-	case GREEDY:
+	case FIRST_AVAILABLE:
 		{
 			const Command *candidateCommand = NULL;
 
@@ -1427,7 +1436,10 @@ const Command *Channel::readNextCommand() const
 							int minGap = minProtocolGap(challengerCommand);
 
 							if (time + minGap != challengerExecuteTime)
+							{
+								cerr << time << " " << minGap << " " << challengerExecuteTime;
 								assert(max(time + minGap, (tick)0) == challengerExecuteTime);
+							}
 #endif
 							// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
 							if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
@@ -2003,36 +2015,13 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			int tRCGap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRC();
 
 			// respect tRRD and tRC of all other banks of same rank
-			int tRRDGap;
-
-			if (currentRank.lastActivateTimes.empty())
-			{
-				tRRDGap = 0;
-			}
-			else 
-			{
-				// read tail end of ras history
-				const tick lastRASTime = currentRank.lastActivateTimes.front();
-				// respect the row-to-row activation delay
-				tRRDGap = (int)(lastRASTime - time) + timingSpecification.tRRD();				
-			}
+			int tRRDGap = (int)(currentRank.lastActivateTimes.front() - time) + timingSpecification.tRRD();
 
 			// respect tRP of same bank
 			int tRPGap = (int)(currentBank.getLastPrechargeTime() - time) + timingSpecification.tRP();
 
 			// respect the t_faw value for DDR2 and beyond
-			int tFAWGap;
-
-			if (!currentRank.lastActivateTimes.full())
-			{
-				tFAWGap = 0;
-			}
-			else
-			{
-				// read head of ras history
-				const tick fourthRASTime = currentRank.lastActivateTimes.back(); 
-				tFAWGap = (fourthRASTime - time) + timingSpecification.tFAW();
-			}
+			int tFAWGap = (currentRank.lastActivateTimes.back() - time) + timingSpecification.tFAW();
 
 			// respect tRFC
 			int tRFCGap = (currentRank.getLastRefreshTime() - time) + timingSpecification.tRFC();

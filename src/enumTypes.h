@@ -50,7 +50,7 @@ namespace DRAMsimII
 		STRICT_ORDER, // maintains original ordering
 		RANK_ROUND_ROBIN, // alternate ranks 
 		BANK_ROUND_ROBIN, // keep same ranks as long as possible, go down banks
-		GREEDY, // greedy algorithm
+		FIRST_AVAILABLE, // greedy algorithm
 		WANG_RANK_HOP // Patented stuff. davewang202@yahoo.com ;)
 	};
 

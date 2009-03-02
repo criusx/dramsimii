@@ -8,7 +8,6 @@ import os, optparse, sys
 m5.AddToPath('../common')
 import Simulation
 from Caches import *
-import specbench
 from specbench import *
 import string
 
@@ -29,10 +28,10 @@ parser.add_option("-o", "--options", default="",
 parser.add_option("-i", "--input", default="",
                   help="A file of input to give to the binary.")
 parser.add_option("-f", "--DRAMsimConfig",
-		  default=os.path.join(m5_root, "src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml"),
+		  default=os.path.join(m5_root, "/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml"),
 		  help="The DRAMsimII config file.")
 parser.add_option("-b", "--benchmark",
-					default=0, help="Choose the number from the following:\nperlbench\nbzip2\ngcc\nbwaves\ngamess\nmcf\nmilc\nzeusmp\ngromacs\ncactusADM\nleslie3d\nnamd\ngobmk\ndealII\nsoplex\npovray\ncalculix\nhmmer\nsjeng\nGemsFDTD\nlibquantum\nh264ref\ntonto\nlbm\nomnetpp\nastar\nwrf\nsphinx3\nxalancbmk\n998.specrand_i\n999.specrand_f")
+					default=None, help="Choose the number from the following:\nperlbench\nbzip2\ngcc\nbwaves\ngamess\nmcf\nmilc\nzeusmp\ngromacs\ncactusADM\nleslie3d\nnamd\ngobmk\ndealII\nsoplex\npovray\ncalculix\nhmmer\nsjeng\nGemsFDTD\nlibquantum\nh264ref\ntonto\nlbm\nomnetpp\nastar\nwrf\nsphinx3\nxalancbmk\n998.specrand_i\n999.specrand_f")
 parser.add_option("--simple", action="store_true")
 parser.add_option("--mp",
                   default="", help="Override default memory parameters with this switch")
@@ -55,20 +54,14 @@ if args:
     print "Error: script doesn't take any positional arguments"
     sys.exit(1)
 
-#print options
-
-if options.benchmark != 0:
+if options.benchmark is not None:
     try:
-        process = liveProcessDict[options.benchmark]
         cmdLine = cmdLineDict[options.benchmark]
+        process = liveProcessDict[options.benchmark]
+        executable = [cmdLineDict[options.benchmark]]
     except KeyError:
         print "Unknown benchmark.\n"
         sys.exit()
-
-    #executable = process.executable.split("/")
-    executable = [cmdLineDict[options.benchmark]]
-	#cmdLine = executable[len(executable) - 1] + " " + string.join(process.cmd[1:]," ") +" <" + process.input
-#    cmdLine = options.benchmark
 else:
     process = LiveProcess()
     process.executable = options.cmd
@@ -82,7 +75,7 @@ else:
         cmdInput = " <%s" % options.input
     else:
         cmdInput = ""
-	cmdLine = executable[len(executable) - 1] + " " + options.options + cmdInput
+    cmdLine = executable[len(executable) - 1] + " " + options.options + cmdInput
 
 
 if options.detailed:
@@ -116,7 +109,7 @@ system = System(cpu=[CPUClass(cpu_id=i) for i in xrange(np)],
                            settingsFile=options.DRAMsimConfig,
                            outFilename=executable.pop(),
                            commandLine=cmdLine,
-                           range=AddrRange("1024MB")),
+                           range=AddrRange("512MB")),
                 membus=Bus(), mem_mode=test_mem_mode)
 
 system.physmem.port = system.membus.port

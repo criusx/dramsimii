@@ -71,6 +71,7 @@ namespace DRAMsimII
 		void issueCAS(const tick currentTime, const Command *currentCommand);
 		void issueCASW(const tick currentTime, const Command *currentCommand);
 		void issueREF(const tick currentTime, const Command *currentCommand);
+		void resetToTime(const tick time);
 		
 		// constructors
 		explicit Rank(const Rank &, const TimingSpecification &, const SystemConfiguration &);

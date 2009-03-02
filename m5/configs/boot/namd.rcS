@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd /benchmarks/444.namd/data/all/input
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/444.namd/exe/namd_base.alpha-gcc410-glibc236 --input namd.input --iterations 1 --output namd.out
+/sbin/m5 exit

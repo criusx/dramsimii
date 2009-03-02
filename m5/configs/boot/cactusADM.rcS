@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd /benchmarks/436.cactusADM/data/test/input
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/436.cactusADM/exe/cactusADM_base.alpha-gcc410-glibc236 benchADM.par
+/sbin/m5 exit

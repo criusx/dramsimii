@@ -242,7 +242,7 @@ liveProcessDict["lbm"] = lbm
 omnetpp = LiveProcess()
 omnetpp.executable = os.path.join(binary_dir, '471.omnetpp/exe/omnetpp_base' + suffix)
 data = os.path.join(data_dir, '471.omnetpp/data/ref/input/omnetpp.ini')
-omnetpp.cwd = os.path.join(data_dir,'471.omnetpp/data/ref/input/')
+omnetpp.cwd = os.path.join(data_dir, '471.omnetpp/data/ref/input/')
 omnetpp.cmd = [omnetpp.executable] + [data]
 #omnetpp.output = 'omnetpp.log'
 cmdLineDict["omnetpp"] = '471.omnetpp.ref'
@@ -260,6 +260,7 @@ liveProcessDict["astar"] = astar
 wrf = LiveProcess()
 wrf.executable = binary_dir + '481.wrf/exe/wrf_base' + suffix
 wrf.cmd = [wrf.executable] + [os.path.join(data_dir, '481.wrf/data/ref/input/namelist.input')]
+#print wrf.cmd
 #wrf.output = 'rsl.out.0000'
 wrf.cwd = os.path.join(data_dir, '481.wrf/data/ref/input/')
 cmdLineDict["wrf"] = '481.wrf.namelist'

@@ -24,12 +24,12 @@
 <!ELEMENT DQperDRAM (#PCDATA)>
 <!ELEMENT DQSperDRAM (#PCDATA)>
 <!ELEMENT DMperDRAM (#PCDATA)>
-<!ELEMENT dramspec (timing, power, simulationParameters)>
+<!ELEMENT dramspec (setup, timing, power, simulationParameters)>
 <!ATTLIST dramspec
-	type CDATA #REQUIRED
-	xmlns:xsi CDATA #IMPLIED
-	xsi:noNamespaceSchemaLocation CDATA #IMPLIED
-	>
+type CDATA #REQUIRED
+xmlns:xsi CDATA #IMPLIED
+xsi:noNamespaceSchemaLocation CDATA #IMPLIED
+>
 <!ELEMENT eventQueueDepth (#PCDATA)>
 <!ELEMENT epoch (#PCDATA)>
 <!ELEMENT historyQueueDepth (#PCDATA)>
@@ -48,7 +48,8 @@
 <!ELEMENT PdqWRoth (#PCDATA)>
 <!ELEMENT physicalAddressMappingPolicy (#PCDATA)>
 <!ELEMENT postedCAS (#PCDATA)>
-<!ELEMENT power (PdqRD, PdqWR, PdqRDoth, PdqWRoth, DQperDRAM, DQSperDRAM, DMperDRAM, frequencySpec, maxVCC, systemVDD, IDD0, IDD2P, IDD2N, IDD3P, IDD3N, IDD4R, IDD4W, IDD5A)>
+<!ELEMENT power (PdqRD, PdqWR, PdqRDoth, PdqWRoth, DQperDRAM, DQSperDRAM, DMperDRAM,
+frequencySpec, maxVCC, systemVDD, IDD0, IDD2P, IDD2N, IDD3P, IDD3N, IDD4R, IDD4W, IDD5A)>
 <!ELEMENT ranks (#PCDATA)>
 <!ELEMENT readPercentage (#PCDATA)>
 <!ELEMENT readWriteGrouping (#PCDATA)>
@@ -60,7 +61,9 @@
 <!ELEMENT rows (#PCDATA)>
 <!ELEMENT seniorityAgeLimit (#PCDATA)>
 <!ELEMENT shortBurstRatio (#PCDATA)>
-<!ELEMENT simulationParameters (shortBurstRatio, readPercentage, averageInterarrivalCycleCount, outFile, outFileDirectory, requestCount, inputFile, cpuToMemoryClockRatio, epoch)>
+<!ELEMENT simulationParameters (shortBurstRatio, readPercentage,
+averageInterarrivalCycleCount, outFile, outFileDirectory, requestCount, inputFile,
+cpuToMemoryClockRatio, epoch)>
 <!ELEMENT systemConfigurationType (#PCDATA)>
 <!ELEMENT systemVDD (#PCDATA)>
 <!ELEMENT tAL (#PCDATA)>
@@ -81,6 +84,13 @@
 <!ELEMENT tRTRS (#PCDATA)>
 <!ELEMENT tWR (#PCDATA)>
 <!ELEMENT tWTR (#PCDATA)>
-<!ELEMENT timing (datarate, clockGranularity, channels, channelWidth, physicalAddressMappingPolicy, rowBufferPolicy, ranks, banks, rows, rowSize, columns, columnSize, tBufferDelay, tBurst, tCAS, tCMD, tCWD, tFAW, tRAS, tRC, tRCD, tRFC, tRRD, tRP, tRTP, tRTRS, tWR, tWTR, postedCAS, tAL, autoRefreshPolicy, refreshTime, tREFI, commandOrderingAlgorithm, transactionOrderingAlgorithm, perBankQueueDepth, systemConfigurationType, cacheLineSize, historyQueueDepth, completionQueueDepth, transactionQueueDepth, eventQueueDepth, refreshQueueDepth, seniorityAgeLimit, readWriteGrouping, autoPrecharge)>
+<!ELEMENT timing (tBufferDelay, tBurst, tCAS, tCMD, tCWD, tFAW, tRAS, tRC, tRCD, tRFC, tRRD,
+tRP, tRTP, tRTRS, tWR, tWTR, tAL, refreshTime, tREFI, seniorityAgeLimit)>
+<!ELEMENT setup (datarate, clockGranularity, channels, ranks, banks, rows, columns,
+channelWidth, physicalAddressMappingPolicy, rowBufferPolicy, rowSize, columnSize,
+postedCAS,autoRefreshPolicy,commandOrderingAlgorithm,
+transactionOrderingAlgorithm, perBankQueueDepth, systemConfigurationType,
+cacheLineSize, historyQueueDepth, completionQueueDepth, transactionQueueDepth,
+eventQueueDepth, refreshQueueDepth, readWriteGrouping, autoPrecharge)>
 <!ELEMENT transactionOrderingAlgorithm (#PCDATA)>
 <!ELEMENT transactionQueueDepth (#PCDATA)>

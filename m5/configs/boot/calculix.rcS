@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd /benchmarks/454.calculix/data/test/input
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/454.calculix/exe/calculix_base.alpha-gcc410-glibc236 -i beampic
+/sbin/m5 exit

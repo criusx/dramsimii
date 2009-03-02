@@ -1,0 +1,6 @@
+#!/bin/sh
+
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/stream-short-opt
+/sbin/m5 exit

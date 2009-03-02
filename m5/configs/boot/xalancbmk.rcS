@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd /benchmarks/483.xalancbmk/data/test/input
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/483.xalancbmk/exe/Xalan_base.alpha-gcc410-glibc236 -v test.xml xalanc.xsl
+/sbin/m5 exit

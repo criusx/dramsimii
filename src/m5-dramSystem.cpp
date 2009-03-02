@@ -88,25 +88,21 @@ unsigned int M5dramSystem::drain(::Event *de)
 //////////////////////////////////////////////////////////////////////
 void M5dramSystem::moveToTime(const tick now)
 {
-	//tick finishTime;	
-
 	// if transactions are returned, then send them back,
 	// else if time is not brought up to date, then a refresh transaction has finished
-	//unsigned transactionID;
 	ds->moveAllChannelsToTime(now);
-	/// @todo make this a member variable to avoid reinitializing?
-	std::queue<pair<unsigned, tick> > finishedTransactions;
+
 	ds->getPendingTransactions(finishedTransactions);
+
 	while (finishedTransactions.size() > 0)
 	{
-		Packet *packet = NULL;
 		pair<unsigned,tick> currentValue = finishedTransactions.front();
 		finishedTransactions.pop();
 
 		assert(currentValue.first < UINT_MAX);
 		std::tr1::unordered_map<unsigned,Packet*>::iterator packetIterator = transactionLookupTable.find(currentValue.first);
 		assert(packetIterator != transactionLookupTable.end());
-		packet = packetIterator->second;
+		Packet *packet = packetIterator->second;
 		transactionLookupTable.erase(packetIterator);
 
 		if (packet)
@@ -557,29 +553,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		}
 		else
 		{
-#if 0
-			Transaction *trans = new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(),pkt->req->getPC(),pkt->req->getThreadNum(),memory->currentTransactionID);
-			cerr << pkt->req->getCpuNum() << pkt->req->getThreadNum() << endl;
-
-			cerr << pkt->cmd.isRead() << " "
-				<< pkt->cmd.isWrite() << " " 
-				//<< pkt->cmd.isRequest() << " " 
-				//<< pkt->cmd.isResponse() << " " 
-				//<< pkt->cmd.needsExclusive() << " " 
-				<< pkt->cmd.needsResponse() << " "
-				//<< pkt->cmd.isInvalidate() << " " 
-				//<< pkt->cmd.hasData() << " "
-				//<< pkt->cmd.isReadWrite() << " " 
-				//<< pkt->cmd.isLocked() << " " 
-				//<< pkt->cmd.isPrint() << " "
-				;
-			if ((pkt->cmd.isRead() || pkt->cmd.isWrite()) && pkt->cmd.needsResponse())
-				cerr << pkt->req->getPC() << " " << pkt->req->getThreadNum() << " " << pkt->req->getCpuNum();
-			cerr << endl;
-
-			//async_statdump = async_statreset = true;
-#endif
-
 			if (pkt->cmd == MemCmd::SwapReq)
 				cerr << "swap" << endl;
 
@@ -601,6 +574,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 				packetType = Transaction::READ_TRANSACTION;
 			else if (pkt->isWrite())
 				packetType = Transaction::WRITE_TRANSACTION;
+			else
+				cerr << "not read or write" << endl;
 
 			/// @todo make sure currentTransactionID is not already in the hash table
 
@@ -609,7 +584,12 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			assert(result == true);
 
 			memory->transactionLookupTable[memory->currentTransactionID] = pkt;
-			memory->currentTransactionID = (memory->currentTransactionID + 1) % UINT_MAX;
+			// make sure not to use any that are already being used
+			while (memory->transactionLookupTable.find(memory->currentTransactionID) != memory->transactionLookupTable.end())
+			{
+				memory->currentTransactionID = (memory->currentTransactionID + 1) % UINT_MAX;
+			}
+			
 
 			// deschedule and reschedule yourself to wake at the next event time
 			if (memory->tickEvent.scheduled())
