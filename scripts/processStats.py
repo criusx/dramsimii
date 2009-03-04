@@ -739,20 +739,14 @@ def processStats(filename):
         gnuplot[1].stdin.write("unset multiplot\nunset output\n")
 
         # make the PC vs latency graph
-        sortedKeys = latencyVsPCDict.keys()
-        sortedKeys.sort()
-        lowValues = []
-        highValues = []
-        for u in sortedKeys:
-            if u < 0x100000000:
-                lowValues.append(u)
-            else:
-                highValues.append(u)
-
         gnuplot[0].stdin.write(pcVsLatencyGraph0 % (commandLine, extension))
 
-        for u in lowValues:
-            gnuplot[0].stdin.write("%lf %f\n" % (u, period * latencyVsPCDict[u]))
+        highValues = []
+        for u in latencyVsPCDict.keys():
+            if u < 0x100000000:
+                gnuplot[0].stdin.write("%lf %f\n" % (u, period * latencyVsPCDict[u]))
+            else:
+                highValues.append(u)
 
         gnuplot[0].stdin.write("\ne\n%s\n" % pcVsLatencyGraph1 )
 
@@ -764,9 +758,7 @@ def processStats(filename):
         # make the transaction latency distribution graph
         gnuplot[0].stdin.write(transactionGraph % (commandLine, extension))
 
-        sortedKeys = distTransactionLatency.keys()
-        sortedKeys.sort()
-        for u in sortedKeys:
+        for u in distTransactionLatency.keys():
             gnuplot[0].stdin.write("%d %f\n" % (u * period, distTransactionLatency[u]))
 
         gnuplot[0].stdin.write("e\nunset output\n")

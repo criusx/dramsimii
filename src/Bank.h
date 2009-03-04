@@ -101,6 +101,7 @@ namespace DRAMsimII
 		const inline Command *front() const { return perBankQueue.front(); }
 		const Command *back() const { return perBankQueue.back(); }
 		unsigned size() const { return perBankQueue.size(); }
+		unsigned depth() const { return perBankQueue.depth(); }
 		Command::CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : Command::INVALID_COMMAND; }
 		unsigned freeCommandSlots() const { return perBankQueue.freecount(); }
 		bool openPageInsert(Transaction *value, const tick time);

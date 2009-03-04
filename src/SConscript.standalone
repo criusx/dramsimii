@@ -105,8 +105,13 @@ platform = ARGUMENTS.get("build",Platform())
 
 if platform == 'debug':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
-	envDebug.Append(CCFLAGS = '-g -O -fopenmp -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
+	envDebug.Append(CCFLAGS = '-g -O -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
 	debug = envDebug.Program('dramSimII.debug',sourceFile)
+	envDebug.Install(os.path.abspath('..') + "/bin", debug)
+elif platform == 'debugOpt':
+	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogO')
+	envDebug.Append(CCFLAGS = '-g -O2 -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
+	debug = envDebug.Program('dramSimII.debugOpt',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugsimple':
 	envDebugSimple = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogs')

@@ -383,8 +383,6 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 			addressMappingScheme = Address::INTEL845G_MAP;
 		else if (nodeValue == "sdrambase")
 			addressMappingScheme = Address::SDRAM_BASE_MAP;
-		else if (nodeValue == "sdramclosepage")
-			addressMappingScheme = Address::SDRAM_CLOSE_PAGE_MAP;
 		else if (nodeValue == "sdramhiperf")
 			addressMappingScheme = Address::SDRAM_HIPERF_MAP;
 		else if (nodeValue == "closepagehighlocality")

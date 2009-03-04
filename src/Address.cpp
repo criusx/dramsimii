@@ -144,8 +144,7 @@ bool Address::reverseAddressTranslation()
 	switch (mappingScheme)
 	{
 	case SDRAM_HIPERF_MAP:
-	case OPEN_PAGE_BASELINE:		
-
+	
 		physicalAddress = (PHYSICAL_ADDRESS)columnLow << shift;
 		shift += columnLowAddressDepth;
 		physicalAddress |= (PHYSICAL_ADDRESS)channel << shift;
@@ -174,7 +173,6 @@ bool Address::reverseAddressTranslation()
 		physicalAddress |= (PHYSICAL_ADDRESS)rank << shift;
 
 		break;
-	case SDRAM_CLOSE_PAGE_MAP:
 	case CLOSE_PAGE_BASELINE:
 
 		physicalAddress = (PHYSICAL_ADDRESS)columnLow << shift;
@@ -277,8 +275,6 @@ bool Address::addressTranslation()
 	switch (mappingScheme)
 	{
 	case SDRAM_HIPERF_MAP:
-	case OPEN_PAGE_BASELINE:	/* works for SDRAM, DDR, DDR2 and DDR3 ! */
-
 		/*
 		*               High performance SDRAM Mapping scheme
 		*                                                                    5
@@ -351,8 +347,6 @@ bool Address::addressTranslation()
 		break;
 
 	case SDRAM_BASE_MAP:		
-		/* works for SDRAM and DDR SDRAM too! */
-
 		/*
 		*               Basic SDRAM Mapping scheme (As found on user-upgradeable memory systems)
 		*                                                                    5
@@ -412,7 +406,6 @@ bool Address::addressTranslation()
 		break;
 
 	case CLOSE_PAGE_BASELINE:
-	case SDRAM_CLOSE_PAGE_MAP:
 		/*
 		*               High performance closed page SDRAM Mapping scheme
 		*                                                                    5
@@ -775,14 +768,12 @@ std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address::AddressMap
 		os << "BBM";
 		break;
 	case Address::SDRAM_HIPERF_MAP:
-	case Address::OPEN_PAGE_BASELINE:
-		os << "OPBAS";
+		os << "SDHIPF";
 		break;
 	case Address::SDRAM_BASE_MAP:
 		os << "SDBAS";
 		break;
 	case Address::CLOSE_PAGE_BASELINE:
-	case Address::SDRAM_CLOSE_PAGE_MAP:
 		os << "CPBAS";
 		break;
 	case Address::CLOSE_PAGE_BASELINE_OPT:

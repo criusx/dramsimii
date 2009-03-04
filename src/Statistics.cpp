@@ -18,7 +18,7 @@
 #include "globals.h"
 #ifdef M5
 #include "base/statistics.hh"
-#include "base/stats/statdb.hh"
+//#include "base/stats/statdb.hh"
 #include "base/stats/types.hh"
 #include "sim/async.hh"
 #include "base/stats/text.hh"
@@ -229,22 +229,28 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 
 	
-
+	
 #ifdef M5
-	Stats::Database::stat_list_t::iterator i = Stats::Database::stats().begin();
-	Stats::Database::stat_list_t::iterator end = Stats::Database::stats().end();
+
+	using Stats::Info;
+	//Stats::Database::stat_list_t::iterator i = Stats::Database::stats().begin();
+	std::list<Info *>::const_iterator i = Stats::statsList().begin();
+	//Stats::Database::stat_list_t::iterator end = Stats::Database::stats().end();
+	std::list<Info *>::const_iterator end = Stats::statsList().end();
 	
 	for (;i != end;++i) 
 	{
-		Stats::StatData *data = *i;
-		if (data->name.find("ipc_total") != string::npos)
+		Info *info = *i;
+		//Stats::StatData *data = *i;
+		//if (data->name.find("ipc_total") != string::npos)
+		if (info->name.find("ipc_total") != string::npos)
 		{
 			//cerr << data->name << " " << endl;
 			//if (typeid(*data) == typeid(Stats::Formula))
 			//	cerr << "Formula" << endl;
 			os << "----IPC----" << endl;
-			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().begin();
-			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().end();
+			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfo<Stats::FormulaBase> *)info)->result().begin();
+			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfo<Stats::FormulaBase> *)info)->result().end();
 			while (start != end)
 			{
 				os << *start << endl;
@@ -254,24 +260,24 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			}
 			//cerr << ((Stats::FormulaData *)data)->str();
 		}
-		if ((data->name.find("dcache.overall_hits") != string::npos) ||
-			(data->name.find("dcache.overall_misses") != string::npos) ||
-			(data->name.find("dcache.overall_miss_latency") != string::npos) ||
-			(data->name.find("icache.overall_hits") != string::npos) ||
-			(data->name.find("icache.overall_misses") != string::npos) ||
-			(data->name.find("icache.overall_miss_latency") != string::npos) ||
-			(data->name.find("l2.overall_hits") != string::npos) ||
-			(data->name.find("l2.overall_misses") != string::npos) ||
-			(data->name.find("l2.overall_mshr_hits") != string::npos) ||
-			(data->name.find("l2.overall_mshr_misses") != string::npos) ||
-			(data->name.find("l2.overall_mshr_miss_latency") != string::npos) ||
-			(data->name.find("l2.overall_miss_latency") != string::npos) )
+		if ((info->name.find("dcache.overall_hits") != string::npos) ||
+			(info->name.find("dcache.overall_misses") != string::npos) ||
+			(info->name.find("dcache.overall_miss_latency") != string::npos) ||
+			(info->name.find("icache.overall_hits") != string::npos) ||
+			(info->name.find("icache.overall_misses") != string::npos) ||
+			(info->name.find("icache.overall_miss_latency") != string::npos) ||
+			(info->name.find("l2.overall_hits") != string::npos) ||
+			(info->name.find("l2.overall_misses") != string::npos) ||
+			(info->name.find("l2.overall_mshr_hits") != string::npos) ||
+			(info->name.find("l2.overall_mshr_misses") != string::npos) ||
+			(info->name.find("l2.overall_mshr_miss_latency") != string::npos) ||
+			(info->name.find("l2.overall_miss_latency") != string::npos) )
 		{
 			{
-				os << "----M5 Stat: " << data->name << " ";
+				os << "----M5 Stat: " << info->name << " ";
 
-				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().begin();
-				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaStatData<Stats::FormulaBase> *)data)->result().end();
+				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfo<Stats::FormulaBase> *)info)->result().begin();
+				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfo<Stats::FormulaBase> *)info)->result().end();
 				while (start != end)
 				{
 					os << *start << " ";

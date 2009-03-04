@@ -63,6 +63,10 @@ Benchmarks['libquantum'] = [SysConfig('libquantum.rcS', '512MB')]
 Benchmarks['omnetpp'] = [SysConfig('omnetpp.rcS', '512MB')]
 Benchmarks['xalancbmk'] = [SysConfig('xalancbmk.rcS', '512MB')]
 
+benchs = Benchmarks.keys()
+benchs.sort()
+DefinedBenchmarks = ", ".join(benchs)
+
 
 def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settingsFilename=""):
     class BaseTsunami(Tsunami):
@@ -139,6 +143,9 @@ parser.add_option("--etherdump", action="store", type="string", dest="etherdump"
 execfile(os.path.join(config_root, "common", "Options.py"))
 
 (options, args) = parser.parse_args()
+options.l2cache = True
+options.caches = True
+options.detailed = True
 
 if args:
     print "Error: script doesn't take any positional arguments"
@@ -188,7 +195,7 @@ if options.script is not None:
 
 np = options.num_cpus
 
-test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns")
+test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'stride', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24)
 test_sys.tol2bus = Bus()
 test_sys.l2.cpu_side = test_sys.tol2bus.port
 test_sys.l2.mem_side = test_sys.membus.port

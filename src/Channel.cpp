@@ -203,8 +203,10 @@ void Channel::moveChannelToTime(const tick endTime)
 		assert(time >= oldTime);
 
 		// has room to decode an available transaction, as many as are ready
+		int decodedCount = 0;
 		while (checkForAvailableCommandSlots(readTransaction(true)))
 		{
+			decodedCount++;
 			// actually remove it from the queue now
 			Transaction *decodedTransaction = getTransaction();
 			// then break into commands and insert into per bank command queues			
@@ -213,8 +215,12 @@ void Channel::moveChannelToTime(const tick endTime)
 			// checkForAvailablecommandSlots() should not have returned true if there was not enough space
 			assert(t2cResult == true);
 
-			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "/" << transactionQueue.get_depth() << "]" << *decodedTransaction);
+			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "/" << transactionQueue.depth() << "]->[" << 
+				rank[decodedTransaction->getAddress().getRank()].bank[decodedTransaction->getAddress().getBank()].size() << "/" <<
+				rank[decodedTransaction->getAddress().getRank()].bank[decodedTransaction->getAddress().getBank()].depth() << "] " << *decodedTransaction);
 		}		
+		if (decodedCount > 2)
+			cerr << "decoded " << decodedCount << endl;
 
 		// execute commands for this time, reevaluate what the next command is since this may have changed after decoding the transaction
 		const Command *nextCommand = readNextCommand();
@@ -1107,7 +1113,10 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
-				bool result = currentBank->push(refreshCommand);
+#ifndef NDEBUG
+				bool result = 
+#endif
+					currentBank->push(refreshCommand);
 				assert (result);
 			}
 		}
@@ -1165,7 +1174,10 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
-				bool result = currentBank->push(refreshCommand);
+#ifndef NDEBUG
+				bool result = 
+#endif // NDEBUG
+					currentBank->push(refreshCommand);
 				assert (result);
 				assert(currentBank->back() == refreshCommand);
 			}
@@ -1252,14 +1264,20 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					assert(tempAddr.getChannel() == channelID);
 
 					Command *newCommand = new Command(*incomingTransaction, tempAddr, time, systemConfig.isPostedCAS(), false, timingSpecification.tBurst(), Command::PRECHARGE);
-					bool result = i->push(newCommand);
+#ifndef NDEBUG
+					bool result = 
+#endif // NDEBUG
+						i->push(newCommand);
 					assert(result);
 					assert(&(rank[tempAddr.getRank()].bank[j]) == &*i);
 					assert(rank[tempAddr.getRank()].bank[j].back() == newCommand);
 					
 				}
 				
-				bool result = i->push(refreshCommand);
+				#ifndef NDEBUG
+bool result = 
+#endif // NDEBUG
+					i->push(refreshCommand);
 				assert (result);
 				j++;
 			}
@@ -1287,7 +1305,10 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					}
 					assert(!destinationBank.back() || !destinationBank.back()->isRefresh());
 					assert(!destinationBank.back() || !destinationBank.back()->isPrecharge());
-					bool result = destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst(), Command::PRECHARGE));
+					#ifndef NDEBUG
+bool result = 
+#endif // NDEBUG
+						destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst(), Command::PRECHARGE));
 					assert(result);
 				}
 				else if (destinationBank.freeCommandSlots() < 2)

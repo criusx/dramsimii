@@ -112,7 +112,7 @@ namespace DRAMsimII
 
 		Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }				///< get the oldest item from the transaction completion queue
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }				///< determine how many items are in the transaction completion queue
-		unsigned getTransactionQueueDepth() const { return transactionQueue.get_depth(); }			///< determine how large the transaction completion queue is
+		unsigned getTransactionQueueDepth() const { return transactionQueue.depth(); }			///< determine how large the transaction completion queue is
 		Rank& operator[](unsigned rank_num) { return rank[rank_num]; }
 
 		// mutators

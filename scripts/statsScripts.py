@@ -3,7 +3,7 @@
 import re
 
 
-thumbnailResolution = "640x480"
+thumbnailResolution = "640x400"
 
 #terminal = 'set terminal png font "Arial,10" transparent nointerlace truecolor  size 1700, 1024 nocrop enhanced\n'
 #extension = 'png'
@@ -14,7 +14,7 @@ extension = 'svg'
 #terminal = 'set terminal postscript eps enhanced color font "Arial, 10"'
 #extension = 'eps'
 
-decoder = { "OPBAS":"Open Page Baseline", "SDBAS": "SDRAM Baseline", "CPBAS":"Close Page Baseline", "LOLOC":"Low Locality", "HILOC":"High Locality",
+decoder = { "SDHIPF":"SDRAM High Performance", "SDBAS": "SDRAM Baseline", "CPBAS":"Close Page Baseline", "LOLOC":"Low Locality", "HILOC":"High Locality",
            "GRD":"Greedy", "STR":"Strict", "BRR":"Bank Round Robin", "RRR":"Rank Round Robin", "CLSO":"Close Page Aggressive", "OPEN":"Open Page", "CPAG":"Close Page Aggressive",
            "CLOS":"Close Page", "OPA":"Open Page Aggressive", "CPBOPT":"Close Page Baseline Opt"}
 

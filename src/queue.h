@@ -238,7 +238,7 @@ namespace DRAMsimII
 		}
 
 		/// @brief get the number of entries this queue can hold
-		inline unsigned get_depth() const
+		inline unsigned depth() const
 		{
 			return entry.size();
 		}
