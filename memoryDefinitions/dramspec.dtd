@@ -21,6 +21,7 @@
 <!ELEMENT completionQueueDepth (#PCDATA)>
 <!ELEMENT cpuToMemoryClockRatio (#PCDATA) >
 <!ELEMENT datarate (#PCDATA)>
+<!ELEMENT decodeWindow (#PCDATA)>
 <!ELEMENT DQperDRAM (#PCDATA)>
 <!ELEMENT DQSperDRAM (#PCDATA)>
 <!ELEMENT DMperDRAM (#PCDATA)>
@@ -91,6 +92,6 @@ channelWidth, physicalAddressMappingPolicy, rowBufferPolicy, rowSize, columnSize
 postedCAS,autoRefreshPolicy,commandOrderingAlgorithm,
 transactionOrderingAlgorithm, perBankQueueDepth, systemConfigurationType,
 cacheLineSize, historyQueueDepth, completionQueueDepth, transactionQueueDepth,
-eventQueueDepth, refreshQueueDepth, readWriteGrouping, autoPrecharge)>
+decodeWindow, eventQueueDepth, refreshQueueDepth, readWriteGrouping, autoPrecharge)>
 <!ELEMENT transactionOrderingAlgorithm (#PCDATA)>
 <!ELEMENT transactionQueueDepth (#PCDATA)>

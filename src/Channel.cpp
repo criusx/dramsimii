@@ -204,7 +204,9 @@ void Channel::moveChannelToTime(const tick endTime)
 
 		// has room to decode an available transaction, as many as are ready
 		int decodedCount = 0;
+		//unsigned nextToDecode = readAvailableTransaction();
 		while (checkForAvailableCommandSlots(readTransaction(true)))
+		//while (nextToDecode < UINT_MAX)
 		{
 			decodedCount++;
 			// actually remove it from the queue now
@@ -218,6 +220,8 @@ void Channel::moveChannelToTime(const tick endTime)
 			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "/" << transactionQueue.depth() << "]->[" << 
 				rank[decodedTransaction->getAddress().getRank()].bank[decodedTransaction->getAddress().getBank()].size() << "/" <<
 				rank[decodedTransaction->getAddress().getRank()].bank[decodedTransaction->getAddress().getBank()].depth() << "] " << *decodedTransaction);
+
+			//nextToDecode = readAvailableTransaction();
 		}		
 		if (decodedCount > 2)
 			cerr << "decoded " << decodedCount << endl;
@@ -699,7 +703,10 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 {
 	const unsigned delay = bufferDelay ? timingSpecification.tBufferDelay() : 0;
 
-	const Transaction *nextTransaction = transactionQueue.front(); 
+	//const Transaction *nextTransaction = transactionQueue.front(); 
+	unsigned val = readAvailableTransaction();
+	
+	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : transactionQueue.front(); 
 
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{
@@ -718,24 +725,16 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 		const tick nextRefreshTime = nextRefresh();
 
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
-		if (nextTransaction && (nextTransaction->getEnqueueTime() < nextRefreshTime + systemConfig.getSeniorityAgeLimit()))
+		// if there is a normal transaction ready to go, it's ready to go and the refresh command isn't starving
+		if (nextTransaction && 
+			((time < nextRefreshTime + systemConfig.getSeniorityAgeLimit()) && 
+			(time >= nextTransaction->getEnqueueTime() + delay)))
 		{
-			// if this transaction has not yet been decoded, then look to see if the refresh trans has arrived
-			if (time < nextTransaction->getEnqueueTime() + delay)
-			{
-				M5_TIMING_LOG("resetting: " << time << " " << nextTransaction->getEnqueueTime() << " " << delay);
+			//M5_TIMING_LOG("resetting: " << time << " " << nextTransaction->getEnqueueTime() << " " << delay);
 
-				// if this refresh command has arrived
-				if (nextRefreshTime <= time) 
-					return readNextRefresh();
-				else
-					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
-			}
-			else
-			{
-				return nextTransaction;
-			}
+			return nextTransaction;
 		}
+		// either there is no transaction or the refresh command will starve
 		else if (time >= nextRefreshTime)
 		{
 			return readNextRefresh();
@@ -747,6 +746,48 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 	}
 }
 
+unsigned Channel::readAvailableTransaction() const
+{
+	unsigned limit = min(systemConfig.getDecodeWindow(), transactionQueue.size());
+	for (unsigned i = 0; i < limit; i++)
+	{
+		// if it's ready to decode
+		if ((transactionQueue[i]->getEnqueueTime() + timingSpecification.tBufferDelay()) &&
+			checkForAvailableCommandSlots(transactionQueue[i]))
+		{
+			bool conflict = false;
+			// make sure not to create a RAW, WAR, WAW problem
+			for (unsigned j = 0; j < i; j++)
+			{
+				if (transactionQueue[i]->getAddress() == transactionQueue[j]->getAddress())
+				{
+					conflict = true;
+					break;
+				}
+			}
+			if (!conflict)
+				return i;
+		}
+	}
+	return UINT_MAX;
+}
+
+Transaction *Channel::getAvailableTransaction(unsigned useThis)
+{
+	if (useThis < UINT_MAX)
+		return transactionQueue.remove(useThis);
+	else
+	{
+		unsigned val = readAvailableTransaction();
+		if (val < UINT_MAX)
+			return transactionQueue.remove(val);
+		else
+			return NULL;
+	}
+}
+
+
+
 //////////////////////////////////////////////////////////////////////////
 /// @brief get the next transaction, whether a refresh transaction or a normal R/W transaction
 /// @detail gets the next transaction for this channel and removes it
@@ -755,42 +796,37 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 //////////////////////////////////////////////////////////////////////////
 Transaction *Channel::getTransaction()
 {
-	const Transaction *tempTrans = transactionQueue.front(); 
+	unsigned val = readAvailableTransaction();
+	
+	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : transactionQueue.front(); 
 
 	// no refresh transactions, just see if normal transactions are decoded
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{
-		if ((tempTrans) && (time - tempTrans->getEnqueueTime() < timingSpecification.tBufferDelay()))
+		if ((nextTransaction) && (time - nextTransaction->getEnqueueTime() < timingSpecification.tBufferDelay()))
 		{
-			M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay());			
+			M5_TIMING_LOG("resetting: " << time << " " << nextTransaction->getEnqueueTime() << " " << timingSpecification.tBufferDelay());			
 			return NULL; // not enough time has passed
 		}
-		return transactionQueue.pop();
+		//return transactionQueue.pop();
+		return getAvailableTransaction(val);
 	}
 	else
 	{
-		const tick refreshTrans = nextRefresh();
+		const tick nextRefreshTime = nextRefresh();
 
-		// prioritize the normal transactions, but don't starve the refresh transactions
-		if (tempTrans && (tempTrans->getEnqueueTime() < refreshTrans + systemConfig.getSeniorityAgeLimit()))
+		// give an advantage to normal transactions, but prevent starvation for refresh operations
+		// if there is a normal transaction ready to go, it's ready to go and the refresh command isn't starving
+		if (nextTransaction && 
+			((time < nextRefreshTime + systemConfig.getSeniorityAgeLimit()) && 
+			(time >= nextTransaction->getEnqueueTime() + timingSpecification.tBufferDelay())))
 		{
-			// if it's not decoded, go with the refresh transaction
-			if (time < tempTrans->getEnqueueTime() + timingSpecification.tBufferDelay())
-			{
-				M5_TIMING_LOG("resetting: " << time << " " << tempTrans->getEnqueueTime() << " " << timingSpecification.tBufferDelay());
+			//M5_TIMING_LOG("resetting: " << time << " " << nextTransaction->getEnqueueTime() << " " << delay);
 
-				// if this refresh command has arrived
-				if (refreshTrans <= time) 
-					return createNextRefresh();
-				else
-					return NULL; // not enough time has passed and the newest refresh transaction hasn't arrived yet
-			}
-			else
-			{
-				return transactionQueue.pop();
-			}
+			//return transactionQueue.pop();
+			return getAvailableTransaction(val);
 		}
-		else if (time >= refreshTrans)
+		else if (time >= nextRefreshTime)
 		{
 			return createNextRefresh();
 		}

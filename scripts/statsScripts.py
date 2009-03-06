@@ -26,6 +26,7 @@ combinedRegex = re.compile('\(([\d.]+),([\d.]+),([\d.]+)\) (\d+)')
 NaN = float('nan')
 
 addressDistroString = '<h2>Address Distribution, Channel %d</h2><a rel="lightbox" href="addressDistribution%d.svgz"><img class="fancyzoom" src="addressDistribution%d-thumb.png" alt="" /></a>'
+addressLatencyString = '<h2>Address Latency Distribution, Channel %d</h2><a rel="lightbox" href="addressLatencyDistribution%d.svgz"><img class="fancyzoom" src="addressLatencyDistribution%d-thumb.png" alt="" /></a>'
 
 # setup the script headers
 powerScripts = ['''
@@ -293,7 +294,7 @@ addressDistroC = '''
     '''
 
 subAddrDistroA = '''
-    set output "addressDistribution%d.''' + extension + '''"
+    set output "%s.''' + extension + '''"
     unset y2tics
     unset logscale y
     set format x
@@ -303,6 +304,7 @@ subAddrDistroA = '''
     set autoscale xfixmax
     set ylabel "Access %%"
     set yrange [0 : 1.0] noreverse nowriteback
+    #set yrange [0 : *]
     set key outside center bottom horizontal reverse Left
     set style data histograms
     set style histogram rowstacked

@@ -57,6 +57,7 @@ namespace DRAMsimII
 		unsigned bankCount;												///< How many banks per device? 
 		unsigned rowCount;												///< rows per bank
 		unsigned columnCount;											///< columns per row
+		unsigned decodeWindow;											///< how many transactions to consider when decoding to commands
 		const unsigned epoch;											///< the amount of time between stats aggregation and reporting
 		double shortBurstRatio;
 		double readPercentage;											///< the percentage of transactions that are reads
@@ -91,6 +92,7 @@ namespace DRAMsimII
 		double getReadPercentage() const { return readPercentage; }
 		double Frequency() const { return datarate; }
 		const std::string &getSessionID() const { return sessionID; }
+		unsigned getDecodeWindow() const { return decodeWindow; }
 
 		// operator overloads
 		SystemConfiguration& operator =(const SystemConfiguration &rs);

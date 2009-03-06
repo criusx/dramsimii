@@ -63,6 +63,23 @@ namespace DRAMsimII
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
 
+		// functions
+		void retireCommand(Command *);
+		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
+		bool transaction2commands(Transaction *);
+		Command *getNextCommand(const Command *useThisCommand = NULL);		
+		tick nextTransactionDecodeTime() const;
+		tick nextCommandExecuteTime() const;
+		unsigned readAvailableTransaction() const;
+		Transaction *getAvailableTransaction(unsigned useThis = UINT_MAX);
+		void executeCommand(Command *thisCommand);
+
+		// functions that may differ for architectures that inherit this		
+		virtual const Command *readNextCommand() const;
+		virtual tick minProtocolGap(const Command *thisCommand) const;
+		virtual tick earliestExecuteTime(const Command *thisCommand) const;
+		virtual tick earliestExecuteTimeLog(const Command *thisCommand) const;
+
 	public:
 		// constructors
 		explicit Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats);
@@ -73,26 +90,14 @@ namespace DRAMsimII
 		// functions
 		bool enqueue(Transaction *in);
 		bool isFull() const { return transactionQueue.isFull(); }	///< determines whether there is room for more transactions
-		void retireCommand(Command *);
 		unsigned getChannelID() const { return channelID; }					///< return the ordinal of this channel
-		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
-		bool transaction2commands(Transaction *);
-		Command *getNextCommand(const Command *useThisCommand = NULL);		
 		void doPowerCalculation(const tick systemTime);
-		void executeCommand(Command *thisCommand);
-		tick nextTransactionDecodeTime() const;
-		tick nextCommandExecuteTime() const;
 		virtual tick nextTick() const;
 		void resetToTime(const tick time);
 		unsigned pendingTransactionCount() const { return finishedTransactions.size(); }
 		void getPendingTransactions(std::queue<std::pair<unsigned,tick> > &);
 
-		// functions that may differ for architectures that inherit this		
-		virtual const Command *readNextCommand() const;
 		virtual void moveChannelToTime(const tick endTime);
-		virtual tick minProtocolGap(const Command *thisCommand) const;
-		virtual tick earliestExecuteTime(const Command *thisCommand) const;
-		virtual tick earliestExecuteTimeLog(const Command *thisCommand) const;
 
 		// accessors
 		const TimingSpecification& getTimingSpecification() const { return timingSpecification; }	///< returns a reference to access the timing specification

@@ -35,6 +35,7 @@
 		<historyQueueDepth>16</historyQueueDepth>
 		<completionQueueDepth>32</completionQueueDepth>
 		<transactionQueueDepth>16</transactionQueueDepth>
+		<decodeWindow>16</decodeWindow>
 		<eventQueueDepth>8</eventQueueDepth>
 		<refreshQueueDepth>8</refreshQueueDepth>
 		<!--attempts to group reads and writes together in time-->

@@ -102,9 +102,11 @@ using std::vector;
 
 BOOST_AUTO_TEST_CASE( serialize_vector ) 
 {
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
+	Address::initialize(settings);
 	vector<Address *> vecA(18);
 
-	vecA[9] = new Address(0xfaceffee);
+	vecA[9] = new Address(0xfaceffee % Address::maxAddress());
 
 	backup("serializeVectorTest",vecA);
 
@@ -301,6 +303,7 @@ BOOST_AUTO_TEST_CASE(addressTest)
 	Address::initialize(s);
 
 	Address a;
+#if 0
 	for (unsigned i = 0; i < s.channelCount; i++)
 		for (unsigned j = 0; j < s.rankCount; j++)
 			for (unsigned k = 0; k < s.bankCount; k++)
@@ -311,6 +314,106 @@ BOOST_AUTO_TEST_CASE(addressTest)
 	{
 		Address *add = new Address(vargen());
 		delete add;
+	}
+#endif
+}
+
+BOOST_AUTO_TEST_CASE(testQueue0)
+{
+	for (int i = 10; i > 0; i--)
+	{
+		Queue<std::string> queueA(16);
+
+		// randomize the head/tail pointers
+		int numberOfTimes = std::rand() % queueA.depth();
+
+		for (int j = numberOfTimes; j > 0; j--)
+		{
+			if (std::rand() % 2 == 0)
+				queueA.push(new std::string());
+			else
+				queueA.push_front(new std::string());
+		}
+		while (!queueA.isEmpty())
+			delete queueA.pop();
+
+
+		char letter = 'a';
+
+		for (int i = queueA.depth(); i > 0; --i)
+		{
+			std::string *newOne = new std::string();
+			*newOne += letter++;
+			queueA.push(newOne);
+		}
+
+		BOOST_CHECK(queueA.size() == 16);
+
+		std::string *val = queueA.remove(0);
+		BOOST_CHECK(queueA.size() == 15);
+		BOOST_CHECK(*val == "a");
+		delete val;
+		BOOST_CHECK(*(queueA.front()) == "b");
+		BOOST_CHECK(*(queueA.back()) == "p");
+
+		val = queueA.remove(3);
+		BOOST_CHECK(queueA.size() == 14);
+		BOOST_CHECK(*val == "e");
+		delete val;
+		BOOST_CHECK(*(queueA.front()) == "b");
+		BOOST_CHECK(*(queueA.back()) == "p");
+
+		val = queueA.remove(13);
+		BOOST_CHECK(queueA.size() == 13);
+		BOOST_CHECK(*val == "p");
+		delete val;
+		BOOST_CHECK(*(queueA.front()) == "b");
+		BOOST_CHECK(*(queueA.back()) == "o");
+
+		val = queueA.remove(5);
+		BOOST_CHECK(queueA.size() == 12);
+		BOOST_CHECK(*val == "h");
+		delete val;
+		BOOST_CHECK(*(queueA.front()) == "b");
+		BOOST_CHECK(*(queueA.back()) == "o");
+
+		val = queueA.remove(10);
+		BOOST_CHECK(queueA.size() == 11);
+		BOOST_CHECK(*val == "n");
+		delete val;
+		BOOST_CHECK(*(queueA.front()) == "b");
+		BOOST_CHECK(*(queueA.back()) == "o");
+
+		val = queueA.remove(0);
+		BOOST_CHECK(queueA.size() == 10);
+		BOOST_CHECK(*val == "b");
+		delete val;
+		BOOST_CHECK(*(queueA.front()) == "c");
+		BOOST_CHECK(*(queueA.back()) == "o");
+
+		val = queueA.remove(3);
+		BOOST_CHECK(queueA.size() == 9);
+		BOOST_CHECK(*val == "g");
+		delete val;
+		BOOST_CHECK(*(queueA.front()) == "c");
+		BOOST_CHECK(*(queueA.back()) == "o");
+
+		val = queueA.remove(6);
+		BOOST_CHECK(queueA.size() == 8);
+		BOOST_CHECK(*val == "l");
+		delete val;
+		BOOST_CHECK(*(queueA.front()) == "c");
+		BOOST_CHECK(*(queueA.back()) == "o");
+
+		val = queueA.remove(7);
+		BOOST_CHECK(queueA.size() == 7);
+		BOOST_CHECK(*val == "o");
+		delete val;
+		BOOST_CHECK(*(queueA.front()) == "c");
+		BOOST_CHECK(*(queueA.back()) == "m");
+
+		while (!queueA.isEmpty())
+			delete queueA.pop();
 	}
 }
 

@@ -112,6 +112,7 @@ namespace DRAMsimII
 		cpu_to_memory_clock_ratio,
 		datarate_token,
 		debug_token,
+		decode_window_token,
 		deprecated_ignore_token,
 		dm_per_dram_token,
 		dq_per_dram_token,

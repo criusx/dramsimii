@@ -295,6 +295,9 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 	case transaction_queue_depth_token:
 		result = toNumeric<unsigned>(transactionQueueDepth,nodeValue,std::dec);
 		break;
+	case decode_window_token:
+		result = toNumeric<unsigned>(decodeWindow, nodeValue,std::dec);
+		break;
 	case completion_queue_depth_token:
 		result = toNumeric<unsigned>(completionQueueDepth,nodeValue,std::dec);
 		break;

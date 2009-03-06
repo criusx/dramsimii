@@ -46,6 +46,7 @@ rankCount(settings.rankCount),
 bankCount(settings.bankCount),
 rowCount(settings.rowCount),
 columnCount(settings.columnCount),
+decodeWindow(settings.decodeWindow),
 epoch(settings.epoch),
 shortBurstRatio(settings.shortBurstRatio),
 readPercentage(settings.readPercentage),
@@ -80,6 +81,7 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	channelCount = rs.channelCount;
 	rankCount = rs.rankCount;
 	bankCount = rs.bankCount;
+	decodeWindow = rs.decodeWindow;
 	shortBurstRatio = rs.shortBurstRatio;
 	readPercentage = rs.readPercentage;
 	sessionID = rs.sessionID;
@@ -112,6 +114,7 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
 		bankCount==right.bankCount &&
 		rowCount==right.rowCount &&
 		columnCount==right.columnCount &&
+		decodeWindow == right.decodeWindow &&
 		epoch==right.epoch &&
 		AlmostEqual<double>(shortBurstRatio,right.shortBurstRatio,0.0005) &&
 		AlmostEqual<double>(readPercentage,right.readPercentage,0.0005) &&

@@ -327,6 +327,28 @@ namespace DRAMsimII
 			}
 		}
 
+		T *remove(const int offset)
+		{
+			assert(offset <= (int)count && offset >= 0);
+			
+			// first get the item
+			T *item = entry[(head + offset) % entry.size()];
+			count--;
+
+			tail = (head + count) % entry.size();
+
+			// then shift the other items up
+			for (unsigned i = (unsigned)offset; i < count; i++)
+			{
+				entry[(head + i) % entry.size()] = entry[(head + i + 1) % entry.size()];
+			}
+
+			
+			entry[(head + count) % entry.size()] = NULL;
+
+			return item;
+		}
+
 		/// @brief the number of entries still available in this queue
 		unsigned freecount() const
 		{

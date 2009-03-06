@@ -195,6 +195,7 @@ if options.script is not None:
 
 np = options.num_cpus
 
+#test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'none', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24)
 test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'stride', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24)
 test_sys.tol2bus = Bus()
 test_sys.l2.cpu_side = test_sys.tol2bus.port

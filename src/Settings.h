@@ -79,6 +79,7 @@ namespace DRAMsimII
 		unsigned refreshQueueDepth;
 		unsigned refreshTime;
 		unsigned seniorityAgeLimit;
+		unsigned decodeWindow;
 		RowBufferPolicy rowBufferManagementPolicy;
 		Address::AddressMappingScheme addressMappingScheme;
 		bool postedCAS;
@@ -236,6 +237,7 @@ namespace DRAMsimII
 			theMap[input_type_token] = "inputFile/@type";
 			theMap[random_distribution_token] = "inputFile";
 			theMap[datarate_token] = "datarate";
+			theMap[decode_window_token] = "decodeWindow";
 
 
 			return theMap;
@@ -369,6 +371,7 @@ namespace DRAMsimII
 			theMap["cachelinesperrow"] = cachelines_per_row_token;
 			theMap["history_queue_depth" ] = history_queue_depth_token;
 			theMap["historyqueuedepth"] = history_queue_depth_token;
+			theMap["decodewindow"] = decode_window_token;
 			theMap["completion_queue_depth" ] = completion_queue_depth_token;
 			theMap["completionqueuedepth"] = completion_queue_depth_token;
 			theMap["transaction_queue_depth"] = transaction_queue_depth_token;

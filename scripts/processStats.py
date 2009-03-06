@@ -308,14 +308,21 @@ def processStats(filename):
     banks = []
     bankTotals = array('i')
 
+    channelLatencies = []
+    channelLatencyTotals = array('i')
+    rankLatencies = []
+    rankLatencyTotals = array('i')
+    bankLatencies = []
+    bankLatencyTotals = array('i')
+
     channelDistribution = []
+    channelLatencyDistribution = []
 
     commandTurnaroundCounter = 0
     cmdCounter = 0
     workingSetCounter = 0
     rwTotalCounter = 0
     ipcCounter = 0
-
 
     # the list of files to be compressed
     fileList = []
@@ -400,6 +407,16 @@ def processStats(filename):
                                 total += rank[i][ - 1]
                             rank[ - 1].append(total if total > 0 else 1)
 
+                if writing == 15:
+                    for channel in channelLatencyDistribution:
+                        for rank in channel:
+                            total = 0
+                            for i in range(len(rank) - 1):
+                                total += rank[i][ - 1]
+                            rank[ - 1].append(total if total > 0 else 1)
+
+                writing = 0
+
                 if started == False:
                     # extract the command line, set the writers up
                     if line.startswith('----Command Line:'):
@@ -417,10 +434,13 @@ def processStats(filename):
                         numberBanks = int(bankRegex.search(line).group(0))
 
                         for i in range(numberChannels):
+                            channelLatencyDistribution.append([])
                             channelDistribution.append([])
                             for j in range(numberRanks):
+                                channelLatencyDistribution[ - 1].append([])
                                 channelDistribution[ - 1].append([])
                                 for k in range(numberBanks + 1):
+                                    channelLatencyDistribution[ - 1][ - 1].append(array('d'))
                                     channelDistribution[ - 1][ - 1].append(array('d'))
 
                         for i in range(numberChannels):
@@ -531,6 +551,10 @@ def processStats(filename):
                             x.append(0)
 
                         writing = 14
+
+                    elif line.startswith("----Latency Breakdown"):
+
+                        writing = 15
 
                     else:
                         writing = 0
@@ -650,6 +674,18 @@ def processStats(filename):
                         rankTotals[ - 1] += value
                         bankTotals[ - 1] += value
 
+                # latency distribution graphs
+                elif writing == 15:
+                    groupsD = combinedRegex.match(line).groups()
+
+                    channelD = int(groupsD[0])
+                    rankD = int(groupsD[1])
+                    bankD = int(groupsD[2])
+                    valueD = int(groupsD[3])
+
+                    channelLatencyDistribution[channelD][rankD][bankD].append(valueD)
+
+
     except IOError, strerror:
         print "I/O error", strerror, "\nThis archive is probably truncated."
     except OSError, strerror:
@@ -666,38 +702,93 @@ def processStats(filename):
                     for i in range(len(rank) - 1):
                         total += rank[i][ - 1]
                     rank[ - 1].append(total if total > 0 else 1)
-        #gnuplot[3].stdin.write("\ne\n")
 
+        if writing == 15:
+            for channel in channelLatencyDistribution:
+                for rank in channel:
+                    total = 0
+                    for i in range(len(rank) - 1):
+                        total += rank[i][ - 1]
+                    rank[ - 1].append(total if total > 0 else 1)
 
+        # make the address latency distribution per channel graphs
         channelID = 0
-        for u in channelDistribution:
+        for channel in channelLatencyDistribution:
             #for each channel make its own graph
-            gnuplot[5].stdin.write(subAddrDistroA % channelID)
+            gnuplot[2].stdin.write(subAddrDistroA % ("addressLatencyDistribution%d" % channelID))
+            fileList.append('addressLatencyDistribution%d.%s' % (channelID, extension))
+            channelID += 1
+            rankFraction = 1.0 / len(channel)
+            offset = 1 - rankFraction
+            rankID = 0
+            for rank in channel:
+                gnuplot[2].stdin.write(subAddrDistroB % (rankFraction, offset, rankID, "" if rankID > 0 else "\\n%s" % commandLine))
+                rankID += 1
+                offset -= rankFraction
+                if rankID < len(channel):
+                    gnuplot[2].stdin.write('\nunset key\nunset xlabel\n')
+                else:
+                    gnuplot[2].stdin.write('\nset xlabel "Time (s)" offset 0,0.6\nset key outside center bottom horizontal reverse Left\n')
+                    pass
+                gnuplot[2].stdin.write('plot ')
+                for a in range(len(rank) - 1):
+                    gnuplot[2].stdin.write('"-" using 1 "%%lf" axes x2y1 t "bank_{%d}  ",' % a)
+                gnuplot[2].stdin.write('"-" using 1:2 axes x1y1 notitle with points pointsize 0.01\n')
+                #print len(v) - 1
+                #for each bank
+                for bank in range(len(rank) - 1):
+                    #print len(rank[z])
+                    for epoch in range(len(rank[bank])):
+                        gnuplot[2].stdin.write("%f\n" % (1.0 * rank[bank][epoch] / rank[ - 1][epoch]))
+                        #gnuplot[2].stdin.write("%f\n" % (1.0 * v[z][y]))
+                        #if y ==12 or y==11 or y == 13:
+                        #if z == 4:
+                        #if epoch == 10:
+                        #    print rank[-1][epoch], 1.0 * rank[bank][epoch], bank, epoch, len(rank[-1])
+                        #print rank[-1]
+                        #print (1.0 * v[z][y] / v[ - 1][y])
+                    gnuplot[2].stdin.write("e\n")
+                gnuplot[2].stdin.write('%lf 0.2\ne\n' % (len(rank[0]) * epochTime))
+            gnuplot[2].stdin.write("\nunset multiplot\nunset output\n")
+
+
+        # make the address distribution per channel graphs
+        channelID = 0
+        for channel in channelDistribution:
+            #for each channel make its own graph
+            gnuplot[5].stdin.write(subAddrDistroA % ("addressDistribution%d" % channelID))
             fileList.append('addressDistribution%d.%s' % (channelID, extension))
             channelID += 1
-            rankFraction = 1.0 / len(u)
+            rankFraction = 1.0 / len(channel)
             offset = 1 - rankFraction
-            rank = 0
-            for v in u:
-                gnuplot[5].stdin.write(subAddrDistroB % (rankFraction, offset, rank, "" if rank > 0 else "\\n%s" % commandLine))
-                rank += 1
+            rankID = 0
+            for rank in channel:
+                gnuplot[5].stdin.write(subAddrDistroB % (rankFraction, offset, rankID, "" if rankID > 0 else "\\n%s" % commandLine))
+                rankID += 1
                 offset -= rankFraction
-                if rank < len(u):
+                if rankID < len(channel):
                     gnuplot[5].stdin.write('\nunset key\nunset xlabel\n')
                 else:
                     gnuplot[5].stdin.write('\nset xlabel "Time (s)" offset 0,0.6\nset key outside center bottom horizontal reverse Left\n')
                     pass
                 gnuplot[5].stdin.write('plot ')
-                for a in range(len(v) - 1):
+                for a in range(len(rank) - 1):
                     gnuplot[5].stdin.write('"-" using 1 "%%lf" axes x2y1 t "bank_{%d}  ",' % a)
                 gnuplot[5].stdin.write('"-" using 1:2 axes x1y1 notitle with points pointsize 0.01\n')
-                for z in range(len(v) - 1):
+                for bank in range(len(rank) - 1):
                     #for each bank
-                    for y in range(len(v[z])):
-                        gnuplot[5].stdin.write("%f\n" % (1.0 * v[z][y] / v[ - 1][y]))
+                    for epoch in range(len(rank[bank])):
+                        gnuplot[5].stdin.write("%f\n" % (1.0 * rank[bank][epoch] / rank[ - 1][epoch]))
+                        #if epoch == 10:
+                        #    print rank[-1][epoch], 1.0 * rank[bank][epoch], bank, epoch, len(rank[-1])
+
+                        #if y == 4:
+                        #    print v[-1][y], 1.0 * v[z][y]
                     gnuplot[5].stdin.write("e\n")
-                gnuplot[5].stdin.write('%lf 0.2\ne\n' % (len(v[0]) * epochTime))
+                gnuplot[5].stdin.write('%lf 0.2\ne\n' % (len(rank[0]) * epochTime))
             gnuplot[5].stdin.write("\nunset multiplot\nunset output\n")
+
+
 
         # make the address distribution graphs
         gnuplot[1].stdin.write(addressDistroA % commandLine)
@@ -748,7 +839,7 @@ def processStats(filename):
             else:
                 highValues.append(u)
 
-        gnuplot[0].stdin.write("\ne\n%s\n" % pcVsLatencyGraph1 )
+        gnuplot[0].stdin.write("\ne\n%s\n" % pcVsLatencyGraph1)
 
         for u in highValues:
             gnuplot[0].stdin.write("%lf %f\n" % (u - 4294967296, period * latencyVsPCDict[u]))
@@ -927,6 +1018,8 @@ def processStats(filename):
     distroStrings = ''
     for i in range(len(channels)):
         distroStrings += addressDistroString % (i, i, i)
+    for i in range(len(channels)):
+        distroStrings += addressLatencyString % (i, i, i)
     o.write(re.sub("\+\+\+", distroStrings, template))
     o.close()
     templateF.close()
