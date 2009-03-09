@@ -60,6 +60,9 @@ void M5dramSystem::getAddressRanges(AddrRangeList &resp, bool &snoop)
 	resp.push_back(RangeSize(start(), params()->range.size()));
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief drain all commands from the system in preparation to switch timing modes
+//////////////////////////////////////////////////////////////////////////
 unsigned int M5dramSystem::drain(::Event *de)
 {
 	ds->resetToTime((curTick + getCPURatio() - 1) / getCPURatio());
@@ -579,7 +582,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 			/// @todo make sure currentTransactionID is not already in the hash table
 
-			bool result = memory->ds->enqueue(new Transaction(packetType,currentMemCycle,pkt->getSize(),pkt->getAddr(), pC, threadID, memory->currentTransactionID));
+			
+			bool result = memory->ds->enqueue(new Transaction(packetType,currentMemCycle,pkt->getSize() / 8,pkt->getAddr(), pC, threadID, memory->currentTransactionID));
 
 			assert(result == true);
 

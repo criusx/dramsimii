@@ -189,7 +189,7 @@ Channel::~Channel()
 /// @param transFinishTime the time that this transaction finished
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-void Channel::moveChannelToTime(const tick endTime)
+void Channel::moveToTime(const tick endTime)
 {	
 	assert(finishedTransactions.size() == 0);
 
@@ -197,7 +197,9 @@ void Channel::moveChannelToTime(const tick endTime)
 	{	
 		// move time to either when the next command executes or the next transaction decodes, whichever is earlier
 		// otherwise just go to the end
+#ifndef NDEBUG
 		tick oldTime = time;
+#endif
 		time = max(min(endTime,min(nextTransactionDecodeTime(),nextCommandExecuteTime())),time);
 		assert(time <= endTime);
 		assert(time >= oldTime);
@@ -206,16 +208,19 @@ void Channel::moveChannelToTime(const tick endTime)
 		int decodedCount = 0;
 		//unsigned nextToDecode = readAvailableTransaction();
 		while (checkForAvailableCommandSlots(readTransaction(true)))
-		//while (nextToDecode < UINT_MAX)
+			//while (nextToDecode < UINT_MAX)
 		{
 			decodedCount++;
 			// actually remove it from the queue now
 			Transaction *decodedTransaction = getTransaction();
 			// then break into commands and insert into per bank command queues			
-			bool t2cResult = transaction2commands(decodedTransaction);
+#ifndef NDEBUG
+			bool t2cResult = 
+#endif
+				transaction2commands(decodedTransaction);
 			decodedTransaction->setDecodeTime(time);
 			// checkForAvailablecommandSlots() should not have returned true if there was not enough space
-			assert(t2cResult == true);
+			assert(t2cResult);
 
 			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "/" << transactionQueue.depth() << "]->[" << 
 				rank[decodedTransaction->getAddress().getRank()].bank[decodedTransaction->getAddress().getBank()].size() << "/" <<
@@ -223,7 +228,7 @@ void Channel::moveChannelToTime(const tick endTime)
 
 			//nextToDecode = readAvailableTransaction();
 		}		
-		if (decodedCount > 2)
+		if (decodedCount > 3)
 			cerr << "decoded " << decodedCount << endl;
 
 		// execute commands for this time, reevaluate what the next command is since this may have changed after decoding the transaction
@@ -281,7 +286,7 @@ void Channel::moveChannelToTime(const tick endTime)
 //////////////////////////////////////////////////////////////////////////
 /// @brief determines when the next transaction is decoded, command ready to be executed or next refresh command arrives
 /// @return the time when the next event happens
-/// @sa readTransactionSimple() readNextCommand() earliestExecuteTime() checkForAvailableCommandSlots()
+/// @sa readTransactionSimple() readNextCommand() earliestExecuteTime() checkForAvailableCommandSlots() nextRefresh()
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 tick Channel::nextTick() const
@@ -311,6 +316,11 @@ tick Channel::nextTransactionDecodeTime() const
 	return TICK_MAX;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief return any transactions that finished when moveToTime() was called
+/// @details moves results from the internal queue to the given queue
+/// @returns a queue that has the results in transactionID, finished time pairs
+//////////////////////////////////////////////////////////////////////////
 void Channel::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outputQueue)
 {
 	while (finishedTransactions.size() > 0) 
@@ -357,7 +367,6 @@ tick Channel::nextRefresh() const
 	else
 		return TICK_MAX;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief adds this command to the history queue
@@ -705,7 +714,7 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 
 	//const Transaction *nextTransaction = transactionQueue.front(); 
 	unsigned val = readAvailableTransaction();
-	
+
 	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : transactionQueue.front(); 
 
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
@@ -746,6 +755,13 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief read a transaction that is ready to go, out of order possibly
+/// @detail searches from the head to the end or the decode window to find
+/// a transaction that is able to be decoded at the current time
+/// @returns a pointer to the next transaction that can currently be decoded
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 unsigned Channel::readAvailableTransaction() const
 {
 	unsigned limit = min(systemConfig.getDecodeWindow(), transactionQueue.size());
@@ -772,6 +788,12 @@ unsigned Channel::readAvailableTransaction() const
 	return UINT_MAX;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief removes and returns the next decodable transaction
+/// @sa readAvailableTransaction()
+/// @detail returns a transaction that can be decoded right now in the same
+/// way as readAvailableTransaction(), but actually removes it
+//////////////////////////////////////////////////////////////////////////
 Transaction *Channel::getAvailableTransaction(unsigned useThis)
 {
 	if (useThis < UINT_MAX)
@@ -786,8 +808,6 @@ Transaction *Channel::getAvailableTransaction(unsigned useThis)
 	}
 }
 
-
-
 //////////////////////////////////////////////////////////////////////////
 /// @brief get the next transaction, whether a refresh transaction or a normal R/W transaction
 /// @detail gets the next transaction for this channel and removes it
@@ -797,7 +817,7 @@ Transaction *Channel::getAvailableTransaction(unsigned useThis)
 Transaction *Channel::getTransaction()
 {
 	unsigned val = readAvailableTransaction();
-	
+
 	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : transactionQueue.front(); 
 
 	// no refresh transactions, just see if normal transactions are decoded
@@ -1044,54 +1064,56 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 		// all break down into PRE,RAS,CAS
 		// or CAS
 	case OPEN_PAGE:
-				
-			// refresh transactions become only one command and are handled differently
-			if (incomingTransaction->isRefresh())
-			{
-				const Rank &currentRank = rank[incomingTransaction->getAddress().getRank()];
-				// make sure that there is room in all the queues for one command
-				// refresh commands refresh a row, but kill everything currently in the sense amps
-				// therefore, we need to make sure that the refresh commands happen when all banks
-				// are available
-				for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
-				{					
-					if (i->freeCommandSlots() < 2)
-						return false;
-				}
-				return true;
-			}
-			else if (!destinationBank.isFull())
-			{	
-				// try to do a normal open page insert on this transaction
-				if (destinationBank.openPageInsertCheck(incomingTransaction, time))
-				{					
-					return true;
-				}
-				else
-				{
-					// first, the precharge command, if necessary
-					if (((destinationBank.isEmpty() && destinationBank.isActivated()) || (!destinationBank.isEmpty() && !destinationBank.back()->isRefresh())))
-					{
-						if (destinationBank.freeCommandSlots() < 3)
-						{
-							return false;
-						}
-						assert(!destinationBank.back() || destinationBank.back()->getCommandType() != Command::REFRESH_ALL);
-						assert(!destinationBank.back() || destinationBank.back()->getCommandType() != Command::PRECHARGE);
-					}
-					else if (destinationBank.freeCommandSlots() < 2)
-					{
-						return false;
-					}
+	case OPEN_PAGE_AGGRESSIVE:
 
-					return true;	
-				}
+		// refresh transactions become only one command and are handled differently
+		if (incomingTransaction->isRefresh())
+		{
+			const Rank &currentRank = rank[incomingTransaction->getAddress().getRank()];
+			// make sure that there is room in all the queues for one command
+			// refresh commands refresh a row, but kill everything currently in the sense amps
+			// therefore, we need to make sure that the refresh commands happen when all banks
+			// are available
+			for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			{					
+				if (i->freeCommandSlots() < 2)
+					return false;
+			}
+			return true;
+		}
+		else if (!destinationBank.isFull())
+		{	
+			// try to do a normal open page insert on this transaction
+			if ((systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE_AGGRESSIVE) &&
+				(destinationBank.openPageInsertCheck(incomingTransaction, time)))
+			{					
+				return true;
 			}
 			else
 			{
-				return false;
+				// first, the precharge command, if necessary
+				if (((destinationBank.isEmpty() && destinationBank.isActivated()) || (!destinationBank.isEmpty() && !destinationBank.back()->isRefresh())))
+				{
+					if (destinationBank.freeCommandSlots() < 3)
+					{
+						return false;
+					}
+					assert(!destinationBank.back() || destinationBank.back()->getCommandType() != Command::REFRESH_ALL);
+					assert(!destinationBank.back() || destinationBank.back()->getCommandType() != Command::PRECHARGE);
+				}
+				else if (destinationBank.freeCommandSlots() < 2)
+				{
+					return false;
+				}
+
+				return true;	
 			}
-			
+		}
+		else
+		{
+			return false;
+		}
+
 		break;
 
 	default:
@@ -1269,6 +1291,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// open page systems may, in the best case, add a CAS command to an already open row
 		// closing the row and precharging may be pushed back one slot
 	case OPEN_PAGE:
+	case OPEN_PAGE_AGGRESSIVE:
 
 		// refresh transactions become only one command and are handled differently
 		if (incomingTransaction->isRefresh())
@@ -1307,11 +1330,11 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					assert(result);
 					assert(&(rank[tempAddr.getRank()].bank[j]) == &*i);
 					assert(rank[tempAddr.getRank()].bank[j].back() == newCommand);
-					
+
 				}
-				
-				#ifndef NDEBUG
-bool result = 
+
+#ifndef NDEBUG
+				bool result = 
 #endif // NDEBUG
 					i->push(refreshCommand);
 				assert (result);
@@ -1322,7 +1345,8 @@ bool result =
 		else if (!destinationBank.isFull())
 		{	
 			// try to do a normal open page insert on this transaction
-			if (destinationBank.openPageInsert(incomingTransaction, time))
+			if ((systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE_AGGRESSIVE) &&
+				destinationBank.openPageInsert(incomingTransaction, time))
 			{
 				// found place to insert, hit
 				statistics.reportHit();
@@ -1341,8 +1365,8 @@ bool result =
 					}
 					assert(!destinationBank.back() || !destinationBank.back()->isRefresh());
 					assert(!destinationBank.back() || !destinationBank.back()->isPrecharge());
-					#ifndef NDEBUG
-bool result = 
+#ifndef NDEBUG
+					bool result = 
 #endif // NDEBUG
 						destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst(), Command::PRECHARGE));
 					assert(result);
@@ -1413,7 +1437,7 @@ Command *Channel::getNextCommand(const Command *useThisCommand)
 
 				assert(tempCommand != NULL);
 				assert(tempCommand->isRefresh());
-				
+
 				currentBank++;
 
 				if (currentBank == currentRank.bank.end())
@@ -1427,9 +1451,21 @@ Command *Channel::getNextCommand(const Command *useThisCommand)
 			assert((useThisCommand->isPrecharge() && systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE) ||
 				(currentRank.bank[useThisCommand->getAddress().getBank()].front() == useThisCommand));
 
-			Command *tempCommand = currentRank.bank[useThisCommand->getAddress().getBank()].pop();
+			Bank &currentBank = currentRank.bank[useThisCommand->getAddress().getBank()];
+
+			Command *tempCommand = currentBank.pop();
 			// command is being removed, clear the cache
 			assert(tempCommand && tempCommand == useThisCommand);
+			if ((systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE_AGGRESSIVE) &&
+				(tempCommand->isReadOrWrite() && 
+				!currentBank.isEmpty() && currentBank.isHighUtilization() &&
+				currentBank.front()->isPrecharge()))
+			{
+				assert(!tempCommand->isPrecharge());
+				tempCommand->setAutoPrecharge(true);
+				delete currentRank.bank[useThisCommand->getAddress().getBank()].pop();
+			}
+
 			return tempCommand;
 		}
 	}
@@ -1457,11 +1493,15 @@ const Command *Channel::readNextCommand() const
 
 			tick candidateExecuteTime = TICK_MAX;
 
-			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
+			vector<Rank>::const_iterator rankEnd = rank.end();
+
+			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; currentRank++)
 			{
 				bool isRefreshCommand = true;
 
-				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+				vector<Bank>::const_iterator bankEnd = currentRank->bank.end();
+
+				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; currentBank++)
 				{
 					const Command *challengerCommand = currentBank->front();
 					assert(challengerCommand == NULL || challengerCommand->isRefresh() || rank[challengerCommand->getAddress().getRank()].bank[challengerCommand->getAddress().getBank()].front() == challengerCommand);
@@ -1535,11 +1575,15 @@ const Command *Channel::readNextCommand() const
 			vector<Bank>::const_iterator oldestBank;
 			vector<Bank>::const_iterator oldestExecutableBank;
 
-			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
+			vector<Rank>::const_iterator rankEnd = rank.end();
+
+			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; currentRank++)
 			{
 				bool notAllRefresh = false;
 
-				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
+				vector<Bank>::const_iterator bankEnd = currentRank->bank.end();
+
+				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; currentBank++)
 				{
 					if (const Command *challengerCommand = currentBank->front())
 					{
@@ -1909,14 +1953,15 @@ const Command *Channel::readNextCommand() const
 }
 
 
-/// <summary>
-/// Updates the channel time to what it would be had this command been executed
-/// Updates the rank and bank records of the most recent RAS, CAS, etc. times
+//////////////////////////////////////////////////////////////////////////
+/// @brief Updates the channel time to what it would be had this command been executed
+/// @details Updates the rank and bank records of the most recent RAS, CAS, etc. times
 /// Enqueues RAS times to allow t_faw to be determined later
 /// Updates rank and bank records of CAS, RAS lengths for later calculations in 
 /// min_protocol_gap()
-/// </summary>
-/// <param name="this_command">The command to execute against the current state</param>
+/// @param the command to execute at this time
+/// @author Joe Gross
+//////////////////////////////////////////////////////////////////////////
 void Channel::executeCommand(Command *thisCommand)
 {
 	Rank &currentRank = rank[thisCommand->getAddress().getRank()];
@@ -1924,8 +1969,6 @@ void Channel::executeCommand(Command *thisCommand)
 	Bank &currentBank = currentRank.bank[thisCommand->getAddress().getBank()];
 
 	currentRank.setLastBankID(thisCommand->getAddress().getBank());
-
-	const unsigned rankID = currentRank.getRankID();
 
 	thisCommand->setStartTime(time);
 
@@ -1964,7 +2007,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
 		{
-			if (i->getRankID() != rankID)
+			if (&currentRank != &*i)
 				i->setOtherLastCAS(time + timingSpecification.tAL(),thisCommand->getLength());
 		}
 		break;
@@ -1988,7 +2031,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
 		{
-			if (i->getRankID() != rankID)
+			if (&currentRank != &*i)
 				i->setOtherLastCASW(time + timingSpecification.tAL(),thisCommand->getLength());
 		}
 		break;
@@ -2266,9 +2309,6 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 	const Rank &currentRank = rank[currentCommand->getAddress().getRank()];
 
-	//const unsigned rankID = currentRank.getRankID();
-	//assert (rankID == currentCommand->getAddress().getRank());
-
 	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
 
 	switch(currentCommand->getCommandType())
@@ -2425,7 +2465,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief Returns the soonest time that this command may execute
+/// @brief Returns the soonest time that this command may execute, tracks the limiting factor
 /// @details refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk by Jacob/Wang
 /// @details Looks at all of the timing parameters and decides when the this command may soonest execute
 //////////////////////////////////////////////////////////////////////////

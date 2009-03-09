@@ -205,6 +205,12 @@ void Bank::issueREF(const tick currentTime, const Command *currentCommand)
 	lastRefreshAllTime = currentTime;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief reset statistics so that it appears the last command was not long ago
+/// @detail choose recent times for the lastX actions so that values are not so
+/// large when looking to see when the next available time to execute any dependent
+/// command. Often issued just after fast-forwarding finishes in a simulator
+//////////////////////////////////////////////////////////////////////////
 void Bank::resetToTime(const tick time)
 {
 	lastRASTime = time - timing.tRC();
@@ -240,7 +246,10 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 			// channel, rank, bank, row all match, insert just before this precharge command
 			else if ((currentCommand->isReadOrWrite()) && (currentCommand->getAddress().getRow() == value->getAddress().getRow())) 
 			{
-				bool result = perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()), currentIndex + 1);
+#ifndef NDEBUG
+				bool result = 
+#endif
+					perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()), currentIndex + 1);
 				assert(result);
 
 				return true;
@@ -256,7 +265,10 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 		// already guaranteed not to have RAW/WAR errors
 		if (activated && openRowID == value->getAddress().getRow())
 		{
-			bool result = perBankQueue.push_front(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()));
+#ifndef NDEBUG
+			bool result = 
+#endif
+				perBankQueue.push_front(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()));
 			assert(result);
 
 			return true;

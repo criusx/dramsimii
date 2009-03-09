@@ -5,7 +5,7 @@ import gzip
 import sys
 import os
 import string
-from threading import Thread
+from threading import Thread, Lock
 import Queue
 #import tempfile
 #import tarfile
@@ -22,6 +22,8 @@ from statsScripts import *
 workerThreads = 2
 
 Window = 8
+
+resizeLock = Lock()
 
 class CumulativePriorMovingAverage:
     def __init__(self):
@@ -87,15 +89,16 @@ def gziplines(filename):
 def thumbnail(filelist, tempPath):
     for x in filelist:
         if x.endswith(extension):
-            file = os.path.join(tempPath, x)
-            p1 = Popen(['convert', '-limit', 'memory', '512', '-resize', thumbnailResolution, file, '%s-thumb.png' % file[: - 4]])
-            p2 = Popen("gzip -c -9 -f %s > %s" % (file, file + "z"), shell=True)
-            p1.wait()
-            p2.wait()
-            try:
-                os.remove(file)
-            except OSError, msg:
-                print OSError, msg
+            with resizeLock:
+                file = os.path.join(tempPath, x)
+                p1 = Popen(['convert', '-limit', 'memory', '512mb', '-resize', thumbnailResolution, file, '%s-thumb.png' % file[: - 4]])
+                p2 = Popen("gzip -c -9 -f %s > %s" % (file, file + "z"), shell=True)
+                p1.wait()
+                p2.wait()
+                try:
+                    os.remove(file)
+                except OSError, msg:
+                    print OSError, msg
 
 def processPower(filename):
 
@@ -110,7 +113,7 @@ def processPower(filename):
         print "Could not create output dir: " + tempPath
         if not os.path.exists(tempPath):
             return
-
+#todo: make the gnuplot subprocesses common for the entire run, not per zip file
     writing = 0
     p = Popen(['gnuplot'], stdin=PIPE, stdout=PIPE, shell=False)
     p.stdin.write(terminal)

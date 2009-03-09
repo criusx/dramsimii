@@ -27,7 +27,9 @@ using namespace DRAMsimII;
 // initialize the static members
 Queue<Transaction> Transaction::freeTransactionPool(4*POOL_SIZE,true);
 
-/// constructor to make a transaction with no values set
+//////////////////////////////////////////////////////////////////////////
+/// @brief constructor to make a transaction with no values set
+//////////////////////////////////////////////////////////////////////////
 Transaction::Transaction():
 Event(),
 type(CONTROL_TRANSACTION),
@@ -38,7 +40,9 @@ threadNum(0),
 originalTransaction(UINT_MAX)
 {}
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief constructor to use when creating a transaction based on a request that has a possible program counter and thread ID
+//////////////////////////////////////////////////////////////////////////
 Transaction::Transaction(const TransactionType transType, const tick arrivalTime,const unsigned burstLength, const Address &address, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
 Event(arrivalTime,address),
 type(transType),
@@ -49,6 +53,9 @@ threadNum(threadNumber),
 originalTransaction(originalTrans)
 {}
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief constructor to use when creating a transaction that is linked to a native transaction
+//////////////////////////////////////////////////////////////////////////
 Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const unsigned originalTrans):
 Event(arrivalTime,address),
 type(transType),
@@ -59,7 +66,9 @@ threadNum(0),
 originalTransaction(originalTrans)
 {}
 
-/// copy constructor to duplicate a transaction
+//////////////////////////////////////////////////////////////////////////
+/// @brief copy constructor to duplicate a transaction
+//////////////////////////////////////////////////////////////////////////
 Transaction::Transaction(const Transaction &rs):
 Event(rs),
 type(rs.type),
@@ -70,7 +79,9 @@ threadNum(rs.threadNum),
 originalTransaction(rs.originalTransaction)
 {}
 
-/// constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
+//////////////////////////////////////////////////////////////////////////
+/// @brief constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
+//////////////////////////////////////////////////////////////////////////
 Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
 Event(arrivalTime,physicalAddress),
 type(transType),
@@ -81,7 +92,10 @@ threadNum(threadNumber),
 originalTransaction(originalTrans)
 {}
 
-/// overrides the new operator to draw from the transaction pool instead
+//////////////////////////////////////////////////////////////////////////
+/// @brief overloads the new operator to draw from the transaction pool instead
+/// @details avoids the system call for most of runtime by drawing from a pool
+//////////////////////////////////////////////////////////////////////////
 void *Transaction::operator new(size_t size)
 {
 	assert(size == sizeof(Transaction));
@@ -92,32 +106,45 @@ void *Transaction::operator new(size_t size)
 	//return newTrans;
 }
 
-/// override the delete operator to send transactions back to the pool
+//////////////////////////////////////////////////////////////////////////
+/// @brief override the delete operator to send transactions back to the pool
+/// @details return transactions to the transaction pool rather than to free memory
+//////////////////////////////////////////////////////////////////////////
 void Transaction::operator delete(void *mem)
 {
 	Transaction *trans = static_cast<Transaction*>(mem);
 	freeTransactionPool.releaseItem(trans);
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief comparison operator definition
+//////////////////////////////////////////////////////////////////////////
 bool Transaction::operator==(const Transaction& right) const
 {
-	return (/*eventNumber == right.eventNumber &&*/ type == right.type && /*status == right.status && */length == right.length &&
+	return (type == right.type && length == right.length &&
 		arrivalTime == right.arrivalTime && enqueueTime == right.enqueueTime && completionTime == right.completionTime &&
 		decodeTime == right.decodeTime && this->Event::operator==(right) && originalTransaction == right.originalTransaction);
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief inequality operator
+//////////////////////////////////////////////////////////////////////////
 bool Transaction::operator !=(const Transaction& right) const
 {
 	return !(*this == right);
 }
 
-/// prints the key attributes of a transaction
+//////////////////////////////////////////////////////////////////////////
+/// @brief insertion operator overload, prints details of the transaction
+//////////////////////////////////////////////////////////////////////////
 ostream &DRAMsimII::operator<<(ostream &os, const Transaction& thisTransaction)
 {	
 	return os << thisTransaction.getType() << ((Event&)thisTransaction);
 }
 
-/// decodes and prints the transaction type
+//////////////////////////////////////////////////////////////////////////
+/// @brief insertion operator for transactiontype, decodes and prints the transaction type
+//////////////////////////////////////////////////////////////////////////
 ostream &DRAMsimII::operator<<(ostream &os, const Transaction::TransactionType type)
 {
 	switch (type)

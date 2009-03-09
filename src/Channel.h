@@ -97,7 +97,7 @@ namespace DRAMsimII
 		unsigned pendingTransactionCount() const { return finishedTransactions.size(); }
 		void getPendingTransactions(std::queue<std::pair<unsigned,tick> > &);
 
-		virtual void moveChannelToTime(const tick endTime);
+		virtual void moveToTime(const tick endTime);
 
 		// accessors
 		const TimingSpecification& getTimingSpecification() const { return timingSpecification; }	///< returns a reference to access the timing specification

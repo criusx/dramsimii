@@ -39,7 +39,9 @@ using boost::token_compress_on;
 using boost::split;
 
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief update the value in the settings file with a new value at runtime
+//////////////////////////////////////////////////////////////////////////
 bool updateKeyValue(const string &nodeName, const string &nodeValue, xmlDocPtr doc)
 {
 	FileIOToken token = unknown_token;
@@ -88,7 +90,11 @@ bool updateKeyValue(const string &nodeName, const string &nodeValue, xmlDocPtr d
 
 namespace opt = boost::program_options;
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief construct a set of settings based upon parameters passed from the command line
+/// @detail will parse parameters passed from the command line without modification
+/// and print any errors that occur
+//////////////////////////////////////////////////////////////////////////
 Settings::Settings(int argc, char **argv):
 systemType(BASELINE_CONFIG)
 {
@@ -192,7 +198,10 @@ systemType(BASELINE_CONFIG)
 					{
 						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
 						string attrS = (const char *)attr;
-						bool result = setKeyValue(nodeName,attrS);
+#ifndef NDEBUG
+						bool result = 
+#endif
+							setKeyValue(nodeName,attrS);
 						assert(result);
 						xmlFree(attr);
 					}
@@ -210,7 +219,10 @@ systemType(BASELINE_CONFIG)
 								if (xmlTextReaderNodeType(reader) == XML_TEXT_NODE)
 								{	
 									nodeValue = (const char *)xmlTextReaderConstValue(reader);
-									bool result = setKeyValue(type,nodeValue);		
+#ifndef NDEBUG
+									bool result = 
+#endif
+										setKeyValue(type,nodeValue);		
 									assert(result);
 								}								
 							}							
@@ -224,7 +236,10 @@ systemType(BASELINE_CONFIG)
 						if (attr)
 						{
 							const string type = (const char *)attr;
-							bool result = setKeyValue("outFileType",type);
+#ifndef NDEBUG
+							bool result = 
+#endif
+								setKeyValue("outFileType",type);
 							assert(result);
 						}
 
@@ -235,7 +250,10 @@ systemType(BASELINE_CONFIG)
 						if (attr)
 						{
 							const string type = (const char *)attr;
-							bool result = setKeyValue("dbreporting",type);
+#ifndef NDEBUG
+							bool result = 
+#endif 
+								setKeyValue("dbreporting",type);
 							assert(result);
 						}
 
@@ -247,8 +265,10 @@ systemType(BASELINE_CONFIG)
 				if (xmlTextReaderConstName(reader))
 				{
 					nodeValue = (const char *)xmlTextReaderConstValue(reader);
-
-					bool result = setKeyValue(nodeName, nodeValue);
+#ifndef NDEBUG
+					bool result = 
+#endif
+						setKeyValue(nodeName, nodeValue);
 					assert(result);
 
 				}

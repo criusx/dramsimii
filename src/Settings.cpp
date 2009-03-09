@@ -407,8 +407,10 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 			rowBufferManagementPolicy = CLOSE_PAGE;
 		else if (nodeValue == "closepageaggressive" || nodeValue == "closepageoptimized")
 			rowBufferManagementPolicy = CLOSE_PAGE_AGGRESSIVE;
+		else if (nodeValue == "openpageaggressive")
+			rowBufferManagementPolicy = OPEN_PAGE_AGGRESSIVE;
 		else
-			rowBufferManagementPolicy = AUTO_PAGE;
+			rowBufferManagementPolicy = CLOSE_PAGE_AGGRESSIVE;
 		break;
 	case clock_granularity_token:
 		result = toNumeric<unsigned>(clockGranularity,nodeValue,std::dec);

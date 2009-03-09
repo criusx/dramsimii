@@ -251,7 +251,7 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 
 // may only execute commands from the previous frame or from the first slot in the next frame
 // however, up to three commands must be executed
-unsigned fbdChannel::moveChannelToTime(const tick endTime, tick& transFinishTime)
+unsigned fbdChannel::moveToTime(const tick endTime, tick& transFinishTime)
 {
 	while (time < endTime)
 	{

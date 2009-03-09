@@ -39,6 +39,9 @@ using std::string;
 
 using namespace DRAMsimII;
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief constructor based on a given set of Settings
+//////////////////////////////////////////////////////////////////////////
 Statistics::Statistics(const Settings& settings):
 channels(settings.channelCount),
 ranks(settings.rankCount),
@@ -65,7 +68,9 @@ aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.b
 bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.bankCount)
 {}
 
-// no arg constructor for deserialization
+//////////////////////////////////////////////////////////////////////////
+/// @brief no arg constructor for deserialization, should not be called otherwise
+//////////////////////////////////////////////////////////////////////////
 Statistics::Statistics():
 channels(0),
 ranks(0),
@@ -92,7 +97,9 @@ aggregateBankUtilization(0),
 bankLatencyUtilization(0)
 {}
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief collects transaction statistics once a transaction has finished
+//////////////////////////////////////////////////////////////////////////
 void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 {
 //#pragma omp critical
@@ -119,12 +126,13 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				bankLatencyUtilization[index] += currentTransaction->getLatency();
 				aggregateBankUtilization[index]++;
 				readCount++;
-				readBytesTransferred += currentTransaction->getLength();
+				readBytesTransferred += currentTransaction->getLength() * 8;
 			}
 			else
 			{
 				// 64bit bus for most DDRx architectures
-				writeBytesTransferred += currentTransaction->getLength();
+				/// @todo use #DQ * length to calculate bytes Tx, Rx
+				writeBytesTransferred += currentTransaction->getLength() * 8;
 				writeCount++;
 			}
 
@@ -143,6 +151,9 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief collects commands stats once a command has executed
+//////////////////////////////////////////////////////////////////////////
 void Statistics::collectCommandStats(const Command *currentCommand)
 {
 //#pragma omp critical
@@ -156,6 +167,10 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief insertion operator overload to dump statistics
+/// @details prints info about the statistics since the last reset
+//////////////////////////////////////////////////////////////////////////
 ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 {
 	using std::vector;
@@ -241,16 +256,11 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	for (;i != end;++i) 
 	{
 		Info *info = *i;
-		//Stats::StatData *data = *i;
-		//if (data->name.find("ipc_total") != string::npos)
 		if (info->name.find("ipc_total") != string::npos)
 		{
-			//cerr << data->name << " " << endl;
-			//if (typeid(*data) == typeid(Stats::Formula))
-			//	cerr << "Formula" << endl;
 			os << "----IPC----" << endl;
-			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfo<Stats::FormulaBase> *)info)->result().begin();
-			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfo<Stats::FormulaBase> *)info)->result().end();
+			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfo<Stats::Formula> *)info)->result().begin();
+			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfo<Stats::Formula> *)info)->result().end();
 			while (start != end)
 			{
 				os << *start << endl;
@@ -276,8 +286,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			{
 				os << "----M5 Stat: " << info->name << " ";
 
-				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfo<Stats::FormulaBase> *)info)->result().begin();
-				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfo<Stats::FormulaBase> *)info)->result().end();
+				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfo<Stats::Formula> *)info)->result().begin();
+				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfo<Stats::Formula> *)info)->result().end();
 				while (start != end)
 				{
 					os << *start << " ";
@@ -292,6 +302,9 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	return os;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief reset collected statistics up to this point
+//////////////////////////////////////////////////////////////////////////
 void Statistics::clear()
 {
 	using std::vector;
@@ -314,6 +327,9 @@ void Statistics::clear()
 #endif // M5DEBUG
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief equality operator to test if two sets of statistics are equal
+//////////////////////////////////////////////////////////////////////////
 bool Statistics::operator==(const Statistics& right) const
 {
 	return (validTransactionCount == right.validTransactionCount && startNumber == right.startNumber && endNumber == right.endNumber &&

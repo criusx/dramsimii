@@ -110,6 +110,7 @@ namespace DRAMsimII
 		bool closePageAggressiveInsertCheck(const Transaction *value, const tick time) const;
 		bool isFull() const { return perBankQueue.isFull(); }
 		bool isEmpty() const { return perBankQueue.isEmpty(); }
+		bool isHighUtilization() const { return perBankQueue.size() > (perBankQueue.depth() / 2);}
 
 		// constructors
 		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
