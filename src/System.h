@@ -74,7 +74,7 @@ namespace DRAMsimII
 	public:		
 
 		// functions
-		void moveAllChannelsToTime(const tick endTime);
+		void moveToTime(const tick endTime);
 		bool enqueue(Transaction* trans);
 		void enqueueTimeShift(Transaction* trans);
 		//InputStream::InputStatus waitForTransactionToFinish(Transaction *trans);

@@ -93,7 +93,7 @@ void M5dramSystem::moveToTime(const tick now)
 {
 	// if transactions are returned, then send them back,
 	// else if time is not brought up to date, then a refresh transaction has finished
-	ds->moveAllChannelsToTime(now);
+	ds->moveToTime(now);
 
 	ds->getPendingTransactions(finishedTransactions);
 

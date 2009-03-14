@@ -23,8 +23,6 @@ workerThreads = 2
 
 Window = 8
 
-resizeLock = Lock()
-
 class CumulativePriorMovingAverage:
     def __init__(self):
         self.average = 0.0
@@ -87,18 +85,24 @@ def gziplines(filename):
         yield line
 
 def thumbnail(filelist, tempPath):
+
+    global resizeLock
+    resizeLock = Lock()
+
     for x in filelist:
+        #with resizeLock:
+        resizeLock.acquire()
         if x.endswith(extension):
-            with resizeLock:
-                file = os.path.join(tempPath, x)
-                p1 = Popen(['convert', '-limit', 'memory', '512mb', '-resize', thumbnailResolution, file, '%s-thumb.png' % file[: - 4]])
-                p2 = Popen("gzip -c -9 -f %s > %s" % (file, file + "z"), shell=True)
-                p1.wait()
-                p2.wait()
-                try:
-                    os.remove(file)
-                except OSError, msg:
-                    print OSError, msg
+            file = os.path.join(tempPath, x)
+            p1 = Popen(['convert', '-limit', 'memory', '512mb', '-resize', thumbnailResolution, file, '%s-thumb.png' % file[: - 4]])
+            p2 = Popen("gzip -c -9 -f %s > %s" % (file, file + "z"), shell=True)
+            p1.wait()
+            p2.wait()
+            try:
+                os.remove(file)
+            except OSError, msg:
+                print OSError, msg
+        resizeLock.release()
 
 def processPower(filename):
 
@@ -732,7 +736,6 @@ def processStats(filename):
                     gnuplot[2].stdin.write('\nunset key\nunset xlabel\n')
                 else:
                     gnuplot[2].stdin.write('\nset xlabel "Time (s)" offset 0,0.6\nset key outside center bottom horizontal reverse Left\n')
-                    pass
                 gnuplot[2].stdin.write('plot ')
                 for a in range(len(rank) - 1):
                     gnuplot[2].stdin.write('"-" using 1 "%%lf" axes x2y1 t "bank_{%d}  ",' % a)

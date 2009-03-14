@@ -142,7 +142,7 @@ void SSTdramSystem::moveToTime(const tick now)
 	// if transactions are returned, then send them back,
 	// else if time is not brought up to date, then a refresh transaction has finished
 	unsigned transactionID;
-	while (((transactionID = ds->moveAllChannelsToTime(now, finishTime)) < UINT_MAX) || ds->getTime() < now)
+	while (((transactionID = ds->moveToTime(now, finishTime)) < UINT_MAX) || ds->getTime() < now)
 	{
 		parcel *packet = NULL;
 		if (transactionID < UINT_MAX)

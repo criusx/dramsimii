@@ -395,7 +395,7 @@ void System::resetToTime(tick time)
 /// @param transFinishTime the time at which the transaction finished, less than the endTime
 /// @return a transaction which finished somewhere before the end time
 //////////////////////////////////////////////////////////////////////
-void System::moveAllChannelsToTime(const tick endTime)
+void System::moveToTime(const tick endTime)
 {
 	M5_TIMING_LOG("ch to [" << std::dec << endTime << "]");
 
@@ -404,7 +404,7 @@ void System::moveAllChannelsToTime(const tick endTime)
 //#pragma omp parallel for private(i)
 	for (i = channel.size() - 1; i >= 0; i--)
 	{
-		channel[i].moveChannelToTime(endTime);
+		channel[i].moveToTime(endTime);
 	}
 
 	updateSystemTime();
@@ -508,8 +508,8 @@ void System::runSimulations(const unsigned requestCount)
 		//tick nearFinish = 0;
 
 		// as long as transactions keep happening prior to this time
-		//if (moveAllChannelsToTime(min(inputTransaction->getEnqueueTime(),nextTick()),nearFinish))
-		moveAllChannelsToTime(max(newTime, inputTransaction->getArrivalTime()));
+		//if (moveToTime(min(inputTransaction->getEnqueueTime(),nextTick()),nearFinish))
+		moveToTime(max(newTime, inputTransaction->getArrivalTime()));
 		if (this->pendingTransactionCount() > 0)
 		{
 			cerr << "not right, no host transactions here" << endl;
