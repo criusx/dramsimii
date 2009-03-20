@@ -74,7 +74,6 @@ namespace DRAMsimII
 		//int data_word;				// Which portion of data is returned i.e. entire cacheline or fragment thereof which portions are being sent
 		//int data_word_position;		// Which part of the data transmission are we doing : positions include FIRST , MIDDLE, LAST
 		//bool refresh;					// This is used to determine if the ras/prec are part of refresh
-		bool postedCAS;					///< This is used to determine if the ras + cas were in the same bundle
 		unsigned length;				///< the burst length
 
 	public:
@@ -82,15 +81,15 @@ namespace DRAMsimII
 		// constructors
 		explicit Command(const Command&);
 		explicit Command();		
-		explicit Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
-		explicit Command(Transaction& hostTransaction, const Address &addr, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
+		explicit Command(Transaction& hostTransaction, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
+		explicit Command(Transaction& hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
 		~Command();
 
 		// accessors
 		CommandType getCommandType() const { return commandType; }
 		Transaction *getHost() const { return hostTransaction; }
 		unsigned getLength() const { return length; }
-		bool isPostedCAS() const { return postedCAS; }
+		//bool isPostedCAS() const { return postedCAS; }
 		bool isRead() const { return ((commandType == READ) || (commandType == READ_AND_PRECHARGE)); }
 		bool isWrite() const { return ((commandType == WRITE) || (commandType == WRITE_AND_PRECHARGE)); }
 		bool isPrecharge() const { return ((commandType == READ_AND_PRECHARGE) || (commandType == WRITE_AND_PRECHARGE) || (commandType == PRECHARGE)); }

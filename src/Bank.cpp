@@ -33,7 +33,7 @@ perBankQueue(settings.perBankQueueDepth),
 lastRASTime(-100),
 lastCASTime(-100),
 lastCASWTime(-100),
-lastPrechargeTime(0),
+lastPrechargeTime(-1ll * settings.tRP),
 lastRefreshAllTime(-100),
 lastCASLength(8),
 lastCASWLength(8),
@@ -41,7 +41,7 @@ nextActivateTime(0),
 nextReadTime(0),
 nextWriteTime(0),
 nextPrechargeTime(0),
-nextRefreshTime(0),
+nextRefreshTime(settings.tRFC - 100ll),
 openRowID(0),
 activated(settings.rowBufferManagementPolicy == OPEN_PAGE), // close page starts with RAS, open page starts with Pre
 RASCount(0),
@@ -274,6 +274,7 @@ tick Bank::next(Command::CommandType nextCommandType) const
 		return nextRefreshTime;
 		break;
 	default:
+		return TICK_MAX;
 		break;
 	}
 }
@@ -322,7 +323,7 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 #ifndef NDEBUG
 				bool result =
 #endif
-					perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()), currentIndex + 1);
+					perBankQueue.insert(new Command(*value, time,  false, timing.tBurst()), currentIndex + 1);
 				assert(result);
 
 				return true;
@@ -341,7 +342,7 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 #ifndef NDEBUG
 			bool result =
 #endif
-				perBankQueue.push_front(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()));
+				perBankQueue.push_front(new Command(*value, time, false, timing.tBurst()));
 			assert(result);
 
 			return true;
@@ -429,7 +430,7 @@ bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tic
 				assert(perBankQueue[index + 1]->isPrecharge());
 			}
 
-			bool result = perBankQueue.insert(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);
+			bool result = perBankQueue.insert(new Command(*incomingTransaction,time, systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);
 			assert(perBankQueue[index + 1]->getAddress() == incomingTransaction->getAddress());
 			assert(result);
 			return result;

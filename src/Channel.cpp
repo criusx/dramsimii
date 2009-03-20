@@ -49,14 +49,11 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats):
 time(0ll),
-//lastRefreshTime(-100ll),
 lastCommandIssueTime(-100ll),
-lastRankID(0),
+lastCommand(NULL),
 timingSpecification(settings),
 transactionQueue(settings.transactionQueueDepth),
 refreshCounter(settings.rankCount),
-historyQueue(settings.historyQueueDepth),
-completionQueue(settings.completionQueueDepth),
 systemConfig(sysConfig),
 statistics(stats),
 powerModel(settings),
@@ -90,14 +87,11 @@ rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig))
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats):
 time(rhs.time),
-//lastRefreshTime(rhs.lastRefreshTime),
 lastCommandIssueTime(rhs.lastCommandIssueTime),
-lastRankID(rhs.lastRankID),
+lastCommand(rhs.lastCommand),
 timingSpecification(rhs.timingSpecification),
 transactionQueue(rhs.transactionQueue),
 refreshCounter(rhs.refreshCounter),
-historyQueue(rhs.historyQueue),
-completionQueue(rhs.completionQueue),
 systemConfig(systemConfig),
 statistics(stats),
 powerModel(rhs.powerModel),
@@ -118,14 +112,11 @@ rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
 time(0),
-//lastRefreshTime(0),
 lastCommandIssueTime(0),
-lastRankID(0),
+lastCommand(NULL),
 timingSpecification(timing),
 transactionQueue(0),
 refreshCounter(0),
-historyQueue(0),
-completionQueue(0),
 systemConfig(sysConf),
 statistics(stats),
 powerModel(power),
@@ -142,14 +133,11 @@ rank(newRank)
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Channel &rhs):
 time(rhs.time),
-//lastRefreshTime(rhs.lastRefreshTime),
 lastCommandIssueTime(rhs.lastCommandIssueTime),
-lastRankID(rhs.lastRankID),
+lastCommand(rhs.lastCommand),
 timingSpecification(rhs.timingSpecification),
 transactionQueue(rhs.transactionQueue),
 refreshCounter(rhs.refreshCounter),
-historyQueue(rhs.historyQueue),
-completionQueue(rhs.completionQueue),
 systemConfig(rhs.systemConfig),
 statistics(rhs.statistics),
 powerModel(rhs.powerModel),
@@ -250,39 +238,9 @@ void Channel::moveToTime(const tick endTime)
 
 			assert(earliestExecuteTimeLog(nextCommand) <= time);
 
-			executeCommand(executingCommand);	
-			
 			DEBUG_COMMAND_LOG("C " << *executingCommand);
 
-			// only get completed commands if they have finished
-			if (Transaction *completedTransaction = completionQueue.pop())
-			{
-				statistics.collectTransactionStats(completedTransaction);
-
-				DEBUG_TRANSACTION_LOG("-T " << *completedTransaction);
-
-				// reuse the refresh transactions
-				if (completedTransaction->isRefresh())
-				{
-					assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
-
-					delete completedTransaction;
-
-					//return UINT_MAX;
-				}
-				else // return what was pointed to
-				{
-					const unsigned origTrans = completedTransaction->getOriginalTransaction();
-
-					M5_DEBUG(assert(origTrans < UINT_MAX));
-
-					//transFinishTime = completedTransaction->getCompletionTime();
-
-					delete completedTransaction;
-					if (origTrans < UINT_MAX)
-						finishedTransactions.push(std::pair<unsigned,tick>(origTrans, completedTransaction->getCompletionTime()));
-				}
-			}
+			executeCommand(executingCommand);	
 
 			nextCommand = readNextCommand();
 		}
@@ -390,28 +348,37 @@ void Channel::retireCommand(Command *newestCommand)
 	// transaction complete? if so, put incomingTransaction completion queue
 	// note that the host transaction should only be pointed to by a CAS command
 	// since this is when a transaction is done from the standpoint of the requester
-	if (newestCommand->getHost())
+	if (Transaction *completedTransaction = newestCommand->removeHost())
 	{
+		statistics.collectTransactionStats(completedTransaction);
+
+		DEBUG_TRANSACTION_LOG("-T " << *completedTransaction);
+
 		if (!newestCommand->isRefresh())
-			assert(newestCommand->getEnqueueTime() >= newestCommand->getHost()->getEnqueueTime() && newestCommand->getCompletionTime() <= newestCommand->getHost()->getCompletionTime());
-
-		// remove the host pointer so that when this is serialized there aren't multiple copies made
-		if (!completionQueue.push(newestCommand->removeHost()))
 		{
-			cerr << "Fatal error, cannot insert transaction into completion queue." << endl;
-			cerr << "Increase execution q depth and resume. Should not occur. Check logic." << endl;
-			exit(2);
-		}
-	}
+			assert(newestCommand->getEnqueueTime() >= completedTransaction->getEnqueueTime() && 
+				newestCommand->getCompletionTime() <= completedTransaction->getCompletionTime());
 
+			const unsigned origTrans = completedTransaction->getOriginalTransaction();
+
+			M5_DEBUG(assert(origTrans < UINT_MAX));
+			
+			if (origTrans < UINT_MAX)
+				finishedTransactions.push(std::pair<unsigned,tick>(origTrans, completedTransaction->getCompletionTime()));
+		}
+		else
+		{
+			assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
+		}
+		delete completedTransaction;
+
+	}
 	assert(!newestCommand->getHost());
 
+	if (lastCommand)
+		delete lastCommand;
 
-
-	while (!historyQueue.push(newestCommand))
-	{
-		delete historyQueue.pop();
-	}
+	lastCommand = newestCommand;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1183,7 +1150,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					return false;
 			}
 			// then add the command to all queues
-			Command *refreshCommand = new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
+			Command *refreshCommand = new Command(*incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
 
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
@@ -1211,17 +1178,17 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			statistics.reportMiss();
 
 			// command one, the RAS command to activate the row
-			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::ACTIVATE));
+			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::ACTIVATE));
 
 			// command two, CAS or CAS+Precharge
-			destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
+			destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
 
 			// if CAS+Precharge is unavailable
 			if (!systemConfig.isAutoPrecharge())
 			{
 				// command three, the Precharge command
 				// only one of these commands has a pointer to the original transaction, thus NULL
-				destinationBank.push(new Command(*incomingTransaction, time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::PRECHARGE));
+				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::PRECHARGE));
 			}
 		}
 		break;
@@ -1244,7 +1211,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					return false;
 			}
 			// then add the command to all queues
-			Command *refreshCommand = new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
+			Command *refreshCommand = new Command(*incomingTransaction, time,  systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
 
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
@@ -1287,17 +1254,17 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				statistics.reportMiss();
 
 				// command one, the RAS command to activate the row
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::ACTIVATE));
+				destinationBank.push(new Command(*incomingTransaction,time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::ACTIVATE));
 				assert(destinationBank.back()->getAddress() == incomingTransaction->getAddress());
 
 				// command two, CAS or CAS+Precharge			
-				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
+				destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
 				assert(destinationBank.back()->getAddress() == incomingTransaction->getAddress());
 
 				// possible command three, Precharge
 				if (!systemConfig.isAutoPrecharge())
 				{				
-					destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isPostedCAS(), systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::PRECHARGE));
+					destinationBank.push(new Command(*incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::PRECHARGE));
 					assert(destinationBank.back()->getAddress() == incomingTransaction->getAddress());
 				}
 			}		
@@ -1324,7 +1291,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					return false;
 			}
 			// then add the command to all queues
-			Command *refreshCommand = new Command(*incomingTransaction, time, systemConfig.isPostedCAS(),systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
+			Command *refreshCommand = new Command(*incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
 			Address tempAddr(incomingTransaction->getAddress());
 			unsigned j = 0;
 
@@ -1338,7 +1305,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					tempAddr.setAddress(tempAddr.getChannel(),tempAddr.getRank(), j, 0, 0);
 					assert(tempAddr.getChannel() == channelID);
 
-					Command *newCommand = new Command(*incomingTransaction, tempAddr, time, systemConfig.isPostedCAS(), false, timingSpecification.tBurst(), Command::PRECHARGE);
+					Command *newCommand = new Command(*incomingTransaction, tempAddr, time, false, timingSpecification.tBurst(), Command::PRECHARGE);
 #ifndef NDEBUG
 					bool result =
 #endif // NDEBUG
@@ -1384,7 +1351,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 #ifndef NDEBUG
 					bool result =
 #endif // NDEBUG
-						destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst(), Command::PRECHARGE));
+						destinationBank.push(new Command(*incomingTransaction,time,false, timingSpecification.tBurst(), Command::PRECHARGE));
 					assert(result);
 				}
 				else if (destinationBank.freeCommandSlots() < 2)
@@ -1396,10 +1363,10 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				statistics.reportMiss();
 
 				// RAS command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(), false, timingSpecification.tBurst(), Command::ACTIVATE));
+				destinationBank.push(new Command(*incomingTransaction,time, false, timingSpecification.tBurst(), Command::ACTIVATE));
 
 				// CAS command
-				destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst()));
+				destinationBank.push(new Command(*incomingTransaction,time, false, timingSpecification.tBurst()));
 
 				return true;
 			}
@@ -1518,12 +1485,13 @@ const Command *Channel::readNextCommand() const
 				vector<Bank>::const_iterator bankEnd = currentRank->bank.end();
 
 				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; currentBank++)
-				{
-					const Command *challengerCommand = currentBank->front();
-					assert(challengerCommand == NULL || challengerCommand->isRefresh() || rank[challengerCommand->getAddress().getRank()].bank[challengerCommand->getAddress().getBank()].front() == challengerCommand);
-
-					if (challengerCommand)
+				{	
+					if (!currentBank->isEmpty())
 					{
+						const Command *challengerCommand = currentBank->front();
+
+						assert(challengerCommand == NULL || challengerCommand->isRefresh() || rank[challengerCommand->getAddress().getRank()].bank[challengerCommand->getAddress().getBank()].front() == challengerCommand);
+
 						// see if it is a refresh command
 						if (isRefreshCommand && challengerCommand->isRefresh() && currentRank->refreshAllReady())
 						{
@@ -1531,8 +1499,8 @@ const Command *Channel::readNextCommand() const
 #ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							if (time + minGap != challengerExecuteTime)
-								assert(max(time + minGap, (tick)0) == challengerExecuteTime);
+							if (max(time + minGap, (tick)0) != max(challengerExecuteTime,time))
+								assert(max(time + minGap, (tick)0) == max(challengerExecuteTime,time));
 #endif
 							if (challengerExecuteTime < candidateExecuteTime || (candidateExecuteTime == challengerExecuteTime && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
 							{						
@@ -1548,10 +1516,11 @@ const Command *Channel::readNextCommand() const
 #ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							if (time + minGap != challengerExecuteTime)
+							if (time + minGap != max(challengerExecuteTime,time))
 							{
 								cerr << time << " " << minGap << " " << challengerExecuteTime;
-								assert(max(time + minGap, (tick)0) == challengerExecuteTime);
+
+								assert(time + minGap == max(challengerExecuteTime,time));
 							}
 #endif
 							// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
@@ -1702,12 +1671,12 @@ const Command *Channel::readNextCommand() const
 		{
 			Transaction::TransactionType transactionType;
 			// look at the most recently retired command in this channel's history
-			const Command *lastCommand = historyQueue.back();
+			//const Command *lastCommand = historyQueue.back();
 
 			const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
 			const unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
 			const Command::CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : Command::WRITE_AND_PRECHARGE;
-
+			
 			// attempt to group RAS/CAS pairs together
 			switch (lastCommandType)
 			{
@@ -1831,12 +1800,12 @@ const Command *Channel::readNextCommand() const
 			Transaction::TransactionType transactionType;
 
 			// look at the most recently retired command in this channel's history
-			const Command *lastCommand = historyQueue.back();
+			//const Command *lastCommand = historyQueue.back();
 
 			const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : 0;
 			const unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : 0;
 			const Command::CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : Command::WRITE_AND_PRECHARGE;
-
+			
 			switch (lastCommandType)
 			{
 			case Command::ACTIVATE:
@@ -2337,12 +2306,14 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 //////////////////////////////////////////////////////////////////////////
 tick Channel::earliestExecuteTime(const Command *currentCommand) const
 {
+
 	tick nextTime;	
 
 	const Rank &currentRank = rank[currentCommand->getAddress().getRank()];
 
 	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
 
+#ifndef NDEBUG
 	switch(currentCommand->getCommandType())
 	{
 	case Command::ACTIVATE:
@@ -2492,11 +2463,12 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	tick actualNext = max(nextTime, lastCommandIssueTime + timingSpecification.tCMD());
 	tick predictedNext = max(currentRank.next(currentCommand->getCommandType()), 
 		max(currentBank.next(currentCommand->getCommandType()), lastCommandIssueTime + timingSpecification.tCMD()));
-	if (time > 100)
-		if (actualNext != predictedNext)
-			assert(actualNext == predictedNext);
+	if (actualNext != predictedNext )
+		assert(actualNext == predictedNext);
+#endif
 		
-	return max(nextTime, max(time , lastCommandIssueTime + timingSpecification.tCMD()));
+	return max(currentRank.next(currentCommand->getCommandType()), 
+		max(currentBank.next(currentCommand->getCommandType()), lastCommandIssueTime + timingSpecification.tCMD()));
 }
 
 
@@ -2715,12 +2687,13 @@ Channel& Channel::operator =(const Channel &rhs)
 	time = rhs.time;
 	//lastRefreshTime = rhs.lastRefreshTime;
 	lastCommandIssueTime = rhs.lastCommandIssueTime;
-	lastRankID = rhs.lastRankID;
+	lastCommand = new Command(*(rhs.lastCommand));
+	//lastCommandType = rhs.lastCommandType;
 	//timingSpecification = rhs.timingSpecification;
 	transactionQueue = rhs.transactionQueue;
 	refreshCounter = rhs.refreshCounter;
-	historyQueue = rhs.historyQueue;
-	completionQueue = rhs.completionQueue;
+	//historyQueue = rhs.historyQueue;
+	//completionQueue = rhs.completionQueue;
 	//systemConfig = rhs.systemConfig;
 	//statistics = rhs.statistics;
 	//powerModel = rhs.powerModel;
@@ -2738,9 +2711,10 @@ Channel& Channel::operator =(const Channel &rhs)
 //////////////////////////////////////////////////////////////////////////
 bool Channel::operator ==(const Channel& rhs) const
 {
-	return (time == rhs.time /*&& lastRefreshTime == rhs.lastRefreshTime*/ && lastCommandIssueTime == rhs.lastCommandIssueTime && lastRankID == rhs.lastRankID &&
-		timingSpecification == rhs.timingSpecification && transactionQueue == rhs.transactionQueue && historyQueue == rhs.historyQueue &&
-		completionQueue == rhs.completionQueue && systemConfig == rhs.systemConfig && statistics == rhs.statistics && powerModel == rhs.powerModel &&
+	return (time == rhs.time /*&& lastRefreshTime == rhs.lastRefreshTime*/ && lastCommandIssueTime == rhs.lastCommandIssueTime && /*lastRankID == rhs.lastRankID &&*/
+		timingSpecification == rhs.timingSpecification && transactionQueue == rhs.transactionQueue && /*historyQueue == rhs.historyQueue && lastBankId == rhs.lastBankId &&*/
+		*lastCommand == *(rhs.lastCommand) &&
+		/*completionQueue == rhs.completionQueue && */systemConfig == rhs.systemConfig && statistics == rhs.statistics && powerModel == rhs.powerModel &&
 		algorithm == rhs.algorithm && channelID == rhs.channelID && rank == rhs.rank && refreshCounter == rhs.refreshCounter);
 }
 

@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-//
+// 
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//
+// 
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-//
+// 
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -29,7 +29,6 @@ Command::Command():
 Event(),
 commandType(RETIRE_COMMAND),
 hostTransaction(NULL),
-postedCAS(false),
 length(0)
 {}
 
@@ -38,23 +37,21 @@ Command::Command(const Command &rhs):
 Event(rhs),
 commandType(rhs.commandType),
 hostTransaction(rhs.hostTransaction ? new Transaction(*rhs.hostTransaction) : NULL),
-postedCAS(rhs.postedCAS),
 length(rhs.length)
 {
 	assert(!hostTransaction ||
 		(commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
 		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
 		(commandType == READ && hostTransaction->isRead()) ||
-		(commandType == WRITE && hostTransaction->isWrite()) ||		
+		(commandType == WRITE && hostTransaction->isWrite()) ||		 
 		(commandType == REFRESH_ALL && hostTransaction->isRefresh()) ||
 		(commandType == ACTIVATE) || (commandType == PRECHARGE)
 		);
 }
 
-Command::Command(Transaction& hostTransaction, const Address &addr, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
+Command::Command(Transaction& hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(addr,enqueueTime),
 hostTransaction(type == READ ? &hostTransaction : NULL), // this link is only needed for CAS commands
-postedCAS(postedCAS),
 length(commandLength)
 {
 	if (type == READ)
@@ -93,10 +90,9 @@ length(commandLength)
 }
 
 
-Command::Command(Transaction& hostTransaction, const tick enqueueTime, const bool postedCAS, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
+Command::Command(Transaction& hostTransaction, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(hostTransaction.getAddress(),enqueueTime),
 hostTransaction(type == READ ? &hostTransaction : NULL), // this link is only needed for CAS commands
-postedCAS(postedCAS),
 length(commandLength)
 {
 	if (type == READ)
@@ -195,17 +191,17 @@ void Command::operator delete(void *mem)
 bool Command::operator==(const Command& right) const
 {
 	if (commandType == right.commandType && startTime == right.startTime &&
-		enqueueTime == right.enqueueTime && completionTime == right.completionTime && //addr == right.addr &&
-		postedCAS == right.postedCAS && length == right.length && this->Event::operator==(right))
+		enqueueTime == right.enqueueTime && completionTime == right.completionTime &&
+		length == right.length && this->Event::operator==(right))
 	{
-		if ((hostTransaction && !right.hostTransaction) ||
+		if ((hostTransaction && !right.hostTransaction) || 
 			(!hostTransaction && right.hostTransaction))
 			return false;
 		else if (!hostTransaction && !right.hostTransaction)
 			return true;
 		else if (*hostTransaction == *right.hostTransaction)
 			return true;
-		else
+		else 
 			return false;
 	}
 	else

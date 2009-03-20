@@ -27,7 +27,7 @@ using namespace DRAMsimII;
 Rank::Rank(const Settings& settings, const TimingSpecification &timing, const SystemConfiguration &systemConfig):
 timing(timing),
 lastRefreshTime(-100),
-lastPrechargeAnyBankTime(0),
+lastPrechargeAnyBankTime(-100),
 lastCASTime(-100),
 lastCASWTime(-100),
 otherLastCASTime(-100),
@@ -38,7 +38,7 @@ nextActivateTime(0),
 nextReadTime(0),
 nextWriteTime(0),
 nextPrechargeTime(0),
-nextRefreshTime(0),
+nextRefreshTime(settings.tRFC - 100ll),
 lastCASLength(0),
 lastCASWLength(0),
 otherLastCASLength(0),
@@ -118,7 +118,7 @@ bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConf
 Rank::Rank(const TimingSpecification &timingSpec, const std::vector<Bank> & newBank):
 timing(timingSpec),
 lastRefreshTime(-100),
-lastPrechargeAnyBankTime(0),
+lastPrechargeAnyBankTime(-100),
 lastCASTime(-100),
 lastCASWTime(-100),
 otherLastCASTime(-100),
@@ -338,6 +338,7 @@ tick Rank::next(Command::CommandType nextCommandType) const
 		return nextRefreshTime;
 		break;
 	default:
+		return TICK_MAX;
 		break;
 	}
 }

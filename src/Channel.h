@@ -46,14 +46,11 @@ namespace DRAMsimII
 		// members
 	protected:
 		tick time;										///< channel time, allow for channel concurrency			
-		//tick lastRefreshTime;							///< tells me when last refresh was done
 		tick lastCommandIssueTime;						///< the last time a command was executed on this channel
-		unsigned lastRankID;							///< id of the last accessed rank of this channel
+		const Command *lastCommand;						///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
 		std::vector<tick> refreshCounter;				///< holds the next refresh command time for the rank
-		//Queue<Command> historyQueue;					///< what were the last N commands to this channel?
-		Queue<Transaction> completionQueue;				///< completed_q, can send status back to memory controller
 		const SystemConfiguration &systemConfig;		///< a pointer to common system config values
 		Statistics &statistics;							///< backward pointer to the stats engine
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
@@ -106,7 +103,7 @@ namespace DRAMsimII
 		std::vector<Rank>& getRank() { return rank; }												///< get a reference to this channel's ranks
 		const std::vector<Rank>& getRank() const { return rank; }									///< get a const reference to this channel's ranks
 		tick getTime() const { return time; }														///< get the time that this channel is at
-		unsigned getLastRankID() const { return lastRankID; }										///< get the last rank id a command was issued to
+		unsigned getLastRankID() const { return lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1; }///< get the last rank id a command was issued to
 
 		Transaction *getTransaction();																
 		const Transaction *readTransaction(bool) const;												
@@ -115,7 +112,7 @@ namespace DRAMsimII
 		tick nextRefresh() const;
 
 
-		Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }				///< get the oldest item from the transaction completion queue
+		//Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }				///< get the oldest item from the transaction completion queue
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }				///< determine how many items are in the transaction completion queue
 		unsigned getTransactionQueueDepth() const { return transactionQueue.depth(); }			///< determine how large the transaction completion queue is
 		Rank& operator[](unsigned rank_num) { return rank[rank_num]; }

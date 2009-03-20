@@ -39,7 +39,7 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 	const Rank &currentRank = rank[this_rank];
 	const Bank &currentBank = currentRank.bank[this_c->getAddress().getBank()];
 
-	int t_al = this_c->isPostedCAS() ? timingSpecification.tAL() : 0;
+	int t_al = timingSpecification.tAL();
 
 	switch(this_c->getCommandType())
 	{
@@ -303,38 +303,6 @@ unsigned fbdChannel::moveToTime(const tick endTime, tick& transFinishTime)
 			// then build a frame for t+1, if possible
 			makeFrame(time);
 			
-			// only get completed commands if they have finished TODO:
-			if (Transaction *completed_t = completionQueue.pop())
-			{
-				statistics.collectTransactionStats(completed_t);
-
-				DEBUG_TRANSACTION_LOG("T CH[" << setw(2) << channelID << "] " << completed_t);
-
-				// reuse the refresh transactions
-				if (completed_t->isRefresh())
-				{
-					completed_t->setEnqueueTime(completed_t->getEnqueueTime() + systemConfig.getRefreshTime());
-
-					assert(systemConfig.getRefreshPolicy() != NO_REFRESH);
-
-					delete completed_t;
-
-					return UINT_MAX;
-				}
-				else // return what was pointed to
-				{
-					const unsigned origTrans = completed_t->getOriginalTransaction();
-
-					transFinishTime = completed_t->getCompletionTime();
-
-					M5_DEBUG(assert(completed_t->getOriginalTransaction()));								
-
-					delete completed_t;
-
-					return origTrans;
-				}
-			}
-
 			// last, move time forward to either the next transaction decode or frame create time
 			tick nextDecodeTime = nextTransactionDecodeTime();
 			assert(nextDecodeTime > time);
@@ -506,7 +474,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 {
 	// look at the most recently retired command in this channel's history
 
-	const Command *lastCommand = historyQueue.back();
+	//const Command *lastCommand = historyQueue.back();
 
 	unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
 	unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
