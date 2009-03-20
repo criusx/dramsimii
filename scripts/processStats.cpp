@@ -56,16 +56,16 @@ using redi::opstream;
 using std::ios;
 using std::list;
 
+#define MAXIMUM_VECTOR_SIZE 1 * 32 * 1024
+
+#define WINDOW 5
+
 void prepareOutputDir(const bf::path &outputDir, const string &filename, const string &commandLine, unsigned channelCount);
 
 // globals
 bf::path executableDirectory;
 
-#define WINDOW 5
-
 std::string thumbnailResolution = "640x400";
-
-#include "processStats.hh"
 
 std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 10\n";
 
@@ -73,14 +73,7 @@ std::string extension = "svg";
 
 bool userStop = false;
 
-template <class T>
-T toNumeric(const std::string& s, std::ios_base& (*f)(std::ios_base&))
-{
-	std::istringstream iss(s);
-	T t;
-	iss >> f >> t;
-	return t;
-}	
+#include "processStats.hh"
 
 class CumulativePriorMovingAverage
 {
@@ -159,6 +152,15 @@ public:
 	}
 };
 
+template <class T>
+T toNumeric(const std::string& s, std::ios_base& (*f)(std::ios_base&))
+{
+	std::istringstream iss(s);
+	T t;
+	iss >> f >> t;
+	return t;
+}	
+
 bool fileExists(const string& fileName)
 {
 	bf::path newPath(fileName.c_str());
@@ -210,19 +212,17 @@ void processPower(const string filename)
 		}
 	}
 
-	unsigned writing = 0;
-
-	// get a couple copies of gnuplot running
-	opstream p("gnuplot");
-	p << terminal;
-	opstream p2("gnuplot");
-	p2 << terminal;
+	unsigned writing = 0;	
 
 	list<string> filesGenerated;
 
 	unsigned channelCount;
 	float epochTime;
+
 	vector<vector<float> > values;
+	vector<float> valueBuffer;
+	unsigned scaleFactor = 1;
+	unsigned scaleIndex = 0;
 
 	string commandLine;
 
@@ -248,12 +248,53 @@ void processPower(const string filename)
 			{
 				char *position = strchr(newLine,'{') + 1;
 				char *position2 = strchr(newLine,'}');
+				if (position == NULL || position2 == NULL)
+					break;
 				*position2 = 0;
 
 				float thisPower = atof(position);
-				values[writing].push_back(thisPower);
+				valueBuffer[writing] += (thisPower);
 
 				writing = (writing + 1) % values.size();
+
+				if (writing == 0)
+				{
+					// look to dump the buffer into the array
+					scaleIndex = (scaleIndex + 1) % scaleFactor;
+			
+					// when the scale buffer is full
+					if (scaleIndex == 0)
+					{
+						vector<float>::size_type limit = valueBuffer.size();
+						for (vector<float>::size_type i = 0; i < limit; i++)
+						{
+							values[i].push_back(valueBuffer[i] / scaleFactor);
+							valueBuffer[i] = 0;
+						}
+					}
+
+					// try to compress the array by half and double the scaleFactor
+					if (values.front().size() >= MAXIMUM_VECTOR_SIZE)
+					{
+						// scale the array back by half
+						for (vector<vector<float> >::iterator i = values.begin(); i != values.end(); i++)
+						{
+							for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; j++)
+							{
+								(*i)[j] = ((*i)[2 * j] + (*i)[2 * j + 1]) / 2;
+							}
+							i->resize(MAXIMUM_VECTOR_SIZE / 2);
+
+							assert(i->size() == MAXIMUM_VECTOR_SIZE / 2);
+						}
+
+						// double scaleFactor since each entry now represents twice what it did before
+						scaleFactor *= 2;
+						epochTime *= 2;
+						cerr << "scaleFactor at " << scaleFactor << endl;
+					}
+
+				}
 			}
 			else
 			{
@@ -276,7 +317,7 @@ void processPower(const string filename)
 
 					bf::path fileName = outputDir / ("energy." + extension);
 					filesGenerated.push_back(fileName.native_directory_string());
-					cerr << fileName.native_directory_string();
+					//cerr << fileName.native_directory_string();
 
 					p2 << "set output \"" << fileName.native_directory_string() << "\"\n";
 					p2 << powerScripts[2] << endl;
@@ -293,8 +334,7 @@ void processPower(const string filename)
 					vector<string> splitLine;
 					split(splitLine,line,is_any_of("[]"));
 					channelCount = lexical_cast<unsigned>(splitLine[1]);
-					//unsigned ranks = lexical_cast<unsigned>(splitLine[3]);
-
+				
 					p << "plot ";
 
 					for (unsigned a = 0; a < channelCount; a++)
@@ -308,9 +348,13 @@ void processPower(const string filename)
 
 					values.reserve(channelCount * 5);
 
+					// setup the buffer to be the same size as the value array
+					valueBuffer.resize(channelCount * 5);
+
 					for (int i  = channelCount * 5; i > 0; --i)
 					{
 						values.push_back(vector<float>());
+						values.back().reserve(MAXIMUM_VECTOR_SIZE);
 					}	
 				}
 			}
@@ -319,6 +363,12 @@ void processPower(const string filename)
 	}
 
 	userStop = false;
+
+	// get a couple copies of gnuplot running
+	opstream p("gnuplot");
+	p << terminal;
+	opstream p2("gnuplot");
+	p2 << terminal;
 	
 	// make the main power graph
 	for (vector<vector<float> >::const_iterator i = values.begin(); i != values.end(); i++)
@@ -425,7 +475,18 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		cerr << "cannot find template";
 		return;
 	}
-	bf::path printFile = outputDir / (filename.substr(0,filename.find("-stats")) + ".html");
+	string basename;
+	string::size_type position = filename.find("-stats");
+	if (position != string::npos)
+	{
+		basename = filename.substr(0,position);
+	}
+	else if ((position = filename.find("-power")) != string::npos)
+	{
+		basename = filename.substr(0,position);
+	}
+
+	bf::path printFile = outputDir / (basename + ".html");
 
 	if (!fileExists(printFile.native_directory_string()))
 	{
@@ -493,83 +554,105 @@ void processStats(const string filename)
 			exit(-1);
 		}
 	}
-
-	//vector<vector<unsigned> > channels;
-	//vector<unsigned> channelTotals;
-	//vector<vector<unsigned> > ranks;
-	//vector<unsigned> rankTotals;
-	//vector<vector<unsigned> > banks;
-	//vector<unsigned> bankTotals;
-
-	//vector<vector<unsigned> > channelLatencies;
-	//vector<unsigned> channelLatencyTotals;
-	//vector<vector<unsigned> > rankLatencies;
-	//vector<unsigned> rankLatencyTotals;
-	//vector<vector<unsigned> > bankLatencies;
-	//vector<unsigned> bankLatencyTotals;
-
-	vector<vector<vector<vector<unsigned> > > > channelDistribution;
-	vector<vector<vector<vector<unsigned> > > > channelLatencyDistribution;
-
-	//unsigned commandTurnaroundCounter = 0;
-	//unsigned cmdCounter = 0;
-	unsigned workingSetCounter = 0;
-	//unsigned rwTotalCounter = 0;
-	//unsigned ipcCounter = 0;
-
+	
 	std::list<string> filesGenerated;
+	
+	unsigned scaleIndex = 0;
+	unsigned scaleFactor = 1;
+	bool throughOnce = false;
 
-	opstream p0("gnuplot");
-	p0 << terminal << basicSetup;
-	opstream p1("gnuplot");
-	p1 << terminal << basicSetup;
-	opstream p2("gnuplot");
-	p2 << terminal << basicSetup;
-	opstream p3("gnuplot");
-	p3 << terminal << basicSetup;
+	// vectors to keep track of various stats
+	vector<vector<vector<vector<unsigned> > > > channelDistribution;
+	vector<vector<vector<uint64_t> > > channelDistributionBuffer;
+	vector<vector<vector<vector<unsigned> > > > channelLatencyDistribution;
+	vector<vector<vector<uint64_t> > > channelLatencyDistributionBuffer;
+	
+	std::tr1::unordered_map<boost::uint64_t,float> latencyVsPcLow;
+	std::tr1::unordered_map<boost::uint64_t,float> latencyVsPcHigh;
 
-	//unsigned latencyVsPC = 0;
-	std::tr1::unordered_map<boost::uint64_t,float> latencyVsPCDict;
 	vector<float> transactionLatency;
 	WeightedAverage averageTransactionLatency;
+	
 	vector<unsigned> transactionCount;
-	unsigned perEpochTransactionCount;
+	transactionCount.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t transactionCountBuffer;
 
 	std::tr1::unordered_map<unsigned,unsigned> distTransactionLatency;
-	unsigned transCounter = 0;
 
 	vector<float> hitMissValues;
+	hitMissValues.reserve(MAXIMUM_VECTOR_SIZE);
+	double hitMissValueBuffer;
 
 	vector<unsigned> iCacheHits;
+	iCacheHits.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t iCacheHitBuffer;
+
 	vector<unsigned> iCacheMisses;
+	iCacheMisses.reserve(MAXIMUM_VECTOR_SIZE);
+	unsigned iCacheMissBuffer;
+
 	vector<long> iCacheMissLatency;
+	iCacheMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t iCacheMissLatencyBuffer;
+
 	vector<unsigned> dCacheHits;
+	dCacheHits.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t dCacheHitBuffer;
+
 	vector<unsigned> dCacheMisses;
+	dCacheMisses.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t dCacheMissBuffer;
+
 	vector<long> dCacheMissLatency;
+	dCacheMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t dCacheMissLatencyBuffer;
+
 	vector<unsigned> l2CacheHits;
+	l2CacheHits.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t l2CacheHitBuffer;
+
 	vector<unsigned> l2CacheMisses;
+	l2CacheMisses.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t l2CacheMissBuffer;
+
 	vector<long> l2CacheMissLatency;
+	l2CacheMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t l2CacheMissLatencyBuffer;
+
 	vector<unsigned> l2MshrHits;
+	l2MshrHits.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t l2MshrHitBuffer;
+
 	vector<unsigned> l2MshrMisses;
+	l2MshrMisses.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t l2MshrMissBuffer;
+
 	vector<long> l2MshrMissLatency;
+	l2MshrMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t l2MshrMissLatencyBuffer;
 
 	vector<pair<unsigned,unsigned> > bandwidthValues;
+	bandwidthValues.reserve(MAXIMUM_VECTOR_SIZE);
+	pair<uint64_t,uint64_t> bandwidthValuesBuffer;
 
 	vector<float> ipcValues;
-	PriorMovingAverage ipcBuffer(WINDOW);
-	CumulativePriorMovingAverage ipcTotal;
+	ipcValues.reserve(MAXIMUM_VECTOR_SIZE);
+	double ipcValueBuffer;
 
+	vector<unsigned> workingSetSize;
+	workingSetSize.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t workingSetSizeBuffer;
+	
 	bool started = false;
 	unsigned ipcLinesWritten = 0;
-	//unsigned writeLines = 0;
 	float epochTime = 0.0F;
 	float period = 0.0F;
+
 	unsigned channelCount = 0;
 	unsigned rankCount = 0;
 	unsigned bankCount = 0;
 	unsigned writing = 0;
 	string commandLine;
-
 
 	filtering_istream inputStream;
 	if (ends_with(filename,"gz"))
@@ -579,7 +662,6 @@ void processStats(const string filename)
 
 	inputStream.push(file_source(filename));
 
-
 	char newLine[256];
 
 	inputStream.getline(newLine,256);
@@ -588,35 +670,6 @@ void processStats(const string filename)
 	{
 		if (newLine[0] == '-')
 		{
-			if (writing == 1)
-			{
-				// append the values for this time
-				transactionLatency.push_back(averageTransactionLatency.average());
-				transactionCount.push_back(perEpochTransactionCount);
-				perEpochTransactionCount = 0;
-			}
-			else if (writing == 14)
-			{
-				for (unsigned i = 0; i < channelDistribution.size(); i++)
-					for (unsigned j = 0; j < channelDistribution[i].size(); j++)
-					{
-						unsigned total = 0;
-						for (unsigned k = 0; k < channelDistribution[i][j].size() - 1; k++)
-							total += channelDistribution[i][j][k].back();
-						channelDistribution[i][j].back().push_back((total > 0) ? total : 1);
-					}
-			}
-			else if (writing == 15)
-			{
-				for (unsigned i = 0; i < channelLatencyDistribution.size(); i++)
-					for (unsigned j = 0; j < channelLatencyDistribution[i].size(); j++)
-					{
-						unsigned total = 0;
-						for (unsigned k = 0; k < channelLatencyDistribution[i][j].size() - 1; k++)
-							total += channelLatencyDistribution[i][j][k].back();
-						channelLatencyDistribution[i][j].back().push_back((total > 0) ? total : 1);
-					}
-			}
 			writing = 0;
 
 			if (!started)
@@ -627,13 +680,10 @@ void processStats(const string filename)
 					trim(line);
 					vector<string> splitLine;
 					split(splitLine,line,is_any_of(":"));
-					cerr << splitLine[1] << endl;
 					commandLine = splitLine[1];
-					p3 << "set title 'Working Set Size vs Time\\n" << commandLine << "' offset character 0, -1, 0 font '' norotate" << endl;
-					bf::path outFilename = outputDir / ("workingSet." + extension);
-					p3 << "set output '" << outFilename.native_directory_string() << "'" << endl;
-					filesGenerated.push_back(outFilename.native_directory_string());
-					p3 << workingSetSetup << endl;
+					trim(commandLine);
+					cerr << commandLine << endl;
+					
 
 					started = true;
 
@@ -672,70 +722,82 @@ void processStats(const string filename)
 					{
 						channelLatencyDistribution.push_back(vector<vector<vector<unsigned> > >());
 						channelLatencyDistribution.back().reserve(rankCount);
+						channelLatencyDistributionBuffer.push_back(vector<vector<uint64_t> >());
+						channelLatencyDistributionBuffer.back().reserve(rankCount);
+						
 						channelDistribution.push_back(vector<vector<vector<unsigned> > >());
 						channelDistribution.back().reserve(rankCount);
+						channelDistributionBuffer.push_back(vector<vector<uint64_t> >());
+						channelDistributionBuffer.back().reserve(rankCount);
 
 						for (unsigned j = rankCount; j > 0; --j)
 						{
 							channelLatencyDistribution.back().push_back(vector<vector<unsigned> >());
 							channelLatencyDistribution.back().back().reserve(bankCount + 1);
+							channelLatencyDistributionBuffer.back().push_back(vector<uint64_t>());
+							channelLatencyDistributionBuffer.back().back().reserve(bankCount + 1);
+
 							channelDistribution.back().push_back(vector<vector<unsigned> >());
 							channelDistribution.back().back().reserve(bankCount + 1);
+							channelDistributionBuffer.back().push_back(vector<uint64_t>());
+							channelDistributionBuffer.back().back().reserve(bankCount + 1);
 
 							for (unsigned k = bankCount + 1; k > 0; --k)
 							{
 								channelLatencyDistribution.back().back().push_back(vector<unsigned>());
-								channelLatencyDistribution.back().back().back().reserve(65536);
+								channelLatencyDistribution.back().back().back().reserve(MAXIMUM_VECTOR_SIZE);
+								channelLatencyDistributionBuffer.back().back().push_back(0ULL);
+								
 								channelDistribution.back().back().push_back(vector<unsigned>());
-								channelDistribution.back().back().back().reserve(65536);
+								channelDistribution.back().back().back().reserve(MAXIMUM_VECTOR_SIZE);
+								channelDistributionBuffer.back().back().push_back(0ULL);
 							}
 						}
 					}
 
-// 					for (unsigned i = numberChannels; i > 0; --i)
-// 						channels.push_back(vector<unsigned>());
-// 					for (unsigned i = numberRanks; i > 0; --i)
-// 						ranks.push_back(vector<unsigned>());
-// 					for (unsigned i = numberBanks; i > 0; --i)
-// 						banks.push_back(vector<unsigned>());
 				}
 			}
 			else if (starts_with(newLine, "----M5 Stat:"))
 			{
 				char *position = strchr(newLine, ' ');
 				position = strchr(position + 1, ' ');
+				if (position == NULL)
+					break;
 				*position++ = 0;
 				char* splitline2 = position;
 				position = strchr(splitline2, ' ');
-				//unsigned len = position - newLine;
+				if (position == NULL)
+					break;
 				*position++ = 0;
 				char *position2 = strchr(position, ' ');
+				if (position2 == NULL)
+					break;
 				*position2 = 0;
 
 				if (strcmp(splitline2,"system.cpu.dcache.overall_hits") == 0)
-					dCacheHits.push_back(lexical_cast<unsigned>(position));
+					dCacheHitBuffer = atoi(position);
 				else if (strcmp(splitline2,"system.cpu.dcache.overall_miss_latency") == 0)
-					dCacheMissLatency.push_back(lexical_cast<float>(position));
+					dCacheMissLatencyBuffer = atoi(position);
 				else if (strcmp(splitline2,"system.cpu.dcache.overall_misses") == 0)
-					dCacheMisses.push_back(lexical_cast<unsigned>(position));
+					dCacheMissBuffer = atoi(position);
 				else if (strcmp(splitline2,"system.cpu.icache.overall_hits") == 0)
-					iCacheHits.push_back(lexical_cast<unsigned>(position));
+					iCacheHitBuffer = atoi(position);
 				else if (strcmp(splitline2,"system.cpu.icache.overall_miss_latency") == 0)
-					iCacheMissLatency.push_back(lexical_cast<float>(position));
+					iCacheMissLatencyBuffer = atof(position);
 				else if (strcmp(splitline2,"system.cpu.icache.overall_misses") == 0)
-					iCacheMisses.push_back(lexical_cast<unsigned>(position));
+					iCacheMissBuffer = atoi(position);
 				else if (strcmp(splitline2,"system.l2.overall_hits") == 0)
-					l2CacheHits.push_back(lexical_cast<unsigned>(position));
+					l2CacheHitBuffer = atoi(position);
 				else if (strcmp(splitline2,"system.l2.overall_miss_latency") == 0)
-					l2CacheMissLatency.push_back(lexical_cast<float>(position));
+					l2CacheMissLatencyBuffer = atof(position);
 				else if (strcmp(splitline2,"system.l2.overall_misses") == 0)
-					l2CacheMisses.push_back(lexical_cast<unsigned>(position));
+					l2CacheMissBuffer = atoi(position);
 				else if (strcmp(splitline2,"system.l2.overall_mshr_hits") == 0)
-					l2MshrHits.push_back(lexical_cast<unsigned>(position));
+					l2MshrHitBuffer = atoi(position);
 				else if (strcmp(splitline2,"system.l2.overall_mshr_miss_latency") == 0)
-					l2MshrMissLatency.push_back(lexical_cast<float>(position));
+					l2MshrMissLatencyBuffer = atof(position);
 				else if (strcmp(splitline2,"system.l2.overall_mshr_misses") == 0)
-					l2MshrMisses.push_back(lexical_cast<unsigned>(position));
+					l2MshrMissBuffer = atoi(position);
 				else
 					cerr <<  "missed something: " << newLine << endl;
 			}
@@ -751,8 +813,203 @@ void processStats(const string filename)
 			{
 				if (starts_with(newLine,"----Transaction Latency"))
 				{
+					
+					// only if this is at least the second time around
+					if (throughOnce)
+					{
+						// look to dump the buffers into arrays
+						scaleIndex = (scaleIndex + 1) % scaleFactor;
+
+						// when the scale buffer is full
+						if (scaleIndex == 0)
+						{
+							// dump all the buffers into arrays, scaled correctly
+							for (unsigned i = 0; i < channelCount; i++)
+							{
+								for (unsigned j = 0; j < rankCount; j++)
+								{
+									for (unsigned k = 0; k < bankCount + 1; k++)
+									{
+										channelDistribution[i][j][k].push_back(channelDistributionBuffer[i][j][k] / scaleFactor);
+										channelDistributionBuffer[i][j][k] = 0;
+										channelLatencyDistribution[i][j][k].push_back(channelLatencyDistributionBuffer[i][j][k] / scaleFactor);
+										channelLatencyDistributionBuffer[i][j][k] = 0;
+									}
+								}
+							}
+
+							transactionLatency.push_back(averageTransactionLatency.average());
+							averageTransactionLatency.clear();
+
+							transactionCount.push_back(transactionCountBuffer / scaleFactor);
+							transactionCountBuffer = 0;
+
+							hitMissValues.push_back(hitMissValueBuffer / scaleFactor);
+							hitMissValueBuffer = 0;
+
+							iCacheHits.push_back(iCacheHitBuffer / scaleFactor);
+							iCacheHitBuffer = 0;
+
+							iCacheMisses.push_back(iCacheMissBuffer / scaleFactor);
+							iCacheMissBuffer = 0;
+
+							iCacheMissLatency.push_back(iCacheMissLatencyBuffer / scaleFactor);
+							iCacheMissLatencyBuffer = 0;
+
+							dCacheHits.push_back(dCacheHitBuffer / scaleFactor);
+							dCacheHitBuffer = 0;
+
+							dCacheMisses.push_back(dCacheMissBuffer / scaleFactor);
+							dCacheMissBuffer = 0;
+
+							dCacheMissLatency.push_back(dCacheMissLatencyBuffer / scaleFactor);
+							dCacheMissLatencyBuffer = 0;
+
+							l2CacheHits.push_back(l2CacheHitBuffer / scaleFactor);
+							l2CacheHitBuffer = 0;
+
+							l2CacheMisses.push_back(l2CacheMissBuffer / scaleFactor);
+							l2CacheMissBuffer = 0;
+
+							l2CacheMissLatency.push_back(l2CacheMissLatencyBuffer / scaleFactor);
+							l2CacheMissLatencyBuffer = 0;
+
+							l2MshrHits.push_back(l2MshrHitBuffer / scaleFactor);
+							l2MshrHitBuffer = 0;
+
+							l2MshrMisses.push_back(l2MshrMissBuffer / scaleFactor);
+							l2CacheMissBuffer = 0;
+
+							l2MshrMissLatency.push_back(l2MshrMissLatencyBuffer / scaleFactor);
+							l2MshrMissLatencyBuffer = 0;
+
+							bandwidthValues.push_back(pair<unsigned,unsigned>(bandwidthValuesBuffer.first / scaleFactor, bandwidthValuesBuffer.second / scaleFactor));
+							bandwidthValuesBuffer.first = 0;
+							bandwidthValuesBuffer.second = 0;
+
+							ipcValues.push_back(ipcValueBuffer / scaleFactor);
+							ipcValueBuffer = 0;
+
+							workingSetSize.push_back(workingSetSizeBuffer / scaleFactor);
+							workingSetSizeBuffer = 0;
+
+							if (ipcValues.size() >= MAXIMUM_VECTOR_SIZE)
+							{
+								// adjust the epoch time to account for the fact that each amount counts for more
+								epochTime *= 2;
+								// double the scale factor
+								scaleFactor *= 2;
+
+								cerr << "scaleFactor at " << scaleFactor << endl;
+
+								// scale all the arrays by half
+								for (unsigned epoch = 0; epoch < MAXIMUM_VECTOR_SIZE / 2; epoch++)
+								{
+									for (unsigned i = 0; i < channelCount; i++)
+									{
+										for (unsigned j = 0; j < rankCount; j++)
+										{
+											for (unsigned k = 0; k < bankCount + 1; k++)
+											{
+												channelDistribution[i][j][k][epoch] = (channelDistribution[i][j][k][2 * epoch] + channelDistribution[i][j][k][2 * epoch + 1]) / 2;
+												channelLatencyDistribution[i][j][k][epoch] = (channelLatencyDistribution[i][j][k][2 * epoch] + channelLatencyDistribution[i][j][k][2 * epoch + 1]) / 2;
+											}
+										}
+									}
+
+									transactionLatency[epoch] = (transactionLatency[2 * epoch] + transactionLatency[2 * epoch + 1]) / 2;
+
+									transactionCount[epoch] = (transactionCount[2 * epoch] + transactionCount[2 * epoch + 1]) / 2;
+
+									hitMissValues[epoch] = (hitMissValues[2 * epoch] + hitMissValues[2 * epoch + 1]) / 2;
+
+									iCacheHits[epoch] = (iCacheHits[2 * epoch] + iCacheHits[2 * epoch + 1]) / 2;
+									
+									iCacheMisses[epoch] = (iCacheMisses[2 * epoch] + iCacheMisses[2 * epoch + 1]) / 2;
+
+									iCacheMissLatency[epoch] = (iCacheMissLatency[2 * epoch] + iCacheMissLatency[2 * epoch + 1]) / 2;
+
+									dCacheHits[epoch] = (dCacheHits[2 * epoch] + dCacheHits[2 * epoch + 1]) / 2;
+
+									dCacheMisses[epoch] = (dCacheMisses[2 * epoch] + dCacheMisses[2 * epoch + 1]) / 2;
+
+									dCacheMissLatency[epoch] = (dCacheMissLatency[2 * epoch] + dCacheMissLatency[2 * epoch + 1]) / 2;
+
+									l2CacheHits[epoch] = (l2CacheHits[2 * epoch] + l2CacheHits[2 * epoch + 1]) / 2;
+
+									l2CacheMisses[epoch] = (l2CacheMisses[2 * epoch] + l2CacheMisses[2 * epoch + 1]) / 2;
+
+									l2CacheMissLatency[epoch] = (l2CacheMissLatency[2 * epoch] + l2CacheMissLatency[2 * epoch + 1]) / 2;
+
+									l2MshrHits[epoch] = (l2MshrHits[2 * epoch] + l2MshrHits[2 * epoch + 1]) / 2;
+
+									l2MshrMisses[epoch] = (l2MshrMisses[2 * epoch] + l2MshrMisses[2 * epoch + 1]) / 2;
+
+									l2MshrMissLatency[epoch] = (l2MshrMissLatency[2 * epoch] + l2MshrMissLatency[2 * epoch + 1]) / 2;
+
+									bandwidthValues[epoch].first = (bandwidthValues[2 * epoch].first + bandwidthValues[2 * epoch + 1].first) / 2;
+									bandwidthValues[epoch].second = (bandwidthValues[2 * epoch].second + bandwidthValues[2 * epoch + 1].second) / 2;
+
+									ipcValues[epoch] = (ipcValues[2 * epoch] + ipcValues[2 * epoch + 1]) / 2;
+
+									workingSetSize[epoch] = (workingSetSize[2 * epoch] + workingSetSize[2 * epoch + 1]) / 2;
+								}
+
+								// resize all the vectors
+								for (unsigned i = 0; i < channelCount; i++)
+								{
+									for (unsigned j = 0; j < rankCount; j++)
+									{
+										for (unsigned k = 0; k < bankCount + 1; k++)
+										{
+											channelDistribution[i][j][k].resize(MAXIMUM_VECTOR_SIZE / 2);
+											channelLatencyDistribution[i][j][k].resize(MAXIMUM_VECTOR_SIZE / 2);
+										}
+									}
+								}
+
+								transactionLatency.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								transactionCount.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								hitMissValues.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								iCacheHits.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								iCacheMisses.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								iCacheMissLatency.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								dCacheHits.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								dCacheMisses.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								dCacheMissLatency.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								l2CacheHits.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								l2CacheMisses.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								l2CacheMissLatency.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								l2MshrHits.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								l2MshrMisses.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								l2MshrMissLatency.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								bandwidthValues.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								ipcValues.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+								workingSetSize.resize(MAXIMUM_VECTOR_SIZE / 2);
+							}
+						}
+					}
+					else
+						throughOnce = true;
+
 					averageTransactionLatency.clear();
-					transCounter++;
 					writing = 1;
 				}
 				else if (newLine[4] == 'W')
@@ -773,45 +1030,33 @@ void processStats(const string filename)
 					writing = 9;
 				}
 				else if (starts_with(newLine,"----Row"))
+				{
 					writing = 10;
+				}
 				else if (starts_with(newLine,"----Channel"))
 				{
-// 					channelTotals.push_back(1);
-// 					for (unsigned i = 0; i < channels.size(); i++)
-// 						channels[i].push_back(0);
 					writing = 11;
 				}
 				else if (starts_with(newLine,"----Rank"))
 				{
-// 					rankTotals.push_back(1);
-// 					for (unsigned i = 0; i < ranks.size(); i++)
-// 						ranks[i].push_back(0);
 					writing = 12;
 				}
 				else if (starts_with(newLine,"----Bank"))
 				{
-// 					bankTotals.push_back(1);
-// 					for (unsigned i = 0; i < banks.size(); i++)
-// 						banks[i].push_back(0);
 					writing = 13;
 				}
 				else if (starts_with(newLine,"----Utilization"))
 				{
-// 					channelTotals.push_back(1);
-// 					rankTotals.push_back(1);
-// 					bankTotals.push_back(1);
-// 					for (unsigned i = 0; i < channels.size(); i++)
-// 						channels[i].push_back(0);
-// 					for (unsigned i = 0; i < ranks.size(); i++)
-// 						ranks[i].push_back(0);
-// 					for (unsigned i = 0; i < banks.size(); i++)
-// 						banks[i].push_back(0);
 					writing = 14; 
 				}
 				else if (starts_with(newLine,"----Latency Breakdown"))
+				{
 					writing = 15;
+				}
 				else
+				{
 					writing = 0;
+				}
 			}
 
 		}
@@ -826,16 +1071,13 @@ void processStats(const string filename)
 				unsigned latency = atoi(newLine);
 				unsigned count = atoi(position);
 				averageTransactionLatency.add(latency,count);
-				perEpochTransactionCount += count;
+				transactionCountBuffer += count;
 				distTransactionLatency[latency] += count;
 			}
 			// working set size
 			else if (writing == 2)
 			{
-				string line(newLine);
-				trim(line);
-				p3 << workingSetCounter * epochTime << " " << line << endl;
-				workingSetCounter++;
+				workingSetSizeBuffer = atoi(newLine);
 			}
 			// bandwidth
 			else if (writing == 7)
@@ -845,7 +1087,8 @@ void processStats(const string filename)
 
 				unsigned readValue = atoi(newLine);
 				unsigned writeValue = atoi(position);
-				bandwidthValues.push_back(std::pair<unsigned,unsigned>(readValue,writeValue));				
+				bandwidthValuesBuffer.first += readValue;
+				bandwidthValuesBuffer.second += writeValue;
 			}
 			// PC vs latency
 			else if (writing == 8)
@@ -863,7 +1106,10 @@ void processStats(const string filename)
 
 					float numberAccesses = atof(position);
 
-					latencyVsPCDict[PC] += numberAccesses;
+					if (PC < 0x100000000)
+						latencyVsPcLow[PC] += numberAccesses;
+					else
+						latencyVsPcHigh[PC] += numberAccesses;
 				}
 			}
 			// IPC
@@ -875,42 +1121,30 @@ void processStats(const string filename)
 					if (currentValue != currentValue)
 						currentValue = 0.0F;
 
-					ipcValues.push_back(currentValue);					
+					ipcValueBuffer += currentValue;
 				}
 				ipcLinesWritten++;
 			}
 			// hit and miss values
 			else if (writing == 10)
 			{
-				char *position = strchr(newLine, ' ') ;
+				char *position = strchr(newLine, ' ');
 				*position++ = 0;
 				unsigned hitCount = max(atoi(newLine),1);
 				unsigned missCount = max(atoi(position),1);
-				hitMissValues.push_back(hitCount / ((float)missCount + hitCount));
-				}
+				hitMissValueBuffer += hitCount / ((double)missCount + hitCount);
+			}
 			// channel breakdown
 			else if (writing == 11)
 			{
-// 				char *position = strchr(newLine, ' ') + 1;
-// 
-// 				channels[atoi(newLine)].back() = atoi(position);
-// 				channelTotals.back() += atoi(position);
 			}
 			// rank breakdown
 			else if (writing == 12)
 			{
-// 				char *position = strchr(newLine, ' ') + 1;
-// 
-// 				ranks[atoi(newLine)].back() = atoi(position);
-// 				rankTotals.back() += atoi(position);
 			}
 			// bank breakdown
 			else if (writing == 13)
 			{
-// 				char *position = strchr(newLine, ' ') + 1;
-// 
-// 				banks[lexical_cast<unsigned>(newLine)].back() = lexical_cast<unsigned>(position);
-// 				bankTotals.back() += atoi(position);
 			}
 			// new-style per bank breakdown
 			else if (writing == 14)
@@ -928,14 +1162,8 @@ void processStats(const string filename)
 				unsigned bank = atoi(splitLine3);
 				unsigned value = atoi(splitLine5);
 			
-				channelDistribution[channel][rank][bank].push_back(value);
-
-				//channels[channel].back() += value;
-				//ranks[rank].back() += value;
-				//banks[bank].back() += value;
-				//channelTotals.back() += value;
-				//rankTotals.back() += value;
-				//bankTotals.back() += value;
+				channelDistributionBuffer[channel][rank][bank] += value;
+				channelDistributionBuffer[channel][rank].back() += value;
 			}
 			// latency distribution graphs
 			else if (writing == 15)
@@ -952,12 +1180,9 @@ void processStats(const string filename)
 				unsigned rank = atoi(splitLine2);
 				unsigned bank = atoi(splitLine3);
 				unsigned value = atoi(splitLine5);
-				//unsigned channel = lexical_cast<unsigned>(splitLine1);
-				//unsigned rank = lexical_cast<unsigned>(splitLine2);
-				//unsigned bank = lexical_cast<unsigned>(splitLine3);
-				//unsigned value = lexical_cast<unsigned>(splitLine5);
 
-				channelLatencyDistribution[channel][rank][bank].push_back(value);
+				channelLatencyDistributionBuffer[channel][rank][bank] += value;
+				channelLatencyDistributionBuffer[channel][rank].back() += value;
 			}
 		}
 
@@ -966,30 +1191,19 @@ void processStats(const string filename)
 
 	userStop = false;
 
-	if (writing == 14)
-	{
-		for (unsigned i = 0; i < channelDistribution.size(); i++)
-			for (unsigned j = 0; j < channelDistribution[i].size(); j++)
-			{
-				unsigned total = 0;
-				for (unsigned k = 0; k < channelDistribution[i][j].size() - 1; k++)
-					total += channelDistribution[i][j][k].back();
-				channelDistribution[i][j].back().push_back((total > 0) ? total : 1);
-			}
-	}
-	else if (writing == 15)
-	{
-		for (unsigned i = 0; i < channelLatencyDistribution.size(); i++)
-			for (unsigned j = 0; j < channelLatencyDistribution[i].size(); j++)
-			{
-				unsigned total = 0;
-				for (unsigned k = 0; k < channelLatencyDistribution[i][j].size() - 1; k++)
-					total += channelLatencyDistribution[i][j][k].back();
-				channelLatencyDistribution[i][j].back().push_back((total > 0) ? total : 1);
-			}
-	}
+	opstream p0("gnuplot");	
+	//boost::iostreams::filtering_ostream p0;
+	//p0.push(std::cout);
+	p0 << terminal << basicSetup;
+	opstream p1("gnuplot");
+	p1 << terminal << basicSetup;
+	opstream p2("gnuplot");
+	p2 << terminal << basicSetup;
+	opstream p3("gnuplot");
+	p3 << terminal << basicSetup;
 
-	p3 << "e" << endl << "unset output" << endl;
+	PriorMovingAverage ipcBuffer(WINDOW);
+	CumulativePriorMovingAverage ipcTotal;
 
 	// make the address latency distribution per channel graphs
 	for (unsigned channelID = 0; channelID < channelLatencyDistribution.size(); channelID++)
@@ -1071,14 +1285,14 @@ void processStats(const string filename)
 		p1 << "unset multiplot" << endl << "unset output" << endl;
 	}
 
-	// make the address distribution graphs
+	// make the overall address distribution graphs
 	bf::path outFilename = outputDir / ("addressDistribution." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p0 << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p0 << "set title \"" << commandLine << "\\nChannel Distribution Rate\"" << endl << addressDistroA << endl;
+	p0 << "set title \"" << commandLine << "\\nChannel Distribution Rate\"" << endl << addressDistroA;
 	p0 << "plot ";
-	for (unsigned i = 0; i < channelDistribution.size(); i++)
-		p0 << "'-' using 1 axes x2y1 t 'ch[" << i << "',";
+	for (unsigned i = 0; i < channelCount; i++)
+		p0 << "'-' using 1 axes x2y1 t 'ch[" << i << "]',";
 	p0 << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
 	for (unsigned channelID = 0; channelID < channelDistribution.size(); channelID++)
@@ -1101,10 +1315,11 @@ void processStats(const string filename)
 		p0 << "e" << endl;
 	}
 
-	p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2" << endl << "e" << endl << addressDistroB << endl << "plot ";
+	p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2" << endl << "e" << endl;
+	p0 << addressDistroB << endl << "plot ";
 
 	for (unsigned i = 0; i < rankCount; i++)
-		p0 << "'-' using 1 axes x2y1 t 'rk[" << i << "',";
+		p0 << "'-' using 1 axes x2y1 t 'rk[" << i << "]',";
 	p0 << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
 	for (unsigned rankID = 0; rankID < rankCount; rankID++)
@@ -1126,12 +1341,13 @@ void processStats(const string filename)
 		}
 		p0 << "e" << endl;
 	}
-	p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2" << endl << "e" << endl << addressDistroC << endl << "plot ";
+	p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2" << endl << "e" << endl;
+	p0 << addressDistroC << endl << "plot ";
 	for (unsigned i = 0; i < bankCount; i++)
-		p0 << "'-' using 1 axes x2y1 t 'bk[" << i << "',";
+		p0 << "'-' using 1 axes x2y1 t 'bk[" << i << "]',";
 	p0 << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
-	for (unsigned bankID = 0; bankID < channelDistribution.size(); bankID++)
+	for (unsigned bankID = 0; bankID < bankCount; bankID++)
 	{	
 		for (unsigned epochID = 0; epochID < channelDistribution[0][0][0].size(); epochID++)
 		{
@@ -1150,25 +1366,27 @@ void processStats(const string filename)
 		}
 		p0 << "e" << endl;
 	}
-	p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2" << endl << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
+	p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2" << endl << "e" << endl;
+	p0 << "unset multiplot" << endl << "unset output" << endl;
 
 	// make the PC vs latency graph
 	outFilename = outputDir / ("latencyVsPc." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p1 << "set title \"Total Latency Due to Reads vs. PC Value\\n" << commandLine << "\""<< endl << pcVsLatencyGraph0 << endl;
-	std::list<uint64_t> highValues;
-	for (std::tr1::unordered_map<uint64_t,float>::const_iterator i = latencyVsPCDict.begin(); i != latencyVsPCDict.end(); i++)
-	{
-		if (i->first < 0x100000000)
+	
+	if (latencyVsPcLow.size() > 0)
+		for (std::tr1::unordered_map<uint64_t,float>::const_iterator i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); i++)
 			p1 << i->first << " " << period * i->second << endl;
-	}
+	else
+		p1 << "4294967296 1.0" << endl;
+
 	p1 << endl << "e" << endl << pcVsLatencyGraph1;
-	for (std::tr1::unordered_map<uint64_t,float>::const_iterator i = latencyVsPCDict.begin(); i != latencyVsPCDict.end(); i++)
-	{
-		if (i->first >= 0x100000000)
+	if (latencyVsPcHigh.size() > 0)
+		for (std::tr1::unordered_map<uint64_t,float>::const_iterator i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); i++)
 			p1 << (i->first - 0x100000000) << " " << period * i->second << endl;
-	}
+	else
+		p2 << "4294967296 1.0" << endl;
 	p1 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 
 	// make the transaction latency distribution graph
@@ -1234,31 +1452,32 @@ void processStats(const string filename)
 	// make the cache graph
 	outFilename = outputDir / ("cacheData." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
-	p0 << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p0 << "set title 'Miss Rate of L1 ICache\\n" << commandLine << "'"<< endl << cacheGraphA << endl;
+	p2 << "reset" << endl << terminal << basicSetup;
+	p2 << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	p2 << "set title 'Miss Rate of L1 ICache\\n" << commandLine << "'"<< endl << cacheGraphA << endl;
 
 	for (unsigned i = 0; i < iCacheMisses.size(); i++)
-		p0 << i * epochTime << " " << iCacheMisses[i] + iCacheHits[i] << endl;
-	p0 << "e" << endl;
+		p2 << i * epochTime << " " << iCacheMisses[i] + iCacheHits[i] << endl;
+	p2 << "e" << endl;
 	for (unsigned i = 0; i < iCacheMisses.size(); i++)
-		p0 << i * epochTime << " " << iCacheMisses[i] / ((float)max(iCacheMisses[i] + iCacheHits[i],1U)) << endl;
-	p0 << "e" << endl;
+		p2 << i * epochTime << " " << iCacheMisses[i] / ((float)max(iCacheMisses[i] + iCacheHits[i],1U)) << endl;
+	p2 << "e" << endl;
 
-	p0 << cacheGraphB << endl;
+	p2 << cacheGraphB << endl;
 	for (unsigned i = 0; i < dCacheMisses.size(); i++)
-		p0 << i * epochTime << " " << dCacheMisses[i] + dCacheHits[i] << endl;
-	p0 << "e" << endl;
+		p2 << i * epochTime << " " << dCacheMisses[i] + dCacheHits[i] << endl;
+	p2 << "e" << endl;
 	for (unsigned i = 0; i < dCacheMisses.size(); i++)
-		p0 << i * epochTime << " " << dCacheMisses[i] / ((float)max(dCacheMisses[i] + dCacheHits[i],1U)) << endl;
-	p0 << "e" << endl;
+		p2 << i * epochTime << " " << dCacheMisses[i] / ((float)max(dCacheMisses[i] + dCacheHits[i],1U)) << endl;
+	p2 << "e" << endl;
 
-	p0 << cacheGraphC << endl;
+	p2 << cacheGraphC << endl;
 	for (unsigned i = 0; i < l2CacheMisses.size(); i++)
-		p0 << i * epochTime << " " << l2CacheMisses[i] + l2CacheHits[i] << endl;
-	p0 << "e" << endl;
+		p2 << i * epochTime << " " << l2CacheMisses[i] + l2CacheHits[i] << endl;
+	p2 << "e" << endl;
 	for (unsigned i = 0; i < l2CacheMisses.size(); i++)
-		p0 << i * epochTime << " " << l2CacheMisses[i] / ((float)max(l2CacheMisses[i] + l2CacheHits[i],1U)) << endl;
-	p0 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
+		p2 << i * epochTime << " " << l2CacheMisses[i] / ((float)max(l2CacheMisses[i] + l2CacheHits[i],1U)) << endl;
+	p2 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 
 	// make the other IPC graph
 	outFilename = outputDir / ("averageIPCandLatency." + extension);
@@ -1364,6 +1583,21 @@ void processStats(const string filename)
 		time += epochTime;
 	}
 	p2 << "e" << endl << "unset output" << endl;
+
+	// make the working set
+	p3 << "reset" << endl << basicSetup << terminal;
+	p3 << "set title 'Working Set Size vs Time\\n" << commandLine << "' offset character 0, -1, 0 font '' norotate" << endl;
+	outFilename = outputDir / ("workingSet." + extension);
+	p3 << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	filesGenerated.push_back(outFilename.native_directory_string());
+	p3 << workingSetSetup << endl;
+	time = 0.0F;
+	for (vector<unsigned>::const_iterator i = workingSetSize.begin(); i != workingSetSize.end(); i++)
+	{
+		p3 << time << " " << *i << endl;
+		time += epochTime;
+	}
+	p3 << "e" << endl << "unset output" << endl;
 
 	p0 << endl << "exit" << endl;
 	p1 << endl << "exit" << endl;

@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -48,12 +48,12 @@ virtualAddress(UINT_MAX),
 physicalAddress(PHYSICAL_ADDRESS_MAX),
 channel(UINT_MAX),
 rank(UINT_MAX),
-bank(UINT_MAX), 
+bank(UINT_MAX),
 row(UINT_MAX),
 column(UINT_MAX)
 {}
 
-Address::Address(PHYSICAL_ADDRESS pA):
+Address::Address(PhysicalAddress pA):
 virtualAddress(0),
 physicalAddress(pA),
 channel(0),
@@ -84,14 +84,14 @@ column(column)
 	reverseAddressTranslation();
 
 #ifdef DEBUG
-	PHYSICAL_ADDRESS pA = physicalAddress;
+	PhysicalAddress pA = physicalAddress;
 	addressTranslation();
 	assert((physicalAddress >> columnSizeDepth) == (pA >> columnSizeDepth));
 	assert(this->channel == channel && this->rank == rank && this->bank == bank && this->row == row && this->column == column);
 #endif
 }
 
-PHYSICAL_ADDRESS Address::maxAddress()
+PhysicalAddress Address::maxAddress()
 {
 	return (1LL << (channelAddressDepth + rankAddressDepth + bankAddressDepth + rowAddressDepth +
 		columnAddressDepth + columnSizeDepth)) - 1;
@@ -145,47 +145,47 @@ bool Address::reverseAddressTranslation()
 	{
 	case SDRAM_HIPERF_MAP:
 	
-		physicalAddress = (PHYSICAL_ADDRESS)columnLow << shift;
+		physicalAddress = (PhysicalAddress)columnLow << shift;
 		shift += columnLowAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)channel << shift;
+		physicalAddress |= (PhysicalAddress)channel << shift;
 		shift += channelAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)columnHigh << shift;
+		physicalAddress |= (PhysicalAddress)columnHigh << shift;
 		shift += columnHighAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)bank << shift;
+		physicalAddress |= (PhysicalAddress)bank << shift;
 		shift += bankAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)rank << shift;
+		physicalAddress |= (PhysicalAddress)rank << shift;
 		shift += rankAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)row << shift;
+		physicalAddress |= (PhysicalAddress)row << shift;
 
 		break;
 	case SDRAM_BASE_MAP:
 
-		physicalAddress = (PHYSICAL_ADDRESS)columnLow << shift;
+		physicalAddress = (PhysicalAddress)columnLow << shift;
 		shift += columnLowAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)channel << shift;
+		physicalAddress |= (PhysicalAddress)channel << shift;
 		shift += channelAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)columnHigh << shift;
+		physicalAddress |= (PhysicalAddress)columnHigh << shift;
 		shift += columnHighAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)bank << shift;
+		physicalAddress |= (PhysicalAddress)bank << shift;
 		shift += bankAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)row << shift;
+		physicalAddress |= (PhysicalAddress)row << shift;
 		shift += rowAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)rank << shift;
+		physicalAddress |= (PhysicalAddress)rank << shift;
 
 		break;
 	case CLOSE_PAGE_BASELINE:
 
-		physicalAddress = (PHYSICAL_ADDRESS)columnLow << shift;
+		physicalAddress = (PhysicalAddress)columnLow << shift;
 		shift += columnLowAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)channel << shift;
+		physicalAddress |= (PhysicalAddress)channel << shift;
 		shift += channelAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)bank << shift;
+		physicalAddress |= (PhysicalAddress)bank << shift;
 		shift += bankAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)rank << shift;
+		physicalAddress |= (PhysicalAddress)rank << shift;
 		shift += rankAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)columnHigh << shift;
+		physicalAddress |= (PhysicalAddress)columnHigh << shift;
 		shift += columnHighAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)row << shift;
+		physicalAddress |= (PhysicalAddress)row << shift;
 
 		break;
 
@@ -193,51 +193,51 @@ bool Address::reverseAddressTranslation()
 		{
 			unsigned rowLow = row & 0x07;
 			unsigned rowHigh = row >> 3;
-			physicalAddress = (PHYSICAL_ADDRESS)columnLow << shift;
+			physicalAddress = (PhysicalAddress)columnLow << shift;
 			shift += columnLowAddressDepth;
-			physicalAddress |= (PHYSICAL_ADDRESS)channel << shift;
+			physicalAddress |= (PhysicalAddress)channel << shift;
 			shift += channelAddressDepth;
-			physicalAddress |= (PHYSICAL_ADDRESS)bank << shift;
+			physicalAddress |= (PhysicalAddress)bank << shift;
 			shift += bankAddressDepth;
-			physicalAddress |= (PHYSICAL_ADDRESS)rowLow << shift;
+			physicalAddress |= (PhysicalAddress)rowLow << shift;
 			shift += 3;
-			physicalAddress |= (PHYSICAL_ADDRESS)rank << shift;
+			physicalAddress |= (PhysicalAddress)rank << shift;
 			shift += rankAddressDepth;
-			physicalAddress |= (PHYSICAL_ADDRESS)columnHigh << shift;
+			physicalAddress |= (PhysicalAddress)columnHigh << shift;
 			shift += columnHighAddressDepth;
-			physicalAddress |= (PHYSICAL_ADDRESS)rowHigh << shift;
+			physicalAddress |= (PhysicalAddress)rowHigh << shift;
 
 			break;
 		}
 	case CLOSE_PAGE_LOW_LOCALITY:
 
-		physicalAddress = (PHYSICAL_ADDRESS)channel << shift;
+		physicalAddress = (PhysicalAddress)channel << shift;
 		shift += channelAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)rank << shift;
+		physicalAddress |= (PhysicalAddress)rank << shift;
 		shift += rankAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)bank << shift;
+		physicalAddress |= (PhysicalAddress)bank << shift;
 		shift += bankAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)columnLow << shift;
+		physicalAddress |= (PhysicalAddress)columnLow << shift;
 		shift += columnLowAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)row << shift;
+		physicalAddress |= (PhysicalAddress)row << shift;
 		shift += rowAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)columnHigh << shift;
+		physicalAddress |= (PhysicalAddress)columnHigh << shift;
 
 		break;
 
 	case CLOSE_PAGE_HIGH_LOCALITY:
 
-		physicalAddress = (PHYSICAL_ADDRESS)columnLow << shift;
+		physicalAddress = (PhysicalAddress)columnLow << shift;
 		shift += columnLowAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)row << shift;
+		physicalAddress |= (PhysicalAddress)row << shift;
 		shift += rowAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)columnHigh << shift;
+		physicalAddress |= (PhysicalAddress)columnHigh << shift;
 		shift += columnHighAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)channel << shift;
+		physicalAddress |= (PhysicalAddress)channel << shift;
 		shift += channelAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)bank << shift;
+		physicalAddress |= (PhysicalAddress)bank << shift;
 		shift += bankAddressDepth;
-		physicalAddress |= (PHYSICAL_ADDRESS)rank << shift;
+		physicalAddress |= (PhysicalAddress)rank << shift;
 
 		break;
 
@@ -261,13 +261,13 @@ bool Address::reverseAddressTranslation()
 //////////////////////////////////////////////////////////////////////
 bool Address::addressTranslation()
 {
-	PHYSICAL_ADDRESS buffer;
+	PhysicalAddress buffer;
 
 	if (!physicalAddress)
 		return false;
 
 	// strip away the byte address portion
-	PHYSICAL_ADDRESS tempAddress = physicalAddress >> columnSizeDepth;
+	PhysicalAddress tempAddress = physicalAddress >> columnSizeDepth;
 
 	unsigned columnLow;
 	unsigned columnHigh;
@@ -328,7 +328,7 @@ bool Address::addressTranslation()
 
 		buffer = tempAddress;				
 		tempAddress >>= columnHighAddressDepth;
-		columnHigh = (tempAddress << columnHighAddressDepth) ^ buffer;     
+		columnHigh = (tempAddress << columnHighAddressDepth) ^ buffer;
 
 		column = (columnHigh << columnLowAddressDepth) | columnLow;
 
@@ -434,21 +434,21 @@ bool Address::addressTranslation()
 		tempAddress >>= columnLowAddressDepth;
 
 		// strip out the column low address
-		columnLow = buffer ^ (tempAddress << columnLowAddressDepth); 
+		columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
 
 		buffer = tempAddress;				/* save away original address */
 		tempAddress >>= channelAddressDepth;
-		// strip out the channel address 
-		channel = buffer ^ (tempAddress << channelAddressDepth); 
+		// strip out the channel address
+		channel = buffer ^ (tempAddress << channelAddressDepth);
 
 		buffer = tempAddress;				
 		tempAddress >>= bankAddressDepth;
-		// strip out the bank address 
+		// strip out the bank address
 		bank = buffer ^ (tempAddress << bankAddressDepth);
 
 		buffer = tempAddress;				
 		tempAddress >>= rankAddressDepth;
-		// strip out the rank address 
+		// strip out the rank address
 		rank = buffer ^ (tempAddress << rankAddressDepth);		
 
 		buffer = tempAddress;				
@@ -496,16 +496,16 @@ bool Address::addressTranslation()
 			tempAddress >>= columnLowAddressDepth;
 
 			// strip out the column low address
-			columnLow = buffer ^ (tempAddress << columnLowAddressDepth); 
+			columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
 
 			buffer = tempAddress;			
 			tempAddress >>= channelAddressDepth;
-			// strip out the channel address 
-			channel = buffer ^ (tempAddress << channelAddressDepth); 
+			// strip out the channel address
+			channel = buffer ^ (tempAddress << channelAddressDepth);
 
 			buffer = tempAddress;				
 			tempAddress >>= bankAddressDepth;
-			// strip out the bank address 
+			// strip out the bank address
 			bank = buffer ^ (tempAddress << bankAddressDepth);
 
 			buffer = tempAddress;
@@ -514,7 +514,7 @@ bool Address::addressTranslation()
 
 			buffer = tempAddress;				
 			tempAddress >>= rankAddressDepth;
-			// strip out the rank address 
+			// strip out the rank address
 			rank = buffer ^ (tempAddress << rankAddressDepth);		
 
 			buffer = tempAddress;				
@@ -545,23 +545,23 @@ bool Address::addressTranslation()
 		*/
 		buffer = tempAddress;				
 		tempAddress >>= channelAddressDepth;
-		// strip out the channel address 
+		// strip out the channel address
 		channel = buffer ^ (tempAddress << channelAddressDepth);
 
 		buffer = tempAddress;				
 		tempAddress >>= rankAddressDepth;
-		// strip out the rank address 
+		// strip out the rank address
 		rank = buffer ^ (tempAddress << rankAddressDepth);	
 
 		buffer = tempAddress;				
 		tempAddress >>= bankAddressDepth;
-		// strip out the bank address 
+		// strip out the bank address
 		bank = buffer ^ (tempAddress << bankAddressDepth);
 
 		buffer = tempAddress;				
 		tempAddress >>= columnLowAddressDepth;
 		// strip out the column low address
-		columnLow = buffer ^ (tempAddress << columnLowAddressDepth); 
+		columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
 
 		buffer = tempAddress;				
 		tempAddress >>= rowAddressDepth;
@@ -589,7 +589,7 @@ bool Address::addressTranslation()
 		buffer = tempAddress;				
 		tempAddress >>= columnLowAddressDepth;
 		// strip out the column low address
-		columnLow = buffer ^ (tempAddress << columnLowAddressDepth); 
+		columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
 
 		buffer = tempAddress;				
 		tempAddress >>= rowAddressDepth;
@@ -605,17 +605,17 @@ bool Address::addressTranslation()
 
 		buffer = tempAddress;				
 		tempAddress >>= channelAddressDepth;
-		// strip out the channel address 
+		// strip out the channel address
 		channel = buffer ^ (tempAddress << channelAddressDepth);
 
 		buffer = tempAddress;				
 		tempAddress >>= bankAddressDepth;
-		// strip out the bank address 
+		// strip out the bank address
 		bank = buffer ^ (tempAddress << bankAddressDepth);
 
 		buffer = tempAddress;				
 		tempAddress >>= rankAddressDepth;
-		// strip out the rank address 
+		// strip out the rank address
 		rank = buffer ^ (tempAddress << rankAddressDepth);	
 
 		break;
@@ -713,7 +713,7 @@ bool Address::addressTranslation()
 
 		break;
 
-		// don't know what this policy is.. Map everything to 0 
+		// don't know what this policy is.. Map everything to 0
 	default:
 		cerr << "Unknown address mapping scheme, mapping chan, rank, bank to zero: ";
 		cerr << mappingScheme;
@@ -744,7 +744,7 @@ void Address::setAddress(const unsigned channel, const unsigned rank, const unsi
 	reverseAddressTranslation();
 
 #ifdef DEBUG
-	PHYSICAL_ADDRESS oldPA = physicalAddress;
+	PhysicalAddress oldPA = physicalAddress;
 	addressTranslation();
 	assert((physicalAddress >> columnSizeDepth) == (oldPA >> columnSizeDepth));
 #endif

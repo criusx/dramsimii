@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GLOBALS_H
@@ -21,6 +21,7 @@
 #include <sstream>
 
 #include <limits>
+#include <cmath>
 #include <boost/integer_traits.hpp>
 #include <boost/cstdint.hpp>
 
@@ -75,36 +76,19 @@ namespace DRAMsimII
 		return l2;
 	}
 
-
-	// converts a string to a number using stringstreams
-	template <class T>
-	bool toNumeric(T& t, const std::string& s, std::ios_base& (*f)(std::ios_base&))
-	{
-		std::istringstream iss(s);
-		return !(iss >> f >> t).fail();
-	}	
+#define EPSILON 1E-5
 
 	template <class T>
-	inline std::string toString(const T& convertThis)
+	inline bool AlmostEqual(T nVal1, T nVal2)
 	{
-		std::stringstream ss;
-		ss << convertThis;
-		return ss.str();
-	}
-
-	template <class T>
-	inline bool AlmostEqual(T nVal1, T nVal2, double nEpsilon)
-	{
-		bool bRet = (((nVal2 - nEpsilon) < nVal1) && (nVal1 < (nVal2 + nEpsilon)));
-		return bRet;
+		return std::abs(nVal1 - nVal2) <= EPSILON * std::fabs(nVal1);
+		// see Knuth section 4.2.2 pages 217-218
 	}
 
 	// global var forward
 	extern boost::iostreams::filtering_ostream timingOutStream;
 	extern boost::iostreams::filtering_ostream powerOutStream;
 	extern boost::iostreams::filtering_ostream statsOutStream;
-
-	void printTiming(std::ostringstream &out);
 
 	// converts a string to its corresponding magnitude representation
 	double ascii2multiplier(const std::string &);
@@ -163,18 +147,14 @@ namespace DRAMsimII
 #define DEBUG_LOG(X)
 #endif
 
-#define tick boost::int64_t
+	typedef boost::int64_t tick;
 #define TICK_MAX static_cast<tick>(boost::integer_traits<tick>::const_max)
 #define TICK_MIN static_cast<tick>(boost::integer_traits<tick>::const_min)
-// x86-64 defines long mode as having a physical address space of 64-bits, although most current implementations use only 48
-#define PHYSICAL_ADDRESS boost::uint64_t
-#define PHYSICAL_ADDRESS_MAX static_cast<PHYSICAL_ADDRESS>(boost::integer_traits<PHYSICAL_ADDRESS>::const_max)
-
-#define ABS(a) ((a) < 0 ? (-a) : (a))
+	// x86-64 defines long mode as having a physical address space of 64-bits, although most current implementations use only 48
+	typedef boost::uint64_t PhysicalAddress;
+#define PHYSICAL_ADDRESS_MAX static_cast<PhysicalAddress>(boost::integer_traits<PhysicalAddress>::const_max)
 
 #define PI 3.1415926535897932384626433832795
-
-#define COMP_ACC 0.00005
 
 #define POOL_SIZE 32
 }

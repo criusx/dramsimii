@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -46,13 +46,13 @@ namespace DRAMsimII
 		// members
 	protected:
 		tick time;										///< channel time, allow for channel concurrency			
-		tick lastRefreshTime;							///< tells me when last refresh was done
+		//tick lastRefreshTime;							///< tells me when last refresh was done
 		tick lastCommandIssueTime;						///< the last time a command was executed on this channel
 		unsigned lastRankID;							///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
 		std::vector<tick> refreshCounter;				///< holds the next refresh command time for the rank
-		Queue<Command> historyQueue;					///< what were the last N commands to this channel?
+		//Queue<Command> historyQueue;					///< what were the last N commands to this channel?
 		Queue<Transaction> completionQueue;				///< completed_q, can send status back to memory controller
 		const SystemConfiguration &systemConfig;		///< a pointer to common system config values
 		Statistics &statistics;							///< backward pointer to the stats engine
@@ -128,7 +128,7 @@ namespace DRAMsimII
 		// overloads
 		Channel& operator =(const Channel& rs);
 		bool operator==(const Channel& right) const;
-		friend std::ostream& operator<<(std::ostream& , const Channel& );
+		friend std::ostream& operator<<(std::ostream& , const Channel&);
 
 	private:
 		bool sendPower(double PsysRD, double PsysWR, std::vector<int> rankArray, std::vector<double> PsysACTSTBYArray, std::vector<double> PsysACTArray, const tick currentTime) const;

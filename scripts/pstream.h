@@ -118,7 +118,7 @@ namespace redi
 		/// Constructor that initialises the buffer with @a file and @a argv.
 		basic_pstreambuf( const std::string& file,
 			const argv_type& argv,
-			pmode mode );
+			pmode mode);
 
 		/// Destructor.
 		~basic_pstreambuf();
@@ -389,7 +389,7 @@ namespace redi
 		*/
 		basic_ipstream( const std::string& file,
 			const argv_type& argv,
-			pmode mode = pstdout )
+			pmode mode = pstdout)
 			: istream_type(NULL), pbase_type(file, argv, mode|pstdout)
 		{ }
 
@@ -404,7 +404,7 @@ namespace redi
 		/**
 		* @brief Start a process.
 		*
-		* Calls do_open( @a %command , @a mode|pstdout ).
+		* Calls do_open( @a %command , @a mode|pstdout).
 		*
 		* @param command  a string containing a shell command.
 		* @param mode     the I/O mode to use when opening the pipe.
@@ -419,7 +419,7 @@ namespace redi
 		/**
 		* @brief Start a process.
 		*
-		* Calls do_open( @a file , @a argv , @a mode|pstdout ).
+		* Calls do_open( @a file , @a argv , @a mode|pstdout).
 		*
 		* @param file  a string containing the pathname of a program to execute.
 		* @param argv  a vector of argument strings passed to the new program.
@@ -429,7 +429,7 @@ namespace redi
 		void
 			open( const std::string& file,
 			const argv_type& argv,
-			pmode mode = pstdout )
+			pmode mode = pstdout)
 		{
 			this->do_open(file, argv, mode|pstdout);
 		}
@@ -517,7 +517,7 @@ namespace redi
 		*/
 		basic_opstream( const std::string& file,
 			const argv_type& argv,
-			pmode mode = pstdin )
+			pmode mode = pstdin)
 			: ostream_type(NULL), pbase_type(file, argv, mode|pstdin)
 		{ }
 
@@ -531,7 +531,7 @@ namespace redi
 		/**
 		* @brief Start a process.
 		*
-		* Calls do_open( @a %command , @a mode|pstdin ).
+		* Calls do_open( @a %command , @a mode|pstdin).
 		*
 		* @param command  a string containing a shell command.
 		* @param mode     the I/O mode to use when opening the pipe.
@@ -546,7 +546,7 @@ namespace redi
 		/**
 		* @brief Start a process.
 		*
-		* Calls do_open( @a file , @a argv , @a mode|pstdin ).
+		* Calls do_open( @a file , @a argv , @a mode|pstdin).
 		*
 		* @param file  a string containing the pathname of a program to execute.
 		* @param argv  a vector of argument strings passed to the new program.
@@ -626,7 +626,7 @@ namespace redi
 		*/
 		basic_pstream( const std::string& file,
 			const argv_type& argv,
-			pmode mode = pstdout|pstdin )
+			pmode mode = pstdout|pstdin)
 			: iostream_type(NULL), pbase_type(file, argv, mode)
 		{ }
 
@@ -640,7 +640,7 @@ namespace redi
 		/**
 		* @brief Start a process.
 		*
-		* Calls do_open( @a %command , @a mode ).
+		* Calls do_open( @a %command , @a mode).
 		*
 		* @param command  a string containing a shell command.
 		* @param mode     the I/O mode to use when opening the pipe.
@@ -655,7 +655,7 @@ namespace redi
 		/**
 		* @brief Start a process.
 		*
-		* Calls do_open( @a file , @a argv , @a mode ).
+		* Calls do_open( @a file , @a argv , @a mode).
 		*
 		* @param file  a string containing the pathname of a program to execute.
 		* @param argv  a vector of argument strings passed to the new program.
@@ -665,7 +665,7 @@ namespace redi
 		void
 			open( const std::string& file,
 			const argv_type& argv,
-			pmode mode = pstdout|pstdin )
+			pmode mode = pstdout|pstdin)
 		{
 			this->do_open(file, argv, mode);
 		}
@@ -767,7 +767,7 @@ namespace redi
 		*/
 		basic_rpstream( const std::string& file,
 			const argv_type& argv,
-			pmode mode = pstdout|pstdin )
+			pmode mode = pstdout|pstdin)
 			: ostream_type(NULL), istream_type(NULL), pbase_type(file, argv, mode)
 		{ }
 
@@ -777,7 +777,7 @@ namespace redi
 		/**
 		* @brief  Start a process.
 		*
-		* Calls do_open( @a %command , @a mode ).
+		* Calls do_open( @a %command , @a mode).
 		*
 		* @param command a string containing a shell command.
 		* @param mode the I/O mode to use when opening the pipe.
@@ -792,7 +792,7 @@ namespace redi
 		/**
 		* @brief  Start a process.
 		*
-		* Calls do_open( @a file , @a argv , @a mode ).
+		* Calls do_open( @a file , @a argv , @a mode).
 		*
 		* @param file a string containing the pathname of a program to execute.
 		* @param argv a vector of argument strings passed to the new program.
@@ -802,7 +802,7 @@ namespace redi
 		void
 			open( const std::string& file,
 			const argv_type& argv,
-			pmode mode = pstdout|pstdin )
+			pmode mode = pstdout|pstdin)
 		{
 			this->do_open(file, argv, mode);
 		}
@@ -927,7 +927,7 @@ namespace redi
 	inline
 		basic_pstreambuf<C,T>::basic_pstreambuf( const std::string& file,
 		const argv_type& argv,
-		pmode mode )
+		pmode mode)
 		: ppid_(-1)   // initialise to -1 to indicate no process run yet.
 		, wpipe_(-1)
 		, wbuffer_(NULL)
@@ -1075,7 +1075,7 @@ namespace redi
 	basic_pstreambuf<C,T>*
 		basic_pstreambuf<C,T>::open( const std::string& file,
 		const argv_type& argv,
-		pmode mode )
+		pmode mode)
 	{
 		basic_pstreambuf<C,T>* ret = NULL;
 
@@ -1747,7 +1747,7 @@ namespace redi
 		{
 			this->setg( rbuf + pbsz - npb,
 				rbuf + pbsz,
-				rbuf + pbsz + rc );
+				rbuf + pbsz + rc);
 			return true;
 		}
 		else
@@ -1861,7 +1861,7 @@ namespace redi
 
 	/**
 	* Initialises the stream buffer by calling
-	* do_open( @a command , @a mode )
+	* do_open( @a command , @a mode)
 	*
 	* @param command a string containing a shell command.
 	* @param mode    the I/O mode to use when opening the pipe.
@@ -1880,7 +1880,7 @@ namespace redi
 
 	/**
 	* Initialises the stream buffer by calling
-	* do_open( @a file , @a argv , @a mode )
+	* do_open( @a file , @a argv , @a mode)
 	*
 	* @param file  a string containing the pathname of a program to execute.
 	* @param argv  a vector of argument strings passed to the new program.
@@ -1891,7 +1891,7 @@ namespace redi
 	inline
 		pstream_common<C,T>::pstream_common( const std::string& file,
 		const argv_type& argv,
-		pmode mode )
+		pmode mode)
 		: std::basic_ios<C,T>(NULL)
 		, command_(file)
 		, buf_()
@@ -1916,7 +1916,7 @@ namespace redi
 	}
 
 	/**
-	* Calls rdbuf()->open( @a command , @a mode )
+	* Calls rdbuf()->open( @a command , @a mode)
 	* and sets @c failbit on error.
 	*
 	* @param command a string containing a shell command.
@@ -1932,7 +1932,7 @@ namespace redi
 	}
 
 	/**
-	* Calls rdbuf()->open( @a file, @a  argv, @a mode )
+	* Calls rdbuf()->open( @a file, @a  argv, @a mode)
 	* and sets @c failbit on error.
 	*
 	* @param file  a string containing the pathname of a program to execute.
@@ -1944,7 +1944,7 @@ namespace redi
 	inline void
 		pstream_common<C,T>::do_open( const std::string& file,
 		const argv_type& argv,
-		pmode mode )
+		pmode mode)
 	{
 		if (!buf_.open((command_=file), argv, mode))
 			this->setstate(std::ios_base::failbit);

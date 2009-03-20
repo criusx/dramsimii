@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -43,7 +43,7 @@ originalTransaction(UINT_MAX)
 //////////////////////////////////////////////////////////////////////////
 /// @brief constructor to use when creating a transaction based on a request that has a possible program counter and thread ID
 //////////////////////////////////////////////////////////////////////////
-Transaction::Transaction(const TransactionType transType, const tick arrivalTime,const unsigned burstLength, const Address &address, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
+Transaction::Transaction(const TransactionType transType, const tick arrivalTime,const unsigned burstLength, const Address &address, PhysicalAddress programCounter, int threadNumber, const unsigned originalTrans):
 Event(arrivalTime,address),
 type(transType),
 length(burstLength),
@@ -82,7 +82,7 @@ originalTransaction(rs.originalTransaction)
 //////////////////////////////////////////////////////////////////////////
 /// @brief constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction
 //////////////////////////////////////////////////////////////////////////
-Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PHYSICAL_ADDRESS physicalAddress, PHYSICAL_ADDRESS programCounter, int threadNumber, const unsigned originalTrans):
+Transaction::Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PhysicalAddress physicalAddress, PhysicalAddress programCounter, int threadNumber, const unsigned originalTrans):
 Event(arrivalTime,physicalAddress),
 type(transType),
 length(burstLength),

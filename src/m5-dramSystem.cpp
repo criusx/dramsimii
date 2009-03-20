@@ -1,21 +1,21 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <boost/serialization/map.hpp>
-#include <boost/archive/text_oarchive.hpp> 
+#include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <sstream>
 #include <stdlib.h>
@@ -158,8 +158,8 @@ void M5dramSystem::moveToTime(const tick now)
 /// @return a new M5dramSystem object
 //////////////////////////////////////////////////////////////////////
 M5dramSystem::M5dramSystem(const Params *p):
-PhysicalMemory(p), 
-tickEvent(this), 
+PhysicalMemory(p),
+tickEvent(this),
 ports(1),
 lastPortIndex(0),
 ds(NULL),
@@ -212,12 +212,12 @@ Port *M5dramSystem::getPort(const string &if_name, int idx)
 		return new MemoryPort(csprintf("%s-functional", name()), this);
 	}
 
-	if (if_name != "port") 
+	if (if_name != "port")
 	{
 		panic("PhysicalMemory::getPort: unknown port %s requested", if_name);
 	}
 
-	if (idx >= ports.size()) 
+	if (idx >= ports.size())
 	{
 		ports.resize(idx+1);
 	}
@@ -245,7 +245,7 @@ void M5dramSystem::init()
 		fatal("M5dramSystem object %s is unconnected!", name());
 	}
 
-	for (PortIterator pi = ports.begin(); pi != ports.end(); ++pi) 
+	for (PortIterator pi = ports.begin(); pi != ports.end(); ++pi)
 	{
 		if (*pi)
 			(*pi)->sendStatusChange(Port::RangeChange);
@@ -280,7 +280,7 @@ void M5dramSystem::serialize(ostream &os)
 	string thefile = Checkpoint::dir() + "/" + filename.c_str();
 
 	int fd = creat(thefile.c_str(), 0664);
-	if (fd < 0) 
+	if (fd < 0)
 	{
 		perror("creat");
 		fatal("Can't open physical memory checkpoint file '%s'\n", filename);
@@ -293,7 +293,7 @@ void M5dramSystem::serialize(ostream &os)
 		fatal("Insufficient memory to allocate compression state for %s\n", filename);
 	}
 
-	if (gzwrite(compressedMem, pmemAddr, params()->range.size()) != params()->range.size()) 
+	if (gzwrite(compressedMem, pmemAddr, params()->range.size()) != params()->range.size())
 	{
 		fatal("Write failed on physical memory checkpoint file '%s'\n", filename);
 	}
@@ -363,7 +363,7 @@ void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
 	pmemAddr = (uint8_t *)mmap(NULL, params()->range.size(),
 		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 
-	if (pmemAddr == (void *)MAP_FAILED) 
+	if (pmemAddr == (void *)MAP_FAILED)
 	{
 		perror("mmap");
 		fatal("Could not mmap physical memory!\n");
@@ -374,7 +374,7 @@ void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
 	if (tempPage == NULL)
 		fatal("Unable to malloc memory to read file %s\n", filename);
 	/* Only copy bytes that are non-zero, so we don't give the VM system hell */
-	while (curSize < params()->range.size()) 
+	while (curSize < params()->range.size())
 	{
 		bytesRead = gzread(compressedMem, tempPage, chunkSize);
 		if (bytesRead != chunkSize &&
@@ -416,7 +416,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 { 		
 #if 0
 	bool nr = pkt->needsResponse();
-	if (pkt->memInhibitAsserted()) 
+	if (pkt->memInhibitAsserted())
 	{
 		// snooper will supply based on copy of packet
 		// still target's responsibility to delete packet
@@ -435,7 +435,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		//schedSendTiming(pkt,curTick + 200000 + randomGen.random((Tick)0, (Tick)200000));
 	}
 	else
-	{ 
+	{
 		//delete pkt->req;
 		delete pkt;
 	}
@@ -479,7 +479,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 	timingOutStream << "s[0x" << hex << pkt->getSize() << "]" << endl;
 #endif
-	if (pkt->memInhibitAsserted()) 
+	if (pkt->memInhibitAsserted())
 	{
 		// snooper will supply based on copy of packet
 		// still target's responsibility to delete packet
@@ -488,7 +488,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		return true;
 	}
 	//upgrade or invalidate	
-	else if (!pkt->isRead() && pkt->needsResponse()) 
+	else if (!pkt->isRead() && pkt->needsResponse())
 		//else if (pkt->isInvalidate())
 	{
 		//cerr << "Invalidate" << endl;
@@ -502,7 +502,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		return true;
 	}
 #if 0
-	else if (!pkt->isRead() && pkt->needsResponse()) 
+	else if (!pkt->isRead() && pkt->needsResponse())
 	{
 		cerr << "didn't catch all " << endl;
 		return true;
@@ -559,7 +559,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			if (pkt->cmd == MemCmd::SwapReq)
 				cerr << "swap" << endl;
 
-			PHYSICAL_ADDRESS pC;
+			PhysicalAddress pC;
 			int threadID;
 			if (pkt->req->hasPC())
 			{
@@ -676,7 +676,7 @@ void M5dramSystem::MemoryPort::recvFunctional(PacketPtr pkt)
 /// @return
 //////////////////////////////////////////////////////////////////////
 Tick M5dramSystem::MemoryPort::recvAtomic(PacketPtr pkt)
-{ 
+{
 	//M5_TIMING_LOG("M5dramSystem recvAtomic()");
 
 	// because this is simply a read or write, go to the M5 memory object exclusively

@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -97,22 +97,22 @@ lastCalculation(TICK_MAX)
 
 bool PowerConfig::operator==(const PowerConfig& rhs) const
 {
-	return (AlmostEqual<float>(VDD, rhs.VDD, COMP_ACC) && AlmostEqual<float>(VDDmax, rhs.VDDmax, COMP_ACC) && IDD0 == IDD0 &&
+	return (AlmostEqual<float>(VDD, rhs.VDD) && AlmostEqual<float>(VDDmax, rhs.VDDmax) && IDD0 == IDD0 &&
 		IDD2P == rhs.IDD2P && IDD2N == rhs.IDD2N && IDD3P == rhs.IDD3P &&
 		IDD3N == rhs.IDD3N && IDD4R == rhs.IDD4R && IDD4W == rhs.IDD4W &&
-		IDD5 == rhs.IDD5 && AlmostEqual<float>(PdsACT, rhs.PdsACT, COMP_ACC) && AlmostEqual<float>(PdsACT_STBY, rhs.PdsACT_STBY, COMP_ACC) &&
-		AlmostEqual<double>(PdsRD, rhs.PdsRD, COMP_ACC) && 
-		AlmostEqual<double>(PdsWR, rhs.PdsWR, COMP_ACC) && 
-		AlmostEqual<double>(PdstermW, rhs.PdstermW, COMP_ACC) &&
-		AlmostEqual<double>(PdqRD, rhs.PdqRD, COMP_ACC) && 
-		AlmostEqual<double>(PdqWR, rhs.PdqWR, COMP_ACC) && 
-		AlmostEqual<double>(PdqRDoth, rhs.PdqRDoth, COMP_ACC) &&
-		AlmostEqual<double>(PdqWRoth, rhs.PdqWRoth, COMP_ACC) && DQperDRAM == rhs.DQperDRAM && DQSperDRAM == rhs.DQSperDRAM &&
+		IDD5 == rhs.IDD5 && AlmostEqual<float>(PdsACT, rhs.PdsACT) && AlmostEqual<float>(PdsACT_STBY, rhs.PdsACT_STBY) &&
+		AlmostEqual<double>(PdsRD, rhs.PdsRD) &&
+		AlmostEqual<double>(PdsWR, rhs.PdsWR) &&
+		AlmostEqual<double>(PdstermW, rhs.PdstermW) &&
+		AlmostEqual<double>(PdqRD, rhs.PdqRD) &&
+		AlmostEqual<double>(PdqWR, rhs.PdqWR) &&
+		AlmostEqual<double>(PdqRDoth, rhs.PdqRDoth) &&
+		AlmostEqual<double>(PdqWRoth, rhs.PdqWRoth) && DQperDRAM == rhs.DQperDRAM && DQSperDRAM == rhs.DQSperDRAM &&
 		DMperDRAM == rhs.DMperDRAM && DQperRank == rhs.DQperRank && frequency == rhs.frequency &&
 		specFrequency == rhs.specFrequency && tBurst == rhs.tBurst && tRC == rhs.tRC &&
-		tRAS == rhs.tRAS && lastCalculation==rhs.lastCalculation && 
-		AlmostEqual<double>(voltageScaleFactor, rhs.voltageScaleFactor, COMP_ACC) &&
-		AlmostEqual<double>(frequencyScaleFactor, rhs.frequencyScaleFactor, COMP_ACC));
+		tRAS == rhs.tRAS && lastCalculation==rhs.lastCalculation &&
+		AlmostEqual<double>(voltageScaleFactor, rhs.voltageScaleFactor) &&
+		AlmostEqual<double>(frequencyScaleFactor, rhs.frequencyScaleFactor));
 }
 
 std::ostream& DRAMsimII::operator<<(std::ostream& in, const PowerConfig& pc)

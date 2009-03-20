@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -48,7 +48,7 @@ SSTdramSystem::~SSTdramSystem()
 
 /// @brief used by prefetcher to determine whether to prefetch or not
 /// @details returns the number of currently used DRAMs
-/*int load() 
+/*int load()
 {
 return portCount[FROM_DRAM];
 }*/
@@ -161,7 +161,7 @@ void SSTdramSystem::moveToTime(const tick now)
 
 			//assert(curTick <= static_cast<tick>(finishTime * cpuRatio));
 
-			SST_TIMING_LOG("<-T [@" << std::dec << static_cast<tick>(finishTime ) << "]");
+			SST_TIMING_LOG("<-T [@" << std::dec << static_cast<tick>(finishTime) << "]");
 
 			//ports[lastPortIndex]->doSendTiming((Packet *)packet, static_cast<Tick>(finishTime * getCpuRatio()));
 			/// @todo check for port contention when returning parcels

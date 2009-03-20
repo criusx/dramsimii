@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -120,7 +120,7 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				//	std::cerr << currentTransaction->getLatency() << std::endl;
 				transactionExecution[currentTransaction->getLatency()]++;
 				assert(currentTransaction->getLatency() > 4);
-				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks) + 
+				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks) +
 					currentTransaction->getAddress().getRank() * banks +
 					currentTransaction->getAddress().getBank();
 				bankLatencyUtilization[index] += currentTransaction->getLatency();
@@ -212,7 +212,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << "----Bandwidth----" << endl << setprecision(10) << (float)statsLog.readBytesTransferred / statsLog.timePerEpoch << " " << (float)statsLog.writeBytesTransferred / statsLog.timePerEpoch << endl;
 
 	os << "----Average Transaction Latency Per PC Value " << statsLog.pcOccurrence.size() << "----" << endl;
-	for (std::map<PHYSICAL_ADDRESS, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); currentValue++)
+	for (std::map<PhysicalAddress, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); currentValue++)
 	{
 		os << std::hex << (*currentValue).first << " " << std::noshowpoint << (float)(*currentValue).second.getAccumulatedLatency() / (float)(*currentValue).second.getCount() << " " << std::dec << (*currentValue).second.getCount() << endl;
 	}
@@ -253,7 +253,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	//Stats::Database::stat_list_t::iterator end = Stats::Database::stats().end();
 	std::list<Info *>::const_iterator end = Stats::statsList().end();
 	
-	for (;i != end;++i) 
+	for (;i != end;++i)
 	{
 		Info *info = *i;
 		if (info->name.find("ipc_total") != string::npos)
@@ -281,7 +281,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			(info->name.find("l2.overall_mshr_hits") != string::npos) ||
 			(info->name.find("l2.overall_mshr_misses") != string::npos) ||
 			(info->name.find("l2.overall_mshr_miss_latency") != string::npos) ||
-			(info->name.find("l2.overall_miss_latency") != string::npos) )
+			(info->name.find("l2.overall_miss_latency") != string::npos))
 		{
 			{
 				os << "----M5 Stat: " << info->name << " ";
@@ -322,7 +322,7 @@ void Statistics::clear()
 		bankLatencyUtilization[i] = 0;
 	pcOccurrence.clear();
 #ifdef M5
-	//async_statdump = 
+	//async_statdump =
 	async_event = async_statreset = true;	
 #endif // M5DEBUG
 }
@@ -333,13 +333,13 @@ void Statistics::clear()
 bool Statistics::operator==(const Statistics& right) const
 {
 	return (validTransactionCount == right.validTransactionCount && startNumber == right.startNumber && endNumber == right.endNumber &&
-		burstOf8Count == right.burstOf8Count && burstOf4Count == right.burstOf4Count && columnDepth == right.columnDepth && 
+		burstOf8Count == right.burstOf8Count && burstOf4Count == right.burstOf4Count && columnDepth == right.columnDepth &&
 		/// @todo restore comparisons once tr1 implementations support this
 		//commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
-		//transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution && 
+		//transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution &&
 		//channelUtilization == right.channelUtilization && rankUtilization == right.rankUtilization && bankUtilization == right.bankUtilization &&
 		channels == right.channels && ranks == right.ranks && banks == right.banks &&
 		aggregateBankUtilization == right.aggregateBankUtilization &&
-		pcOccurrence == right.pcOccurrence && workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount && 
+		pcOccurrence == right.pcOccurrence && workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount &&
 		readBytesTransferred == right.readBytesTransferred && writeBytesTransferred == right.writeBytesTransferred);
 }

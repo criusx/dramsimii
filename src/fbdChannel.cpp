@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -28,10 +28,10 @@ frameQueue(3)
 
 /// <summary>
 /// find the protocol gap between a command and current system state
-/// 
+///
 /// </summary>
 tick fbdChannel::minProtocolGap(const Command *this_c) const
-{ 
+{
 	// TODO: also consider commands issued one cycle ago which are not yet executed
 	tick min_gap = 0;
 
@@ -57,10 +57,10 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 			{
 				tRRDGap = 0;
 			}
-			else 
+			else
 			{
 				// read tail end of ras history
-				//tick *last_ras_time = currentRank.lastCommand::ACTIVATETimes.read(ras_q_count - 1); 
+				//tick *last_ras_time = currentRank.lastCommand::ACTIVATETimes.read(ras_q_count - 1);
 				const tick lastRASTime = currentRank.lastActivateTimes.back();
 				// respect the row-to-row activation delay
 				tRRDGap = (int)(lastRASTime - time) + timingSpecification.tRRD();				
@@ -79,7 +79,7 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 			else
 			{
 				// read head of ras history
-				const tick fourth_ras_time = currentRank.lastActivateTimes.back(); 
+				const tick fourth_ras_time = currentRank.lastActivateTimes.back();
 				tFAWGap = (int)(fourth_ras_time - time) + timingSpecification.tFAW();
 			}
 
@@ -138,7 +138,7 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
 			t_cas_gap = max(t_cas_gap,(int)((currentRank.getLastCASWTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
 
-			//if (rank.size() > 1) 
+			//if (rank.size() > 1)
 			//{
 			//respect most recent cas of different rank
 			//	t_cas_gap = max(t_cas_gap,(int)(other_r_last_cas_time + other_r_last_cas_length + timingSpecification.tRTRS() - time));
@@ -363,7 +363,7 @@ tick fbdChannel::nextFrameExecuteTime() const
 	return frameQueue.front()->getExecuteTime();
 }
 
-fbdFrame *fbdChannel::getNextFrame() 
+fbdFrame *fbdChannel::getNextFrame()
 {
 	assert(frameQueue.front()->getExecuteTime() == time);
 	return frameQueue.pop();
@@ -728,7 +728,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 					{
 						return temp_c;
 					}
-					else // have to follow read_write grouping considerations 
+					else // have to follow read_write grouping considerations
 					{
 						// look at the second command
 						const Command *next_c = rank[lastRankID].bank[lastBankID].read(1);	
@@ -762,7 +762,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 		break;
 
 		// keep rank id as long as possible, go round robin down a given rank
-	case BANK_ROUND_ROBIN: 
+	case BANK_ROUND_ROBIN:
 		{			
 			Transaction::TransactionType transactionType;
 

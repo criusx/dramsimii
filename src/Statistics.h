@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -37,7 +37,7 @@
 
 namespace DRAMsimII
 {
-	/// @brief stores statistics about this memory system, primarily relating to counts of transactions/commands 
+	/// @brief stores statistics about this memory system, primarily relating to counts of transactions/commands
 	class Statistics
 	{
 
@@ -67,7 +67,7 @@ namespace DRAMsimII
 
 			  bool operator==(const DelayCounter &right) const
 			  {
-				  return accumulatedLatency == right.accumulatedLatency && 
+				  return accumulatedLatency == right.accumulatedLatency &&
 					  count == right.count;
 			  }
 		};
@@ -95,8 +95,8 @@ namespace DRAMsimII
 		std::tr1::unordered_map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
 		std::tr1::unordered_map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
 		// still some bugs supporting 64-bit numbers
-		std::map<PHYSICAL_ADDRESS, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
-		std::map<PHYSICAL_ADDRESS, tick> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
+		std::map<PhysicalAddress, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
+		std::map<PhysicalAddress, tick> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
 		std::vector<unsigned> aggregateBankUtilization; ///< the bank usage per bank
 		std::vector<unsigned> bankLatencyUtilization;	///< the latency due to each bank per unit time
 
@@ -113,11 +113,11 @@ namespace DRAMsimII
 		void reportHit()
 		{
 //#pragma omp atomic
-			rowHits++; 
+			rowHits++;
 		}
 		unsigned getHitCount() const { return rowHits;}
 		void reportMiss()
-		{ 
+		{
 //#pragma omp atomic
 			rowMisses++;
 		}
@@ -133,10 +133,10 @@ namespace DRAMsimII
 		friend class boost::serialization::access;
 
 		template<class Archive>
-		void serialize( Archive & ar, const unsigned version )
+		void serialize( Archive & ar, const unsigned version)
 		{
 			ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
-				writeCount & readBytesTransferred & writeBytesTransferred & aggregateBankUtilization & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) & 
+				writeCount & readBytesTransferred & writeBytesTransferred & aggregateBankUtilization & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) &
 				const_cast<unsigned&>(banks) & aggregateBankUtilization & bankLatencyUtilization;
 				//channelUtilization & rankUtilization & bankUtilization;
 			//ar & commandDelay & commandExecution & commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;

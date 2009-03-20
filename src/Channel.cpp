@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed incomingTransaction the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -49,7 +49,7 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats):
 time(0ll),
-lastRefreshTime(-100ll),
+//lastRefreshTime(-100ll),
 lastCommandIssueTime(-100ll),
 lastRankID(0),
 timingSpecification(settings),
@@ -90,7 +90,7 @@ rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig))
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats):
 time(rhs.time),
-lastRefreshTime(rhs.lastRefreshTime),
+//lastRefreshTime(rhs.lastRefreshTime),
 lastCommandIssueTime(rhs.lastCommandIssueTime),
 lastRankID(rhs.lastRankID),
 timingSpecification(rhs.timingSpecification),
@@ -118,7 +118,7 @@ rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
 time(0),
-lastRefreshTime(0),
+//lastRefreshTime(0),
 lastCommandIssueTime(0),
 lastRankID(0),
 timingSpecification(timing),
@@ -142,7 +142,7 @@ rank(newRank)
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Channel &rhs):
 time(rhs.time),
-lastRefreshTime(rhs.lastRefreshTime),
+//lastRefreshTime(rhs.lastRefreshTime),
 lastCommandIssueTime(rhs.lastCommandIssueTime),
 lastRankID(rhs.lastRankID),
 timingSpecification(rhs.timingSpecification),
@@ -166,7 +166,7 @@ rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConf
 //////////////////////////////////////////////////////////////////////////
 /// @brief channel destructor
 /// @details need to remove all the commands in the queues before destructing the channel
-/// because some refresh commands are simultaneously in two or more queues and will be 
+/// because some refresh commands are simultaneously in two or more queues and will be
 /// duplicated in the command pool if they are not removed properly
 //////////////////////////////////////////////////////////////////////////
 Channel::~Channel()
@@ -205,36 +205,44 @@ void Channel::moveToTime(const tick endTime)
 		assert(time >= oldTime);
 
 		// has room to decode an available transaction, as many as are ready
-		int decodedCount = 0;
-		//unsigned nextToDecode = readAvailableTransaction();
-		while (checkForAvailableCommandSlots(readTransaction(true)))
-			//while (nextToDecode < UINT_MAX)
+		unsigned decodedCount = 0;
+		unsigned decodedRefreshCount = 0;
+		
+		while (Transaction *nextTransaction = getTransaction())
 		{
-			decodedCount++;
 			// actually remove it from the queue now
-			Transaction *decodedTransaction = getTransaction();
+			//Transaction *decodedTransaction = getTransaction();
+			assert(nextTransaction);
+
+			if (nextTransaction->isRefresh())
+				decodedRefreshCount++;
+			else
+				decodedCount++;
 			// then break into commands and insert into per bank command queues			
 #ifndef NDEBUG
-			bool t2cResult = 
+			bool t2cResult =
 #endif
-				transaction2commands(decodedTransaction);
-			decodedTransaction->setDecodeTime(time);
+				transaction2commands(nextTransaction);
+			nextTransaction->setDecodeTime(time);
 			// checkForAvailablecommandSlots() should not have returned true if there was not enough space
 			assert(t2cResult);
 
-			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "/" << transactionQueue.depth() << "]->[" << 
-				rank[decodedTransaction->getAddress().getRank()].bank[decodedTransaction->getAddress().getBank()].size() << "/" <<
-				rank[decodedTransaction->getAddress().getRank()].bank[decodedTransaction->getAddress().getBank()].depth() << "] " << *decodedTransaction);
+			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "/" << transactionQueue.depth() << "]->[" <<
+				rank[nextTransaction->getAddress().getRank()].bank[nextTransaction->getAddress().getBank()].size() << "/" <<
+				rank[nextTransaction->getAddress().getRank()].bank[nextTransaction->getAddress().getBank()].depth() << "] " << *nextTransaction);
 
 			//nextToDecode = readAvailableTransaction();
+			//nextTransaction = readTransaction(true);
 		}		
-		if (decodedCount > 3)
-			cerr << "decoded " << decodedCount << endl;
+#ifndef NDEBUG
+		if (decodedCount > 3 || decodedRefreshCount > 1)
+			cerr << "decoded " << decodedCount << "/" << decodedRefreshCount << endl;
+#endif
 
 		// execute commands for this time, reevaluate what the next command is since this may have changed after decoding the transaction
 		const Command *nextCommand = readNextCommand();
 
-		if (nextCommand && (earliestExecuteTime(nextCommand) <= time))
+		while (nextCommand && (earliestExecuteTime(nextCommand) <= time))
 		{
 			Command *executingCommand = getNextCommand(nextCommand);
 
@@ -242,8 +250,8 @@ void Channel::moveToTime(const tick endTime)
 
 			assert(earliestExecuteTimeLog(nextCommand) <= time);
 
-			executeCommand(executingCommand);					
-
+			executeCommand(executingCommand);	
+			
 			DEBUG_COMMAND_LOG("C " << *executingCommand);
 
 			// only get completed commands if they have finished
@@ -275,6 +283,8 @@ void Channel::moveToTime(const tick endTime)
 						finishedTransactions.push(std::pair<unsigned,tick>(origTrans, completedTransaction->getCompletionTime()));
 				}
 			}
+
+			nextCommand = readNextCommand();
 		}
 	}
 
@@ -304,7 +314,7 @@ tick Channel::nextTransactionDecodeTime() const
 {	
 	if (const Transaction *nextTrans = readTransaction(false))
 	{
-		if (checkForAvailableCommandSlots(nextTrans))
+		if (nextTrans)
 		{
 			if (nextTrans->isRefresh())
 				return nextTrans->getArrivalTime();
@@ -323,7 +333,7 @@ tick Channel::nextTransactionDecodeTime() const
 //////////////////////////////////////////////////////////////////////////
 void Channel::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outputQueue)
 {
-	while (finishedTransactions.size() > 0) 
+	while (finishedTransactions.size() > 0)
 	{
 		outputQueue.push(finishedTransactions.front());
 		finishedTransactions.pop();
@@ -380,7 +390,7 @@ void Channel::retireCommand(Command *newestCommand)
 	// transaction complete? if so, put incomingTransaction completion queue
 	// note that the host transaction should only be pointed to by a CAS command
 	// since this is when a transaction is done from the standpoint of the requester
-	if (newestCommand->getHost()) 
+	if (newestCommand->getHost())
 	{
 		if (!newestCommand->isRefresh())
 			assert(newestCommand->getEnqueueTime() >= newestCommand->getHost()->getEnqueueTime() && newestCommand->getCompletionTime() <= newestCommand->getHost()->getCompletionTime());
@@ -395,6 +405,8 @@ void Channel::retireCommand(Command *newestCommand)
 	}
 
 	assert(!newestCommand->getHost());
+
+
 
 	while (!historyQueue.push(newestCommand))
 	{
@@ -555,7 +567,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 		double CKE_LO_ACT = 0.01F;
 
 		// calculate PsysACT-STBY
-		PsysACT_STBY += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * 
+		PsysACT_STBY += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() *
 			powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive * (1.0F - CKE_LO_ACT);
 
 		PsysACTSTBYArray.push_back(PsysACT_STBY);
@@ -591,20 +603,20 @@ void Channel::doPowerCalculation(const tick systemTime)
 		// calculate PdsWR
 		double WRschPct = k->getWriteCycles() / (double)(time - powerModel.getLastCalculation());
 
-		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct; 
+		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct;
 
 		k->resetPrechargeTime(time);
 		k->resetCycleCounts();
 	}
 
-	powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) << 
+	powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) <<
 		PsysACT_STBY << "} mW" << endl;
 	//Pre(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
 
-	powerOutStream << "-Psys(ACT) ch[" << channelID << "] {"<< setprecision(5) << 
+	powerOutStream << "-Psys(ACT) ch[" << channelID << "] {"<< setprecision(5) <<
 		PsysACT << "} mW tRRD[" << tRRDsch << "]" << endl;
 
-	powerOutStream << "-Psys(PRE_STBY) ch[" << channelID << "] {" << setprecision(5) << 
+	powerOutStream << "-Psys(PRE_STBY) ch[" << channelID << "] {" << setprecision(5) <<
 		PsysPRE_STBY << "} mW" << endl;
 	//Pre(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
 
@@ -638,12 +650,12 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 		float percentActive = 1.0F - (double)(k->getTotalPrechargeTime())/(double)time;
 
-		powerOutStream << "+Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] {" << setprecision(5) << 
+		powerOutStream << "+Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] {" << setprecision(5) <<
 			powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive << "} mW P(" << k->getTotalPrechargeTime() << "/" << time  << ")" << endl;
 
 		float tRRDsch = ((double)time) / perRankRASCount;
 
-		powerOutStream << "+Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] {"<< setprecision(5) << 
+		powerOutStream << "+Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] {"<< setprecision(5) <<
 			powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT() << "} mW" << endl;
 
 		PsysACTTotal += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
@@ -654,13 +666,13 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 	//cerr << RDschPct * 100 << "%\t" << WRschPct * 100 << "%"<< endl;
 
-	powerOutStream << "+Psys(ACT) ch[" << channelID << "] " << setprecision(5) << 
+	powerOutStream << "+Psys(ACT) ch[" << channelID << "] " << setprecision(5) <<
 		PsysACTTotal << " mW" << endl;
 
-	powerOutStream << "+Psys(RD) ch[" << channelID << "] {" << setprecision(5) << 
+	powerOutStream << "+Psys(RD) ch[" << channelID << "] {" << setprecision(5) <<
 		powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * (powerModel.getIDD4R() - powerModel.getIDD3N()) * RDschPct << "} mW" << endl;
 
-	powerOutStream << "+Psys(WR) ch[" << channelID << "] {" << setprecision(5) << 
+	powerOutStream << "+Psys(WR) ch[" << channelID << "] {" << setprecision(5) <<
 		powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * (powerModel.getIDD4W() - powerModel.getIDD3N()) * WRschPct << "} mW" << endl;
 #endif
 	powerModel.setLastCalculation(time);
@@ -670,7 +682,7 @@ void Channel::doPowerCalculation(const tick systemTime)
 /// @brief sends power calculations off to a remote server, should be run incomingTransaction a separate thread
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-bool Channel::sendPower(double PsysRD, double PsysWR, vector<int> rankArray, vector<double> PsysACTSTBYArray, vector<double> PsysACTArray, const tick currentTime) const 
+bool Channel::sendPower(double PsysRD, double PsysWR, vector<int> rankArray, vector<double> PsysACTSTBYArray, vector<double> PsysACTArray, const tick currentTime) const
 {
 	DRAMsimWSSoapHttp service;
 	_ns2__submitEpochResultElement submit;
@@ -712,10 +724,9 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 {
 	const unsigned delay = bufferDelay ? timingSpecification.tBufferDelay() : 0;
 
-	//const Transaction *nextTransaction = transactionQueue.front(); 
 	unsigned val = readAvailableTransaction();
 
-	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : transactionQueue.front(); 
+	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : NULL;
 
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{
@@ -735,8 +746,8 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
 		// if there is a normal transaction ready to go, it's ready to go and the refresh command isn't starving
-		if (nextTransaction && 
-			((time < nextRefreshTime + systemConfig.getSeniorityAgeLimit()) && 
+		if (nextTransaction &&
+			((time < nextRefreshTime + systemConfig.getSeniorityAgeLimit()) &&
 			(time >= nextTransaction->getEnqueueTime() + delay)))
 		{
 			//M5_TIMING_LOG("resetting: " << time << " " << nextTransaction->getEnqueueTime() << " " << delay);
@@ -746,7 +757,10 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 		// either there is no transaction or the refresh command will starve
 		else if (time >= nextRefreshTime)
 		{
-			return readNextRefresh();
+			if (checkForAvailableCommandSlots(readNextRefresh()))
+				return readNextRefresh();
+			else
+				return NULL;
 		}
 		else
 		{
@@ -768,7 +782,7 @@ unsigned Channel::readAvailableTransaction() const
 	for (unsigned i = 0; i < limit; i++)
 	{
 		// if it's ready to decode
-		if ((transactionQueue[i]->getEnqueueTime() + timingSpecification.tBufferDelay()) &&
+		if ((transactionQueue[i]->getEnqueueTime() + timingSpecification.tBufferDelay() <= time) &&
 			checkForAvailableCommandSlots(transactionQueue[i]))
 		{
 			bool conflict = false;
@@ -810,7 +824,7 @@ Transaction *Channel::getAvailableTransaction(unsigned useThis)
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief get the next transaction, whether a refresh transaction or a normal R/W transaction
-/// @detail gets the next transaction for this channel and removes it
+/// @detail gets the next transaction for this channel and removes it, always returns a transaction that is able to decode
 /// @return the next transaction for this channel
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
@@ -818,7 +832,7 @@ Transaction *Channel::getTransaction()
 {
 	unsigned val = readAvailableTransaction();
 
-	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : transactionQueue.front(); 
+	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : NULL;
 
 	// no refresh transactions, just see if normal transactions are decoded
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
@@ -828,8 +842,7 @@ Transaction *Channel::getTransaction()
 			M5_TIMING_LOG("resetting: " << time << " " << nextTransaction->getEnqueueTime() << " " << timingSpecification.tBufferDelay());			
 			return NULL; // not enough time has passed
 		}
-		//return transactionQueue.pop();
-		return getAvailableTransaction(val);
+		return transactionQueue.remove(val);
 	}
 	else
 	{
@@ -837,8 +850,8 @@ Transaction *Channel::getTransaction()
 
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
 		// if there is a normal transaction ready to go, it's ready to go and the refresh command isn't starving
-		if (nextTransaction && 
-			((time < nextRefreshTime + systemConfig.getSeniorityAgeLimit()) && 
+		if (nextTransaction &&
+			((time < nextRefreshTime + systemConfig.getSeniorityAgeLimit()) &&
 			(time >= nextTransaction->getEnqueueTime() + timingSpecification.tBufferDelay())))
 		{
 			//M5_TIMING_LOG("resetting: " << time << " " << nextTransaction->getEnqueueTime() << " " << delay);
@@ -846,9 +859,12 @@ Transaction *Channel::getTransaction()
 			//return transactionQueue.pop();
 			return getAvailableTransaction(val);
 		}
-		else if (time >= nextRefreshTime)
+		else if ((time >= nextRefreshTime) && (checkForAvailableCommandSlots(createNextRefresh())))
 		{
-			return createNextRefresh();
+			if (checkForAvailableCommandSlots(readNextRefresh()))
+				return createNextRefresh();
+			else
+				return NULL;
 		}
 		else
 		{
@@ -1134,7 +1150,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 /// @param incomingTransaction the transaction which is divided up
 /// @return true if the transaction was able to be divided up and put into per bank queues
 //////////////////////////////////////////////////////////////////////
-bool Channel::transaction2commands(Transaction *incomingTransaction) 
+bool Channel::transaction2commands(Transaction *incomingTransaction)
 {
 	if (incomingTransaction == NULL)
 	{
@@ -1172,7 +1188,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
 #ifndef NDEBUG
-				bool result = 
+				bool result =
 #endif
 					currentBank->push(refreshCommand);
 				assert (result);
@@ -1233,7 +1249,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
 			{
 #ifndef NDEBUG
-				bool result = 
+				bool result =
 #endif // NDEBUG
 					currentBank->push(refreshCommand);
 				assert (result);
@@ -1249,7 +1265,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// then it can be piggybacked on an existing R, C, P or R, C+P chain
 		// also make sure not to starve		
 		// R C1 P => R C1 C2 P
-		// R C1+P => R C1 C2+P 
+		// R C1+P => R C1 C2+P
 		// TODO: look for the last non-refresh command in the per-bank queue
 		else
 		{
@@ -1324,7 +1340,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 
 					Command *newCommand = new Command(*incomingTransaction, tempAddr, time, systemConfig.isPostedCAS(), false, timingSpecification.tBurst(), Command::PRECHARGE);
 #ifndef NDEBUG
-					bool result = 
+					bool result =
 #endif // NDEBUG
 						i->push(newCommand);
 					assert(result);
@@ -1334,7 +1350,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				}
 
 #ifndef NDEBUG
-				bool result = 
+				bool result =
 #endif // NDEBUG
 					i->push(refreshCommand);
 				assert (result);
@@ -1354,7 +1370,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				incomingTransaction->setDecodeTime(time);
 				return true;
 			}
-			else 
+			else
 			{
 				// first, the precharge command, if necessary
 				if (((destinationBank.isEmpty() && destinationBank.isActivated()) || (!destinationBank.isEmpty() && !destinationBank.back()->isRefresh())))
@@ -1366,7 +1382,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					assert(!destinationBank.back() || !destinationBank.back()->isRefresh());
 					assert(!destinationBank.back() || !destinationBank.back()->isPrecharge());
 #ifndef NDEBUG
-					bool result = 
+					bool result =
 #endif // NDEBUG
 						destinationBank.push(new Command(*incomingTransaction,time,systemConfig.isPostedCAS(),false, timingSpecification.tBurst(), Command::PRECHARGE));
 					assert(result);
@@ -1457,7 +1473,7 @@ Command *Channel::getNextCommand(const Command *useThisCommand)
 			// command is being removed, clear the cache
 			assert(tempCommand && tempCommand == useThisCommand);
 			if ((systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE_AGGRESSIVE) &&
-				(tempCommand->isReadOrWrite() && 
+				(tempCommand->isReadOrWrite() &&
 				!currentBank.isEmpty() && currentBank.isHighUtilization() &&
 				currentBank.front()->isPrecharge()))
 			{
@@ -1783,13 +1799,13 @@ const Command *Channel::readNextCommand() const
 				// refresh commands are considered elsewhere
 				if (potentialCommand &&
 					!potentialCommand->isRefresh() &&
-					(allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD() )))
+					(allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD())))
 				{
 					if (!systemConfig.isReadWriteGrouping())
 					{
 						return potentialCommand;
 					}
-					else // have to follow read/write grouping considerations 
+					else // have to follow read/write grouping considerations
 					{
 						// look at the second command
 						const Command *followingCommand = rank[currentRankID].bank[currentBankID].read(1);	
@@ -1810,7 +1826,7 @@ const Command *Channel::readNextCommand() const
 		break;
 
 		// keep rank id as long as possible, go round robin down a given rank
-	case BANK_ROUND_ROBIN: 
+	case BANK_ROUND_ROBIN:
 		{			
 			Transaction::TransactionType transactionType;
 
@@ -1903,7 +1919,7 @@ const Command *Channel::readNextCommand() const
 
 				const Command *potentialCommand = rank[currentRankID].bank[currentBankID].front();
 
-				if (potentialCommand && !potentialCommand->isRefresh() && (allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD() )))
+				if (potentialCommand && !potentialCommand->isRefresh() && (allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD())))
 				{	
 					if(!systemConfig.isReadWriteGrouping())
 					{
@@ -1957,7 +1973,7 @@ const Command *Channel::readNextCommand() const
 /// @brief Updates the channel time to what it would be had this command been executed
 /// @details Updates the rank and bank records of the most recent RAS, CAS, etc. times
 /// Enqueues RAS times to allow t_faw to be determined later
-/// Updates rank and bank records of CAS, RAS lengths for later calculations in 
+/// Updates rank and bank records of CAS, RAS lengths for later calculations in
 /// min_protocol_gap()
 /// @param the command to execute at this time
 /// @author Joe Gross
@@ -1997,7 +2013,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case Command::READ:
 
-		currentRank.issueCAS(time, thisCommand);
+		//currentRank.issueCAS(time, thisCommand);
 
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
@@ -2005,10 +2021,18 @@ void Channel::executeCommand(Command *thisCommand)
 		thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
+		/// @todo let each rank figure out if the command is to it or not by combining issueCAS and issueCASother
 		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
 		{
 			if (&currentRank != &*i)
-				i->setOtherLastCAS(time + timingSpecification.tAL(),thisCommand->getLength());
+			{
+				//i->setOtherLastCAS(time + timingSpecification.tAL(),thisCommand->getLength());
+				i->issueCASother(time, thisCommand);
+			}
+			else
+			{
+				i->issueCAS(time, thisCommand);
+			}
 		}
 		break;
 
@@ -2021,18 +2045,26 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case Command::WRITE:
 
-		currentRank.issueCASW(time, thisCommand);
+		//currentRank.issueCASW(time, thisCommand);
 
 		// for the CAS write command
 		//thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
-		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() );
+		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst());
 		//thisCommand->getHost()->setCompletionTime(time);
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
+		/// @todo let each rank figure out if the command is to it or not by combining issueCAS and issueCASother
 		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
 		{
 			if (&currentRank != &*i)
-				i->setOtherLastCASW(time + timingSpecification.tAL(),thisCommand->getLength());
+			{
+				//i->setOtherLastCASW(time + timingSpecification.tAL(),thisCommand->getLength());
+				i->issueCASWother(time, thisCommand);
+			}
+			else
+			{
+				i->issueCASW(time,thisCommand);
+			}
 		}
 		break;
 
@@ -2096,7 +2128,7 @@ void Channel::executeCommand(Command *thisCommand)
 /// find the protocol gap between a command and current system state
 /// </summary>
 tick Channel::minProtocolGap(const Command *currentCommand) const
-{ 
+{
 	tick min_gap = 0;
 
 	const unsigned currentRankID = currentCommand->getAddress().getRank();
@@ -2178,7 +2210,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
 			t_cas_gap = max((tick)t_cas_gap,((currentRank.getLastCASWTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
 
-			if (rank.size() > 1) 
+			if (rank.size() > 1)
 			{
 				//respect most recent cas of different rank
 				t_cas_gap = max((tick)t_cas_gap, (otherRankLastCASTime - time) + otherRankLastCASLength + timingSpecification.tRTRS());
@@ -2258,10 +2290,10 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			int t_ras_gap = (currentBank.getLastRASTime() - time) + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			int t_cas_gap = max(0,((int)(currentBank.getLastCASTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
+			int t_cas_gap = max(0,((int)(currentBank.getLastCASTime() - time) + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
 
 			// respect t_casw of same bank
-			t_cas_gap = max((tick)t_cas_gap,((currentBank.getLastCASWTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
+			t_cas_gap = max((tick)t_cas_gap,((currentBank.getLastCASWTime() - time) + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
 
 			min_gap = max(t_ras_gap,t_cas_gap);
 		}
@@ -2304,7 +2336,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 /// @details Looks at all of the timing parameters and decides when the this command may soonest execute
 //////////////////////////////////////////////////////////////////////////
 tick Channel::earliestExecuteTime(const Command *currentCommand) const
-{ 
+{
 	tick nextTime;	
 
 	const Rank &currentRank = rank[currentCommand->getAddress().getRank()];
@@ -2320,10 +2352,8 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			// respect the row cycle time limitation
 			tick tRCLimit = currentBank.getLastRASTime() + timingSpecification.tRC();
 
-			const tick lastRASTime = currentRank.lastActivateTimes.front(); 
-
 			// respect the row-to-row activation delay for different banks within a rank
-			tick tRRDLimit = lastRASTime + timingSpecification.tRRD();				
+			tick tRRDLimit = currentRank.lastActivateTimes.front() + timingSpecification.tRRD();				
 
 			// respect tRP of same bank
 			tick tRPLimit = currentBank.getLastPrechargeTime() + timingSpecification.tRP();
@@ -2367,7 +2397,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
 			tCASLimit = max(tCASLimit,currentRank.getLastCASWTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR());
 
-			//if (rank.size() > 1) 
+			//if (rank.size() > 1)
 			{
 				//respect most recent CAS of different rank
 				tCASLimit = max(tCASLimit, currentRank.getOtherLastCASTime() + currentRank.getOtherLastCASLength() + timingSpecification.tRTRS());
@@ -2399,7 +2429,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-			tick tCASLimit = max(time,currentRank.getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
+			tick tCASLimit = currentRank.getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
 
 			// respect last cas to different ranks
 			tCASLimit = max(tCASLimit,currentRank.getOtherLastCASTime() + timingSpecification.tCAS() + currentRank.getOtherLastCASLength() + timingSpecification.tRTRS() - timingSpecification.tCWD());
@@ -2423,15 +2453,14 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			tick tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			// TODO: do not need tAL for these
 			//tick tCASLimit = max(time,currentBank.getLastCASTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
 			// tAL is accounted for by measuring the execution time internal to the DRAM
-			tick tCASLimit = max(time,currentBank.getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
+			tick tCASLimit = currentBank.getLastCASTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD());
 
 			// respect t_casw of same bank
 			//tCASLimit = max(tCASLimit,currentBank.getLastCASWTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 			// tAL is accounted for by measuring the execution time internal to the DRAM
-			tCASLimit = max(tCASLimit,currentBank.getLastCASWTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
+			tCASLimit = max(tCASLimit,currentBank.getLastCASWTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 
 			nextTime = max(tRASLimit,tCASLimit);
 		}
@@ -2460,6 +2489,13 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 	//return max(nextTime, time + timingSpecification.tCMD());
 	//return max(nextTime, max(time, lastCommandIssueTime + timingSpecification.tCMD()));
+	tick actualNext = max(nextTime, lastCommandIssueTime + timingSpecification.tCMD());
+	tick predictedNext = max(currentRank.next(currentCommand->getCommandType()), 
+		max(currentBank.next(currentCommand->getCommandType()), lastCommandIssueTime + timingSpecification.tCMD()));
+	if (time > 100)
+		if (actualNext != predictedNext)
+			assert(actualNext == predictedNext);
+		
 	return max(nextTime, max(time , lastCommandIssueTime + timingSpecification.tCMD()));
 }
 
@@ -2470,7 +2506,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 /// @details Looks at all of the timing parameters and decides when the this command may soonest execute
 //////////////////////////////////////////////////////////////////////////
 tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
-{ 
+{
 	static unsigned tRCcount, tRRDcount, tRPcount, tFAWcount, tRFCcount;
 	static unsigned tRCDcount, tCAScount, tCASWcount, tCASotherCount, tCASWotherCount;
 	static unsigned tRAScount;
@@ -2492,7 +2528,7 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 			// respect the row cycle time limitation
 			tick tRCLimit = currentBank.getLastRASTime() + timingSpecification.tRC();
 
-			const tick lastRASTime = currentRank.lastActivateTimes.front(); 
+			const tick lastRASTime = currentRank.lastActivateTimes.front();
 
 			// respect the row-to-row activation delay for different banks within a rank
 			tick tRRDLimit = lastRASTime + timingSpecification.tRRD();				
@@ -2677,7 +2713,7 @@ Channel& Channel::operator =(const Channel &rhs)
 	//Settings settings;
 	//::new(this)DRAMsimII::Channel(settings,rhs.systemConfig,rhs.statistics, rhs.powerModel, rhs.rank, rhs.timingSpecification);
 	time = rhs.time;
-	lastRefreshTime = rhs.lastRefreshTime;
+	//lastRefreshTime = rhs.lastRefreshTime;
 	lastCommandIssueTime = rhs.lastCommandIssueTime;
 	lastRankID = rhs.lastRankID;
 	//timingSpecification = rhs.timingSpecification;
@@ -2702,7 +2738,7 @@ Channel& Channel::operator =(const Channel &rhs)
 //////////////////////////////////////////////////////////////////////////
 bool Channel::operator ==(const Channel& rhs) const
 {
-	return (time == rhs.time && lastRefreshTime == rhs.lastRefreshTime && lastCommandIssueTime == rhs.lastCommandIssueTime && lastRankID == rhs.lastRankID &&
+	return (time == rhs.time /*&& lastRefreshTime == rhs.lastRefreshTime*/ && lastCommandIssueTime == rhs.lastCommandIssueTime && lastRankID == rhs.lastRankID &&
 		timingSpecification == rhs.timingSpecification && transactionQueue == rhs.transactionQueue && historyQueue == rhs.historyQueue &&
 		completionQueue == rhs.completionQueue && systemConfig == rhs.systemConfig && statistics == rhs.statistics && powerModel == rhs.powerModel &&
 		algorithm == rhs.algorithm && channelID == rhs.channelID && rank == rhs.rank && refreshCounter == rhs.refreshCounter);

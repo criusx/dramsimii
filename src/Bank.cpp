@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -37,6 +37,11 @@ lastPrechargeTime(0),
 lastRefreshAllTime(-100),
 lastCASLength(8),
 lastCASWLength(8),
+nextActivateTime(0),
+nextReadTime(0),
+nextWriteTime(0),
+nextPrechargeTime(0),
+nextRefreshTime(0),
 openRowID(0),
 activated(settings.rowBufferManagementPolicy == OPEN_PAGE), // close page starts with RAS, open page starts with Pre
 RASCount(0),
@@ -50,25 +55,30 @@ totalCASWCount(0)
 //////////////////////////////////////////////////////////////////////////
 /// @brief copy constructor with timing spec and sysconfig information
 //////////////////////////////////////////////////////////////////////////
-Bank::Bank(const Bank &b, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
+Bank::Bank(const Bank &rhs, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
 systemConfig(systemConfigVal),
-perBankQueue(b.perBankQueue),
-lastRASTime(b.lastRASTime),
-lastCASTime(b.lastCASTime),
-lastCASWTime(b.lastCASWTime),
-lastPrechargeTime(b.lastPrechargeTime),
-lastRefreshAllTime(b.lastRefreshAllTime),
-lastCASLength(b.lastCASLength),
-lastCASWLength(b.lastCASWLength),
-openRowID(b.openRowID),
-activated(b.activated),
-RASCount(b.RASCount),
-totalRASCount(b.totalRASCount),
-CASCount(b.CASCount),
-totalCASCount(b.totalCASCount),
-CASWCount(b.CASWCount),
-totalCASWCount(b.totalCASWCount)
+perBankQueue(rhs.perBankQueue),
+lastRASTime(rhs.lastRASTime),
+lastCASTime(rhs.lastCASTime),
+lastCASWTime(rhs.lastCASWTime),
+lastPrechargeTime(rhs.lastPrechargeTime),
+lastRefreshAllTime(rhs.lastRefreshAllTime),
+lastCASLength(rhs.lastCASLength),
+lastCASWLength(rhs.lastCASWLength),
+nextActivateTime(rhs.nextActivateTime),
+nextReadTime(rhs.nextReadTime),
+nextWriteTime(rhs.nextWriteTime),
+nextPrechargeTime(rhs.nextPrechargeTime),
+nextRefreshTime(rhs.nextRefreshTime),
+openRowID(rhs.openRowID),
+activated(rhs.activated),
+RASCount(rhs.RASCount),
+totalRASCount(rhs.totalRASCount),
+CASCount(rhs.CASCount),
+totalCASCount(rhs.totalCASCount),
+CASWCount(rhs.CASWCount),
+totalCASWCount(rhs.totalCASWCount)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -85,6 +95,11 @@ lastPrechargeTime(rhs.lastPrechargeTime),
 lastRefreshAllTime(rhs.lastRefreshAllTime),
 lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
+nextActivateTime(rhs.nextActivateTime),
+nextReadTime(rhs.nextReadTime),
+nextWriteTime(rhs.nextWriteTime),
+nextPrechargeTime(rhs.nextPrechargeTime),
+nextRefreshTime(rhs.nextRefreshTime),
 openRowID(rhs.openRowID),
 activated(rhs.activated),
 RASCount(rhs.RASCount),
@@ -96,7 +111,7 @@ totalCASWCount(rhs.totalCASWCount)
 {}
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief deserialization constructor 
+/// @brief deserialization constructor
 //////////////////////////////////////////////////////////////////////////
 Bank::Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
 timing(timingVal),
@@ -109,6 +124,11 @@ lastPrechargeTime(0),
 lastRefreshAllTime(0),
 lastCASLength(0),
 lastCASWLength(0),
+nextActivateTime(0),
+nextReadTime(0),
+nextWriteTime(0),
+nextPrechargeTime(0),
+nextRefreshTime(0),
 openRowID(0),
 activated(0),
 RASCount(0),
@@ -133,6 +153,12 @@ void Bank::issueRAS(const tick currentTime, const Command *currentCommand)
 	lastRASTime = currentTime;
 	openRowID = currentCommand->getAddress().getRow();
 	RASCount++;
+
+	// calculate when the next few commands can happen
+	nextActivateTime = max(nextActivateTime, currentTime + timing.tRC());
+	nextReadTime = max(nextReadTime, currentTime + timing.tRCD() - timing.tAL());
+	nextWriteTime = max(nextWriteTime, currentTime + timing.tRCD() - timing.tAL());
+	nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tRAS());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -145,15 +171,15 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 	case Command::READ_AND_PRECHARGE:
 		//lastPrechargeTime = max(currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + timing.tRTP(), lastRASTime + timing.tRAS());
 		// see figure 11.28 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
-		lastPrechargeTime = max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), lastRASTime + timing.tRAS());
+		lastPrechargeTime = max(lastPrechargeTime, max(currentTime + (timing.tAL() - timing.tCCD() + timing.tBurst() + timing.tRTP()), lastRASTime + timing.tRAS()));
 		break;
 	case Command::WRITE_AND_PRECHARGE:
 		// see figure 11.29 in Memory Systems: Cache, DRAM, Disk by Bruce Jacob, et al.
 		// obeys minimum timing, but also supports tRAS lockout
-		lastPrechargeTime = max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), lastRASTime + timing.tRAS());
+		lastPrechargeTime = max(lastPrechargeTime, max(currentTime + (timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR()), lastRASTime + timing.tRAS()));
 		break;
 	case Command::PRECHARGE:
-		lastPrechargeTime = currentTime;
+		lastPrechargeTime = max(lastPrechargeTime, currentTime);
 		break;
 	default:
 		cerr << "Unhandled CAS variant" << endl;
@@ -164,6 +190,9 @@ void Bank::issuePRE(const tick currentTime, const Command *currentCommand)
 	// technically, you can pre after pre, but there's no good reason for this
 	assert(activated == true);
 	activated = false;
+
+	// calculate when the next few commands can happen
+	nextActivateTime = max(nextActivateTime, lastPrechargeTime + timing.tRP());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -174,11 +203,17 @@ void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 	//assert(activated);
 	assert(openRowID == currentCommand->getAddress().getRow());
 	
-	lastCASTime = currentTime + timing.tAL();
+	//lastCASTime = currentTime + timing.tAL();
+	lastCASTime = currentTime;
 
 	lastCASLength = currentCommand->getLength();
 	
 	CASCount++;
+
+	// calculate when the next few commands can happen
+	/// @todo which is correct?
+	//nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tBurst() + timing.tRTP() - timing.tCCD());
+	nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tCAS() + timing.tBurst() + max(0,timing.tRTP() - timing.tCMD()));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -189,20 +224,58 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 	//assert(activated);
 	assert(openRowID == currentCommand->getAddress().getRow());
 
-	lastCASWTime = currentTime + timing.tAL();
+	//lastCASWTime = currentTime + timing.tAL();
+	lastCASWTime = currentTime;
 
 	lastCASWLength = currentCommand->getLength();
 
 	CASWCount++;
+
+	// calculate when the next few commands can happen
+	nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR());
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief issue a refresh command to this bank
 //////////////////////////////////////////////////////////////////////////
-void Bank::issueREF(const tick currentTime, const Command *currentCommand)
+void Bank::issueREF(const tick currentTime)
 {
 	assert(!activated);
 	lastRefreshAllTime = currentTime;
+
+	// calculate when the next few commands can happen
+
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief returns the next time this command type may be issued
+//////////////////////////////////////////////////////////////////////////
+tick Bank::next(Command::CommandType nextCommandType) const
+{
+	switch (nextCommandType)
+	{
+	case Command::ACTIVATE:
+		return nextActivateTime;
+		break;
+	case Command::READ:
+	case Command::READ_AND_PRECHARGE:
+		return nextReadTime;
+		break;
+	case Command::WRITE:
+	case Command::WRITE_AND_PRECHARGE:
+		return nextWriteTime;
+		break;
+	case Command::PRECHARGE:
+		return nextPrechargeTime;
+		break;
+	case Command::REFRESH_ALL:
+		return nextRefreshTime;
+		break;
+	default:
+		break;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -244,10 +317,10 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-			else if ((currentCommand->isReadOrWrite()) && (currentCommand->getAddress().getRow() == value->getAddress().getRow())) 
+			else if ((currentCommand->isReadOrWrite()) && (currentCommand->getAddress().getRow() == value->getAddress().getRow()))
 			{
 #ifndef NDEBUG
-				bool result = 
+				bool result =
 #endif
 					perBankQueue.insert(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()), currentIndex + 1);
 				assert(result);
@@ -266,7 +339,7 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 		if (activated && openRowID == value->getAddress().getRow())
 		{
 #ifndef NDEBUG
-			bool result = 
+			bool result =
 #endif
 				perBankQueue.push_front(new Command(*value, time, systemConfig.isPostedCAS(), false, timing.tBurst()));
 			assert(result);
@@ -307,7 +380,7 @@ bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 				return false;
 			}
 			// channel, rank, bank, row all match, insert just before this precharge command
-			else if (currentCommand->isReadOrWrite() && (currentCommand->getAddress().getRow() == value->getAddress().getRow())) 
+			else if (currentCommand->isReadOrWrite() && (currentCommand->getAddress().getRow() == value->getAddress().getRow()))
 			{
 				return true;
 			}
@@ -343,7 +416,7 @@ bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tic
 	for (int index = perBankQueue.size() - 1; index >= 0; --index)
 	{	
 		// see if there is an available command to piggyback on
-		if (perBankQueue[index]->isReadOrWrite() && 
+		if (perBankQueue[index]->isReadOrWrite() &&
 			perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddress().getRow())
 		{
 			if (systemConfig.isAutoPrecharge())
@@ -430,8 +503,8 @@ Bank& Bank::operator =(const Bank& rhs)
 bool Bank::operator==(const Bank& rhs) const
 {
 	return (timing == rhs.timing && systemConfig == rhs.systemConfig && perBankQueue == rhs.perBankQueue && lastRASTime == rhs.lastRASTime &&
-		lastCASTime == rhs.lastCASTime && lastCASWTime == rhs.lastCASWTime && lastPrechargeTime == rhs.lastPrechargeTime && 
-		lastRefreshAllTime == rhs.lastRefreshAllTime && lastCASLength == rhs.lastCASLength && lastCASWLength == rhs.lastCASWLength && 
+		lastCASTime == rhs.lastCASTime && lastCASWTime == rhs.lastCASWTime && lastPrechargeTime == rhs.lastPrechargeTime &&
+		lastRefreshAllTime == rhs.lastRefreshAllTime && lastCASLength == rhs.lastCASLength && lastCASWLength == rhs.lastCASWLength &&
 		openRowID == rhs.openRowID && activated == rhs.activated && RASCount == rhs.RASCount && totalRASCount == rhs.totalRASCount &&
 		CASCount == rhs.CASCount && totalCASCount == rhs.totalCASCount && CASWCount == rhs.CASWCount && totalCASWCount == rhs.totalCASWCount);
 }

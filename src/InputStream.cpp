@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -136,7 +136,7 @@ arrivalGenerator(randomNumberGenerator, gaussianDistribution)
 			{
 				traceFile.push(file_source(inFileWithPath.string().c_str()));
 			}
-			
+
 			if (!traceFile.is_complete())
 			{
 				cerr << "Unable to open trace file \"" << settings.inFile << "\"" << endl;
@@ -261,9 +261,9 @@ float InputStream::Poisson(float xm) const
 	static float sq, alxm, g, oldm = -1.0F;
 	float em, t, y;
 
-	if (xm < 12.0) 
+	if (xm < 12.0)
 	{
-		if (!AlmostEqual<float>(xm,oldm,COMP_ACC)) 
+		if (!AlmostEqual<float>(xm,oldm))
 		{
 			oldm = xm;
 			g = exp(-xm);
@@ -278,7 +278,7 @@ float InputStream::Poisson(float xm) const
 	}
 	else
 	{
-		if (!AlmostEqual<float>(xm,oldm,COMP_ACC))
+		if (!AlmostEqual<float>(xm,oldm))
 		{
 			oldm = xm;
 			sq = sqrt(2.0 * xm);
@@ -304,7 +304,7 @@ float InputStream::Poisson(float xm) const
 
 float InputStream::gammaLn(const float xx) const
 {
-	static float coefficients[6] = 
+	static float coefficients[6] =
 	{76.18009172947146F, -86.50532032941677F,
 	24.01409824083091F, -1.231739572450155F,
 	0.1208650973866179e-2F, -0.5395239384953e-5F};
@@ -334,14 +334,14 @@ float InputStream::boxMuller(const float m, const float s) const
 	else
 	{
 		float x1, x2;
-		do 
+		do
 		{
 			x1 = 2.0F * rngGenerator() - 1.0F;
 			x2 = 2.0F * rngGenerator() - 1.0F;
 			w = x1 * x1 + x2 * x2;
-		} while ( w >= 1.0 );
+		} while ( w >= 1.0);
 
-		w = sqrt( (-2.0 * log( w ) ) / w );
+		w = sqrt( (-2.0 * log( w)) / w);
 		y1 = x1 * w;
 		y2 = x2 * w;
 		use_last = true;
@@ -419,11 +419,11 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 			}
 			thisEvent.address.setPhysicalAddress(address);
 			thisEvent.timestamp = timestamp;
-		} 
+		}
 		break;
 	case MASE_TRACE:
 		{
-			PHYSICAL_ADDRESS tempPA;
+			PhysicalAddress tempPA;
 			traceFile >> hex >> tempPA >> input >> dec >> thisEvent.timestamp;
 			thisEvent.address.setPhysicalAddress(tempPA);
 
@@ -431,7 +431,7 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 
 			//thisEvent.timestamp /= cpuToMemoryRatio;
 			thisEvent.timestamp *= cpuToMemoryRatio;
-			if(!traceFile.good()) /// found starting Hex address 
+			if(!traceFile.good()) /// found starting Hex address
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;
 				return false;
@@ -467,7 +467,7 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 
 			thisEvent.address.setAddress(channel,rank,bank,row,column);
 
-			if(!traceFile.good()) /// found starting Hex address 
+			if(!traceFile.good()) /// found starting Hex address
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;
 				return false;
@@ -545,7 +545,7 @@ Transaction *InputStream::getNextIncomingTransaction()
 			{
 				/* EOF reached */
 				return NULL;
-			} 
+			}
 			else
 			{
 				Transaction *tempTransaction = new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address, 0, 0);
@@ -594,11 +594,11 @@ double InputStream::ascii2multiplier(const string &input) const
 bool InputStream::operator==(const InputStream& rhs) const
 {
 	return type == rhs.type && systemConfig == rhs.systemConfig && channel == rhs.channel &&
-		AlmostEqual<float>(channelLocality,rhs.channelLocality,COMP_ACC) && AlmostEqual<float>(rankLocality,rhs.rankLocality,COMP_ACC) &&
-		AlmostEqual<float>(bankLocality,rhs.bankLocality,COMP_ACC) && time == rhs.time && AlmostEqual<float>(rowLocality,rhs.rowLocality,COMP_ACC) &&
-		AlmostEqual<float>(readPercentage,rhs.readPercentage,COMP_ACC) && interarrivalDistributionModel == rhs.interarrivalDistributionModel &&
-		AlmostEqual<float>(shortBurstRatio, rhs.shortBurstRatio,COMP_ACC) && AlmostEqual<float>(arrivalThreshold, rhs.arrivalThreshold,COMP_ACC) &&
-		AlmostEqual<float>(cpuToMemoryRatio, rhs.cpuToMemoryRatio, COMP_ACC) && averageInterarrivalCycleCount == rhs.averageInterarrivalCycleCount;
+		AlmostEqual<float>(channelLocality,rhs.channelLocality) && AlmostEqual<float>(rankLocality,rhs.rankLocality) &&
+		AlmostEqual<float>(bankLocality,rhs.bankLocality) && time == rhs.time && AlmostEqual<float>(rowLocality,rhs.rowLocality) &&
+		AlmostEqual<float>(readPercentage,rhs.readPercentage) && interarrivalDistributionModel == rhs.interarrivalDistributionModel &&
+		AlmostEqual<float>(shortBurstRatio, rhs.shortBurstRatio) && AlmostEqual<float>(arrivalThreshold, rhs.arrivalThreshold) &&
+		AlmostEqual<float>(cpuToMemoryRatio, rhs.cpuToMemoryRatio) && averageInterarrivalCycleCount == rhs.averageInterarrivalCycleCount;
 }
 
 
@@ -628,7 +628,7 @@ Transaction *InputStream::getNextRandomRequest()
 		}
 
 		// check against the rank_id of the last transaction to the newly selected channel to see if we need to change the rank_id
-		// or keep to this rank_id 
+		// or keep to this rank_id
 		unsigned nextRank = channel[nextChannel].getLastRankID();
 
 		if (rankLocality < rngGenerator())

@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -51,7 +51,7 @@ epoch(settings.epoch),
 shortBurstRatio(settings.shortBurstRatio),
 readPercentage(settings.readPercentage),
 sessionID(settings.sessionID)
-{}
+{assert(decodeWindow >= 1);}
 
 SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConfiguration &rs)
 {
@@ -82,6 +82,7 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	rankCount = rs.rankCount;
 	bankCount = rs.bankCount;
 	decodeWindow = rs.decodeWindow;
+	assert(decodeWindow >= 1);
 	shortBurstRatio = rs.shortBurstRatio;
 	readPercentage = rs.readPercentage;
 	sessionID = rs.sessionID;
@@ -89,7 +90,7 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	return *this;
 }
 
-bool SystemConfiguration::operator ==(const SystemConfiguration& right) const 
+bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
 {
 	return (commandOrderingAlgorithm==right.commandOrderingAlgorithm &&
 		transactionOrderingAlgorithm==right.transactionOrderingAlgorithm &&
@@ -103,7 +104,7 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
 		dramType==right.dramType &&
 		rowBufferManagementPolicy==right.rowBufferManagementPolicy &&
 		addressMappingScheme==right.addressMappingScheme &&
-		AlmostEqual<double>(datarate,right.datarate,0.0005) &&
+		AlmostEqual<double>(datarate,right.datarate) &&
 		postedCAS==right.postedCAS &&
 		readWriteGrouping==right.readWriteGrouping &&
 		autoPrecharge==right.autoPrecharge &&
@@ -116,8 +117,8 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
 		columnCount==right.columnCount &&
 		decodeWindow == right.decodeWindow &&
 		epoch==right.epoch &&
-		AlmostEqual<double>(shortBurstRatio,right.shortBurstRatio,0.0005) &&
-		AlmostEqual<double>(readPercentage,right.readPercentage,0.0005) &&
+		AlmostEqual<double>(shortBurstRatio,right.shortBurstRatio) &&
+		AlmostEqual<double>(readPercentage,right.readPercentage) &&
 		sessionID==right.sessionID);
 }
 

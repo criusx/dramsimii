@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -20,6 +20,7 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options/parsers.hpp>
+#include <boost/lexical_cast.hpp>
 #include <libxml/xmlreader.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -37,6 +38,7 @@ using namespace DRAMsimII;
 using boost::is_any_of;
 using boost::token_compress_on;
 using boost::split;
+using boost::lexical_cast;
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -159,10 +161,10 @@ systemType(BASELINE_CONFIG)
 			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);	
 		delete entireXmlFile;
 #else
-		reader = xmlReaderForFile( 
-			settingsFile.c_str(), 
-			NULL, 
-			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID); 
+		reader = xmlReaderForFile(
+			settingsFile.c_str(),
+			NULL,
+			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);
 #endif
 		
 
@@ -199,7 +201,7 @@ systemType(BASELINE_CONFIG)
 						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"type");
 						string attrS = (const char *)attr;
 #ifndef NDEBUG
-						bool result = 
+						bool result =
 #endif
 							setKeyValue(nodeName,attrS);
 						assert(result);
@@ -220,7 +222,7 @@ systemType(BASELINE_CONFIG)
 								{	
 									nodeValue = (const char *)xmlTextReaderConstValue(reader);
 #ifndef NDEBUG
-									bool result = 
+									bool result =
 #endif
 										setKeyValue(type,nodeValue);		
 									assert(result);
@@ -237,7 +239,7 @@ systemType(BASELINE_CONFIG)
 						{
 							const string type = (const char *)attr;
 #ifndef NDEBUG
-							bool result = 
+							bool result =
 #endif
 								setKeyValue("outFileType",type);
 							assert(result);
@@ -251,8 +253,8 @@ systemType(BASELINE_CONFIG)
 						{
 							const string type = (const char *)attr;
 #ifndef NDEBUG
-							bool result = 
-#endif 
+							bool result =
+#endif
 								setKeyValue("dbreporting",type);
 							assert(result);
 						}
@@ -266,7 +268,7 @@ systemType(BASELINE_CONFIG)
 				{
 					nodeValue = (const char *)xmlTextReaderConstValue(reader);
 #ifndef NDEBUG
-					bool result = 
+					bool result =
 #endif
 						setKeyValue(nodeName, nodeValue);
 					assert(result);
@@ -325,12 +327,12 @@ systemType(BASELINE_CONFIG)
 	xmlFree(buffer);
 
 	// free the document
-	xmlFreeDoc(doc); 
+	xmlFreeDoc(doc);
 
 	boost::mt19937 generator(std::time(0));
 	// Define a uniform random number distribution which produces "double"
 	// values between 0 and 1 (0 inclusive, 1 exclusive).
 	boost::uniform_int<> uni_dist(0,INT_MAX);
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > uni(generator, uni_dist);	
-	sessionID = toString(uni());
+	sessionID = lexical_cast<string>(uni());
 }

@@ -113,8 +113,6 @@ std::string addressDistroC =
 set origin 0.0, 0.0\n\
 set title 'Bank Distribution Rate' offset character 0, -1, 0 font '' norotate\n";
 
-
-
 std::string transactionGraph = 
 "set xrange [1 : *] noreverse nowriteback\n\
 set logscale y\n\
@@ -189,7 +187,7 @@ std::string cacheGraphC =
 "set size 1.0, 0.333\n\
 set origin 0.0, 0.0\n\
 set yrange [0 : *] noreverse nowriteback\n\
-set xlabel 'Time (s)' offset character .05, 0,0 font "" lt -1 rotate by 90\n\
+set xlabel 'Time (s)' offset character .05, 0, 0 font \"\" textcolor lt -1 rotate by 90\n\
 set ylabel 'Miss Rate'\n\
 set y2label 'Access Count'\n\
 set title 'Miss Rate of L2 Cache' offset character 0, -1, 0 font '' norotate\n\

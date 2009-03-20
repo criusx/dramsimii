@@ -165,6 +165,6 @@ elif platform == 'all':
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)
 else:
 	envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
-	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -DNDEBUG')
+	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -Wextra -Wunused -pedantic -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -DNDEBUG')
 	opt = envOpt.Program('dramSimII.opt',sourceFile)
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)

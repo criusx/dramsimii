@@ -1,20 +1,21 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <iostream>
+#include <boost/functional.hpp>
 #include "Rank.h"
 
 using std::vector;
@@ -33,6 +34,11 @@ otherLastCASTime(-100),
 otherLastCASWTime(-100),
 prechargeTime(0),
 totalPrechargeTime(0),
+nextActivateTime(0),
+nextReadTime(0),
+nextWriteTime(0),
+nextPrechargeTime(0),
+nextRefreshTime(0),
 lastCASLength(0),
 lastCASWLength(0),
 otherLastCASLength(0),
@@ -56,6 +62,11 @@ otherLastCASTime(rhs.otherLastCASTime),
 otherLastCASWTime(rhs.otherLastCASWTime),
 prechargeTime(rhs.prechargeTime),
 totalPrechargeTime(rhs.totalPrechargeTime),
+nextActivateTime(rhs.nextActivateTime),
+nextReadTime(rhs.nextReadTime),
+nextWriteTime(rhs.nextWriteTime),
+nextPrechargeTime(rhs.nextPrechargeTime),
+nextRefreshTime(rhs.nextRefreshTime),
 lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
 otherLastCASLength(rhs.otherLastCASLength),
@@ -79,6 +90,11 @@ otherLastCASTime(rhs.otherLastCASTime),
 otherLastCASWTime(rhs.otherLastCASWTime),
 prechargeTime(rhs.prechargeTime),
 totalPrechargeTime(rhs.totalPrechargeTime),
+nextActivateTime(rhs.nextActivateTime),
+nextReadTime(rhs.nextReadTime),
+nextWriteTime(rhs.nextWriteTime),
+nextPrechargeTime(rhs.nextPrechargeTime),
+nextRefreshTime(rhs.nextRefreshTime),
 lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
 otherLastCASLength(rhs.otherLastCASLength),
@@ -109,6 +125,11 @@ otherLastCASTime(-100),
 otherLastCASWTime(-100),
 prechargeTime(0),
 totalPrechargeTime(0),
+nextActivateTime(0),
+nextReadTime(0),
+nextWriteTime(0),
+nextPrechargeTime(0),
+nextRefreshTime(0),
 lastCASLength(0),
 lastCASWLength(0),
 otherLastCASLength(0),
@@ -122,13 +143,16 @@ lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(newBank)
 {}
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief this logically issues a RAS command and updates all variables to reflect this
+//////////////////////////////////////////////////////////////////////////
 void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
 	// RAS time history queue, per rank
 	const tick thisRASTime = currentTime;
-	
+	// record these for tFAW calculations
 	lastActivateTimes.push_front(thisRASTime);
+
 	lastBankID = currentCommand->getAddress().getBank();
 
 	// for power modeling, if all banks were precharged and now one is being activated, record the interval that one was precharged	
@@ -142,10 +166,19 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 	banksPrecharged--;
 	assert(banksPrecharged >= 0 && banksPrecharged < bank.size());
 	// update the bank to reflect this change also
-	Bank &currentBank = bank[currentCommand->getAddress().getBank()];
-	currentBank.issueRAS(currentTime, currentCommand);
+	bank[currentCommand->getAddress().getBank()].issueRAS(currentTime,currentCommand);
+
+	// calculate when the next few commands can happen
+	nextActivateTime = max(currentTime + timing.tRRD(), max(lastActivateTimes.back() + timing.tFAW() , nextActivateTime));
+	// ACT/rank does not directly affect nextReadTime
+	// ACT/rank does not directly affect nextWriteTime
+	// ACT/rank does not directly affect nextPrefetchTime
+	// ACT/rank does not directly influence nextRefreshTime
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief issue a precharge command to this rank
+//////////////////////////////////////////////////////////////////////////
 void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
@@ -159,7 +192,8 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 		lastPrechargeAnyBankTime = max(lastPrechargeAnyBankTime, currentBank.getLastPrechargeTime());
 		break;
 	case Command::PRECHARGE:
-		lastPrechargeAnyBankTime = currentTime;
+		// choose the latest time since there may be +Pre commands that have queued a Pre internally
+		lastPrechargeAnyBankTime = max(lastPrechargeAnyBankTime, currentTime);
 		break;
 	default:
 		cerr << "Unhandled CAS variant" << endl;
@@ -169,43 +203,143 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 	banksPrecharged++;
 	assert(banksPrecharged > 0);
 	assert(banksPrecharged <= bank.size());
+
+	// calculate when the next few commands can happen
+	nextRefreshTime = max(nextRefreshTime, lastPrechargeAnyBankTime + timing.tRP());
+	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC() || currentTime < 250);
+
 }
 
+//////////////////////////////////////////////////////////////////////////
+// @brief issue a CAS command to this rank
+//////////////////////////////////////////////////////////////////////////
 void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
 
-	lastCASTime = currentTime + timing.tAL();
+	//lastCASTime = currentTime + timing.tAL();
+	lastCASTime = currentTime;
 
 	lastCASLength = currentCommand->getLength();
 
 	CASLength += currentCommand->getLength();
 
 	lastBankID = currentCommand->getAddress().getBank();
+
+	// calculate when the next few commands can happen
+	nextReadTime = max(nextReadTime, currentTime + timing.tBurst());
+	nextWriteTime = max(nextWriteTime, currentTime + timing.tCAS() + timing.tBurst() + timing.tRTRS() - timing.tCWD());
+	//nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tBurst() + timing.tRTP() - timing.tCCD());
+
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief issue a CASW command to this rank
+//////////////////////////////////////////////////////////////////////////
 void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);
 
-	lastCASWTime = currentTime + timing.tAL();
+	//lastCASWTime = currentTime + timing.tAL();
+	lastCASWTime = currentTime;
 
 	lastCASWLength = currentCommand->getLength();
 
 	CASWLength += currentCommand->getLength();
 
 	lastBankID = currentCommand->getAddress().getBank();
+
+	// calculate when the next few commands can happen
+	nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tWTR());
+	nextWriteTime = max(nextWriteTime, currentTime + timing.tBurst());
+	//nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR());
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief issue a refresh command to this rank
+//////////////////////////////////////////////////////////////////////////
 void Rank::issueREF(const tick currentTime, const Command *currentCommand)
 {
 	lastRefreshTime = currentTime;
 
 	// FIXME: should this not count as a RAS + PRE command to all banks?
-	for (vector<Bank>::iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
-		currentBank->issueREF(currentTime, currentCommand);
+	std::for_each(bank.begin(), bank.end(),boost::bind2nd(boost::mem_fun_ref(&Bank::issueREF),currentTime));
+
+	// calculate when the next few commands can happen
+	nextRefreshTime = max(nextRefreshTime, currentTime + timing.tRFC());
+	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC() || currentTime < 250);
+	nextActivateTime = max(nextActivateTime, currentTime + timing.tRFC());
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief issue a read command to another rank at this time
+//////////////////////////////////////////////////////////////////////////
+void Rank::issueCASother(const tick currentTime, const Command *currentCommand)
+{
+	assert(currentTime + timing.tAL() > otherLastCASTime); 
+	/// @todo should this not be the nominal value?
+	//otherLastCASTime = currentTime + timing.tAL(); 
+	otherLastCASTime = currentTime; 
+	otherLastCASLength = currentCommand->getLength();
+
+	// calculate when the next few commands can happen
+	nextReadTime = max(nextReadTime, currentTime + timing.tBurst() + timing.tRTRS());
+	nextWriteTime = max(nextWriteTime, currentTime + timing.tCAS() + timing.tBurst() + timing.tRTRS() - timing.tCWD());
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief issue a write command to another rank at this time
+//////////////////////////////////////////////////////////////////////////
+void Rank::issueCASWother(const tick currentTime, const Command *currentCommand)
+{
+	assert(currentTime + timing.tAL() > otherLastCASWTime);
+	//otherLastCASWTime = currentTime + timing.tAL();
+	otherLastCASWTime = currentTime;
+	otherLastCASWLength = currentCommand->getLength();
+
+	// calculate when the next few commands can happen
+	nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tRTRS() - timing.tCAS());
+	nextWriteTime = max(nextWriteTime, currentTime + timing.tOST() + timing.tBurst());
+}
+
+void Rank::resetPrechargeTime(const tick time)
+{
+	prechargeTime = 1;
+	lastPrechargeAnyBankTime = max(time, lastPrechargeAnyBankTime); 
+	nextRefreshTime = std::max(nextRefreshTime, lastPrechargeAnyBankTime + timing.tRP());
+	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC());
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief returns the next time this command type may be issued
+//////////////////////////////////////////////////////////////////////////
+tick Rank::next(Command::CommandType nextCommandType) const
+{
+	switch (nextCommandType)
+	{
+	case Command::ACTIVATE:
+		return nextActivateTime;
+		break;
+	case Command::READ:
+	case Command::READ_AND_PRECHARGE:
+		return nextReadTime;
+		break;
+	case Command::WRITE:
+	case Command::WRITE_AND_PRECHARGE:
+		return nextWriteTime;
+		break;
+	case Command::PRECHARGE:
+		return nextPrechargeTime;
+		break;
+	case Command::REFRESH_ALL:
+		return nextRefreshTime;
+		break;
+	default:
+		break;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -264,7 +398,7 @@ void Rank::resetToTime(const tick time)
 //////////////////////////////////////////////////////////////////////
 /// @brief is there a refresh command ready at each per bank queue
 /// @details if there is a refresh all command at the head of each per
-/// bank queue, then the next command for this rank is a refresh all banks 
+/// bank queue, then the next command for this rank is a refresh all banks
 /// command\n
 /// this is signified by inserting a refresh all command into the tail of each
 /// queue and removing them when they all reach the front\n

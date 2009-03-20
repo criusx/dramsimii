@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -24,7 +24,7 @@
 #include "Settings.h"
 #include "SystemConfiguration.h"
 
-#include <boost/archive/text_oarchive.hpp> 
+#include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
 
@@ -100,7 +100,7 @@ using namespace boost::unit_test;
 using namespace boost::unit_test::framework;
 using std::vector;
 
-BOOST_AUTO_TEST_CASE( serialize_vector ) 
+BOOST_AUTO_TEST_CASE( serialize_vector)
 {
 	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 	Address::initialize(settings);
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE( serialize_vector )
 	BOOST_CHECK(vecA == vecB);
 }
 
-BOOST_AUTO_TEST_CASE( rank_copy_test )
+BOOST_AUTO_TEST_CASE( rank_copy_test)
 {
 	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 	const TimingSpecification timing(settings);
@@ -297,8 +297,8 @@ BOOST_AUTO_TEST_CASE( test_commands)
 BOOST_AUTO_TEST_CASE(addressTest)
 {
 	boost::mt19937 rng;
-	boost::uniform_int<PHYSICAL_ADDRESS> rngen(0,Address::maxAddress());
-	boost::variate_generator<boost::mt19937, boost::uniform_int<PHYSICAL_ADDRESS>> vargen(rng,rngen);
+	boost::uniform_int<PhysicalAddress> rngen(0,Address::maxAddress());
+	boost::variate_generator<boost::mt19937, boost::uniform_int<PhysicalAddress>> vargen(rng,rngen);
 	Settings s(master_test_suite().argc, (char **)master_test_suite().argv);
 	Address::initialize(s);
 
@@ -557,7 +557,7 @@ BOOST_AUTO_TEST_CASE( test_queue)
 }
 
 
-BOOST_AUTO_TEST_CASE( test_system_serialization )
+BOOST_AUTO_TEST_CASE( test_system_serialization)
 {
 	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 	
@@ -592,7 +592,7 @@ BOOST_AUTO_TEST_CASE( test_system_serialization )
 }
 
 
-BOOST_AUTO_TEST_CASE( serialize_inputstream )
+BOOST_AUTO_TEST_CASE( serialize_inputstream)
 {
 	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 	const SystemConfiguration sc1(settings);
@@ -607,7 +607,7 @@ BOOST_AUTO_TEST_CASE( serialize_inputstream )
 	BOOST_CHECK_EQUAL(is1, *is2);
 }
 
-BOOST_AUTO_TEST_CASE( test_serialization )
+BOOST_AUTO_TEST_CASE( test_serialization)
 {
 	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 #if 0

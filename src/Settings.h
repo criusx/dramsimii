@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -142,7 +142,7 @@ namespace DRAMsimII
 		static FileIOToken dramTokenizer(const std::string & value)
 		{
 			std::string lowerValue = value;
-			//std::transform(lowerValue.begin(),lowerValue.end(),lowerValue.begin(),std::ptr_fun((int (*)( int ))std::tolower));
+			//std::transform(lowerValue.begin(),lowerValue.end(),lowerValue.begin(),std::ptr_fun((int (*)( int))std::tolower));
 			//std::transform(lowerValue.begin(), lowerValue.end(), lowerValue.begin(), std::tolower);
 			boost::algorithm::to_lower(lowerValue);
 
@@ -159,7 +159,7 @@ namespace DRAMsimII
 			std::map<FileIOToken, std::string> theMap;
 
 			theMap[clock_granularity_token] = "clockGranularity";
-			theMap[chan_count_token] = "channels";
+			theMap[channel_count_token] = "channels";
 			theMap[channel_width_token] = "channelWidth";
 			theMap[addr_mapping_scheme_token] = "physicalAddressMappingPolicy";
 			theMap[row_buffer_management_policy_token] = "rowBufferPolicy";
@@ -297,9 +297,9 @@ namespace DRAMsimII
 			theMap["riff"] = riff_token;
 			theMap["posted_cas"] = posted_cas_token;
 			theMap["postedcas"] = posted_cas_token;
-			theMap["channel_count"] = chan_count_token;
-			theMap["channelcount"] = chan_count_token;
-			theMap["channels"] = chan_count_token;
+			theMap["channel_count"] = channel_count_token;
+			theMap["channelcount"] = channel_count_token;
+			theMap["channels"] = channel_count_token;
 			theMap["channel_width" ] = channel_width_token;
 			theMap["channelwidth"] = channel_width_token;
 			theMap["rank_count"] = rank_count_token;
@@ -453,7 +453,7 @@ namespace DRAMsimII
 			else
 			{
 				std::string lowerNodeName = nodeName;
-				//std::transform(lowerNodeName.begin(),lowerNodeName.end(),lowerNodeName.begin(),std::ptr_fun((int (*)( int ))std::tolower));
+				//std::transform(lowerNodeName.begin(),lowerNodeName.end(),lowerNodeName.begin(),std::ptr_fun((int (*)( int))std::tolower));
 				boost::algorithm::to_lower(lowerNodeName);
 
 				std::map<std::string, FileIOToken>::iterator result = tokenizeMap.find(lowerNodeName);
@@ -496,7 +496,7 @@ namespace DRAMsimII
 				refreshPolicy & dramType & dataRate & commandOrderingAlgorithm & transactionOrderingAlgorithm & systemType & perBankQueueDepth &
 				columnSize & rowSize & channelWidth & columnCount & rowCount & cacheLineSize & historyQueueDepth & completionQueueDepth &
 				transactionQueueDepth & eventQueueDepth & refreshQueueDepth & refreshTime & seniorityAgeLimit & rowBufferManagementPolicy &
-				addressMappingScheme & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount & 
+				addressMappingScheme & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount &
 				rankCount & bankCount & shortBurstRatio & readPercentage & tRTRS & tAL & tBurst & tCAS & tCWD & tFAW & tRAS & tRC & tRCD & tREFI &
 				tRFC & tRP & tRRD & tRTP & tWR & tCMD & tInternalBurst & tBufferDelay & cpuToMemoryClockRatio & PdqRD & PdqWR & PdqRDoth &
 				PdqWRoth & DQperDRAM & DQSperDRAM & DMperDRAM & frequencySpec & maxVCC & VDD & IDD0 & IDD2P & IDD2N & IDD3P & IDD3N & IDD4W &

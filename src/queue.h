@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -86,7 +86,7 @@ namespace DRAMsimII
 			pool(preallocate)
 		{
 			if (preallocate)
-			{      
+			{
 				while (count < size)
 				{
 					push(::new T());
@@ -120,7 +120,7 @@ namespace DRAMsimII
 			pool = preallocate;
 
 			if (preallocate)
-			{      
+			{
 				while (count < entry.size())
 					push(::new T);
 			}
@@ -296,7 +296,7 @@ namespace DRAMsimII
 			return newItem;
 		}
 
-		/// @brief this function makes this queue rhs non-FIFO queue.  
+		/// @brief this function makes this queue rhs non-FIFO queue.
 		/// @detail Allows insertion into the middle or at any end
 		bool insert(T *item, const int offset)
 		{

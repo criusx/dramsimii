@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -36,18 +36,29 @@ namespace DRAMsimII
 	/// @brief represents a logical rank and associated statistics
 	class Rank
 	{
-	protected:
+	private:
 
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
+
+	protected:
 
 		tick lastRefreshTime;				///< the time of the last refresh
 		tick lastPrechargeAnyBankTime;		///< the time of the last precharge
 		tick lastCASTime;					///< the time of the last CAS
 		tick lastCASWTime;					///< the time of the last CASW
+	
 		tick otherLastCASTime;				///< the time of the most recent CAS from any other rank on this channel
 		tick otherLastCASWTime;				///< the time of the most recent CASW from any other rank on this channel
+
 		tick prechargeTime;					///< total time that all banks in this rank are precharged in this epoch
 		tick totalPrechargeTime;			///< total time that all banks are precharged, all time
+
+		tick nextActivateTime;				///< the time at which an ACT may be sent to this rank
+		tick nextReadTime;					///< the time at which a CAS may be sent to this rank
+		tick nextWriteTime;					///< the time at which a CASW may be sent to this rank
+		tick nextPrechargeTime;				///< the time at which a Pre may be sent to this rank
+		tick nextRefreshTime;				///< the time at which a Ref may be sent to this rank
+
 		unsigned lastCASLength;				///< the length of the last CAS
 		unsigned lastCASWLength;			///< the length of the last CASW
 		unsigned otherLastCASLength;		///< the length of the last CAS on any other rank
@@ -69,9 +80,12 @@ namespace DRAMsimII
 		void issueRAS(const tick currentTime, const Command *currentCommand);
 		void issuePRE(const tick currentTime, const Command *currentCommand);
 		void issueCAS(const tick currentTime, const Command *currentCommand);
+		void issueCASother(const tick currentTime, const Command *currentCommand);
 		void issueCASW(const tick currentTime, const Command *currentCommand);
+		void issueCASWother(const tick currentTime, const Command *currentCommand);
 		void issueREF(const tick currentTime, const Command *currentCommand);
 		void resetToTime(const tick time);
+		tick next(Command::CommandType nextCommandType) const;
 		
 		// constructors
 		explicit Rank(const Rank &, const TimingSpecification &, const SystemConfiguration &);
@@ -100,10 +114,10 @@ namespace DRAMsimII
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
 		void setLastBankID(const unsigned value) { lastBankID = value; }
-		void resetPrechargeTime(tick time) { prechargeTime = 1; lastPrechargeAnyBankTime = time;}
+		void resetPrechargeTime(const tick time); 
 		void resetCycleCounts() { CASLength = CASWLength = 0; }
-		void setOtherLastCAS(const tick value, const unsigned length) { assert(value > otherLastCASTime); otherLastCASTime = value; otherLastCASLength = length;}
-		void setOtherLastCASW(const tick value, const unsigned length) { assert(value > otherLastCASWTime); otherLastCASWTime = value; otherLastCASWLength = length;}
+		//void setOtherLastCAS(const tick value, const unsigned length) { assert(value > otherLastCASTime); otherLastCASTime = value; otherLastCASLength = length;}
+		//void setOtherLastCASW(const tick value, const unsigned length) { assert(value > otherLastCASWTime); otherLastCASWTime = value; otherLastCASWLength = length;}
 
 		// overloads
 		Rank& operator=(const Rank &rs);
@@ -120,7 +134,7 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned version)
 		{
-			ar & lastRefreshTime & lastPrechargeAnyBankTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength; 
+			ar & lastRefreshTime & lastPrechargeAnyBankTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength;
 			ar & lastCASWLength & rankID & lastBankID & banksPrecharged;
 			ar & lastActivateTimes & CASWLength & CASLength & otherLastCASTime & otherLastCASWTime & otherLastCASLength & otherLastCASWLength;		
 		}

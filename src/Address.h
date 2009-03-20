@@ -65,7 +65,7 @@ namespace DRAMsimII
 		static AddressMappingScheme mappingScheme;	///< the mapping scheme to convert physical to logical addresses
 
 		unsigned virtualAddress;			///< the virtual address
-		PHYSICAL_ADDRESS physicalAddress;	///< the physical address
+		PhysicalAddress physicalAddress;	///< the physical address
 
 		unsigned channel;					///< the enumerated channel id
 		unsigned rank;						///< the rank id
@@ -79,10 +79,10 @@ namespace DRAMsimII
 	public:
 
 		// functions
-		PHYSICAL_ADDRESS static highestAddress();
+		PhysicalAddress static highestAddress();
 
 		// accessors
-		PHYSICAL_ADDRESS getPhysicalAddress() const { return physicalAddress; }
+		PhysicalAddress getPhysicalAddress() const { return physicalAddress; }
 		unsigned getChannel() const { return channel; }
 		unsigned getRank() const { return rank; }
 		unsigned getBank() const { return bank; }
@@ -90,18 +90,18 @@ namespace DRAMsimII
 		unsigned getColumn() const { return column; }
 
 		// mutators
-		void setPhysicalAddress(PHYSICAL_ADDRESS pa) { physicalAddress = pa; addressTranslation(); }
+		void setPhysicalAddress(PhysicalAddress pa) { physicalAddress = pa; addressTranslation(); }
 		void setAddress(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column);
 
 		// constructor
 		Address();						///< the no-arg constructor
-		explicit Address(PHYSICAL_ADDRESS pA);	///< the constructor based on a physical address
+		explicit Address(PhysicalAddress pA);	///< the constructor based on a physical address
 		explicit Address(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column);
 
 		// initialize
 		void static initialize(const Settings &dramSettings);
 		void static initialize(const SystemConfiguration &systemConfig);
-		PHYSICAL_ADDRESS static maxAddress();
+		PhysicalAddress static maxAddress();
 
 		// friend		
 		friend class boost::serialization::access;
@@ -112,7 +112,7 @@ namespace DRAMsimII
 
 	private:
 		template<class Archive>
-		void serialize(Archive & ar, const unsigned version )
+		void serialize(Archive & ar, const unsigned version)
 		{
 			ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth & columnAddressDepth & columnSizeDepth;
 			ar & mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column & columnLowAddressDepth & columnHighAddressDepth;

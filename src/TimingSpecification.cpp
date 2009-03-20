@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -60,7 +60,7 @@ t_refi(settings.tREFI)
 	case DDR:
 
 		t_ccd = 2;					// internal fetch is 1 cycle, 2 beats for DDR
-		t_al = 0;					// no such thing in DDR 
+		t_al = 0;					// no such thing in DDR
 		t_burst = settings.tBurst;	// depending on system config! can be 2, 4, or 8
 		t_cas = settings.tCAS;
 		t_cmd = 2;					// protocol specific, cannot be changed
@@ -121,7 +121,7 @@ t_refi(settings.tREFI)
 
 		t_ccd = 8;					// four cycles, eight beats in DDR3
 		t_al = settings.postedCAS ? settings.tAL : 0; // if posted CAS is disabled, tAL should be zero
-		t_burst = 8;				// protocol specific, cannot be changed 
+		t_burst = 8;				// protocol specific, cannot be changed
 		t_cas = settings.tCAS;
 		t_cmd = 2;					// protocol specific, cannot be changed
 		t_cwd = t_cas - 2;			// fixed
@@ -147,21 +147,21 @@ t_refi(settings.tREFI)
 	case SDRAM:
 
 		t_ccd = 1;					// one cycle, one beat in SDR
-		t_al = 0;					// no such thing as posted CAS in SDRAM 
-		t_burst = settings.tBurst;	// depending on system config, can be 1, 2, 4, or 8 
+		t_al = 0;					// no such thing as posted CAS in SDRAM
+		t_burst = settings.tBurst;	// depending on system config, can be 1, 2, 4, or 8
 		t_cas = settings.tCAS;
-		t_cmd = 1;					// protocol specific, cannot be changed 
-		t_cwd = 0;					//no such thing in SDRAM 
-		t_int_burst = 1;			// prefetch length is 1 
-		t_faw = 0;					// no such thing in SDRAM 
-		t_ras = settings.tRAS;		 
+		t_cmd = 1;					// protocol specific, cannot be changed
+		t_cwd = 0;					//no such thing in SDRAM
+		t_int_burst = 1;			// prefetch length is 1
+		t_faw = 0;					// no such thing in SDRAM
+		t_ras = settings.tRAS;		
 		t_rc = settings.tRC;		
 		t_rcd = settings.tRCD;
-		t_rfc = settings.tRC;		// same as t_rc 
-		t_rp = settings.tRP;		// 12 ns @ 1.25ns per cycle = 9.6 cycles 
-		t_rrd = 0;					// no such thing in SDRAM 
+		t_rfc = settings.tRC;		// same as t_rc
+		t_rp = settings.tRP;		// 12 ns @ 1.25ns per cycle = 9.6 cycles
+		t_rrd = 0;					// no such thing in SDRAM
 		t_rtp = settings.tRTP;
-		t_rtrs = settings.tRTRS;	// no such thing in SDRAM 
+		t_rtrs = settings.tRTRS;	// no such thing in SDRAM
 		t_wr = settings.tWR;	
 		t_ost = 0;					// does not exist in SDRAM
 		break;
@@ -176,11 +176,11 @@ t_refi(settings.tREFI)
 	}	
 }
 
-bool TimingSpecification::operator==(const TimingSpecification &right) const 
+bool TimingSpecification::operator==(const TimingSpecification &right) const
 {
 	return (t_al == right.t_al && t_burst == right.t_burst && t_cas == right.t_cas && t_ccd == right.t_ccd && t_cmd == right.t_cmd &&
-		t_cwd == right.t_cwd && t_faw == right.t_faw && t_ras == right.t_ras && t_rc == right.t_rc && t_rcd == right.t_rcd && 
-		t_rfc == right.t_rfc && t_rp == right.t_rp && t_rrd == right.t_rrd && t_rtp == right.t_rtp && t_rtrs == right.t_rtrs && 
+		t_cwd == right.t_cwd && t_faw == right.t_faw && t_ras == right.t_ras && t_rc == right.t_rc && t_rcd == right.t_rcd &&
+		t_rfc == right.t_rfc && t_rp == right.t_rp && t_rrd == right.t_rrd && t_rtp == right.t_rtp && t_rtrs == right.t_rtrs &&
 		t_wr == right.t_wr && t_wtr == right.t_wtr && t_int_burst == right.t_int_burst && t_buffer_delay == right.t_buffer_delay &&
 		t_refi == right.t_refi && t_ost == right.t_ost);
 

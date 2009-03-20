@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -51,12 +51,19 @@ namespace DRAMsimII
 		tick lastRefreshAllTime;		///< must respect t_rfc. concurrent refresh takes time
 		unsigned lastCASLength;			///< the length of the last CAS command issued
 		unsigned lastCASWLength;		///< the length of the last CASW command issued
+
+		tick nextActivateTime;				///< the time at which an ACT may be sent to this rank
+		tick nextReadTime;					///< the time at which a CAS may be sent to this rank
+		tick nextWriteTime;					///< the time at which a CASW may be sent to this rank
+		tick nextPrechargeTime;				///< the time at which a Pre may be sent to this rank
+		tick nextRefreshTime;				///< the time at which a Ref may be sent to this rank
+
 		unsigned openRowID;				///< if the bank is open, what is the row id?
 		bool activated;					///< if the bank is activated, else precharged
 
 		// stats
 		unsigned RASCount;				///< the total number of RAS commands in this epoch
-		unsigned totalRASCount;			///< the number of RAS commands 
+		unsigned totalRASCount;			///< the number of RAS commands
 		unsigned CASCount;				///< the total number of CAS commands in this epoch
 		unsigned totalCASCount;			///< the number of CAS commands
 		unsigned CASWCount;				///< the total number of CAS+W commands in this epoch
@@ -68,9 +75,10 @@ namespace DRAMsimII
 		void issuePRE(const tick currentTime, const Command *currentCommand);
 		void issueCAS(const tick currentTime, const Command *currentCommand);
 		void issueCASW(const tick currentTime, const Command *currentCommand);
-		void issueREF(const tick currentTime, const Command *currentCommand);
+		void issueREF(const tick currentTime);
 		void accumulateAndResetCounts() { totalRASCount += RASCount; totalCASCount += CASCount; totalCASWCount += CASWCount; RASCount = CASWCount = CASCount = 0; }
 		void resetToTime(const tick time);
+		tick next(Command::CommandType nextCommandType) const;
 
 		// accessors
 		tick getLastRASTime() const { return lastRASTime; }
@@ -121,7 +129,7 @@ namespace DRAMsimII
 		bool operator==(const Bank& rhs) const;
 		Bank &operator=(const Bank& rhs);
 
-		friend std::ostream& operator<<(std::ostream& , const Bank& );
+		friend std::ostream& operator<<(std::ostream& , const Bank&);
 
 	private:
 		
@@ -135,7 +143,7 @@ namespace DRAMsimII
 		void serialize( Archive & ar, const unsigned version)
 		{
 			ar & perBankQueue;
-			ar & lastRASTime & lastCASTime & lastCASWTime & lastPrechargeTime & lastRefreshAllTime & lastCASLength & 
+			ar & lastRASTime & lastCASTime & lastCASWTime & lastPrechargeTime & lastRefreshAllTime & lastCASLength &
 				lastCASWLength & openRowID & activated & RASCount & totalRASCount & CASCount & totalCASCount & CASWCount & totalCASWCount;
 		}
 

@@ -1,16 +1,16 @@
 // Copyright (C) 2008 University of Maryland.
 // This file is part of DRAMsimII.
-// 
+//
 // DRAMsimII is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // DRAMsimII is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -70,7 +70,7 @@ namespace bf = boost::filesystem;
 /// @author Joe Gross
 /// @param settings the settings that define what the system should look like
 //////////////////////////////////////////////////////////////////////
-System::System(const Settings &settings): 
+System::System(const Settings &settings):
 systemConfig(settings),
 simParameters(settings),
 statistics(settings),
@@ -215,16 +215,16 @@ nextStats(settings.epoch)
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
-		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << 
+		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
+		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
 	powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
-		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << 
+		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
+		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
 	statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
@@ -247,7 +247,7 @@ nextStats(settings.epoch)
 	}
 }
 
-System::System(const System &rhs): 
+System::System(const System &rhs):
 systemConfig(rhs.systemConfig),
 simParameters(rhs.simParameters),
 statistics(rhs.statistics),
@@ -293,7 +293,7 @@ bool System::fileExists(stringstream& fileName) const
 //////////////////////////////////////////////////////////////////////
 /// @brief returns the time at which the next event happens
 /// @details returns the time when the memory system next has an event\n
-/// the event may either be a conversion of a transaction into commands or it may be the the 
+/// the event may either be a conversion of a transaction into commands or it may be the the
 /// next time a command may be issued
 /// @author Joe Gross
 /// @return the time of the next event, or TICK_MAX if there was no next event found
@@ -341,7 +341,7 @@ void System::checkStats()
 //////////////////////////////////////////////////////////////////////
 void System::updateSystemTime()
 {
-	vector<Channel>::const_iterator currentChan = channel.begin(); 
+	vector<Channel>::const_iterator currentChan = channel.begin();
 	time = currentChan->getTime();
 	currentChan++;
 
@@ -487,7 +487,7 @@ void System::runSimulations(const unsigned requestCount)
 
 	tick newTime = 0;
 
-	for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0; )
+	for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
 	{		
 		if (!inputTransaction)
 		{
@@ -517,7 +517,7 @@ void System::runSimulations(const unsigned requestCount)
 
 		// attempt to enqueue external transactions
 		// as internal transactions (REFRESH) are enqueued automatically
-		if (time >= inputTransaction->getArrivalTime()) 
+		if (time >= inputTransaction->getArrivalTime())
 		{
 			if (enqueue(inputTransaction))
 			{
@@ -596,7 +596,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm << 
+		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M]" << endl;
 #endif
 	os << thisSystem.systemConfig;
