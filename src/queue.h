@@ -49,7 +49,7 @@ namespace DRAMsimII
 		unsigned tail;	///< the point where items will be removed
 		std::vector<T *> entry;		///< the circular queue
 		bool pool;		///< whether or not this is a pool
-		
+
 	public:
 		explicit Queue(): count(0), head(0), tail(0), entry(0), pool(false)
 		{}
@@ -57,7 +57,7 @@ namespace DRAMsimII
 		/// @brief copy constructor
 		/// @detail copy the existing queue, making copies of each element
 		explicit Queue(const Queue<T>& rhs):
-			count(rhs.count),
+		count(rhs.count),
 			head(rhs.head),
 			tail(rhs.tail),
 			entry(rhs.entry.size()),
@@ -79,7 +79,7 @@ namespace DRAMsimII
 		/// @param size the depth of the circular queue
 		/// @preallocate whether or not to fill the queue with blank elements, defaults to false
 		explicit Queue(const unsigned size, const bool preallocate = false):
-			count(0),
+		count(0),
 			head(0),
 			tail(0),
 			entry(size),
@@ -257,7 +257,7 @@ namespace DRAMsimII
 		/// and one would like to store them when they are not in use
 		void releaseItem(T *item)
 		{
-//#pragma omp critical
+			//#pragma omp critical
 			{
 
 #if 0
@@ -283,7 +283,7 @@ namespace DRAMsimII
 		{
 			assert(pool);
 			T* newItem;
-//#pragma omp critical
+			//#pragma omp critical
 			{
 				if (count == 0)
 				{
@@ -330,7 +330,7 @@ namespace DRAMsimII
 		T *remove(const int offset)
 		{
 			assert(offset <= (int)count && offset >= 0);
-			
+
 			// first get the item
 			T *item = entry[(head + offset) % entry.size()];
 			count--;
@@ -343,7 +343,7 @@ namespace DRAMsimII
 				entry[(head + i) % entry.size()] = entry[(head + i + 1) % entry.size()];
 			}
 
-			
+
 			entry[(head + count) % entry.size()] = NULL;
 
 			return item;
@@ -419,7 +419,7 @@ namespace DRAMsimII
 			for (unsigned i = 0; i < rhs.count; i++)
 			{
 				assert(rhs.at(i));
-				
+
 				entry[(head + i) % entry.size()] = new T(*(rhs.at(i)));
 			}
 

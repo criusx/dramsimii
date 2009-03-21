@@ -202,12 +202,12 @@ void Bank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	//assert(activated);
 	assert(openRowID == currentCommand->getAddress().getRow());
-	
+
 	//lastCASTime = currentTime + timing.tAL();
 	lastCASTime = currentTime;
 
 	lastCASLength = currentCommand->getLength();
-	
+
 	CASCount++;
 
 	// calculate when the next few commands can happen

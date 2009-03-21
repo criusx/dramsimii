@@ -124,7 +124,7 @@ namespace DRAMsimII
 		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
 		Bank(const Bank&, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
 		Bank(const Bank&);
-		
+
 		// overloads
 		bool operator==(const Bank& rhs) const;
 		Bank &operator=(const Bank& rhs);
@@ -132,12 +132,12 @@ namespace DRAMsimII
 		friend std::ostream& operator<<(std::ostream& , const Bank&);
 
 	private:
-		
+
 		// friends
 		friend class boost::serialization::access;
 
 		explicit Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
-		
+
 		// serialization
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned version)

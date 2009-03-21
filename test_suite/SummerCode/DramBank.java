@@ -22,9 +22,9 @@ public class DramBank
 
   public String checkTiming(DramCommand com)
   {
-    if (com.getType().equalsIgnoreCase("RAS"))
+    if (com.getType() == DramCommand.CommandType.ACTIVATE)
     { //Prev = A
-      if (previousCommand.getType().equals("RAS"))
+      if (previousCommand.getType()== DramCommand.CommandType.ACTIVATE)
       { //Next = A
         if (com.getStart() - previousCommand.getEnd() > DramSimValid.getTimingParameter("tRC"))
         {

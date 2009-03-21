@@ -49,7 +49,7 @@ namespace DRAMsimII
 			eventNumber(eventCounter++),
 			address(0x0)
 		{}
-		
+
 		Event(const Address &add, const tick enqTime):
 		arrivalTime(0),
 			enqueueTime(enqTime),
@@ -105,16 +105,16 @@ namespace DRAMsimII
 		void setEnqueueTime(const tick et) { enqueueTime = et; }
 		void setStartTime(const tick st) { startTime = st; }
 		void setCompletionTime(const tick ct) { completionTime = ct; }
-		
+
 		// friends
 		friend std::ostream &DRAMsimII::operator<<(std::ostream &, const Event &);		
-		
+
 		// overloads
 		bool operator==(const Event& right) const
 		{
 			return (arrivalTime == right.arrivalTime && enqueueTime == right.enqueueTime && startTime == right.startTime && completionTime == right.completionTime && address == right.getAddress());
 		}
-private:
+	private:
 		// serialization
 		friend class boost::serialization::access;
 

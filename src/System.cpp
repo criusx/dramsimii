@@ -119,7 +119,7 @@ nextStats(settings.epoch)
 		}
 
 		bf::path outDir(settings.outFileDir.c_str());
-		
+
 		if (!bf::exists(outDir))
 		{
 			if (!bf::create_directory(outDir))
@@ -147,12 +147,12 @@ nextStats(settings.epoch)
 				baseFilename = baseFilename.substr(0,baseFilename.find(".bz2"));
 
 			int counter = 0;		
-			
+
 			stringstream timingFilename;
 			stringstream powerFilename;
 			stringstream statsFilename;		
 			stringstream settingsFilename;
-			
+
 			do
 			{
 				timingFilename.str("");
@@ -166,7 +166,7 @@ nextStats(settings.epoch)
 				counter++;
 
 			} while (fileExists(timingFilename) || fileExists(powerFilename) || fileExists(statsFilename) || fileExists(settingsFilename));
-			
+
 			timingOutStream.push(file_sink(timingFilename.str().c_str()));
 			powerOutStream.push(file_sink(powerFilename.str().c_str()));
 			statsOutStream.push(file_sink(statsFilename.str().c_str()));
@@ -238,7 +238,7 @@ nextStats(settings.epoch)
 	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
 
 	statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
-	
+
 
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)
@@ -401,7 +401,7 @@ void System::moveToTime(const tick endTime)
 
 	//unsigned finishedTransaction = UINT_MAX;
 	int i;
-//#pragma omp parallel for private(i)
+	//#pragma omp parallel for private(i)
 	for (i = channel.size() - 1; i >= 0; i--)
 	{
 		channel[i].moveToTime(endTime);

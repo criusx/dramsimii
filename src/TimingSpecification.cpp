@@ -110,7 +110,7 @@ t_refi(settings.tREFI)
 		// this MHC will account for any issues
 		//assert(t_rcd + t_rtp + t_burst - t_ccd >= t_ras);
 		assert(t_rcd + t_cwd + t_burst + t_wr >= t_ras);	
-		
+
 		if (t_al > t_rcd)
 		{
 			cerr << "tAL must be <= tRCD to ensure proper operation" << endl;
@@ -121,7 +121,7 @@ t_refi(settings.tREFI)
 
 
 		break;
-		
+
 	case DDR3:
 
 		t_ccd = 8;					// four cycles, eight beats in DDR3

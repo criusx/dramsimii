@@ -302,14 +302,14 @@ unsigned fbdChannel::moveToTime(const tick endTime, tick& transFinishTime)
 
 			// then build a frame for t+1, if possible
 			makeFrame(time);
-			
+
 			// last, move time forward to either the next transaction decode or frame create time
 			tick nextDecodeTime = nextTransactionDecodeTime();
 			assert(nextDecodeTime > time);
 			tick nextFrameTime = nextFrameExecuteTime();
 			assert(nextFrameTime > time);
 
-			
+
 			time = min(endTime, min(nextDecodeTime, nextFrameTime));
 		}		
 	}
@@ -433,7 +433,7 @@ Command *fbdChannel::getNextCommand(const Command *slotACommand, const Command *
 			for (vector<Bank>::iterator cur_bank = currentRank.bank.begin(); cur_bank != currentRank.bank.end(); cur_bank++)
 			{
 				//if (tempCommand)
-					//delete tempCommand;
+				//delete tempCommand;
 				tempCommand = cur_bank->pop();
 				assert(tempCommand->getCommandType() == Command::REFRESH_ALL);
 			}

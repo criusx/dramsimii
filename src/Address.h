@@ -25,7 +25,7 @@
 
 namespace DRAMsimII
 {
-	
+
 	/// @brief This class logically represents several interpretations of a memory address
 	/// @details A class to store various representations of an address
 	/// The same address may be represented as a virtual address, physical address, 
@@ -118,7 +118,7 @@ namespace DRAMsimII
 			ar & mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column & columnLowAddressDepth & columnHighAddressDepth;
 		}
 	};
-std::ostream& operator<<(std::ostream&, const Address::AddressMappingScheme&);
-	
+	std::ostream& operator<<(std::ostream&, const Address::AddressMappingScheme&);
+
 }
 #endif

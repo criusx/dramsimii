@@ -195,7 +195,7 @@ void Channel::moveToTime(const tick endTime)
 		// has room to decode an available transaction, as many as are ready
 		unsigned decodedCount = 0;
 		unsigned decodedRefreshCount = 0;
-		
+
 		while (Transaction *nextTransaction = getTransaction())
 		{
 			// actually remove it from the queue now
@@ -223,8 +223,8 @@ void Channel::moveToTime(const tick endTime)
 			//nextTransaction = readTransaction(true);
 		}		
 #ifndef NDEBUG
-		if (decodedCount > 3 || decodedRefreshCount > 1)
-			cerr << "decoded " << decodedCount << "/" << decodedRefreshCount << endl;
+		//if (decodedCount > 3 || decodedRefreshCount > 1)
+		//cerr << "decoded " << decodedCount << "/" << decodedRefreshCount << endl;
 #endif
 
 		// execute commands for this time, reevaluate what the next command is since this may have changed after decoding the transaction
@@ -237,10 +237,10 @@ void Channel::moveToTime(const tick endTime)
 			assert(executingCommand == nextCommand);
 
 			assert(earliestExecuteTimeLog(nextCommand) <= time);
+			
+			executeCommand(executingCommand);	
 
 			DEBUG_COMMAND_LOG("C " << *executingCommand);
-
-			executeCommand(executingCommand);	
 
 			nextCommand = readNextCommand();
 		}
@@ -362,7 +362,7 @@ void Channel::retireCommand(Command *newestCommand)
 			const unsigned origTrans = completedTransaction->getOriginalTransaction();
 
 			M5_DEBUG(assert(origTrans < UINT_MAX));
-			
+
 			if (origTrans < UINT_MAX)
 				finishedTransactions.push(std::pair<unsigned,tick>(origTrans, completedTransaction->getCompletionTime()));
 		}
@@ -1676,7 +1676,7 @@ const Command *Channel::readNextCommand() const
 			const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
 			const unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
 			const Command::CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : Command::WRITE_AND_PRECHARGE;
-			
+
 			// attempt to group RAS/CAS pairs together
 			switch (lastCommandType)
 			{
@@ -1805,7 +1805,7 @@ const Command *Channel::readNextCommand() const
 			const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : 0;
 			const unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : 0;
 			const Command::CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : Command::WRITE_AND_PRECHARGE;
-			
+
 			switch (lastCommandType)
 			{
 			case Command::ACTIVATE:
@@ -2466,7 +2466,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	if (actualNext != predictedNext )
 		assert(actualNext == predictedNext);
 #endif
-		
+
 	return max(currentRank.next(currentCommand->getCommandType()), 
 		max(currentBank.next(currentCommand->getCommandType()), lastCommandIssueTime + timingSpecification.tCMD()));
 }

@@ -68,7 +68,7 @@ namespace DRAMsimII
 		//tick  dimm_data_tran_comp_time;
 		//tick  amb_down_proc_comp_time;
 		//tick  link_data_tran_comp_time;
-		
+
 		//int bundle_id;				// Bundle into which command is being sent - Do we need this ??
 		//unsigned tran_id;				// The transaction id number
 		//int data_word;				// Which portion of data is returned i.e. entire cacheline or fragment thereof which portions are being sent
@@ -119,7 +119,7 @@ namespace DRAMsimII
 			// @todo serialize inherited types
 			//ar & freeCommandPool;
 			//ar & commandType & startTime & enqueueTime & completionTime & addr & hostTransaction & postedCAS & length;
-			ar & commandType & hostTransaction & postedCAS & length;
+			ar & commandType & hostTransaction & length;
 		}
 	};	
 

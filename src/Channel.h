@@ -83,11 +83,11 @@ namespace DRAMsimII
 		Channel(const Channel&);
 		explicit Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats);
 		virtual ~Channel();
-		
+
 		// functions
 		bool enqueue(Transaction *in);
 		bool isFull() const { return transactionQueue.isFull(); }	///< determines whether there is room for more transactions
-		unsigned getChannelID() const { return channelID; }					///< return the ordinal of this channel
+		unsigned getChannelID() const { return channelID; }			///< return the ordinal of this channel
 		void doPowerCalculation(const tick systemTime);
 		virtual tick nextTick() const;
 		void resetToTime(const tick time);
@@ -111,8 +111,6 @@ namespace DRAMsimII
 		const Transaction *readNextRefresh() const;
 		tick nextRefresh() const;
 
-
-		//Transaction *getOldestCompletedTransaction() { return completionQueue.pop(); }				///< get the oldest item from the transaction completion queue
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }				///< determine how many items are in the transaction completion queue
 		unsigned getTransactionQueueDepth() const { return transactionQueue.depth(); }			///< determine how large the transaction completion queue is
 		Rank& operator[](unsigned rank_num) { return rank[rank_num]; }
@@ -139,8 +137,8 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned int version)
 		{
-			ar & time & lastRefreshTime & lastCommandIssueTime & lastRankID & transactionQueue
-				& refreshCounter &historyQueue & completionQueue & algorithm & channelID & dbReporting;			
+			ar & time & lastCommandIssueTime & transactionQueue
+				& refreshCounter & algorithm & channelID & dbReporting;			
 		}
 
 		template<class Archive>

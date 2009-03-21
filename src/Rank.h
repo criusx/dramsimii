@@ -46,7 +46,7 @@ namespace DRAMsimII
 		tick lastPrechargeAnyBankTime;		///< the time of the last precharge
 		tick lastCASTime;					///< the time of the last CAS
 		tick lastCASWTime;					///< the time of the last CASW
-	
+
 		tick otherLastCASTime;				///< the time of the most recent CAS from any other rank on this channel
 		tick otherLastCASWTime;				///< the time of the most recent CASW from any other rank on this channel
 
@@ -86,12 +86,12 @@ namespace DRAMsimII
 		void issueREF(const tick currentTime, const Command *currentCommand);
 		void resetToTime(const tick time);
 		tick next(Command::CommandType nextCommandType) const;
-		
+
 		// constructors
 		explicit Rank(const Rank &, const TimingSpecification &, const SystemConfiguration &);
 		explicit Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
 		Rank(const Rank &);
-		
+
 		// accessors
 		unsigned getRankID() const { return rankID; }		
 		tick getTotalPrechargeTime() const { return totalPrechargeTime; }
@@ -110,7 +110,7 @@ namespace DRAMsimII
 		unsigned getReadCycles() const { return CASLength; }
 		unsigned getWriteCycles() const { return CASWLength; }
 
-		
+
 		// mutators
 		void setRankID(const unsigned value) { rankID = value; }
 		void setLastBankID(const unsigned value) { lastBankID = value; }
@@ -155,7 +155,7 @@ namespace DRAMsimII
 			ar >> timing;
 			std::vector<DRAMsimII::Bank>* newBank;
 			ar >> newBank;
-			
+
 			::new(t)DRAMsimII::Rank(*timing, *newBank);
 		}		
 	};
@@ -184,7 +184,7 @@ namespace boost
 		ar << (count);
 
 		for (typename circular_buffer<U, Allocator>::const_iterator i = t.begin(); i != t.end(); i++)
-		//for (boost::circular_buffer<U,Allocator>::size_type i = 0; i < t.size(); i++)
+			//for (boost::circular_buffer<U,Allocator>::size_type i = 0; i < t.size(); i++)
 		{
 			ar << *i;
 			//ar << t[i];

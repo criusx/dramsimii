@@ -110,7 +110,7 @@ if platform == 'debug':
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugOpt':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogO')
-	envDebug.Append(CCFLAGS = '-g -O2 -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
+	envDebug.Append(CCFLAGS = '-g -O3 -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
 	debug = envDebug.Program('dramSimII.debugOpt',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugsimple':
@@ -165,6 +165,6 @@ elif platform == 'all':
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)
 else:
 	envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
-	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -Wextra -Wunused -pedantic -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -DNDEBUG')
+	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -Wextra -Wunused -pedantic -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=native -DNDEBUG')
 	opt = envOpt.Program('dramSimII.opt',sourceFile)
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)

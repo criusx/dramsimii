@@ -3,9 +3,22 @@ import java.util.HashMap;
 public class DramCommand
 {
 
+  public enum CommandType
+  {
+    ACTIVATE,
+    PRECHARGE,
+    READ,
+    READ_AND_PRECHARGE,
+    WRITE,
+    WRITE_AND_PRECHARGE,
+    REFRESH,
+    ;
+  }
+
   private String command;
   private static HashMap<Integer, Long> lastActivateTime = new HashMap<Integer, Long>();
-  private String addr, type;
+  private String addr;
+  private CommandType type;
   private int F, col, row;
   private int MG, rank, bank, chan;
   private long originalStart, start, enqueue, end, T, DLY;
@@ -16,19 +29,21 @@ public class DramCommand
   private DramCommand(DramCommand casp, int type)
   {
     originalStart = casp.getStart();
+
     switch (type)
     {
       case 0: //Return CAS Assumes end time is end of data burst
         F = casp.getF();
         MG = casp.getMG();
-        this.type = "CAS";
+        this.type = CommandType.READ;
         addr = casp.getAddr();
         chan = casp.getChan();
         rank = casp.getRank();
         bank = casp.getBank();
         row = casp.getRow();
         col = casp.getCol();
-        start = casp.getStart() + DramSimValid.getTimingParameter("tAL");
+        //start = casp.getStart() + DramSimValid.getTimingParameter("tAL");
+        start = casp.getStart();
         enqueue = casp.getEnqueue();
         end = DramSimValid.getTimingParameter("tCAS") + DramSimValid.getTimingParameter("tBurst") + start;
         T = end - start;
@@ -37,7 +52,7 @@ public class DramCommand
       default: //return Pre Assume end of Pre is at end of array precharge tRP
         F = casp.getF();
         MG = casp.getMG();
-        this.type = "Pre";
+        this.type = CommandType.PRECHARGE;
         addr = casp.getAddr();
         chan = casp.getChan();
         rank = casp.getRank();
@@ -70,12 +85,13 @@ public class DramCommand
     try
     {
       l = l.substring(2);
-      command = l;
-      F = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
-      l = l.substring(l.indexOf(']') + 2);
-      MG = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
-      l = l.substring(l.indexOf(']') + 2);
-      type = l.substring(0, l.indexOf("addr")).trim();
+      command = l.substring(0, l.indexOf(' '));
+      //F = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
+      //l = l.substring(l.indexOf(']') + 2);
+      //MG = Integer.parseInt(l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim(), 16);
+      //l = l.substring(l.indexOf(']') + 2);
+      String type = l.substring(0, l.indexOf("addr")).trim();
+      setCommandType(type);
       l = l.substring(type.length());
       addr = l.substring(l.indexOf('[') + 1, l.indexOf(']')).trim();
       l = l.substring(l.indexOf(']') + 2);
@@ -111,14 +127,36 @@ public class DramCommand
     }
   }
 
+  private void setCommandType(String commandString)
+  {
+    if (commandString.compareToIgnoreCase("RAS") == 0)
+      type = CommandType.ACTIVATE;
+    else if (commandString.compareToIgnoreCase("PREC") == 0)
+      type = CommandType.PRECHARGE;
+    else if (commandString.compareToIgnoreCase("REF") == 0)
+      type = CommandType.REFRESH;
+    else if (commandString.compareToIgnoreCase("CAS") == 0)
+      type = CommandType.READ;
+    else if (commandString.compareToIgnoreCase("CASW") == 0)
+      type = CommandType.WRITE;
+    else if (commandString.compareToIgnoreCase("CAS+P") == 0)
+      type = CommandType.READ_AND_PRECHARGE;
+    else if (commandString.compareToIgnoreCase("CASW+P") == 0)
+      type = CommandType.WRITE_AND_PRECHARGE;
+    else
+      throw new IllegalArgumentException();
+
+  }
+
   public DramCommand getCAS()
   {
     DramCommand dc = new DramCommand(this, 0);
-    if (this.getType().equalsIgnoreCase("CAS+P"))
+
+    if (this.getType() == CommandType.READ_AND_PRECHARGE)
       return dc;
     else
     { //Assumes CASW ends after data restore
-      dc.type = "CASW";
+      dc.type = CommandType.WRITE;
       dc.end = 
           this.getStart() + DramSimValid.getTimingParameter("tCWD") + DramSimValid.getTimingParameter("tBurst") + DramSimValid.getTimingParameter("tWR");
       dc.T = dc.end - dc.start;
@@ -167,7 +205,7 @@ public class DramCommand
     return col;
   }
 
-  public String getType()
+  public CommandType getType()
   {
     return type;
   }

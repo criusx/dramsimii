@@ -25,8 +25,8 @@ public class DramRank {
 	}
 	
 	public String checkTiming(DramCommand com){
-		if(com.getType().equalsIgnoreCase("RAS")){
-			if(recentCommands.get(1).getType().equalsIgnoreCase("RAS")){
+		if(com.getType()== DramCommand.CommandType.ACTIVATE){
+			if(recentCommands.get(1).getType()== DramCommand.CommandType.ACTIVATE){
 				
 			}
 		}

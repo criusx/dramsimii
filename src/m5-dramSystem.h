@@ -38,13 +38,13 @@ private:
 	{
 
 	private:
-		
+
 		M5dramSystem *memory;	///< pointer to the wrapper class so static functions may see the single instance
 
 	public:
 		// constructor
 		TickEvent(M5dramSystem *c);
-		
+
 		void process();			///< process to call when a tick event happens
 
 		const char *description();	///< return a string that describes this event
@@ -120,7 +120,7 @@ public:
 	void getAddressRanges(AddrRangeList &resp, bool &snoop);
 
 	int getCPURatio() const { return cpuRatio; }			///< returns the ratio of the cpu frequency to the memory frequency
-	
+
 	//float getInvCPURatio() const { return invCpuRatio; }	///< returns the ratio of the memory frequency to the cpu frequency
 
 	void moveToTime(tick now);

@@ -1,3 +1,4 @@
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +40,7 @@ public class DramSimValid
     parseParameters(timingFile);
     System.out.println(checkParameters());
 
-    lengthOfWindow = getLongestTiming();
+    lengthOfWindow = 3 * getLongestTiming();
     for (int i = 0; i < chans.length; i++)
       chans[i] = new DramChannel(timingParameters, lengthOfWindow);
     commands = new ArrayList<DramCommand>();
@@ -119,8 +120,10 @@ public class DramSimValid
     try
     {
       FileOutputStream fOut = new FileOutputStream(outFile);
-      gOut = new GZIPOutputStream(fOut);
-      //gOut = new BufferedOutputStream(fOut);
+      if (outFile.endsWith("gz"))
+        gOut = new GZIPOutputStream(fOut);
+      else
+        gOut = new BufferedOutputStream(fOut);
     }
     catch (FileNotFoundException e)
     {
@@ -138,7 +141,7 @@ public class DramSimValid
       // GZIPInputStream gzStream = new GZIPInputStream(fis, 32768);
 
       BufferedReader gzStream;
-      if (file.endsWith("gz"))
+      if (file.endsWith("gz") || file.endsWith("gz.filepart"))
         gzStream = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))));
       else
         gzStream = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -147,7 +150,7 @@ public class DramSimValid
       String line;
       while ((line = gzStream.readLine()) != null)
       {
-        if (line.startsWith("C F"))
+        if (line.startsWith("C "))
         {
           dc = new DramCommand(line);
           //Process Compound Commands
@@ -171,7 +174,7 @@ public class DramSimValid
           }
         }
 
-        if (currentB++ % 100000 == 0)
+        if (++currentB % 100000 == 0)
         {
           System.out.print(currentB + "/" + totalB + "/" + errorsFound + "\r");
         }
