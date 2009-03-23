@@ -593,8 +593,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			{
 				memory->currentTransactionID = (memory->currentTransactionID + 1) % UINT_MAX;
 			}
-			
-
+		
 			// deschedule and reschedule yourself to wake at the next event time
 			if (memory->tickEvent.scheduled())
 				memory->tickEvent.deschedule();

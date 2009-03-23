@@ -30,6 +30,7 @@
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/functional.hpp>
 
 #ifndef WIN32
 #include <boost/iostreams/filter/bzip2.hpp>
@@ -367,10 +368,9 @@ bool System::enqueue(Transaction *currentTransaction)
 	// attempt to insert the transaction into the per-channel transaction queue
 	bool result = channel[currentTransaction->getAddress().getChannel()].enqueue(currentTransaction);
 
-#ifdef M5DEBUG	
-	M5_TIMING_LOG((result ? "" : "!") << "+T ch[" << currentTransaction->getAddress().getChannel() << "](" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ")")
-#endif
-		return result;
+	DEBUG_TRANSACTION_LOG((result ? "" : "!") << "+T ch[" << currentTransaction->getAddress().getChannel() << "](" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ") " << *currentTransaction)
+
+	return result;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -400,12 +400,12 @@ void System::moveToTime(const tick endTime)
 	M5_TIMING_LOG("ch to [" << std::dec << endTime << "]");
 
 	//unsigned finishedTransaction = UINT_MAX;
-	int i;
 	//#pragma omp parallel for private(i)
-	for (i = channel.size() - 1; i >= 0; i--)
-	{
-		channel[i].moveToTime(endTime);
-	}
+	std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime),endTime));
+// 	for (i = channel.size() - 1; i >= 0; i--)
+// 	{
+// 		channel[i].moveToTime(endTime);
+// 	}
 
 	updateSystemTime();
 	checkStats();
@@ -485,31 +485,16 @@ void System::runSimulations(const unsigned requestCount)
 {
 	Transaction *inputTransaction = NULL;
 
-	tick newTime = 0;
+	tick newTime = (rand() % 65536) + 65536;
+
+	resetToTime(newTime);
+
+	inputTransaction = inputStream.getNextIncomingTransaction();
 
 	for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
-	{		
-		if (!inputTransaction)
-		{
-			inputTransaction = inputStream.getNextIncomingTransaction();
+	{				
+		moveToTime(min(nextTick(), max(inputTransaction->getArrivalTime(),channel[inputTransaction->getAddress().getChannel()].getTime() + 1)));
 
-			if (!inputTransaction)
-				break;
-
-			newTime = channel[inputTransaction->getAddress().getChannel()].getTime();
-			// if the previous transaction was delayed, thus making this arrival be in the past
-			// prevent new arrivals from arriving in the past
-			//inputTransaction->setEnqueueTime(max(inputTransaction->getEnqueueTime(),channel[inputTransaction->getAddress().channel].getTime()));
-		}
-
-		// in case this transaction tried to arrive while the queue was full
-
-
-		//tick nearFinish = 0;
-
-		// as long as transactions keep happening prior to this time
-		//if (moveToTime(min(inputTransaction->getEnqueueTime(),nextTick()),nearFinish))
-		moveToTime(max(newTime, inputTransaction->getArrivalTime()));
 		if (this->pendingTransactionCount() > 0)
 		{
 			cerr << "not right, no host transactions here" << endl;
@@ -521,17 +506,20 @@ void System::runSimulations(const unsigned requestCount)
 		{
 			if (enqueue(inputTransaction))
 			{
-				inputTransaction = NULL;
+				inputTransaction = inputStream.getNextIncomingTransaction();
+
+				if (!inputTransaction)
+					break;
+
 				i--;
-			}
-			else
-			{
-				// figure that the cpu <=> mch bus runs at the mostly the same speed
-				//inputTransaction->setEnqueueTime(inputTransaction->getEnqueueTime() + channel[0].getTimingSpecification().tCMD());
-				newTime = max(channel[inputTransaction->getAddress().getChannel()].nextTick(), newTime);
 			}
 		}
 	}
+
+	if (inputTransaction)
+		delete inputTransaction;
+
+	moveToTime(channel[0].getTime() + 64000000);
 }
 
 

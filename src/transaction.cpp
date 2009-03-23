@@ -25,7 +25,7 @@ using std::setw;
 using namespace DRAMsimII;
 
 // initialize the static members
-Queue<Transaction> Transaction::freeTransactionPool(4*POOL_SIZE,true);
+Queue<Transaction> Transaction::freeTransactionPool(12*POOL_SIZE,true);
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief constructor to make a transaction with no values set
@@ -113,6 +113,7 @@ void *Transaction::operator new(size_t size)
 void Transaction::operator delete(void *mem)
 {
 	Transaction *trans = static_cast<Transaction*>(mem);
+	trans->~Transaction();
 	freeTransactionPool.releaseItem(trans);
 }
 

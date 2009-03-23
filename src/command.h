@@ -81,8 +81,8 @@ namespace DRAMsimII
 		// constructors
 		explicit Command(const Command&);
 		explicit Command();		
-		explicit Command(Transaction& hostTransaction, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
-		explicit Command(Transaction& hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
+		explicit Command(Transaction *hostTransaction, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
+		explicit Command(Transaction *hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType commandType = READ);
 		~Command();
 
 		// accessors

@@ -13,9 +13,12 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
-
+//#define _CRTDBG_MAP_ALLOC
 #include <iostream>
 #include <fstream>
+
+//#include <stdlib.h>
+//#include <crtdbg.h>
 
 #include "globals.h"
 #include "System.h"
@@ -48,6 +51,7 @@ int main(int argc,char **argv, char *envp[])
 
 	//cerr << ds.timing_specification;
 	//cerr << (dram_statistics) ds;
+	//_CrtDumpMemoryLeaks();
 	return 0;
 }
 

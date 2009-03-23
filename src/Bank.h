@@ -48,7 +48,6 @@ namespace DRAMsimII
 		tick lastCASTime;				///< when did last CAS command start?
 		tick lastCASWTime;				///< when did last CASW command start?
 		tick lastPrechargeTime;			///< when did last Precharge command start?
-		tick lastRefreshAllTime;		///< must respect t_rfc. concurrent refresh takes time
 		unsigned lastCASLength;			///< the length of the last CAS command issued
 		unsigned lastCASWLength;		///< the length of the last CASW command issued
 
@@ -56,8 +55,7 @@ namespace DRAMsimII
 		tick nextReadTime;					///< the time at which a CAS may be sent to this rank
 		tick nextWriteTime;					///< the time at which a CASW may be sent to this rank
 		tick nextPrechargeTime;				///< the time at which a Pre may be sent to this rank
-		tick nextRefreshTime;				///< the time at which a Ref may be sent to this rank
-
+		
 		unsigned openRowID;				///< if the bank is open, what is the row id?
 		bool activated;					///< if the bank is activated, else precharged
 
@@ -86,8 +84,7 @@ namespace DRAMsimII
 		tick getLastCASWTime() const {return lastCASWTime; }
 
 		tick getLastPrechargeTime() const { return lastPrechargeTime; }
-		tick getLastRefreshAllTime() const { return lastRefreshAllTime; }
-
+		
 		unsigned getLastCASLength() const { return lastCASLength; }
 		unsigned getLastCASWLength() const { return lastCASWLength; }
 
@@ -143,7 +140,7 @@ namespace DRAMsimII
 		void serialize( Archive & ar, const unsigned version)
 		{
 			ar & perBankQueue;
-			ar & lastRASTime & lastCASTime & lastCASWTime & lastPrechargeTime & lastRefreshAllTime & lastCASLength &
+			ar & lastRASTime & lastCASTime & lastCASWTime & lastPrechargeTime & lastCASLength &
 				lastCASWLength & openRowID & activated & RASCount & totalRASCount & CASCount & totalCASCount & CASWCount & totalCASWCount;
 		}
 

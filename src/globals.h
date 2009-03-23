@@ -156,6 +156,6 @@ namespace DRAMsimII
 
 #define PI 3.1415926535897932384626433832795
 
-#define POOL_SIZE 32
+#define POOL_SIZE 64
 }
 #endif

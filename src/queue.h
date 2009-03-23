@@ -43,12 +43,11 @@ namespace DRAMsimII
 	class Queue
 	{
 	private:
-		//unsigned maxCount; ///< how many elements can there be total
 		unsigned count;	///< how many elements are in the queue now
 		unsigned head;	///< the point where items will be inserted
 		unsigned tail;	///< the point where items will be removed
 		std::vector<T *> entry;		///< the circular queue
-		bool pool;		///< whether or not this is a pool
+		const bool pool;		///< whether or not this is a pool
 
 	public:
 		explicit Queue(): count(0), head(0), tail(0), entry(0), pool(false)
@@ -63,6 +62,8 @@ namespace DRAMsimII
 			entry(rhs.entry.size()),
 			pool(rhs.pool)
 		{
+			entry.reserve(rhs.entry.size());
+
 			for (unsigned i = 0; i < rhs.count; i++)
 			{
 				assert(rhs.at(i) != NULL);
@@ -85,6 +86,8 @@ namespace DRAMsimII
 			entry(size),
 			pool(preallocate)
 		{
+			entry.reserve(size);
+
 			if (preallocate)
 			{
 				while (count < size)
@@ -412,7 +415,7 @@ namespace DRAMsimII
 			count = rhs.count;
 			head = rhs.head;
 			tail = rhs.tail;
-			pool = rhs.pool;
+			const_cast<bool&>(pool) = rhs.pool;
 
 			entry.resize(rhs.entry.size());
 

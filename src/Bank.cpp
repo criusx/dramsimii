@@ -34,14 +34,12 @@ lastRASTime(-100),
 lastCASTime(-100),
 lastCASWTime(-100),
 lastPrechargeTime(-1ll * settings.tRP),
-lastRefreshAllTime(-100),
 lastCASLength(8),
 lastCASWLength(8),
 nextActivateTime(0),
 nextReadTime(0),
 nextWriteTime(0),
 nextPrechargeTime(0),
-nextRefreshTime(settings.tRFC - 100ll),
 openRowID(0),
 activated(settings.rowBufferManagementPolicy == OPEN_PAGE), // close page starts with RAS, open page starts with Pre
 RASCount(0),
@@ -63,14 +61,12 @@ lastRASTime(rhs.lastRASTime),
 lastCASTime(rhs.lastCASTime),
 lastCASWTime(rhs.lastCASWTime),
 lastPrechargeTime(rhs.lastPrechargeTime),
-lastRefreshAllTime(rhs.lastRefreshAllTime),
 lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
 nextActivateTime(rhs.nextActivateTime),
 nextReadTime(rhs.nextReadTime),
 nextWriteTime(rhs.nextWriteTime),
 nextPrechargeTime(rhs.nextPrechargeTime),
-nextRefreshTime(rhs.nextRefreshTime),
 openRowID(rhs.openRowID),
 activated(rhs.activated),
 RASCount(rhs.RASCount),
@@ -92,14 +88,12 @@ lastRASTime(rhs.lastRASTime),
 lastCASTime(rhs.lastCASTime),
 lastCASWTime(rhs.lastCASWTime),
 lastPrechargeTime(rhs.lastPrechargeTime),
-lastRefreshAllTime(rhs.lastRefreshAllTime),
 lastCASLength(rhs.lastCASLength),
 lastCASWLength(rhs.lastCASWLength),
 nextActivateTime(rhs.nextActivateTime),
 nextReadTime(rhs.nextReadTime),
 nextWriteTime(rhs.nextWriteTime),
 nextPrechargeTime(rhs.nextPrechargeTime),
-nextRefreshTime(rhs.nextRefreshTime),
 openRowID(rhs.openRowID),
 activated(rhs.activated),
 RASCount(rhs.RASCount),
@@ -121,14 +115,12 @@ lastRASTime(0),
 lastCASTime(0),
 lastCASWTime(0),
 lastPrechargeTime(0),
-lastRefreshAllTime(0),
 lastCASLength(0),
 lastCASWLength(0),
 nextActivateTime(0),
 nextReadTime(0),
 nextWriteTime(0),
 nextPrechargeTime(0),
-nextRefreshTime(0),
 openRowID(0),
 activated(0),
 RASCount(0),
@@ -241,10 +233,6 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 void Bank::issueREF(const tick currentTime)
 {
 	assert(!activated);
-	lastRefreshAllTime = currentTime;
-
-	// calculate when the next few commands can happen
-
 }
 
 
@@ -271,7 +259,7 @@ tick Bank::next(Command::CommandType nextCommandType) const
 		return nextPrechargeTime;
 		break;
 	case Command::REFRESH_ALL:
-		return nextRefreshTime;
+		return 0;
 		break;
 	default:
 		return TICK_MAX;
@@ -291,6 +279,7 @@ void Bank::resetToTime(const tick time)
 	lastPrechargeTime = time - timing.tRP();
 	lastCASTime = time - timing.tCAS() - timing.tBurst();
 	lastCASWTime = time - timing.tCWD() - timing.tWTR() - timing.tBurst();
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -323,7 +312,7 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 #ifndef NDEBUG
 				bool result =
 #endif
-					perBankQueue.insert(new Command(*value, time,  false, timing.tBurst()), currentIndex + 1);
+					perBankQueue.insert(new Command(value, time,  false, timing.tBurst()), currentIndex + 1);
 				assert(result);
 
 				return true;
@@ -342,7 +331,7 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 #ifndef NDEBUG
 			bool result =
 #endif
-				perBankQueue.push_front(new Command(*value, time, false, timing.tBurst()));
+				perBankQueue.push_front(new Command(value, time, false, timing.tBurst()));
 			assert(result);
 
 			return true;
@@ -430,7 +419,7 @@ bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tic
 				assert(perBankQueue[index + 1]->isPrecharge());
 			}
 
-			bool result = perBankQueue.insert(new Command(*incomingTransaction,time, systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);
+			bool result = perBankQueue.insert(new Command(incomingTransaction,time, systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);
 			assert(perBankQueue[index + 1]->getAddress() == incomingTransaction->getAddress());
 			assert(result);
 			return result;
@@ -483,7 +472,6 @@ Bank& Bank::operator =(const Bank& rhs)
 	lastCASTime = rhs.lastCASTime;
 	lastCASWTime = rhs.lastCASWTime;
 	lastPrechargeTime = rhs.lastPrechargeTime;
-	lastRefreshAllTime = rhs.lastRefreshAllTime;	
 	lastCASLength = rhs.lastCASLength;		
 	lastCASWLength = rhs.lastCASWLength;		
 	openRowID = rhs.openRowID;			
@@ -505,7 +493,7 @@ bool Bank::operator==(const Bank& rhs) const
 {
 	return (timing == rhs.timing && systemConfig == rhs.systemConfig && perBankQueue == rhs.perBankQueue && lastRASTime == rhs.lastRASTime &&
 		lastCASTime == rhs.lastCASTime && lastCASWTime == rhs.lastCASWTime && lastPrechargeTime == rhs.lastPrechargeTime &&
-		lastRefreshAllTime == rhs.lastRefreshAllTime && lastCASLength == rhs.lastCASLength && lastCASWLength == rhs.lastCASWLength &&
+		lastCASLength == rhs.lastCASLength && lastCASWLength == rhs.lastCASWLength &&
 		openRowID == rhs.openRowID && activated == rhs.activated && RASCount == rhs.RASCount && totalRASCount == rhs.totalRASCount &&
 		CASCount == rhs.CASCount && totalCASCount == rhs.totalCASCount && CASWCount == rhs.CASWCount && totalCASWCount == rhs.totalCASWCount);
 }

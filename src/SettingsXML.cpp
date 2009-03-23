@@ -165,8 +165,7 @@ systemType(BASELINE_CONFIG)
 			settingsFile.c_str(),
 			NULL,
 			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);
-#endif
-		
+#endif	
 
 	}
 
@@ -328,6 +327,8 @@ systemType(BASELINE_CONFIG)
 
 	// free the document
 	xmlFreeDoc(doc);
+
+	xmlCleanupParser();
 
 	boost::mt19937 generator(std::time(0));
 	// Define a uniform random number distribution which produces "double"

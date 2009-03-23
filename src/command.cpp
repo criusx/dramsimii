@@ -23,7 +23,7 @@ using std::ostream;
 using namespace DRAMsimII;
 
 // initialize the static member
-Queue<Command> Command::freeCommandPool(8*POOL_SIZE,true);
+Queue<Command> Command::freeCommandPool(16*POOL_SIZE,true);
 
 Command::Command():
 Event(),
@@ -49,14 +49,14 @@ length(rhs.length)
 		);
 }
 
-Command::Command(Transaction& hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
+Command::Command(Transaction *hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(addr,enqueueTime),
-hostTransaction(type == READ ? &hostTransaction : NULL), // this link is only needed for CAS commands
+hostTransaction((type == READ) ? hostTransaction : NULL),
 length(commandLength)
 {
 	if (type == READ)
 	{
-		switch (hostTransaction.getType())
+		switch (hostTransaction->getType())
 		{
 		case Transaction::AUTO_REFRESH_TRANSACTION:
 			commandType = REFRESH_ALL;
@@ -80,24 +80,24 @@ length(commandLength)
 		commandType = type;
 	}
 
-	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction.isWrite()) ||
-		(commandType == READ_AND_PRECHARGE && hostTransaction.isRead()) ||
-		(commandType == READ && hostTransaction.isRead()) ||
-		(commandType == WRITE && hostTransaction.isWrite()) ||
+	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
+		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
+		(commandType == READ && hostTransaction->isRead()) ||
+		(commandType == WRITE && hostTransaction->isWrite()) ||
 		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
-		(commandType == REFRESH_ALL && hostTransaction.isRefresh())
+		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
 		);
 }
 
 
-Command::Command(Transaction& hostTransaction, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
-Event(hostTransaction.getAddress(),enqueueTime),
-hostTransaction(type == READ ? &hostTransaction : NULL), // this link is only needed for CAS commands
+Command::Command(Transaction *hostTransaction, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
+Event(hostTransaction->getAddress(),enqueueTime),
+hostTransaction((type == READ) ? hostTransaction : NULL),
 length(commandLength)
 {
 	if (type == READ)
 	{
-		switch (hostTransaction.getType())
+		switch (hostTransaction->getType())
 		{
 		case Transaction::AUTO_REFRESH_TRANSACTION:
 			commandType = REFRESH_ALL;
@@ -121,12 +121,12 @@ length(commandLength)
 		commandType = type;
 	}
 
-	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction.isWrite()) ||
-		(commandType == READ_AND_PRECHARGE && hostTransaction.isRead()) ||
-		(commandType == READ && hostTransaction.isRead()) ||
-		(commandType == WRITE && hostTransaction.isWrite()) ||
+	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
+		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
+		(commandType == READ && hostTransaction->isRead()) ||
+		(commandType == WRITE && hostTransaction->isWrite()) ||
 		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
-		(commandType == REFRESH_ALL && hostTransaction.isRefresh())
+		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
 		);
 }
 
@@ -182,7 +182,7 @@ void *Command::operator new(size_t size)
 void Command::operator delete(void *mem)
 {
 	Command *cmd = static_cast<Command*>(mem);
-	//assert(!cmd->getHost());
+	assert(!cmd->getHost());
 	cmd->~Command();
 	freeCommandPool.releaseItem(cmd);
 }

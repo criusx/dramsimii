@@ -26,7 +26,7 @@ using namespace DRAMsimII;
 
 Rank::Rank(const Settings& settings, const TimingSpecification &timing, const SystemConfiguration &systemConfig):
 timing(timing),
-lastRefreshTime(-100),
+lastRefreshTime(-1ll * settings.tRFC),
 lastPrechargeAnyBankTime(-100),
 lastCASTime(-100),
 lastCASWTime(-100),
@@ -38,7 +38,7 @@ nextActivateTime(0),
 nextReadTime(0),
 nextWriteTime(0),
 nextPrechargeTime(0),
-nextRefreshTime(settings.tRFC - 100ll),
+nextRefreshTime(0),
 lastCASLength(0),
 lastCASWLength(0),
 otherLastCASLength(0),
@@ -117,7 +117,7 @@ bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConf
 
 Rank::Rank(const TimingSpecification &timingSpec, const std::vector<Bank> & newBank):
 timing(timingSpec),
-lastRefreshTime(-100),
+lastRefreshTime(-1ll * timingSpec.tRFC()),
 lastPrechargeAnyBankTime(-100),
 lastCASTime(-100),
 lastCASWTime(-100),
@@ -170,10 +170,6 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 
 	// calculate when the next few commands can happen
 	nextActivateTime = max(currentTime + timing.tRRD(), max(lastActivateTimes.back() + timing.tFAW() , nextActivateTime));
-	// ACT/rank does not directly affect nextReadTime
-	// ACT/rank does not directly affect nextWriteTime
-	// ACT/rank does not directly affect nextPrefetchTime
-	// ACT/rank does not directly influence nextRefreshTime
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -206,7 +202,7 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 
 	// calculate when the next few commands can happen
 	nextRefreshTime = max(nextRefreshTime, lastPrechargeAnyBankTime + timing.tRP());
-	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC() || currentTime < 250);
+	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC());
 
 }
 
@@ -230,8 +226,6 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 	// calculate when the next few commands can happen
 	nextReadTime = max(nextReadTime, currentTime + timing.tBurst());
 	nextWriteTime = max(nextWriteTime, currentTime + timing.tCAS() + timing.tBurst() + timing.tRTRS() - timing.tCWD());
-	//nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tBurst() + timing.tRTP() - timing.tCCD());
-
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -254,7 +248,6 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 	// calculate when the next few commands can happen
 	nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tWTR());
 	nextWriteTime = max(nextWriteTime, currentTime + timing.tBurst());
-	//nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -308,6 +301,7 @@ void Rank::resetPrechargeTime(const tick time)
 {
 	prechargeTime = 1;
 	lastPrechargeAnyBankTime = max(time, lastPrechargeAnyBankTime); 
+
 	nextRefreshTime = std::max(nextRefreshTime, lastPrechargeAnyBankTime + timing.tRP());
 	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC());
 }
@@ -388,9 +382,12 @@ void Rank::resetToTime(const tick time)
 	lastCASTime = time - 1000;
 	lastCASWTime = time - 1000;
 	lastPrechargeAnyBankTime = time - 1000;
-	lastRefreshTime = time - timing.tREFI();
+	lastRefreshTime = time - timing.tRFC();
+	
+	nextActivateTime = time;
+	nextRefreshTime = time;
 	for (boost::circular_buffer<tick>::iterator i = lastActivateTimes.begin(); i != lastActivateTimes.end(); i++)
-		*i = time - timing.tRP();
+		*i = time - timing.tFAW();
 	for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); i++)
 		i->resetToTime(time);
 
