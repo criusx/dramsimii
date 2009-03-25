@@ -397,7 +397,7 @@ void System::resetToTime(tick time)
 //////////////////////////////////////////////////////////////////////
 void System::moveToTime(const tick endTime)
 {
-	M5_TIMING_LOG("ch to [" << std::dec << endTime << "]");
+	//M5_TIMING_LOG("ch to [" << std::dec << endTime << "]");
 
 	//unsigned finishedTransaction = UINT_MAX;
 	//#pragma omp parallel for private(i)
@@ -493,7 +493,7 @@ void System::runSimulations(const unsigned requestCount)
 
 	for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
 	{				
-		moveToTime(min(nextTick(), max(inputTransaction->getArrivalTime(),channel[inputTransaction->getAddress().getChannel()].getTime() + 1)));
+		moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()),time + 1));
 
 		if (this->pendingTransactionCount() > 0)
 		{

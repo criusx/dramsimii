@@ -260,12 +260,12 @@ void Channel::moveToTime(const tick endTime)
 //////////////////////////////////////////////////////////////////////////
 /// @brief determines when the next transaction is decoded, command ready to be executed or next refresh command arrives
 /// @return the time when the next event happens
-/// @sa readTransactionSimple() readNextCommand() earliestExecuteTime() checkForAvailableCommandSlots() nextRefresh()
+/// @sa readTransactionSimple() readNextCommand() earliestExecuteTime() checkForAvailableCommandSlots() nextRefreshTime()
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 tick Channel::nextTick() const
 {
-	return max(min(min(nextTransactionDecodeTime(),nextCommandExecuteTime()),nextRefresh()),time + 1);
+	return max(min(min(nextTransactionDecodeTime(),nextCommandExecuteTime()),nextRefreshTime()),time + 1);
 }
 
 
@@ -333,7 +333,7 @@ tick Channel::nextCommandExecuteTime() const
 /// @return the time at which the next refresh should be issued for this channel
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-tick Channel::nextRefresh() const
+tick Channel::nextRefreshTime() const
 {
 	assert(rank.size() >= 1);
 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
@@ -703,7 +703,7 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 {
 	const unsigned delay = bufferDelay ? timingSpecification.tBufferDelay() : 0;
 
-	unsigned val = readAvailableTransaction();
+	unsigned val = readAvailableTransaction(bufferDelay);
 
 	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : NULL;
 
@@ -716,18 +716,18 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 	}
 	else
 	{
-		const tick nextRefreshTime = nextRefresh();
+		const tick nextRefresh = nextRefreshTime();
 
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
 		// if there is a normal transaction ready to go, it's ready to go and the refresh command isn't starving
 		if (nextTransaction &&
-			((time < nextRefreshTime + systemConfig.getSeniorityAgeLimit()) &&
+			((time < nextRefresh + systemConfig.getSeniorityAgeLimit()) &&
 			(time >= nextTransaction->getEnqueueTime() + delay)))
 		{
 			return nextTransaction;
 		}
 		// either there is no transaction or the refresh command will starve
-		else if ((time >= nextRefreshTime) && (checkForAvailableCommandSlots(readNextRefresh())))
+		else if ((time >= nextRefresh) && (checkForAvailableCommandSlots(readNextRefresh())))
 		{
 			return readNextRefresh();
 		}
@@ -742,13 +742,15 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 /// @returns a pointer to the next transaction that can currently be decoded
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-unsigned Channel::readAvailableTransaction() const
+unsigned Channel::readAvailableTransaction(const bool bufferDelay) const
 {
+	const unsigned delay = bufferDelay ? timingSpecification.tBufferDelay() : 0;
+
 	unsigned limit = min(systemConfig.getDecodeWindow(), transactionQueue.size());
 	for (unsigned i = 0; i < limit; i++)
 	{
 		// if it's ready to decode
-		if ((transactionQueue[i]->getEnqueueTime() + timingSpecification.tBufferDelay() <= time) &&
+		if ((transactionQueue[i]->getEnqueueTime() + delay <= time) &&
 			checkForAvailableCommandSlots(transactionQueue[i]))
 		{
 			bool conflict = false;
@@ -780,7 +782,7 @@ Transaction *Channel::getAvailableTransaction(unsigned useThis)
 		return transactionQueue.remove(useThis);
 	else
 	{
-		unsigned val = readAvailableTransaction();
+		unsigned val = readAvailableTransaction(true);
 		if (val < UINT_MAX)
 			return transactionQueue.remove(val);
 		else
@@ -796,7 +798,7 @@ Transaction *Channel::getAvailableTransaction(unsigned useThis)
 //////////////////////////////////////////////////////////////////////////
 Transaction *Channel::getTransaction()
 {
-	unsigned val = readAvailableTransaction();
+	unsigned val = readAvailableTransaction(true);
 
 	const Transaction *nextTransaction = (val < UINT_MAX) ? transactionQueue[val] : NULL;
 
@@ -810,17 +812,17 @@ Transaction *Channel::getTransaction()
 	}
 	else
 	{
-		const tick nextRefreshTime = nextRefresh();
+		const tick nextRefresh = nextRefreshTime();
 
 		// give an advantage to normal transactions, but prevent starvation for refresh operations
 		// if there is a normal transaction ready to go, it's ready to go and the refresh command isn't starving
 		if (nextTransaction &&
-			((time < nextRefreshTime + systemConfig.getSeniorityAgeLimit()) &&
+			((time < nextRefresh + systemConfig.getSeniorityAgeLimit()) &&
 			(time >= nextTransaction->getEnqueueTime() + timingSpecification.tBufferDelay())))
 		{
 			return getAvailableTransaction(val);
 		}
-		else if ((time >= nextRefreshTime) && (checkForAvailableCommandSlots(readNextRefresh())))
+		else if ((time >= nextRefresh) && (checkForAvailableCommandSlots(readNextRefresh())))
 		{
 			return createNextRefresh();
 		}

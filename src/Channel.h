@@ -64,11 +64,20 @@ namespace DRAMsimII
 		void retireCommand(Command *);
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
 		bool transaction2commands(Transaction *);
-		Command *getNextCommand(const Command *useThisCommand = NULL);		
+		Command *getNextCommand(const Command *useThisCommand = NULL);
+
+		Transaction *getTransaction();																
+		Transaction *getAvailableTransaction(unsigned useThis = UINT_MAX);
+
+		const Transaction *readTransaction(bool) const;												
+		unsigned readAvailableTransaction(bool) const;
+
+		Transaction *createNextRefresh();
+		const Transaction *readNextRefresh() const;
+
+		tick nextRefreshTime() const;
 		tick nextTransactionDecodeTime() const;
 		tick nextCommandExecuteTime() const;
-		unsigned readAvailableTransaction() const;
-		Transaction *getAvailableTransaction(unsigned useThis = UINT_MAX);
 		void executeCommand(Command *thisCommand);
 
 		// functions that may differ for architectures that inherit this		
@@ -105,12 +114,7 @@ namespace DRAMsimII
 		tick getTime() const { return time; }														///< get the time that this channel is at
 		unsigned getLastRankID() const { return lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1; }///< get the last rank id a command was issued to
 
-		Transaction *getTransaction();																
-		const Transaction *readTransaction(bool) const;												
-		Transaction *createNextRefresh();
-		const Transaction *readNextRefresh() const;
-		tick nextRefresh() const;
-
+		
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }				///< determine how many items are in the transaction completion queue
 		unsigned getTransactionQueueDepth() const { return transactionQueue.depth(); }			///< determine how large the transaction completion queue is
 		Rank& operator[](unsigned rank_num) { return rank[rank_num]; }

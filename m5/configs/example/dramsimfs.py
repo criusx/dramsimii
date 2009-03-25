@@ -124,13 +124,16 @@ parser.add_option("--script", action="store", type="string")
 # Benchmark options
 parser.add_option("--dual", action="store_true",
                   help="Simulate two systems attached with an ethernet link")
+
 parser.add_option("-b", "--benchmark", action="store", type="string",
                   dest="benchmark",
                   help="Specify the benchmark to run. Available benchmarks: %s"\
                   % DefinedBenchmarks)
+
 parser.add_option("-f", "--DRAMsimConfig",
 		  default="/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml",
 		  help="The DRAMsimII config file.")
+
 parser.add_option("--mp",
                   default="", help="Override default memory parameters with this switch")
 
@@ -196,7 +199,7 @@ if options.script is not None:
 np = options.num_cpus
 
 #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'none', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24)
-test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'stride', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24)
+test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'stride', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24, prefetch_cache_check_push=False)
 test_sys.tol2bus = Bus()
 test_sys.l2.cpu_side = test_sys.tol2bus.port
 test_sys.l2.mem_side = test_sys.membus.port

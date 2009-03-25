@@ -240,6 +240,12 @@ void processPower(const string filename)
 
 	inputStream.getline(newLine,256); 
 
+	// get a couple copies of gnuplot running
+	opstream p("gnuplot");
+	p << terminal;
+	opstream p2("gnuplot");
+	p2 << terminal;
+
 	while ((newLine[0] != 0) && (!userStop))
 	{
 		if (newLine[0] == '-')
@@ -364,11 +370,7 @@ void processPower(const string filename)
 
 	userStop = false;
 
-	// get a couple copies of gnuplot running
-	opstream p("gnuplot");
-	p << terminal;
-	opstream p2("gnuplot");
-	p2 << terminal;
+	
 	
 	// make the main power graph
 	for (vector<vector<float> >::const_iterator i = values.begin(); i != values.end(); i++)
@@ -472,7 +474,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 
 	if (!fileExists(openfile.native_directory_string()))
 	{
-		cerr << "cannot find template";
+		cerr << "cannot find template:" << openfile.native_directory_string();
 		return;
 	}
 	string basename;
@@ -485,6 +487,8 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 	{
 		basename = filename.substr(0,position);
 	}
+	else
+		return;
 
 	bf::path printFile = outputDir / (basename + ".html");
 
@@ -515,7 +519,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		out.close();
 	}
 	else
-		cerr << "skipping creation of html file(" <<printFile.string() << "), exists" << endl;
+		cerr << "skipping creation of html file(" << printFile.string() << "), exists" << endl;
 
 
 	bf::path htaccessOut = outputDir / ".htaccess";
@@ -525,8 +529,10 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		bf::copy_file(htaccessFile, htaccessOut);
 	}
 	else
-		cerr << "skipping creation of htaccess file, exists" << endl;
+		cerr << "skipping creation of htaccess file(" << htaccessOut.string() << "), exists" << endl;
 }
+
+
 void processStats(const string filename)
 {
 	// create the output dir

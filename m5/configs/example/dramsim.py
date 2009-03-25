@@ -119,8 +119,8 @@ for i in xrange(np):
         system.cpu[i].addPrivateSplitL1Caches(L1Cache(size='64kB', assoc=2),
                                               L1Cache(size='64kB', assoc=2))
     if options.l2cache:
-        system.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'stride', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24)
-        #system.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'none', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24)
+        system.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'stride', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24, prefetch_cache_check_push=False)
+        #system.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'none', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24, prefetch_cache_check_push=False)
         system.tol2bus = Bus()
         system.l2.cpu_side = system.tol2bus.port
         system.l2.mem_side = system.membus.port

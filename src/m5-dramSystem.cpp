@@ -727,7 +727,7 @@ void M5dramSystem::TickEvent::process()
 	tick next = memory->ds->nextTick();	
 
 
-	M5_TIMING_LOG("schWake [" << static_cast<Tick>(next * memory->getCPURatio()) << "][" << next << "]");
+	M5_TIMING_LOG("schWake [" << next << "]");
 
 	assert(next > currentMemCycle);
 	assert(next * memory->getCPURatio() > curTick);
