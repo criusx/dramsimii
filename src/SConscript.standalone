@@ -115,8 +115,9 @@ if platform == 'script':
 	envScript.Install(os.path.abspath('../scripts'),script)
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.osd')
-	envScriptD.Append(CCFLAGS = '-g -O1 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')
+	envScriptD.Append(CCFLAGS = '-ggdb3 -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')
 	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cpp")
+	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
 	envDebug.Append(CCFLAGS = '-g -O -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')

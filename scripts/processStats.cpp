@@ -40,9 +40,12 @@ using boost::iostreams::filtering_istreambuf;
 using boost::iostreams::file_source;
 using boost::split;
 using boost::starts_with;
+using boost::erase_all;
 using boost::ends_with;
+using boost::replace_all;
 using boost::token_compress_on;
 using boost::trim;
+using boost::ireplace_all_copy;
 using boost::is_any_of;
 using boost::lexical_cast;
 using boost::regex;
@@ -51,10 +54,19 @@ using std::max;
 using std::min;
 using std::vector;
 using std::endl;
+using std::ofstream;
 using std::ifstream;
 using redi::opstream;
 using std::ios;
 using std::list;
+
+#ifdef WIN32
+#include <unordered_map>
+using std::unordered_map;
+#else
+#include <tr1/unordered_map>
+using std::tr1::unordered_map;
+#endif
 
 #define MAXIMUM_VECTOR_SIZE 1 * 32 * 1024
 
@@ -72,6 +84,10 @@ std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \
 std::string extension = "svg";
 
 bool userStop = false;
+
+unordered_map<string,string> &setupDecoder();
+
+unordered_map<string,string> decoder = setupDecoder();
 
 #include "processStats.hh"
 
@@ -165,6 +181,29 @@ bool fileExists(const string& fileName)
 {
 	bf::path newPath(fileName.c_str());
 	return bf::exists(newPath);
+}
+
+unordered_map<string,string> &setupDecoder()
+{
+	static unordered_map<string,string> theMap;
+
+	theMap["SDHIPF"] = "SDRAM High Performance";
+	theMap["SDBAS"] = "SDRAM Baseline";
+	theMap["CPBAS"] = "Close Page Baseline";
+	theMap["LOLOC"] = "Low Locality";
+	theMap["HILOC"] = "High Locality";
+	theMap["GRD"] = "Greedy";
+	theMap["STR"] = "Strict";
+	theMap["BRR"] = "Bank Round Robin";
+	theMap["RRR"] = "Rank Round Robin";
+	theMap["CLSO"] = "Close Page Aggressive";
+	theMap["OPEN"] = "Open Page";
+	theMap["CPAG"] = "Close Page Aggressive";
+	theMap["CLOS"] = "Close Page";
+	theMap["OPA"] = "Open Page Aggressive";
+	theMap["CPBOPT"] = "Close Page Baseline Opt";
+
+	return theMap;
 }
 
 void thumbNail(std::list<string>& fileList)
@@ -267,7 +306,7 @@ void processPower(const string filename)
 				{
 					// look to dump the buffer into the array
 					scaleIndex = (scaleIndex + 1) % scaleFactor;
-			
+
 					// when the scale buffer is full
 					if (scaleIndex == 0)
 					{
@@ -340,7 +379,7 @@ void processPower(const string filename)
 					vector<string> splitLine;
 					split(splitLine,line,is_any_of("[]"));
 					channelCount = lexical_cast<unsigned>(splitLine[1]);
-				
+
 					p << "plot ";
 
 					for (unsigned a = 0; a < channelCount; a++)
@@ -370,8 +409,8 @@ void processPower(const string filename)
 
 	userStop = false;
 
-	
-	
+
+
 	// make the main power graph
 	for (vector<vector<float> >::const_iterator i = values.begin(); i != values.end(); i++)
 	{
@@ -560,9 +599,9 @@ void processStats(const string filename)
 			exit(-1);
 		}
 	}
-	
+
 	std::list<string> filesGenerated;
-	
+
 	unsigned scaleIndex = 0;
 	unsigned scaleFactor = 1;
 	bool throughOnce = false;
@@ -572,13 +611,13 @@ void processStats(const string filename)
 	vector<vector<vector<uint64_t> > > channelDistributionBuffer;
 	vector<vector<vector<vector<unsigned> > > > channelLatencyDistribution;
 	vector<vector<vector<uint64_t> > > channelLatencyDistributionBuffer;
-	
+
 	std::tr1::unordered_map<boost::uint64_t,float> latencyVsPcLow;
 	std::tr1::unordered_map<boost::uint64_t,float> latencyVsPcHigh;
 
 	vector<float> transactionLatency;
 	WeightedAverage averageTransactionLatency;
-	
+
 	vector<unsigned> transactionCount;
 	transactionCount.reserve(MAXIMUM_VECTOR_SIZE);
 	uint64_t transactionCountBuffer;
@@ -648,7 +687,7 @@ void processStats(const string filename)
 	vector<unsigned> workingSetSize;
 	workingSetSize.reserve(MAXIMUM_VECTOR_SIZE);
 	uint64_t workingSetSizeBuffer;
-	
+
 	bool started = false;
 	unsigned ipcLinesWritten = 0;
 	float epochTime = 0.0F;
@@ -689,13 +728,13 @@ void processStats(const string filename)
 					commandLine = splitLine[1];
 					trim(commandLine);
 					cerr << commandLine << endl;
-					
+
 
 					started = true;
 
 					regex channelSearch("ch\\[([0-9]+)\\]");
 					cmatch what;
-					
+
 					if (regex_search(newLine,what,channelSearch))
 					{
 						string value(what[1].first,what[1].second);
@@ -730,7 +769,7 @@ void processStats(const string filename)
 						channelLatencyDistribution.back().reserve(rankCount);
 						channelLatencyDistributionBuffer.push_back(vector<vector<uint64_t> >());
 						channelLatencyDistributionBuffer.back().reserve(rankCount);
-						
+
 						channelDistribution.push_back(vector<vector<vector<unsigned> > >());
 						channelDistribution.back().reserve(rankCount);
 						channelDistributionBuffer.push_back(vector<vector<uint64_t> >());
@@ -753,7 +792,7 @@ void processStats(const string filename)
 								channelLatencyDistribution.back().back().push_back(vector<unsigned>());
 								channelLatencyDistribution.back().back().back().reserve(MAXIMUM_VECTOR_SIZE);
 								channelLatencyDistributionBuffer.back().back().push_back(0ULL);
-								
+
 								channelDistribution.back().back().push_back(vector<unsigned>());
 								channelDistribution.back().back().back().reserve(MAXIMUM_VECTOR_SIZE);
 								channelDistributionBuffer.back().back().push_back(0ULL);
@@ -819,7 +858,7 @@ void processStats(const string filename)
 			{
 				if (starts_with(newLine,"----Transaction Latency"))
 				{
-					
+
 					// only if this is at least the second time around
 					if (throughOnce)
 					{
@@ -930,7 +969,7 @@ void processStats(const string filename)
 									hitMissValues[epoch] = (hitMissValues[2 * epoch] + hitMissValues[2 * epoch + 1]) / 2;
 
 									iCacheHits[epoch] = (iCacheHits[2 * epoch] + iCacheHits[2 * epoch + 1]) / 2;
-									
+
 									iCacheMisses[epoch] = (iCacheMisses[2 * epoch] + iCacheMisses[2 * epoch + 1]) / 2;
 
 									iCacheMissLatency[epoch] = (iCacheMissLatency[2 * epoch] + iCacheMissLatency[2 * epoch + 1]) / 2;
@@ -1167,7 +1206,7 @@ void processStats(const string filename)
 				unsigned rank = atoi(splitLine2);
 				unsigned bank = atoi(splitLine3);
 				unsigned value = atoi(splitLine5);
-			
+
 				channelDistributionBuffer[channel][rank][bank] += value;
 				channelDistributionBuffer[channel][rank].back() += value;
 			}
@@ -1380,7 +1419,7 @@ void processStats(const string filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p1 << "set title \"Total Latency Due to Reads vs. PC Value\\n" << commandLine << "\""<< endl << pcVsLatencyGraph0 << endl;
-	
+
 	if (latencyVsPcLow.size() > 0)
 		for (std::tr1::unordered_map<uint64_t,float>::const_iterator i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); i++)
 			p1 << i->first << " " << period * i->second << endl;
@@ -1630,8 +1669,99 @@ int main(int argc, char** argv)
 {
 	bf::path dir(argv[0]);
 	executableDirectory = dir.branch_path();
-	
+
 	signal(SIGUSR1, sigproc);
+
+	unordered_map<string,string> files;
+
+	for (unsigned i = 0; i < argc; i++)
+	{
+
+		if (ends_with(argv[i],"power.gz") || ends_with(argv[i],"power.bz2") || 
+			ends_with(argv[i],"stats.gz") || ends_with(argv[i],"stats.bz2"))
+		{
+			filtering_istream inputStream;
+			inputStream.push(boost::iostreams::gzip_decompressor());
+			inputStream.push(file_source(argv[i]));
+
+			char newLine[256];
+			//string line = "";
+			
+			if (!inputStream.is_complete())
+				continue;
+
+			inputStream.getline(newLine,256); 
+			unsigned lineCounter = 0;
+
+			while ((newLine[0] != 0) && (!userStop))
+			{
+				const string commandline(newLine);
+				const string filename(argv[i]);
+
+				if (starts_with(commandline, "----Command Line:"))
+				{
+					string basefilename = filename.substr(0,filename.find_last_of('-'));
+					string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
+					string modUrlString = commandline.substr(commandline.find(':')+2,commandline.length());
+					vector<string> splitLine;
+					erase_all(modUrlString, "_");
+					erase_all(modUrlString, "{");
+					erase_all(modUrlString, "}");
+					split(splitLine, modUrlString, is_any_of(" "), token_compress_on);
+
+					string outline;
+					for (vector<string>::const_iterator x = splitLine.begin(); x != splitLine.end(); x++)
+					{
+						string::size_type start = x->find("[");
+						string::size_type end = x->find("]");
+						string benchmarkName;
+						if (start == string::npos || end == string::npos)
+							benchmarkName = *x;
+						else
+							benchmarkName = x->substr(start + 1,end - start - 1);
+						if (decoder.find(benchmarkName) != decoder.end())
+							benchmarkName = decoder[benchmarkName];
+
+						outline += "<td>" + ireplace_all_copy(currentUrlString,"%2",benchmarkName) + "</td>";
+					}
+					files[basefilename] = outline;
+				}
+				if (++lineCounter > 30)
+					break;
+				inputStream.getline(newLine,256);
+			}
+			boost::iostreams::close(inputStream);
+		}
+	}
+
+	// then generate result.html
+	bf::path openfile = executableDirectory / "template2.html";
+
+	if (!fileExists(openfile.native_directory_string()))
+	{
+		cerr << "cannot open template file: " << openfile.native_directory_string();
+		return -1;
+	}
+
+	ifstream is(openfile.directory_string().c_str(), ios::in | ios::ate);
+	ifstream::pos_type length = is.tellg();
+	char *entireFile = new char[length];
+
+	is.seekg(0,ios::beg);
+	is.read(entireFile,length);
+	is.close();
+	string fileList;
+	for (unordered_map<string,string>::const_iterator x = files.begin(); x != files.end(); x++)
+	{
+		fileList += "<tr>";
+		fileList += x->second;
+		fileList += "</tr>";
+	}
+	ofstream out("result.html");
+	string outString(entireFile);
+	replace_all(outString,"@@@", fileList);
+	out.write(outString.c_str(), outString.length()); 
+	out.close();		
 
 	for (int i = 0; i < argc; i++)
 	{

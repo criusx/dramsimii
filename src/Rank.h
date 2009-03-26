@@ -83,7 +83,7 @@ namespace DRAMsimII
 		void issueCASother(const tick currentTime, const Command *currentCommand);
 		void issueCASW(const tick currentTime, const Command *currentCommand);
 		void issueCASWother(const tick currentTime, const Command *currentCommand);
-		void issueREF(const tick currentTime, const Command *currentCommand);
+		void issueREF(const tick currentTime);
 		void resetToTime(const tick time);
 		tick next(Command::CommandType nextCommandType) const;
 

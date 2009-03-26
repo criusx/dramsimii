@@ -73,7 +73,7 @@ namespace DRAMsimII
 		void issuePRE(const tick currentTime, const Command *currentCommand);
 		void issueCAS(const tick currentTime, const Command *currentCommand);
 		void issueCASW(const tick currentTime, const Command *currentCommand);
-		void issueREF(const tick currentTime);
+		void issueREF();
 		void accumulateAndResetCounts() { totalRASCount += RASCount; totalCASCount += CASCount; totalCASWCount += CASWCount; RASCount = CASWCount = CASCount = 0; }
 		void resetToTime(const tick time);
 		tick next(Command::CommandType nextCommandType) const;

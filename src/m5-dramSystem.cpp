@@ -461,7 +461,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 #if defined(M5DEBUG) && defined(DEBUG) && !defined(NDEBUG)
 	using std::setw;
-	timingOutStream << "recvTiming [" << std::dec << currentMemCycle << "]";
+	timingOutStream << "+recvTiming [" << std::dec << currentMemCycle << "] ";
 	// calculate the time elapsed from when the transaction started
 	timingOutStream << setw(2) << (pkt->isRead() ? "Rd" : "");
 	timingOutStream << setw(2) << (pkt->isWrite() ? "Wr" : "");
@@ -477,7 +477,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 	timingOutStream << " 0x" << hex << pkt->getAddr();
 
-	timingOutStream << "s[0x" << hex << pkt->getSize() << "]" << endl;
+	timingOutStream << " s[0x" << hex << pkt->getSize() << "]" << endl;
 #endif
 	if (pkt->memInhibitAsserted())
 	{
@@ -582,33 +582,35 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 			/// @todo make sure currentTransactionID is not already in the hash table
 
-			
-			bool result = memory->ds->enqueue(new Transaction(packetType,currentMemCycle,pkt->getSize() / 8,pkt->getAddr(), pC, threadID, memory->currentTransactionID));
+#ifndef NDEBUG
+			bool result = 
+#endif
+				memory->ds->enqueue(new Transaction(packetType,currentMemCycle,pkt->getSize() / 8,pkt->getAddr(), pC, threadID, memory->currentTransactionID));
 
 			assert(result == true);
 
 			memory->transactionLookupTable[memory->currentTransactionID] = pkt;
+
 			// make sure not to use any that are already being used
 			while (memory->transactionLookupTable.find(memory->currentTransactionID) != memory->transactionLookupTable.end())
 			{
 				memory->currentTransactionID = (memory->currentTransactionID + 1) % UINT_MAX;
 			}
+
+			// find out when the next event is
+			tick next = memory->ds->nextTick();
+			assert(next < TICK_MAX);
+			assert(next > currentMemCycle);
+			assert(next * memory->getCPURatio() > curTick);
 		
 			// deschedule and reschedule yourself to wake at the next event time
 			if (memory->tickEvent.scheduled())
 				memory->tickEvent.deschedule();
 
-			// find out when the next event is
-			tick next = memory->ds->nextTick();
-			assert(next < TICK_MAX);
-
-			M5_TIMING_LOG("schWake 4[" << next << "] @ " << "[" << currentMemCycle << "]");
-		
-			assert(next > currentMemCycle);
-			assert(next * memory->getCPURatio() > curTick);
-
 			memory->tickEvent.schedule(next * memory->getCPURatio());
-
+			
+			M5_TIMING_LOG("-recvTiming goto[" << next << "]");
+			
 			return true;
 		}
 	}
@@ -711,11 +713,10 @@ void M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp, bool 
 //////////////////////////////////////////////////////////////////////
 void M5dramSystem::TickEvent::process()
 {	
-	//tick currentMemCycle = curTick / memory->getCPURatio();
+	M5_TIMING_LOG("+process [" << dec << currentMemCycle << "]");
+
 	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
-
-	M5_TIMING_LOG("process [" << dec << currentMemCycle << "]");
-
+	
 	// move memory channels to the current time
 	memory->moveToTime(currentMemCycle);
 
@@ -727,12 +728,12 @@ void M5dramSystem::TickEvent::process()
 	tick next = memory->ds->nextTick();	
 
 
-	M5_TIMING_LOG("schWake [" << next << "]");
-
 	assert(next > currentMemCycle);
 	assert(next * memory->getCPURatio() > curTick);
 
 	schedule(next * memory->getCPURatio());
+
+	M5_TIMING_LOG("-process [" << currentMemCycle << "] sch[" << next << "]");
 }
 
 //////////////////////////////////////////////////////////////////////////

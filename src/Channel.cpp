@@ -2002,7 +2002,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case Command::REFRESH_ALL:
 
-		currentRank.issueREF(time, thisCommand);
+		currentRank.issueREF(time);
 
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tRFC());
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());

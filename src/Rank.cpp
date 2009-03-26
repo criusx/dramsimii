@@ -253,12 +253,13 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 /// @brief issue a refresh command to this rank
 //////////////////////////////////////////////////////////////////////////
-void Rank::issueREF(const tick currentTime, const Command *currentCommand)
+void Rank::issueREF(const tick currentTime)
 {
 	lastRefreshTime = currentTime;
 
 	// FIXME: should this not count as a RAS + PRE command to all banks?
-	std::for_each(bank.begin(), bank.end(),boost::bind2nd(boost::mem_fun_ref(&Bank::issueREF),currentTime));
+	//std::for_each(bank.begin(), bank.end(),boost::bind2nd(boost::mem_fun_ref(&Bank::issueREF),currentTime));
+	std::for_each(bank.begin(), bank.end(), boost::mem_fun_ref(&Bank::issueREF));
 
 	// calculate when the next few commands can happen
 	nextRefreshTime = max(nextRefreshTime, currentTime + timing.tRFC());

@@ -230,7 +230,7 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 /// @brief issue a refresh command to this bank
 //////////////////////////////////////////////////////////////////////////
-void Bank::issueREF(const tick currentTime)
+void Bank::issueREF()
 {
 	assert(!activated);
 }
