@@ -8,6 +8,7 @@ from Caches import *
 
 liveProcessDict = {}
 cmdLineDict = {}
+alternateMemorySize = {}
 
 #binary_dir = '/spec/'
 #data_dir = '/spec/'
@@ -52,12 +53,14 @@ liveProcessDict["bwaves"] = bwaves
 
 #416.gamess
 gamess = LiveProcess()
-gamess.executable = binary_dir + '416.gamess/exe/gamess_base' + suffix
+gamess.executable = os.path.join(binary_dir, '416.gamess/exe/gamess_base' + suffix)
 gamess.cmd = [gamess.executable]
-gamess.input = 'exam29.config'
+gamess.cwd = os.path.join(binary_dir, '416.gamess/data/test/input')
+gamess.input = os.path.join(binary_dir, '416.gamess/data/test/input/exam29.config')
 gamess.output = 'exam29.output'
 cmdLineDict["gamess"] = '416.gamess.exam29'
 liveProcessDict["gamess"] = gamess
+alternateMemorySize['gamess'] = "768MB"
 
 #429.mcf
 mcf = LiveProcess()
@@ -258,18 +261,20 @@ liveProcessDict["astar"] = astar
 
 #481.wrf
 wrf = LiveProcess()
-wrf.executable = binary_dir + '481.wrf/exe/wrf_base' + suffix
-wrf.cmd = [wrf.executable] + [os.path.join(data_dir, '481.wrf/data/ref/input/namelist.input')]
+wrf.executable = os.path.join(binary_dir,'481.wrf/exe/wrf_base' + suffix)
+#wrf.cmd = [wrf.executable] + [os.path.join(data_dir, '481.wrf/data/ref/input/namelist.input')]
+wrf.cmd = [wrf.executable] + ['namelist.input']
 #print wrf.cmd
 #wrf.output = 'rsl.out.0000'
-wrf.cwd = os.path.join(data_dir, '481.wrf/data/ref/input/')
-cmdLineDict["wrf"] = '481.wrf.namelist'
+wrf.cwd = os.path.join(data_dir, '481.wrf/data/ref/input')
+#print wrf.cwd
+cmdLineDict["wrf"] = '481.wrf.ref'
 liveProcessDict["wrf"] = wrf
 
 #482.sphinx
 sphinx3 = LiveProcess()
 sphinx3.executable = binary_dir + '482.sphinx3/exe/sphinx_livepretend_base' + suffix
-sphinx3.cmd = [sphinx3.executable] + ['ctlfile', '.', 'args.an4']
+sphinx3.cmd = [sphinx3.executable] + ['beams.dat', '.', os.path.join(binary_dir, '482.sphinx3/data/ref/input/args.an4')]
 #sphinx3.output = 'an4.out'
 sphinx3.cwd = os.path.join(data_dir, '482.sphinx3/data/ref/input/')
 cmdLineDict["sphinx3"] = '482.sphinx.args.an4'

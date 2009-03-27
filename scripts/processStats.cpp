@@ -17,6 +17,7 @@
 #include <boost/iostreams/device/file.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <signal.h>
 #ifdef WIN32
 #include <unordered_map>
@@ -48,6 +49,7 @@ using boost::trim;
 using boost::ireplace_all_copy;
 using boost::is_any_of;
 using boost::lexical_cast;
+using boost::numeric_cast;
 using boost::regex;
 using boost::cmatch;
 using std::max;
@@ -612,8 +614,8 @@ void processStats(const string filename)
 	vector<vector<vector<vector<unsigned> > > > channelLatencyDistribution;
 	vector<vector<vector<uint64_t> > > channelLatencyDistributionBuffer;
 
-	std::tr1::unordered_map<boost::uint64_t,float> latencyVsPcLow;
-	std::tr1::unordered_map<boost::uint64_t,float> latencyVsPcHigh;
+	std::tr1::unordered_map<boost::uint64_t, pair<uint64_t,uint64_t> > latencyVsPcLow;
+	std::tr1::unordered_map<boost::uint64_t, pair<uint64_t,uint64_t> > latencyVsPcHigh;
 
 	vector<float> transactionLatency;
 	WeightedAverage averageTransactionLatency;
@@ -1144,17 +1146,26 @@ void processStats(const string filename)
 				// ignore stack addresses for now
 				if ((position - newLine) < 12)
 				{
-					char *position2 = strchr(position,' ') ;
-					*position2 = 0;
-					string line(newLine);
-					uint64_t PC = toNumeric<uint64_t>(line,std::hex);
+					char *position2 = strchr(position,' ');
+					assert(position2 != NULL);
+					*position2++ = 0;
 
-					float numberAccesses = atof(position);
+					uint64_t PC = strtol(newLine,0,16);
+					
+					float averageAccessTime = atof(position);
+
+					unsigned numberAccesses = atoi(position2);
 
 					if (PC < 0x100000000)
-						latencyVsPcLow[PC] += numberAccesses;
+					{
+						latencyVsPcLow[PC].first += numeric_cast<uint64_t>(averageAccessTime * (float)numberAccesses);
+						latencyVsPcLow[PC].second += numberAccesses;
+					}
 					else
-						latencyVsPcHigh[PC] += numberAccesses;
+					{
+						latencyVsPcHigh[PC].first += numeric_cast<uint64_t>(averageAccessTime * (float)numberAccesses);
+						latencyVsPcHigh[PC].second += numberAccesses;
+					}
 				}
 			}
 			// IPC
@@ -1281,12 +1292,10 @@ void processStats(const string filename)
 				for (unsigned epoch = 0; epoch < channelLatencyDistribution[channelID][rankID][bankID].size(); epoch++)
 				{
 					p2 << channelLatencyDistribution[channelID][rankID][bankID][epoch] / ((float)channelLatencyDistribution[channelID][rankID].back()[epoch]) << endl;
-					//cerr << channelLatencyDistribution[channelID][rankID][bankID][epoch] / ((float)channelLatencyDistribution[channelID][rankID].back()[epoch]) << endl;
 				}
 				p2 << "e" << endl;
 			}
 			p2 << channelLatencyDistribution[channelID][rankID][0].size() * epochTime << " " << "0.2" << endl << "e" << endl;
-			//cerr << channelLatencyDistribution[channelID][rankID][0].size() * epochTime << endl << "e" << endl;
 		}
 		p2 << "unset multiplot" << endl << "unset output" << endl;
 	}
@@ -1418,20 +1427,45 @@ void processStats(const string filename)
 	outFilename = outputDir / ("latencyVsPc." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p1 << "set title \"Total Latency Due to Reads vs. PC Value\\n" << commandLine << "\""<< endl << pcVsLatencyGraph0 << endl;
+	p1 << pcVsLatencyGraph << endl;
+	p1 << "set multiplot layout 1, 2 title \"Total Latency Due to Reads vs. PC Value\\n" << commandLine << "\""<< endl;
+	p1 << "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
 
 	if (latencyVsPcLow.size() > 0)
-		for (std::tr1::unordered_map<uint64_t,float>::const_iterator i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); i++)
-			p1 << i->first << " " << period * i->second << endl;
+		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); i++)
+			p1 << i->first << " " << period * i->second.first << endl;
 	else
-		p1 << "4294967296 1.0" << endl;
+		p1 << "4294967296 1.01" << endl;
 
-	p1 << endl << "e" << endl << pcVsLatencyGraph1;
+	p1 << endl << "e" << endl << "set format x '0x1%x'" << endl << "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
 	if (latencyVsPcHigh.size() > 0)
-		for (std::tr1::unordered_map<uint64_t,float>::const_iterator i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); i++)
-			p1 << (i->first - 0x100000000) << " " << period * i->second << endl;
+		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); i++)
+			p1 << (i->first - 0x100000000) << " " << period * i->second.first << endl;
 	else
-		p2 << "4294967296 1.0" << endl;
+		p1 << "4294967296 1.01" << endl;
+	p1 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
+
+	// make the PC vs average latency graph
+	outFilename = outputDir / ("avgLatencyVsPc." + extension);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	p1 << avgPcVsLatencyGraph << endl;
+	p1 << "set multiplot layout 1, 2 title \"Average Latency Due to Reads vs. PC Value\\n" << commandLine << "\""<< endl;
+	p1 << "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
+
+	if (latencyVsPcLow.size() > 0)
+		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); i++)
+			p1 << i->first << " " << period * (i->second.first / i->second.second) << endl;
+	else
+		p1 << "4294967296 1.01" << endl;
+
+	p1 << endl << "e" << endl;
+	p1 << "set format x '0x1%x'" << endl << "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
+	if (latencyVsPcHigh.size() > 0)
+		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); i++)
+			p1 << (i->first - 0x100000000) << " " << period * (i->second.first / i->second.second) << endl;
+	else
+		p1 << "4294967296 1.01" << endl;
 	p1 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 
 	// make the transaction latency distribution graph
@@ -1447,7 +1481,7 @@ void processStats(const string filename)
 	outFilename = outputDir / ("bandwidth." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p3 << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p3 << "set title 'System Bandwidth\\n" << commandLine << "'"<< endl << bandwidthGraph << endl;
+	p3 << "set title \"System Bandwidth\\n" << commandLine << "\""<< endl << bandwidthGraph << endl;
 
 	for (vector<pair<unsigned,unsigned> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
 		p3 << 1.0 * i->first << endl;
@@ -1497,9 +1531,10 @@ void processStats(const string filename)
 	// make the cache graph
 	outFilename = outputDir / ("cacheData." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
-	p2 << "reset" << endl << terminal << basicSetup;
+	p2 << "reset" << endl << terminal << basicSetup << cacheGraph0;
 	p2 << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p2 << "set title 'Miss Rate of L1 ICache\\n" << commandLine << "'"<< endl << cacheGraphA << endl;
+	p2 << "set multiplot layout 3, 1 title \"" << commandLine << "\"" << endl;
+	p2 << cacheGraph1 << endl;
 
 	for (unsigned i = 0; i < iCacheMisses.size(); i++)
 		p2 << i * epochTime << " " << iCacheMisses[i] + iCacheHits[i] << endl;
@@ -1508,7 +1543,7 @@ void processStats(const string filename)
 		p2 << i * epochTime << " " << iCacheMisses[i] / ((float)max(iCacheMisses[i] + iCacheHits[i],1U)) << endl;
 	p2 << "e" << endl;
 
-	p2 << cacheGraphB << endl;
+	p2 << cacheGraph2 << endl;
 	for (unsigned i = 0; i < dCacheMisses.size(); i++)
 		p2 << i * epochTime << " " << dCacheMisses[i] + dCacheHits[i] << endl;
 	p2 << "e" << endl;
@@ -1516,7 +1551,7 @@ void processStats(const string filename)
 		p2 << i * epochTime << " " << dCacheMisses[i] / ((float)max(dCacheMisses[i] + dCacheHits[i],1U)) << endl;
 	p2 << "e" << endl;
 
-	p2 << cacheGraphC << endl;
+	p2 << cacheGraph3 << endl;
 	for (unsigned i = 0; i < l2CacheMisses.size(); i++)
 		p2 << i * epochTime << " " << l2CacheMisses[i] + l2CacheHits[i] << endl;
 	p2 << "e" << endl;
@@ -1674,7 +1709,7 @@ int main(int argc, char** argv)
 
 	unordered_map<string,string> files;
 
-	for (unsigned i = 0; i < argc; i++)
+	for (int i = 0; i < argc; i++)
 	{
 
 		if (ends_with(argv[i],"power.gz") || ends_with(argv[i],"power.bz2") || 

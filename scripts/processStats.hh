@@ -135,62 +135,56 @@ set style histogram rowstacked title offset 0,0,0\n\
 set ylabel 'Bandwidth (bytes per second)'\n\
 plot '-' using 1 axes x2y1 title 'Read Bytes', '-' using 1 axes x2y1 title 'Write Bytes', '-' using 1:2 axes x1y1 sm csp title 'Average Bandwidth' with lines\n";
 
-std::string pcVsLatencyGraph0 =
+std::string pcVsLatencyGraph =
 "set logscale y \n\
 set yrange [1 : *] noreverse nowriteback\n\
 set xlabel 'PC Value' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
 set ylabel 'Total Latency (ns)'\n\
 set style fill solid 1.00 noborder\n\
-set format x '0x0%x'\n\
-set multiplot\n\
-set size 0.5, 1.0\n\
-set origin 0.0, 0.0\n\
-plot '-' using 1:2 t 'Total Latency' with boxes\n";
+set format x '0x0%x'\n";
 
-std::string pcVsLatencyGraph1 =
-"set size 0.5, 1.0\n\
-set origin 0.5, 0.0\n\
-set format x '0x1%x'\n\
-plot '-' using 1:2 t 'Total Latency' with boxes\n";
+std::string avgPcVsLatencyGraph =
+"set logscale y \n\
+set yrange [1 : *] noreverse nowriteback\n\
+set xlabel 'PC Value' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+set ylabel 'Average Latency (ns)'\n\
+set style fill solid 1.00 noborder\n\
+set format x '0x0%x'\n";
 
 std::string smallIPCGraph = 
-"set size 1.0, 0.35\n\
+"set size 1.0, 0.345\n\
 set origin 0.0, 0.0\n\
 set ylabel 'IPC'\n\
 set title 'IPC vs. Time'  offset character 0, -1, 0 font '' norotate\n\
 set style fill solid 1.00 noborder\n\
 plot '-' using 1:2 title 'IPC' with impulses, '-' using 1:2 sm csp title 'Cumulative Average IPC' with lines, '-' using 1:2 sm csp title 'Moving Average IPC' with lines\n";
 
-std::string cacheGraphA = 
+std::string cacheGraph0 = 
 "set y2tics\n\
 set format x\n\
-set yrange [0 : 1] noreverse nowriteback\n\
-set multiplot\n\
-set size 1.0, 0.333\n\
-set origin 0.0, 0.666\n\
+set yrange [0 : 1] noreverse nowriteback\n";
+
+std::string cacheGraph1 = 
+"unset xlabel\n\
+set ylabel 'Miss Rate'\n\
+set y2label 'Access Count'\n\
+set title 'L1 ICache'\n\
+plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
+
+std::string cacheGraph2 =
+"set yrange [0 : *] noreverse nowriteback\n\
 unset xlabel\n\
 set ylabel 'Miss Rate'\n\
 set y2label 'Access Count'\n\
+set title 'L1 DCache'  offset character 0, -1, 0 font '' norotate\n\
 plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
 
-std::string cacheGraphB =
-"set size 1.0, 0.333\n\
-set origin 0.0, 0.333\n\
-set yrange [0 : *] noreverse nowriteback\n\
-unset xlabel\n\
-set ylabel 'Miss Rate'\n\
-set y2label 'Access Count'\n\
-set title 'Miss Rate of L1 DCache'  offset character 0, -1, 0 font '' norotate\n\
-plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
-
-std::string cacheGraphC = 
-"set size 1.0, 0.333\n\
-set origin 0.0, 0.0\n\
-set yrange [0 : *] noreverse nowriteback\n\
+std::string cacheGraph3 = 
+"set yrange [0 : *] noreverse nowriteback\n\
 set xlabel 'Time (s)' offset character .05, 0, 0 font \"\" textcolor lt -1 rotate by 90\n\
 set ylabel 'Miss Rate'\n\
 set y2label 'Access Count'\n\
-set title 'Miss Rate of L2 Cache' offset character 0, -1, 0 font '' norotate\n\
+set title 'L2 Cache' offset character 0, -1, 0 font '' norotate\n\
 plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
 
 std::string otherIPCGraph = 

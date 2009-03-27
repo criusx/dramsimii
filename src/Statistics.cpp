@@ -242,15 +242,10 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			}
 		}
 	}
-
-	
-	
 #ifdef M5
 
 	using Stats::Info;
-	//Stats::Database::stat_list_t::iterator i = Stats::Database::stats().begin();
 	std::list<Info *>::const_iterator i = Stats::statsList().begin();
-	//Stats::Database::stat_list_t::iterator end = Stats::Database::stats().end();
 	std::list<Info *>::const_iterator end = Stats::statsList().end();
 	
 	for (;i != end;++i)
@@ -268,7 +263,6 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 				// only considering single-threaded for now
 				//break;
 			}
-			//cerr << ((Stats::FormulaData *)data)->str();
 		}
 		if ((info->name.find("dcache.overall_hits") != string::npos) ||
 			(info->name.find("dcache.overall_misses") != string::npos) ||

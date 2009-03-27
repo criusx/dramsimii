@@ -712,10 +712,10 @@ void M5dramSystem::MemoryPort::getDeviceAddressRanges(AddrRangeList &resp, bool 
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
 void M5dramSystem::TickEvent::process()
-{	
-	M5_TIMING_LOG("+process [" << dec << currentMemCycle << "]");
-
+{		
 	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
+
+	M5_TIMING_LOG("+process [" << dec << currentMemCycle << "]");
 	
 	// move memory channels to the current time
 	memory->moveToTime(currentMemCycle);
