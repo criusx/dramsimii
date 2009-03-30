@@ -798,7 +798,10 @@ std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address::AddressMap
 // overloads
 bool Address::operator==(const Address& right) const
 {
-	return (virtualAddress == right.virtualAddress && (physicalAddress >> columnSizeDepth) == (right.physicalAddress >> columnSizeDepth) && channel == right.channel &&
-		rank == right.rank && bank == right.bank && row == right.row && column == right.column);
+	return channel == right.channel && rank == right.rank && bank == right.bank && row == right.row && column == right.column;
+}
 
+bool Address::operator!=(const Address& right) const
+{
+	return channel != right.channel || rank != right.rank || bank != right.bank || row != right.row || column != right.column;
 }

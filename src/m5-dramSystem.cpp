@@ -110,7 +110,7 @@ void M5dramSystem::moveToTime(const tick now)
 
 		if (packet)
 		{
-			assert(packet->isRead() || packet->isWrite() || packet->isInvalidate());
+			assert(packet->isRead() || packet->isWrite());
 
 			bool needsResponse = packet->needsResponse();
 
@@ -138,6 +138,10 @@ void M5dramSystem::moveToTime(const tick now)
 				delete packet;
 			}			
 		}	
+		else
+		{
+			cerr << "warn: no Packet found for corresponding transaction" << endl;
+		}
 	}
 
 	// if there is now room, allow a retry to happen
@@ -449,7 +453,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		//static unsigned numCallsWhileBlocked = 1;
 		//if (numCallsWhileBlocked++ % 100000 == 0)
 		//	cerr << numCallsWhileBlocked << "\r";
-		M5_TIMING_LOG("attempted packet send after packet is nacked");
+		M5_TIMING_LOG("warn: attempted packet send after packet is nacked");
 		return false;
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -492,6 +496,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		//else if (pkt->isInvalidate())
 	{
 		//cerr << "Invalidate" << endl;
+		assert(pkt->cmd != MemCmd::SwapReq);
+		assert(pkt->isInvalidate());
 		if (pkt->needsResponse())
 		{
 			pkt->makeAtomicResponse();
@@ -578,10 +584,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			else if (pkt->isWrite())
 				packetType = Transaction::WRITE_TRANSACTION;
 			else
-				cerr << "not read or write" << endl;
-
-			/// @todo make sure currentTransactionID is not already in the hash table
-
+				cerr << "warn: not read or write" << endl;
+			
 #ifndef NDEBUG
 			bool result = 
 #endif
@@ -616,17 +620,17 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	}
 	else
 	{
-		M5_TIMING_LOG("packet not needing response.");
+		M5_TIMING_LOG("warn: packet not needing response.");
 
 		if (pkt->cmd != MemCmd::UpgradeReq)
 		{
-			cerr << "deleted pkt, not upgradereq, not write, needs no resp" << endl;
+			cerr << "warn: deleted pkt, not upgradereq, not write, needs no resp" << endl;
 			delete pkt->req;
 			delete pkt;
 		}
 		else
 		{
-			cerr << "####################### not upgrade request" << endl;
+			cerr << "warn: not upgrade request" << endl;
 		}
 		return true;
 	}

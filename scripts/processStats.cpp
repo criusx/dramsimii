@@ -8,6 +8,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <limits>
+#include <cmath>
+#include <map>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
@@ -18,6 +21,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/tuple/tuple.hpp>
 #include <signal.h>
 #ifdef WIN32
 #include <unordered_map>
@@ -52,10 +56,13 @@ using boost::lexical_cast;
 using boost::numeric_cast;
 using boost::regex;
 using boost::cmatch;
+using boost::tuple;
 using std::max;
 using std::min;
+using std::numeric_limits;
 using std::vector;
 using std::endl;
+using std::map;
 using std::ofstream;
 using std::ifstream;
 using redi::opstream;
@@ -70,7 +77,7 @@ using std::unordered_map;
 using std::tr1::unordered_map;
 #endif
 
-#define MAXIMUM_VECTOR_SIZE 1 * 32 * 1024
+#define MAXIMUM_VECTOR_SIZE 1 * 16 * 1024
 
 #define WINDOW 5
 
@@ -92,6 +99,182 @@ unordered_map<string,string> &setupDecoder();
 unordered_map<string,string> decoder = setupDecoder();
 
 #include "processStats.hh"
+
+template <typename T>
+class WeightedAverage
+{
+	unsigned count;
+	T total;
+
+public:
+	WeightedAverage():count(0), total(0)
+	{}
+
+	void add(T value, unsigned count)
+	{
+		this->total += value * (T)count;
+		this->count += count;
+	}
+
+	void clear()
+	{
+		total = 0;
+		count = 0;
+	}
+
+	T average()
+	{
+		return total / ((count > 0) ? (T)count : (T)1);
+	}
+};
+
+// using the method of Mendenhall and Sincich (1995)
+template <typename T>
+class BoxPlot
+{
+protected:
+	map<T, unsigned> values;
+	unsigned totalCount;
+public:
+	BoxPlot():
+	  values(),
+	 	  totalCount(0)
+	{}
+
+	void clear()
+	{
+		values.clear();
+		totalCount = 0;
+	}
+
+	void add(const T value, const unsigned count)
+	{
+		// shouldn't be any duplicates
+		if (values.find(value) != values.end())
+			throw;
+
+		values[value] = count;
+
+		totalCount += count;
+	}
+
+	tuple<T, T, T, T, T, T> getQuartiles() const
+	{
+		if (totalCount > 0)
+		{
+			unsigned median = max(round(totalCount / 2.0), 1.0);
+			unsigned firstQuartile = max(round((totalCount + 1.0) / 4.0), 1.0);
+			assert(firstQuartile <= median);
+			unsigned thirdQuartile = max(round((3.0 * totalCount + 3.0) / 4.0), 1.0);
+			if (thirdQuartile > totalCount) thirdQuartile = totalCount;
+			assert(median <= thirdQuartile);
+
+			T firstQuartileValue;
+			T thirdQuartileValue;
+			T medianValue;
+
+			unsigned cumulativeSum = 0;
+
+			typename map<T,unsigned>::const_iterator end = values.end();
+			WeightedAverage<double> wa;
+
+			// go determine which bin the quartile elements are in
+			for (typename map<T,unsigned>::const_iterator i = values.begin(); i != end; ++i)
+			{
+				wa.add(i->first, i->second);
+
+				if (firstQuartile > cumulativeSum && firstQuartile <= cumulativeSum + i->second)
+					firstQuartileValue = i->first;
+				if (thirdQuartile > cumulativeSum && thirdQuartile <= cumulativeSum + i->second)
+					thirdQuartileValue = i->first;
+				if (median > cumulativeSum && median <= cumulativeSum + i->second)
+				{
+					// only if it's the last element
+					if (totalCount % 2 == 1 && (cumulativeSum + i->second == median))
+					{
+						typename map<T,unsigned>::const_iterator j(i);
+						j++;
+						if (j == end)
+							medianValue = i->first;
+						else
+							medianValue = (i->first + j->first) / 2;
+					}	
+					else
+						medianValue = i->first;
+
+				}
+				cumulativeSum += i->second;
+			}	
+
+			assert(firstQuartileValue <= medianValue);
+			assert(medianValue <= thirdQuartileValue);
+
+			return tuple<T, T, T, T, T, T>(values.begin()->first, firstQuartileValue, medianValue, wa.average(), thirdQuartileValue, values.rbegin()->first);
+		}
+		else
+			return tuple<T, T, T, T, T, T>((T)0, (T)0, (T)0, (T)0, (T)0, (T)0);
+	}
+};
+
+template <typename T>
+class StdDev
+{
+protected:
+	map<T, unsigned> values;
+	unsigned totalCount;
+public:
+	StdDev():
+	  values(),
+		  totalCount(0)
+	  {}
+
+	  void clear()
+	  {
+		  values.clear();
+		  totalCount = 0;
+	  }
+
+	  void add(const T value, const unsigned count)
+	  {
+		  // shouldn't be any duplicates
+		  if (values.find(value) != values.end())
+			  throw;
+
+		  values[value] = count;
+
+		  totalCount += count;
+	  }
+
+	  tuple<T, T, T, T> getStdDev() const
+	  {
+		  if (totalCount > 0)
+		  {	  
+			  typename map<T,unsigned>::const_iterator end = values.end();
+			  WeightedAverage<double> wa;
+
+			  // go determine which bin the quartile elements are in
+			  for (typename map<T,unsigned>::const_iterator i = values.begin(); i != end; ++i)
+			  {
+				  wa.add(i->first, i->second);
+			  }	
+
+			  unsigned mean = wa.average();
+
+			  uint64_t sum = 0;
+
+			  for (typename map<T,unsigned>::const_iterator i = values.begin(); i != end; ++i)
+			  {
+				  sum += i->second * (i->first - mean) * (i->first - mean);
+			  }	
+
+			  double stdDev = sqrt(sum / totalCount);
+			  
+			  return tuple<T, T, T, T>(values.begin()->first, mean, stdDev, values.rbegin()->first);
+		  }
+		  else
+			  return tuple<T, T, T, T>((T)0, (T)0, (T)0, (T)0);
+	  }
+};
 
 class CumulativePriorMovingAverage
 {
@@ -117,32 +300,6 @@ public:
 	}
 };
 
-class WeightedAverage
-{
-	unsigned count;
-	unsigned total;
-
-public:
-	WeightedAverage():count(0), total(0)
-	{}
-
-	void add(unsigned value, unsigned count)
-	{
-		this->total += value * count;
-		this->count += count;
-	}
-
-	void clear()
-	{
-		total = 0;
-		count = 0;
-	}
-
-	double average()
-	{
-		return (double)total / ((count > 0) ? (double)count : 1.0);
-	}
-};
 
 class PriorMovingAverage
 {
@@ -617,8 +774,9 @@ void processStats(const string filename)
 	std::tr1::unordered_map<boost::uint64_t, pair<uint64_t,uint64_t> > latencyVsPcLow;
 	std::tr1::unordered_map<boost::uint64_t, pair<uint64_t,uint64_t> > latencyVsPcHigh;
 
-	vector<float> transactionLatency;
-	WeightedAverage averageTransactionLatency;
+	vector<tuple<unsigned, unsigned, double, unsigned> > transactionLatency;
+	//WeightedAverage<double> averageTransactionLatency;
+	StdDev<float> averageTransactionLatency;
 
 	vector<unsigned> transactionCount;
 	transactionCount.reserve(MAXIMUM_VECTOR_SIZE);
@@ -885,7 +1043,7 @@ void processStats(const string filename)
 								}
 							}
 
-							transactionLatency.push_back(averageTransactionLatency.average());
+							transactionLatency.push_back(tuple<unsigned,unsigned,double,unsigned>((tuple<unsigned,unsigned,double,unsigned>)averageTransactionLatency.getStdDev()));
 							averageTransactionLatency.clear();
 
 							transactionCount.push_back(transactionCountBuffer / scaleFactor);
@@ -963,8 +1121,14 @@ void processStats(const string filename)
 											}
 										}
 									}
-
-									transactionLatency[epoch] = (transactionLatency[2 * epoch] + transactionLatency[2 * epoch + 1]) / 2;
+									//fixit
+									//transactionLatency[epoch] = (transactionLatency[2 * epoch] + transactionLatency[2 * epoch + 1]) / 2;
+									transactionLatency[epoch].get<0>() = (transactionLatency[2 * epoch].get<0>() + transactionLatency[2 * epoch + 1].get<0>()) / 2;
+									transactionLatency[epoch].get<1>() = (transactionLatency[2 * epoch].get<1>() + transactionLatency[2 * epoch + 1].get<1>()) / 2;
+									transactionLatency[epoch].get<2>() = (transactionLatency[2 * epoch].get<2>() + transactionLatency[2 * epoch + 1].get<2>()) / 2;
+									transactionLatency[epoch].get<3>() = (transactionLatency[2 * epoch].get<3>() + transactionLatency[2 * epoch + 1].get<3>()) / 2;
+									//transactionLatency[epoch].get<4>() = (transactionLatency[2 * epoch].get<4>() + transactionLatency[2 * epoch + 1].get<4>()) / 2;
+									//transactionLatency[epoch].get<5>() = (transactionLatency[2 * epoch].get<5>() + transactionLatency[2 * epoch + 1].get<5>()) / 2;
 
 									transactionCount[epoch] = (transactionCount[2 * epoch] + transactionCount[2 * epoch + 1]) / 2;
 
@@ -1225,11 +1389,19 @@ void processStats(const string filename)
 			else if (writing == 15)
 			{
 				char *splitLine1 = strchr(newLine,'(') + 1;
+				if (splitLine1 == NULL)
+					break;
 				char *splitLine2 = strchr(splitLine1,',');
+				if (splitLine2 == NULL)
+					break;
 				*splitLine2++ = 0;
 				char *splitLine3 = strchr(splitLine2,',');
+				if (splitLine3 == NULL)
+					break;
 				*splitLine3++ = 0;
 				char *splitLine5 = strchr(splitLine3,')');
+				if (splitLine5 == NULL)
+					break;
 				*splitLine5 = 0;
 				splitLine5 += 2;
 				unsigned channel = atoi(splitLine1);
@@ -1267,21 +1439,17 @@ void processStats(const string filename)
 		bf::path filename = outputDir / ("addressLatencyDistribution" + lexical_cast<string>(channelID) + "." + extension);
 		filesGenerated.push_back(filename.native_directory_string());
 		p2 << "set output '" << filename.native_directory_string() << "'" << endl << subAddrDistroA;
-		float rankFraction = 1.0F / channelLatencyDistribution[channelID].size();
-		float offset = 1 - rankFraction;
-		offset = 1.0F - rankFraction;
+		p2 << "set multiplot layout " << channelLatencyDistribution[channelID].size() << ", 1 title \"" << commandLine << "\"" << endl;
+		
 		for (unsigned rankID = 0; rankID < channelLatencyDistribution[channelID].size(); rankID++)
 		{
-			p2 << "set size 1.0, " << rankFraction << endl << "set origin 0.0, " << offset << endl;
-			p2 << "set title \"Rank " << rankID << "Distribution Rate";
-			if (rankID == 0)
-				p2 << "\\n" << commandLine;
-			p2 << "\" offset character 0, 0, 0 font \"\" norotate" << endl;
-			offset -= rankFraction;
+			p2 << "set title \"Rank " << rankID << "Distribution Rate\" offset character 0, 0, 0 font \"\" norotate" << endl;
+		
 			if (rankID < channelLatencyDistribution[channelID].size() - 1)
 				p2 << "unset key" << endl << "unset label" << endl;
 			else
 				p2 << "set xlabel 'Time (s)' offset 0,0.6" << endl << "set key outside center bottom horizontal reverse Left" << endl;
+
 			p2 << "plot ";
 			for (unsigned a = 0; a < channelLatencyDistribution[channelID][rankID].size() - 1; a++)
 				p2 << "'-' using 1 axes x2y1 t 'bank_{" << a << "}  ',";
@@ -1306,21 +1474,17 @@ void processStats(const string filename)
 		bf::path filename = outputDir / ("addressDistribution" + lexical_cast<string>(channelID) + "." + extension);
 		filesGenerated.push_back(filename.native_directory_string());
 		p1 << "set output '" << filename.native_directory_string() << "'" << endl << subAddrDistroA;
-		float rankFraction = 1.0F / channelDistribution[channelID].size();
-		float offset = 1 - rankFraction;
-		offset = 1.0F - rankFraction;
+		p1 << "set multiplot layout " << channelLatencyDistribution[channelID].size() << ", 1 title \"" << commandLine << "\"" << endl;
+
 		for (unsigned rankID = 0; rankID < channelDistribution[channelID].size(); rankID++)
 		{
-			p1 << "set size 1.0, " << rankFraction << endl << "set origin 0.0, " << offset << endl;
-			p1 << "set title \"Rank " << rankID << " Distribution Rate";
-			if (rankID == 0)
-				p1 << "\\n" << commandLine;
-			p1 << "\" offset character 0, 0, 0 font \"\" norotate" << endl;
-			offset -= rankFraction;
+			p1 << "set title \"Rank " << rankID << " Distribution Rate\" offset character 0, 0, 0 font \"\" norotate" << endl;
+			
 			if (rankID < channelDistribution[channelID].size() - 1)
 				p1 << "unset key" << endl << "unset label" << endl;
 			else
 				p1 << "set xlabel 'Time (s)' offset 0,0.6" << endl << "set key outside center bottom horizontal reverse Left" << endl;
+			
 			p1 << "plot ";
 			for (unsigned a = 0; a < channelDistribution[channelID][rankID].size() - 1; a++)
 				p1 << "'-' using 1 axes x2y1 t 'bank_{" << a << "}  ',";
@@ -1563,7 +1727,8 @@ void processStats(const string filename)
 	outFilename = outputDir / ("averageIPCandLatency." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p1 << "reset" << endl << terminal << endl << basicSetup << endl << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p1 << "set title 'Average IPC vs. Time\\n" << commandLine << "'"<< endl << otherIPCGraph << endl;
+	p1 << "set multiplot layout 2,1 title \"" << commandLine << "\"" << endl;
+	p1 << "set title 'Average IPC vs. Time'" << endl << otherIPCGraph << endl;
 
 	time = 0.0F;
 	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
@@ -1593,37 +1758,37 @@ void processStats(const string filename)
 	}
 
 	// make the transaction latency graph
-	p1 << "e" << endl << "set title 'Transaction Latency \\n" << commandLine << "'" << endl << averageTransactionLatencyScript << endl;
+	p1 << "e" << endl << "set title 'Transaction Latency'" << endl << averageTransactionLatencyScript << endl;
 
 	time = 0.0F;
-	for (vector<float>::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
+	// minimum
+	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
 	{
-		p1 << time << " " << *i << endl;
+		p1 << time << " " << period * i->get<0>() << endl;
+		time += epochTime;
+	}
+	p1 << "e" << endl;
+
+	// mean
+	time = 0.0F;
+	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
+	{
+		p1 << time << " " << period * i->get<1>() << endl;
+		time += epochTime;
+	}
+	p1 << "e" << endl;
+	
+	time = 0.0F;
+	// mean + 1 std dev
+	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
+	{
+		p1 << time << " " << period * (i->get<1>() + i->get<2>()) << endl;
 		time += epochTime;
 	}
 	p1 << "e" << endl;
 
 	time = 0.0F;
-	PriorMovingAverage movingTransactionBuffer(WINDOW);
-	for (vector<float>::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
-	{
-		movingTransactionBuffer.append(*i);
-		p1 << time << " " << movingTransactionBuffer.getAverage() << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-
-	time = 0.0F;
-	CumulativePriorMovingAverage average;
-	for (vector<float>::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
-	{
-		average.add(1.0,*i);
-		p1 << time << " " << average.getAverage() << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-
-	time = 0.0F;
+	// access count
 	for (vector<unsigned>::const_iterator i = transactionCount.begin(); i != transactionCount.end(); i++)
 	{
 		p1 << time << " " << *i << endl;
@@ -1810,6 +1975,30 @@ int main(int argc, char** argv)
 			processStats(currentValue);
 		}
 	}
+
+	// create the js directory 
+	bf::path jsDirectory = "js";
+	if (!exists(jsDirectory))
+		create_directory(jsDirectory);		
+	else if (!is_directory(jsDirectory))
+	{
+		cerr << "error: 'js' exists but is not a directory" << endl;
+		return -1;
+	}
+
+	bf::path sourceJsDirectory = executableDirectory / "js";
+
+	bf::directory_iterator endIter;
+	for (bf::directory_iterator iter(sourceJsDirectory); iter != endIter; ++iter)
+	{
+		if (!is_directory(*iter))
+		{
+			bf::path result = jsDirectory / iter->leaf();
+			if (!exists(result))
+				copy_file(*iter,result);
+		}
+	}
+
 	return 0;
 }
 

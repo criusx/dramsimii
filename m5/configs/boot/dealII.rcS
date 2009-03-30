@@ -1,7 +1,6 @@
 #!/bin/sh
 
-cd /benchmarks/447.dealII/exe
 /sbin/m5 resetstats
 /sbin/m5 switchcpu
-./dealII_base.alpha-gcc410-glibc236 8
+/benchmarks/447.dealII/exe/dealII_base.alpha-gcc410-glibc236 8
 /sbin/m5 exit

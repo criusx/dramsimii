@@ -766,6 +766,8 @@ unsigned Channel::readAvailableTransaction(const bool bufferDelay) const
 			if (!conflict)
 				return i;
 		}
+		else if (time - transactionQueue[i]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+			break;
 	}
 	return UINT_MAX;
 }

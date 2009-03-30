@@ -30,7 +30,7 @@ bzip2 = LiveProcess()
 bzip2.executable = os.path.join(binary_dir, '401.bzip2/exe/bzip2_base' + suffix)
 data = os.path.join(data_dir, '401.bzip2/data/all/input/input.combined')
 bzip2.cmd = [bzip2.executable] + [data, '1']
-bzip2.output = 'bzip2.out'
+#bzip2.output = 'bzip2.out'
 cmdLineDict["bzip2"] = '401.bzip2.combined'
 liveProcessDict["bzip2"] = bzip2
 
@@ -99,9 +99,11 @@ liveProcessDict["milc"] = milc
 zeusmp = LiveProcess()
 zeusmp.executable = os.path.join(binary_dir, '434.zeusmp/exe/zeusmp_base' + suffix)
 zeusmp.cmd = [zeusmp.executable]
+zeusmp.cwd = os.path.join(binary_dir, '434.zeusmp/data/ref/input')
 #zeusmp.output = 'zeusmp.stdout'
 cmdLineDict["zeusmp"] = '434.zeusmp'
 liveProcessDict["zeusmp"] = zeusmp
+alternateMemorySize['zeusmp'] = "1200MB"
 
 #435.gromacs
 gromacs = LiveProcess()
@@ -239,7 +241,6 @@ lbm.cmd = [lbm.executable] + ['20', 'reference.dat', '0', '1' , data]
 #lbm.output = 'lbm.out'
 cmdLineDict["lbm"] = '470.lbm.100_100_130_ldc'
 liveProcessDict["lbm"] = lbm
-
 
 #471.omnetpp
 omnetpp = LiveProcess()

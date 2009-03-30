@@ -73,7 +73,7 @@
 		<!--average periodic refresh time, look at Micron app note TN-46-09 -->
 		<tREFI>6240</tREFI>
 		<!-- used to determine how long a refresh transaction may be deprioritized relative to normal transactions -->
-		<seniorityAgeLimit>512</seniorityAgeLimit>
+		<seniorityAgeLimit>1024</seniorityAgeLimit>
 	</timing>
 	<power>
 		<!--all in terms of mW-->

@@ -1,7 +1,7 @@
 #!/bin/sh
 
-cd /benchmarks/429.mcf/data/ref/input
+#cd /benchmarks/429.mcf/data/ref/input
 /sbin/m5 resetstats
 /sbin/m5 switchcpu
-/benchmarks/429.mcf/exe/mcf_base.alpha-gcc410-glibc236 inp.in
+/benchmarks/429.mcf/exe/mcf_base.alpha-gcc410-glibc236 /benchmarks/429.mcf/data/ref/input/inp.in
 /sbin/m5 exit

@@ -1,7 +1,7 @@
 #!/bin/sh
 
-cd /benchmarks/450.soplex/data/ref/input
+#cd /benchmarks/450.soplex/data/ref/input
 /sbin/m5 resetstats
 /sbin/m5 switchcpu
-/benchmarks/450.soplex/exe/soplex_base.alpha-gcc410-glibc236 -m10000 ref.mps
+/benchmarks/450.soplex/exe/soplex_base.alpha-gcc410-glibc236 -m10000 /benchmarks/450.soplex/data/ref/input/ref.mps
 /sbin/m5 exit

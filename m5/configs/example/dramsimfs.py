@@ -44,10 +44,11 @@ import Simulation
 from Caches import *
 
 #update Benchmarks to support our benchmarks
-Benchmarks['lbm'] = [SysConfig('lbm.rcS', '512MB')]
+Benchmarks['lbm'] = [SysConfig('lbm.rcS', '1024MB')]
 Benchmarks['stream'] = [SysConfig('stream.rcS', '512MB')]
+Benchmarks['streamLong'] = [SysConfig('streamLong.rcS', '768MB')]
 Benchmarks['mcf'] = [SysConfig('mcf.rcS', '2000MB')]
-Benchmarks['soplex'] = [SysConfig('soplex.rcS', '512MB')]
+Benchmarks['soplex'] = [SysConfig('soplex.rcS', '768MB')]
 Benchmarks['bzip2'] = [SysConfig('bzip2.rcS', '512MB')]
 Benchmarks['milc'] = [SysConfig('milc.rcS', '512MB')]
 Benchmarks['cactusADM'] = [SysConfig('cactusADM.rcS', '512MB')]
@@ -68,7 +69,7 @@ benchs.sort()
 DefinedBenchmarks = ", ".join(benchs)
 
 
-def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settingsFilename=""):
+def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settingsFilename="", revert=None):
     class BaseTsunami(Tsunami):
         ethernet = NSGigE(pci_bus=0, pci_dev=1, pci_func=0)
         ide = IdeController(disks=[Parent.disk0, Parent.disk2],
@@ -83,7 +84,11 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
     self.bridge = Bridge(delay='2ns', nack_delay='1ns')
     # use the memory size established by the benchmark definition in Benchmarks.py
     outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0]
-    self.physmem = M5dramSystem(extraParameters=extraParameters,
+    if revert is not None:
+        print "reverting"
+        self.physmem = PhysicalMemory(range=AddrRange(mdesc.mem()))
+    else:
+        self.physmem = M5dramSystem(extraParameters=extraParameters,
                            	settingsFile=settingsFilename,
                           	outFilename=outFile,
 	                        commandLine=outFile,
@@ -125,10 +130,14 @@ parser.add_option("--script", action="store", type="string")
 parser.add_option("--dual", action="store_true",
                   help="Simulate two systems attached with an ethernet link")
 
+parser.add_option("--simple", action="store_true", help="Run in simple mode")
+
 parser.add_option("-b", "--benchmark", action="store", type="string",
                   dest="benchmark",
                   help="Specify the benchmark to run. Available benchmarks: %s"\
                   % DefinedBenchmarks)
+
+parser.add_option("--addmem", default=None, type="string", help="larger than normal memory size")
 
 parser.add_option("-f", "--DRAMsimConfig",
 		  default="/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml",
@@ -136,6 +145,8 @@ parser.add_option("-f", "--DRAMsimConfig",
 
 parser.add_option("--mp",
                   default="", help="Override default memory parameters with this switch")
+
+parser.add_option("--revert", default=None)
 
 
 # Metafile options
@@ -146,9 +157,14 @@ parser.add_option("--etherdump", action="store", type="string", dest="etherdump"
 execfile(os.path.join(config_root, "common", "Options.py"))
 
 (options, args) = parser.parse_args()
-options.l2cache = True
-options.caches = True
-options.detailed = True
+if options.simple:
+    options.l2cache = False
+    options.caches = False
+    options.detailed = False
+else:
+    options.l2cache = True
+    options.caches = True
+    options.detailed = True
 
 if args:
     print "Error: script doesn't take any positional arguments"
@@ -178,9 +194,13 @@ else:
     else:
         bm = [SysConfig()]
 
+if options.addmem:
+    print 'set mem = ' + options.addmem
+    bm[0].memsize = options.addmem
+
 
 if m5.build_env['TARGET_ISA'] == "alpha":
-    test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig)
+    test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig, options.revert)
 elif m5.build_env['TARGET_ISA'] == "mips":
     test_sys = makeLinuxMipsSystem(test_mem_mode, bm[0])
 elif m5.build_env['TARGET_ISA'] == "sparc":
@@ -199,7 +219,7 @@ if options.script is not None:
 np = options.num_cpus
 
 #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'none', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24)
-test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'stride', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24, prefetch_cache_check_push=False)
+test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
 test_sys.tol2bus = Bus()
 test_sys.l2.cpu_side = test_sys.tol2bus.port
 test_sys.l2.mem_side = test_sys.membus.port
