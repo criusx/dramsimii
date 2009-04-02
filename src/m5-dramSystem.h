@@ -110,7 +110,7 @@ protected:
 
 
 public:
-	typedef M5dramSystemParams Params;						///< the parameters used to initialize the memory sytem object
+	typedef M5dramSystemParams Params;						///< the parameters used to initialize the memory system object
 
 	M5dramSystem(const Params *);							///< constructor
 

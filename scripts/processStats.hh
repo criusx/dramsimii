@@ -48,7 +48,6 @@ std::string powerScripts[] =
 std::string powerTypes[] = 
 {"ACT-STBY","ACT","PRE-STBY","RD","WR"};
 
-
 std::string subAddrDistroA = 
 "unset y2tics\n\
 unset logscale y\n\
@@ -120,7 +119,7 @@ std::string bandwidthGraph =
 "set yrange [0 : *] noreverse nowriteback\n\
 set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
 set xrange [0:*]\n\
-set multiplot\n\
+set title 'System Bandwidth'\n\
 set size 1.0, 0.66\n\
 set origin 0.0, 0.33\n\
 set style data histograms\n\
@@ -186,7 +185,11 @@ set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate b
 set ylabel 'Instructions Per Cycle'\n\
 set style fill solid 1.00 noborder\n\
 set xrange [0 : *]\n\
-plot '-' using 1:2 title 'IPC' with impulses, '-' using 1:2 sm csp title 'Cumulative Average IPC' with lines, '-' using 1:2 sm csp title 'Moving Average IPC' with lines\n";
+plot '-' using 1:2 title 'IPC' with impulses,\
+'-' using 1:2 sm csp title 'Moving Average IPC' with lines\n";
+
+//'-' using 1:2 sm csp title 'Cumulative Average IPC' with lines,\
+
 
 std::string averageTransactionLatencyScript =
 "set yrange [1 : *] noreverse nowriteback\n\
@@ -198,11 +201,11 @@ set y2label 'Access Count'\n\
 set y2tics\n\
 set style fill solid 1.00 noborder\n\
 plot \
+'-' using 1:2 t 'Accesses' axes x1y2 with impulses,\
 '-' using 1:2 title 'Minimum Latency' with lines lw 1.25, \
 '-' using 1:2 title 'Average Latency' with lines lw 1.25, \
-'-' using 1:2 title 'Average + 1 std. dev.' with lines lw 1.25, \
-'-' using 1:2 t 'Accesses' axes x2y2 with impulses\n";
-
+'-' using 1:2 title \"Average + 2 std. dev.\" with lines lw 1.25\n";
+//'-' using 1:2 title \"Average + 2 {/Symbol s}\" with lines lw 1.25\n";
 //
 //'-' using 1:2 title 'Maximum Latency' with lines lw 1.25, \
 

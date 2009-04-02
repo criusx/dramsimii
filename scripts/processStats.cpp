@@ -11,6 +11,7 @@
 #include <limits>
 #include <cmath>
 #include <map>
+#include <sstream>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
@@ -68,6 +69,7 @@ using std::ifstream;
 using redi::opstream;
 using std::ios;
 using std::list;
+using std::stringstream;
 
 #ifdef WIN32
 #include <unordered_map>
@@ -279,16 +281,16 @@ public:
 class CumulativePriorMovingAverage
 {
 	double average;
-	double count;
+	double totalCount;
 
 public:
-	CumulativePriorMovingAverage():average(0.0),count(0.0)
+	CumulativePriorMovingAverage():average(0.0),totalCount(0.0)
 	{}
 
 	void add(double count, double value)
 	{
-		count += 1.0;
-		average += ((count * value - average) / count);
+		totalCount += count;
+		average += ((count * value - average) / totalCount);
 	}
 
 	double getAverage() const { return average; }
@@ -296,7 +298,7 @@ public:
 	void clear()
 	{
 		average = 0.0;
-		count = 0.0;
+		totalCount = 0.0;
 	}
 };
 
@@ -371,7 +373,7 @@ void thumbNail(std::list<string>& fileList)
 		i != fileList.end(); i++)
 	{
 		string filename = (*i).substr(0,(*i).find(extension) - 1);
-		string commandLine = "convert -limit memory 512mb -resize " + thumbnailResolution + " " + *i + " " + filename + "-thumb.png";
+		string commandLine = "convert " + *i + "[" + thumbnailResolution + "] -limit memory 512mb " + filename + "-thumb.png";
 		string commandLine2 = "gzip -c -9 -f " +  *i + " > " + *i + "z";
 
 
@@ -383,7 +385,7 @@ void thumbNail(std::list<string>& fileList)
 	}
 }
 
-void processPower(const string filename)
+void processPower(const string &filename)
 {
 	bf::path outputDir(filename.substr(0,filename.find("-power")));
 
@@ -430,7 +432,6 @@ void processPower(const string filename)
 
 
 	char newLine[256];
-	string line = "";
 	boost::regex powerRegex("\\{([0-9.e\\-\\+]+)\\}");
 
 	if (!inputStream.is_complete())
@@ -450,10 +451,11 @@ void processPower(const string filename)
 		{
 			if (newLine[1] == 'P')
 			{
-				char *position = strchr(newLine,'{') + 1;
+				char *position = strchr(newLine,'{');
 				char *position2 = strchr(newLine,'}');
 				if (position == NULL || position2 == NULL)
 					break;
+				position++;
 				*position2 = 0;
 
 				float thisPower = atof(position);
@@ -502,15 +504,18 @@ void processPower(const string filename)
 			}
 			else
 			{
-				line = newLine;
-				if (boost::starts_with(line,"----Epoch"))
+				//line = newLine;
+				if (boost::starts_with(newLine,"----Epoch"))
 				{
-					vector<string> splitLine;
-					split(splitLine,line, is_any_of(" "),token_compress_on);
-					epochTime = lexical_cast<float>(splitLine[1]);
+					char *position = strchr(newLine, ' ');
+					if (position == NULL)
+						break;
+					position++;
+					epochTime = lexical_cast<float>(position);
 				}
-				else if (starts_with(line,"----Command Line"))
+				else if (starts_with(newLine,"----Command Line"))
 				{
+					string line(newLine);
 					trim(line);
 					vector<string> splitLine;
 					split(splitLine,line,is_any_of(":"));
@@ -528,8 +533,9 @@ void processPower(const string filename)
 					p2 << "set title \"{/=12 Energy vs. Time}\\n{/=10 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
 					p2 << "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
 				}
-				else if (line[1] == '+')
+				else if (newLine[1] == '+')
 				{
+					string line(newLine);
 					bf::path fileName = outputDir / ("power." + extension);
 					filesGenerated.push_back(fileName.native_directory_string());
 					p << "set output \"" << fileName.native_directory_string() << "\"\n";
@@ -568,8 +574,6 @@ void processPower(const string filename)
 
 	userStop = false;
 
-
-
 	// make the main power graph
 	for (vector<vector<float> >::const_iterator i = values.begin(); i != values.end(); i++)
 	{
@@ -579,7 +583,7 @@ void processPower(const string filename)
 		}
 		p << "e" << endl;
 	}
-	p << "0 0" << endl << values.size() * epochTime << " 0.2" << endl << "e" << endl;
+	p << "0 0" << endl << (values.size() > 0 ? values.back().size() : 0.0) * epochTime << " 0.2" << endl << "e" << endl;
 
 	p << powerScripts[1];
 
@@ -731,7 +735,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 }
 
 
-void processStats(const string filename)
+void processStats(const string &filename)
 {
 	// create the output dir
 	bf::path outputDir(filename.substr(0,filename.find("-stats")));
@@ -1371,10 +1375,16 @@ void processStats(const string filename)
 			{
 				char *splitLine1 = strchr(newLine,'(') + 1;
 				char *splitLine2 = strchr(splitLine1,',');
+				if (splitLine2 == NULL || splitLine1 == NULL)
+					break;
 				*splitLine2++ = 0;
 				char *splitLine3 = strchr(splitLine2,',');
+				if (splitLine3 == NULL)
+					break;
 				*splitLine3++ = 0;
 				char *splitLine5 = strchr(splitLine3,')');
+				if (splitLine5 == NULL)
+					break;
 				*splitLine5 = 0;
 				splitLine5 += 2;
 				unsigned channel = atoi(splitLine1);
@@ -1430,9 +1440,7 @@ void processStats(const string filename)
 	opstream p3("gnuplot");
 	p3 << terminal << basicSetup;
 
-	PriorMovingAverage ipcBuffer(WINDOW);
-	CumulativePriorMovingAverage ipcTotal;
-
+	
 	// make the address latency distribution per channel graphs
 	for (unsigned channelID = 0; channelID < channelLatencyDistribution.size(); channelID++)
 	{
@@ -1443,7 +1451,7 @@ void processStats(const string filename)
 		
 		for (unsigned rankID = 0; rankID < channelLatencyDistribution[channelID].size(); rankID++)
 		{
-			p2 << "set title \"Rank " << rankID << "Distribution Rate\" offset character 0, 0, 0 font \"\" norotate" << endl;
+			p2 << "set title \"Rank " << rankID << " Distribution Rate\" offset character 0, 0, 0 font \"\" norotate" << endl;
 		
 			if (rankID < channelLatencyDistribution[channelID].size() - 1)
 				p2 << "unset key" << endl << "unset label" << endl;
@@ -1592,7 +1600,7 @@ void processStats(const string filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p1 << pcVsLatencyGraph << endl;
-	p1 << "set multiplot layout 1, 2 title \"Total Latency Due to Reads vs. PC Value\\n" << commandLine << "\""<< endl;
+	p1 << "set multiplot layout 1, 2 title \"" << commandLine << "\\nTotal Latency Due to Reads vs. PC Value\"" << endl;
 	p1 << "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
 
 	if (latencyVsPcLow.size() > 0)
@@ -1614,7 +1622,7 @@ void processStats(const string filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p1 << avgPcVsLatencyGraph << endl;
-	p1 << "set multiplot layout 1, 2 title \"Average Latency Due to Reads vs. PC Value\\n" << commandLine << "\""<< endl;
+	p1 << "set multiplot layout 1, 2 title \"" << commandLine << "\\nAverage Latency Due to Reads vs. PC Value\"" << endl;
 	p1 << "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
 
 	if (latencyVsPcLow.size() > 0)
@@ -1636,7 +1644,7 @@ void processStats(const string filename)
 	outFilename = outputDir / ("transactionLatencyDistribution." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p2 << "set title \"Read Transaction Latency\\n" << commandLine << "\""<< endl << transactionGraph << endl;
+	p2 << "set title \"" << commandLine << "\\nRead Transaction Latency\""<< endl << transactionGraph << endl;
 	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distTransactionLatency.begin(); i != distTransactionLatency.end(); i++)
 		p2 << i->first * period << " " << i->second << endl;
 	p2 << "e" << endl << "unset output" << endl;
@@ -1645,7 +1653,8 @@ void processStats(const string filename)
 	outFilename = outputDir / ("bandwidth." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p3 << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p3 << "set title \"System Bandwidth\\n" << commandLine << "\""<< endl << bandwidthGraph << endl;
+	p3 << "set multiplot title \"" << commandLine << "\""<< endl;
+	p3 << bandwidthGraph << endl;
 
 	for (vector<pair<unsigned,unsigned> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
 		p3 << 1.0 * i->first << endl;
@@ -1675,7 +1684,9 @@ void processStats(const string filename)
 		time += epochTime;
 	}
 	p3 << "e" << endl;
+
 	time = 0.0F;
+	CumulativePriorMovingAverage ipcTotal;
 	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
 	{
 		ipcTotal.add(1,*i);
@@ -1683,7 +1694,9 @@ void processStats(const string filename)
 		time += epochTime;
 	}
 	p3 << "e" << endl;
+
 	time = 0.0F;
+	PriorMovingAverage ipcBuffer(WINDOW);
 	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
 	{
 		ipcBuffer.append(*i);
@@ -1728,37 +1741,18 @@ void processStats(const string filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p1 << "reset" << endl << terminal << endl << basicSetup << endl << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p1 << "set multiplot layout 2,1 title \"" << commandLine << "\"" << endl;
-	p1 << "set title 'Average IPC vs. Time'" << endl << otherIPCGraph << endl;
+	
+	// make the transaction latency graph
+	p1 << "set title 'Transaction Latency'" << endl << averageTransactionLatencyScript << endl;
 
 	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	// access count
+	for (vector<unsigned>::const_iterator i = transactionCount.begin(); i != transactionCount.end(); i++)
 	{
 		p1 << time << " " << *i << endl;
 		time += epochTime;
 	}
 	p1 << "e" << endl;
-
-	ipcTotal.clear();
-	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
-	{
-		ipcTotal.add(1, *i);
-		p1 << time << " " << ipcTotal.getAverage() << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-
-	ipcBuffer.clear();
-	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
-	{
-		ipcBuffer.append(*i);
-		p1 << time << " " << ipcBuffer.getAverage() << endl;
-		time += epochTime;
-	}
-
-	// make the transaction latency graph
-	p1 << "e" << endl << "set title 'Transaction Latency'" << endl << averageTransactionLatencyScript << endl;
 
 	time = 0.0F;
 	// minimum
@@ -1782,25 +1776,52 @@ void processStats(const string filename)
 	// mean + 1 std dev
 	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
 	{
-		p1 << time << " " << period * (i->get<1>() + i->get<2>()) << endl;
+		p1 << time << " " << period * (i->get<1>() + 2 * i->get<2>()) << endl;
 		time += epochTime;
 	}
 	p1 << "e" << endl;
 
+	// ipc part
+	p1 << "set title 'Average IPC vs. Time'" << endl << otherIPCGraph << endl;
+
 	time = 0.0F;
-	// access count
-	for (vector<unsigned>::const_iterator i = transactionCount.begin(); i != transactionCount.end(); i++)
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
 	{
 		p1 << time << " " << *i << endl;
 		time += epochTime;
 	}
-	p1 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
+	p1 << "e" << endl;
+
+#if 0
+	ipcTotal.clear();
+	time = 0.0F;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	{
+		ipcTotal.add(1, *i);
+		p1 << time << " " << ipcTotal.getAverage() << endl;
+		time += epochTime;
+	}
+	p1 << "e" << endl;
+#endif
+
+	ipcBuffer.clear();
+	time = 0.0F;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	{
+		ipcBuffer.append(*i);
+		p1 << time << " " << ipcBuffer.getAverage() << endl;
+		time += epochTime;
+	}
+	p1 << "e" << endl;
+
+
+	p1 << "unset multiplot" << endl << "unset output" << endl;
 
 	// make the hit-miss graph
 	outFilename = outputDir / ("rowHitRate." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p2 << "set title 'Reuse Rate of Open Rows vs. Time\\n" << commandLine << "'"<< endl << rowHitMissGraph << endl;
+	p2 << "set title \"" << commandLine << "\\nReuse Rate of Open Rows vs. Time\"" << endl << rowHitMissGraph << endl;
 
 	time = 0.0F;
 	for (vector<float>::const_iterator i = hitMissValues.begin(); i != hitMissValues.end(); i++)
@@ -1831,7 +1852,7 @@ void processStats(const string filename)
 
 	// make the working set
 	p3 << "reset" << endl << basicSetup << terminal;
-	p3 << "set title 'Working Set Size vs Time\\n" << commandLine << "' offset character 0, -1, 0 font '' norotate" << endl;
+	p3 << "set title \"" << commandLine << "\\nWorking Set Size vs Time\" offset character 0, -1, 0 font '' norotate" << endl;
 	outFilename = outputDir / ("workingSet." + extension);
 	p3 << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	filesGenerated.push_back(outFilename.native_directory_string());
@@ -1943,13 +1964,10 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	ifstream is(openfile.directory_string().c_str(), ios::in | ios::ate);
-	ifstream::pos_type length = is.tellg();
-	char *entireFile = new char[length];
-
-	is.seekg(0,ios::beg);
-	is.read(entireFile,length);
-	is.close();
+	ifstream instream(openfile.directory_string().c_str());
+	stringstream entirefile;
+	entirefile << instream.rdbuf();
+	
 	string fileList;
 	for (unordered_map<string,string>::const_iterator x = files.begin(); x != files.end(); x++)
 	{
@@ -1957,8 +1975,9 @@ int main(int argc, char** argv)
 		fileList += x->second;
 		fileList += "</tr>";
 	}
+	
 	ofstream out("result.html");
-	string outString(entireFile);
+	string outString = entirefile.str();
 	replace_all(outString,"@@@", fileList);
 	out.write(outString.c_str(), outString.length()); 
 	out.close();		

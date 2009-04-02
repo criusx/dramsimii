@@ -1,7 +1,8 @@
 #!/bin/sh
 
-#cd /benchmarks/429.mcf/data/ref/input
+echo "MCF Train"
 /sbin/m5 resetstats
 /sbin/m5 switchcpu
-/benchmarks/429.mcf/exe/mcf_base.alpha-gcc410-glibc236 /benchmarks/429.mcf/data/ref/input/inp.in
+/benchmarks/429.mcf/exe/mcf_base.alpha-gcc410-glibc236 /benchmarks/429.mcf/data/train/input/inp.in
+echo Done.
 /sbin/m5 exit

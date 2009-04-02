@@ -146,13 +146,15 @@ parser.add_option("-f", "--DRAMsimConfig",
 parser.add_option("--mp",
                   default="", help="Override default memory parameters with this switch")
 
-parser.add_option("--revert", default=None)
+parser.add_option("--revert", action="store_true")
 
+parser.add_option("--nopre", action="store_true")
 
 # Metafile options
 parser.add_option("--etherdump", action="store", type="string", dest="etherdump",
                   help="Specify the filename to dump a pcap capture of the" \
                   "ethernet traffic")
+
 
 execfile(os.path.join(config_root, "common", "Options.py"))
 
@@ -165,6 +167,8 @@ else:
     options.l2cache = True
     options.caches = True
     options.detailed = True
+    #if options.fast-forward is None:
+    #    options.fast-forward = "10000000000"
 
 if args:
     print "Error: script doesn't take any positional arguments"
@@ -218,8 +222,13 @@ if options.script is not None:
 
 np = options.num_cpus
 
-#test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32, prefetch_policy = 'none', prefetch_degree = 3, prefetcher_size = 256, tgts_per_mshr=24)
-test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
+if options.nopre is True:
+    print "no prefetcher"
+    test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32)
+else:
+    #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
+    test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=True)
+
 test_sys.tol2bus = Bus()
 test_sys.l2.cpu_side = test_sys.tol2bus.port
 test_sys.l2.mem_side = test_sys.membus.port
