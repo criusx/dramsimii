@@ -111,6 +111,7 @@ namespace DRAMsimII
 		unsigned gettRAS() const { return tRAS; }
 		double getVoltageScaleFactor() const { return voltageScaleFactor;}
 		double getFrequencyScaleFactor() const { return frequencyScaleFactor; }
+		void resetToTime(const tick newTime) { lastCalculation = newTime; }
 
 		// mutators
 		void setLastCalculation(const tick lastTime) { lastCalculation = lastTime; }

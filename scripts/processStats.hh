@@ -23,7 +23,9 @@ std::string powerScripts[] =
  set origin 0.0, 0.0\n\
  set title \"Power Dissipated\"\n\
  set boxwidth 0.95 relative\n\
- plot '-' u 1:2 sm csp t \"Cumulative Average\" w lines lw 2.00, '-' u 1:2 t \"Total Power\" w boxes, '-' u 1:2 sm csp t \"Running Average\" w lines lw 2.00\n",
+ plot '-' u 1:2 t \"Total Power\" w boxes,\
+ '-' u 1:2 sm csp t \"Cumulative Average\" w lines lw 2.00,\
+  '-' u 1:2 sm csp t \"Running Average\" w lines lw 2.00\n",
  "unset border\n\
  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
  set autoscale xfixmin\n\
@@ -43,7 +45,8 @@ std::string powerScripts[] =
  "set size 1.0, 0.5\n\
  set origin 0.0, 0.0\n\
  set title\n\
- plot '-' u 1:2 sm csp t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n"};
+ plot '-' u 1:2 sm csp t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00,\
+ '-' u 1:2 sm csp t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n"};
 
 std::string powerTypes[] = 
 {"ACT-STBY","ACT","PRE-STBY","RD","WR"};

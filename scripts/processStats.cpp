@@ -79,7 +79,7 @@ using std::unordered_map;
 using std::tr1::unordered_map;
 #endif
 
-#define MAXIMUM_VECTOR_SIZE 1 * 16 * 1024
+#define MAXIMUM_VECTOR_SIZE 1 * 8 * 1024
 
 #define WINDOW 5
 
@@ -587,17 +587,6 @@ void processPower(const string &filename)
 
 	p << powerScripts[1];
 
-	// make the average power line
-	CumulativePriorMovingAverage cumulativePower;
-
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
-	{
-		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
-			cumulativePower.add(1.0,values[j][i]);
-		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
-	}
-	p << "e" << endl;
-
 	// make the total power bar graphs
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
 	{
@@ -608,13 +597,30 @@ void processPower(const string &filename)
 	}
 	p << "e" << endl;
 
+	// make the average power line
+	CumulativePriorMovingAverage cumulativePower;
+
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
+	{
+		float total = 0;
+
+		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
+			total += values[j][i];
+		cumulativePower.add(1.0,total);
+		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
+	}
+	p << "e" << endl;
+
 	PriorMovingAverage powerMovingAverage(WINDOW);
 
 	// moving window average
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
 	{
+		float total = 0;
+
 		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
-			powerMovingAverage.append(values[j][i]);
+			total += values[j][i];
+		powerMovingAverage.append(total);
 		p << i * epochTime << " " << powerMovingAverage.getAverage() << endl;
 	}
 	p << "e" << endl << "unset multiplot" << endl << "unset output" << endl << "exit" << endl;

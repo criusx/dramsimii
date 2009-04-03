@@ -94,8 +94,8 @@ namespace DRAMsimII
 
 		// accessors
 		unsigned getRankID() const { return rankID; }		
-		tick getTotalPrechargeTime() const { return totalPrechargeTime; }
-		tick getPrechargeTime() const { return prechargeTime; }
+		tick getTotalPrechargeTime(const tick currentTime) const;  
+		tick getPrechargeTime(const tick currentTime) const;
 		tick getLastRefreshTime() const { return lastRefreshTime; }
 		tick getLastCASTime() const { return lastCASTime; }
 		tick getLastCASWTime() const { return lastCASWTime; }
@@ -116,9 +116,7 @@ namespace DRAMsimII
 		void setLastBankID(const unsigned value) { lastBankID = value; }
 		void resetPrechargeTime(const tick time); 
 		void resetCycleCounts() { CASLength = CASWLength = 0; }
-		//void setOtherLastCAS(const tick value, const unsigned length) { assert(value > otherLastCASTime); otherLastCASTime = value; otherLastCASLength = length;}
-		//void setOtherLastCASW(const tick value, const unsigned length) { assert(value > otherLastCASWTime); otherLastCASWTime = value; otherLastCASWLength = length;}
-
+		
 		// overloads
 		Rank& operator=(const Rank &rs);
 		bool operator==(const Rank& right) const;

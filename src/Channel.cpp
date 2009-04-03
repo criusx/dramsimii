@@ -537,9 +537,9 @@ void Channel::doPowerCalculation(const tick systemTime)
 		}
 
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
-		double percentActive = 1.0F - (k->getPrechargeTime() / (double)(time - powerModel.getLastCalculation()));
+		double percentActive = 1.0F - (k->getPrechargeTime(time) / (double)(time - powerModel.getLastCalculation()));
 		assert(percentActive >= 0.0F && percentActive <= 1.0F);
-		assert(k->getPrechargeTime() <= time - powerModel.getLastCalculation());
+		assert(k->getPrechargeTime(time) <= time - powerModel.getLastCalculation());
 
 		/// @todo actually simulate CKE, per rank
 		double CKE_LO_PRE = 0.95F;
@@ -893,6 +893,7 @@ void Channel::resetToTime(const tick time)
 {
 	lastCommandIssueTime = time - timingSpecification.tCMD();
 	this->time = time;
+	powerModel.resetToTime(time);
 	// adjust the start time of the refreshes to match the new time
 	for (vector<tick>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
 	{

@@ -301,20 +301,20 @@ bool System::fileExists(stringstream& fileName) const
 //////////////////////////////////////////////////////////////////////
 tick System::nextTick() const
 {
-	tick nextWake = nextStats;
+	tick nextEvent = nextStats;
 
 	// find the next time to wake from among all the channels
 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
 		tick channelNextWake = currentChan->nextTick();
-		if (channelNextWake < nextWake)
+		if (channelNextWake < nextEvent)
 		{
-			nextWake = channelNextWake;
+			nextEvent = channelNextWake;
 		}
 	}
-	assert(nextWake < TICK_MAX);
-	assert(nextWake > time);
-	return nextWake;
+	assert(nextEvent < TICK_MAX);
+	assert(nextEvent > time);
+	return nextEvent;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -332,7 +332,7 @@ void System::checkStats()
 	}
 
 	while (time >= nextStats)
-		nextStats += systemConfig.getEpoch();
+		nextStats = time + systemConfig.getEpoch();
 }
 
 

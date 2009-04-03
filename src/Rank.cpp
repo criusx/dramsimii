@@ -300,7 +300,7 @@ void Rank::issueCASWother(const tick currentTime, const Command *currentCommand)
 
 void Rank::resetPrechargeTime(const tick time)
 {
-	prechargeTime = 1;
+	prechargeTime = 0;
 	lastPrechargeAnyBankTime = max(time, lastPrechargeAnyBankTime); 
 
 	nextRefreshTime = std::max(nextRefreshTime, lastPrechargeAnyBankTime + timing.tRP());
@@ -382,16 +382,26 @@ void Rank::resetToTime(const tick time)
 {
 	lastCASTime = time - 1000;
 	lastCASWTime = time - 1000;
-	lastPrechargeAnyBankTime = time - 1000;
+	lastPrechargeAnyBankTime = time;
 	lastRefreshTime = time - timing.tRFC();
 	
 	nextActivateTime = time;
-	nextRefreshTime = time;
+	nextRefreshTime = time + timing.tRP();
 	for (boost::circular_buffer<tick>::iterator i = lastActivateTimes.begin(); i != lastActivateTimes.end(); i++)
 		*i = time - timing.tFAW();
 	for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); i++)
 		i->resetToTime(time);
 
+}
+
+tick Rank::getTotalPrechargeTime(const tick currentTime) const
+{	
+	return totalPrechargeTime + ((banksPrecharged == bank.size()) ? max(currentTime - lastPrechargeAnyBankTime, (tick)0) : 0);
+}
+
+tick Rank::getPrechargeTime(const tick currentTime) const
+{
+	return prechargeTime + ((banksPrecharged == bank.size()) ? max(currentTime - lastPrechargeAnyBankTime, (tick)0) : 0);
 }
 
 //////////////////////////////////////////////////////////////////////
