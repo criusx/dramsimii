@@ -193,6 +193,58 @@ currentTransactionID(0)
 		ds = new System(settings);
 
 	//std::cerr << p->extraParameters << std::endl;
+#ifdef TRACE_GENERATE
+	traceOutStream.push(gzip_compressor(gzip_params(9)));
+	//traceOutStream.push(cout);
+
+	path outDir(settings.outFileDir.c_str());
+
+	if (!exists(outDir))
+	{
+		if (!create_directory(outDir))
+		{
+			cerr << "Could not create dir " << outDir.leaf() << " and dir does not exist." << endl;
+			exit(-1);
+		}
+	}
+	else
+	{
+		if (!is_directory(outDir))
+		{
+			cerr << "Directory " << outDir.leaf() << " exists, but is not a directory." << endl;
+			exit(-1);
+		}
+	}
+	
+
+	if (settings.outFileType == GZ)
+	{
+		stringstream tracefilename;
+		path tracepath;
+		unsigned counter = 0;
+		//string tracefilename;
+		string baseFilename = settings.outFile;
+
+
+		do
+		{
+			tracefilename.str("");
+			tracefilename << baseFilename << setfill('0') << setw(3) << counter << "-trace.gz";
+			counter++;
+			tracepath = outDir / tracefilename.str();
+		} while (exists(tracepath));
+
+		traceOutStream.push(file_sink(tracepath.native_directory_string().c_str()));
+
+		if (!traceOutStream.good())
+		{
+			cerr << "Error opening file \"" << tracepath.native_directory_string() << "\" for writing" << endl;
+			exit(-12);
+		}
+
+	}
+
+#endif
 
 	cpuRatio =(int)round(((float)Clock::Frequency/((float)ds->Frequency())));
 	//cerr << cpuRatio << endl;
@@ -418,8 +470,8 @@ void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
 //////////////////////////////////////////////////////////////////////
 bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 { 		
-#if 0
-	bool nr = pkt->needsResponse();
+#ifdef TRACE_GENERATE
+	bool needsResponse = pkt->needsResponse();
 	if (pkt->memInhibitAsserted())
 	{
 		// snooper will supply based on copy of packet
@@ -430,10 +482,13 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	}
 	memory->doAtomicAccess(pkt);
 
-	if (nr)
+	if (pkt->isRead() || pkt->isWrite())
+		memory->traceOutStream << std::hex << pkt->getAddr() << " " << (pkt->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 10E9 / Clock::Frequency << " " << std::hex << (pkt->req->hasPC() ? pkt->req->getPC() : 0) <<  endl;
+
+	if (needsResponse)
 	{
-		timingOutStream << "sending packet back at " << dec << static_cast<Tick>(curTick + 95996) << endl;
-		memory->ports[memory->lastPortIndex]->doSendTiming(pkt, static_cast<Tick>(curTick + 8));
+		//timingOutStream << "sending packet back at " << dec << static_cast<Tick>(curTick + 95996) << endl;
+		memory->ports[memory->lastPortIndex]->doSendTiming(pkt, static_cast<Tick>(curTick + 1));
 		//memory->ports[memory->lastPortIndex]->doSendTiming(pkt,curTick + 18750 + rand()%400);
 		//schedSendTiming(pkt,curTick + 20000 + rand()%20000);
 		//schedSendTiming(pkt,curTick + 200000 + randomGen.random((Tick)0, (Tick)200000));

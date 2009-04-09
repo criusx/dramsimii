@@ -1473,7 +1473,7 @@ void processStats(const string &filename)
 			{
 				for (unsigned epoch = 0; epoch < channelLatencyDistribution[channelID][rankID][bankID].size(); epoch++)
 				{
-					p2 << channelLatencyDistribution[channelID][rankID][bankID][epoch] / ((float)channelLatencyDistribution[channelID][rankID].back()[epoch]) << endl;
+					p2 << max(1E-5F, channelLatencyDistribution[channelID][rankID][bankID][epoch] / ((float)channelLatencyDistribution[channelID][rankID].back()[epoch])) << endl;
 				}
 				p2 << "e" << endl;
 			}
@@ -1508,7 +1508,7 @@ void processStats(const string &filename)
 			{
 				for (unsigned epoch = 0; epoch < channelDistribution[channelID][rankID][bankID].size(); epoch++)
 				{
-					p1 << channelDistribution[channelID][rankID][bankID][epoch] / ((float)channelDistribution[channelID][rankID].back()[epoch]) << endl;
+					p1 << max(1E-5F, channelDistribution[channelID][rankID][bankID][epoch] / ((float)channelDistribution[channelID][rankID].back()[epoch])) << endl;
 				}
 				p1 << "e" << endl;
 			}

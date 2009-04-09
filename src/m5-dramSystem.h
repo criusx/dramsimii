@@ -16,6 +16,33 @@
 #include <tr1/unordered_map>
 #endif
 
+#ifdef TRACE_GENERATE
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/bzip2.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
+#include <boost/iostreams/device/file_descriptor.hpp>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/filesystem.hpp>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+
+
+using boost::iostreams::bzip2_compressor;
+using boost::iostreams::gzip_compressor;
+using boost::iostreams::gzip_params;
+using boost::iostreams::file_sink;
+using boost::filesystem::exists;
+using boost::filesystem::path;
+using boost::filesystem::create_directory;
+using boost::filesystem::is_directory;
+using std::cout;
+using std::stringstream;
+using std::setw;
+using std::setfill;
+
+#endif
+
 #include <queue>
 
 #include "System.h"
@@ -110,6 +137,10 @@ protected:
 
 
 public:
+#if TRACE_GENERATE
+	boost::iostreams::filtering_ostream traceOutStream;
+#endif
+
 	typedef M5dramSystemParams Params;						///< the parameters used to initialize the memory system object
 
 	M5dramSystem(const Params *);							///< constructor

@@ -97,17 +97,18 @@ m5FSCommandLine = '%s %s -b %%s -F 10000000000 --nopre --mp "%%s"' % (os.path.jo
 channels = [2]
 ranks = [4]
 banks = [16]
-#addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'sdramclosepage', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
+addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'sdramclosepage', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
 #addressMappingPolicy = ['closepagebaselineopt']
-addressMappingPolicy = ['sdrambase','closepagelowlocality']
-#commandOrderingAlgorithm = ['greedy','bankroundrobin','rankroundrobin']
-commandOrderingAlgorithm = ['firstAvailable']
+#addressMappingPolicy = ['sdrambase','closepagelowlocality']
+#addressMappingPolicy = ['sdrambase']
+commandOrderingAlgorithm = ['firstAvailable','bankroundrobin','rankroundrobin']
+#commandOrderingAlgorithm = ['firstAvailable']
 interarrivalCycleCount = [1]
-#perBankQueueDepth = range(8, 16, 4)
-perBankQueueDepth = [12]
+perBankQueueDepth = range(8, 16, 4)
+#perBankQueueDepth = [12]
 requests = [13500000]
-benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
-#benchmarks = ['stream']
+#benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
+benchmarks = ['stream']
 
 def main():
     try:

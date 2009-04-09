@@ -669,6 +669,7 @@ Transaction *InputStream::getNextRandomRequest()
 		switch (interarrivalDistributionModel)
 		{
 		case GAUSSIAN_DISTRIBUTION:
+#if 0
 			while (true)
 			{
 				if (arrivalThreshold < rngGenerator()) // interarrival probability function
@@ -682,6 +683,8 @@ Transaction *InputStream::getNextRandomRequest()
 					nextTime++;
 				}
 			}
+#endif
+			nextTime = (int)std::max(0.0,arrivalGenerator());
 			break;
 		case POISSON_DISTRIBUTION:
 			while (true)
@@ -701,7 +704,7 @@ Transaction *InputStream::getNextRandomRequest()
 		case UNIFORM_DISTRIBUTION:
 		case LOGNORMAL_DISTRIBUTION:
 		case NORMAL_DISTRIBUTION:
-			nextTime = (int)std::max(0.0,arrivalGenerator());
+			nextTime = (int)std::abs(arrivalGenerator());
 			break;
 
 		}
