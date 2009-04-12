@@ -74,7 +74,7 @@ try:
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
 		CCFLAGS = ['-I/usr/include/libxml2', '-march=native', '-mtune=native'],
-		CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5','TRACE_GENERATE'])
+		CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5'])
 	elif 'prof' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		#print viableTargets
 		env.Append(

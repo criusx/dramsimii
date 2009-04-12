@@ -483,7 +483,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 	memory->doAtomicAccess(pkt);
 
 	if (pkt->isRead() || pkt->isWrite())
-		memory->traceOutStream << std::hex << pkt->getAddr() << " " << (pkt->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 10E9 / Clock::Frequency << " " << std::hex << (pkt->req->hasPC() ? pkt->req->getPC() : 0) <<  endl;
+		memory->traceOutStream << std::hex << pkt->getAddr() << " " << (pkt->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 1E9 / Clock::Frequency << " " << std::hex << (pkt->req->hasPC() ? pkt->req->getPC() : 0) <<  endl;
 
 	if (needsResponse)
 	{

@@ -156,13 +156,13 @@ plot '-' using 1:2 title 'IPC' with impulses, '-' using 1:2 sm csp title 'Cumula
 
 std::string cacheGraph0 = 
 "set y2tics\n\
-set format x\n\
-set yrange [0 : 1] noreverse nowriteback\n";
+set format x\n";
 
 std::string cacheGraph1 = 
 "unset xlabel\n\
 set ylabel 'Miss Rate'\n\
 set y2label 'Access Count'\n\
+set yrange [0:1] noreverse nowriteback\n\
 set title 'L1 ICache'\n\
 plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
 
@@ -170,6 +170,7 @@ std::string cacheGraph2 =
 "set yrange [0 : *] noreverse nowriteback\n\
 unset xlabel\n\
 set ylabel 'Miss Rate'\n\
+set yrange [0:1] noreverse nowriteback\n\
 set y2label 'Access Count'\n\
 set title 'L1 DCache'  offset character 0, -1, 0 font '' norotate\n\
 plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
@@ -179,6 +180,7 @@ std::string cacheGraph3 =
 set xlabel 'Time (s)' offset character .05, 0, 0 font \"\" textcolor lt -1 rotate by 90\n\
 set ylabel 'Miss Rate'\n\
 set y2label 'Access Count'\n\
+set yrange [0:1] noreverse nowriteback\n\
 set title 'L2 Cache' offset character 0, -1, 0 font '' norotate\n\
 plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
 

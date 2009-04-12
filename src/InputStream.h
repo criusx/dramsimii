@@ -42,7 +42,8 @@ namespace DRAMsimII
 			RANDOM,
 			MAPPED,
 			ALPHASIM,
-			GEMS
+			GEMS,
+			DRAMSIM
 		};
 
 		enum DistributionType
@@ -99,7 +100,6 @@ namespace DRAMsimII
 		float boxMuller(float, float) const;
 		float Poisson (float) const;
 		float gammaLn(float) const;
-		bool getNextBusEvent(BusEvent &);
 		Transaction *getNextIncomingTransaction();
 		Transaction *getNextRandomRequest();
 

@@ -444,14 +444,18 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 				dramType = DDR2;
 			break;
 		case input_type_token:
-			if (nodeValue == "mase")
-				inFileType = InputStream::MASE_TRACE;
-			else if (nodeValue == "k6")
+			if (nodeValue == "k6" || nodeValue == "K6")
 				inFileType = InputStream::K6_TRACE;
-			else if (nodeValue == "mapped")
-				inFileType = InputStream::MAPPED;
-			else if (nodeValue == "random")
+			else if (nodeValue == "mase" || nodeValue == "MASE" || nodeValue == "Mase")
+				inFileType = InputStream::MASE_TRACE;
+			else if (nodeValue == "random" || nodeValue == "RANDOM" || nodeValue == "Random")
 				inFileType = InputStream::RANDOM;
+			else if (nodeValue == "mapped" || nodeValue == "Mapped" || nodeValue == "MAPPED")
+				inFileType = InputStream::MAPPED;
+			else if (nodeValue == "ds" || nodeValue == "ds2" || nodeValue == "dramsim" || nodeValue == "dramsim2")
+				inFileType = InputStream::DRAMSIM;
+			else
+				inFileType = InputStream::MAPPED;
 			break;
 		case random_distribution_token:
 			if (nodeValue == "uniform")

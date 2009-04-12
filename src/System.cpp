@@ -206,9 +206,14 @@ nextStats(settings.epoch)
 	{
 		if (settings.inFileType == InputStream::RANDOM)
 			commandLine = "Random";
-		else if (settings.inFileType == InputStream::MASE_TRACE)
+		else if (settings.inFileType == InputStream::MASE_TRACE || settings.inFileType == InputStream::DRAMSIM)
 		{			
-			commandLine = settings.inFile;
+			size_t begin = settings.inFile.find_last_of('/');
+			size_t end = settings.inFile.find_last_of('.');
+			if (begin != string::npos && end != string::npos)
+				commandLine = settings.inFile.substr(begin + 1,end - begin - 1);
+			else
+				commandLine = settings.inFile;
 		}
 	}
 	// else printing to these streams goes nowhere
@@ -485,7 +490,7 @@ void System::runSimulations(const unsigned requestCount)
 {
 	Transaction *inputTransaction = NULL;
 
-	tick newTime = (rand() % 65536) + 65536;
+	tick newTime = 0;// = (rand() % 65536) + 65536;
 
 	resetToTime(newTime);
 

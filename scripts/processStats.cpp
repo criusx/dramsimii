@@ -574,6 +574,9 @@ void processPower(const string &filename)
 
 	userStop = false;
 
+	if (values.size() < 1)
+		return;
+
 	// make the main power graph
 	for (vector<vector<float> >::const_iterator i = values.begin(); i != values.end(); i++)
 	{
@@ -1435,6 +1438,9 @@ void processStats(const string &filename)
 
 	userStop = false;
 
+	if (channelLatencyDistribution.size() < 1)
+		return;
+
 	opstream p0("gnuplot");	
 	//boost::iostreams::filtering_ostream p0;
 	//p0.push(std::cout);
@@ -1899,11 +1905,17 @@ int main(int argc, char** argv)
 
 	signal(SIGUSR1, sigproc);
 
+	bool generateResultsOnly = false;
+
+	if (argc < 2)
+		exit(-1);
+	else if (strncmp(argv[1],"-f",2) == 0)
+		generateResultsOnly = true;
+
 	unordered_map<string,string> files;
 
 	for (int i = 0; i < argc; i++)
 	{
-
 		if (ends_with(argv[i],"power.gz") || ends_with(argv[i],"power.bz2") || 
 			ends_with(argv[i],"stats.gz") || ends_with(argv[i],"stats.bz2"))
 		{
@@ -1912,7 +1924,6 @@ int main(int argc, char** argv)
 			inputStream.push(file_source(argv[i]));
 
 			char newLine[256];
-			//string line = "";
 			
 			if (!inputStream.is_complete())
 				continue;
@@ -1988,19 +1999,6 @@ int main(int argc, char** argv)
 	out.write(outString.c_str(), outString.length()); 
 	out.close();		
 
-	for (int i = 0; i < argc; i++)
-	{
-		string currentValue(argv[i]);
-		if (ends_with(currentValue,"power.gz")|| ends_with(currentValue,"power.bz2"))
-		{
-			processPower(currentValue);
-		}
-		else if (ends_with(currentValue,"stats.gz")|| ends_with(currentValue,"stats.bz2"))
-		{
-			processStats(currentValue);
-		}
-	}
-
 	// create the js directory 
 	bf::path jsDirectory = "js";
 	if (!exists(jsDirectory))
@@ -2021,6 +2019,23 @@ int main(int argc, char** argv)
 			bf::path result = jsDirectory / iter->leaf();
 			if (!exists(result))
 				copy_file(*iter,result);
+		}
+	}
+
+	// finally, process the files to generate results
+	if (!generateResultsOnly)
+	{
+		for (int i = 0; i < argc; i++)
+		{
+			string currentValue(argv[i]);
+			if (ends_with(currentValue,"power.gz")|| ends_with(currentValue,"power.bz2"))
+			{
+				processPower(currentValue);
+			}
+			else if (ends_with(currentValue,"stats.gz")|| ends_with(currentValue,"stats.bz2"))
+			{
+				processStats(currentValue);
+			}
 		}
 	}
 

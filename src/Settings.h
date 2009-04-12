@@ -406,6 +406,8 @@ namespace DRAMsimII
 			theMap["p_lock_rd"] = LOCK_RD;
 			theMap["p_lock_wr"] = LOCK_WR;
 			theMap["lock_rd"] = LOCK_RD;
+			theMap["r"] = MEM_RD;
+			theMap["w"] = MEM_WR;
 			theMap["lock_wr"] = LOCK_WR;
 			theMap["mem_rd"] = MEM_RD;
 			theMap["write"] = MEM_WR;

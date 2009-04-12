@@ -350,23 +350,51 @@ float InputStream::boxMuller(const float m, const float s) const
 	return floor(m + y1 * s);
 }
 
+InputStream::InputType InputStream::toInputToken(const string &input) const
+{
+	if (input == "k6" || input == "K6")
+		return K6_TRACE;
+	else if (input == "mase" || input == "MASE" || input == "Mase")
+		return MASE_TRACE;
+	else if (input == "random" || input == "RANDOM" || input == "Random")
+		return RANDOM;
+	else if (input == "mapped" || input == "Mapped" || input == "MAPPED")
+		return MAPPED;
+	else if (input == "ds" || input == "ds2" || input == "dramsim" || input == "dramsim2")
+		return DRAMSIM;
+	else
+		return MAPPED;
+}
 
-bool InputStream::getNextBusEvent(BusEvent &thisEvent)
-{	
-	string input;	
+//////////////////////////////////////////////////////////////////////
+/// @brief get the next logical transaction
+/// @details get the transaction from whichever source is currently being used
+/// whether a random input, mase, k6 or mapped trace file
+/// @author Joe Gross
+/// @return the next transaction, NULL if there are no more available transactions
+//////////////////////////////////////////////////////////////////////
+Transaction *InputStream::getNextIncomingTransaction()
+{
+	string input;
 
 	switch (type)
 	{
-	case K6_TRACE:	
+	case RANDOM:
+		return getNextRandomRequest();
+		break;
+	case K6_TRACE:
 		{
-			//int base_control;
+			cerr << "needs to be updated" << endl;
+			exit(-2);
+#if 0
 			Transaction::TransactionType attributes;
 			int burst_length = 4; // Socket 7 cachelines are 32 byte long, burst of 4
 			int burst_count = 0;
 			bool bursting = true;
 			//double multiplier;
-			tick timestamp = TICK_MAX;
-			unsigned address = UINT_MAX;
+			tick timestamp;
+			unsigned address;
+			Transaction *newTrans = new Transaction();
 
 			while ((bursting == true) && traceFile.good())
 			{
@@ -375,7 +403,7 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 				if(traceFile.good())
 				{
 					cerr << "Unexpected EOF, Please fix input trace file" << endl;
-					return false;
+					return NULL;
 				}
 
 				FileIOToken control = Settings::dramTokenizer(input);
@@ -383,7 +411,7 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 				if (control == unknown_token)
 				{
 					cerr << "Unknown Token Found" << input << endl;
-					return false;
+					return NULL;
 				}
 
 				if (control == MEM_WR)
@@ -403,11 +431,11 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 				}
 				// FIXME: what was this for?
 				if (/*(thisEvent.attributes != control) || */
-					(((thisEvent.address.getPhysicalAddress() ^ address) & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
+					((address & 0xFFFFFFE0) != 0) || (burst_count == burst_length))
 				{
 					bursting = false;
 					timestamp = static_cast<tick>(static_cast<double>(timestamp) * ascii2multiplier(input));
-					thisEvent.address.setPhysicalAddress(0x3FFFFFFF & address); // mask out top addr bit
+					newTrans = new Transaction(0x3FFFFFFF & address,); // mask out top addr bit
 					thisEvent.attributes = Transaction::CONTROL_TRANSACTION;
 					thisEvent.timestamp = timestamp;
 					burst_count = 1;
@@ -419,126 +447,55 @@ bool InputStream::getNextBusEvent(BusEvent &thisEvent)
 			}
 			thisEvent.address.setPhysicalAddress(address);
 			thisEvent.timestamp = timestamp;
+#endif
 		}
 		break;
 	case MASE_TRACE:
 		{
 			PhysicalAddress tempPA;
-			traceFile >> hex >> tempPA >> input >> dec >> thisEvent.timestamp;
-			thisEvent.address.setPhysicalAddress(tempPA);
-
+			tick timestamp;
+			traceFile >> hex >> tempPA >> input >> dec >> timestamp;
 			//thisEvent.timestamp /= 40000;
 
 			//thisEvent.timestamp /= cpuToMemoryRatio;
-			thisEvent.timestamp *= cpuToMemoryRatio;
+			timestamp *= cpuToMemoryRatio;
 			if(!traceFile.good()) /// found starting Hex address
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;
 				return false;
 			}
 
+			Transaction::TransactionType type;
+
 			switch (Settings::dramTokenizer(input))
 			{
 			case FETCH:
-				thisEvent.attributes = Transaction::IFETCH_TRANSACTION;
+				type = Transaction::IFETCH_TRANSACTION;
 				break;
 			case MEM_RD:
-				thisEvent.attributes = Transaction::READ_TRANSACTION;
+				type = Transaction::READ_TRANSACTION;
 				break;
 			case MEM_WR:
-				thisEvent.attributes = Transaction::WRITE_TRANSACTION;
+				type = Transaction::WRITE_TRANSACTION;
 				break;
 			case unknown_token:
 				cerr << "Unknown Token Found " << input << endl;
-				return false;
+				return NULL;
 				break;			
 			default:
 				cerr << "Unexpected transaction type: " << input;
 				exit(-7);
 				break;
 			}
+
+			return new Transaction(type, timestamp, 8, tempPA, 0x0, 0x0);
 		}
 		break;
 	case MAPPED:
 		{
-			unsigned channel, rank, bank, row, column;
-
-			traceFile >> dec >> thisEvent.timestamp >> input >> dec >> channel >> rank >> bank >> row >> column;
-
-			thisEvent.address.setAddress(channel,rank,bank,row,column);
-
-			if(!traceFile.good()) /// found starting Hex address
-			{
-				cerr << "Unexpected EOF, Please fix input trace file" << endl;
-				return false;
-			}
-
-			FileIOToken control = Settings::dramTokenizer(input);
-
-			switch (control)
-			{
-			case unknown_token:
-				cerr << "Unknown Token Found " << input << endl;
-				return false;
-				break;
-			case FETCH:
-				thisEvent.attributes = Transaction::IFETCH_TRANSACTION;
-				break;
-			case MEM_RD:
-				thisEvent.attributes = Transaction::READ_TRANSACTION;
-				break;
-			case MEM_WR:
-				thisEvent.attributes = Transaction::WRITE_TRANSACTION;
-				break;
-			default:
-				cerr << "Unexpected transaction type: " << input;
-				exit(-7);
-				break;
-			}
-		}
-		break;
-	default:
-		cerr << "Unknown address trace type" << endl;
-		exit(-8);
-		break;
-	}
-
-	//thisEvent.attributes = CONTROL_TRANSACTION;
-
-	return true;
-}
-
-InputStream::InputType InputStream::toInputToken(const string &input) const
-{
-	if (input == "k6" || input == "K6")
-		return K6_TRACE;
-	else if (input == "mase" || input == "MASE" || input == "Mase")
-		return MASE_TRACE;
-	else if (input == "random" || input == "RANDOM" || input == "Random")
-		return RANDOM;
-	else if (input == "mapped" || input == "Mapped" || input == "MAPPED")
-		return MAPPED;
-	return MAPPED;
-}
-
-//////////////////////////////////////////////////////////////////////
-/// @brief get the next logical transaction
-/// @details get the transaction from whichever source is currently being used
-/// whether a random input, mase, k6 or mapped trace file
-/// @author Joe Gross
-/// @return the next transaction, NULL if there are no more available transactions
-//////////////////////////////////////////////////////////////////////
-Transaction *InputStream::getNextIncomingTransaction()
-{
-	switch (type)
-	{
-	case RANDOM:
-		return getNextRandomRequest();
-		break;
-	case K6_TRACE:
-	case MASE_TRACE:
-	case MAPPED:
-		{
+			cerr << "needs to be updated" << endl;
+			exit(-2);
+#if 0
 			static BusEvent newEvent;
 
 			if (!getNextBusEvent(newEvent))
@@ -548,13 +505,43 @@ Transaction *InputStream::getNextIncomingTransaction()
 			}
 			else
 			{
-				Transaction *tempTransaction = new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address, 0, 0);
-				// FIXME: ignores return type
-				//convertAddress(tempTransaction->getAddresses());
-
-				// need to adjust arrival time for K6 traces to cycles
-				return tempTransaction;
+				return new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address, 0, 0);
 			}
+#endif
+		}
+		break;
+	case DRAMSIM:
+		{
+			PhysicalAddress tempPA, PC;
+			double timestamp;
+			string input;
+			traceFile >> hex >> tempPA >> input >> dec >> timestamp >> hex >> PC;
+			//cerr << "warn: timestamp adjusted incorrectly to compensate for older trace files" << endl;
+			tick arrivalTime = (timestamp * 1E-10) * systemConfig.Frequency();
+			
+			if(!traceFile.good()) /// found starting Hex address
+			{
+				cerr << "Unexpected EOF, Please fix input trace file" << endl;
+				return false;
+			}
+
+			Transaction::TransactionType type;
+
+			switch (Settings::dramTokenizer(input))
+			{
+			case MEM_RD:
+				type = Transaction::READ_TRANSACTION;
+				break;
+			case MEM_WR:
+				type = Transaction::WRITE_TRANSACTION;
+				break;
+			default:
+				cerr << "Unexpected transaction type: " << input;
+				exit(-7);
+				break;
+			}
+
+			return new Transaction(type, arrivalTime, 8, tempPA, PC, 0x0);
 		}
 		break;
 	case NONE:

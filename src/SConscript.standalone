@@ -120,7 +120,7 @@ elif platform == 'scriptDebug':
 	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
-	envDebug.Append(CCFLAGS = '-g -O -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')
+	envDebug.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')
 	debug = envDebug.Program('dramSimII.debug',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugOpt':
@@ -145,12 +145,14 @@ elif platform == 'prof':
 	envProf.Install(os.path.abspath('..') + "/bin", prof)
 elif platform == 'profgen':
 	envProfgen = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opg')
-	envProfgen.Append(CCFLAGS = '-O3 -mtune=native -march=native -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate -DNDEBUG')
+	envProfgen.Append(CCFLAGS = '-O3 -mtune=native -march=native -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate -DNDEBUG',
+	LINKFLAGS = "-fprofile-generate")
 	profgen = envProfgen.Program('dramSimII.profgen', sourceFile)
 	envProfgen.Install(os.path.abspath('..') + "/bin", profgen)
 elif platform == 'profuse':
 	envProfuse = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opu')
-	envProfuse.Append(LIBS = 'gcov')
+	envProfuse.Append(CCFLAGS = '-O3 -mtune=native -march=native -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-use -DNDEBUG',
+	LINKFLAGS = "-fprofile-use")
 	profuse = envProfuse.Program('dramSimII.profuse', sourceFile)
 	envProfuse.Install(os.path.abspath('..') + "/bin", profuse)
 elif platform == 'all':
