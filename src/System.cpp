@@ -253,6 +253,11 @@ nextStats(settings.epoch)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief copy constructor
+/// @details will copy channel 0 into all the other channels via copy constructor
+/// and then use the assignment operator to copy the contents over
+//////////////////////////////////////////////////////////////////////////
 System::System(const System &rhs):
 systemConfig(rhs.systemConfig),
 simParameters(rhs.simParameters),
@@ -266,22 +271,26 @@ nextStats(rhs.nextStats)
 	channel = rhs.channel;
 }
 
+//////////////////////////////////////////////////////////////////////////
 /// @brief deserialization constructor
-System::System(const SystemConfiguration &sysConfig, const std::vector<Channel> &chan, const SimulationParameters &simParams,
+//////////////////////////////////////////////////////////////////////////
+System::System(const SystemConfiguration &sysConfig, const std::vector<Channel> &rhsChan, const SimulationParameters &simParams,
 			   const Statistics &stats, const InputStream &inputStr):
 systemConfig(sysConfig),
 simParameters(simParams),
 statistics(stats),
-//channel(chan),
-channel((unsigned)chan.size(),Channel(chan[0],sysConfig,statistics)),
+channel((unsigned)rhsChan.size(),Channel(rhsChan[0],sysConfig,statistics)),
 inputStream(inputStr),
 time(0),
 nextStats(0)
 {
 	Address::initialize(systemConfig);
-	channel = chan;
+	channel = rhsChan;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief simple destructor
+//////////////////////////////////////////////////////////////////////////
 System::~System()
 {}
 
@@ -295,7 +304,6 @@ bool System::fileExists(stringstream& fileName) const
 	return bf::exists(newPath);
 }
 
-
 //////////////////////////////////////////////////////////////////////
 /// @brief returns the time at which the next event happens
 /// @details returns the time when the memory system next has an event\n
@@ -303,6 +311,7 @@ bool System::fileExists(stringstream& fileName) const
 /// next time a command may be issued
 /// @author Joe Gross
 /// @return the time of the next event, or TICK_MAX if there was no next event found
+/// @todo should always be a next event due to perpetual stats collection, could throw an exception when there are no stats being collected
 //////////////////////////////////////////////////////////////////////
 tick System::nextTick() const
 {
@@ -375,14 +384,14 @@ bool System::enqueue(Transaction *currentTransaction)
 
 	DEBUG_TRANSACTION_LOG((result ? "" : "!") << "+T ch[" << currentTransaction->getAddress().getChannel() << "](" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ") " << *currentTransaction)
 
-	return result;
+		return result;
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief resets various counters to account for the fact that time starts now
 /// @param time the time to reset things to begin at
 //////////////////////////////////////////////////////////////////////////
-void System::resetToTime(tick time)
+void System::resetToTime(const tick time)
 {
 	nextStats = time + systemConfig.getEpoch();
 
@@ -396,8 +405,7 @@ void System::resetToTime(tick time)
 /// @brief moves all channels to the specified time
 /// @details if a transaction completes before the end time is reached, it is returned and transFinishTime variable is set
 /// @author Joe Gross
-/// @param endTime the time which the channels should be moved to, assuming no transactions finish
-/// @param transFinishTime the time at which the transaction finished, less than the endTime
+/// @param endTime the time which the channels should be moved to, finishing and queuing transactions as R/W finish
 /// @return a transaction which finished somewhere before the end time
 //////////////////////////////////////////////////////////////////////
 void System::moveToTime(const tick endTime)
@@ -407,10 +415,10 @@ void System::moveToTime(const tick endTime)
 	//unsigned finishedTransaction = UINT_MAX;
 	//#pragma omp parallel for private(i)
 	std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime),endTime));
-// 	for (i = channel.size() - 1; i >= 0; i--)
-// 	{
-// 		channel[i].moveToTime(endTime);
-// 	}
+	// 	for (i = channel.size() - 1; i >= 0; i--)
+	// 	{
+	// 		channel[i].moveToTime(endTime);
+	// 	}
 
 	updateSystemTime();
 	checkStats();
@@ -464,6 +472,10 @@ void System::doPowerCalculation()
 	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief the number of finished transactions queued up due to moving the channel to a time
+/// @returns the number of transactions waiting in the queue
+//////////////////////////////////////////////////////////////////////////
 unsigned System::pendingTransactionCount() const
 {
 	unsigned count = 0;
@@ -472,6 +484,9 @@ unsigned System::pendingTransactionCount() const
 	return count;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief move all the pending, finished transactions into a new queue 
+//////////////////////////////////////////////////////////////////////////
 void System::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outputQueue)
 {
 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
@@ -596,5 +611,3 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 
 	return os;
 }
-
-

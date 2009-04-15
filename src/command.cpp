@@ -270,6 +270,9 @@ ostream &DRAMsimII::operator<<(ostream &os, const Command::CommandType &command)
 	case Command::INVALID_COMMAND:
 		os << "INVALD";
 		break;
+	default:
+		os << "UNKWN";
+		break;
 	}
 	return os;
 }

@@ -55,7 +55,7 @@ namespace DRAMsimII
 		tick nextReadTime;					///< the time at which a CAS may be sent to this rank
 		tick nextWriteTime;					///< the time at which a CASW may be sent to this rank
 		tick nextPrechargeTime;				///< the time at which a Pre may be sent to this rank
-		
+
 		unsigned openRowID;				///< if the bank is open, what is the row id?
 		bool activated;					///< if the bank is activated, else precharged
 
@@ -84,7 +84,7 @@ namespace DRAMsimII
 		tick getLastCASWTime() const {return lastCASWTime; }
 
 		tick getLastPrechargeTime() const { return lastPrechargeTime; }
-		
+
 		unsigned getLastCASLength() const { return lastCASLength; }
 		unsigned getLastCASWLength() const { return lastCASWLength; }
 

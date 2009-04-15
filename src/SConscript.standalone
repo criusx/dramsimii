@@ -61,7 +61,6 @@ sourceBase = """
 			reporting/stdsoap2.cpp
 			Address.cpp
 			Bank.cpp
-			busEvent.cpp
 			command.cpp
 			Algorithm.cpp
 			Channel.cpp

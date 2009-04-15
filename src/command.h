@@ -59,22 +59,10 @@ namespace DRAMsimII
 
 		mutable CommandType commandType;///< what type of command this is
 		Transaction *hostTransaction;	///< backward pointer to the original transaction
-
-		// Variables added for the FB-DIMM
-		//tick  link_comm_tran_comp_time;
-		//tick  amb_proc_comp_time;
-		//tick  dimm_comm_tran_comp_time;
-		//tick  dram_proc_comp_time;
-		//tick  dimm_data_tran_comp_time;
-		//tick  amb_down_proc_comp_time;
-		//tick  link_data_tran_comp_time;
-
-		//int bundle_id;				// Bundle into which command is being sent - Do we need this ??
-		//unsigned tran_id;				// The transaction id number
-		//int data_word;				// Which portion of data is returned i.e. entire cacheline or fragment thereof which portions are being sent
-		//int data_word_position;		// Which part of the data transmission are we doing : positions include FIRST , MIDDLE, LAST
-		//bool refresh;					// This is used to determine if the ras/prec are part of refresh
 		unsigned length;				///< the burst length
+
+		// assignment operator
+		Command &operator=(const Command &rhs) { return *this; }
 
 	public:
 
@@ -89,7 +77,6 @@ namespace DRAMsimII
 		CommandType getCommandType() const { return commandType; }
 		Transaction *getHost() const { return hostTransaction; }
 		unsigned getLength() const { return length; }
-		//bool isPostedCAS() const { return postedCAS; }
 		bool isRead() const { return ((commandType == READ) || (commandType == READ_AND_PRECHARGE)); }
 		bool isWrite() const { return ((commandType == WRITE) || (commandType == WRITE_AND_PRECHARGE)); }
 		bool isPrecharge() const { return ((commandType == READ_AND_PRECHARGE) || (commandType == WRITE_AND_PRECHARGE) || (commandType == PRECHARGE)); }

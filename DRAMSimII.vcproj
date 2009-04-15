@@ -567,10 +567,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\busEvent.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Channel.cpp"
 				>
 			</File>

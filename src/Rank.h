@@ -116,7 +116,7 @@ namespace DRAMsimII
 		void setLastBankID(const unsigned value) { lastBankID = value; }
 		void resetPrechargeTime(const tick time); 
 		void resetCycleCounts() { CASLength = CASWLength = 0; }
-		
+
 		// overloads
 		Rank& operator=(const Rank &rs);
 		bool operator==(const Rank& right) const;

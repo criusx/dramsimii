@@ -31,7 +31,6 @@
 
 #include "InputStream.h"
 #include "Settings.h"
-#include "busEvent.h"
 #include "SystemConfiguration.h"
 #include "Channel.h"
 
@@ -518,7 +517,7 @@ Transaction *InputStream::getNextIncomingTransaction()
 			traceFile >> hex >> tempPA >> input >> dec >> timestamp >> hex >> PC;
 			//cerr << "warn: timestamp adjusted incorrectly to compensate for older trace files" << endl;
 			tick arrivalTime = (timestamp * 1E-10) * systemConfig.Frequency();
-			
+
 			if(!traceFile.good()) /// found starting Hex address
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;

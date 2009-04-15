@@ -298,6 +298,9 @@ void Rank::issueCASWother(const tick currentTime, const Command *currentCommand)
 	nextWriteTime = max(nextWriteTime, currentTime + timing.tOST() + timing.tBurst());
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief reset the accumulated precharge time for this rank
+//////////////////////////////////////////////////////////////////////////
 void Rank::resetPrechargeTime(const tick time)
 {
 	prechargeTime = 0;
@@ -378,13 +381,19 @@ Command *Rank::getCommand(const unsigned thisBank)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief update this rank to seem like time started at a nonzero time
+/// @detail used when the simulator has fast forwarded to a certain time and then
+/// begun detailed simulation. this function will avoid giving too large/small values
+/// after a simple->detailed switch
+//////////////////////////////////////////////////////////////////////////
 void Rank::resetToTime(const tick time)
 {
 	lastCASTime = time - 1000;
 	lastCASWTime = time - 1000;
 	lastPrechargeAnyBankTime = time;
 	lastRefreshTime = time - timing.tRFC();
-	
+
 	nextActivateTime = time;
 	nextRefreshTime = time + timing.tRP();
 	for (boost::circular_buffer<tick>::iterator i = lastActivateTimes.begin(); i != lastActivateTimes.end(); i++)
@@ -394,11 +403,19 @@ void Rank::resetToTime(const tick time)
 
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief get the total length of time that this rank had all banks precharged 
+/// @returns cycles all banks are precharged
+//////////////////////////////////////////////////////////////////////////
 tick Rank::getTotalPrechargeTime(const tick currentTime) const
 {	
 	return totalPrechargeTime + ((banksPrecharged == bank.size()) ? max(currentTime - lastPrechargeAnyBankTime, (tick)0) : 0);
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief get the total length of time that this rank had all banks precharged since the last reset
+/// @returns cycles all banks are precharged
+//////////////////////////////////////////////////////////////////////////
 tick Rank::getPrechargeTime(const tick currentTime) const
 {
 	return prechargeTime + ((banksPrecharged == bank.size()) ? max(currentTime - lastPrechargeAnyBankTime, (tick)0) : 0);

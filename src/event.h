@@ -41,6 +41,7 @@ namespace DRAMsimII
 		const unsigned eventNumber;				///< the nth event
 		const Address address;					///< the address that this event involves
 
+		// constructors
 		Event():
 		arrivalTime(0),
 			enqueueTime(0),
@@ -86,7 +87,10 @@ namespace DRAMsimII
 			address(rhs.address)
 		{}
 
-	public:		
+	public:
+		// destructors
+		virtual ~Event() {}
+
 		// accessors
 		tick getArrivalTime() const { return arrivalTime; }
 		tick getEnqueueTime() const { return enqueueTime; }

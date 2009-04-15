@@ -235,8 +235,6 @@ void Bank::issueREF()
 	assert(!activated);
 }
 
-
-
 //////////////////////////////////////////////////////////////////////////
 /// @brief returns the next time this command type may be issued
 //////////////////////////////////////////////////////////////////////////
@@ -464,9 +462,6 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 //////////////////////////////////////////////////////////////////////////
 Bank& Bank::operator =(const Bank& rhs)
 {
-	//::new(this)DRAMsimII::Bank(rhs.timing,rhs.systemConfig);
-	//timing = rhs.timing;		
-	//systemConfig = rhs.systemConfig;
 	perBankQueue = rhs.perBankQueue;
 	lastRASTime = rhs.lastRASTime;
 	lastCASTime = rhs.lastCASTime;
