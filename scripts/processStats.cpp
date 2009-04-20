@@ -23,6 +23,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
 #include <signal.h>
 #ifdef WIN32
 #include <unordered_map>
@@ -58,6 +60,8 @@ using boost::numeric_cast;
 using boost::regex;
 using boost::cmatch;
 using boost::tuple;
+using boost::this_thread::sleep;
+using boost::mutex;
 using std::max;
 using std::min;
 using std::numeric_limits;
@@ -90,7 +94,7 @@ bf::path executableDirectory;
 
 std::string thumbnailResolution = "640x400";
 
-std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 10\n";
+std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
 
 std::string extension = "svg";
 
@@ -367,21 +371,41 @@ unordered_map<string,string> &setupDecoder()
 	return theMap;
 }
 
-void thumbNail(std::list<string>& fileList)
+bool doneEntering = false;
+list<string> fileList;
+mutex fileListMutex;
+
+void thumbNailWorker()
 {
-	for (std::list<string>::const_iterator i = fileList.begin();
-		i != fileList.end(); i++)
+	string filename;
+	string baseFilename;
+
+	while (!doneEntering || !fileList.empty())
 	{
-		string filename = (*i).substr(0,(*i).find(extension) - 1);
-		string commandLine = "convert " + *i + "[" + thumbnailResolution + "] -limit memory 512mb " + filename + "-thumb.png";
-		string commandLine2 = "gzip -c -9 -f " +  *i + " > " + *i + "z";
+		if (fileList.empty())
+		{
+			boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+		}
+		else
+		{
+			{
+				boost::mutex::scoped_lock lock(fileListMutex);
+				filename = fileList.front();
+				baseFilename = fileList.front().substr(0,fileList.front().find(extension) - 1);
+				fileList.pop_front();
+			}
+			//string commandLine0 = "convert " + filename + "[" + thumbnailResolution + "] -limit memory 1gb " + baseFilename + "-thumb.png";
+			//string commandLine1 = "mogrify -resize 3840 -format png -limit memory 1gb " + filename;
+			string commandLine0 = "convert " + filename + "[" + thumbnailResolution + "] " + baseFilename + "-thumb.png";
+			string commandLine1 = "mogrify -resize 3840 -format png " + filename;
+			string commandLine2 = "gzip -c -9 -f " + filename + " > " + filename + "z";
 
+			system(commandLine0.c_str());
+			system(commandLine1.c_str());
+			system(commandLine2.c_str());
 
-		system(commandLine.c_str());
-		system(commandLine2.c_str());
-
-		bf::remove(bf::path(*i));
-
+			bf::remove(bf::path(filename));
+		}
 	}
 }
 
@@ -522,7 +546,7 @@ void processPower(const string &filename)
 					commandLine = splitLine[1];
 					cerr << commandLine << endl;
 
-					p << "set title \"{/=12 Power Consumed vs. Time}\\n{/=10 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+					p << "set title \"{/=18 Power Consumed vs. Time}\\n{/=14 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
 
 					bf::path fileName = outputDir / ("energy." + extension);
 					filesGenerated.push_back(fileName.native_directory_string());
@@ -530,7 +554,7 @@ void processPower(const string &filename)
 
 					p2 << "set output \"" << fileName.native_directory_string() << "\"\n";
 					p2 << powerScripts[2] << endl;
-					p2 << "set title \"{/=12 Energy vs. Time}\\n{/=10 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+					p2 << "set title \"{/=18 Energy vs. Time}\\n{/=14 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
 					p2 << "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
 				}
 				else if (newLine[1] == '+')
@@ -673,8 +697,12 @@ void processPower(const string &filename)
 	p.close();
 	p2.close();
 
-	thumbNail(filesGenerated);
-
+	{
+		boost::mutex::scoped_lock lock(fileListMutex);
+		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); i++)
+			fileList.push_back(*i);
+	}
+	
 	bf::path givenfilename(filename);
 	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, channelCount);
 }
@@ -1318,13 +1346,16 @@ void processStats(const string &filename)
 			else if (writing == 8)
 			{
 				char *position = strchr(newLine, ' ') ;
-				assert(position != NULL);
+				if (position == NULL)
+					break;
 				*position++ = 0;
 				// ignore stack addresses for now
 				if ((position - newLine) < 12)
 				{
 					char *position2 = strchr(position,' ');
-					assert(position2 != NULL);
+					if (position2 == NULL)
+						break;
+				
 					*position2++ = 0;
 
 					uint64_t PC = strtol(newLine,0,16);
@@ -1459,7 +1490,7 @@ void processStats(const string &filename)
 		bf::path filename = outputDir / ("addressLatencyDistribution" + lexical_cast<string>(channelID) + "." + extension);
 		filesGenerated.push_back(filename.native_directory_string());
 		p2 << "set output '" << filename.native_directory_string() << "'" << endl << subAddrDistroA;
-		p2 << "set multiplot layout " << channelLatencyDistribution[channelID].size() << ", 1 title \"" << commandLine << "\"" << endl;
+		p2 << "set multiplot layout " << channelLatencyDistribution[channelID].size() << ", 1 title \"{/=18" << commandLine << "\"" << endl;
 		
 		for (unsigned rankID = 0; rankID < channelLatencyDistribution[channelID].size(); rankID++)
 		{
@@ -1887,7 +1918,12 @@ void processStats(const string &filename)
 	p2.close();
 	p3.close();
 
-	thumbNail(filesGenerated);
+	{
+		boost::mutex::scoped_lock lock(fileListMutex);
+		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); i++)
+			fileList.push_back(*i);
+	}
+
 	bf::path givenfilename(filename);
 	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, channelDistribution.size());
 	return;
@@ -2025,6 +2061,8 @@ int main(int argc, char** argv)
 	// finally, process the files to generate results
 	if (!generateResultsOnly)
 	{
+		boost::thread threadA(thumbNailWorker);
+
 		for (int i = 0; i < argc; i++)
 		{
 			string currentValue(argv[i]);
@@ -2037,8 +2075,19 @@ int main(int argc, char** argv)
 				processStats(currentValue);
 			}
 		}
+
+		doneEntering = true;
+
+		boost::thread threadB(thumbNailWorker);
+
+
+		cerr << "Waiting for post-processing to finish." << endl;
+
+		threadA.join();
+		threadB.join();
 	}
 
+	
 	return 0;
 }
 

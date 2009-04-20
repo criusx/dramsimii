@@ -695,7 +695,6 @@ Transaction *InputStream::getNextRandomRequest()
 
 		}
 
-
 		// set arrival time
 
 		static Address nextAddress;

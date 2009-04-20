@@ -133,7 +133,7 @@ plot '-' using 1 axes x2y1 title 'Read Bytes', '-' using 1 axes x2y1 title 'Writ
 std::string pcVsLatencyGraph =
 "set logscale y \n\
 set yrange [1 : *] noreverse nowriteback\n\
-set xlabel 'PC Value' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+set xlabel 'PC Value' offset character .05, 0,0 font 'Arial, 14' textcolor lt -1 rotate by -45\n\
 set ylabel 'Total Latency (ns)'\n\
 set style fill solid 1.00 noborder\n\
 set format x '0x0%x'\n";
@@ -141,7 +141,7 @@ set format x '0x0%x'\n";
 std::string avgPcVsLatencyGraph =
 "set logscale y \n\
 set yrange [1 : *] noreverse nowriteback\n\
-set xlabel 'PC Value' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+set xlabel 'PC Value' offset character .05, 0,0 font 'Arial, 14' textcolor lt -1 rotate by -45\n\
 set ylabel 'Average Latency (ns)'\n\
 set style fill solid 1.00 noborder\n\
 set format x '0x0%x'\n";
