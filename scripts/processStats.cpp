@@ -92,9 +92,10 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 // globals
 bf::path executableDirectory;
 
-std::string thumbnailResolution = "640x400";
+std::string thumbnailResolution = "640";
 
-std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
+//std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
+std::string terminal = "set terminal svg size 2880,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
 
 std::string extension = "svg";
 
@@ -396,7 +397,7 @@ void thumbNailWorker()
 			}
 			//string commandLine0 = "convert " + filename + "[" + thumbnailResolution + "] -limit memory 1gb " + baseFilename + "-thumb.png";
 			//string commandLine1 = "mogrify -resize 3840 -format png -limit memory 1gb " + filename;
-			string commandLine0 = "convert " + filename + "[" + thumbnailResolution + "] " + baseFilename + "-thumb.png";
+			string commandLine0 = "convert " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
 			string commandLine1 = "mogrify -resize 3840 -format png " + filename;
 			string commandLine2 = "gzip -c -9 -f " + filename + " > " + filename + "z";
 
@@ -1908,6 +1909,31 @@ void processStats(const string &filename)
 	}
 	p3 << "e" << endl << "unset output" << endl;
 
+	// make special IPC graph
+	p0 << "reset" << endl << basicSetup << terminal;
+	outFilename = outputDir / ("bigIpcGraph." + extension);
+	p0 << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	filesGenerated.push_back(outFilename.native_directory_string());
+	p0 << bigIPCGraph << endl;
+	time = 0.0F;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	{
+		p0 << time << " " << *i << endl;
+		time += epochTime;
+	}
+	p0 << "2.51 1E-5" << endl << "e" << endl;
+
+	time = 0.0F;
+	ipcTotal.clear();
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	{
+		ipcTotal.add(1,*i);
+		p0 << time << " " << ipcTotal.getAverage() << endl;
+		time += epochTime;
+	}
+	p0 << "e" << endl << "unset output" << endl;
+
+
 	p0 << endl << "exit" << endl;
 	p1 << endl << "exit" << endl;
 	p2 << endl << "exit" << endl;
@@ -1948,6 +1974,8 @@ int main(int argc, char** argv)
 	else if (strncmp(argv[1],"-f",2) == 0)
 		generateResultsOnly = true;
 
+	list<string> toBeProcessed;
+
 	unordered_map<string,string> files;
 
 	for (int i = 0; i < argc; i++)
@@ -1974,6 +2002,8 @@ int main(int argc, char** argv)
 
 				if (starts_with(commandline, "----Command Line:"))
 				{
+					toBeProcessed.push_back(argv[i]);
+
 					string basefilename = filename.substr(0,filename.find_last_of('-'));
 					string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
 					string modUrlString = commandline.substr(commandline.find(':')+2,commandline.length());
@@ -2063,16 +2093,15 @@ int main(int argc, char** argv)
 	{
 		boost::thread threadA(thumbNailWorker);
 
-		for (int i = 0; i < argc; i++)
+			for (list<string>::const_iterator i = toBeProcessed.begin(); i != toBeProcessed.end(); i++)
 		{
-			string currentValue(argv[i]);
-			if (ends_with(currentValue,"power.gz")|| ends_with(currentValue,"power.bz2"))
+			if (ends_with(*i,"power.gz")|| ends_with(*i,"power.bz2"))
 			{
-				processPower(currentValue);
+				processPower(*i);
 			}
-			else if (ends_with(currentValue,"stats.gz")|| ends_with(currentValue,"stats.bz2"))
+			else if (ends_with(*i,"stats.gz")|| ends_with(*i,"stats.bz2"))
 			{
-				processStats(currentValue);
+				processStats(*i);
 			}
 		}
 

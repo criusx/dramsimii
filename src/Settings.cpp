@@ -192,7 +192,7 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 			DMperDRAM = lexical_cast<unsigned>(nodeValue);
 			break;
 		case request_count_token:
-			requestCount = lexical_cast<unsigned>(nodeValue);
+			requestCount = lexical_cast<tick>(nodeValue);
 			break;
 		case idd5_token:
 			IDD5 = lexical_cast<unsigned>(nodeValue);
@@ -398,9 +398,9 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 				addressMappingScheme = Address::SDRAM_BASE_MAP;
 			else if (nodeValue == "sdramhiperf")
 				addressMappingScheme = Address::SDRAM_HIPERF_MAP;
-			else if (nodeValue == "closepagehighlocality")
+			else if (nodeValue == "closepagehighlocality" || nodeValue == "highlocality")
 				addressMappingScheme = Address::CLOSE_PAGE_HIGH_LOCALITY;
-			else if (nodeValue == "closepagelowlocality")
+			else if (nodeValue == "closepagelowlocality" || nodeValue == "lowlocality")
 				addressMappingScheme = Address::CLOSE_PAGE_LOW_LOCALITY;
 			else if (nodeValue == "closepagebaselineopt")
 				addressMappingScheme = Address::CLOSE_PAGE_BASELINE_OPT;
@@ -492,7 +492,7 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 	}
 	catch (boost::bad_lexical_cast exception)
 	{
-		cerr << "Bad number " << nodeValue << endl;
+		cerr << "Invalid numeric conversion '" << nodeValue << "'" << endl;
 		return false;
 	}
 

@@ -48,6 +48,7 @@ std::string powerScripts[] =
  plot '-' u 1:2 sm csp t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00,\
  '-' u 1:2 sm csp t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n"};
 
+
 std::string powerTypes[] = 
 {"ACT-STBY","ACT","PRE-STBY","RD","WR"};
 
@@ -150,9 +151,19 @@ std::string smallIPCGraph =
 "set size 1.0, 0.345\n\
 set origin 0.0, 0.0\n\
 set ylabel 'IPC'\n\
+set y2label\n\
 set title 'IPC vs. Time'  offset character 0, -1, 0 font '' norotate\n\
 set style fill solid 1.00 noborder\n\
 plot '-' using 1:2 title 'IPC' with impulses, '-' using 1:2 sm csp title 'Cumulative Average IPC' with lines, '-' using 1:2 sm csp title 'Moving Average IPC' with lines\n";
+
+std::string bigIPCGraph = 
+"set origin 0.0, 0.0\n\
+set ylabel 'IPC'\n\
+set y2label\n\
+set title 'IPC vs. Time'  offset character 0, -1, 0 font '' norotate\n\
+set style fill solid 1.00 noborder\n\
+plot '-' using 1:2 title 'IPC' with impulses, '-' using 1:2 sm csp title 'Cumulative Average IPC' with lines\n";
+
 
 std::string cacheGraph0 = 
 "set y2tics\n\
@@ -188,6 +199,8 @@ std::string otherIPCGraph =
 "set yrange [0 : *] noreverse nowriteback\n\
 set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
 set ylabel 'Instructions Per Cycle'\n\
+set y2label\n\
+unset logscale y2\n\
 set style fill solid 1.00 noborder\n\
 set xrange [0 : *]\n\
 plot '-' using 1:2 title 'IPC' with impulses,\

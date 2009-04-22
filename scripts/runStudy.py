@@ -29,6 +29,7 @@ traces = ['bzip2003-trace.gz',
 'namd000-trace.gz',
 'omnetpp000-trace.gz',
 'soplex000-trace.gz']
+traces = ['lbm000-trace.gz']
 #tracesDir = '/home/crius/benchmarks/addressTraces/'
 #traces = ['mase_256K_64_4G/ammp.trc.gz',
 #'mase_256K_64_4G/equake.trc.gz',
@@ -97,7 +98,7 @@ m5SEConfigFile = '/home/crius/m5/configs/example/dramsim.py'
 m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
 m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
-outputDir = '/home/crius/results/mappingStudy14'
+outputDir = '/home/crius/results/mappingStudy13'
 memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
 commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d outfiledir %s %s"'
 fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"
@@ -107,24 +108,27 @@ submitString = '''echo 'time %%s' | qsub -q %s -o %%s -e %%s -N "%%s"''' % (queu
 m5SECommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %d ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"'
 m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s outfiledir %s"'
 m5FSCommandLine = '%s %s -b %%s -F 10000000000 --nopre --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript)
-channels = [2, 4]
-ranks = [4, 8]
-banks = [8, 16]
-tFAW = [28, 42]
-#addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'sdramclosepage', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
-addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
+channels = [2]
+ranks = [4]
+banks = [16]
+tFAW = [28]
+addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagebaseline', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
+#addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
+#addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagelowlocality', 'closepagehighlocality']
+#addressMappingPolicy = ['closepagebaseline', 'sdramhiperf']
 #addressMappingPolicy = ['closepagebaselineopt']
 #addressMappingPolicy = ['sdrambase','closepagelowlocality']
-#addressMappingPolicy = ['sdrambase']
+#addressMappingPolicy = ['closepagebaseline']
 #commandOrderingAlgorithm = ['firstAvailable', 'bankroundrobin', 'rankroundrobin', 'strict']
 #commandOrderingAlgorithm = ['firstAvailable', 'bankroundrobin', 'rankroundrobin']
 commandOrderingAlgorithm = ['firstAvailable']
 interarrivalCycleCount = [1]
 #perBankQueueDepth = range(8, 16, 4)
 perBankQueueDepth = [12]
-requests = [1350000000000]
+requests = [9223372036854775808]
 #benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
-benchmarks = ['stream']
+#benchmarks = ['stream']
+benchmarks = ['lbm']
 
 def main():
     try:
@@ -155,12 +159,11 @@ def main():
                                                 currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, i))
                                                 submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
                                                 #print submitCommandLine
+                                                #sys.exit(0)
                                                 if not counting:
                                                     os.system(submitCommandLine)
                                                 else:
                                                     count += 1
-                                                #sys.exit(0)
-
 
                                         # syscall emulation
                                         elif opt == '-s':

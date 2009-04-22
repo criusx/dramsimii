@@ -9,9 +9,9 @@
 		<clockGranularity>2</clockGranularity>
 		<channels>2</channels>
 		<ranks>4</ranks>
-		<banks>16</banks>
+		<banks>8</banks>
 		<rows>16384</rows>
-		<columns>2048</columns>
+		<columns>1024</columns>
 		<channelWidth>8</channelWidth>
 		<!--burgerBase, closePageBaseline, intel845g, sdramBase, sdramClosePage, sdramHiperf, closePageLowLocality, closePageHighLocality -->
 		<physicalAddressMappingPolicy>closePageBaseline</physicalAddressMappingPolicy>
@@ -114,7 +114,7 @@
 		<outFile type="gz" dbreporting="false">standardOutFile.gz</outFile>
 		<!-- the directory that the output files will be written to -->
 		<outFileDirectory>.</outFileDirectory>
-		<requestCount>75000000</requestCount>
+		<requestCount>4294967296</requestCount>
 		<!-- type may be "mase","k6","mapped","random," if random, then the value is the distrubution model, which may be 'uniform', 'gaussian' , 'poisson', 'normal' -->
 		<!-- may be plain text, gzipped or bzipped -->
 		<inputFile type="random">gaussian</inputFile>

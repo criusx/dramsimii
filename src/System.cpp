@@ -505,41 +505,44 @@ void System::runSimulations(const unsigned requestCount)
 {
 	Transaction *inputTransaction = NULL;
 
-	tick newTime = 0;// = (rand() % 65536) + 65536;
-
-	resetToTime(newTime);
-
 	inputTransaction = inputStream.getNextIncomingTransaction();
 
-	for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
-	{				
-		moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()),time + 1));
+	if (inputTransaction)
+	{
+		tick newTime = inputTransaction->getArrivalTime();// = (rand() % 65536) + 65536;
 
-		if (this->pendingTransactionCount() > 0)
-		{
-			cerr << "not right, no host transactions here" << endl;
-		}
+		resetToTime(newTime);
 
-		// attempt to enqueue external transactions
-		// as internal transactions (REFRESH) are enqueued automatically
-		if (time >= inputTransaction->getArrivalTime())
-		{
-			if (enqueue(inputTransaction))
+		for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
+		{				
+			moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()),time + 1));
+
+			if (this->pendingTransactionCount() > 0)
 			{
-				inputTransaction = inputStream.getNextIncomingTransaction();
+				cerr << "not right, no host transactions here" << endl;
+			}
 
-				if (!inputTransaction)
-					break;
+			// attempt to enqueue external transactions
+			// as internal transactions (REFRESH) are enqueued automatically
+			if (time >= inputTransaction->getArrivalTime())
+			{
+				if (enqueue(inputTransaction))
+				{
+					inputTransaction = inputStream.getNextIncomingTransaction();
 
-				i--;
+					if (!inputTransaction)
+						break;
+
+					i--;
+				}
 			}
 		}
+
+		if (inputTransaction)
+			delete inputTransaction;
+
 	}
-
-	if (inputTransaction)
-		delete inputTransaction;
-
-	moveToTime(channel[0].getTime() + 64000000);
+//	moveToTime(channel[0].getTime() + 64000000);
 }
 
 
