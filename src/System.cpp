@@ -168,6 +168,7 @@ nextStats(settings.epoch)
 
 			} while (fileExists(timingFilename) || fileExists(powerFilename) || fileExists(statsFilename) || fileExists(settingsFilename));
 
+			// @todo race condition here, create temp files, attempt to move to desired filename, if it works then do this, also look at using inotify syscalls
 			timingOutStream.push(file_sink(timingFilename.str().c_str()));
 			powerOutStream.push(file_sink(powerFilename.str().c_str()));
 			statsOutStream.push(file_sink(statsFilename.str().c_str()));

@@ -95,7 +95,7 @@ bf::path executableDirectory;
 std::string thumbnailResolution = "640";
 
 //std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
-std::string terminal = "set terminal svg size 2880,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
+std::string terminal = "set terminal svg size 3840,1200 dynamic enhanced font \"Arial,32\"\n";
 
 std::string extension = "svg";
 
@@ -466,9 +466,14 @@ void processPower(const string &filename)
 
 	// get a couple copies of gnuplot running
 	opstream p("gnuplot");
-	p << terminal;
+	p << basicSetup << terminal;
 	opstream p2("gnuplot");
-	p2 << terminal;
+	p2 << basicSetup << terminal;
+	opstream p3("gnuplot");
+	p3 << basicSetup << terminal;
+	opstream p4("gnuplot");
+	p4 << basicSetup << terminal;
+
 
 	while ((newLine[0] != 0) && (!userStop))
 	{
@@ -547,7 +552,8 @@ void processPower(const string &filename)
 					commandLine = splitLine[1];
 					cerr << commandLine << endl;
 
-					p << "set title \"{/=18 Power Consumed vs. Time}\\n{/=14 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+					p << "set title \"{/=18 Power vs. Time}\\n{/=14 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+					p3 << "set title \"{/=24 Power vs. Time}\\n{/=18 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
 
 					bf::path fileName = outputDir / ("energy." + extension);
 					filesGenerated.push_back(fileName.native_directory_string());
@@ -557,6 +563,14 @@ void processPower(const string &filename)
 					p2 << powerScripts[2] << endl;
 					p2 << "set title \"{/=18 Energy vs. Time}\\n{/=14 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
 					p2 << "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
+
+					fileName = outputDir / ("bigEnergy." + extension);
+					filesGenerated.push_back(fileName.native_directory_string());
+
+					p4 << "set output \"" << fileName.native_directory_string() << "\"\n";
+					p4 << bigEnergyScript << endl;
+					p4 << "set title \"{/=24 Energy vs. Time}\\n{/=18 " << commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+					p4 << "plot '-' u 1:2 axes x1y1 t \"Energy (P t)\" w boxes lt rgb \"#66CF03\" , '-' u 1:2 axes x1y2 t \"Cumulative Energy\" w lines lw 6.00 lt rgb \"#387400\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 				}
 				else if (newLine[1] == '+')
 				{
@@ -566,20 +580,30 @@ void processPower(const string &filename)
 					p << "set output \"" << fileName.native_directory_string() << "\"\n";
 					p << powerScripts[0] << endl;
 
+					fileName = outputDir / ("bigPower." + extension);
+					filesGenerated.push_back(fileName.native_directory_string());
+					p3 << "set output \"" << fileName.native_directory_string() << "\"" << endl;
+					p3 << bigPowerScript << endl;
+					
 					vector<string> splitLine;
 					split(splitLine,line,is_any_of("[]"));
 					channelCount = lexical_cast<unsigned>(splitLine[1]);
 
 					p << "plot ";
+					p3 << "plot ";
 
 					for (unsigned a = 0; a < channelCount; a++)
 					{
 						for (unsigned b = 0; b < 5; b++)
 						{
 							p << "'-' using 1 axes x2y1 title \"P_{sys}(" << powerTypes[b] << ") ch[" << a << "]\",";
+							p3 << "'-' using 1 axes x2y1 title \"P_{sys}(" << powerTypes[b] << ") ch[" << a << "]\",";
 						}
 					}
 					p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
+					p3 << "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
+					p3 << "'-' u 1:2 axes x1y1 sm csp t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
+					p3 << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
 					values.reserve(channelCount * 5);
 
@@ -602,19 +626,22 @@ void processPower(const string &filename)
 	if (values.size() < 1)
 		return;
 
-	// make the main power graph
+	// make the main power graph and big power graph
 	for (vector<vector<float> >::const_iterator i = values.begin(); i != values.end(); i++)
 	{
 		for (vector<float>::const_iterator j = i->begin(); j != i->end(); j++)
 		{
 			p << *j << endl;
+			p3 << *j << endl;
 		}
 		p << "e" << endl;
+		p3 << "e" << endl;
 	}
 	p << "0 0" << endl << (values.size() > 0 ? values.back().size() : 0.0) * epochTime << " 0.2" << endl << "e" << endl;
+	p3 << "0 0" << endl << 3.31 / epochTime << " 1e-5" << endl << "e" << endl;
 
 	p << powerScripts[1];
-
+	
 	// make the total power bar graphs
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
 	{
@@ -636,8 +663,12 @@ void processPower(const string &filename)
 			total += values[j][i];
 		cumulativePower.add(1.0,total);
 		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
+		p3 << i * epochTime << " " << cumulativePower.getAverage() << endl;
 	}
 	p << "e" << endl;
+	p3 << "e" << endl;
+	p3 << "0 0" << endl << 3.31 << " 1e-5" << endl << "e" << endl;
+
 
 	PriorMovingAverage powerMovingAverage(WINDOW);
 
@@ -661,9 +692,12 @@ void processPower(const string &filename)
 			totalPowerPerEpoch += values[j][i];
 
 		p2 << i * epochTime << " " << totalPowerPerEpoch * epochTime << endl;
+		p4 << i * epochTime << " " << totalPowerPerEpoch * epochTime << endl;
 	}
 	p2 << "e" << endl;
+	p4 << "e" << endl;
 
+	double cumulativeEnergy = 0.0F;
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
 	{
 		float totalPowerPerEpoch = 0.0F;
@@ -671,9 +705,12 @@ void processPower(const string &filename)
 			totalPowerPerEpoch += values[j][i];
 
 		p2 << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch * epochTime * epochTime << endl;
+		cumulativeEnergy += totalPowerPerEpoch * epochTime;
+		p4 << i * epochTime << " " << cumulativeEnergy << endl;
 	}
 
 	p2 << "e" << endl << powerScripts[3] << endl;
+	p4 << "e" << endl << "0 0" << endl << "3.31 1e-5" << endl << "e" << "unset output" << endl;
 
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
 	{
@@ -1921,7 +1958,7 @@ void processStats(const string &filename)
 		p0 << time << " " << *i << endl;
 		time += epochTime;
 	}
-	p0 << "2.51 1E-5" << endl << "e" << endl;
+	p0 << "e" << endl;
 
 	time = 0.0F;
 	ipcTotal.clear();
@@ -1931,7 +1968,7 @@ void processStats(const string &filename)
 		p0 << time << " " << ipcTotal.getAverage() << endl;
 		time += epochTime;
 	}
-	p0 << "e" << endl << "unset output" << endl;
+	p0 << "e" << endl << "0 0" << endl << "3.31 1E-5" << endl << "e" << endl << "unset output" << endl;
 
 
 	p0 << endl << "exit" << endl;

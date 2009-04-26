@@ -25,7 +25,7 @@ std::string powerScripts[] =
  set boxwidth 0.95 relative\n\
  plot '-' u 1:2 t \"Total Power\" w boxes,\
  '-' u 1:2 sm csp t \"Cumulative Average\" w lines lw 2.00,\
-  '-' u 1:2 sm csp t \"Running Average\" w lines lw 2.00\n",
+ '-' u 1:2 sm csp t \"Running Average\" w lines lw 2.00\n",
  "unset border\n\
  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
  set autoscale xfixmin\n\
@@ -48,6 +48,38 @@ std::string powerScripts[] =
  plot '-' u 1:2 sm csp t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00,\
  '-' u 1:2 sm csp t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n"};
 
+std::string bigPowerScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+							 set yrange [0:*] noreverse nowriteback\n\
+							 unset x2tics\n\
+							 set mxtics\n\
+							 set xrange [0:*]\n\
+							 set yrange [0:7000]\n\
+							 set xlabel \"Time (s)\"\n\
+							 set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+							 set ytics out\n\
+							 set boxwidth 1.00 absolute\n\
+							 set style fill  solid 1.00 noborder\n\
+							 set style data histograms\n\
+							 #set style data filledcurves below x1\n\
+							 set style histogram rowstacked title offset 0,0,0\n";
+
+std::string bigEnergyScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+							  set autoscale xfixmin\n\
+							  set autoscale xfixmax\n\
+							  set yrange [0:*] noreverse nowriteback\n\
+							  set ytics out\n\
+							  set xtics out\n\
+							  set mxtics\n\
+							  set yrange [0:9]\n\
+							  set y2range [0:16000]\n\
+							  set ytics nomirror\n\
+							  set y2tics\n\
+							  unset x2tics\n\
+							  set boxwidth 1.00 relative\n\
+							  #set logscale y2\n\
+							  set ylabel \"Energy (mJ)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+							  set y2label \"Cumulative Energy (mJ)\"\n\
+							  set xlabel \"Time (s)\"\n";
 
 std::string powerTypes[] = 
 {"ACT-STBY","ACT","PRE-STBY","RD","WR"};
@@ -162,8 +194,8 @@ set ylabel 'IPC'\n\
 set y2label\n\
 set title 'IPC vs. Time'  offset character 0, -1, 0 font '' norotate\n\
 set style fill solid 1.00 noborder\n\
-plot '-' using 1:2 title 'IPC' with impulses, '-' using 1:2 sm csp title 'Cumulative Average IPC' with lines\n";
-
+set boxwidth 0.95 relative\n\
+plot '-' using 1:2 title 'IPC' with boxes lt rgb \"#007872\", '-' using 1:2 sm csp title 'Cumulative Average IPC' with lines lw 6.00 lt rgb \"#57072B\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
 
 std::string cacheGraph0 = 
 "set y2tics\n\
