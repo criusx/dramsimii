@@ -136,7 +136,6 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 {
 	string nodeValue = value;
 	bool result = true;
-	//std::transform(nodeValue.begin(),nodeValue.end(),nodeValue.begin(),std::ptr_fun((int (*)( int))std::tolower));
 	boost::algorithm::to_lower(nodeValue);
 
 	const FileIOToken token = dramTokenizer(nodeName);
@@ -380,11 +379,16 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 				commandOrderingAlgorithm = RANK_ROUND_ROBIN;
 			else if (nodeValue == "wanghop")
 				commandOrderingAlgorithm = WANG_RANK_HOP;
-			else if (nodeValue == "greedy" || nodeValue == "firstavailable")
-				commandOrderingAlgorithm = FIRST_AVAILABLE;
-			else {
+			else if (nodeValue == "firstavailableage")
+				commandOrderingAlgorithm = FIRST_AVAILABLE_AGE;
+			else if (nodeValue == "firstavailableriff")
+				commandOrderingAlgorithm = FIRST_AVAILABLE_RIFF;
+			else if (nodeValue == "firstavailablequeue")
+				commandOrderingAlgorithm = FIRST_AVAILABLE_QUEUE;
+			else 
+			{
 				cerr << "Unrecognized ordering algorithm: " << nodeValue << endl;
-				commandOrderingAlgorithm = BANK_ROUND_ROBIN;
+				commandOrderingAlgorithm = FIRST_AVAILABLE_AGE;
 			}
 			break;
 		case addr_mapping_scheme_token:
@@ -512,7 +516,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const CommandOrderingAlgorithm coa)
 	case BANK_ROUND_ROBIN:
 		os << "BRR";
 		break;
-	case FIRST_AVAILABLE:
+	case FIRST_AVAILABLE_AGE:
 		os << "GRD";
 		break;
 	case WANG_RANK_HOP:

@@ -137,7 +137,7 @@ protected:
 
 
 public:
-#if TRACE_GENERATE
+#ifdef TRACE_GENERATE
 	boost::iostreams::filtering_ostream traceOutStream;
 #endif
 

@@ -70,6 +70,7 @@ namespace DRAMsimII
 		virtual void doPowerCalculation();
 		virtual void printStatistics();	
 		bool fileExists(std::stringstream& fileName) const;
+		bool createNewFile(const std::string& fileName) const;
 
 	public:		
 

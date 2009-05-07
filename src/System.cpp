@@ -26,7 +26,15 @@
 #include <functional>
 #include <algorithm>
 #include <assert.h>
+#ifdef WIN32
+#include <io.h> 
+#endif
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
 #include <boost/iostreams/filtering_streambuf.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -48,6 +56,7 @@ using std::bind2nd;
 using std::mem_fun_ref;
 using boost::iostreams::null_sink;
 using boost::iostreams::file_sink;
+using boost::iostreams::filtering_ostream;
 using std::ifstream;
 using std::ofstream;
 using std::stringstream;
@@ -142,9 +151,9 @@ nextStats(settings.epoch)
 			string baseFilename = settings.outFile;
 
 			// strip off the file suffix
-			if (baseFilename.find("gz") > 0)
+			if (baseFilename.find("gz") != string::npos)
 				baseFilename = baseFilename.substr(0,baseFilename.find(".gz"));
-			if (baseFilename.find("bz2") > 0)
+			if (baseFilename.find("bz2") != string::npos)
 				baseFilename = baseFilename.substr(0,baseFilename.find(".bz2"));
 
 			int counter = 0;		
@@ -153,7 +162,7 @@ nextStats(settings.epoch)
 			stringstream powerFilename;
 			stringstream statsFilename;		
 			stringstream settingsFilename;
-
+			
 			do
 			{
 				timingFilename.str("");
@@ -163,41 +172,43 @@ nextStats(settings.epoch)
 				timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
 				powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
 				statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-				settingsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";	
+				settingsFilename << outDir.native_directory_string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";	
 				counter++;
 
-			} while (fileExists(timingFilename) || fileExists(powerFilename) || fileExists(statsFilename) || fileExists(settingsFilename));
+			} while (!createNewFile(timingFilename.str()) || !createNewFile(powerFilename.str()) || !createNewFile(statsFilename.str()) || !createNewFile(settingsFilename.str()));
 
-			// @todo race condition here, create temp files, attempt to move to desired filename, if it works then do this, also look at using inotify syscalls
 			timingOutStream.push(file_sink(timingFilename.str().c_str()));
 			powerOutStream.push(file_sink(powerFilename.str().c_str()));
 			statsOutStream.push(file_sink(statsFilename.str().c_str()));
-			ofstream settingsOutStream(settingsFilename.str().c_str());
+			filtering_ostream settingsOutStream;
+			settingsOutStream.push(file_sink(settingsFilename.str().c_str()));
 
-			if (!timingOutStream.good())
+			if (!timingOutStream.good() || !timingOutStream.is_complete())
 			{
-				cerr << "Error opening file \"" << timingFilename << "\" for writing" << endl;
+				cerr << "Error opening file \"" << timingFilename.str() << "\" for writing" << endl;
 				exit(-12);
 			}
-			else if (!powerOutStream.good())
+			else if (!powerOutStream.good() || !powerOutStream.is_complete())
 			{
-				cerr << "Error opening file \"" << powerFilename << "\" for writing" << endl;
+				cerr << "Error opening file \"" << powerFilename.str() << "\" for writing" << endl;
 				exit(-12);
 			}
-			else if (!statsOutStream.good())
+			else if (!statsOutStream.good() || !statsOutStream.is_complete())
 			{
-				cerr << "Error opening file \"" << statsFilename << "\" for writing" << endl;
+				cerr << "Error opening file \"" << statsFilename.str() << "\" for writing" << endl;
 				exit(-12);
 			}
-			else if (!settingsOutStream.good())
+			else if (!settingsOutStream.good() || !settingsOutStream.is_complete())
 			{
-				cerr << "Error writing settings file" << settingsFilename << endl;
+				cerr << "Error writing settings file" << settingsFilename.str() << endl;
 				exit(-12);
 			}
 			else
 			{
-				settingsOutStream.write(settings.settingsOutputFile.c_str(),settings.settingsOutputFile.length());
-				settingsOutStream.close();
+				settingsOutStream << settings.settingsOutputFile;
+				settingsOutStream.flush();
+				//settingsOutStream.write(settings.settingsOutputFile.c_str(),settings.settingsOutputFile.length());
+				//settingsOutStream.close();
 			}
 		}
 	}
@@ -303,6 +314,28 @@ bool System::fileExists(stringstream& fileName) const
 {
 	bf::path newPath(fileName.str().c_str());
 	return bf::exists(newPath);
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief attempt to atomically create a file with this name
+/// @return true if the file was created
+//////////////////////////////////////////////////////////////////////////
+bool System::createNewFile(const string& fileName) const
+{
+	int fs = 
+#ifdef WIN32
+		_open(fileName.c_str(), O_CREAT | O_EXCL, _S_IREAD | _S_IWRITE);
+#else
+		open(fileName.c_str(), O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+#endif
+	if (fs < 0)
+		return false;
+	else
+	{
+		close(fs);
+		return true;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -591,7 +624,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 	case WANG_RANK_HOP:
 		os << "WANG] ";
 		break;
-	case FIRST_AVAILABLE:
+	case FIRST_AVAILABLE_AGE:
 		os << "GRDY] ";
 		break;
 	default:

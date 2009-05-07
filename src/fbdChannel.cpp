@@ -854,7 +854,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 		}
 		break;
 
-	case FIRST_AVAILABLE:
+	case FIRST_AVAILABLE_AGE:
 		{
 			const Command *candidateCommand = NULL;
 

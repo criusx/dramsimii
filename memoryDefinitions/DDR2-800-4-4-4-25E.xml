@@ -24,8 +24,8 @@
 		<postedCAS>true</postedCAS>
 		<!--may be none, refreshOneChanAllRankAllBank, etc.-->
 		<autoRefreshPolicy>refreshOneChanAllRankAllBank</autoRefreshPolicy>
-		<!--strict, bankRoundRobin, rankRoundRobin, wangHop, firstAvailable-->
-		<commandOrderingAlgorithm>firstAvailable</commandOrderingAlgorithm>
+		<!--strict, bankRoundRobin, rankRoundRobin, wangHop, firstAvailableAge, firstAvailableRiff, firstAvailableQueue-->
+		<commandOrderingAlgorithm>firstAvailableAge</commandOrderingAlgorithm>
 		<!--may be strict, RIFF-->
 		<transactionOrderingAlgorithm>RIFF</transactionOrderingAlgorithm>
 		<perBankQueueDepth>8</perBankQueueDepth>
