@@ -38,8 +38,8 @@
 		<decodeWindow>16</decodeWindow>
 		<eventQueueDepth>8</eventQueueDepth>
 		<refreshQueueDepth>8</refreshQueueDepth>
-		<!--attempts to group reads and writes together in time-->
-		<readWriteGrouping>false</readWriteGrouping>
+		<!--attempts to sweep through and group reads and writes together in time-->
+		<readWriteGrouping>true</readWriteGrouping>
 		<!--able to issue CAS+Pre commands, effective with close page, unavailable in open page RBMP -->
 		<autoPrecharge>true</autoPrecharge>
 	</setup>

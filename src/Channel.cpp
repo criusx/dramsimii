@@ -1548,7 +1548,7 @@ const Command *Channel::readNextCommand() const
 							if ((challengerExecuteTime < candidateExecuteTime) ||
 								(candidateExecuteTime == challengerExecuteTime && ((challengerCommand->isRead() && candidateCommand->isWrite()) ||
 								(challengerCommand->isRead() && candidateCommand->isRead() && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))) ||
-								(time - challengerCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit()))
+								(time - challengerCommand->getEnqueueTime() > 12 * systemConfig.getSeniorityAgeLimit()))
 							{						
 								candidateCommand = challengerCommand;
 								// stop searching since all the queues are proved to have refresh commands at the front
@@ -1573,7 +1573,7 @@ const Command *Channel::readNextCommand() const
 							if ((challengerExecuteTime < candidateExecuteTime) ||
 								(candidateExecuteTime == challengerExecuteTime && ((challengerCommand->isRead() && candidateCommand->isWrite()) ||
 								(challengerCommand->isRead() && candidateCommand->isRead() && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))) ||
-								(time - challengerCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit()))
+								(time - challengerCommand->getEnqueueTime() > 12 *systemConfig.getSeniorityAgeLimit()))
 							{								
 								candidateExecuteTime = challengerExecuteTime;
 								candidateCommand = challengerCommand;															
@@ -1798,12 +1798,13 @@ const Command *Channel::readNextCommand() const
 		// alternate ranks as we go down banks
 	case RANK_ROUND_ROBIN:
 		{
-			Transaction::TransactionType transactionType;
+			// the command type to look for first
+			Command::CommandType currentCommandType;
 			// look at the most recently retired command in this channel's history
 
-			const unsigned lastBankID = lastCommand ? lastCommand->getAddress().getBank() : systemConfig.getBankCount() - 1;
-			const unsigned lastRankID = lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1;
-			const Command::CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : Command::WRITE_AND_PRECHARGE;
+			const unsigned startingBankID = lastCommand ? lastCommand->getAddress().getBank() : 0;
+			const unsigned startingRankID = lastCommand ? lastCommand->getAddress().getRank() : 0;
+			const Command::CommandType lastCommandType = lastCommand ? (lastCommand->isRead() ? Command::READ : Command::WRITE) : Command::READ;
 
 			// attempt to group RAS/CAS pairs together
 			switch (lastCommandType)
@@ -1812,131 +1813,6 @@ const Command *Channel::readNextCommand() const
 			case Command::ACTIVATE:
 				{
 					// look at the command just after the RAS, it should be some sort of CAS
-					const Command *nextCommand = rank[lastRankID].bank[lastBankID].front();
-
-					if ((nextCommand) &&
-						(nextCommand->isRead() || nextCommand->isWrite()))
-					{
-						return nextCommand;
-					}
-					else
-					{
-						cerr << "Serious problems. RAS not followed by CAS" << endl;
-						exit(2);
-					}
-				}
-				break;
-
-			case Command::READ_AND_PRECHARGE:
-			case Command::READ:
-			case Command::PRECHARGE:
-				transactionType = Transaction::READ_TRANSACTION;
-				break;
-
-			case Command::REFRESH_ALL:
-			case Command::WRITE:
-			case Command::WRITE_AND_PRECHARGE:
-				transactionType = Transaction::WRITE_TRANSACTION;
-				break;	
-
-			default:
-				transactionType = Transaction::READ_TRANSACTION;
-				cerr << "Did not find a CAS or RAS command when it was expected" << endl;
-				break;
-			}
-
-			unsigned currentRankID = lastRankID;
-			unsigned currentBankID = lastBankID;
-			Transaction::TransactionType originalTransactionType = transactionType;
-			bool noPendingRefreshes = false;
-			bool allowNotReadyCommands = false;
-
-			while (true)
-			{
-				// select the next rank
-				currentRankID = (currentRankID + 1) % systemConfig.getRankCount();
-
-				// select the next bank when all ranks at this bank have been checked
-				if (lastRankID == currentRankID)
-				{
-					if (!noPendingRefreshes)
-					{
-						// before switching to the next bank, see if all the queues are refreshes in any rank
-						for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
-						{
-							if (currentRank->refreshAllReady())
-							{
-								return currentRank->bank[currentBankID].front();
-							}
-						}
-						noPendingRefreshes = true;
-					}
-
-					// then switch to the next bank
-					currentBankID = (currentBankID + 1) % systemConfig.getBankCount();
-
-					// when all ranks and all banks have been checked for a read/write, look for a write/read
-					if (currentBankID == currentRankID)
-					{						
-						transactionType = (transactionType == Transaction::WRITE_TRANSACTION) ? Transaction::READ_TRANSACTION : Transaction::WRITE_TRANSACTION;
-
-						// however, if this type has already been searched for, then there are no commands, so quit
-						if (transactionType == originalTransactionType)
-						{
-							if (allowNotReadyCommands)
-								return  NULL;
-							else
-								allowNotReadyCommands = true;
-						}
-					}
-				}
-
-				const Command *potentialCommand = rank[currentRankID].bank[currentBankID].front();
-
-				// refresh commands are considered elsewhere
-				if (potentialCommand &&
-					!potentialCommand->isRefresh() &&
-					(allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD())))
-				{
-					if (!systemConfig.isReadWriteGrouping())
-					{
-						return potentialCommand;
-					}
-					else // have to follow read/write grouping considerations
-					{
-						// look at the second command
-						const Command *followingCommand = rank[currentRankID].bank[currentBankID].read(1);	
-
-						if (followingCommand)
-							if ((followingCommand->isRead() && (transactionType == Transaction::READ_TRANSACTION)) ||
-								(followingCommand->isWrite() && (transactionType == Transaction::WRITE_TRANSACTION)))
-							{
-								assert(rank[currentRankID].bank[currentBankID].front()->getAddress().getBank() == currentBankID);
-								assert(rank[currentRankID].bank[currentBankID].front()->getAddress().getRank() == currentRankID);
-								return rank[currentRankID].bank[currentBankID].front();
-							}
-					}
-
-				}
-			}
-		}
-		break;
-
-		// keep rank id as long as possible, go round robin down a given rank
-	case BANK_ROUND_ROBIN:
-		{			
-			Command::CommandType commandType;
-
-			// look at the most recently retired command in this channel's history
-			const unsigned startingBankID = lastCommand ? lastCommand->getAddress().getBank() : 0;
-			const unsigned startingRankID = lastCommand ? lastCommand->getAddress().getRank() : 0;
-			const Command::CommandType lastCommandType = lastCommand ? lastCommand->getCommandType() : Command::WRITE_AND_PRECHARGE;
-
-			// attempt to issue RAS and CAS together
-			switch (lastCommandType)
-			{
-			case Command::ACTIVATE:
-				{
 					const Command *nextCommand = rank[startingRankID].bank[startingBankID].front();
 
 					if (nextCommand && nextCommand->isReadOrWrite())
@@ -1945,147 +1821,227 @@ const Command *Channel::readNextCommand() const
 					}
 					else
 					{
-						cerr << "Serious problems. RAS not followed by CAS (" << lastCommandType << ")." << endl;
+						cerr << "error: Found a row activate not followed by a column command." << endl;
 						exit(2);
 					}
 				}
 				break;
+
+			case Command::REFRESH_ALL:
 			case Command::READ_AND_PRECHARGE:
 			case Command::READ:
 			case Command::PRECHARGE:
-				commandType = Command::READ;
+				currentCommandType = Command::READ;
 				break;
 
-			case Command::REFRESH_ALL:
 			case Command::WRITE:
 			case Command::WRITE_AND_PRECHARGE:
-				commandType = Command::WRITE;
-				break;
+				currentCommandType = Command::WRITE;
+				break;	
+
 			default:
-				commandType = Command::READ; // FIXME: added this to ensure no uninit vars
-				cerr << "Did not find a CAS or RAS command when it was expected" << endl;
+				currentCommandType = Command::READ;
+				cerr << "warn: Unhandled command type." << endl;
 				break;
 			}
 
 			unsigned currentRankID = startingRankID;
 			unsigned currentBankID = startingBankID;
-			Command::CommandType originalTransactionType = commandType;
 			//bool noPendingRefreshes = false;
 			bool allowNotReadyCommands = false;
 
 			while (true)
 			{
+				vector<Rank>::const_iterator rankEnd = rank.end();
+
+				for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; currentRank++)
+				{
+					const Command *potentialCommand = currentRank->bank[currentBankID].front();
+
+					// refresh commands are considered elsewhere
+					if (potentialCommand && !potentialCommand->isRefresh() &&
+						(allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD())))
+					{
+						// if not doing read/write sweeping, then choose any command
+						if (systemConfig.isReadWriteGrouping())
+						{
+							if (potentialCommand->isActivate())
+								assert(currentRank->bank[currentBankID].read(1));
+
+							const Command *secondCommand = potentialCommand->isActivate() ? currentRank->bank[currentBankID].read(1) : potentialCommand;
+							assert(secondCommand->isReadOrWrite());
+
+							if ((secondCommand->isRead() && currentCommandType == Command::READ) ||
+								(secondCommand->isWrite() && currentCommandType == Command::WRITE))
+							{
+								assert(currentRank->bank[currentBankID].front() == potentialCommand);
+								return potentialCommand;
+							}
+						}
+						else // have to follow read_write grouping considerations
+						{
+							return potentialCommand;
+						}
+					}
+
+					// before switching to the next rank, see if all the queues are refreshes in any rank
+					if (currentBankID == startingBankID && currentRank->refreshAllReady() && ((allowNotReadyCommands) || (earliestExecuteTime(currentRank->bank.begin()->front()) <= lastCommandIssueTime + timingSpecification.tCMD())))
+					{
+						return currentRank->bank.begin()->front();
+					}
+				}
+
 				// select the next bank
 				currentBankID = (currentBankID + 1) % systemConfig.getBankCount();
 
-				// came back to the original bank ID, switch ranks
+				// select the next bank when all ranks at this bank have been checked
 				if (startingBankID == currentBankID)
-				{
-					// before switching to the next rank, see if all the queues are refreshes in any rank
-					if (rank[currentRankID].refreshAllReady())
+				{				
+					if (systemConfig.isReadWriteGrouping())
 					{
-						return rank[currentRankID].bank[currentBankID].front();
-					}
+						// try other types
+						currentCommandType = (currentCommandType == Command::WRITE) ? Command::READ : Command::WRITE;
 
-					// then switch to the next rank
-					currentRankID = (currentRankID + 1) % systemConfig.getRankCount();
-
-					// back to the beginning, at startingRankID, startingBankID
-					if (startingRankID == currentRankID)
-					{						
-						if (!systemConfig.isReadWriteGrouping())
+						if (currentCommandType == lastCommandType)
 						{
 							if (allowNotReadyCommands)
-							{
-								const Command *lastAttempt = rank[startingRankID].bank[startingBankID].front();
-
-								if (lastAttempt && earliestExecuteTime(lastAttempt) <= lastCommandIssueTime + timingSpecification.tCMD())
-									return lastAttempt;
-								else
-									return NULL;
-							}
+								return NULL;
 							else
-							{
-								// see if the starting rank/bank is an eligible command before allowing all other unready commands
-								const Command *lastAttempt = rank[startingRankID].bank[startingBankID].front();
-
-								if (lastAttempt && earliestExecuteTime(lastAttempt) <= lastCommandIssueTime + timingSpecification.tCMD())
-									return lastAttempt;
-
-								// allow commands that can't yet be issued and start again
 								allowNotReadyCommands = true;
-								currentBankID = (startingBankID + 1) % systemConfig.getBankCount();
-							}
 						}
+					}
+					else
+					{
+						if (allowNotReadyCommands)
+							return NULL;
 						else
-						{
-							// try other types
-							commandType = (commandType == Command::WRITE) ? Command::READ : Command::WRITE;
-
-							if (commandType == originalTransactionType)
-							{
-								if (allowNotReadyCommands)
-								{
-									// test the original bank again as lowest priority
-									//assert(!rank[startingRankID].bank[startingBankID].front());
-									//return NULL;
-									commandType = Command::ACTIVATE;
-								}
-								else
-									allowNotReadyCommands = true;
-							}
-							else if (commandType == Command::ACTIVATE)
-							{
-								const Command *lastAttempt = rank[startingRankID].bank[startingBankID].front();
-
-								if (lastAttempt && earliestExecuteTime(lastAttempt) <= lastCommandIssueTime + timingSpecification.tCMD())
-									return lastAttempt;
-								else
-									return NULL;
-							}
-						}
+							allowNotReadyCommands = true;
 					}
 				}
+			}
+		}
+		break;
 
-				const Command *potentialCommand = rank[currentRankID].bank[currentBankID].front();
+		// keep rank id as long as possible, go round robin down a given rank
+	case BANK_ROUND_ROBIN:
+		{			
+			Command::CommandType currentCommandType;
 
-				// see if this command could be used
-				if (potentialCommand && !potentialCommand->isRefresh() && (allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD())))
-				{	
-					if (!systemConfig.isReadWriteGrouping())
+			// look at the most recently retired command in this channel's history
+			const unsigned startingRankID = lastCommand ? lastCommand->getAddress().getRank() : 0;
+			const Command::CommandType lastCommandType = lastCommand ? (lastCommand->isRead() ? Command::READ : Command::WRITE) : Command::READ;
+
+			// attempt to issue RAS and CAS together
+			switch (lastCommandType)
+			{
+			case Command::ACTIVATE:
+				{
+					const Command *nextCommand = rank[startingRankID].bank[lastCommand->getAddress().getBank()].front();
+
+					if (nextCommand && nextCommand->isReadOrWrite())
 					{
-						return potentialCommand;
+						return nextCommand;
 					}
-					else // have to follow read_write grouping considerations
+					else
 					{
-						// look at the second command
-						const Command *nextCommand = rank[currentRankID].bank[currentBankID].read(1);
+						cerr << "error: row activate command not followed by a column command." << endl;
+						exit(2);
+					}
+				}
+				break;
+				// doing read sweeping
+			case Command::REFRESH_ALL:
+			case Command::READ_AND_PRECHARGE:
+			case Command::READ:
+			case Command::PRECHARGE:
+				currentCommandType = Command::READ;
+				break;
 
-						if (nextCommand)
-							if ((nextCommand->isRead() && (commandType == Transaction::READ_TRANSACTION)) ||
-								(nextCommand->isWrite() && (commandType == Transaction::WRITE_TRANSACTION)))
+				// doing write sweeping
+			case Command::WRITE:
+			case Command::WRITE_AND_PRECHARGE:
+				currentCommandType = Command::WRITE;
+				break;
+			default:
+				currentCommandType = Command::READ; // FIXME: added this to ensure no uninit vars
+				cerr << "warn: unhandled command type" << endl;
+				break;
+			}
+
+			unsigned currentRankID = startingRankID;
+			bool allowNotReadyCommands = false;
+
+			while (true)
+			{
+				const Rank &currentRank = rank[currentRankID];
+
+				vector<Bank>::const_iterator bankEnd = currentRank.bank.end();
+
+				for (vector<Bank>::const_iterator currentBank = currentRank.bank.begin(); currentBank != bankEnd; currentBank++)
+				{
+					const Command *potentialCommand = currentBank->front();
+
+					// see if this command could be used
+					if (potentialCommand && !potentialCommand->isRefresh() &&
+						(earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD() || allowNotReadyCommands))
+					{	
+						// if not doing read/write sweeping, then choose any command
+						if (systemConfig.isReadWriteGrouping())
+						{
+							if (potentialCommand->isActivate())
+								assert(currentBank->read(1));
+
+							const Command *secondCommand = potentialCommand->isActivate() ? currentBank->read(1) : potentialCommand;
+							assert(secondCommand->isReadOrWrite());
+
+							if ((secondCommand->isRead() && currentCommandType == Command::READ) ||
+								(secondCommand->isWrite() && currentCommandType == Command::WRITE))
 							{
-								assert(rank[currentRankID].bank[currentBankID].front()->getAddress().getBank() == currentBankID);
-								assert(rank[currentRankID].bank[currentBankID].front()->getAddress().getRank() == currentRankID);
-								assert(rank[currentRankID].bank[currentBankID].front() == potentialCommand);
+								assert(currentBank->front()->getAddress().getRank() == currentRankID);
+								assert(currentBank->front() == potentialCommand);
 								return potentialCommand;
 							}
+						}
+						else // have to follow read_write grouping considerations
+						{
+							return potentialCommand;
+						}
 					}
-
-#ifdef DEBUG_FLAG_2
-					cerr << "Looked in ["<< potentialCommand->getAddress().rank << "] [" << potentialCommand->getAddress().bank << "] but wrong type, We want [" << commandType << "]. Candidate command type ";
-					cerr << potentialCommand->getCommandType();
-					cerr << " followed by ";
-					cerr << rank[startingRankID].bank[startingBankID].getPerBankQueue().read(1)->getCommandType();
-					cerr << "count [" << rank[startingRankID].bank[startingBankID].getPerBankQueue().get_count() << "]" << endl;
-#endif
-
 				}
 
-#ifdef DEBUG_FLAG_2
-				cerr << "Looked in rank=[" << startingRankID << "] bank=[" << startingBankID << "] but Q empty" << endl;
-#endif
+				// before switching to the next rank, see if all the queues are refreshes in any rank
+				if (currentRank.refreshAllReady() && ((allowNotReadyCommands) ||(earliestExecuteTime(currentRank.bank.begin()->front()) <= lastCommandIssueTime + timingSpecification.tCMD())))
+				{
+					return currentRank.bank.begin()->front();
+				}
 
+				// then switch to the next rank
+				currentRankID = (currentRankID + 1) % systemConfig.getRankCount();
+
+				// back to the beginning, at startingRankID
+				if (startingRankID == currentRankID)
+				{						
+					if (systemConfig.isReadWriteGrouping())
+					{
+						// try other types
+						currentCommandType = (currentCommandType == Command::WRITE) ? Command::READ : Command::WRITE;
+
+						if (currentCommandType == lastCommandType)
+						{
+							if (allowNotReadyCommands)
+								return NULL;
+							else
+								allowNotReadyCommands = true;
+						}
+					}					
+					else
+					{
+						if (allowNotReadyCommands)
+							return NULL;
+						else
+							allowNotReadyCommands = true;
+					}
+				}			
 			}
 		}
 		break;

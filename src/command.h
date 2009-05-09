@@ -77,6 +77,7 @@ namespace DRAMsimII
 		CommandType getCommandType() const { return commandType; }
 		Transaction *getHost() const { return hostTransaction; }
 		unsigned getLength() const { return length; }
+		bool isActivate() const { return ((commandType == ACTIVATE) || (commandType == ACTIVATE_ALL)); }
 		bool isRead() const { return ((commandType == READ) || (commandType == READ_AND_PRECHARGE)); }
 		bool isWrite() const { return ((commandType == WRITE) || (commandType == WRITE_AND_PRECHARGE)); }
 		bool isPrecharge() const { return ((commandType == READ_AND_PRECHARGE) || (commandType == WRITE_AND_PRECHARGE) || (commandType == PRECHARGE)); }

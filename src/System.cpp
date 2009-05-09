@@ -560,8 +560,15 @@ void System::runSimulations(const unsigned requestCount)
 			// as internal transactions (REFRESH) are enqueued automatically
 			if (time >= inputTransaction->getArrivalTime())
 			{
-				if (enqueue(inputTransaction))
+				if (!isFull(inputTransaction->getAddress().getChannel()))
 				{
+#ifndef NDEBUG
+					bool result =
+#endif
+					enqueue(inputTransaction);
+
+					assert(result);
+
 					inputTransaction = inputStream.getNextIncomingTransaction();
 
 					if (!inputTransaction)
