@@ -319,6 +319,9 @@ tick Channel::nextCommandExecuteTime() const
 #ifndef NDEBUG
 		int tempGap = minProtocolGap(tempCommand);
 
+		if (time + tempGap != tempCommandExecuteTime)
+			cerr << time << " " << tempGap << " " << tempCommandExecuteTime << " " << tempCommand->getCommandType() << " " << tempCommand->getAddress() << endl;
+;
 		assert(time + tempGap == tempCommandExecuteTime);
 #endif
 		return tempCommandExecuteTime;
@@ -1478,9 +1481,9 @@ const Command *Channel::readNextCommand() const
 
 							if (time + minGap != max(challengerExecuteTime,time))
 							{
-								cerr << time << " " << minGap << " " << challengerExecuteTime;
+								cerr << time << " " << minGap << " " << challengerExecuteTime << " " << challengerCommand->getCommandType() << " " << challengerCommand->getAddress() << endl;
 
-								assert(time + minGap == max(challengerExecuteTime,time));
+								assert(challengerCommand && (time + minGap == max(challengerExecuteTime,time)));
 							}
 #endif
 							// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
@@ -1706,12 +1709,12 @@ const Command *Channel::readNextCommand() const
 				{
 					if (const Command *challengerCommand = currentBank->front())
 					{
-						const tick executeTime = earliestExecuteTime(challengerCommand);
 #ifndef NDEBUG
+						const tick executeTime = earliestExecuteTime(challengerCommand);
 						assert(executeTime == time + minProtocolGap(challengerCommand));
 #endif
 						// choose the oldest command that can be executed
-						if ((challengerCommand->getEnqueueTime() < oldestExecutableCommandTime) && (executeTime <= time))
+						if ((challengerCommand->getEnqueueTime() < oldestExecutableCommandTime) && (canIssue(challengerCommand)))
 						{
 							// if it's a refresh_all command and we haven't proved that all the queues aren't refresh_all commands, search
 							if (challengerCommand->isRefresh())
@@ -1845,7 +1848,7 @@ const Command *Channel::readNextCommand() const
 				break;
 			}
 
-			unsigned currentRankID = startingRankID;
+			//unsigned currentRankID = startingRankID;
 			unsigned currentBankID = startingBankID;
 			//bool noPendingRefreshes = false;
 			bool allowNotReadyCommands = false;
@@ -1860,7 +1863,7 @@ const Command *Channel::readNextCommand() const
 
 					// refresh commands are considered elsewhere
 					if (potentialCommand && !potentialCommand->isRefresh() &&
-						(allowNotReadyCommands || (earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD())))
+						(allowNotReadyCommands || canIssue(potentialCommand)))
 					{
 						// if not doing read/write sweeping, then choose any command
 						if (systemConfig.isReadWriteGrouping())
@@ -1983,7 +1986,7 @@ const Command *Channel::readNextCommand() const
 
 					// see if this command could be used
 					if (potentialCommand && !potentialCommand->isRefresh() &&
-						(earliestExecuteTime(potentialCommand) <= lastCommandIssueTime + timingSpecification.tCMD() || allowNotReadyCommands))
+						(canIssue(potentialCommand) || allowNotReadyCommands))
 					{	
 						// if not doing read/write sweeping, then choose any command
 						if (systemConfig.isReadWriteGrouping())
@@ -2010,7 +2013,7 @@ const Command *Channel::readNextCommand() const
 				}
 
 				// before switching to the next rank, see if all the queues are refreshes in any rank
-				if (currentRank.refreshAllReady() && ((allowNotReadyCommands) ||(earliestExecuteTime(currentRank.bank.begin()->front()) <= lastCommandIssueTime + timingSpecification.tCMD())))
+				if (currentRank.refreshAllReady() && (allowNotReadyCommands || canIssue(currentRank.bank.begin()->front())))
 				{
 					return currentRank.bank.begin()->front();
 				}
@@ -2076,7 +2079,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	thisCommand->setStartTime(time);
 
-	assert(thisCommand->getStartTime() >= earliestExecuteTime(thisCommand));
+	assert(canIssue(thisCommand));
 
 	lastCommandIssueTime = time;
 

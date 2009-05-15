@@ -136,7 +136,8 @@ namespace DRAMsimII
 		unsigned IDD4R;
 		unsigned IDD5;
 	
-		bool setKeyValue(const std::string nodeName, const std::string nodeValue);
+		bool setKeyValue(const std::string &nodeName, const std::string &nodeValue);
+		bool setKeyValue(const char* nodeName, const std::string &nodeValue) { std::string name(nodeName); return setKeyValue(name, nodeValue); }
 
 		// converts a string to a file_io_token
 		static FileIOToken dramTokenizer(const std::string & value)
@@ -483,6 +484,8 @@ namespace DRAMsimII
 			else
 				return false;
 		}
+
+		bool loadSettingsFromFile(int, char **);
 
 		// create a dramSettings from command line arguments
 		explicit Settings(int, char **);

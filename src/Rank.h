@@ -59,6 +59,8 @@ namespace DRAMsimII
 		tick nextPrechargeTime;				///< the time at which a Pre may be sent to this rank
 		tick nextRefreshTime;				///< the time at which a Ref may be sent to this rank
 
+		tick lastCalculationTime;			///< the time at which the last power calculation was done
+
 		unsigned lastCASLength;				///< the length of the last CAS
 		unsigned lastCASWLength;			///< the length of the last CASW
 		unsigned otherLastCASLength;		///< the length of the last CAS on any other rank

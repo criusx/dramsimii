@@ -100,6 +100,11 @@ namespace opt = boost::program_options;
 Settings::Settings(int argc, char **argv):
 systemType(BASELINE_CONFIG)
 {
+	loadSettingsFromFile(argc, argv);
+}
+
+bool Settings::loadSettingsFromFile(int argc, char **argv)
+{
 
 	opt::options_description desc("Basic options");
 	string settingsFile;
@@ -110,7 +115,7 @@ systemType(BASELINE_CONFIG)
 		("modifiers", opt::value<string>(&extraSettings)->default_value(""), "Modifiers to the settings file");
 
 	opt::variables_map vm;
-	
+
 	opt::store(opt::parse_command_line(argc, argv, desc), vm);
 	opt::notify(vm);
 
@@ -119,7 +124,7 @@ systemType(BASELINE_CONFIG)
 		cout << "Usage: " << argv[0] << "(--help | --config-file <configuration file> {--modifiers \"<modifiers string>}\")" << endl;
 		cout << "Where modifiers strings look like (parameter value)+" << endl;
 	}
-	
+
 	if (!vm.count("config-file"))
 	{
 		cout << "A configuration file MUST be specified (--config-file <filename>)" << endl;
@@ -133,7 +138,7 @@ systemType(BASELINE_CONFIG)
 	xmlTextReader *reader = NULL;
 
 	xmlDocPtr doc = NULL;
-	
+
 	if (xmlFile.is_open())
 	{		
 		doc = xmlParseFile(settingsFile.c_str());
@@ -336,4 +341,6 @@ systemType(BASELINE_CONFIG)
 	boost::uniform_int<> uni_dist(0,INT_MAX);
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > uni(generator, uni_dist);	
 	sessionID = lexical_cast<string>(uni());
+
+	return true;
 }

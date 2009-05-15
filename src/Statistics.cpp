@@ -254,8 +254,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		if (info->name.find("ipc_total") != string::npos)
 		{
 			os << "----IPC----" << endl;
-			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfo<Stats::Formula> *)info)->result().begin();
-			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfo<Stats::Formula> *)info)->result().end();
+			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().begin();
+			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().end();
 			while (start != end)
 			{
 				os << *start << endl;
@@ -280,8 +280,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			{
 				os << "----M5 Stat: " << info->name << " ";
 
-				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfo<Stats::Formula> *)info)->result().begin();
-				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfo<Stats::Formula> *)info)->result().end();
+				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().begin();
+				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().end();
 				while (start != end)
 				{
 					os << *start << " ";

@@ -158,8 +158,8 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 	// for power modeling, if all banks were precharged and now one is being activated, record the interval that one was precharged	
 	if (banksPrecharged == bank.size())
 	{
-		prechargeTime += max(currentTime - lastPrechargeAnyBankTime,(tick)0);
-		totalPrechargeTime += max(currentTime - lastPrechargeAnyBankTime, (tick)0);
+		prechargeTime += max(currentTime - max(lastCalculationTime, lastPrechargeAnyBankTime),(tick)0);
+		totalPrechargeTime += max(currentTime - max(lastCalculationTime, lastPrechargeAnyBankTime), (tick)0);
 		for (vector<Bank>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
 			assert(!curBnk->isActivated());
 	}	
@@ -304,9 +304,10 @@ void Rank::issueCASWother(const tick currentTime, const Command *currentCommand)
 void Rank::resetPrechargeTime(const tick time)
 {
 	prechargeTime = 0;
-	lastPrechargeAnyBankTime = max(time, lastPrechargeAnyBankTime); 
+	lastCalculationTime = time;
+	//lastPrechargeAnyBankTime = max(time, lastPrechargeAnyBankTime); 
 
-	nextRefreshTime = std::max(nextRefreshTime, lastPrechargeAnyBankTime + timing.tRP());
+	//nextRefreshTime = std::max(nextRefreshTime, lastPrechargeAnyBankTime + timing.tRP());
 	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC());
 }
 
@@ -393,6 +394,8 @@ void Rank::resetToTime(const tick time)
 	lastCASWTime = time - 1000;
 	lastPrechargeAnyBankTime = time;
 	lastRefreshTime = time - timing.tRFC();
+	lastCalculationTime = time;
+	prechargeTime = 0;
 
 	nextActivateTime = time;
 	nextRefreshTime = time + timing.tRP();
@@ -409,7 +412,7 @@ void Rank::resetToTime(const tick time)
 //////////////////////////////////////////////////////////////////////////
 tick Rank::getTotalPrechargeTime(const tick currentTime) const
 {	
-	return totalPrechargeTime + ((banksPrecharged == bank.size()) ? max(currentTime - lastPrechargeAnyBankTime, (tick)0) : 0);
+	return totalPrechargeTime + ((banksPrecharged == bank.size()) ? max(currentTime - max(lastPrechargeAnyBankTime, lastCalculationTime), (tick)0) : 0);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -418,7 +421,7 @@ tick Rank::getTotalPrechargeTime(const tick currentTime) const
 //////////////////////////////////////////////////////////////////////////
 tick Rank::getPrechargeTime(const tick currentTime) const
 {
-	return prechargeTime + ((banksPrecharged == bank.size()) ? max(currentTime - lastPrechargeAnyBankTime, (tick)0) : 0);
+	return prechargeTime + ((banksPrecharged == bank.size()) ? max(currentTime - max(lastPrechargeAnyBankTime, lastCalculationTime), (tick)0) : 0);
 }
 
 //////////////////////////////////////////////////////////////////////

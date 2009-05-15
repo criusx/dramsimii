@@ -41,7 +41,9 @@ namespace DRAMsimII
 }
 
 
-// for unit tests, should not be instantiated
+//////////////////////////////////////////////////////////////////////////
+/// @brief blank settings constructor
+//////////////////////////////////////////////////////////////////////////
 Settings::Settings():
 settingsOutputFile(""),
 epoch(UINT_MAX),
@@ -132,7 +134,7 @@ IDD5(UINT_MAX)
 /// @return true if the parameter was recognized and the value converted
 /// false otherwise
 //////////////////////////////////////////////////////////////////////////
-bool Settings::setKeyValue(const string nodeName, const string value)
+bool Settings::setKeyValue(const string &nodeName, const string &value)
 {
 	string nodeValue = value;
 	bool result = true;
@@ -379,7 +381,7 @@ bool Settings::setKeyValue(const string nodeName, const string value)
 				commandOrderingAlgorithm = RANK_ROUND_ROBIN;
 			else if (nodeValue == "wanghop")
 				commandOrderingAlgorithm = WANG_RANK_HOP;
-			else if (nodeValue == "firstavailableage")
+			else if (nodeValue == "firstavailableage" || nodeValue == "firstavailable")
 				commandOrderingAlgorithm = FIRST_AVAILABLE_AGE;
 			else if (nodeValue == "firstavailableriff")
 				commandOrderingAlgorithm = FIRST_AVAILABLE_RIFF;
@@ -517,7 +519,13 @@ ostream &DRAMsimII::operator<<(ostream &os, const CommandOrderingAlgorithm coa)
 		os << "BRR";
 		break;
 	case FIRST_AVAILABLE_AGE:
-		os << "GRD";
+		os << "FRSTA";
+		break;
+	case FIRST_AVAILABLE_RIFF:
+		os << "FRSTR";
+		break;
+	case FIRST_AVAILABLE_QUEUE:
+		os << "FRSTQ";
 		break;
 	case WANG_RANK_HOP:
 		os << "CPRH";

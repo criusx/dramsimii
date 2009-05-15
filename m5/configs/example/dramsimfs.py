@@ -80,19 +80,20 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
         mdesc = SysConfig()
     self.readfile = mdesc.script()
     self.iobus = Bus(bus_id=0)
-    self.membus = Bus(bus_id=1, clock='2600MHz')
+    self.membus = MemBus(bus_id=1, clock='2600MHz')
     self.bridge = Bridge(delay='2ns', nack_delay='1ns')
     # use the memory size established by the benchmark definition in Benchmarks.py
     outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0]
     if revert is not None:
-        print "reverting"
-        self.physmem = PhysicalMemory(range=AddrRange(mdesc.mem()))
+        print "reverting to use PhysicalMemory"
+        self.physmem = PhysicalMemory(range = AddrRange(mdesc.mem()))
     else:
+        print "using DRAMsimII"
         self.physmem = M5dramSystem(extraParameters=extraParameters,
-                           	settingsFile=settingsFilename,
-                          	outFilename=outFile,
-	                        commandLine=outFile,
-        	                range=AddrRange(mdesc.mem()))
+                                    settingsFile=settingsFilename,
+                                    outFilename=outFile,
+                                    commandLine=outFile,
+                                    range=AddrRange(mdesc.mem()))
     self.bridge.side_a = self.iobus.port
     self.bridge.side_b = self.membus.port
     self.physmem.port = self.membus.port
@@ -104,8 +105,8 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
     self.tsunami.attachIO(self.iobus)
     self.tsunami.ide.pio = self.iobus.port
     self.tsunami.ethernet.pio = self.iobus.port
-    self.simple_disk = SimpleDisk(disk=RawDiskImage(image_file=mdesc.disk(),
-                                               read_only=True))
+    self.simple_disk = SimpleDisk(disk=RawDiskImage(image_file = mdesc.disk(),
+                                                     read_only = True))
     self.intrctrl = IntrControl()
     self.mem_mode = mem_mode
     self.terminal = Terminal()
@@ -137,6 +138,7 @@ parser.add_option("-b", "--benchmark", action="store", type="string",
                   help="Specify the benchmark to run. Available benchmarks: %s"\
                   % DefinedBenchmarks)
 
+# DRAMsimII specific options
 parser.add_option("--addmem", default=None, type="string", help="larger than normal memory size")
 
 parser.add_option("-f", "--DRAMsimConfig",
@@ -159,6 +161,7 @@ parser.add_option("--etherdump", action="store", type="string", dest="etherdump"
 execfile(os.path.join(config_root, "common", "Options.py"))
 
 (options, args) = parser.parse_args()
+
 if options.simple:
     options.l2cache = False
     options.caches = False
@@ -198,6 +201,8 @@ else:
     else:
         bm = [SysConfig()]
 
+np = options.num_cpus
+
 if options.addmem:
     print 'set mem = ' + options.addmem
     bm[0].memsize = options.addmem
@@ -220,32 +225,40 @@ if options.kernel is not None:
 if options.script is not None:
     test_sys.readfile = options.script
 
-np = options.num_cpus
 
-if options.nopre is True:
-    print "no prefetcher"
-    test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32)
-else:
-    #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
-    test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=True)
 
-test_sys.tol2bus = Bus()
-test_sys.l2.cpu_side = test_sys.tol2bus.port
-test_sys.l2.mem_side = test_sys.membus.port
+if options.l2cache:
+    if options.nopre is True:
+        print "no prefetcher"
+        test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32)
+    else:
+        #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
+        #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='stride', prefetch_degree=2, prefetcher_size=64, prefetch_cache_check_push=True)
+        test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16)
+
+
+    #test_sys.l2 = L2Cache(size = '2MB')
+    test_sys.tol2bus = Bus()
+    test_sys.l2.cpu_side = test_sys.tol2bus.port
+    test_sys.l2.mem_side = test_sys.membus.port
 
 test_sys.cpu = [TestCPUClass(cpu_id=i) for i in xrange(np)]
 
-test_sys.bridge.filter_ranges_a = [AddrRange(0, Addr.max)]
-test_sys.bridge.filter_ranges_b = [AddrRange(0, size='8GB')]
-test_sys.iocache = IOCache(mem_side_filter_ranges=[AddrRange(0, Addr.max)],
-                       cpu_side_filter_ranges=[AddrRange(0x8000000000, Addr.max)])
-test_sys.iocache.cpu_side = test_sys.iobus.port
-test_sys.iocache.mem_side = test_sys.membus.port
+if options.caches:
+    test_sys.bridge.filter_ranges_a=[AddrRange(0, Addr.max)]
+    test_sys.bridge.filter_ranges_b=[AddrRange(0, size='8GB')]
+    test_sys.iocache = IOCache(addr_range=AddrRange(0, size='8GB'))
+    test_sys.iocache.cpu_side = test_sys.iobus.port
+    test_sys.iocache.mem_side = test_sys.membus.port
 
 for i in xrange(np):
-    test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size='64kB', assoc=2),
-						L1Cache(size='64kB', assoc=2))
-    test_sys.cpu[i].connectMemPorts(test_sys.tol2bus)
+    if options.caches:
+        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB'),
+                                                L1Cache(size = '64kB'))
+    if options.l2cache:
+        test_sys.cpu[i].connectMemPorts(test_sys.tol2bus)
+    else:
+        test_sys.cpu[i].connectMemPorts(test_sys.membus)
 
     if options.fastmem:
         test_sys.cpu[i].physmem_port = test_sys.physmem.port
