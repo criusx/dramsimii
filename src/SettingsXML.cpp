@@ -103,6 +103,13 @@ systemType(BASELINE_CONFIG)
 	loadSettingsFromFile(argc, argv);
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief load settings from an xml file
+/// @detail loads and populates a Settings object based on a particular
+/// settings file and updates the settings based upon the modifiers
+/// sent to it
+/// @returns true if no errors were encountered, false otherwise
+//////////////////////////////////////////////////////////////////////////
 bool Settings::loadSettingsFromFile(int argc, char **argv)
 {
 

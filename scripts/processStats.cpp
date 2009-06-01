@@ -1,6 +1,7 @@
 #include "pstream.h"
 #include <boost/circular_buffer.hpp>
 #include <cstdio>
+//#include <ImageMagick/Magick++.h>
 #include <string>
 #include <list>
 #include <errno.h>
@@ -83,7 +84,8 @@ using std::unordered_map;
 using std::tr1::unordered_map;
 #endif
 
-#define MAXIMUM_VECTOR_SIZE 1 * 8 * 1024
+// the number of points to use as a maximum in the graph
+#define MAXIMUM_VECTOR_SIZE 2 * 1024
 
 #define WINDOW 5
 
@@ -95,7 +97,8 @@ bf::path executableDirectory;
 std::string thumbnailResolution = "640";
 
 //std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
-std::string terminal = "set terminal svg size 3840,1200 dynamic enhanced font \"Arial,32\"\n";
+//std::string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
+std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced font \"Arial\" fsize 14\n";
 
 std::string extension = "svg";
 
@@ -145,82 +148,82 @@ protected:
 public:
 	BoxPlot():
 	  values(),
-	 	  totalCount(0)
-	{}
+		  totalCount(0)
+	  {}
 
-	void clear()
-	{
-		values.clear();
-		totalCount = 0;
-	}
+	  void clear()
+	  {
+		  values.clear();
+		  totalCount = 0;
+	  }
 
-	void add(const T value, const unsigned count)
-	{
-		// shouldn't be any duplicates
-		if (values.find(value) != values.end())
-			throw;
+	  void add(const T value, const unsigned count)
+	  {
+		  // shouldn't be any duplicates
+		  if (values.find(value) != values.end())
+			  throw;
 
-		values[value] = count;
+		  values[value] = count;
 
-		totalCount += count;
-	}
+		  totalCount += count;
+	  }
 
-	tuple<T, T, T, T, T, T> getQuartiles() const
-	{
-		if (totalCount > 0)
-		{
-			unsigned median = max(round(totalCount / 2.0), 1.0);
-			unsigned firstQuartile = max(round((totalCount + 1.0) / 4.0), 1.0);
-			assert(firstQuartile <= median);
-			unsigned thirdQuartile = max(round((3.0 * totalCount + 3.0) / 4.0), 1.0);
-			if (thirdQuartile > totalCount) thirdQuartile = totalCount;
-			assert(median <= thirdQuartile);
+	  tuple<T, T, T, T, T, T> getQuartiles() const
+	  {
+		  if (totalCount > 0)
+		  {
+			  unsigned median = max(round(totalCount / 2.0), 1.0);
+			  unsigned firstQuartile = max(round((totalCount + 1.0) / 4.0), 1.0);
+			  assert(firstQuartile <= median);
+			  unsigned thirdQuartile = max(round((3.0 * totalCount + 3.0) / 4.0), 1.0);
+			  if (thirdQuartile > totalCount) thirdQuartile = totalCount;
+			  assert(median <= thirdQuartile);
 
-			T firstQuartileValue;
-			T thirdQuartileValue;
-			T medianValue;
+			  T firstQuartileValue;
+			  T thirdQuartileValue;
+			  T medianValue;
 
-			unsigned cumulativeSum = 0;
+			  unsigned cumulativeSum = 0;
 
-			typename map<T,unsigned>::const_iterator end = values.end();
-			WeightedAverage<double> wa;
+			  typename map<T,unsigned>::const_iterator end = values.end();
+			  WeightedAverage<double> wa;
 
-			// go determine which bin the quartile elements are in
-			for (typename map<T,unsigned>::const_iterator i = values.begin(); i != end; ++i)
-			{
-				wa.add(i->first, i->second);
+			  // go determine which bin the quartile elements are in
+			  for (typename map<T,unsigned>::const_iterator i = values.begin(); i != end; ++i)
+			  {
+				  wa.add(i->first, i->second);
 
-				if (firstQuartile > cumulativeSum && firstQuartile <= cumulativeSum + i->second)
-					firstQuartileValue = i->first;
-				if (thirdQuartile > cumulativeSum && thirdQuartile <= cumulativeSum + i->second)
-					thirdQuartileValue = i->first;
-				if (median > cumulativeSum && median <= cumulativeSum + i->second)
-				{
-					// only if it's the last element
-					if (totalCount % 2 == 1 && (cumulativeSum + i->second == median))
-					{
-						typename map<T,unsigned>::const_iterator j(i);
-						j++;
-						if (j == end)
-							medianValue = i->first;
-						else
-							medianValue = (i->first + j->first) / 2;
-					}	
-					else
-						medianValue = i->first;
+				  if (firstQuartile > cumulativeSum && firstQuartile <= cumulativeSum + i->second)
+					  firstQuartileValue = i->first;
+				  if (thirdQuartile > cumulativeSum && thirdQuartile <= cumulativeSum + i->second)
+					  thirdQuartileValue = i->first;
+				  if (median > cumulativeSum && median <= cumulativeSum + i->second)
+				  {
+					  // only if it's the last element
+					  if (totalCount % 2 == 1 && (cumulativeSum + i->second == median))
+					  {
+						  typename map<T,unsigned>::const_iterator j(i);
+						  j++;
+						  if (j == end)
+							  medianValue = i->first;
+						  else
+							  medianValue = (i->first + j->first) / 2;
+					  }	
+					  else
+						  medianValue = i->first;
 
-				}
-				cumulativeSum += i->second;
-			}	
+				  }
+				  cumulativeSum += i->second;
+			  }	
 
-			assert(firstQuartileValue <= medianValue);
-			assert(medianValue <= thirdQuartileValue);
+			  assert(firstQuartileValue <= medianValue);
+			  assert(medianValue <= thirdQuartileValue);
 
-			return tuple<T, T, T, T, T, T>(values.begin()->first, firstQuartileValue, medianValue, wa.average(), thirdQuartileValue, values.rbegin()->first);
-		}
-		else
-			return tuple<T, T, T, T, T, T>((T)0, (T)0, (T)0, (T)0, (T)0, (T)0);
-	}
+			  return tuple<T, T, T, T, T, T>(values.begin()->first, firstQuartileValue, medianValue, wa.average(), thirdQuartileValue, values.rbegin()->first);
+		  }
+		  else
+			  return tuple<T, T, T, T, T, T>((T)0, (T)0, (T)0, (T)0, (T)0, (T)0);
+	  }
 };
 
 template <typename T>
@@ -275,7 +278,7 @@ public:
 			  }	
 
 			  double stdDev = sqrt(sum / totalCount);
-			  
+
 			  return tuple<T, T, T, T>(values.begin()->first, mean, stdDev, values.rbegin()->first);
 		  }
 		  else
@@ -368,6 +371,8 @@ unordered_map<string,string> &setupDecoder()
 	theMap["CLOS"] = "Close Page";
 	theMap["OPA"] = "Open Page Aggressive";
 	theMap["CPBOPT"] = "Close Page Baseline Opt";
+	theMap["FRSTA"] = "First Available (Age)";
+	theMap["FRSTR"] = "First Available (RIFF)";
 
 	return theMap;
 }
@@ -376,10 +381,19 @@ bool doneEntering = false;
 list<string> fileList;
 mutex fileListMutex;
 
+#define CONVERT_COMMAND "/home/crius/ImageMagick/bin/convert"
+#define MOGRIFY_COMMAND "/home/crius/ImageMagick/bin/mogrify"
+
+
 void thumbNailWorker()
 {
+	//using namespace Magick;
+
 	string filename;
 	string baseFilename;
+	//Image first;
+	//Image second;
+
 
 	while (!doneEntering || !fileList.empty())
 	{
@@ -397,8 +411,18 @@ void thumbNailWorker()
 			}
 			//string commandLine0 = "convert " + filename + "[" + thumbnailResolution + "] -limit memory 1gb " + baseFilename + "-thumb.png";
 			//string commandLine1 = "mogrify -resize 3840 -format png -limit memory 1gb " + filename;
-			string commandLine0 = "convert " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
-			string commandLine1 = "mogrify -resize 3840 -format png " + filename;
+
+			//first.read(filename);
+			//second = first;
+			
+			//first.sample(thumbnailResolution);
+			//second.sample("3840");
+
+			//first.write(baseFilename + "-thumb.png");
+			//second.write(baseFilename + ".png");
+
+			string commandLine0 = string(CONVERT_COMMAND) + " " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
+			string commandLine1 = string(MOGRIFY_COMMAND) + " -resize 3840 -format png " + filename;
 			string commandLine2 = "gzip -c -9 -f " + filename + " > " + filename + "z";
 
 			system(commandLine0.c_str());
@@ -584,7 +608,7 @@ void processPower(const string &filename)
 					filesGenerated.push_back(fileName.native_directory_string());
 					p3 << "set output \"" << fileName.native_directory_string() << "\"" << endl;
 					p3 << bigPowerScript << endl;
-					
+
 					vector<string> splitLine;
 					split(splitLine,line,is_any_of("[]"));
 					channelCount = lexical_cast<unsigned>(splitLine[1]);
@@ -641,7 +665,7 @@ void processPower(const string &filename)
 	p3 << "0 0" << endl << 3.31 / epochTime << " 1e-5" << endl << "e" << endl;
 
 	p << powerScripts[1];
-	
+
 	// make the total power bar graphs
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
 	{
@@ -740,7 +764,7 @@ void processPower(const string &filename)
 		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); i++)
 			fileList.push_back(*i);
 	}
-	
+
 	bf::path givenfilename(filename);
 	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, channelCount);
 }
@@ -1393,11 +1417,11 @@ void processStats(const string &filename)
 					char *position2 = strchr(position,' ');
 					if (position2 == NULL)
 						break;
-				
+
 					*position2++ = 0;
 
 					uint64_t PC = strtol(newLine,0,16);
-					
+
 					float averageAccessTime = atof(position);
 
 					unsigned numberAccesses = atoi(position2);
@@ -1521,7 +1545,7 @@ void processStats(const string &filename)
 	opstream p3("gnuplot");
 	p3 << terminal << basicSetup;
 
-	
+
 	// make the address latency distribution per channel graphs
 	for (unsigned channelID = 0; channelID < channelLatencyDistribution.size(); channelID++)
 	{
@@ -1529,11 +1553,11 @@ void processStats(const string &filename)
 		filesGenerated.push_back(filename.native_directory_string());
 		p2 << "set output '" << filename.native_directory_string() << "'" << endl << subAddrDistroA;
 		p2 << "set multiplot layout " << channelLatencyDistribution[channelID].size() << ", 1 title \"{/=18" << commandLine << "\"" << endl;
-		
+
 		for (unsigned rankID = 0; rankID < channelLatencyDistribution[channelID].size(); rankID++)
 		{
 			p2 << "set title \"Rank " << rankID << " Distribution Rate\" offset character 0, 0, 0 font \"\" norotate" << endl;
-		
+
 			if (rankID < channelLatencyDistribution[channelID].size() - 1)
 				p2 << "unset key" << endl << "unset label" << endl;
 			else
@@ -1568,12 +1592,12 @@ void processStats(const string &filename)
 		for (unsigned rankID = 0; rankID < channelDistribution[channelID].size(); rankID++)
 		{
 			p1 << "set title \"Rank " << rankID << " Distribution Rate\" offset character 0, 0, 0 font \"\" norotate" << endl;
-			
+
 			if (rankID < channelDistribution[channelID].size() - 1)
 				p1 << "unset key" << endl << "unset label" << endl;
 			else
 				p1 << "set xlabel 'Time (s)' offset 0,0.6" << endl << "set key outside center bottom horizontal reverse Left" << endl;
-			
+
 			p1 << "plot ";
 			for (unsigned a = 0; a < channelDistribution[channelID][rankID].size() - 1; a++)
 				p1 << "'-' using 1 axes x2y1 t 'bank_{" << a << "}  ',";
@@ -1822,7 +1846,7 @@ void processStats(const string &filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p1 << "reset" << endl << terminal << endl << basicSetup << endl << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p1 << "set multiplot layout 2,1 title \"" << commandLine << "\"" << endl;
-	
+
 	// make the transaction latency graph
 	p1 << "set title 'Transaction Latency'" << endl << averageTransactionLatencyScript << endl;
 
@@ -1852,7 +1876,7 @@ void processStats(const string &filename)
 		time += epochTime;
 	}
 	p1 << "e" << endl;
-	
+
 	time = 0.0F;
 	// mean + 1 std dev
 	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
@@ -2025,7 +2049,7 @@ int main(int argc, char** argv)
 			inputStream.push(file_source(argv[i]));
 
 			char newLine[256];
-			
+
 			if (!inputStream.is_complete())
 				continue;
 
@@ -2087,7 +2111,7 @@ int main(int argc, char** argv)
 	ifstream instream(openfile.directory_string().c_str());
 	stringstream entirefile;
 	entirefile << instream.rdbuf();
-	
+
 	string fileList;
 	for (unordered_map<string,string>::const_iterator x = files.begin(); x != files.end(); x++)
 	{
@@ -2095,7 +2119,7 @@ int main(int argc, char** argv)
 		fileList += x->second;
 		fileList += "</tr>";
 	}
-	
+
 	ofstream out("result.html");
 	string outString = entirefile.str();
 	replace_all(outString,"@@@", fileList);
@@ -2130,7 +2154,7 @@ int main(int argc, char** argv)
 	{
 		boost::thread threadA(thumbNailWorker);
 
-			for (list<string>::const_iterator i = toBeProcessed.begin(); i != toBeProcessed.end(); i++)
+		for (list<string>::const_iterator i = toBeProcessed.begin(); i != toBeProcessed.end(); i++)
 		{
 			if (ends_with(*i,"power.gz")|| ends_with(*i,"power.bz2"))
 			{
@@ -2153,7 +2177,7 @@ int main(int argc, char** argv)
 		threadB.join();
 	}
 
-	
+
 	return 0;
 }
 

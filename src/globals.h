@@ -52,13 +52,10 @@ namespace DRAMsimII
 	void unitTests(const Settings &settings);
 
 	// overloaded insertion operator functions for printing various aspects of the dram system
-	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Event&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction&);
-	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Address::AddressMappingScheme&);
-	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction::TransactionType );
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::fbdFrame&);	
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);

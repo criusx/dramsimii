@@ -81,7 +81,7 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
     self.readfile = mdesc.script()
     self.iobus = Bus(bus_id=0)
     self.membus = MemBus(bus_id=1, clock='2600MHz')
-    self.bridge = Bridge(delay='2ns', nack_delay='1ns')
+    self.bridge = Bridge(delay='1ns', nack_delay='1ns')
     # use the memory size established by the benchmark definition in Benchmarks.py
     outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0]
     if revert is not None:
@@ -185,8 +185,8 @@ drive_mem_mode = 'atomic'
 # system under test can be any CPU
 (TestCPUClass, test_mem_mode, FutureClass) = Simulation.setCPUClass(options)
 
-TestCPUClass.clock = '3GHz'
-DriveCPUClass.clock = '3GHz'
+TestCPUClass.clock = '6GHz'
+DriveCPUClass.clock = '6GHz'
 
 if options.benchmark:
     try:
@@ -225,12 +225,10 @@ if options.kernel is not None:
 if options.script is not None:
     test_sys.readfile = options.script
 
-
-
 if options.l2cache:
     if options.nopre is True:
         print "no prefetcher"
-        test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs = 32)
+        test_sys.l2 = L2Cache(size='512kB', assoc=16, latency="4ns", mshrs = 32)
     else:
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='stride', prefetch_degree=2, prefetcher_size=64, prefetch_cache_check_push=True)
@@ -253,8 +251,8 @@ if options.caches:
 
 for i in xrange(np):
     if options.caches:
-        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB'),
-                                                L1Cache(size = '64kB'))
+        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB', latency="500ps"),
+                                                L1Cache(size = '64kB', latency="500ps"))
     if options.l2cache:
         test_sys.cpu[i].connectMemPorts(test_sys.tol2bus)
     else:

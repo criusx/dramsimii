@@ -177,14 +177,14 @@ Channel::~Channel()
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief Moves the specified channel to at least the time given
-/// @param endTime move the channel until it is at this time
-/// @param transFinishTime the time that this transaction finished
+/// @param endTime issue all events up to and including this time
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 void Channel::moveToTime(const tick endTime)
 {	
 	assert(finishedTransactions.size() == 0);
 
+	/// @todo continue until no events are processed, no commands issued, no transactions decoded
 	while (time < endTime)
 	{	
 		// move time to either when the next command executes or the next transaction decodes, whichever is earlier
@@ -455,20 +455,31 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @brief counts the number of reads and writes so far and returns whichever had more
+/// @param rankID which rank to look at when determining which transaction type to choose
+/// @param 
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 Transaction::TransactionType Channel::setReadWriteType(const int rankID,const int bankCount) const
 {
-	int readCount = 0;
-	int writeCount = 0;
-	int emptyCount = 0;
+	unsigned readCount = 0;
+	unsigned writeCount = 0;
+	unsigned emptyCount = 0;
 
-	for(int i = 0; i < bankCount; ++i)
+	vector<Bank>::const_iterator currentBank = rank[rankID].bank.begin();
+	vector<Bank>::const_iterator bankEnd = rank[rankID].bank.end();
+
+	for(; currentBank != bankEnd; currentBank++)
 	{
-		const Command *currentCommand = rank[rankID].bank[i].read(1);
+		const Command *currentCommand = currentBank->front();
 
 		if (currentCommand)
 		{
+			if (currentCommand->isActivate())
+			{
+				currentCommand = currentBank->read(1);
+				assert(currentCommand && currentCommand->isReadOrWrite());
+			}
+
 			if (currentCommand->isRead())
 			{
 				readCount++;
@@ -2215,9 +2226,12 @@ void Channel::executeCommand(Command *thisCommand)
 }
 
 
-/// <summary>
-/// find the protocol gap between a command and current system state
-/// </summary>
+//////////////////////////////////////////////////////////////////////////
+/// @brief find the protocol gap between a command and current system state
+/// @details old version of the function to check the next available command 
+/// time, now used to check newer functions and ensure changes don't break
+/// timing requirements
+//////////////////////////////////////////////////////////////////////////
 tick Channel::minProtocolGap(const Command *currentCommand) const
 {
 	tick min_gap = 0;

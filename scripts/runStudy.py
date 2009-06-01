@@ -98,7 +98,7 @@ m5SEConfigFile = '/home/crius/m5/configs/example/dramsim.py'
 m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
 m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
-outputDir = '/home/crius/results/mappingStudy15'
+outputDir = '/home/crius/results/commandStudy0'
 memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
 commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d outfiledir %s %s"'
 fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s outfiledir %s"
@@ -107,7 +107,11 @@ submitString = '''echo 'time %%s' | qsub -q %s -o %%s -e %%s -N "%%s"''' % (queu
 #m5CommandLine = '%s /home/crius/m5-stable/configs/example/dramsim.py -f %s -b mcf --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
 m5SECommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %d ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"'
 m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s outfiledir %s"'
+
+# command line to setup full system runs
 m5FSCommandLine = '%s %s -b %%s -F 10000000000 --nopre --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript)
+
+# options for the run
 channels = [2]
 ranks = [4]
 banks = [16]
@@ -117,19 +121,20 @@ tFAW = [28]
 #addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagelowlocality', 'closepagebaselineopt']
 #addressMappingPolicy = ['closepagebaseline', 'sdramhiperf']
 #addressMappingPolicy = ['closepagebaselineopt']
-addressMappingPolicy = ['closepagebaselineopt','closepagelowlocality']
+addressMappingPolicy = ['closepagebaselineopt','closepagebaseline','sdramhiperf']
 #addressMappingPolicy = ['closepagebaseline']
 #commandOrderingAlgorithm = ['firstAvailable', 'bankroundrobin', 'rankroundrobin', 'strict']
-commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin']
+commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF']
 #commandOrderingAlgorithm = ['firstAvailable']
 interarrivalCycleCount = [1]
 #perBankQueueDepth = range(8, 16, 4)
 perBankQueueDepth = [12]
-readWriteGrouping = ['true', 'false']
+readWriteGrouping = ['true']
 requests = [9223372036854775808]
 #benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
 #benchmarks = ['stream']
-benchmarks = ['lbm']
+#benchmarks = ['lbm', 'stream', 'bzip2']
+benchmarks = ['stream']
 
 def main():
     try:
@@ -190,8 +195,8 @@ def main():
                                                 for i in benchmarks:
                                                     currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, b, c, d, e, g, k, outputDir))
                                                     submitCommand = submitString % (currentCommandLine, outputDir, outputDir, i)
-                                                    print submitCommand
-                                                    sys.exit(0)
+                                                    #print submitCommand
+                                                    #sys.exit(0)
                                                     os.system(submitCommand)
 
                                         #sys.exit(2)

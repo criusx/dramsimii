@@ -52,9 +52,6 @@ if not conf.CheckLib('boost_regex'):
 	print 'e.g. sudo apt-get install "libboost-regex*"'
 	Exit(1)
 
-
-
-
 sourceBase = """
 			reporting/soapC.cpp
 			reporting/soapClient.cpp
@@ -85,6 +82,13 @@ sourceBase = """
 sourceFile = Split(sourceBase + "\nmain.cpp")
 sourcesTest = Split(sourceBase + "\nunitTest.cpp")
 
+platform = ARGUMENTS.get("build",Platform())
+
+if platform == 'script' or platform == 'scriptDebug':
+	if not conf.CheckLib('Magick++'):
+		print 'Magick++ libraries to do graphics editing, please install.'
+		#Exit(1)
+
 env = conf.Finish()
 
 ROOT = Dir('.').abspath
@@ -105,15 +109,14 @@ def make_objs(sourceFiles, env):
     #objs.append(date_obj)
     return objs
 
-platform = ARGUMENTS.get("build",Platform())
-
 if platform == 'script':
-	envScript = env.Clone(OBJSUFFIX='.os')
+	envScript = env.Clone(OBJSUFFIX='.os', CPPPATH = '/usr/include/ImageMagick')
 	envScript.Append(CCFLAGS = '-O3 -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions ')
 	script = envScript.Program('processStats',"../scripts/processStats.cpp")
 	envScript.Install(os.path.abspath('../scripts'),script)
+
 elif platform == 'scriptDebug':
-	envScriptD = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.osd')
+	envScriptD = env.Clone(OBJSUFFIX='.osd', CPPPATH = '/usr/include/ImageMagick')
 	envScriptD.Append(CCFLAGS = '-ggdb3 -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')
 	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cpp")
 	envScriptD.Install(os.path.abspath('../scripts'),script)

@@ -53,7 +53,7 @@ std::string bigPowerScript = "set key outside center bottom horizontal Left reve
 							 unset x2tics\n\
 							 set mxtics\n\
 							 set xrange [0:*]\n\
-							 set yrange [0:7000]\n\
+							 set yrange [0:*]\n\
 							 set xlabel \"Time (s)\"\n\
 							 set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
 							 set ytics out\n\
@@ -70,8 +70,8 @@ std::string bigEnergyScript = "set key outside center bottom horizontal Left rev
 							  set ytics out\n\
 							  set xtics out\n\
 							  set mxtics\n\
-							  set yrange [0:9]\n\
-							  set y2range [0:16000]\n\
+							  set yrange [0:*]\n\
+							  set y2range [0:*]\n\
 							  set ytics nomirror\n\
 							  set y2tics\n\
 							  unset x2tics\n\
@@ -239,7 +239,6 @@ plot '-' using 1:2 title 'IPC' with impulses,\
 '-' using 1:2 sm csp title 'Moving Average IPC' with lines\n";
 
 //'-' using 1:2 sm csp title 'Cumulative Average IPC' with lines,\
-
 
 std::string averageTransactionLatencyScript =
 "set yrange [1 : *] noreverse nowriteback\n\
