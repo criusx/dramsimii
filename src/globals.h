@@ -31,8 +31,7 @@
 // global vars and functions
 namespace DRAMsimII
 {
-	// class forward declarations
-	
+	// class forward declarations	
 	class Address;
 	class Event;
 	class Command;
@@ -51,7 +50,11 @@ namespace DRAMsimII
 
 	void unitTests(const Settings &settings);
 
+	
 	// overloaded insertion operator functions for printing various aspects of the dram system
+	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Bank&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Channel&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Event&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address&);
@@ -59,7 +62,7 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::fbdFrame&);	
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
-	std::ostream& operator<<(std::ostream&, const CommandOrderingAlgorithm coa);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandOrderingAlgorithm coa);
 	std::ostream& operator<<(std::ostream&, const RowBufferPolicy rbp);
 
 	// will compute log2(n)=x for any n, where n=2**x

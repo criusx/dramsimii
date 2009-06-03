@@ -319,13 +319,13 @@ tick Rank::next(Command::CommandType nextCommandType) const
 {
 	switch (nextCommandType)
 	{
-	case Command::ACTIVATE:
-		return nextActivateTime;
-		break;
 	case Command::READ:
 	case Command::READ_AND_PRECHARGE:
 		return nextReadTime;
 		break;
+	case Command::ACTIVATE:
+		return nextActivateTime;
+		break;	
 	case Command::WRITE:
 	case Command::WRITE_AND_PRECHARGE:
 		return nextWriteTime;
@@ -384,7 +384,7 @@ Command *Rank::getCommand(const unsigned thisBank)
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief update this rank to seem like time started at a nonzero time
-/// @detail used when the simulator has fast forwarded to a certain time and then
+/// @details used when the simulator has fast forwarded to a certain time and then
 /// begun detailed simulation. this function will avoid giving too large/small values
 /// after a simple->detailed switch
 //////////////////////////////////////////////////////////////////////////

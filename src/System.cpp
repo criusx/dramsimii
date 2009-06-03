@@ -628,8 +628,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 	case BANK_ROUND_ROBIN:
 		os << "BRR ] ";
 		break;
-	case WANG_RANK_HOP:
-		os << "WANG] ";
+	case COMMAND_PAIR_RANK_HOPPING:
+		os << "CPRH] ";
 		break;
 	case FIRST_AVAILABLE_AGE:
 		os << "GRDY] ";

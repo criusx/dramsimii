@@ -47,6 +47,7 @@ using namespace std;
 /// @brief constructs the dramChannel using this settings reference, also makes a reference to the dramSystemConfiguration object
 /// @param settings the settings file that defines the number of ranks, refresh policy, etc.
 /// @param sysConfig a const reference is made to this for some functions to grab parameters from
+/// @param stats a reference to the stats object that will be collecting data
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats):
@@ -456,10 +457,9 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @brief counts the number of reads and writes so far and returns whichever had more
 /// @param rankID which rank to look at when determining which transaction type to choose
-/// @param 
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-Transaction::TransactionType Channel::setReadWriteType(const int rankID,const int bankCount) const
+Transaction::TransactionType Channel::setReadWriteType(const int rankID) const
 {
 	unsigned readCount = 0;
 	unsigned writeCount = 0;
@@ -708,7 +708,7 @@ bool Channel::sendPower(double PsysRD, double PsysWR, vector<int> rankArray, vec
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief returns a pointer to the next transaction to issue to this channel without removing it
-/// @detail read the next available transaction for this channel without actually removing it from the queue \n
+/// @details read the next available transaction for this channel without actually removing it from the queue \n
 /// if bufferDelay is set, then only transactions that have been incomingTransaction the queue long enough to decode are considered
 /// @return the next transaction that should be issued to this channel
 /// @author Joe Gross
@@ -751,7 +751,7 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief read a transaction that is ready to go, out of order possibly
-/// @detail searches from the head to the end or the decode window to find
+/// @details searches from the head to the end or the decode window to find
 /// a transaction that is able to be decoded at the current time
 /// @returns a pointer to the next transaction that can currently be decoded
 /// @author Joe Gross
@@ -789,7 +789,7 @@ unsigned Channel::readAvailableTransaction(const bool bufferDelay) const
 //////////////////////////////////////////////////////////////////////////
 /// @brief removes and returns the next decodable transaction
 /// @sa readAvailableTransaction()
-/// @detail returns a transaction that can be decoded right now in the same
+/// @details returns a transaction that can be decoded right now in the same
 /// way as readAvailableTransaction(), but actually removes it
 //////////////////////////////////////////////////////////////////////////
 Transaction *Channel::getAvailableTransaction(unsigned useThis)
@@ -808,7 +808,7 @@ Transaction *Channel::getAvailableTransaction(unsigned useThis)
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief get the next transaction, whether a refresh transaction or a normal R/W transaction
-/// @detail gets the next transaction for this channel and removes it, always returns a transaction that is able to decode
+/// @details gets the next transaction for this channel and removes it, always returns a transaction that is able to decode
 /// @return the next transaction for this channel
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
@@ -848,7 +848,7 @@ Transaction *Channel::getTransaction()
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief get the next refresh command and remove it from the queue
-/// @detail returns a pointer to a refresh transaction that represents what the next refresh \n
+/// @details returns a pointer to a refresh transaction that represents what the next refresh \n
 /// transaction would be. this should not be enqueued as it has not been removed yet
 /// @return the next possible refresh transaction
 /// @author Joe Gross
@@ -866,7 +866,7 @@ Transaction *Channel::createNextRefresh()
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief returns a pointer to the next refresh transaction that's going to be issued to this channel
-/// @detail returns a pointer to a representative object for the next refresh that this channel will see
+/// @details returns a pointer to a representative object for the next refresh that this channel will see
 /// @return a pointer to a representative copy of the next refresh transaction
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
@@ -900,7 +900,7 @@ const Transaction *Channel::readNextRefresh() const
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief reset some stats to account for the fact that fast-forwarding has moved time forward significantly
-/// @param the time at which the timing model begins
+/// @param time the time at which the timing model begins
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 void Channel::resetToTime(const tick time)
@@ -924,7 +924,7 @@ void Channel::resetToTime(const tick time)
 /// @details this will ensure that a given transaction can be broken into and inserted as commands in this channel
 /// if there is not enough room according to a given algorithm, then it will indicate that this is not possible
 /// @author Joe Gross
-/// @param trans the transaction to be considered
+/// @param incomingTransaction trans the transaction to be considered
 /// @return true if there is enough room, false otherwise
 //////////////////////////////////////////////////////////////////////
 bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransaction) const
@@ -2060,6 +2060,8 @@ const Command *Channel::readNextCommand() const
 		}
 		break;
 
+		case COMMAND_PAIR_RANK_HOPPING:
+
 	default:
 		{
 			cerr << "This configuration and algorithm combination is not supported" << endl;
@@ -2077,7 +2079,7 @@ const Command *Channel::readNextCommand() const
 /// Enqueues RAS times to allow t_faw to be determined later
 /// Updates rank and bank records of CAS, RAS lengths for later calculations in
 /// min_protocol_gap()
-/// @param the command to execute at this time
+/// @param thisCommand the command to execute at this time
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 void Channel::executeCommand(Command *thisCommand)
@@ -2812,7 +2814,7 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief the assignment operator, will copy non-key items to this channel
-/// @detail copies the non-reference items over, should be used for deserialization
+/// @details copies the non-reference items over, should be used for deserialization
 /// @return a reference to this channel, for chaining
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////

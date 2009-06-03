@@ -256,7 +256,6 @@ bool Address::reverseAddressTranslation()
 /// @brief converts a given memory request from a physical address to a rank/bank/row/column representation
 /// @details converts according to the address mapping scheme in systemConfig
 /// @author Joe Gross
-/// @param thisAddress the addresses representation to be decoded in-place
 /// @return true if the conversion was successful, false if there was some problem
 //////////////////////////////////////////////////////////////////////
 bool Address::addressTranslation()

@@ -33,6 +33,8 @@ namespace DRAMsimII
 	class Command: public Event
 	{
 	public:
+		/// @brief available command types to send to DRAMs
+		/// @details a basic DRAM command may be any of the following
 		enum CommandType
 		{
 			ACTIVATE,							///< open this row
@@ -90,6 +92,7 @@ namespace DRAMsimII
 
 		// friends
 		friend std::ostream &DRAMsimII::operator<<(std::ostream &,const Command &);	
+		//friend std::ostream &DRAMsimII::operator<<(std::ostream &, const Command::CommandType &);
 
 		// overloads
 		bool operator==(const Command& right) const;

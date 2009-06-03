@@ -265,5 +265,5 @@ set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate b
 set ylabel 'Reuse Rate'\n\
 plot '-' using 1:2 sm csp title 'Hit Rate' with filledcurve below x1, '-' using 1:2 sm csp title 'Cumulative Average Hit Rate' with lines lw 1.250, '-' using 1:2 sm csp title 'Moving Average' with lines lw 1.250\n";
 
-std::string urlString = "<a href=\"%1/%1.html\">%2</a>";
+std::string urlString = "<a href=\"%1/index.html\">%2</a>";
 

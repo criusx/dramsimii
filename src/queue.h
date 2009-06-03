@@ -38,7 +38,7 @@ namespace DRAMsimII
 
 
 	/// @brief the queue template class, rhs circular queue
-	/// @detail push/pop are O(1) operations, while random insertions are O(n) operations
+	/// @details push/pop are O(1) operations, while random insertions are O(n) operations
 	template <typename T>
 	class Queue
 	{
@@ -54,7 +54,7 @@ namespace DRAMsimII
 		{}
 
 		/// @brief copy constructor
-		/// @detail copy the existing queue, making copies of each element
+		/// @details copy the existing queue, making copies of each element
 		explicit Queue(const Queue<T>& rhs):
 		count(rhs.count),
 			head(rhs.head),
@@ -76,9 +76,9 @@ namespace DRAMsimII
 		}	
 
 		/// @brief constructor
-		/// @detail create rhs queue of rhs certain size and optionally fill it with empty elements
+		/// @details create rhs queue of rhs certain size and optionally fill it with empty elements
 		/// @param size the depth of the circular queue
-		/// @preallocate whether or not to fill the queue with blank elements, defaults to false
+		/// @param preallocate whether or not to fill the queue with blank elements, defaults to false
 		explicit Queue(const unsigned size, const bool preallocate = false):
 		count(0),
 			head(0),
@@ -98,7 +98,7 @@ namespace DRAMsimII
 		}
 
 		/// @brief destructor
-		/// @detail remove the elements and delete them before removing the rest of the queue
+		/// @details remove the elements and delete them before removing the rest of the queue
 		~Queue()
 		{
 			while (!isEmpty())
@@ -111,7 +111,7 @@ namespace DRAMsimII
 		}	
 
 		/// @brief change the size of the queue
-		/// @detail remove all existing elements and create rhs new queue of rhs different size
+		/// @details remove all existing elements and create rhs new queue of rhs different size
 		/// @param size the depth to set the queue to
 		/// @param preallocate whether or not to fill the queue with blank elements, defaults to false
 		void resize(unsigned size, bool preallocate = false)
@@ -137,7 +137,9 @@ namespace DRAMsimII
 		}	
 
 		/// @brief add an item to the back of the queue
-		/// @detail issue rhs warning if the element is null\nreturn false if the queue is already full\nadd to the tail pointer position and remove from the head
+		/// @details issue rhs warning if the element is null
+		/// return false if the queue is already full add to the tail pointer 
+		/// position and remove from the head
 		/// @param item the item to be inserted into the queue
 		bool push(T *item)
 		{
@@ -217,7 +219,7 @@ namespace DRAMsimII
 		}
 
 		/// @brief get rhs pointer to the item at the head of the queue
-		/// @detail similar to peek()
+		/// @details similar to peek()
 		/// @return rhs pointer to the item at the front of the queue, or NULL if the queue is empty
 		const inline T *front() const
 		{
@@ -256,7 +258,7 @@ namespace DRAMsimII
 		}
 
 		/// @brief release item into pool
-		/// @detail This is useful for when the queue holds preallocated pieces of memory
+		/// @details This is useful for when the queue holds preallocated pieces of memory
 		/// and one would like to store them when they are not in use
 		void releaseItem(T *item)
 		{
@@ -280,7 +282,7 @@ namespace DRAMsimII
 		}
 
 		/// @brief treat this queue like an object pool and retrieve an item
-		/// @detail if there is no available object, then create one
+		/// @details if there is no available object, then create one
 		/// @return rhs new item which may or may not be initialized
 		T *acquireItem()
 		{
@@ -300,7 +302,7 @@ namespace DRAMsimII
 		}
 
 		/// @brief this function makes this queue rhs non-FIFO queue.
-		/// @detail Allows insertion into the middle or at any end
+		/// @details Allows insertion into the middle or at any end
 		bool insert(T *item, const int offset)
 		{
 			assert(offset <= (int)count);
@@ -406,7 +408,7 @@ namespace DRAMsimII
 		}
 
 		/// @brief assignment operator overload
-		/// @detail moves all the objects from the rhs object to the lhs object
+		/// @details moves all the objects from the rhs object to the lhs object
 		Queue<T> &operator=(const Queue<T> &rhs)
 		{
 			if (&rhs == this)

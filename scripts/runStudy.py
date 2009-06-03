@@ -16,8 +16,13 @@ from subprocess import Popen, PIPE, STDOUT
 from array import array
 import shutil
 
-tracesDir = '/home/crius/m5'
+# the directory where the traces are
+tracesDir = '/home/crius/benchmarks/dsTraces'
+
+# the format of the traces
 traceType = 'dramsim'
+
+# the list of trace files to run
 traces = ['bzip2003-trace.gz',
 'cactusADM001-trace.gz',
 'calculix000-trace.gz',
@@ -29,7 +34,8 @@ traces = ['bzip2003-trace.gz',
 'namd000-trace.gz',
 'omnetpp000-trace.gz',
 'soplex000-trace.gz']
-traces = ['lbm000-trace.gz']
+
+traces = ['lbm000-trace.gz', 'mcf000-trace.gz', 'milc000-trace.gz']
 #tracesDir = '/home/crius/benchmarks/addressTraces/'
 #traces = ['mase_256K_64_4G/ammp.trc.gz',
 #'mase_256K_64_4G/equake.trc.gz',
@@ -91,19 +97,45 @@ traces = ['lbm000-trace.gz']
 #'mase_256K_64_2G/gzip.trc.gz',
 #'mase_256K_64_2G/galgel.trc.gz']
 
-dramSimExe = 'dramSimII.profuse'
+# the name of the DRAMsimII executable
+dramSimExe = 'dramSimII.opt'
+
+# the path to the DRAMsimII executable
 dramSimPath = '/home/crius/m5/src/mem/DRAMsimII/build'
+
+# the path to M5/SE executable
 m5Path = '/home/crius/m5/build/ALPHA_SE/'
+
+# the config file for the M5/SE executable
 m5SEConfigFile = '/home/crius/m5/configs/example/dramsim.py'
+
+# the path to the M5/FS executable
 m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
+
+# the config file for the M5/FS executable
 m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
+
+# the executable for M5/(FS|SE)
 m5Exe = 'm5.fast'
-outputDir = '/home/crius/results/commandStudy0'
+
+# the directory where the simulation outputs should be written
+outputDir = '/home/crius/results/commandStudy2'
+
+# the file that describes the base memory settings
 memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
+
+# the command line to pass to the DRAMsimII simulator to modify parameters
 commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d outfiledir %s %s"'
+
+# the command line parameters for running in FS mode
 fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s outfiledir %s"
+
+# the name of the queue to submit these jobs to
 queueName = 'default'
+
+# the string that sends this command to the queue
 submitString = '''echo 'time %%s' | qsub -q %s -o %%s -e %%s -N "%%s"''' % (queueName)
+
 #m5CommandLine = '%s /home/crius/m5-stable/configs/example/dramsim.py -f %s -b mcf --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
 m5SECommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %d ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"'
 m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s outfiledir %s"'
@@ -134,7 +166,8 @@ requests = [9223372036854775808]
 #benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
 #benchmarks = ['stream']
 #benchmarks = ['lbm', 'stream', 'bzip2']
-benchmarks = ['stream']
+#benchmarks = ['stream']
+benchmarks = ['stream', 'mcf', 'milc']
 
 def main():
     try:
@@ -161,14 +194,15 @@ def main():
                                         for opt, arg in opts:
                                             # trace file
                                             if opt == '-t':
-                                                for i in traces:
-                                                    currentTrace = os.path.join(tracesDir, i)
-                                                    currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, i))
-                                                    submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
+                                                for t in traces:
+                                                    currentTrace = os.path.join(tracesDir, t)
+                                                    currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
+                                                    #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
+                                                    submitCommand = submitString % (currentCommandLine, outputDir, outputDir, t)
                                                     #print submitCommandLine
                                                     #sys.exit(0)
                                                     if not counting:
-                                                        os.system(submitCommandLine)
+                                                        os.system(submitCommand)
                                                     else:
                                                         count += 1
 

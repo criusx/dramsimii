@@ -19,7 +19,9 @@
 
 #include "InputStream.h"
 #include "Address.h"
+//#include "Channel.h"
 #include "enumTypes.h"
+
 //#include "globals.h"
 
 #include <string>

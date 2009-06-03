@@ -44,16 +44,16 @@ namespace DRAMsimII
 		FBD_CONFIG // fully buffered DIMMS
 	};
 
-	// we can define various algorithms previously explored by Rixner, McKee et al. here.
+	/// we can define various algorithms previously explored by Rixner, McKee et al. here.
 	enum CommandOrderingAlgorithm
 	{
-		STRICT_ORDER, // maintains original ordering
-		RANK_ROUND_ROBIN, // alternate ranks
-		BANK_ROUND_ROBIN, // keep same ranks as long as possible, go down banks
-		FIRST_AVAILABLE_AGE, //< prioritizes whatever may issue soonest and uses age as a tie-breaker
+		STRICT_ORDER, ///< maintains original ordering
+		RANK_ROUND_ROBIN, ///< alternate ranks
+		BANK_ROUND_ROBIN, ///< keep same ranks as long as possible, go down banks
+		FIRST_AVAILABLE_AGE, ///< prioritizes whatever may issue soonest and uses age as a tie-breaker
 		FIRST_AVAILABLE_RIFF, ///< priortizes whatever may issue soonest and uses prioritizes reads over writes
 		FIRST_AVAILABLE_QUEUE, ///< prioritizes whatever may issue soonest and uses queue pressure as the tie-breaker
-		WANG_RANK_HOP // Patented stuff. davewang202@yahoo.com ;)
+		COMMAND_PAIR_RANK_HOPPING ///< Patented stuff. davewang202@yahoo.com ;)
 	};
 
 	enum TransactionOrderingAlgorithm

@@ -8,7 +8,7 @@
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
-      <li><a href="main.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
       <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
     </ul>
@@ -26,6 +26,8 @@
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
       <li><a href="functions_type.html"><span>Typedefs</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div class="tabs">
@@ -59,10 +61,12 @@
 Here is a list of all documented class members with links to the class documentation for each member:
 <p>
 <h3><a class="anchor" name="index_g">- g -</a></h3><ul>
-<li>get_depth()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_queue.html#24e58f2e679c8fe59a9a2023e360d25b">DRAMsimII::Queue&lt; T &gt;</a>
+<li>gaussianDistribution
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_input_stream.html#1932e8903b183eeb9e6fbd36b4e738ad">DRAMsimII::InputStream</a>
 <li>getAddressRanges()
 : <a class="el" href="class_m5dram_system.html#17d8fd3640bd4767ca88ace2ac3036b9">M5dramSystem</a>
+<li>getAvailableTransaction()
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#0cc52c572e890e714452bf9fe7dcf524">DRAMsimII::Channel</a>
 <li>getChannelID()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#6686ab8add8a9c0fe1a3b3bb029e38b6">DRAMsimII::Channel</a>
 <li>getCommand()
@@ -77,8 +81,6 @@ Here is a list of all documented class members with links to the class documenta
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#6d959ab956cc8ec9853bd097c4100b58">DRAMsimII::Channel</a>
 <li>getLength()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#92b4de22f19d5d659f236f40f442801d">DRAMsimII::Transaction</a>
-<li>getNextBusEvent()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_input_stream.html#3bf99c825be167ca237528addf442071">DRAMsimII::InputStream</a>
 <li>getNextCommand()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#7ccb7a779c25d6eac6c3d6b7bf0d7449">DRAMsimII::Channel</a>
 , <a class="el" href="class_d_r_a_msim_i_i_1_1fbd_channel.html#3d9bc56507f1d873092c6a96bae3db56">DRAMsimII::fbdChannel</a>
@@ -86,18 +88,23 @@ Here is a list of all documented class members with links to the class documenta
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_input_stream.html#553157e2ed5ef9d1b44d9c21dd6a4464">DRAMsimII::InputStream</a>
 <li>getNextRandomRequest()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_input_stream.html#7f583b7e3cfe92f1332fb99925a13458">DRAMsimII::InputStream</a>
-<li>getOldestCompletedTransaction()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#3b7a6bc67a61809281ee2431bf8878a0">DRAMsimII::Channel</a>
 <li>getOriginalTransaction()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#e7a386db95dd3b642b05029d7002a401">DRAMsimII::Transaction</a>
+<li>getPendingTransactions()
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#45aa0482ce88a84d0ad46b12aa5f762e">DRAMsimII::Channel</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#96cf2bc6d42da76ab0133681d5df7ba3">DRAMsimII::System</a>
+<li>getPrechargeTime()
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#6826601315567089a09b6a53023672d9">DRAMsimII::Rank</a>
 <li>getProgramCounter()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#4bfd1efbd2337e50824b9b209b82b75b">DRAMsimII::Transaction</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#4062ffc918d35c057ebc6b03fe0be3ba">DRAMsimII::Transaction</a>
 <li>getRank()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#31fdce469dc9e14f2a25d87913b628fd">DRAMsimII::Channel</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#6c9930bd4bc28c8e56712fd36c2a2366">DRAMsimII::Channel</a>
 <li>getTime()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#861366579b98a0c6071612bb8b28d72c">DRAMsimII::Channel</a>
 <li>getTimingSpecification()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#3010ef141c980c8070206174e27dc6f2">DRAMsimII::Channel</a>
+<li>getTotalPrechargeTime()
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#cedcb11333dd8281488e440ffc6a8711">DRAMsimII::Rank</a>
 <li>getTransaction()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#5476d2960d9e14e5e6481f6d33709df8">DRAMsimII::Channel</a>
 <li>getTransactionQueueCount()
@@ -108,7 +115,7 @@ Here is a list of all documented class members with links to the class documenta
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#f8a03aa94ca2d4e196d54c5ca46d0e1a">DRAMsimII::Transaction</a>
 </ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Jan 31 22:26:43 2009 for DRAMSimII by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Tue Jun 2 23:59:55 2009 for DRAMSimII by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

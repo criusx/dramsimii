@@ -21,6 +21,7 @@
 #include "globals.h"
 #include "Settings.h"
 #include "Address.h"
+//#include "Channel.h"
 
 #include <fstream>
 

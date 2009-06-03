@@ -267,7 +267,7 @@ tick Bank::next(Command::CommandType nextCommandType) const
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief reset statistics so that it appears the last command was not long ago
-/// @detail choose recent times for the lastX actions so that values are not so
+/// @details choose recent times for the lastX actions so that values are not so
 /// large when looking to see when the next available time to execute any dependent
 /// command. Often issued just after fast-forwarding finishes in a simulator
 //////////////////////////////////////////////////////////////////////////
@@ -286,6 +286,7 @@ void Bank::resetToTime(const tick time)
 /// if one is found, then the transaction is converted into the appropriate CAS command and inserted
 /// @author Joe Gross
 /// @param value the transaction to be inserted
+/// @param time the current time, used to check and prevent against starvation of commands
 /// @return true if the transaction was converted and inserted successfully, false otherwise
 //////////////////////////////////////////////////////////////////////
 bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
@@ -349,6 +350,7 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 /// there is a precharge command to the same row that it can insert before
 /// @author Joe Gross
 /// @param value the transaction to test
+/// @param time the current time, used to check and prevent against starvation of commands
 /// @return true if it is able to be inserted, false otherwise
 //////////////////////////////////////////////////////////////////////
 bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
@@ -396,6 +398,8 @@ bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief see if there is room to insert a command using the Close Page Aggressive algorithm and then insert
+/// @param incomingTransaction the transaction to insert
+/// @param time the current time, used to check and prevent against starvation of commands
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tick time)
@@ -403,9 +407,11 @@ bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tic
 	// go from the end to the beginning to ensure no starvation or RAW/WAR errors
 	for (int index = perBankQueue.size() - 1; index >= 0; --index)
 	{	
+		const Command *currentItem = perBankQueue[index];
+
 		// see if there is an available command to piggyback on
-		if (perBankQueue[index]->isReadOrWrite() &&
-			perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddress().getRow())
+		if (currentItem->isReadOrWrite() &&
+			currentItem->getAddress().getRow() == incomingTransaction->getAddress().getRow())
 		{
 			if (systemConfig.isAutoPrecharge())
 			{
@@ -424,7 +430,7 @@ bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tic
 
 		}
 		// don't starve commands
-		if (time - perBankQueue[index]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+		if (time - currentItem->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
 			break;
 	}
 	return false;
@@ -432,6 +438,8 @@ bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tic
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief see if there is room to insert a command using the Close Page Aggressive algorithm
+/// @param incomingTransaction the transaction to insert
+/// @param time the current time, used to check and prevent against starvation of commands
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
 bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction, const tick time) const
@@ -439,9 +447,10 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 	// go from the end to the beginning to ensure no starvation or RAW/WAR errors
 	for (int index = perBankQueue.size() - 1; index >= 0; --index)
 	{	
+		const Command *currentItem = perBankQueue[index];
 		// see if there is an available command to piggyback on
-		if (perBankQueue[index]->getAddress().getRow() == incomingTransaction->getAddress().getRow() &&
-			perBankQueue[index]->isReadOrWrite())
+		if (currentItem->getAddress().getRow() == incomingTransaction->getAddress().getRow() &&
+			currentItem->isReadOrWrite())
 		{
 			if (!systemConfig.isAutoPrecharge())
 			{
@@ -451,7 +460,7 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 			return true;
 		}
 		// don't starve commands
-		if (time - perBankQueue[index]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+		if (time - currentItem->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
 			break;
 	}
 	return false;
@@ -459,6 +468,7 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief assignment operator to copy non-reference values
+/// @param rhs the value that will be copied into this object
 //////////////////////////////////////////////////////////////////////////
 Bank& Bank::operator =(const Bank& rhs)
 {
@@ -483,6 +493,7 @@ Bank& Bank::operator =(const Bank& rhs)
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief equality operator to check values for equality
+/// @param rhs the value that will be copied into this object
 //////////////////////////////////////////////////////////////////////////
 bool Bank::operator==(const Bank& rhs) const
 {

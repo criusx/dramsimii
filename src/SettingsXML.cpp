@@ -94,7 +94,7 @@ namespace opt = boost::program_options;
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief construct a set of settings based upon parameters passed from the command line
-/// @detail will parse parameters passed from the command line without modification
+/// @details will parse parameters passed from the command line without modification
 /// and print any errors that occur
 //////////////////////////////////////////////////////////////////////////
 Settings::Settings(int argc, char **argv):
@@ -105,7 +105,7 @@ systemType(BASELINE_CONFIG)
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief load settings from an xml file
-/// @detail loads and populates a Settings object based on a particular
+/// @details loads and populates a Settings object based on a particular
 /// settings file and updates the settings based upon the modifiers
 /// sent to it
 /// @returns true if no errors were encountered, false otherwise

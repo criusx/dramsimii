@@ -17,7 +17,7 @@ Collaboration diagram for M5dramSystem:\nopagebreak
 \item 
 typedef M5dramSystemParams {\bf Params}\label{class_m5dram_system_bc049789b7ba009ac06888952383d456}
 
-\begin{CompactList}\small\item\em the parameters used to initialize the memory sytem object \item\end{CompactList}\end{CompactItemize}
+\begin{CompactList}\small\item\em the parameters used to initialize the memory system object \item\end{CompactList}\end{CompactItemize}
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
@@ -52,6 +52,9 @@ TickEvent {\bf tickEvent}\label{class_m5dram_system_2c1df40ac4ba1b6ee79a89c36717
 std::vector$<$ MemoryPort $\ast$ $>$ {\bf ports}\label{class_m5dram_system_c74ac86e7c7390068a33e60dfb352427}
 
 \begin{CompactList}\small\item\em ports to send/recv data to other simulator components \item\end{CompactList}\item 
+std::queue$<$ std::pair$<$ unsigned, tick $>$ $>$ {\bf finishedTransactions}\label{class_m5dram_system_ef2801ef6e3717682ae2e81219c462d1}
+
+\begin{CompactList}\small\item\em channels will return values as they finish transactions \item\end{CompactList}\item 
 int {\bf lastPortIndex}\label{class_m5dram_system_8dec460f8036d2885f730687e207624c}
 
 \begin{CompactList}\small\item\em the last port accessed \item\end{CompactList}\item 

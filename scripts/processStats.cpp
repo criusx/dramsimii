@@ -98,7 +98,7 @@ std::string thumbnailResolution = "640";
 
 //std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
 //std::string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
-std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced font \"Arial\" fsize 14\n";
+std::string terminal = "set terminal svg size 1920,1200 enhanced font \"Arial\" fsize 14\n";
 
 std::string extension = "svg";
 
@@ -791,7 +791,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 	else
 		return;
 
-	bf::path printFile = outputDir / (basename + ".html");
+	bf::path printFile = outputDir / ("index.html");
 
 	if (!fileExists(printFile.native_directory_string()))
 	{
@@ -2084,6 +2084,7 @@ int main(int argc, char** argv)
 							benchmarkName = *x;
 						else
 							benchmarkName = x->substr(start + 1,end - start - 1);
+
 						if (decoder.find(benchmarkName) != decoder.end())
 							benchmarkName = decoder[benchmarkName];
 

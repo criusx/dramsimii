@@ -8,29 +8,64 @@
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
-      <li><a href="main.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
       <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
     </ul>
   </div>
 </div>
 <div class="contents">
-<h1><a class="anchor" name="todo">Todo List </a></h1><a class="anchor" name="_todo000002"></a> <dl>
+<h1><a class="anchor" name="todo">Todo List </a></h1><a class="anchor" name="_todo000001"></a> <dl>
+<dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#1f759cc59082c2ca03271ca55f3ab1f6">DRAMsimII::Bank::issueCAS</a> (const tick currentTime, const Command *currentCommand) </dt>
+<dd>which is correct? </dd>
+</dl>
+<p>
+<a class="anchor" name="_todo000004"></a> <dl>
 <dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#0d13f91b788925a91ade7801391568d5">DRAMsimII::Channel::doPowerCalculation</a> (const tick systemTime) </dt>
 <dd>actually simulate CKE, per rank </dd>
 </dl>
 <p>
-<a class="anchor" name="_todo000002"></a> <dl>
+<a class="anchor" name="_todo000004"></a> <dl>
 <dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#0d13f91b788925a91ade7801391568d5">DRAMsimII::Channel::doPowerCalculation</a> (const tick systemTime) </dt>
 <dd>: account for CKE </dd>
 </dl>
 <p>
-<a class="anchor" name="_todo000001"></a> <dl>
+<a class="anchor" name="_todo000003"></a> <dl>
 <dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#da774dec2e706f86d1c3364cb6b8d3bb">DRAMsimII::Channel::enqueue</a> (Transaction *in) </dt>
 <dd>probably should set the enqueue time = time here </dd>
 </dl>
+<p>
+<a class="anchor" name="_todo000006"></a> <dl>
+<dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#c70faefd9c39af71cb67096c00527331">DRAMsimII::Channel::executeCommand</a> (Command *thisCommand) </dt>
+<dd>let each rank figure out if the command is to it or not by combining issueCAS and issueCASother </dd>
+</dl>
+<p>
+<a class="anchor" name="_todo000002"></a> <dl>
+<dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#a9fd8570d07b881c2958be9834ccf4c5">DRAMsimII::Channel::moveToTime</a> (const tick endTime) </dt>
+<dd>continue until no events are processed, no commands issued, no transactions decoded </dd>
+</dl>
+<p>
+<a class="anchor" name="_todo000013"></a> <dl>
+<dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#fabcd4ee36a5d14c40f0b080f25e3225">DRAMsimII::System::nextTick</a> () const  </dt>
+<dd>should always be a next event due to perpetual stats collection, could throw an exception when there are no stats being collected </dd>
+</dl>
+<p>
+<a class="anchor" name="_todo000009"></a> <dl>
+<dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#666ea94c63822e59cc132968ae290751">DRAMsimII::Rank::issueCASother</a> (const tick currentTime, const Command *currentCommand) </dt>
+<dd>should this not be the nominal value? </dd>
+</dl>
+<p>
+<a class="anchor" name="_todo000011"></a> <dl>
+<dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_statistics.html#e435d174dc17300c38b02497751688cb">DRAMsimII::Statistics::collectTransactionStats</a> (const Transaction *) </dt>
+<dd>use DQ * length to calculate bytes Tx, Rx </dd>
+</dl>
+<p>
+<a class="anchor" name="_todo000012"></a> <dl>
+<dt>Member <a class="el" href="class_d_r_a_msim_i_i_1_1_statistics.html#dd4ecfbdd143d3cf6a8413d395a17e58">DRAMsimII::Statistics::operator==</a> (const Statistics &amp;right) const  </dt>
+<dd>restore comparisons once tr1 implementations support this </dd>
+</dl>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Jan 31 22:26:43 2009 for DRAMSimII by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Tue Jun 2 23:59:55 2009 for DRAMSimII by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -379,8 +379,8 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 				commandOrderingAlgorithm = BANK_ROUND_ROBIN;
 			else if (nodeValue == "rankroundrobin")
 				commandOrderingAlgorithm = RANK_ROUND_ROBIN;
-			else if (nodeValue == "wanghop")
-				commandOrderingAlgorithm = WANG_RANK_HOP;
+			else if (nodeValue == "cprh" || nodeValue == "commandpairrankhop" || nodeValue == "command_pair_rank_hop" || nodeValue == "commandpairrankhopping")
+				commandOrderingAlgorithm = COMMAND_PAIR_RANK_HOPPING;
 			else if (nodeValue == "firstavailableage" || nodeValue == "firstavailable")
 				commandOrderingAlgorithm = FIRST_AVAILABLE_AGE;
 			else if (nodeValue == "firstavailableriff")
@@ -527,7 +527,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const CommandOrderingAlgorithm coa)
 	case FIRST_AVAILABLE_QUEUE:
 		os << "FRSTQ";
 		break;
-	case WANG_RANK_HOP:
+	case COMMAND_PAIR_RANK_HOPPING:
 		os << "CPRH";
 		break;
 	}
