@@ -441,7 +441,7 @@ bool Rank::refreshAllReady() const
 	for (vector<Bank>::const_iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
 	{
 		// if any queue is empty or the head of any queue isn't a refresh command, then the rank isn't ready for a refresh all command
-		if (currentBank->nextCommandType() != Command::REFRESH_ALL)
+		if (!currentBank->front() || !currentBank->front()->isRefresh())
 		{
 			return false;
 		}
