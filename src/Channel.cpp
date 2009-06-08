@@ -62,7 +62,10 @@ statistics(stats),
 powerModel(settings),
 algorithm(settings),
 dbReporting(settings.dbReporting),
-rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig))
+rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig)),
+finishedTransactions(),
+lastRAS(0, settings.bankCount / 2),
+lastCAS(0, 0)
 {
 	// assign an id to each channel (normally done with commands)
 	for (unsigned i = 0; i < settings.rankCount; i++)
@@ -102,7 +105,10 @@ algorithm(rhs.algorithm),
 channelID(rhs.channelID),
 dbReporting(rhs.dbReporting),
 // to initialize the references
-rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification, systemConfig))
+rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification, systemConfig)),
+finishedTransactions(),
+lastRAS(0, systemConfig.getBankCount() / 2),
+lastCAS(0, 0)
 {
 	// to fill incomingTransaction the values
 	rank = rhs.rank;
@@ -147,7 +153,10 @@ powerModel(rhs.powerModel),
 algorithm(rhs.algorithm),
 channelID(rhs.channelID),
 dbReporting(rhs.dbReporting),
-rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConfig))
+rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConfig)),
+finishedTransactions(),
+lastRAS(rhs.lastRAS),
+lastCAS(rhs.lastCAS)
 {
 	// TODO: copy over values incomingTransaction ranks now that reference members are init
 	// assign an id to each channel (normally done with commands)
@@ -2072,6 +2081,66 @@ const Command *Channel::readNextCommand() const
 		break;
 
 		case COMMAND_PAIR_RANK_HOPPING:
+			{	
+				// determine
+				Command::CommandType currentCommandType = lastCommand->isActivate() ? Command::READ : Command::ACTIVATE;
+
+				pair<unsigned,unsigned> previousRAS = lastRAS;
+				pair<unsigned,unsigned> previousCAS = lastCAS;
+
+
+
+				while (true)
+				{
+					const Command *potentialCommand = 
+						currentCommandType == Command::ACTIVATE ?
+						((rank.begin() + previousRAS.first)->bank.begin() + previousRAS.second)->front() :
+					((rank.begin() + previousCAS.first)->bank.begin() + previousCAS.second)->front();
+
+					// see if this command could be used
+					if (potentialCommand)
+					{
+						if (!potentialCommand->isRefresh())
+						{
+							if ((currentCommandType == Command::ACTIVATE && potentialCommand->isActivate()) ||
+								(currentCommandType == Command::READ && potentialCommand->isReadOrWrite()))
+							{							
+								return potentialCommand;
+							}
+						}
+						else
+						{
+							// look for refreshes
+							if ((rank.begin() + (currentCommandType == Command::ACTIVATE ? previousRAS.first : previousCAS.first))->refreshAllReady())
+							{
+								return potentialCommand;
+							}
+						}
+					}
+					// then switch command
+					currentCommandType = (currentCommandType == Command::ACTIVATE) ? Command::READ : Command::ACTIVATE;
+
+					// if switched to the next RAS command, recalculate RAS/CAS commands
+					if (currentCommandType == Command::ACTIVATE)
+					{
+						unsigned nextCasBank = (previousCAS.second + 1) % systemConfig.getBankCount();
+						unsigned nextCasRank = (nextCasBank == 0) ? (previousCAS.first + 1) % systemConfig.getRankCount() : lastCAS.first;
+
+						unsigned nextRasRank =  (previousRAS.first + 1 + ((nextCasBank == 0) ? 1 : 0)) % systemConfig.getRankCount();
+						unsigned nextRasBank = (nextCasBank == 0) ? systemConfig.getBankCount() / 2 : (previousRAS.second >= systemConfig.getBankCount() / 2 ? previousRAS.second - systemConfig.getBankCount() / 2 : previousRAS.second + systemConfig.getBankCount() / 2 + 1);
+						previousCAS.first = nextCasRank;
+						previousCAS.second = nextCasBank;
+						previousRAS.first = nextRasRank;
+						previousRAS.second = nextRasBank;
+					}
+					// test for all refresh commands
+
+					// back to the beginning, either no result or look for the opposite type
+
+					//if (previousCAS == lastCAS && previousRAS == lastRAS && )			
+				}
+			}
+			break;
 
 	default:
 		{

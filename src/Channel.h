@@ -59,6 +59,9 @@ namespace DRAMsimII
 		bool dbReporting;								///< whether or not to report results to a db
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
+		std::pair<unsigned,unsigned> lastRAS;			///< keeps track of the last RAS command executed
+		std::pair<unsigned,unsigned> lastCAS;			///< keeps track of the last CAS command executed
+
 
 		// functions
 		void retireCommand(Command *);

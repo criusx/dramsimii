@@ -32,6 +32,93 @@ int main(int argc,char **argv, char *envp[])
 {
 	const Settings settings(argc, argv);
 
+	//////////////////////////////////////////////////////////////////////////
+	// CPRH test
+	//////////////////////////////////////////////////////////////////////////
+	const unsigned ranks = 4;
+	const unsigned banks = 16;
+
+	std::pair<unsigned,unsigned> lastRAS = std::pair<unsigned,unsigned>(0,banks / 2);
+	std::pair<unsigned,unsigned> lastCAS = std::pair<unsigned,unsigned>(0,0);
+	std::map<std::pair<unsigned,unsigned>,std::pair<unsigned,unsigned> > alreadyVisitedRas;
+	std::map<std::pair<unsigned,unsigned>,unsigned> alreadyVisitedCas;
+
+	for (unsigned i = 2* ranks * banks; i > 0; --i)
+	{
+		std::cerr << lastRAS.first << " " << lastRAS.second << " , " << lastCAS.first << " " << lastCAS.second << "\t" << 			
+			(ranks - ((2 * (lastRAS.second % (banks / 2)) + !(lastRAS.second / (banks / 2))) % ranks) + lastRAS.first) % ranks << " " <<
+		2 * (lastRAS.second % (banks / 2)) + !(lastRAS.second / (banks / 2)) << endl;
+		if (alreadyVisitedRas.find(lastRAS) != alreadyVisitedRas.end())
+		{
+			//std::cerr << "too many" << endl;
+		}
+		else
+		{
+			alreadyVisitedRas[lastRAS] = lastCAS;
+		}
+		alreadyVisitedCas[lastCAS]++;
+		
+
+		unsigned nextCasBank = (lastCAS.second + 1) % banks;
+		unsigned nextCasRank = (nextCasBank == 0) ? (lastCAS.first + 1) % ranks : lastCAS.first;
+
+		unsigned nextRasRank =  (lastRAS.first + 1 + ((nextCasBank == 0) ? 1 : 0)) % ranks;
+		unsigned nextRasBank = (nextCasBank == 0) ? banks / 2 : (lastRAS.second >= banks / 2 ? lastRAS.second - banks / 2 : lastRAS.second + banks / 2 + 1);
+		lastCAS.first = nextCasRank;
+		lastCAS.second = nextCasBank;
+		lastRAS.first = nextRasRank;
+		lastRAS.second = nextRasBank;
+	}
+
+	for (std::map<std::pair<unsigned,unsigned>,std::pair<unsigned,unsigned> >::const_iterator i = alreadyVisitedRas.begin(); i != alreadyVisitedRas.end(); i++)
+	{
+		std::cerr << "(" << i->first.first << "," << i->first.second << ")" << endl;
+	}
+	for (std::map<std::pair<unsigned,unsigned>,unsigned>::const_iterator i = alreadyVisitedCas.begin(); i != alreadyVisitedCas.end(); i++)
+	{
+		std::cerr << "(" << i->first.first << "," << i->first.second << ") " << i->second << endl;
+	}
+
+	// second effort
+	std::pair<unsigned,unsigned> lastCommand = std::pair<unsigned,unsigned>(0,banks / 2);
+	bool isActivate = true;
+
+
+	for (unsigned i = 2* ranks * banks; i > 0; --i)
+	{
+		
+		std::cerr << lastCommand.first << " " << lastCommand.second;
+		if (isActivate)
+			std::cerr << " , " ;
+		else
+			std::cerr << endl;
+
+		if (isActivate)
+		{
+			// set the rank of the next CAS
+			unsigned newBank = 2 * (lastCommand.second % (banks / 2)) + !(lastCommand.second / (banks / 2));
+			unsigned newRank = (ranks - ((2 * (lastCommand.second % (banks / 2)) + !(lastCommand.second / (banks / 2))) % ranks) + lastCommand.first) % ranks;
+			lastCommand = std::pair<unsigned,unsigned>(newRank,newBank);
+		}
+		else
+		{
+			unsigned newBank, newRank;
+			if (lastCommand.second == banks - 1)
+			{
+				newRank = (lastCommand.first + 1) % ranks;
+				newBank = banks / 2;
+			}
+			else
+			{				
+				newBank = (lastCommand.second % 2) * (banks / 2) + ((lastCommand.second + 1) / 2);
+				newRank = (lastCommand.first + lastCommand.second + 1) % ranks;
+			}
+			lastCommand = std::pair<unsigned,unsigned>(newRank,newBank);
+		}
+
+		isActivate = !isActivate;
+	}
+
 #ifdef DEBUG
 	//cerr << TICK_MAX << endl;
 	//cerr << PHYSICAL_ADDRESS_MAX << endl;
