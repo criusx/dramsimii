@@ -63,9 +63,7 @@ powerModel(settings),
 algorithm(settings),
 dbReporting(settings.dbReporting),
 rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig)),
-finishedTransactions(),
-lastRAS(0, settings.bankCount / 2),
-lastCAS(0, 0)
+finishedTransactions()
 {
 	// assign an id to each channel (normally done with commands)
 	for (unsigned i = 0; i < settings.rankCount; i++)
@@ -106,9 +104,7 @@ channelID(rhs.channelID),
 dbReporting(rhs.dbReporting),
 // to initialize the references
 rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification, systemConfig)),
-finishedTransactions(),
-lastRAS(0, systemConfig.getBankCount() / 2),
-lastCAS(0, 0)
+finishedTransactions()
 {
 	// to fill incomingTransaction the values
 	rank = rhs.rank;
@@ -154,9 +150,7 @@ algorithm(rhs.algorithm),
 channelID(rhs.channelID),
 dbReporting(rhs.dbReporting),
 rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConfig)),
-finishedTransactions(),
-lastRAS(rhs.lastRAS),
-lastCAS(rhs.lastCAS)
+finishedTransactions()
 {
 	// TODO: copy over values incomingTransaction ranks now that reference members are init
 	// assign an id to each channel (normally done with commands)
@@ -2083,27 +2077,54 @@ const Command *Channel::readNextCommand() const
 		case COMMAND_PAIR_RANK_HOPPING:
 			{	
 				// determine
-				Command::CommandType currentCommandType = lastCommand->isActivate() ? Command::READ : Command::ACTIVATE;
+				bool isActivate;
+				unsigned nextRank, nextBank;
 
-				pair<unsigned,unsigned> previousRAS = lastRAS;
-				pair<unsigned,unsigned> previousCAS = lastCAS;
+				if (lastCommand)
+				{
+					isActivate = lastCommand->isActivate();
+					nextRank = lastCommand->getAddress().getRank();
+					nextBank = lastCommand->getAddress().getBank();
+					getNextCPRHValues(nextRank, nextBank, isActivate);
+					assert(nextRank < systemConfig.getRankCount());
+					assert(nextBank < systemConfig.getBankCount());
+					isActivate = !isActivate;
+				}
+				else // special case, must reset to the first value in the pattern
+				{
+					isActivate = true;
+					nextRank = 0;
+					nextBank = systemConfig.getBankCount() / 2;
+#if 0
+					for (unsigned i = 4* systemConfig.getRankCount() * systemConfig.getBankCount(); i > 0; --i)
+					{
+						std::cerr << nextRank << " " << nextBank;
+						if (isActivate)
+							std::cerr << " , " ;
+						else
+							std::cerr << endl;
 
+						getNextCPRHValues(nextRank,nextBank,isActivate);
+						isActivate = !isActivate;
+					}
+#endif
+				}
 
+				const unsigned originalRank = nextRank;
+				const unsigned originalBank = nextBank;
+				const bool originalActivate = isActivate;
 
 				while (true)
 				{
-					const Command *potentialCommand = 
-						currentCommandType == Command::ACTIVATE ?
-						((rank.begin() + previousRAS.first)->bank.begin() + previousRAS.second)->front() :
-					((rank.begin() + previousCAS.first)->bank.begin() + previousCAS.second)->front();
+					const Command *potentialCommand = 						
+						((rank.begin() + nextRank)->bank.begin() + nextBank)->front();
 
 					// see if this command could be used
 					if (potentialCommand)
 					{
 						if (!potentialCommand->isRefresh())
 						{
-							if ((currentCommandType == Command::ACTIVATE && potentialCommand->isActivate()) ||
-								(currentCommandType == Command::READ && potentialCommand->isReadOrWrite()))
+							if (potentialCommand->isActivate() == isActivate)
 							{							
 								return potentialCommand;
 							}
@@ -2111,38 +2132,29 @@ const Command *Channel::readNextCommand() const
 						else
 						{
 							// look for refreshes
-							if ((rank.begin() + (currentCommandType == Command::ACTIVATE ? previousRAS.first : previousCAS.first))->refreshAllReady())
+							if ((rank.begin() + nextRank)->refreshAllReady())
 							{
 								return potentialCommand;
 							}
 						}
 					}
+
 					// then switch command
-					currentCommandType = (currentCommandType == Command::ACTIVATE) ? Command::READ : Command::ACTIVATE;
+					getNextCPRHValues(nextRank, nextBank, isActivate);
+					isActivate = !isActivate;	
 
-					// if switched to the next RAS command, recalculate RAS/CAS commands
-					if (currentCommandType == Command::ACTIVATE)
+					// quit if already checked every rank/bank combination
+					if (nextRank == originalRank && nextBank == originalBank && originalActivate == isActivate)
 					{
-						unsigned nextCasBank = (previousCAS.second + 1) % systemConfig.getBankCount();
-						unsigned nextCasRank = (nextCasBank == 0) ? (previousCAS.first + 1) % systemConfig.getRankCount() : lastCAS.first;
-
-						unsigned nextRasRank =  (previousRAS.first + 1 + ((nextCasBank == 0) ? 1 : 0)) % systemConfig.getRankCount();
-						unsigned nextRasBank = (nextCasBank == 0) ? systemConfig.getBankCount() / 2 : (previousRAS.second >= systemConfig.getBankCount() / 2 ? previousRAS.second - systemConfig.getBankCount() / 2 : previousRAS.second + systemConfig.getBankCount() / 2 + 1);
-						previousCAS.first = nextCasRank;
-						previousCAS.second = nextCasBank;
-						previousRAS.first = nextRasRank;
-						previousRAS.second = nextRasBank;
+						return NULL;
 					}
-					// test for all refresh commands
-
-					// back to the beginning, either no result or look for the opposite type
-
-					//if (previousCAS == lastCAS && previousRAS == lastRAS && )			
+					
+									
 				}
 			}
 			break;
 
-	default:
+		default:
 		{
 			cerr << "This configuration and algorithm combination is not supported" << endl;
 			exit(-2);
@@ -2150,6 +2162,33 @@ const Command *Channel::readNextCommand() const
 		break;
 	}
 	return NULL;
+}
+
+void Channel::getNextCPRHValues(unsigned &nextRank, unsigned &nextBank, const bool isActivate) const
+{
+	unsigned oldBank = nextBank;
+	unsigned oldRank = nextRank;
+
+	if (isActivate)
+	{
+		// set the rank of the next CAS
+		nextBank = 2 * (oldBank % (systemConfig.getBankCount() / 2)) + !(oldBank / (systemConfig.getBankCount() / 2));
+		nextRank = (systemConfig.getRankCount() - ((2 * (oldBank % (systemConfig.getBankCount() / 2)) + !(oldBank / (systemConfig.getBankCount() / 2))) % systemConfig.getRankCount()) + oldRank) % systemConfig.getRankCount();
+	}
+	else
+	{
+		if (oldBank == systemConfig.getBankCount() - 1)
+		{
+			nextRank = (oldRank + 1) % systemConfig.getRankCount();
+			nextBank = systemConfig.getBankCount() / 2;
+		}
+		else
+		{				
+			nextBank = (oldBank % 2) * (systemConfig.getBankCount() / 2) + ((oldBank + 1) / 2);
+			nextRank = (oldRank + oldBank + 1) % systemConfig.getRankCount();
+		}
+	}
+
 }
 
 

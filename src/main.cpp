@@ -35,6 +35,7 @@ int main(int argc,char **argv, char *envp[])
 	//////////////////////////////////////////////////////////////////////////
 	// CPRH test
 	//////////////////////////////////////////////////////////////////////////
+#if 0
 	const unsigned ranks = 4;
 	const unsigned banks = 16;
 
@@ -118,6 +119,7 @@ int main(int argc,char **argv, char *envp[])
 
 		isActivate = !isActivate;
 	}
+#endif
 
 #ifdef DEBUG
 	//cerr << TICK_MAX << endl;
