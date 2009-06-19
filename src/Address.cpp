@@ -62,13 +62,16 @@ bank(0),
 row(0),
 column(0)
 {
-	addressTranslation();
+	bool result = addressTranslation();
 
 #ifdef DEBUG
 	unsigned oldCh = channel, oldRk = rank, oldBk = bank, oldRow = row, oldCol = column;
 	reverseAddressTranslation();
 	assert(oldCh == channel && oldRk == rank && oldBk == bank && oldRow == row && oldCol == column);
-	assert((physicalAddress >> columnSizeDepth) == (pA >> columnSizeDepth));
+	if (result)
+	{
+		assert((physicalAddress >> columnSizeDepth) == (pA >> columnSizeDepth));
+	}	
 #endif
 }
 
@@ -725,11 +728,16 @@ bool Address::addressTranslation()
 	// If there is still "stuff" left, the input address is out of range
 	if (tempAddress)
 	{
-		cerr << "Memory address out of range[" << std::hex << physicalAddress << "] of available physical memory." << endl;
+		cerr << "Memory address (" << std::hex << physicalAddress << ") out of range of available physical memory, max(" << highestAddress() << ")" << endl;
 		return false;
 	}
 
 	return true;
+}
+
+PhysicalAddress Address::highestAddress()
+{
+	return ((PhysicalAddress)1 << (columnLowAddressDepth + columnHighAddressDepth + channelAddressDepth + rankAddressDepth + bankAddressDepth + rowAddressDepth + columnSizeDepth)) - 1;
 }
 
 void Address::setAddress(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column)
@@ -802,5 +810,5 @@ bool Address::operator==(const Address& right) const
 
 bool Address::operator!=(const Address& right) const
 {
-	return channel != right.channel || rank != right.rank || bank != right.bank || row != right.row || column != right.column;
+	return !(*this == right);
 }

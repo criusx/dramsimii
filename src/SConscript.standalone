@@ -59,7 +59,6 @@ sourceBase = """
 			Address.cpp
 			Bank.cpp
 			command.cpp
-			Algorithm.cpp
 			Channel.cpp
 			Statistics.cpp
 			System.cpp
@@ -137,7 +136,7 @@ elif platform == 'debugsimple':
 	envDebugSimple.Install(os.path.abspath('..') + "/bin", debugSimple)
 elif platform == 'test':
 	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ot')
-	envTest.Append(CCFLAGS = '-g -O -Wall -Wextra -Weffc++ -DDEBUG')
+	envTest.Append(CCFLAGS = '-g -Wall -Wextra -Weffc++ -DDEBUG')
 	test = envTest.Program('dramSimII.test',sourcesTest)
 	envTest.Install(os.path.abspath('..') + "/bin", test)
 elif platform == 'prof':

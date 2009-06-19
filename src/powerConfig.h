@@ -129,14 +129,18 @@ namespace DRAMsimII
 		template <class Archive>
 		void serialize( Archive & ar, const unsigned version)
 		{
-			ar & const_cast<float&>(VDD) & const_cast<float&>(VDDmax) &
-				const_cast<int&>(IDD0) & const_cast<int&>(IDD2P) & const_cast<int&>(IDD2N) & const_cast<int&>(IDD3P) & const_cast<int&>(IDD3N) &
-				const_cast<int&>(IDD4R) & const_cast<int&>(IDD4W) & const_cast<int&>(IDD5) & 
-				const_cast<double&>(PdsACT) & const_cast<double&>(PdsACT_STBY) & const_cast<double&>(PdsRD) & const_cast<double&>(PdsWR)&
-				const_cast<double&>(PdstermW) & const_cast<double&>(PdqRD) & const_cast<double&>(PdqWR) & const_cast<double&>(PdqRDoth) & const_cast<double&>(PdqWRoth) & 
-				const_cast<unsigned&>(DQperDRAM) & const_cast<unsigned&>(DQSperDRAM) & const_cast<unsigned&>(DMperDRAM) & const_cast<unsigned&>(frequency) & const_cast<unsigned&>(specFrequency) &
-				const_cast<unsigned&>(tBurst) & const_cast<unsigned&>(tRC) & const_cast<unsigned&>(tRAS) & const_cast<unsigned&>(DQperRank) & lastCalculation &
-				const_cast<double&>(frequencyScaleFactor) & const_cast<double&>(voltageScaleFactor);
+			if (version == 0)
+			{
+				ar & const_cast<float&>(VDD) & const_cast<float&>(VDDmax) &
+					const_cast<int&>(IDD0) & const_cast<int&>(IDD2P) & const_cast<int&>(IDD2N) & const_cast<int&>(IDD3P) & const_cast<int&>(IDD3N) &
+					const_cast<int&>(IDD4R) & const_cast<int&>(IDD4W) & const_cast<int&>(IDD5) & 
+					const_cast<double&>(PdsACT) & const_cast<double&>(PdsACT_STBY) & const_cast<double&>(PdsRD) & const_cast<double&>(PdsWR)&
+					const_cast<double&>(PdstermW) & const_cast<double&>(PdqRD) & const_cast<double&>(PdqWR) & const_cast<double&>(PdqRDoth) & const_cast<double&>(PdqWRoth) & 
+					const_cast<unsigned&>(DQperDRAM) & const_cast<unsigned&>(DQSperDRAM) & const_cast<unsigned&>(DMperDRAM) & const_cast<unsigned&>(frequency) & const_cast<unsigned&>(specFrequency) &
+					const_cast<unsigned&>(tBurst) & const_cast<unsigned&>(tRC) & const_cast<unsigned&>(tRAS) & const_cast<unsigned&>(DQperRank) & lastCalculation &
+					const_cast<double&>(frequencyScaleFactor) & const_cast<double&>(voltageScaleFactor);
+			}
+			
 		}
 
 	};

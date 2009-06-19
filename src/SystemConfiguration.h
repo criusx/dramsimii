@@ -67,7 +67,7 @@ namespace DRAMsimII
 	public:
 		// constructors
 		explicit SystemConfiguration(const Settings& settings);
-		
+
 		// accessors
 		RowBufferPolicy getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }
 		Address::AddressMappingScheme getAddressMappingScheme() const { return addressMappingScheme; }
@@ -102,34 +102,42 @@ namespace DRAMsimII
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const System &);	
 		friend std::ostream &operator<<(std::ostream &, const SystemConfiguration &);		
-		
+
 
 	private:
 		friend class boost::serialization::access;
-		
+
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned version)
 		{
-			ar & commandOrderingAlgorithm & transactionOrderingAlgorithm & configType & refreshTime & refreshPolicy & columnSize & rowSize;
-			ar & cachelineSize & seniorityAgeLimit & dramType & rowBufferManagementPolicy & addressMappingScheme & datarate & postedCAS;
-			ar & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount & rankCount & bankCount & rowCount;
-			ar & columnCount & shortBurstRatio & readPercentage & sessionID;
-			//ar & epoch;
+			if (version == 0)
+			{
+				ar & commandOrderingAlgorithm & transactionOrderingAlgorithm & configType & refreshTime & refreshPolicy & columnSize & rowSize;
+				ar & cachelineSize & seniorityAgeLimit & dramType & rowBufferManagementPolicy & addressMappingScheme & datarate & postedCAS;
+				ar & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount & rankCount & bankCount & rowCount;
+				ar & columnCount & shortBurstRatio & readPercentage & sessionID & decodeWindow & const_cast<unsigned&>(epoch);
+			}
+
 		}
 
 		template <class Archive>
 		friend inline void save_construct_data(Archive& ar, const DRAMsimII::SystemConfiguration *t, const unsigned version)
 		{
-			ar << t->epoch;
+			if (version == 0)
+			{
+
+			}
 		}
 
 		template <class Archive>
 		friend inline void load_construct_data(Archive & ar, DRAMsimII::SystemConfiguration *t, const unsigned version)
 		{
-			Settings s;
-			ar >> s.epoch;			
-			
-			new(t)DRAMsimII::SystemConfiguration(s);
+			if (version == 0)
+			{
+				Settings s;
+				
+				new(t)DRAMsimII::SystemConfiguration(s);
+			}
 		}
 
 	};

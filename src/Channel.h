@@ -28,7 +28,6 @@
 #include "powerConfig.h"
 #include "transaction.h"
 #include "command.h"
-#include "Algorithm.h"
 
 #include <vector>
 #include <queue>
@@ -54,7 +53,6 @@ namespace DRAMsimII
 		const SystemConfiguration &systemConfig;		///< a pointer to common system config values
 		Statistics &statistics;							///< backward pointer to the stats engine
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
-		Algorithm algorithm;							///< the algorithms used for transaction, command, etc. ordering
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
 		bool dbReporting;								///< whether or not to report results to a db
 		std::vector<Rank> rank;							///< vector of the array of ranks
@@ -106,7 +104,7 @@ namespace DRAMsimII
 		unsigned pendingTransactionCount() const { return finishedTransactions.size(); }
 		void getPendingTransactions(std::queue<std::pair<unsigned,tick> > &);
 
-		virtual void moveToTime(const tick endTime);
+		virtual void moveToTime(const tick currentTime);
 
 		// accessors
 		const TimingSpecification& getTimingSpecification() const { return timingSpecification; }	///< returns a reference to access the timing specification
@@ -144,42 +142,58 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned int version)
 		{
-			ar & time & lastCommandIssueTime & transactionQueue
-				& refreshCounter & algorithm & channelID & dbReporting;			
+			if (version == 0)
+			{
+ar & time & lastCommandIssueTime & transactionQueue & refreshCounter & channelID & dbReporting;
+			}
+			
 		}
 
 		template<class Archive>
-		friend inline void save_construct_data(Archive &ar, const DRAMsimII::Channel *t, const unsigned version)
+		friend inline void save_construct_data(Archive &ar, const Channel *t, const unsigned version)
 		{			
-			const DRAMsimII::SystemConfiguration* const sysC = &(t->systemConfig);
-			ar << sysC;
-			const DRAMsimII::Statistics* const stats = &(t->statistics);
-			ar << stats;
-			const DRAMsimII::PowerConfig* const power = &(t->powerModel);
-			ar << power;
-			const std::vector<DRAMsimII::Rank>* const rank = &(t->rank);
-			ar << rank;
-			const DRAMsimII::TimingSpecification* const timing = &(t->timingSpecification);
-			ar << timing;
+			if (version == 0)
+			{
+				const SystemConfiguration* sysC = &(t->systemConfig);
+				ar << sysC;
+				const Statistics* stats = &(t->statistics);
+				ar << stats;
+				const PowerConfig* power = &(t->powerModel);
+				ar << power;
+				const std::vector<Rank>* rank = &(t->rank);
+				ar << rank;
+				const TimingSpecification* timing = &(t->timingSpecification);
+				ar << timing;
+				ar << t->lastCommand;
+			}
+			
 		}
 
 		template<class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMsimII::Channel * t, const unsigned version)
+		friend inline void load_construct_data(Archive &ar, Channel *t, const unsigned version)
 		{
-			DRAMsimII::SystemConfiguration* sysC;
-			ar >> sysC;
-			DRAMsimII::Statistics* stats;
-			ar >> stats;
-			DRAMsimII::PowerConfig* power;
-			ar >> power;
-			std::vector<DRAMsimII::Rank>* newRank;
-			ar >> newRank;
-			DRAMsimII::TimingSpecification* timing;
-			ar >> timing;
-			Settings settings;
+			if (version == 0)
+			{
+				SystemConfiguration* sysC;
+				ar >> sysC;
+				Statistics* stats;
+				ar >> stats;
+				PowerConfig* power;
+				ar >> power;
+				std::vector<Rank>* newRank;
+				ar >> newRank;
+				TimingSpecification* timing;
+				ar >> timing;
+				Settings settings;
 
 
-			new(t)DRAMsimII::Channel(settings, *sysC, *stats, *power, *newRank, *timing);
+				new(t)Channel(settings, *sysC, *stats, *power, *newRank, *timing);
+
+				Command *lastCmd;
+				ar >> lastCmd;
+				t->lastCommand = lastCmd;
+			}
+		
 		}
 	};
 }

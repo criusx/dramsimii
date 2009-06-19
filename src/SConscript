@@ -102,7 +102,6 @@ except IndexError:
 SimObject('M5dramSystem.py')
 
 Source('Address.cpp')
-Source('Algorithm.cpp')
 Source('Bank.cpp')
 Source('command.cpp')
 Source('Channel.cpp')

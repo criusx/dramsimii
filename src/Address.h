@@ -115,8 +115,11 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned version)
 		{
-			ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth & columnAddressDepth & columnSizeDepth;
-			ar & mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column & columnLowAddressDepth & columnHighAddressDepth;
+			if (version == 0)
+			{
+				ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth & columnAddressDepth & columnSizeDepth &
+				mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column & columnLowAddressDepth & columnHighAddressDepth;
+			}
 		}
 	};
 	std::ostream& operator<<(std::ostream&, const Address::AddressMappingScheme&);

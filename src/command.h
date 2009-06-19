@@ -92,8 +92,7 @@ namespace DRAMsimII
 
 		// friends
 		friend std::ostream &DRAMsimII::operator<<(std::ostream &,const Command &);	
-		//friend std::ostream &DRAMsimII::operator<<(std::ostream &, const Command::CommandType &);
-
+	
 		// overloads
 		bool operator==(const Command& right) const;
 		bool operator!=(const Command& right) const;
@@ -107,10 +106,11 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned version)
 		{
-			// @todo serialize inherited types
-			//ar & freeCommandPool;
-			//ar & commandType & startTime & enqueueTime & completionTime & addr & hostTransaction & postedCAS & length;
-			ar & commandType & hostTransaction & length;
+			if (version == 0)
+			{
+ar & boost::serialization::base_object<Event>(*this) & commandType & hostTransaction & length;
+			}
+			
 		}
 	};	
 

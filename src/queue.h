@@ -440,12 +440,15 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version)
 		{
-			ar & count & head & tail & pool;	
+			if (version == 0)
+			{
+				ar & count & head & tail & const_cast<bool&>(pool);	
 
-			ar & entry;
+				ar & entry;
 
-			for (unsigned i = 0; i < count; i++)
-				assert(at(i));
+				for (unsigned i = 0; i < count; i++)
+					assert(at(i));
+			}
 		}
 	};
 

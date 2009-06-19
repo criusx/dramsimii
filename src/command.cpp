@@ -25,6 +25,9 @@ using namespace DRAMsimII;
 // initialize the static member
 Queue<Command> Command::freeCommandPool(16*POOL_SIZE,true);
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief blank constructor for NULL commands
+//////////////////////////////////////////////////////////////////////////
 Command::Command():
 Event(),
 commandType(RETIRE_COMMAND),
@@ -32,7 +35,9 @@ hostTransaction(NULL),
 length(0)
 {}
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief copy constructor
+//////////////////////////////////////////////////////////////////////////
 Command::Command(const Command &rhs):
 Event(rhs),
 commandType(rhs.commandType),
@@ -49,6 +54,9 @@ length(rhs.length)
 		);
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief constructor when an explicit address is given
+//////////////////////////////////////////////////////////////////////////
 Command::Command(Transaction *hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(addr,enqueueTime),
 hostTransaction((type == READ) ? hostTransaction : NULL),
@@ -89,7 +97,9 @@ length(commandLength)
 		);
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief constructor when the hostTransaction's address should be used
+//////////////////////////////////////////////////////////////////////////
 Command::Command(Transaction *hostTransaction, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(hostTransaction->getAddress(),enqueueTime),
 hostTransaction((type == READ) ? hostTransaction : NULL),
@@ -130,20 +140,24 @@ length(commandLength)
 		);
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief destructor
+/// @details deletes the host transaction, thus unlinking the two
+//////////////////////////////////////////////////////////////////////////
 Command::~Command()
 {
 	if (hostTransaction)
 	{
-		//::delete hostTransaction;
 		delete hostTransaction;
 		// don't want to checkpoint this
 		hostTransaction = NULL;
 	}
 }
 
-
+//////////////////////////////////////////////////////////////////////////
 /// @brief to convert CAS(W)+P <=> CAS(W)
-/// @brief has no effect on non CAS commands
+/// @brief only affects CAS commands
+//////////////////////////////////////////////////////////////////////////
 void Command::setAutoPrecharge(const bool autoPrecharge) const
 {
 	switch (commandType)
@@ -171,14 +185,18 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 		);
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief new operator overload
+//////////////////////////////////////////////////////////////////////////
 void *Command::operator new(size_t size)
 {
 	assert(size == sizeof(Command));
 	return freeCommandPool.acquireItem();
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief delete operator overload
+//////////////////////////////////////////////////////////////////////////
 void Command::operator delete(void *mem)
 {
 	Command *cmd = static_cast<Command*>(mem);
@@ -187,7 +205,9 @@ void Command::operator delete(void *mem)
 	freeCommandPool.releaseItem(cmd);
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief equality operator
+//////////////////////////////////////////////////////////////////////////
 bool Command::operator==(const Command& right) const
 {
 	if (commandType == right.commandType && startTime == right.startTime &&
@@ -208,13 +228,17 @@ bool Command::operator==(const Command& right) const
 		return false;
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief inequality operator
+//////////////////////////////////////////////////////////////////////////
 bool Command::operator !=(const Command& right) const
 {
 	return !(*this == right);
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief output stream operator for CommandTypes
+//////////////////////////////////////////////////////////////////////////
 ostream &DRAMsimII::operator<<(ostream &os, const Command::CommandType &command)
 {
 	switch(command)
@@ -277,6 +301,9 @@ ostream &DRAMsimII::operator<<(ostream &os, const Command::CommandType &command)
 	return os;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// @brief output stream operator
+//////////////////////////////////////////////////////////////////////////
 ostream &DRAMsimII::operator<<(ostream &os, const Command &currentCommand)
 {
 	return os << currentCommand.commandType << (const Event&)(currentCommand);	

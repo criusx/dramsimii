@@ -25,7 +25,6 @@
 #include "command.h"
 #include "simulationParameters.h"
 #include "Statistics.h"
-#include "Algorithm.h"
 #include "InputStream.h"
 #include "event.h"
 #include "Channel.h"
@@ -110,42 +109,51 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned version)
 		{
-			ar & time & nextStats;
-			//ar & channel;
-			//ar & simParameters;
-			//ar & systemConfig;
+			if (version == 0)
+			{
+ar & time & nextStats;
+			}
+			
 		}
 
 		template<class Archive>
-		friend inline void save_construct_data(Archive &ar, const DRAMsimII::System *t, const unsigned version)
+		friend inline void save_construct_data(Archive &ar, const System *t, const unsigned version)
 		{
-			const SystemConfiguration *const sysConfig = &(t->systemConfig);
-			ar << sysConfig;
-			const std::vector<Channel> *const channel = &(t->channel);
-			ar << channel;
-			const SimulationParameters *const simParameters = &(t->simParameters);			
-			ar << simParameters;
-			const Statistics *const statistics = &(t->statistics);
-			ar << statistics;
-			const InputStream *const inputStream = &(t->inputStream);
-			ar << inputStream;
+			if (version == 0)
+			{
+				const SystemConfiguration *sysConfig = &(t->systemConfig);
+				ar << sysConfig;
+				const std::vector<Channel> *channel = &(t->channel);
+				ar << channel;
+				const SimulationParameters *simParameters = &(t->simParameters);			
+				ar << simParameters;
+				const Statistics *statistics = &(t->statistics);
+				ar << statistics;
+				const InputStream *inputStream = &(t->inputStream);
+				ar << inputStream;
+			}
+			
 		}
 
 		template<class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMsimII::System * t, const unsigned version)
+		friend inline void load_construct_data(Archive & ar, System * t, const unsigned version)
 		{
-			SystemConfiguration *sysConfig;
-			ar >> sysConfig;
-			std::vector<Channel> *channel;
-			ar >> channel;
-			SimulationParameters *simParameters;
-			ar >> simParameters;
-			Statistics *statistics;
-			ar >> statistics;
-			InputStream *inputStream;
-			ar >> inputStream;
+			if (version == 0)
+			{
+				SystemConfiguration *sysConfig;
+				ar >> sysConfig;
+				std::vector<Channel> *channel;
+				ar >> channel;
+				SimulationParameters *simParameters;
+				ar >> simParameters;
+				Statistics *statistics;
+				ar >> statistics;
+				InputStream *inputStream;
+				ar >> inputStream;
 
-			new(t)DRAMsimII::System(*sysConfig, *channel, *simParameters, *statistics, *inputStream);
+				new(t)DRAMsimII::System(*sysConfig, *channel, *simParameters, *statistics, *inputStream);
+			}
+			
 		}
 	};
 }

@@ -18,7 +18,6 @@
 #include "globals.h"
 #ifdef M5
 #include "base/statistics.hh"
-//#include "base/stats/statdb.hh"
 #include "base/stats/types.hh"
 #include "sim/async.hh"
 #include "base/stats/text.hh"
@@ -57,6 +56,8 @@ writeCount(0),
 readBytesTransferred(0),
 writeBytesTransferred(0),
 timePerEpoch((float)settings.epoch / settings.dataRate),
+rowHits(0),
+rowMisses(0),
 commandDelay(),
 commandExecution(),
 commandTurnaround(),
@@ -66,7 +67,10 @@ pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.bankCount),
 bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.bankCount)
-{}
+{
+	bankLatencyUtilization.reserve(settings.channelCount * settings.rankCount * settings.bankCount);
+	aggregateBankUtilization.reserve(settings.channelCount * settings.rankCount * settings.bankCount);
+}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief no arg constructor for deserialization, should not be called otherwise
@@ -86,6 +90,8 @@ writeCount(0),
 readBytesTransferred(0),
 writeBytesTransferred(0),
 timePerEpoch(0),
+rowHits(0),
+rowMisses(0),
 commandDelay(),
 commandExecution(),
 commandTurnaround(),
@@ -329,10 +335,9 @@ bool Statistics::operator==(const Statistics& right) const
 	return (validTransactionCount == right.validTransactionCount && startNumber == right.startNumber && endNumber == right.endNumber &&
 		burstOf8Count == right.burstOf8Count && burstOf4Count == right.burstOf4Count && columnDepth == right.columnDepth &&
 		/// @todo restore comparisons once tr1 implementations support this
-		//commandDelay == right.commandDelay && commandExecution == right.commandExecution && commandTurnaround == right.commandTurnaround &&
-		//transactionDecodeDelay == right.transactionDecodeDelay && transactionExecution == right.transactionExecution &&
-		//channelUtilization == right.channelUtilization && rankUtilization == right.rankUtilization && bankUtilization == right.bankUtilization &&
-		channels == right.channels && ranks == right.ranks && banks == right.banks &&
+		std::equal(commandDelay.begin(),commandDelay.end(), right.commandDelay.begin()) && std::equal(commandExecution.begin(), commandExecution.end(), right.commandExecution.begin()) && 
+		std::equal(commandTurnaround.begin(), commandTurnaround.end(), right.commandTurnaround.begin()) && std::equal(transactionDecodeDelay.begin(), transactionDecodeDelay.end(), right.transactionDecodeDelay.begin()) && 
+		std::equal(transactionExecution.begin(), transactionExecution.end(), right.transactionExecution.begin()) && channels == right.channels && ranks == right.ranks && banks == right.banks &&
 		aggregateBankUtilization == right.aggregateBankUtilization &&
 		pcOccurrence == right.pcOccurrence && workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount &&
 		readBytesTransferred == right.readBytesTransferred && writeBytesTransferred == right.writeBytesTransferred);

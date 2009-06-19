@@ -46,7 +46,7 @@ namespace DRAMsimII
 
 	protected:
 		static Queue<Transaction> freeTransactionPool;	///< transactions are stored here to avoid allocating memory after initialization
-		
+
 		const TransactionType type;				///< transaction type
 		const unsigned length;					///< the number of words requested
 		tick decodeTime;						///< when the transaction was split up into several commands
@@ -55,7 +55,7 @@ namespace DRAMsimII
 		const unsigned originalTransaction;		///< utility counter id in the event that this transaction represents another version of a transaction
 
 	public:
-		
+
 		// accessors
 		tick getDecodeTime() const { return decodeTime; }							///< get its decode time
 		tick getDecodeDelay() const { return decodeTime - enqueueTime; }			///< get the time it took before this transaction was decoded
@@ -66,17 +66,17 @@ namespace DRAMsimII
 		bool isRead() const { return ((type == IFETCH_TRANSACTION) || (type == READ_TRANSACTION) || (type == PREFETCH_TRANSACTION)); }
 		bool isWrite() const { return (type == WRITE_TRANSACTION); }
 		bool isRefresh() const { return (type == AUTO_REFRESH_TRANSACTION); }
-		
+
 		// mutators
 		void setDecodeTime(const tick value) { decodeTime = value; }
-		
+
 		// constructors
 		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, PhysicalAddress PC, int threadNumber, const unsigned originalTrans = UINT_MAX);		
 		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const unsigned originalTrans = UINT_MAX);
 		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const PhysicalAddress physicalAddress, PhysicalAddress PC, int threadNumber, const unsigned originalTrans = UINT_MAX);
 		explicit Transaction(const Transaction &rhs);
 		explicit Transaction();
-	
+
 	public:
 		friend std::ostream &operator<<(std::ostream &, const Transaction &);
 
@@ -91,13 +91,17 @@ namespace DRAMsimII
 		friend class boost::serialization::access;
 
 		template<class Archive>
-		void serialize(Archive & ar, const unsigned int version)
+		void serialize(Archive & ar, const unsigned version)
 		{
-			/// @todo serialize inherited type
-			ar & const_cast<unsigned&>(eventNumber) & const_cast<TransactionType&>(type);// & status;
-			ar & const_cast<unsigned&>(length);// & arrivalTime & enqueueTime & completionTime;
-			ar & decodeTime;// & const_cast<Address&>(addr)
-			ar & const_cast<unsigned&>(originalTransaction);
+			if (version == 0)
+			{
+				ar & boost::serialization::base_object<Event>(*this);
+				ar & const_cast<TransactionType&>(type);
+				ar & const_cast<unsigned&>(length);
+				ar & decodeTime;
+				ar & const_cast<unsigned&>(originalTransaction);
+			}
+
 		}
 	};
 

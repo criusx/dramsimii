@@ -70,6 +70,20 @@ namespace DRAMsimII
 				  return accumulatedLatency == right.accumulatedLatency &&
 					  count == right.count;
 			  }
+
+		private:
+
+			friend class boost::serialization::access;
+
+			template<class Archive>
+			void serialize(Archive &ar, const unsigned version)
+			{
+				if (version == 0)
+				{
+					ar & accumulatedLatency & count;
+				}
+
+			}
 		};
 
 	protected:
@@ -96,9 +110,9 @@ namespace DRAMsimII
 		std::tr1::unordered_map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
 		// still some bugs supporting 64-bit numbers
 		std::map<PhysicalAddress, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
-		std::map<PhysicalAddress, tick> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
+		std::map<PhysicalAddress, unsigned> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
 		std::vector<unsigned> aggregateBankUtilization; ///< the bank usage per bank
-		std::vector<unsigned> bankLatencyUtilization;	///< the latency due to each bank per unit time
+		std::vector<tick> bankLatencyUtilization;	///< the latency due to each bank per unit time
 
 	public:
 
@@ -112,13 +126,13 @@ namespace DRAMsimII
 		inline void setValidTransactionCount(int vtc) {validTransactionCount = vtc;}
 		void reportHit()
 		{
-//#pragma omp atomic
+			//#pragma omp atomic
 			rowHits++;
 		}
 		unsigned getHitCount() const { return rowHits;}
 		void reportMiss()
 		{
-//#pragma omp atomic
+			//#pragma omp atomic
 			rowMisses++;
 		}
 		unsigned getMissCount() const { return rowMisses; }
@@ -135,12 +149,119 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned version)
 		{
-			ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
-				writeCount & readBytesTransferred & writeBytesTransferred & aggregateBankUtilization & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) &
-				const_cast<unsigned&>(banks) & aggregateBankUtilization & bankLatencyUtilization;
-				//channelUtilization & rankUtilization & bankUtilization;
-			//ar & commandDelay & commandExecution & commandTurnaround & transactionDecodeDelay & transactionExecution & workingSet;
+			if (version == 0)
+			{
+				ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
+					writeCount & readBytesTransferred & writeBytesTransferred & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) &
+					const_cast<unsigned&>(banks) & rowHits & rowMisses & timePerEpoch;
+
+				ar & aggregateBankUtilization ;
+				ar & workingSet;
+				ar & bankLatencyUtilization ;
+				ar & pcOccurrence ;
+			}
+
+		}
+
+		template<class Archive>
+		friend inline void save_construct_data(Archive &ar, const Statistics* st, const unsigned version)
+		{
+#if 0
+			if (version == 0)
+			{
+				std::map<unsigned,unsigned> serializeMap;
+				std::tr1::unordered_map<unsigned,unsigned>::const_iterator it;
+
+				for (it = st->commandDelay.begin(); it != st->commandDelay.end(); it++)
+				{
+					serializeMap[it->first] = it->second;
+				}
+				{
+					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					ar << serializeMap2;
+				}
+				serializeMap.clear();
+				for (it = st->commandExecution.begin(); it != st->commandExecution.end(); it++)
+				{
+					serializeMap[it->first] = it->second;
+				}
+				{
+					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					ar << serializeMap2;
+				}
+				serializeMap.clear();
+
+				for (it = st->commandTurnaround.begin(); it != st->commandTurnaround.end(); it++)
+				{
+					serializeMap[it->first] = it->second;
+				}
+				{
+					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					ar << serializeMap2;
+				}
+				serializeMap.clear();
+
+				for (it = st->transactionDecodeDelay.begin(); it != st->transactionDecodeDelay.end(); it++)
+				{
+					serializeMap[it->first] = it->second;
+				}
+				{
+					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					ar << serializeMap2;
+				}
+				serializeMap.clear();
+
+				for (it = st->transactionExecution.begin(); it != st->transactionExecution.end(); it++)
+				{
+					serializeMap[it->first] = it->second;
+				}
+				{
+					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					ar << serializeMap2;
+				}
+			}
+#endif
+		}
+
+		template<class Archive>
+		friend inline void load_construct_data(Archive& ar, Statistics *st, const unsigned version)
+		{
+#if 0
+			if (version == 0)
+			{
+				std::map<unsigned,unsigned> serializeMap;
+				std::map<unsigned,unsigned>::const_iterator it;
+
+				ar >> serializeMap;
+				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
+				{
+					st->commandDelay[it->first] = it->second;
+				}
+				ar >> serializeMap;
+				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
+				{
+					st->commandExecution[it->first] = it->second;
+				}
+				ar >> serializeMap;
+				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
+				{
+					st->commandTurnaround[it->first] = it->second;
+				}
+				ar >> serializeMap;
+				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
+				{
+					st->transactionDecodeDelay[it->first] = it->second;
+				}
+				ar >> serializeMap;
+				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
+				{
+					st->transactionExecution[it->first] = it->second;
+				}
+			}
+#endif
+
 		}
 	};
 }
+
 #endif

@@ -136,8 +136,12 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned version)
 		{
-			ar & type & channelLocality & rankLocality & bankLocality & time & rowLocality & readPercentage;
-			ar & shortBurstRatio & arrivalThreshold & cpuToMemoryRatio & averageInterarrivalCycleCount;
+			if (version == 0)
+			{
+				ar & type & channelLocality & rankLocality & bankLocality & time & rowLocality & readPercentage;
+				ar & shortBurstRatio & arrivalThreshold & cpuToMemoryRatio & averageInterarrivalCycleCount;
+			}
+			
 			//ar & traceFile;
 			//ar & serialization::make_nvp("rng",randomNumberGenerator & rngDistributionModel & rngIntDistributionModel & rngGenerator & rngIntGenerator;
 		}
@@ -145,7 +149,9 @@ namespace DRAMsimII
 		template <class Archive>
 		friend inline void save_construct_data(Archive& ar, const InputStream* t, const unsigned version)
 		{
-			const SystemConfiguration* const sysConfig = &(t->systemConfig);
+			if (version == 0)
+			{
+	const SystemConfiguration* const sysConfig = &(t->systemConfig);
 			ar << sysConfig;
 			const std::vector<Channel>* const channel = &(t->channel);
 			ar << channel;
@@ -155,12 +161,16 @@ namespace DRAMsimII
 			//ar << location;
 
 			ar << t->traceFilename;			
+			}
+		
 		}
 
 		template <class Archive>
 		friend inline void load_construct_data(Archive& ar, InputStream* t, const unsigned version)
 		{
-			SystemConfiguration *sysConfig;
+			if (version == 0)
+			{
+	SystemConfiguration *sysConfig;
 			ar >> sysConfig;
 			std::vector<Channel> *channel;
 			ar >> channel;
@@ -174,6 +184,8 @@ namespace DRAMsimII
 			new(t)InputStream(*sysConfig,*channel, interarrivalDistributionModel, filename);
 
 			//t->traceFile.seekg(location);
+			}
+		
 		}
 	};
 

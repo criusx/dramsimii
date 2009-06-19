@@ -96,10 +96,13 @@ namespace DRAMsimII
 		TimingSpecification();
 
 		template<class Archive>
-		void serialize( Archive & ar, const unsigned verison)
+		void serialize( Archive & ar, const unsigned version)
 		{
-			ar & t_al & t_burst & t_cas & t_ccd & t_cmd & t_cwd &  t_faw & t_ras & t_rc & t_rcd & t_rfc & t_rp & t_rrd & t_rtp &
-				t_rtrs & t_wr & t_wtr & t_int_burst & t_buffer_delay & t_refi & t_ost;
+			if (version == 0)
+			{
+				ar & t_al & t_burst & t_cas & t_ccd & t_cmd & t_cwd &  t_faw & t_ras & t_rc & t_rcd & t_rfc & t_rp & t_rrd & t_rtp &
+					t_rtrs & t_wr & t_wtr & t_int_burst & t_buffer_delay & t_refi & t_ost;
+			}			
 		}
 	};
 }

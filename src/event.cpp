@@ -18,8 +18,6 @@
 
 using namespace DRAMsimII;
 
-unsigned Event::eventCounter(0);
-
 using std::ostream;
 
 ostream &DRAMsimII::operator<<(ostream &os, const Event& currentEvent)

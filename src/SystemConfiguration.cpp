@@ -92,34 +92,34 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 
 bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
 {
-	return (commandOrderingAlgorithm==right.commandOrderingAlgorithm &&
-		transactionOrderingAlgorithm==right.transactionOrderingAlgorithm &&
-		configType==right.configType &&
-		refreshTime==right.refreshTime &&
-		refreshPolicy==right.refreshPolicy &&
-		columnSize==right.columnSize &&
-		rowSize==right.rowSize &&
-		cachelineSize==right.cachelineSize &&
-		seniorityAgeLimit==right.seniorityAgeLimit &&
-		dramType==right.dramType &&
-		rowBufferManagementPolicy==right.rowBufferManagementPolicy &&
-		addressMappingScheme==right.addressMappingScheme &&
+	return (commandOrderingAlgorithm == right.commandOrderingAlgorithm &&
+		transactionOrderingAlgorithm == right.transactionOrderingAlgorithm &&
+		configType == right.configType &&
+		refreshTime == right.refreshTime &&
+		refreshPolicy == right.refreshPolicy &&
+		columnSize == right.columnSize &&
+		rowSize == right.rowSize &&
+		cachelineSize == right.cachelineSize &&
+		seniorityAgeLimit == right.seniorityAgeLimit &&
+		dramType == right.dramType &&
+		rowBufferManagementPolicy == right.rowBufferManagementPolicy &&
+		addressMappingScheme == right.addressMappingScheme &&
 		AlmostEqual<double>(datarate,right.datarate) &&
-		postedCAS==right.postedCAS &&
-		readWriteGrouping==right.readWriteGrouping &&
-		autoPrecharge==right.autoPrecharge &&
-		clockGranularity==right.clockGranularity &&
-		cachelinesPerRow==right.cachelinesPerRow &&
-		channelCount==right.channelCount &&
-		rankCount==right.rankCount &&
-		bankCount==right.bankCount &&
-		rowCount==right.rowCount &&
-		columnCount==right.columnCount &&
+		postedCAS == right.postedCAS &&
+		readWriteGrouping == right.readWriteGrouping &&
+		autoPrecharge == right.autoPrecharge &&
+		clockGranularity == right.clockGranularity &&
+		cachelinesPerRow == right.cachelinesPerRow &&
+		channelCount == right.channelCount &&
+		rankCount == right.rankCount &&
+		bankCount == right.bankCount &&
+		rowCount == right.rowCount &&
+		columnCount == right.columnCount &&
 		decodeWindow == right.decodeWindow &&
-		epoch==right.epoch &&
+		epoch == right.epoch &&
 		AlmostEqual<double>(shortBurstRatio,right.shortBurstRatio) &&
 		AlmostEqual<double>(readPercentage,right.readPercentage) &&
-		sessionID==right.sessionID);
+		sessionID == right.sessionID);
 }
 
 ostream &DRAMsimII::operator<<(ostream &os, const SystemConfiguration &this_a)

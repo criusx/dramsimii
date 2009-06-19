@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libDRAMsim.la
 
-libDRAMsim_la_SOURCES = Address.cpp Address.h Algorithm.cpp Algorithm.h Bank.cpp Bank.h busEvent.cpp busEvent.h Channel.cpp Channel.h \
+libDRAMsim_la_SOURCES = Address.cpp Address.h Bank.cpp Bank.h busEvent.cpp busEvent.h Channel.cpp Channel.h \
 command.cpp command.h enumTypes.h event.cpp event.h executeCommand.cpp fbdAMB.cpp fbdAMB.h fbdChannel.cpp fbdChannel.h fbdFrame.cpp fbdFrame.h \
 fbdSystem.cpp fbdSystem.h getNextCommand.cpp globals.cpp globals.h InputStream.cpp InputStream.h  \
 minProtocolGap.cpp  powerConfig.cpp powerConfig.h queue.h Rank.cpp Rank.h reporting runSimulations.cpp Settings.cpp SettingsXML.cpp Settings.h simulationParameters.cpp \

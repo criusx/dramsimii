@@ -51,19 +51,31 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned int version)
 		{
-			ar & requestCount & inputType;
+			if (version == 0)
+			{
+ar & requestCount & inputType;
+			}
+			
 		}
 
 		template<class Archive>
 		friend void inline load_construct_data(Archive& ar, DRAMsimII::SimulationParameters* t, const unsigned version)
 		{
-			Settings settings;
-			::new(t)DRAMsimII::SimulationParameters(settings);
+			if (version == 0)
+			{
+				Settings settings;
+				::new(t)DRAMsimII::SimulationParameters(settings);
+			}
+		
 		}
 
 		template <class Archive>
 		friend inline void save_construct_data(Archive& ar, const DRAMsimII::SimulationParameters* t, const unsigned version)
 		{
+			if (version == 0)
+			{
+
+			}
 		}
 
 	};

@@ -69,14 +69,14 @@ originalTransaction(originalTrans)
 //////////////////////////////////////////////////////////////////////////
 /// @brief copy constructor to duplicate a transaction
 //////////////////////////////////////////////////////////////////////////
-Transaction::Transaction(const Transaction &rs):
-Event(rs),
-type(rs.type),
-length(rs.length),
-decodeTime(rs.decodeTime),
-PC(rs.PC),
-threadNum(rs.threadNum),
-originalTransaction(rs.originalTransaction)
+Transaction::Transaction(const Transaction &rhs):
+Event(rhs),
+type(rhs.type),
+length(rhs.length),
+decodeTime(rhs.decodeTime),
+PC(rhs.PC),
+threadNum(rhs.threadNum),
+originalTransaction(rhs.originalTransaction)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,11 +99,7 @@ originalTransaction(originalTrans)
 void *Transaction::operator new(size_t size)
 {
 	assert(size == sizeof(Transaction));
-	//Transaction *newTrans = freeTransactionPool.acquireItem();
 	return freeTransactionPool.acquireItem();
-	//newTrans->getAddresses().setPhysicalAddress(0);
-	//::new(newTrans)Transaction(0);
-	//return newTrans;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,19 +116,18 @@ void Transaction::operator delete(void *mem)
 //////////////////////////////////////////////////////////////////////////
 /// @brief comparison operator definition
 //////////////////////////////////////////////////////////////////////////
-bool Transaction::operator==(const Transaction& right) const
+bool Transaction::operator==(const Transaction& rhs) const
 {
-	return (type == right.type && length == right.length &&
-		arrivalTime == right.arrivalTime && enqueueTime == right.enqueueTime && completionTime == right.completionTime &&
-		decodeTime == right.decodeTime && this->Event::operator==(right) && originalTransaction == right.originalTransaction);
+	return (type == rhs.type && length == rhs.length &&
+		decodeTime == rhs.decodeTime && this->Event::operator==(rhs) && originalTransaction == rhs.originalTransaction);
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief inequality operator
 //////////////////////////////////////////////////////////////////////////
-bool Transaction::operator !=(const Transaction& right) const
+bool Transaction::operator !=(const Transaction& rhs) const
 {
-	return !(*this == right);
+	return !(*this == rhs);
 }
 
 //////////////////////////////////////////////////////////////////////////

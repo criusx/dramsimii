@@ -12,6 +12,7 @@ Global
 		M5|Win32 = M5|Win32
 		Release|Win32 = Release|Win32
 		Test|Win32 = Test|Win32
+		TestOpt|Win32 = TestOpt|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -24,6 +25,8 @@ Global
 		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Release|Win32.Build.0 = Release|Win32
 		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Test|Win32.ActiveCfg = Test2|Win32
 		{65A5B23B-7F7D-4848-82BE-B9155E072660}.Test|Win32.Build.0 = Test2|Win32
+		{65A5B23B-7F7D-4848-82BE-B9155E072660}.TestOpt|Win32.ActiveCfg = TestOpt|Win32
+		{65A5B23B-7F7D-4848-82BE-B9155E072660}.TestOpt|Win32.Build.0 = TestOpt|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

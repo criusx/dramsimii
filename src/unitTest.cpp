@@ -102,19 +102,34 @@ using std::vector;
 
 BOOST_AUTO_TEST_CASE( serialize_vector)
 {
+	
 	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
 	Address::initialize(settings);
-	vector<Address *> vecA(18);
+	{
 
-	vecA[9] = new Address(0xfaceffee % Address::maxAddress());
+		vector<Address *> vecA(18);
 
-	backup("serializeVectorTest",vecA);
+		vecA[9] = new Address(0xfaceffee % Address::maxAddress());
 
-	vector<Address *> vecB;
+		backup("serializeVectorTest",vecA);
 
-	restore("serializeVectorTest",vecB);
+		vector<Address *> vecB;
 
-	BOOST_CHECK(vecA == vecB);
+		restore("serializeVectorTest",vecB);
+
+		BOOST_CHECK(vecA == vecB);	
+	}
+	{
+		vector<unsigned> vecA(18);
+
+		backup("serializeVectorTest2",vecA);
+
+		vector<unsigned> vecB;
+
+		restore("serializeVectorTest2",vecB);
+
+		BOOST_CHECK(vecA == vecB);	
+	}
 }
 
 BOOST_AUTO_TEST_CASE( rank_copy_test)
@@ -245,7 +260,7 @@ BOOST_AUTO_TEST_CASE( test_commands)
 
 	Transaction *trans = new Transaction(Transaction::READ_TRANSACTION,3400,8,addr2,42);
 
-	Command *t2 = new Command(*trans,1234,true,false,4);
+	Command *t2 = new Command(trans,1234,false,4); 
 
 	BOOST_CHECK(t2->getAddress() == trans->getAddress());
 
@@ -255,7 +270,7 @@ BOOST_AUTO_TEST_CASE( test_commands)
 
 	BOOST_CHECK(*t2 == *t3);
 
-	Command *t4 = new Command(*trans,1235,true,false,4);
+	Command *t4 = new Command(trans,1235,false,4);
 
 	delete t3;
 
@@ -296,6 +311,7 @@ BOOST_AUTO_TEST_CASE( test_commands)
 
 BOOST_AUTO_TEST_CASE(addressTest)
 {
+#if 0
 	boost::mt19937 rng;
 	boost::uniform_int<PhysicalAddress> rngen(0,Address::maxAddress());
 	boost::variate_generator<boost::mt19937, boost::uniform_int<PhysicalAddress>> vargen(rng,rngen);
@@ -303,7 +319,7 @@ BOOST_AUTO_TEST_CASE(addressTest)
 	Address::initialize(s);
 
 	Address a;
-#if 0
+
 	for (unsigned i = 0; i < s.channelCount; i++)
 		for (unsigned j = 0; j < s.rankCount; j++)
 			for (unsigned k = 0; k < s.bankCount; k++)
@@ -316,6 +332,29 @@ BOOST_AUTO_TEST_CASE(addressTest)
 		delete add;
 	}
 #endif
+}
+
+BOOST_AUTO_TEST_CASE( serialize_command )
+{
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
+	Address::initialize(settings);
+	Transaction *trans1 = new Transaction(Transaction::IFETCH_TRANSACTION,23423, 8, 0xFACEFACE, 0x1234, 0x4);
+	// serialize normally
+	const Command cmd1(trans1, Address(0xBFEAECFE), 123456, true, 8);
+	backup("abce",cmd1);
+	Command cmd2;
+	restore("abce",cmd2);
+	BOOST_CHECK_EQUAL(cmd1, cmd2);
+
+	// serialize via pointer
+	const Command *cmd3 = new Command(trans1, Address(0xBFEAECFE), 123456, true, 8);
+	backup("abce", cmd3);
+	Command *cmd4;
+	restore("abce",cmd4);
+	BOOST_CHECK_EQUAL(*cmd3, *cmd4);
+
+	delete cmd3;
+	delete cmd4;
 }
 
 BOOST_AUTO_TEST_CASE(testQueue0)
@@ -419,8 +458,8 @@ BOOST_AUTO_TEST_CASE(testQueue0)
 
 BOOST_AUTO_TEST_CASE( test_queue)
 {
-	// transaction tests
-	Transaction t(Transaction::READ_TRANSACTION,0xface, 8, PHYSICAL_ADDRESS_MAX, 0, 0, NULL);
+	// transaction tests	
+	Transaction t(Transaction::READ_TRANSACTION,0xface, 8, Address::maxAddress(), 0, 0, NULL);
 	Queue<std::string> queueA(5);
 	bool result = queueA.push(new std::string("abc"));
 	BOOST_CHECK(result == true);
@@ -452,12 +491,12 @@ BOOST_AUTO_TEST_CASE( test_queue)
 	backup("cmdtest3",q4);
 	restore("cmdtest3",q4);
 
-	q3->push(new Command(t,0xfacedeef,true,true,Command::ACTIVATE));
-	q3->push(new Command(t,0xfbcedeef,true,true,Command::ACTIVATE));
-	q3->push(new Command(t,0xfccedeef,true,true,Command::ACTIVATE));
-	q3->push(new Command(t,0xfdcedeef,true,true,Command::ACTIVATE));
-	q3->push(new Command(t,0xfecedeef,true,true,Command::ACTIVATE));
-	q3->push(new Command(t,0xffcedeef,true,true,Command::ACTIVATE));
+	q3->push(new Command(&t,0xfacedeef,true,64,Command::ACTIVATE));
+	q3->push(new Command(&t,0xfbcedeef,true,64,Command::ACTIVATE));
+	q3->push(new Command(&t,0xfccedeef,true,64,Command::ACTIVATE));
+	q3->push(new Command(&t,0xfdcedeef,true,64,Command::ACTIVATE));
+	q3->push(new Command(&t,0xfecedeef,true,64,Command::ACTIVATE));
+	q3->push(new Command(&t,0xffcedeef,true,64,Command::ACTIVATE));
 	backup("cmdtest2",q3);
 	restore("cmdtest2",q2);
 	BOOST_CHECK_EQUAL(*q3,*q2);
@@ -474,7 +513,7 @@ BOOST_AUTO_TEST_CASE( test_queue)
 	{
 		q5.push(
 			new Command(
-			*(new Transaction(
+			(new Transaction(
 			Transaction::READ_TRANSACTION,
 			std::rand(),
 			std::rand()%9,
@@ -483,9 +522,7 @@ BOOST_AUTO_TEST_CASE( test_queue)
 			0,
 			NULL)),
 			std::rand(),
-			true,true,8
-			)
-			);
+			true,8));
 	}
 
 	backup("queueTest",q5);
@@ -540,78 +577,35 @@ BOOST_AUTO_TEST_CASE( test_queue)
 		delete val;
 		BOOST_CHECK_EQUAL(q7.size() , 0);
 	}
+	
+	//q7.resize(20);
+	Queue<int> q8(20);
 
 	for (int a = 5; a > 0; --a)
 	{
-		result = q7.push(new int(5));
+		result = q8.push(new int(5));
 		BOOST_ASSERT(result);
-		result = q7.push_front(new int(-5));
+		result = q8.push_front(new int(-5));
 		BOOST_ASSERT(result);
-		result = q7.insert(new int(-1),std::abs(a - 3));
+		result = q8.insert(new int(-1),1);
 		BOOST_ASSERT(result);
-		BOOST_CHECK_EQUAL(*q7.front(), -5);
-		BOOST_CHECK_EQUAL(*q7.back(), 5);
-		BOOST_CHECK_EQUAL(*q7.at(std::abs(a - 3)), -1);
+		result = q8.insert(new int(-2),q8.size() - 1);
+		BOOST_ASSERT(result);
+
+		BOOST_CHECK_EQUAL(*q8.front(), -5);
+		BOOST_CHECK_EQUAL(*q8.back(), 5);
+		BOOST_CHECK_EQUAL(*q8.at(1), -1);
+		BOOST_CHECK_EQUAL(*q8.at(q8.size() - 2), -2);
 	}
-	BOOST_CHECK_EQUAL(q7.size(), 15);
+	BOOST_CHECK_EQUAL(q8.size(), 20);
 }
 
-
-BOOST_AUTO_TEST_CASE( test_system_serialization)
-{
-	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
-	
-	System *ds3 = new System(settings);	
-
-	//for (int i = std::rand() % 30; i > 0; i--)
-	{
-
-		ds3->runSimulations(500 + (std::rand() % 50000));
-
-		backup("systemTest",ds3);
-
-		System *ds4;
-
-		restore("systemTest",ds4);
-
-		BOOST_CHECK_EQUAL(*ds4,*ds3);
-
-		delete ds3;
-
-		ds4->runSimulations(600);
-
-		backup("systemTest2",ds4);
-
-		restore("systemTest2",ds3);
-
-		BOOST_CHECK_EQUAL(*ds3,*ds4);
-
-		ds4->runSimulations();
-		delete ds4;
-	}
-}
-
-
-BOOST_AUTO_TEST_CASE( serialize_inputstream)
-{
-	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
-	const SystemConfiguration sc1(settings);
-
-	Statistics st1(settings);
-	std::vector<Channel> ch1(4, Channel(settings,sc1, st1));
-
-	const InputStream is1(settings, sc1,ch1);
-	backup("testInputStream",&is1);
-	InputStream *is2;
-	restore("testInputStream",is2);
-	BOOST_CHECK_EQUAL(is1, *is2);
-}
 
 BOOST_AUTO_TEST_CASE( test_serialization)
 {
 	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
-#if 0
-	const Settings settings2;
+	Settings settings2(master_test_suite().argc, (char **)master_test_suite().argv);
+	settings2.decodeWindow = 8;
 
 	Queue<Address> t3(5);
 	t3.push(new Address(0xfeeddeef));
@@ -679,12 +673,7 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 
 	SystemConfiguration sc3(settings2);
 
-	const Statistics st1(settings);
-	backup("aaab",&st1);
-	Statistics *st2;
-	restore("aaab",st2);
-	BOOST_CHECK_EQUAL(st1 , *st2);
-
+	
 	const SimulationParameters sp1(settings);
 	backup("aaad",&sp1);
 	SimulationParameters *sp2;
@@ -698,6 +687,20 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	PowerConfig *pc3 = new PowerConfig(settings2);
 	restore("aaac",pc3);
 	BOOST_CHECK_EQUAL(*pc0, *pc3);
+
+	// serialize normally
+	const Statistics st1(settings);
+	backup("statsReg",&st1);
+	Statistics *st2;
+	restore("statsReg",st2);
+	BOOST_CHECK_EQUAL(st1 , *st2);
+#if 0
+	// serialize via a pointer
+	const Statistics *st3 = new Statistics(settings);
+	backup("statsPtr",st3);
+	Statistics *st4;
+	restore("statsPtr",st4);
+	BOOST_CHECK_EQUAL(*st3,*st4);
 
 
 	//BOOST_CHECK_EQUAL(pc1 , pc2);
@@ -716,7 +719,6 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	restore("banktest",bk3);
 	BOOST_CHECK_EQUAL(*bk3,bk1);
 	delete bk3;
-
 
 	const Bank *bk4 = new Bank(settings, ts1, sc1);
 	backup("aaae",bk4);
@@ -737,33 +739,108 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	restore("rankTest1",rk2);
 	BOOST_CHECK_EQUAL(rk1,*rk2);
 
-
 	Channel ch1(settings, sc1, *st2);
+	ch1.setChannelID(0);
+	Transaction *t1 = new Transaction(Transaction::IFETCH_TRANSACTION, 1590, 8, Address(0x14584), 0x20, 0x2);
+	ch1.moveToTime(150);
+	ch1.enqueue(t1);
+	ch1.moveToTime(3523);
 	backup("chanTest1",&ch1);
 	Channel *ch2;
 	restore("chanTest1",ch2);
 	BOOST_CHECK_EQUAL(ch1, *ch2);
-#endif
 
 	System *ds2 = new System(settings);	
-	backup("abbc",ds2);
+	backup("ds2",ds2);
 	System *ds5;
-	restore("abbc",ds5);
+	restore("ds2",ds5);
 	BOOST_CHECK_EQUAL(*ds2,*ds5);
 
 	System *ds3 = new System(settings);
 	ds3->runSimulations(500);
 	backup("systemTest",ds3);
-	restore("abbc",ds3);
+
+	restore("ds2",ds3);
 	BOOST_CHECK_EQUAL(*ds2,*ds3);
+
 	System *ds4 = new System(settings);
 	restore("systemTest",ds4);
 	BOOST_CHECK_EQUAL(*ds3,*ds4);
+
 	delete ds2;
 	delete ds3;
 	delete ds4;
-
+#endif
 
 	//ds.runSimulations();
 	//timingOutStream << ds << endl;
 }
+
+#if 0
+#include <sstream>
+using std::stringstream;
+using std::string;
+
+BOOST_AUTO_TEST_CASE( test_system_serialization)
+{
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
+	
+	System *ds3 = new System(settings);	
+
+	const string name("systemTest");
+
+	stringstream fullname;
+
+	unsigned counter = 0;
+
+	for (int i = std::rand() % 16384; i > 0; i--)
+	{
+
+		ds3->runSimulations(500 + (std::rand() % 2*65536));
+
+		fullname.str("");
+		fullname << name << counter++;
+
+		backup(fullname.str().c_str(),ds3);
+
+		System *ds4;
+
+		restore(fullname.str().c_str(),ds4);
+
+		BOOST_CHECK_EQUAL(*ds4,*ds3);
+
+		delete ds3;
+
+		ds4->runSimulations(500 + (std::rand() % 2*65536));
+
+		fullname.str("");
+		fullname << name << counter++;
+
+		backup(fullname.str().c_str(),ds4);
+
+		restore(fullname.str().c_str(),ds3);
+
+		BOOST_CHECK_EQUAL(*ds3,*ds4);
+
+		ds4->runSimulations();
+		delete ds4;
+	}
+}
+
+
+BOOST_AUTO_TEST_CASE( serialize_inputstream)
+{
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
+	const SystemConfiguration sc1(settings);
+
+	Statistics st1(settings);
+	std::vector<Channel> ch1(4, Channel(settings,sc1, st1));
+
+	const InputStream is1(settings, sc1,ch1);
+	backup("testInputStream",&is1);
+	InputStream *is2;
+	restore("testInputStream",is2);
+	BOOST_CHECK_EQUAL(is1, *is2);
+}
+
+#endif

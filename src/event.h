@@ -18,7 +18,6 @@
 #define EVENT_H
 #pragma once
 
-//#include "globals.h"
 #include "Address.h"
 
 #include <boost/serialization/base_object.hpp>
@@ -29,16 +28,12 @@ namespace DRAMsimII
 	/// @brief pending event queue
 	class Event
 	{
-	private:
-		static unsigned eventCounter;			///< keeps track of how many transactions are created
-
 	protected:
 		tick arrivalTime;						///< the time that this event was created
 		tick enqueueTime;						///< the time that this event was put into a queue
 		tick startTime;							///< when this actually started
 		tick completionTime;					///< when this finished
 
-		const unsigned eventNumber;				///< the nth event
 		const Address address;					///< the address that this event involves
 
 		// constructors
@@ -47,7 +42,6 @@ namespace DRAMsimII
 			enqueueTime(0),
 			startTime(0),
 			completionTime(0),
-			eventNumber(eventCounter++),
 			address(0x0)
 		{}
 
@@ -56,7 +50,6 @@ namespace DRAMsimII
 			enqueueTime(enqTime),
 			startTime(0),
 			completionTime(0),
-			eventNumber(eventCounter++),
 			address(add)
 		{}
 
@@ -65,7 +58,6 @@ namespace DRAMsimII
 			enqueueTime(0),
 			startTime(0),
 			completionTime(0),
-			eventNumber(eventCounter++),
 			address(add)
 		{}
 
@@ -74,7 +66,6 @@ namespace DRAMsimII
 			enqueueTime(0),
 			startTime(0),
 			completionTime(0),
-			eventNumber(eventCounter++),
 			address(add)
 		{}
 
@@ -83,7 +74,6 @@ namespace DRAMsimII
 			enqueueTime(rhs.enqueueTime),
 			startTime(rhs.startTime),
 			completionTime(rhs.completionTime),
-			eventNumber(eventCounter++),
 			address(rhs.address)
 		{}
 
@@ -96,7 +86,6 @@ namespace DRAMsimII
 		tick getEnqueueTime() const { return enqueueTime; }
 		tick getStartTime() const { return startTime; }
 		tick getCompletionTime() const { return completionTime; }
-		unsigned getEventNumber() const { return eventNumber; }
 		const Address &getAddress() const { return address; }
 
 		// functions
@@ -125,7 +114,11 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned version)
 		{
-			ar & startTime & enqueueTime & completionTime & const_cast<Address&>(address);
+			if (version == 0)
+			{
+ar & startTime & enqueueTime & completionTime & arrivalTime & const_cast<Address&>(address);
+			}
+			
 		}
 
 

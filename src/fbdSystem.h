@@ -30,7 +30,6 @@
 #include "command.h"
 #include "simulationParameters.h"
 #include "Statistics.h"
-#include "Algorithm.h"
 #include "InputStream.h"
 #include "event.h"
 #include "Channel.h"

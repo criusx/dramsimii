@@ -134,29 +134,42 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned version)
 		{
-			ar & lastRefreshTime & lastPrechargeAnyBankTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength;
-			ar & lastCASWLength & rankID & lastBankID & banksPrecharged;
-			ar & lastActivateTimes & CASWLength & CASLength & otherLastCASTime & otherLastCASWTime & otherLastCASLength & otherLastCASWLength;		
+			if (version == 0)
+			{
+				ar & lastRefreshTime & lastPrechargeAnyBankTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength &
+					lastCASWLength & rankID & lastBankID & banksPrecharged & lastActivateTimes & CASWLength & CASLength & otherLastCASTime & 
+					otherLastCASWTime & otherLastCASLength & otherLastCASWLength & nextActivateTime & nextReadTime & nextWriteTime & nextPrechargeTime &
+					nextRefreshTime & lastCalculationTime;
+			}
+
 		}
 
 		template <class Archive>
 		friend inline void save_construct_data(Archive& ar, const DRAMsimII::Rank* t, const unsigned version)
 		{
-			const DRAMsimII::TimingSpecification* const timing = &(t->timing);
-			ar << timing;
-			const std::vector<DRAMsimII::Bank>* const bank = &(t->bank);
-			ar << bank;			
+			if (version == 0)
+			{
+				const DRAMsimII::TimingSpecification* const timing = &(t->timing);
+				ar << timing;
+				const std::vector<DRAMsimII::Bank>* const bank = &(t->bank);
+				ar << bank;	
+			}
+
 		}
 
 		template <class Archive>
 		friend inline void load_construct_data(Archive & ar, DRAMsimII::Rank *t, const unsigned version)
 		{
-			DRAMsimII::TimingSpecification* timing;
-			ar >> timing;
-			std::vector<DRAMsimII::Bank>* newBank;
-			ar >> newBank;
+			if (version == 0)
+			{
+				DRAMsimII::TimingSpecification* timing;
+				ar >> timing;
+				std::vector<DRAMsimII::Bank>* newBank;
+				ar >> newBank;
 
-			::new(t)DRAMsimII::Rank(*timing, *newBank);
+				::new(t)DRAMsimII::Rank(*timing, *newBank);
+			}
+
 		}		
 	};
 }
@@ -164,53 +177,63 @@ namespace DRAMsimII
 namespace boost
 {
 	template<class Archive, class U, class Allocator>
-	inline void serialize(Archive &ar, boost::circular_buffer<U, Allocator> &t, const unsigned file_version)
+	inline void serialize(Archive &ar, boost::circular_buffer<U, Allocator> &t, const unsigned version)
 	{
-		boost::serialization::split_free(ar,t,file_version);
+		if (version == 0)
+		{
+			boost::serialization::split_free(ar,t,version);
+		}
 	}
 
-
 	template<class Archive, class U, class Allocator>
-	inline void save(Archive &ar, const boost::circular_buffer<U, Allocator> &t, const unsigned int version)
+	inline void save(Archive &ar, const boost::circular_buffer<U, Allocator> &t, const unsigned version)
 	{
-		//const circular_buffer<U>::size_type maxCount(t.capacity());
-		//ar << BOOST_SERIALIZATION_NVP(maxCount);
-		typename circular_buffer<U, Allocator>::capacity_type maxCount(t.capacity());
-		ar << (maxCount);
-
-		//const circular_buffer<U>::size_type count(t.size());
-		//ar << BOOST_SERIALIZATION_NVP(count);
-		typename circular_buffer<U, Allocator>::size_type count(t.size());
-		ar << (count);
-
-		for (typename circular_buffer<U, Allocator>::const_iterator i = t.begin(); i != t.end(); i++)
-			//for (boost::circular_buffer<U,Allocator>::size_type i = 0; i < t.size(); i++)
+		if (version == 0)
 		{
-			ar << *i;
-			//ar << t[i];
+			//const circular_buffer<U>::size_type maxCount(t.capacity());
+			//ar << BOOST_SERIALIZATION_NVP(maxCount);
+			typename circular_buffer<U, Allocator>::capacity_type maxCount(t.capacity());
+			ar << (maxCount);
+
+			//const circular_buffer<U>::size_type count(t.size());
+			//ar << BOOST_SERIALIZATION_NVP(count);
+			typename circular_buffer<U, Allocator>::size_type count(t.size());
+			ar << (count);
+
+			for (typename circular_buffer<U, Allocator>::const_iterator i = t.begin(); i != t.end(); i++)
+				//for (boost::circular_buffer<U,Allocator>::size_type i = 0; i < t.size(); i++)
+			{
+				ar << *i;
+				//ar << t[i];
+			}
 		}
+
 	}
 
 	template<class Archive, class U, class Allocator>
 	inline void load(Archive &ar, boost::circular_buffer<U, Allocator> &t, const unsigned version)
 	{
-		//ar >> BOOST_SERIALIZATION_NVP(maxCount);
-		typename circular_buffer<U, Allocator>::capacity_type maxCount;
-		ar >> (maxCount);
-		t.set_capacity(maxCount);
-
-		//circular_buffer<U>::size_type count;
-		//ar >> BOOST_SERIALIZATION_NVP(count);
-		unsigned count;
-		ar >> (count);
-
-		while (count-- > 0)
+		if (version == 0)
 		{
-			U value;
-			ar >> value;
-			//t.push_front(value);
-			t.push_back(value);
+			//ar >> BOOST_SERIALIZATION_NVP(maxCount);
+			typename circular_buffer<U, Allocator>::capacity_type maxCount;
+			ar >> (maxCount);
+			t.set_capacity(maxCount);
+
+			//circular_buffer<U>::size_type count;
+			//ar >> BOOST_SERIALIZATION_NVP(count);
+			unsigned count;
+			ar >> (count);
+
+			while (count-- > 0)
+			{
+				U value;
+				ar >> value;
+				//t.push_front(value);
+				t.push_back(value);
+			}
 		}
+
 	}
 
 }
