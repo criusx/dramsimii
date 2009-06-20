@@ -57,7 +57,7 @@ namespace DRAMsimII
 		bool dbReporting;								///< whether or not to report results to a db
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
-		
+
 
 		// functions
 		void retireCommand(Command *);
@@ -115,7 +115,7 @@ namespace DRAMsimII
 		tick getTime() const { return time; }														///< get the time that this channel is at
 		unsigned getLastRankID() const { return lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1; }///< get the last rank id a command was issued to
 
-		
+
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }				///< determine how many items are in the transaction completion queue
 		unsigned getTransactionQueueDepth() const { return transactionQueue.depth(); }			///< determine how large the transaction completion queue is
 		Rank& operator[](unsigned rank_num) { return rank[rank_num]; }
@@ -144,9 +144,9 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-ar & time & lastCommandIssueTime & transactionQueue & refreshCounter & channelID & dbReporting;
+				ar & time & lastCommandIssueTime & transactionQueue & refreshCounter & channelID & dbReporting;
 			}
-			
+
 		}
 
 		template<class Archive>
@@ -154,19 +154,20 @@ ar & time & lastCommandIssueTime & transactionQueue & refreshCounter & channelID
 		{			
 			if (version == 0)
 			{
-				const SystemConfiguration* sysC = &(t->systemConfig);
+				const SystemConfiguration* const sysC = &(t->systemConfig);
 				ar << sysC;
-				const Statistics* stats = &(t->statistics);
+				const Statistics* const stats = &(t->statistics);
 				ar << stats;
-				const PowerConfig* power = &(t->powerModel);
+				const PowerConfig* const power = &(t->powerModel);
 				ar << power;
-				const std::vector<Rank>* rank = &(t->rank);
+				const std::vector<Rank>* const rank = &(t->rank);
 				ar << rank;
-				const TimingSpecification* timing = &(t->timingSpecification);
+				const TimingSpecification* const timing = &(t->timingSpecification);
 				ar << timing;
+				
 				ar << t->lastCommand;
 			}
-			
+
 		}
 
 		template<class Archive>
@@ -193,7 +194,7 @@ ar & time & lastCommandIssueTime & transactionQueue & refreshCounter & channelID
 				ar >> lastCmd;
 				t->lastCommand = lastCmd;
 			}
-		
+
 		}
 	};
 }

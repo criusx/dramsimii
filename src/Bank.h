@@ -139,29 +139,37 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar, const unsigned version)
 		{
-			ar & perBankQueue;
-			ar & lastRASTime & lastCASTime & lastCASWTime & lastPrechargeTime & lastCASLength &
-				lastCASWLength & openRowID & activated & RASCount & totalRASCount & CASCount & totalCASCount & CASWCount & totalCASWCount;
+			if (version == 0)
+			{
+				ar & perBankQueue & lastRASTime & lastCASTime & lastCASWTime & lastPrechargeTime & lastCASLength &
+					lastCASWLength & openRowID & activated & RASCount & totalRASCount & CASCount & totalCASCount & CASWCount & totalCASWCount;
+			}
 		}
 
 		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const DRAMsimII::Bank* t, const unsigned int file_version)
+		friend inline void save_construct_data(Archive& ar, const DRAMsimII::Bank* t, const unsigned  version)
 		{
-			const DRAMsimII::TimingSpecification* const timing = &(t->timing);
-			ar << timing;
-			const DRAMsimII::SystemConfiguration* const systemConfig = &(t->systemConfig);
-			ar << systemConfig;			
+			if (version == 0)
+			{
+				const DRAMsimII::TimingSpecification* const timing = &(t->timing);
+				ar << timing;
+				const DRAMsimII::SystemConfiguration* const systemConfig = &(t->systemConfig);
+				ar << systemConfig;			
+			}
 		}
 
 		template <class Archive>
 		friend inline void load_construct_data(Archive & ar, DRAMsimII::Bank *t, const unsigned version)
 		{
-			DRAMsimII::TimingSpecification* timing;	
-			ar >> timing;
-			DRAMsimII::SystemConfiguration* systemConfig;	
-			ar >> systemConfig;
+			if (version == 0)
+			{
+				DRAMsimII::TimingSpecification* timing;	
+				ar >> timing;
+				DRAMsimII::SystemConfiguration* systemConfig;	
+				ar >> systemConfig;
 
-			::new(t)DRAMsimII::Bank(*timing,*systemConfig);
+				::new(t)DRAMsimII::Bank(*timing,*systemConfig);
+			}
 		}
 	};
 

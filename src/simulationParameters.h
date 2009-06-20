@@ -53,9 +53,9 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-ar & requestCount & inputType;
+				ar & requestCount & inputType;
 			}
-			
+
 		}
 
 		template<class Archive>
@@ -63,21 +63,12 @@ ar & requestCount & inputType;
 		{
 			if (version == 0)
 			{
+				assert(&ar);
 				Settings settings;
 				::new(t)DRAMsimII::SimulationParameters(settings);
 			}
-		
+
 		}
-
-		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const DRAMsimII::SimulationParameters* t, const unsigned version)
-		{
-			if (version == 0)
-			{
-
-			}
-		}
-
 	};
 }
 #endif

@@ -98,7 +98,9 @@ namespace opt = boost::program_options;
 /// and print any errors that occur
 //////////////////////////////////////////////////////////////////////////
 Settings::Settings(int argc, char **argv):
-systemType(BASELINE_CONFIG)
+systemType(BASELINE_CONFIG),
+cachelinesPerRow(0),
+tInternalBurst(0)
 {
 	loadSettingsFromFile(argc, argv);
 }

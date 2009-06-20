@@ -34,6 +34,7 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
 
 namespace DRAMsimII
 {
@@ -153,12 +154,8 @@ namespace DRAMsimII
 			{
 				ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
 					writeCount & readBytesTransferred & writeBytesTransferred & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) &
-					const_cast<unsigned&>(banks) & rowHits & rowMisses & timePerEpoch;
-
-				ar & aggregateBankUtilization ;
-				ar & workingSet;
-				ar & bankLatencyUtilization ;
-				ar & pcOccurrence ;
+					const_cast<unsigned&>(banks) & rowHits & rowMisses & timePerEpoch & aggregateBankUtilization & workingSet &
+					bankLatencyUtilization & pcOccurrence;
 			}
 
 		}
@@ -166,7 +163,7 @@ namespace DRAMsimII
 		template<class Archive>
 		friend inline void save_construct_data(Archive &ar, const Statistics* st, const unsigned version)
 		{
-#if 0
+
 			if (version == 0)
 			{
 				std::map<unsigned,unsigned> serializeMap;
@@ -220,15 +217,18 @@ namespace DRAMsimII
 					ar << serializeMap2;
 				}
 			}
-#endif
+
 		}
 
 		template<class Archive>
 		friend inline void load_construct_data(Archive& ar, Statistics *st, const unsigned version)
 		{
-#if 0
+
 			if (version == 0)
 			{
+				Settings settings;
+				new(st)Statistics(settings);
+
 				std::map<unsigned,unsigned> serializeMap;
 				std::map<unsigned,unsigned>::const_iterator it;
 
@@ -256,10 +256,8 @@ namespace DRAMsimII
 				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
 				{
 					st->transactionExecution[it->first] = it->second;
-				}
+				}				
 			}
-#endif
-
 		}
 	};
 }

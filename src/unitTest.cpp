@@ -687,14 +687,14 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	PowerConfig *pc3 = new PowerConfig(settings2);
 	restore("aaac",pc3);
 	BOOST_CHECK_EQUAL(*pc0, *pc3);
-
+	
 	// serialize normally
 	const Statistics st1(settings);
 	backup("statsReg",&st1);
-	Statistics *st2;
+	Statistics *st2 = new Statistics(settings2);
 	restore("statsReg",st2);
 	BOOST_CHECK_EQUAL(st1 , *st2);
-#if 0
+
 	// serialize via a pointer
 	const Statistics *st3 = new Statistics(settings);
 	backup("statsPtr",st3);
@@ -738,7 +738,6 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	Rank *rk2;
 	restore("rankTest1",rk2);
 	BOOST_CHECK_EQUAL(rk1,*rk2);
-
 	Channel ch1(settings, sc1, *st2);
 	ch1.setChannelID(0);
 	Transaction *t1 = new Transaction(Transaction::IFETCH_TRANSACTION, 1590, 8, Address(0x14584), 0x20, 0x2);
@@ -764,19 +763,17 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	BOOST_CHECK_EQUAL(*ds2,*ds3);
 
 	System *ds4 = new System(settings);
-	restore("systemTest",ds4);
+	restore("ds2",ds4);
 	BOOST_CHECK_EQUAL(*ds3,*ds4);
 
 	delete ds2;
 	delete ds3;
 	delete ds4;
-#endif
-
 	//ds.runSimulations();
 	//timingOutStream << ds << endl;
 }
-
 #if 0
+
 #include <sstream>
 using std::stringstream;
 using std::string;
@@ -826,7 +823,6 @@ BOOST_AUTO_TEST_CASE( test_system_serialization)
 		delete ds4;
 	}
 }
-
 
 BOOST_AUTO_TEST_CASE( serialize_inputstream)
 {

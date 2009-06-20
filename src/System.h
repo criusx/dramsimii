@@ -111,9 +111,9 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-ar & time & nextStats;
+				ar & time & nextStats;
 			}
-			
+
 		}
 
 		template<class Archive>
@@ -121,18 +121,17 @@ ar & time & nextStats;
 		{
 			if (version == 0)
 			{
-				const SystemConfiguration *sysConfig = &(t->systemConfig);
+				const SystemConfiguration* const sysConfig = &(t->systemConfig);
 				ar << sysConfig;
-				const std::vector<Channel> *channel = &(t->channel);
+				const std::vector<Channel>* const channel = &(t->channel);
 				ar << channel;
-				const SimulationParameters *simParameters = &(t->simParameters);			
+				const SimulationParameters* const simParameters = &(t->simParameters);			
 				ar << simParameters;
-				const Statistics *statistics = &(t->statistics);
+				const Statistics* const statistics = &(t->statistics);
 				ar << statistics;
-				const InputStream *inputStream = &(t->inputStream);
+				const InputStream* const inputStream = &(t->inputStream);
 				ar << inputStream;
 			}
-			
 		}
 
 		template<class Archive>
@@ -153,7 +152,7 @@ ar & time & nextStats;
 
 				new(t)DRAMsimII::System(*sysConfig, *channel, *simParameters, *statistics, *inputStream);
 			}
-			
+
 		}
 	};
 }
