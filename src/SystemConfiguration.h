@@ -117,7 +117,6 @@ namespace DRAMsimII
 				readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount & rankCount & bankCount & rowCount &
 				columnCount & shortBurstRatio & readPercentage & sessionID & decodeWindow & const_cast<unsigned&>(epoch);
 			}
-
 		}
 
 		template <class Archive>
