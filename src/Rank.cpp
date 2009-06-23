@@ -168,7 +168,7 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 			assert(!curBnk->isActivated());
 	}	
 	banksPrecharged--;
-	assert(banksPrecharged >= 0 && banksPrecharged < bank.size());
+	assert(banksPrecharged < bank.size());
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().getBank()].issueRAS(currentTime,currentCommand);
 

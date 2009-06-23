@@ -91,7 +91,7 @@ finishedTransactions()
 Channel::Channel(const Channel& rhs, const SystemConfiguration& systemConfig, Statistics& stats):
 time(rhs.time),
 lastCommandIssueTime(rhs.lastCommandIssueTime),
-lastCommand(rhs.lastCommand),
+lastCommand(rhs.lastCommand ? new Command(*rhs.lastCommand) : NULL),
 timingSpecification(rhs.timingSpecification),
 transactionQueue(rhs.transactionQueue),
 refreshCounter(rhs.refreshCounter),
@@ -173,7 +173,10 @@ Channel::~Channel()
 	}
 
 	if (lastCommand)
+	{
 		delete lastCommand;
+		lastCommand = NULL;
+	}
 
 	for (vector<Rank>::const_iterator i = rank.begin(); i != rank.end(); i++)
 	{
@@ -200,7 +203,8 @@ void Channel::moveToTime(const tick currentTime)
 		tick oldTime = time;
 #endif
 		/// @todo verify that this is right
-		time = max(min(currentTime,min(nextTransactionDecodeTime(),min(nextCommandExecuteTime(),nextRefreshTime()))),time);
+		//time = max(min(currentTime,min(nextTransactionDecodeTime(),min(nextCommandExecuteTime(),nextRefreshTime()))),time);
+		time = max(min(currentTime,min(nextTransactionDecodeTime(),nextCommandExecuteTime())),time);
 		assert(time <= currentTime);
 		assert(time >= oldTime);
 
@@ -609,20 +613,20 @@ void Channel::doPowerCalculation(const tick systemTime)
 		k->resetCycleCounts();
 	}
 
-	powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) <<
+	systemConfig.powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) <<
 		PsysACT_STBY << "} mW" << endl;
 	//Pre(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
 
-	powerOutStream << "-Psys(ACT) ch[" << channelID << "] {"<< setprecision(5) <<
+	systemConfig.powerOutStream << "-Psys(ACT) ch[" << channelID << "] {"<< setprecision(5) <<
 		PsysACT << "} mW tRRD[" << tRRDsch << "]" << endl;
 
-	powerOutStream << "-Psys(PRE_STBY) ch[" << channelID << "] {" << setprecision(5) <<
+	systemConfig.powerOutStream << "-Psys(PRE_STBY) ch[" << channelID << "] {" << setprecision(5) <<
 		PsysPRE_STBY << "} mW" << endl;
 	//Pre(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
 
-	powerOutStream << "-Psys(RD) ch[" << channelID << "] {" << setprecision(5) << PsysRD << "} mW" << endl;
+	systemConfig.powerOutStream << "-Psys(RD) ch[" << channelID << "] {" << setprecision(5) << PsysRD << "} mW" << endl;
 
-	powerOutStream << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << PsysWR << "} mW" << endl;
+	systemConfig.powerOutStream << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << PsysWR << "} mW" << endl;
 
 	// report these results
 	if (dbReporting)
@@ -748,7 +752,7 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 			return nextTransaction;
 		}
 		// either there is no transaction or the refresh command will starve
-		else if ((time >= nextRefresh) && (checkForAvailableCommandSlots(readNextRefresh())))
+		else if (((time >= nextRefresh) || !bufferDelay) && (checkForAvailableCommandSlots(readNextRefresh())))
 		{
 			return readNextRefresh();
 		}
@@ -899,7 +903,7 @@ const Transaction *Channel::readNextRefresh() const
 	address.setAddress(channelID,earliestRank,0,0,0);
 
 	static Transaction newRefreshTransaction;
-	::new(&newRefreshTransaction)Transaction(Transaction::AUTO_REFRESH_TRANSACTION, 0, 8, address, 0, 0, UINT_MAX);
+	::new(&newRefreshTransaction)Transaction(Transaction::AUTO_REFRESH_TRANSACTION, earliestTime, 8, address, 0, 0, UINT_MAX);
 
 	return &newRefreshTransaction;
 

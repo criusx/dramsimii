@@ -92,7 +92,7 @@ namespace DRAMsimII
 
 		// friends
 		friend std::ostream &DRAMsimII::operator<<(std::ostream &,const Command &);	
-	
+
 		// overloads
 		bool operator==(const Command& right) const;
 		bool operator!=(const Command& right) const;
@@ -108,9 +108,9 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-ar & boost::serialization::base_object<Event>(*this) & commandType & hostTransaction & length;
+				ar & boost::serialization::base_object<Event>(*this) & commandType & hostTransaction & length;
 			}
-			
+
 		}
 	};	
 

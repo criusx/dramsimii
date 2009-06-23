@@ -49,7 +49,6 @@ namespace DRAMsimII
 	class BusEvent;
 
 	void unitTests(const Settings &settings);
-
 	
 	// overloaded insertion operator functions for printing various aspects of the dram system
 	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);
@@ -86,9 +85,9 @@ namespace DRAMsimII
 	}
 
 	// global var forward
-	extern boost::iostreams::filtering_ostream timingOutStream;
-	extern boost::iostreams::filtering_ostream powerOutStream;
-	extern boost::iostreams::filtering_ostream statsOutStream;
+	//extern boost::iostreams::filtering_ostream timingOutStream;
+	//extern boost::iostreams::filtering_ostream powerOutStream;
+	//extern boost::iostreams::filtering_ostream statsOutStream;
 
 	// converts a string to its corresponding magnitude representation
 	double ascii2multiplier(const std::string &);
@@ -111,7 +110,7 @@ namespace DRAMsimII
 
 
 #if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) // compiler should declare this
-#define M5_TIMING_LOG(X) timingOutStream << X << std::endl;
+#define M5_TIMING_LOG(X) systemConfig.timingOutStream << X << std::endl;
 #define M5_DEBUG(X) X;
 #else
 #define M5_TIMING_LOG(X)
@@ -119,7 +118,7 @@ namespace DRAMsimII
 #endif
 
 #if defined(DEBUG) && defined(SSTDEBUG) && !defined(NDEBUG) // compiler should declare this
-#define SST_TIMING_LOG(X) timingOutStream << X << std::endl;
+#define SST_TIMING_LOG(X) systemConfig.timingOutStream << X << std::endl;
 #define SST_DEBUG(X) X;
 #else
 #define SST_TIMING_LOG(X)
@@ -127,20 +126,20 @@ namespace DRAMsimII
 #endif
 
 #if defined(DEBUG) && defined(DEBUG_TRANSACTION) && !defined(NDEBUG) // compiler should declare this
-#define DEBUG_TRANSACTION_LOG(X) timingOutStream << X << std::endl;
+#define DEBUG_TRANSACTION_LOG(X) systemConfig.timingOutStream << X << std::endl;
 #else
 #define DEBUG_TRANSACTION_LOG(X)
 #endif
 
 	
 #if defined(DEBUG) && defined(DEBUG_COMMAND) && !defined(NDEBUG)
-#define DEBUG_COMMAND_LOG(X) timingOutStream << X << std::endl;
+#define DEBUG_COMMAND_LOG(X) systemConfig.timingOutStream << X << std::endl;
 #else
 #define DEBUG_COMMAND_LOG(X)
 #endif
 
 #if defined(DEBUG) && defined(DEBUGDRAMSIM) && !defined(NDEBUG)
-#define DEBUG_TIMING_LOG(X) timingOutStream << X << std::endl;
+#define DEBUG_TIMING_LOG(X) systemConfig.timingOutStream << X << std::endl;
 #define DEBUG_LOG(X) cerr << X << endl;
 #else
 #define DEBUG_TIMING_LOG(X)

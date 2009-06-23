@@ -148,9 +148,10 @@ arrivalGenerator(randomNumberGenerator, gaussianDistribution)
 //////////////////////////////////////////////////////////////////////////
 /// @brief deserialization constructor
 //////////////////////////////////////////////////////////////////////////
-InputStream::InputStream(const SystemConfiguration &systemConfig, const vector<Channel> &systemChannel, DistributionType arrivalDistributionModel, string filename):
+InputStream::InputStream(const SystemConfiguration &systemConfig, const vector<Channel> &systemChannel, unsigned avgInterarrivalCycles, DistributionType arrivalDistributionModel, string filename):
 systemConfig(systemConfig),
 channel(systemChannel),
+averageInterarrivalCycleCount(avgInterarrivalCycles),
 interarrivalDistributionModel(arrivalDistributionModel),
 randomNumberGenerator(std::time(0)),
 rngDistributionModel(0,1),

@@ -25,6 +25,9 @@
 
 #include <fstream>
 
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/list.hpp>
@@ -34,6 +37,11 @@ namespace DRAMsimII
 	/// @brief stores the system configuration options for a dramSystem
 	class SystemConfiguration
 	{
+	public:
+		// streams available to other classes
+		mutable boost::iostreams::filtering_ostream timingOutStream;
+		mutable boost::iostreams::filtering_ostream powerOutStream;
+		mutable boost::iostreams::filtering_ostream statsOutStream;	
 	protected:
 		CommandOrderingAlgorithm commandOrderingAlgorithm;				///< describes how to place commands into the per bank command queues
 		TransactionOrderingAlgorithm transactionOrderingAlgorithm;		///< the algorithm that describes how to place transactions into the queue
@@ -63,10 +71,16 @@ namespace DRAMsimII
 		double shortBurstRatio;
 		double readPercentage;											///< the percentage of transactions that are reads
 		std::string sessionID;											///< a unique identifier for this run
+		std::string timingFile;
+		std::string powerFile;
+		std::string statsFile;		
+		OutputFileType outType;
+
 
 	public:
 		// constructors
 		explicit SystemConfiguration(const Settings& settings);
+		explicit SystemConfiguration(const SystemConfiguration &rhs);
 
 		// accessors
 		RowBufferPolicy getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }
@@ -94,6 +108,9 @@ namespace DRAMsimII
 		double Frequency() const { return datarate; }
 		const std::string &getSessionID() const { return sessionID; }
 		unsigned getDecodeWindow() const { return decodeWindow; }
+		bool fileExists(std::stringstream& fileName) const;
+		bool createNewFile(const std::string& fileName) const;
+		bool setupStreams();
 
 		// operator overloads
 		SystemConfiguration& operator =(const SystemConfiguration &rs);
@@ -113,20 +130,12 @@ namespace DRAMsimII
 			if (version == 0)
 			{
 				ar & commandOrderingAlgorithm & transactionOrderingAlgorithm & configType & refreshTime & refreshPolicy & columnSize & rowSize &
-				cachelineSize & seniorityAgeLimit & dramType & rowBufferManagementPolicy & addressMappingScheme & datarate & postedCAS &
-				readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount & rankCount & bankCount & rowCount &
-				columnCount & shortBurstRatio & readPercentage & sessionID & decodeWindow & const_cast<unsigned&>(epoch);
+					cachelineSize & seniorityAgeLimit & dramType & rowBufferManagementPolicy & addressMappingScheme & datarate & postedCAS &
+					readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount & rankCount & bankCount & rowCount &
+					columnCount & shortBurstRatio & readPercentage & sessionID & decodeWindow & const_cast<unsigned&>(epoch);
 			}
 		}
 
-		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const DRAMsimII::SystemConfiguration *t, const unsigned version)
-		{
-			if (version == 0)
-			{
-
-			}
-		}
 
 		template <class Archive>
 		friend inline void load_construct_data(Archive & ar, DRAMsimII::SystemConfiguration *t, const unsigned version)
@@ -134,7 +143,7 @@ namespace DRAMsimII
 			if (version == 0)
 			{
 				Settings s;
-				
+
 				new(t)DRAMsimII::SystemConfiguration(s);
 			}
 		}

@@ -87,7 +87,7 @@ namespace DRAMsimII
 		mutable boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rngGenerator;
 		boost::variate_generator<boost::mt19937&, boost::uniform_int<> > rngIntGenerator;
 		boost::variate_generator<boost::mt19937, boost::normal_distribution<> > arrivalGenerator;
-		
+
 	public:
 
 		// constructors	
@@ -131,17 +131,17 @@ namespace DRAMsimII
 		// serialization
 		friend class boost::serialization::access;
 
-		InputStream(const SystemConfiguration &systemConfig, const std::vector<Channel> &systemChannel, DistributionType arrivalDistributionModel, std::string filename);
+		InputStream(const SystemConfiguration &systemConfig, const std::vector<Channel> &systemChannel, unsigned, DistributionType arrivalDistributionModel, std::string filename);
 
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned version)
 		{
 			if (version == 0)
 			{
-				ar & type & channelLocality & rankLocality & bankLocality & time & rowLocality & readPercentage;
-				ar & shortBurstRatio & arrivalThreshold & cpuToMemoryRatio & averageInterarrivalCycleCount;
+				ar & type & channelLocality & rankLocality & bankLocality & time & rowLocality & readPercentage &
+				shortBurstRatio & arrivalThreshold & cpuToMemoryRatio & averageInterarrivalCycleCount;
 			}
-			
+
 			//ar & traceFile;
 			//ar & serialization::make_nvp("rng",randomNumberGenerator & rngDistributionModel & rngIntDistributionModel & rngGenerator & rngIntGenerator;
 		}
@@ -151,18 +151,19 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-	const SystemConfiguration* const sysConfig = &(t->systemConfig);
-			ar << sysConfig;
-			const std::vector<Channel>* const channel = &(t->channel);
-			ar << channel;
-			ar << t->interarrivalDistributionModel;
+				const SystemConfiguration* const sysConfig = &(t->systemConfig);
+				ar << sysConfig;
+				const std::vector<Channel>* const channel = &(t->channel);
+				ar << channel;
+				ar << t->interarrivalDistributionModel;
+				ar << t->averageInterarrivalCycleCount;
 
-			//std::basic_istream<char,std::char_traits<char>>::pos_type location = t->traceFile.tellg();
-			//ar << location;
+				//std::basic_istream<char,std::char_traits<char>>::pos_type location = t->traceFile.tellg();
+				//ar << location;
 
-			ar << t->traceFilename;			
+				ar << t->traceFilename;			
 			}
-		
+
 		}
 
 		template <class Archive>
@@ -170,22 +171,24 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-	SystemConfiguration *sysConfig;
-			ar >> sysConfig;
-			std::vector<Channel> *channel;
-			ar >> channel;
-			DistributionType interarrivalDistributionModel;
-			ar >> interarrivalDistributionModel;
-			//std::basic_istream<char,std::char_traits<char>>::pos_type location;
-			//ar >> location;
-			std::string filename;
-			ar >> filename;
+				SystemConfiguration *sysConfig;
+				ar >> sysConfig;
+				std::vector<Channel> *channel;
+				ar >> channel;
+				DistributionType interarrivalDistributionModel;
+				ar >> interarrivalDistributionModel;
+				//std::basic_istream<char,std::char_traits<char>>::pos_type location;
+				//ar >> location;
+				unsigned avgInterarrivalCycles;
+				ar >> avgInterarrivalCycles;
+				std::string filename;
+				ar >> filename;
 
-			new(t)InputStream(*sysConfig,*channel, interarrivalDistributionModel, filename);
-
-			//t->traceFile.seekg(location);
+				new(t)InputStream(*sysConfig, *channel, avgInterarrivalCycles, interarrivalDistributionModel, filename);
+				
+				//t->traceFile.seekg(location);
 			}
-		
+
 		}
 	};
 

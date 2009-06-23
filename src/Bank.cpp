@@ -277,7 +277,15 @@ void Bank::resetToTime(const tick time)
 	lastPrechargeTime = time - timing.tRP();
 	lastCASTime = time - timing.tCAS() - timing.tBurst();
 	lastCASWTime = time - timing.tCWD() - timing.tWTR() - timing.tBurst();
-
+	
+	nextPrechargeTime = lastCASWTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR();
+	nextPrechargeTime = max(nextPrechargeTime,lastCASTime + timing.tAL() + timing.tCAS() + timing.tBurst() + max(0,timing.tRTP() - timing.tCMD()));
+	nextActivateTime = lastPrechargeTime + timing.tRP();
+	
+	nextActivateTime = max(nextActivateTime, lastRASTime + timing.tRC());
+	nextReadTime = lastRASTime + timing.tRCD() - timing.tAL();
+	nextWriteTime = lastRASTime + timing.tRCD() - timing.tAL();
+	nextPrechargeTime = max(nextPrechargeTime, lastRASTime + timing.tRAS());
 }
 
 //////////////////////////////////////////////////////////////////////

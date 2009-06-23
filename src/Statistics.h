@@ -38,6 +38,26 @@
 
 namespace DRAMsimII
 {
+	//template <typename A, typename B>
+	//bool operator==(const std::tr1::unordered_map<A, B> &, const std::tr1::unordered_map<A, B> &);
+	template <typename A, typename B>
+	bool operator==(const std::tr1::unordered_map<A, B> &first, const std::tr1::unordered_map<A, B> &second)
+	{
+		if (first.size() != second.size()) return false;
+
+		typename std::tr1::unordered_map<A, B>::const_iterator firstEnd = first.end();
+		typename std::tr1::unordered_map<A, B>::const_iterator secondEnd = second.end();
+		for (typename std::tr1::unordered_map<A, B>::const_iterator it1 = first.begin();it1 != firstEnd; it1++) 
+		{
+			typename std::tr1::unordered_map<A, B>::const_iterator it2 = second.find(it1->first);
+
+			if(it2 == secondEnd || (it1->second != it2->second)) 
+				return false;
+		} 
+		return true;
+	}
+
+
 	/// @brief stores statistics about this memory system, primarily relating to counts of transactions/commands
 	class Statistics
 	{
@@ -259,7 +279,7 @@ namespace DRAMsimII
 				}				
 			}
 		}
-	};
+	};	
 }
 
 #endif

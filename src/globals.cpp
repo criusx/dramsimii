@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <boost/iostreams/filtering_stream.hpp>
+//#include <boost/iostreams/filtering_stream.hpp>
 
 #include "globals.h"
 #include "transaction.h"
@@ -24,15 +24,15 @@
 #include "Settings.h"
 #include "SystemConfiguration.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+//#include <boost/archive/text_oarchive.hpp>
+//#include <boost/archive/text_iarchive.hpp>
 
-using boost::iostreams::filtering_ostream;
+//using boost::iostreams::filtering_ostream;
 
 namespace DRAMsimII
 {
 	// modified, writes to cerr or a compressed output file
-	filtering_ostream timingOutStream;
-	filtering_ostream powerOutStream;
-	filtering_ostream statsOutStream;	
+// 	filtering_ostream timingOutStream;
+// 	filtering_ostream powerOutStream;
+// 	filtering_ostream statsOutStream;	
 }

@@ -26,54 +26,23 @@
 #include <functional>
 #include <algorithm>
 #include <assert.h>
-#ifdef WIN32
-#include <io.h> 
-#endif
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <boost/iostreams/filtering_streambuf.hpp>
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/device/file_descriptor.hpp>
-#include <boost/iostreams/device/file.hpp>
-#include <boost/filesystem/operations.hpp>
 #include <boost/functional.hpp>
 
-#ifndef WIN32
-#include <boost/iostreams/filter/bzip2.hpp>
-#include <boost/iostreams/filter/gzip.hpp>
-using boost::iostreams::bzip2_compressor;
-using boost::iostreams::gzip_compressor;
-using boost::iostreams::gzip_params;
-#endif
 
 #include "System.h"
 
+using std::setprecision;
+using std::string;
+using std::cerr;
 using std::for_each;
 using std::max;
 using std::bind2nd;
 using std::mem_fun_ref;
-using boost::iostreams::null_sink;
-using boost::iostreams::file_sink;
-using boost::iostreams::filtering_ostream;
-using std::ifstream;
-using std::ofstream;
-using std::stringstream;
-using std::cout;
 using std::vector;
 using std::endl;
 using std::ostream;
-using std::ios;
-using std::setw;
-using std::string;
-using std::cerr;
-using std::ifstream;
-using std::setfill;
-using std::setprecision;
 using std::min;
 using namespace DRAMsimII;
-namespace bf = boost::filesystem;
 
 //////////////////////////////////////////////////////////////////////
 /// @brief constructor for a dramSystem, based on dramSettings
@@ -91,127 +60,7 @@ nextStats(settings.epoch)
 {
 	Address::initialize(settings);
 
-	// initialize the output streams
-	if (!timingOutStream.is_complete())
-	{
-
-		string suffix;
-		switch (settings.outFileType)
-		{	
-		case BZ:
-#ifndef WIN32
-			timingOutStream.push(bzip2_compressor());
-			powerOutStream.push(bzip2_compressor());
-			statsOutStream.push(bzip2_compressor());
-			suffix = ".bz2";
-			break;
-#endif
-		case GZ:
-#ifndef WIN32
-			timingOutStream.push(gzip_compressor(gzip_params(9)));
-			powerOutStream.push(gzip_compressor(gzip_params(9)));
-			statsOutStream.push(gzip_compressor(gzip_params(9)));
-			suffix = ".gz";
-			break;
-#endif
-		case UNCOMPRESSED:
-			break;
-		case COUT:
-			timingOutStream.push(cout);
-			powerOutStream.push(cout);
-			statsOutStream.push(cout);
-			break;
-		case NONE:
-			timingOutStream.push(null_sink());
-			powerOutStream.push(null_sink());
-			statsOutStream.push(null_sink());
-			break;
-		}
-
-		bf::path outDir(settings.outFileDir.c_str());
-
-		if (!bf::exists(outDir))
-		{
-			if (!bf::create_directory(outDir))
-			{
-				cerr << "Could not create dir " << outDir.leaf() << " and dir does not exist." << endl;
-				exit(-1);
-			}
-		}
-		else
-		{
-			if (!bf::is_directory(outDir))
-			{
-				cerr << "Directory " << outDir.leaf() << " exists, but is not a directory." << endl;
-				exit(-1);
-			}
-		}
-		if (settings.outFileType == GZ || settings.outFileType == BZ || settings.outFileType == UNCOMPRESSED)
-		{
-			string baseFilename = settings.outFile;
-
-			// strip off the file suffix
-			if (baseFilename.find("gz") != string::npos)
-				baseFilename = baseFilename.substr(0,baseFilename.find(".gz"));
-			if (baseFilename.find("bz2") != string::npos)
-				baseFilename = baseFilename.substr(0,baseFilename.find(".bz2"));
-
-			int counter = 0;		
-
-			stringstream timingFilename;
-			stringstream powerFilename;
-			stringstream statsFilename;		
-			stringstream settingsFilename;
-			
-			do
-			{
-				timingFilename.str("");
-				powerFilename.str("");
-				statsFilename.str("");
-				settingsFilename.str("");
-				timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
-				powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
-				statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-				settingsFilename << outDir.native_directory_string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";	
-				counter++;
-
-			} while (!createNewFile(timingFilename.str()) || !createNewFile(powerFilename.str()) || !createNewFile(statsFilename.str()) || !createNewFile(settingsFilename.str()));
-
-			timingOutStream.push(file_sink(timingFilename.str().c_str()));
-			powerOutStream.push(file_sink(powerFilename.str().c_str()));
-			statsOutStream.push(file_sink(statsFilename.str().c_str()));
-			filtering_ostream settingsOutStream;
-			settingsOutStream.push(file_sink(settingsFilename.str().c_str()));
-
-			if (!timingOutStream.good() || !timingOutStream.is_complete())
-			{
-				cerr << "Error opening file \"" << timingFilename.str() << "\" for writing" << endl;
-				exit(-12);
-			}
-			else if (!powerOutStream.good() || !powerOutStream.is_complete())
-			{
-				cerr << "Error opening file \"" << powerFilename.str() << "\" for writing" << endl;
-				exit(-12);
-			}
-			else if (!statsOutStream.good() || !statsOutStream.is_complete())
-			{
-				cerr << "Error opening file \"" << statsFilename.str() << "\" for writing" << endl;
-				exit(-12);
-			}
-			else if (!settingsOutStream.good() || !settingsOutStream.is_complete())
-			{
-				cerr << "Error writing settings file" << settingsFilename.str() << endl;
-				exit(-12);
-			}
-			else
-			{
-				settingsOutStream << settings.settingsOutputFile;
-				settingsOutStream.flush();
-				//settingsOutStream.write(settings.settingsOutputFile.c_str(),settings.settingsOutputFile.length());
-				//settingsOutStream.close();
-			}
-		}
-	}
+	
 	string commandLine(settings.commandLine);
 
 	if (commandLine.length() < 1)
@@ -229,7 +78,7 @@ nextStats(settings.epoch)
 		}
 	}
 	// else printing to these streams goes nowhere
-	statsOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
+	systemConfig.statsOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
@@ -237,7 +86,7 @@ nextStats(settings.epoch)
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
-	powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
+	systemConfig.powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
@@ -245,17 +94,17 @@ nextStats(settings.epoch)
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
-	statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
+	systemConfig.statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 
-	powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
+	systemConfig.powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 
-	statsOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
+	systemConfig.statsOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
 
-	powerOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
+	systemConfig.powerOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
 
-	powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
+	systemConfig.powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
 
-	statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
+	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
 
 
 	// set the channelID so that each channel may know its ordinal value
@@ -306,37 +155,10 @@ nextStats(0)
 System::~System()
 {}
 
-//////////////////////////////////////////////////////////////////////////
-/// @brief helper function to determine if a file already exists
-/// @return true if the file already exists, false otherwise
-//////////////////////////////////////////////////////////////////////////
-bool System::fileExists(stringstream& fileName) const
-{
-	bf::path newPath(fileName.str().c_str());
-	return bf::exists(newPath);
-}
 
 
-//////////////////////////////////////////////////////////////////////////
-/// @brief attempt to atomically create a file with this name
-/// @return true if the file was created
-//////////////////////////////////////////////////////////////////////////
-bool System::createNewFile(const string& fileName) const
-{
-	int fs = 
-#ifdef WIN32
-		_open(fileName.c_str(), O_CREAT | O_EXCL, _S_IREAD | _S_IWRITE);
-#else
-		open(fileName.c_str(), O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-#endif
-	if (fs < 0)
-		return false;
-	else
-	{
-		close(fs);
-		return true;
-	}
-}
+
+
 
 //////////////////////////////////////////////////////////////////////
 /// @brief returns the time at which the next event happens
@@ -487,7 +309,7 @@ unsigned System::findOldestChannel() const
 //////////////////////////////////////////////////////////////////////
 void System::printStatistics()
 {
-	statsOutStream << statistics;
+	systemConfig.statsOutStream << statistics;
 	statistics.clear();
 }
 

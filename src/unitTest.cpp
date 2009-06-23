@@ -600,6 +600,82 @@ BOOST_AUTO_TEST_CASE( test_queue)
 	BOOST_CHECK_EQUAL(q8.size(), 20);
 }
 
+DRAMsimII::CommandOrderingAlgorithm operator++(DRAMsimII::CommandOrderingAlgorithm &lhs)
+{
+	lhs = (CommandOrderingAlgorithm)((int)lhs + 1);
+	return lhs;
+}
+
+DRAMsimII::TransactionOrderingAlgorithm operator++(DRAMsimII::TransactionOrderingAlgorithm &lhs)
+{
+	lhs = (TransactionOrderingAlgorithm)((int)lhs + 1);
+	return lhs;
+}
+
+DRAMsimII::RowBufferPolicy operator++(DRAMsimII::RowBufferPolicy &lhs)
+{
+	lhs = (RowBufferPolicy)((int)lhs + 1);
+	return lhs;
+}
+
+DRAMsimII::Address::AddressMappingScheme operator++(DRAMsimII::Address::AddressMappingScheme &lhs)
+{
+	lhs = (Address::AddressMappingScheme)((int)lhs + 1);
+	return lhs;
+}
+
+BOOST_AUTO_TEST_CASE( test_configurations )
+{
+	Settings settings0(master_test_suite().argc, (char **)master_test_suite().argv);
+	
+	for (settings0.requestCount = 500; settings0.requestCount < 5000; settings0.requestCount += 500)
+	{
+		for (settings0.averageInterarrivalCycleCount = 0; settings0.averageInterarrivalCycleCount <= 35; settings0.averageInterarrivalCycleCount += 5)
+		{
+			for (settings0.dataRate = 800000000; settings0.dataRate < 3200000000; settings0.dataRate += 200000000)
+			{
+				for (settings0.commandOrderingAlgorithm = STRICT_ORDER; settings0.commandOrderingAlgorithm <= COMMAND_PAIR_RANK_HOPPING; settings0.commandOrderingAlgorithm++)
+				{
+					for (settings0.transactionOrderingAlgorithm = RIFF; settings0.transactionOrderingAlgorithm <= STRICT; settings0.transactionOrderingAlgorithm++)
+					{
+						for (settings0.perBankQueueDepth = 2; settings0.perBankQueueDepth <= 24; settings0.perBankQueueDepth += 2)
+						{
+							for (settings0.channelCount = 1; settings0.channelCount <= 4; settings0.channelCount++)
+							{
+								for (settings0.rankCount = 1; settings0.rankCount <= 8; settings0.rankCount *= 2)
+								{
+									for (settings0.bankCount = 1; settings0.bankCount <= 16; settings0.bankCount *= 2)
+									{
+										for (settings0.transactionQueueDepth = 1; settings0.transactionQueueDepth <= 32; settings0.transactionQueueDepth *= 2)
+										{
+											for (settings0.seniorityAgeLimit = 256; settings0.seniorityAgeLimit < 16384; settings0.seniorityAgeLimit *= 2)
+											{
+												for (settings0.decodeWindow = 1; settings0.decodeWindow <= settings0.transactionQueueDepth; settings0.decodeWindow += 2)
+												{
+													for (settings0.rowBufferManagementPolicy = OPEN_PAGE; settings0.rowBufferManagementPolicy <= CLOSE_PAGE_AGGRESSIVE; settings0.rowBufferManagementPolicy++)
+													{
+														for (settings0.addressMappingScheme = Address::CLOSE_PAGE_BASELINE; settings0.addressMappingScheme <= Address::CLOSE_PAGE_HIGH_LOCALITY; settings0.addressMappingScheme++)
+														{
+															System ds2(settings0);
+															ds2.runSimulations();
+														}
+
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+
 
 BOOST_AUTO_TEST_CASE( test_serialization)
 {
@@ -738,6 +814,8 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	Rank *rk2;
 	restore("rankTest1",rk2);
 	BOOST_CHECK_EQUAL(rk1,*rk2);
+
+	// channel tests
 	Channel ch1(settings, sc1, *st2);
 	ch1.setChannelID(0);
 	Transaction *t1 = new Transaction(Transaction::IFETCH_TRANSACTION, 1590, 8, Address(0x14584), 0x20, 0x2);
@@ -749,7 +827,8 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	restore("chanTest1",ch2);
 	BOOST_CHECK_EQUAL(ch1, *ch2);
 
-	System *ds2 = new System(settings);	
+	// system tests
+	System *ds2 = new System(settings);
 	backup("ds2",ds2);
 	System *ds5;
 	restore("ds2",ds5);
@@ -762,7 +841,7 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	restore("ds2",ds3);
 	BOOST_CHECK_EQUAL(*ds2,*ds3);
 
-	System *ds4 = new System(settings);
+	System *ds4 ;
 	restore("ds2",ds4);
 	BOOST_CHECK_EQUAL(*ds3,*ds4);
 
@@ -772,11 +851,56 @@ BOOST_AUTO_TEST_CASE( test_serialization)
 	//ds.runSimulations();
 	//timingOutStream << ds << endl;
 }
-#if 0
+
+BOOST_AUTO_TEST_CASE( serialize_inputstream)
+{
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
+	const SystemConfiguration sc1(settings);
+
+	Statistics st1(settings);
+	std::vector<Channel> ch1(4, Channel(settings,sc1, st1));
+
+	const InputStream is1(settings, sc1,ch1);
+	backup("testInputStream",&is1);
+	InputStream *is2;
+	restore("testInputStream",is2);
+	BOOST_CHECK_EQUAL(is1, *is2);
+}
+
+
 
 #include <sstream>
 using std::stringstream;
 using std::string;
+
+BOOST_AUTO_TEST_CASE( serialize_pattern_test )
+{
+	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
+
+	System *ds3 = new System(settings);	
+
+	const string name("systemTestRepeat");
+
+	stringstream fullname;
+
+	unsigned counter = 0;
+
+	for (int i = std::rand() % 16384; i > 0; i--)
+	{
+		ds3->runSimulations(500 + (std::rand() % 1024));
+
+		fullname.str("");
+		fullname << name << counter++;
+
+		backup(fullname.str().c_str(),ds3);
+
+		delete ds3;
+		ds3 = NULL;
+
+		restore(fullname.str().c_str(),ds3);
+	}
+}
+
 
 BOOST_AUTO_TEST_CASE( test_system_serialization)
 {
@@ -792,7 +916,6 @@ BOOST_AUTO_TEST_CASE( test_system_serialization)
 
 	for (int i = std::rand() % 16384; i > 0; i--)
 	{
-
 		ds3->runSimulations(500 + (std::rand() % 2*65536));
 
 		fullname.str("");
@@ -823,20 +946,3 @@ BOOST_AUTO_TEST_CASE( test_system_serialization)
 		delete ds4;
 	}
 }
-
-BOOST_AUTO_TEST_CASE( serialize_inputstream)
-{
-	const Settings settings(master_test_suite().argc, (char **)master_test_suite().argv);
-	const SystemConfiguration sc1(settings);
-
-	Statistics st1(settings);
-	std::vector<Channel> ch1(4, Channel(settings,sc1, st1));
-
-	const InputStream is1(settings, sc1,ch1);
-	backup("testInputStream",&is1);
-	InputStream *is2;
-	restore("testInputStream",is2);
-	BOOST_CHECK_EQUAL(is1, *is2);
-}
-
-#endif

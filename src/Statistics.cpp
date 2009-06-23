@@ -330,15 +330,15 @@ void Statistics::clear()
 //////////////////////////////////////////////////////////////////////////
 /// @brief equality operator to test if two sets of statistics are equal
 //////////////////////////////////////////////////////////////////////////
-bool Statistics::operator==(const Statistics& right) const
+bool Statistics::operator==(const Statistics& rhs) const
 {
-	return (validTransactionCount == right.validTransactionCount && startNumber == right.startNumber && endNumber == right.endNumber &&
-		burstOf8Count == right.burstOf8Count && burstOf4Count == right.burstOf4Count && columnDepth == right.columnDepth &&
+	return (validTransactionCount == rhs.validTransactionCount && startNumber == rhs.startNumber && endNumber == rhs.endNumber &&
+		burstOf8Count == rhs.burstOf8Count && burstOf4Count == rhs.burstOf4Count && columnDepth == rhs.columnDepth &&
 		/// @todo restore comparisons once tr1 implementations support this
-		std::equal(commandDelay.begin(),commandDelay.end(), right.commandDelay.begin()) && std::equal(commandExecution.begin(), commandExecution.end(), right.commandExecution.begin()) && 
-		std::equal(commandTurnaround.begin(), commandTurnaround.end(), right.commandTurnaround.begin()) && std::equal(transactionDecodeDelay.begin(), transactionDecodeDelay.end(), right.transactionDecodeDelay.begin()) && 
-		std::equal(transactionExecution.begin(), transactionExecution.end(), right.transactionExecution.begin()) && channels == right.channels && ranks == right.ranks && banks == right.banks &&
-		aggregateBankUtilization == right.aggregateBankUtilization &&
-		pcOccurrence == right.pcOccurrence && workingSet == right.workingSet && readCount == right.readCount && writeCount == right.writeCount &&
-		readBytesTransferred == right.readBytesTransferred && writeBytesTransferred == right.writeBytesTransferred);
+		commandDelay ==  rhs.commandDelay && commandExecution == rhs.commandExecution && commandTurnaround == rhs.commandTurnaround &&
+		transactionDecodeDelay == rhs.transactionDecodeDelay && transactionExecution == rhs.transactionExecution &&
+		channels == rhs.channels && ranks == rhs.ranks && banks == rhs.banks && aggregateBankUtilization == rhs.aggregateBankUtilization &&
+		pcOccurrence == rhs.pcOccurrence && workingSet == rhs.workingSet && readCount == rhs.readCount && writeCount == rhs.writeCount &&
+		readBytesTransferred == rhs.readBytesTransferred && writeBytesTransferred == rhs.writeBytesTransferred);
 }
+

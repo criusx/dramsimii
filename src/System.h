@@ -51,7 +51,7 @@ namespace DRAMsimII
 	{
 	protected:
 		// members
-		SystemConfiguration systemConfig;		///< stores the parameters for the DRAM system, including channel/rank/bank/row counts		
+		const SystemConfiguration systemConfig;		///< stores the parameters for the DRAM system, including channel/rank/bank/row counts		
 		SimulationParameters simParameters;		///< has all the necessary parameters for the simulation run
 		Statistics statistics;					///< keeps running statistics about the simulation
 		std::vector<Channel> channel;			///< represents the independent channels
@@ -68,9 +68,7 @@ namespace DRAMsimII
 		void checkStats();
 		virtual void doPowerCalculation();
 		virtual void printStatistics();	
-		bool fileExists(std::stringstream& fileName) const;
-		bool createNewFile(const std::string& fileName) const;
-
+		
 	public:		
 
 		// functions
@@ -100,7 +98,7 @@ namespace DRAMsimII
 		// serialization
 		friend class boost::serialization::access;
 
-		explicit System(Settings &settings, SystemConfiguration &systemConfig);
+		explicit System(Settings &settings, const SystemConfiguration &systemConfig);
 
 		// deserialization constructor
 		explicit System(const SystemConfiguration &sysConfig, const std::vector<Channel> &chan, const SimulationParameters &simParams,
