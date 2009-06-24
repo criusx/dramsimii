@@ -225,7 +225,8 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 
 	CASLength += currentCommand->getLength();
 
-	lastBankID = currentCommand->getAddress().getBank();
+	assert(currentCommand->getAddress().getBank() == lastBankID);
+	//lastBankID = currentCommand->getAddress().getBank();
 
 	// calculate when the next few commands can happen
 	nextReadTime = max(nextReadTime, currentTime + timing.tBurst());
@@ -247,7 +248,8 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 
 	CASWLength += currentCommand->getLength();
 
-	lastBankID = currentCommand->getAddress().getBank();
+	assert(currentCommand->getAddress().getBank() == lastBankID);
+	//lastBankID = currentCommand->getAddress().getBank();
 
 	// calculate when the next few commands can happen
 	nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tWTR());

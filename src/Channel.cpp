@@ -1733,7 +1733,8 @@ const Command *Channel::readNextCommand() const
 					{
 #ifndef NDEBUG
 						const tick executeTime = earliestExecuteTime(challengerCommand);
-						assert(executeTime == time + minProtocolGap(challengerCommand));
+						if (executeTime != time + minProtocolGap(challengerCommand))
+							assert(executeTime == time + minProtocolGap(challengerCommand));
 #endif
 						// choose the oldest command that can be executed
 						if ((challengerCommand->getEnqueueTime() < oldestExecutableCommandTime) && (canIssue(challengerCommand)))
@@ -2524,7 +2525,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			tick t_ras_gap = (currentBank.getLastRASTime() - time) + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			tick t_cas_gap = max(0L,((tick)(currentBank.getLastCASTime() - time) + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
+			tick t_cas_gap = ((tick)(currentBank.getLastCASTime() - time) + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
 
 			// respect t_casw of same bank
 			t_cas_gap = max((tick)t_cas_gap,((currentBank.getLastCASWTime() - time) + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
@@ -2561,7 +2562,8 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 	}
 
 	//return max(min_gap,timingSpecification.tCMD());
-	return max(min_gap,max(lastCommandIssueTime - time + (tick)timingSpecification.tCMD(),(tick)0));
+	//return max(min_gap,max(lastCommandIssueTime - time + (tick)timingSpecification.tCMD(),(tick)0));
+	return max(min_gap, lastCommandIssueTime - time + (tick)timingSpecification.tCMD());
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -244,6 +244,22 @@ bool Address::reverseAddressTranslation()
 
 		break;
 
+	case INTEL845G_MAP:
+
+		physicalAddress = (PhysicalAddress)column << 10;
+		shift += columnLowAddressDepth;
+		physicalAddress |= (PhysicalAddress)bank << shift;
+		shift += rowAddressDepth;
+		physicalAddress |= (PhysicalAddress)columnHigh << shift;
+		shift += columnHighAddressDepth;
+		physicalAddress |= (PhysicalAddress)channel << shift;
+		shift += channelAddressDepth;
+		physicalAddress |= (PhysicalAddress)bank << shift;
+		shift += bankAddressDepth;
+		physicalAddress |= (PhysicalAddress)rank << shift;
+
+		break;
+
 	case BURGER_BASE_MAP:
 		break;
 
@@ -635,9 +651,10 @@ bool Address::addressTranslation()
 			*     row id goes like this: addr[27:15:26-16]
 			*     rank_id is addr[29:28]  This means that no device switching unless memory usage goes above 256MB grainularity
 			*     No need to remap address with variable number of ranks.  Address just goes up to rank id, if there is more than XXX MB of memory.
-			*     Draw back to this scheme is that we're not effectively using banks.
+			*     Drawback to this scheme is that we're not effectively using banks.
 			*/
-			tempAddress = physicalAddress >> 3;
+			//tempAddress = physicalAddress >> 3;
+			tempAddress = physicalAddress;
 
 			buffer = tempAddress;			
 			tempAddress >>= 10;
@@ -754,6 +771,7 @@ void Address::setAddress(const unsigned channel, const unsigned rank, const unsi
 	PhysicalAddress oldPA = physicalAddress;
 	addressTranslation();
 	assert((physicalAddress >> columnSizeDepth) == (oldPA >> columnSizeDepth));
+	assert(this->channel == channel && this->rank == rank && this->bank == bank && this->row == row && this->column == column);
 #endif
 
 }

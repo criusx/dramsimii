@@ -633,6 +633,7 @@ Transaction *InputStream::getNextRandomRequest()
 			nextBank =  (nextBank + 1 + (rngIntGenerator() % (systemConfig.getBankCount() - 1))) % systemConfig.getBankCount();
 		}
 		// else leave it as is
+		assert(nextBank < systemConfig.getBankCount());
 
 		unsigned nextRow = channel[nextChannel].getRank(nextRank).bank[nextBank].getOpenRowID();
 
@@ -703,6 +704,12 @@ Transaction *InputStream::getNextRandomRequest()
 		time += nextTime;
 
 		nextAddress.setAddress(nextChannel,nextRank,nextBank,nextRow,nextColumn);
+
+		assert(nextAddress.getChannel() < systemConfig.getChannelCount());
+		assert(nextAddress.getRank() < systemConfig.getRankCount());
+		assert(nextAddress.getBank() < systemConfig.getBankCount());
+		assert(nextAddress.getRow() < systemConfig.getRowCount());
+		assert(nextAddress.getColumn() < systemConfig.getColumnCount());
 
 		return new Transaction(nextType, time, burstLength, nextAddress, 0, 0);
 	}

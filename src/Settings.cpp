@@ -293,6 +293,11 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			break;
 		case channel_count_token:
 			channelCount = lexical_cast<unsigned>(nodeValue);
+			if (addressMappingScheme == Address::INTEL845G_MAP)
+			{
+				cerr << "error: Intel 845G doesn't support multiple channels, resetting to SDRAM Base Map" << endl;
+				addressMappingScheme = Address::SDRAM_BASE_MAP;
+			}
 			break;
 		case short_burst_ratio_token:
 			shortBurstRatio = lexical_cast<float>(nodeValue);
@@ -402,7 +407,17 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			else if (nodeValue == "closepagebaseline")
 				addressMappingScheme = Address::CLOSE_PAGE_BASELINE;
 			else if (nodeValue == "intel845g")
-				addressMappingScheme = Address::INTEL845G_MAP;
+			{
+				if (channelCount > 1)
+				{
+					cerr << "error: Intel 845G doesn't support multiple channels, resetting to SDRAM Base Map" << endl;
+					addressMappingScheme = Address::SDRAM_BASE_MAP;
+				}
+				else
+				{
+					addressMappingScheme = Address::INTEL845G_MAP;
+				}				
+			}
 			else if (nodeValue == "sdrambase")
 				addressMappingScheme = Address::SDRAM_BASE_MAP;
 			else if (nodeValue == "sdramhiperf")
