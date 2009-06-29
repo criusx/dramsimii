@@ -113,7 +113,6 @@ Source('fbdSystem.cpp')
 Source('globals.cpp')
 Source('InputStream.cpp')
 Source('m5-dramSystem.cpp')
-
 Source('powerConfig.cpp')
 Source('Rank.cpp')
 Source('Settings.cpp')

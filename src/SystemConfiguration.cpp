@@ -105,7 +105,19 @@ outType(settings.outFileType)
 	{
 		string suffix;
 		switch (outType)
-		{	
+		{			
+		case COUT:
+			timingOutStream.push(cout);
+			powerOutStream.push(cout);
+			statsOutStream.push(cout);
+			return;
+			break;
+		case NONE:
+			timingOutStream.push(null_sink());
+			powerOutStream.push(null_sink());
+			statsOutStream.push(null_sink());
+			return;
+			break;
 		case BZ:
 #ifndef WIN32
 			suffix = ".bz2";
@@ -181,7 +193,6 @@ outType(settings.outFileType)
 				//settingsOutStream.write(settings.settingsOutputFile.c_str(),settings.settingsOutputFile.length());
 				//settingsOutStream.close();
 			}
-
 		}
 	}
 }
@@ -337,10 +348,21 @@ bool SystemConfiguration::setupStreams()
 {
 	if (!timingOutStream.is_complete())
 	{
-
 		string suffix;
 		switch (outType)
 		{	
+		case COUT:
+			timingOutStream.push(cout);
+			powerOutStream.push(cout);
+			statsOutStream.push(cout);
+			return true;
+			break;
+		case NONE:
+			timingOutStream.push(null_sink());
+			powerOutStream.push(null_sink());
+			statsOutStream.push(null_sink());
+			return true;
+			break;
 		case BZ:
 #ifndef WIN32
 			timingOutStream.push(bzip2_compressor());
@@ -357,17 +379,7 @@ bool SystemConfiguration::setupStreams()
 			suffix = ".gz";
 			break;
 #endif
-		case UNCOMPRESSED:
-			break;
-		case COUT:
-			timingOutStream.push(cout);
-			powerOutStream.push(cout);
-			statsOutStream.push(cout);
-			break;
-		case NONE:
-			timingOutStream.push(null_sink());
-			powerOutStream.push(null_sink());
-			statsOutStream.push(null_sink());
+		default:
 			break;
 		}
 		timingOutStream.push(file_sink(timingFile.c_str()));

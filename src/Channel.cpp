@@ -1482,8 +1482,8 @@ const Command *Channel::readNextCommand() const
 #ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							if (max(time + minGap, (tick)0) != max(challengerExecuteTime,time))
-								assert(max(time + minGap, (tick)0) == max(challengerExecuteTime,time));
+							if (max(time + minGap, (tick)0) != challengerExecuteTime)
+								assert(max(time + minGap, (tick)0) == challengerExecuteTime);
 #endif
 							if (challengerExecuteTime < candidateExecuteTime ||
 								(candidateExecuteTime == challengerExecuteTime && 
@@ -1501,11 +1501,12 @@ const Command *Channel::readNextCommand() const
 #ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							if (time + minGap != max(challengerExecuteTime,time))
+							if (time + minGap != challengerExecuteTime)
 							{
 								cerr << time << " " << minGap << " " << challengerExecuteTime << " " << challengerCommand->getCommandType() << " " << challengerCommand->getAddress() << endl;
 
-								assert(challengerCommand && (time + minGap == max(challengerExecuteTime,time)));
+								if (challengerCommand && (time + minGap != challengerExecuteTime))
+									assert(challengerCommand && (time + minGap == challengerExecuteTime));
 							}
 #endif
 							// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
@@ -1587,7 +1588,7 @@ const Command *Channel::readNextCommand() const
 #ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							if (time + minGap != max(challengerExecuteTime,time))
+							if (time + minGap != challengerExecuteTime)
 							{
 								cerr << time << " " << minGap << " " << challengerExecuteTime;
 
@@ -1674,7 +1675,7 @@ const Command *Channel::readNextCommand() const
 #ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							if (time + minGap != max(challengerExecuteTime,time))
+							if (time + minGap != challengerExecuteTime)
 							{
 								cerr << time << " " << minGap << " " << challengerExecuteTime;
 
@@ -1825,12 +1826,12 @@ const Command *Channel::readNextCommand() const
 	case RANK_ROUND_ROBIN:
 		{
 			// the command type to look for first
-			Command::CommandType currentCommandType;
+			bool readSweep = true;
 
 			// look at the most recently retired command in this channel's history
 			//const unsigned lastBankOffset = lastCommand ? lastCommand->getAddress().getBank() : 0;
 			//const vector<Rank>::const_iterator lastRank = rank.begin() + (lastCommand ? lastCommand->getAddress().getRank() : 0);
-			const Command::CommandType lastCommandType = lastCommand ? (lastCommand->isRead() ? Command::READ : Command::WRITE) : Command::READ;
+			const Command::CommandType lastCommandType = lastCommand ? (lastCommand->getCommandType()) : Command::READ;
 
 			// attempt to group RAS/CAS pairs together
 			switch (lastCommandType)
@@ -1854,20 +1855,41 @@ const Command *Channel::readNextCommand() const
 				}
 				break;
 
-			case Command::REFRESH_ALL:
-			case Command::READ_AND_PRECHARGE:
 			case Command::READ:
+				// try to reuse open rows
+					if (lastCommand)
+					{
+						const Command *nextCommand = ((rank.begin() + lastCommand->getAddress().getRank())->bank.begin() + lastCommand->getAddress().getBank())->front();
+
+						if (nextCommand && (nextCommand->isReadOrWrite() || nextCommand->isPrecharge()))
+						{
+							return nextCommand;
+						}
+					}				
+			case Command::READ_AND_PRECHARGE:
 			case Command::PRECHARGE:
-				currentCommandType = Command::READ;
+			case Command::REFRESH_ALL:
+				readSweep = true;
 				break;
 
 			case Command::WRITE:
+				// try to reuse open rows
+				if (lastCommand)
+				{
+					const Command *nextCommand = ((rank.begin() + lastCommand->getAddress().getRank())->bank.begin() + lastCommand->getAddress().getBank())->front();
+
+					if (nextCommand && (nextCommand->isReadOrWrite() || nextCommand->isPrecharge()))
+					{
+						return nextCommand;
+					}
+				}			
 			case Command::WRITE_AND_PRECHARGE:
-				currentCommandType = Command::WRITE;
+
+				readSweep = false;
 				break;	
 
 			default:
-				currentCommandType = Command::READ;
+				readSweep = true;
 				cerr << "warn: Unhandled command type." << endl;
 				break;
 			}
@@ -1885,6 +1907,7 @@ const Command *Channel::readNextCommand() const
 			const unsigned startingBankOffset = currentBankOffset;
 
 			vector<Rank>::const_iterator rankEnd = rank.end();
+			const bool originalReadSweep = readSweep;
 
 			while (true)
 			{		
@@ -1902,8 +1925,8 @@ const Command *Channel::readNextCommand() const
 						const Command *secondCommand = potentialCommand->isActivate() ? (currentRank->bank.begin() + currentBankOffset)->read(1) : potentialCommand;
 						assert(secondCommand->isReadOrWrite());
 
-						if ((secondCommand->isRead() && currentCommandType == Command::READ) ||
-							(secondCommand->isWrite() && currentCommandType == Command::WRITE))
+						if ((secondCommand->isRead() && readSweep) ||
+							(secondCommand->isWrite() && !readSweep))
 						{
 							assert((currentRank->bank.begin() + currentBankOffset)->front() == potentialCommand);
 							return potentialCommand;
@@ -1938,9 +1961,9 @@ const Command *Channel::readNextCommand() const
 					if (systemConfig.isReadWriteGrouping())
 					{
 						// try other types
-						currentCommandType = (currentCommandType == Command::WRITE) ? Command::READ : Command::WRITE;
+						readSweep = !readSweep;
 
-						if (currentCommandType == lastCommandType)
+						if (readSweep == originalReadSweep)
 						{
 							return NULL;
 						}						
@@ -1957,10 +1980,10 @@ const Command *Channel::readNextCommand() const
 		// keep rank id as long as possible, go round robin down a given rank
 	case BANK_ROUND_ROBIN:
 		{			
-			Command::CommandType currentCommandType;
+			bool readSweep = true;
 
 			// look at the most recently retired command in this channel's history
-			const Command::CommandType lastCommandType = lastCommand ? (lastCommand->isRead() ? Command::READ : Command::WRITE) : Command::READ;
+			const Command::CommandType lastCommandType = lastCommand ? (lastCommand->getCommandType()) : Command::READ;
 
 			// attempt to issue RAS and CAS together
 			switch (lastCommandType)
@@ -1983,20 +2006,41 @@ const Command *Channel::readNextCommand() const
 				}
 				break;
 				// doing read sweeping
+			case Command::READ:
+				// try to reuse open rows
+				if (lastCommand)
+				{
+					const Command *nextCommand = ((rank.begin() + lastCommand->getAddress().getRank())->bank.begin() + lastCommand->getAddress().getBank())->front();
+
+					if (nextCommand && (nextCommand->isReadOrWrite() || nextCommand->isPrecharge()))
+					{
+						return nextCommand;
+					}
+				}			
 			case Command::REFRESH_ALL:
 			case Command::READ_AND_PRECHARGE:
-			case Command::READ:
 			case Command::PRECHARGE:
-				currentCommandType = Command::READ;
+				readSweep = true;
 				break;
 
 				// doing write sweeping
 			case Command::WRITE:
+				// try to reuse open rows
+				if (lastCommand)
+				{
+					const Command *nextCommand = ((rank.begin() + lastCommand->getAddress().getRank())->bank.begin() + lastCommand->getAddress().getBank())->front();
+
+					if (nextCommand && (nextCommand->isReadOrWrite() || nextCommand->isPrecharge()))
+					{
+						return nextCommand;
+					}
+				}			
 			case Command::WRITE_AND_PRECHARGE:
-				currentCommandType = Command::WRITE;
+				readSweep = false;
 				break;
+
 			default:
-				currentCommandType = Command::READ; // FIXME: added this to ensure no uninit vars
+				readSweep = true; // FIXME: added this to ensure no uninit vars
 				cerr << "warn: unhandled command type" << endl;
 				break;
 			}
@@ -2012,6 +2056,7 @@ const Command *Channel::readNextCommand() const
 			}
 			const vector<Bank>::const_iterator startingBank = currentBank;
 			const vector<Rank>::const_iterator startingRank = currentRank;
+			const bool originalReadSweep = readSweep;
 
 
 			while (true)
@@ -2027,11 +2072,11 @@ const Command *Channel::readNextCommand() const
 						if (potentialCommand->isActivate())
 							assert(currentBank->read(1));
 
-						const Command *secondCommand = potentialCommand->isActivate() ? currentBank->read(1) : potentialCommand;
+						const Command *secondCommand = (potentialCommand->isActivate() && currentBank->read(1)) ? currentBank->read(1) : potentialCommand;
 						assert(secondCommand->isReadOrWrite());
 
-						if ((secondCommand->isRead() && currentCommandType == Command::READ) ||
-							(secondCommand->isWrite() && currentCommandType == Command::WRITE))
+						if ((secondCommand->isRead() && readSweep) ||
+							(secondCommand->isWrite() && !readSweep))
 						{
 							assert(currentBank->front()->getAddress().getRank() == currentRank->getRankID());
 							assert(currentBank->front() == potentialCommand);
@@ -2067,9 +2112,9 @@ const Command *Channel::readNextCommand() const
 					if (systemConfig.isReadWriteGrouping())
 					{
 						// try other types
-						currentCommandType = (currentCommandType == Command::WRITE) ? Command::READ : Command::WRITE;
+						readSweep = !readSweep;
 
-						if (currentCommandType == lastCommandType)
+						if (readSweep == originalReadSweep)
 						{
 							return NULL;
 						}	
@@ -2499,7 +2544,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-			int t_cas_gap = max(0,(int)(currentRank.getLastCASTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
+			tick t_cas_gap = (tick)(currentRank.getLastCASTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
 
 			// respect last cas to different ranks
 			t_cas_gap = max((tick)t_cas_gap,(otherRankLastCASTime - time) + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD());
@@ -2742,7 +2787,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 //////////////////////////////////////////////////////////////////////////
 /// @brief Returns the soonest time that this command may execute, tracks the limiting factor
 /// @details refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk by Jacob/Wang
-/// @details Looks at all of the timing parameters and decides when the this command may soonest execute
+/// @details Looks at all of the timing parameters and decides when the this command may execute soonest 
 //////////////////////////////////////////////////////////////////////////
 tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 {

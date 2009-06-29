@@ -139,6 +139,11 @@ elif platform == 'test':
 	envTest.Append(CCFLAGS = '-g -Wall -Wextra -Weffc++ -DDEBUG')
 	test = envTest.Program('dramSimII.test',sourcesTest)
 	envTest.Install(os.path.abspath('..') + "/bin", test)
+elif platform == 'testOpt':
+	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.oto')
+	envTest.Append(CCFLAGS = '-g -Wall -Wextra -O2 -mtune=native -march=native -Weffc++ -DDEBUG')
+	test = envTest.Program('dramSimII.testOpt',sourcesTest)
+	envTest.Install(os.path.abspath('..') + "/bin", test)
 elif platform == 'prof':
 	envProf = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.op')
 	envProf.Append(CCFLAGS = '-g -O3 -mtune=native -march=native -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -DNDEBUG')

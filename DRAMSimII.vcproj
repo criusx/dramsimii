@@ -793,10 +793,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\globals.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\InputStream.cpp"
 				>
 			</File>

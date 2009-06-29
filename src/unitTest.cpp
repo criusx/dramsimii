@@ -600,25 +600,25 @@ BOOST_AUTO_TEST_CASE( test_queue)
 	BOOST_CHECK_EQUAL(q8.size(), 20);
 }
 
-DRAMsimII::CommandOrderingAlgorithm operator++(DRAMsimII::CommandOrderingAlgorithm &lhs)
+DRAMsimII::CommandOrderingAlgorithm &operator++(DRAMsimII::CommandOrderingAlgorithm &lhs, int)
 {
 	lhs = (CommandOrderingAlgorithm)((int)lhs + 1);
-	return lhs;
+	return static_cast<CommandOrderingAlgorithm&>(lhs);
 }
 
-DRAMsimII::TransactionOrderingAlgorithm operator++(DRAMsimII::TransactionOrderingAlgorithm &lhs)
+DRAMsimII::TransactionOrderingAlgorithm &operator++(DRAMsimII::TransactionOrderingAlgorithm &lhs, int)
 {
 	lhs = (TransactionOrderingAlgorithm)((int)lhs + 1);
 	return lhs;
 }
 
-DRAMsimII::RowBufferPolicy operator++(DRAMsimII::RowBufferPolicy &lhs)
+DRAMsimII::RowBufferPolicy &operator++(DRAMsimII::RowBufferPolicy &lhs, int)
 {
 	lhs = (RowBufferPolicy)((int)lhs + 1);
 	return lhs;
 }
 
-DRAMsimII::Address::AddressMappingScheme operator++(DRAMsimII::Address::AddressMappingScheme &lhs)
+DRAMsimII::Address::AddressMappingScheme &operator++(DRAMsimII::Address::AddressMappingScheme &lhs, int)
 {
 	lhs = (Address::AddressMappingScheme)((int)lhs + 1);
 	return lhs;
@@ -654,7 +654,7 @@ BOOST_AUTO_TEST_CASE( test_configurations )
 												{
 													for (settings0.rowBufferManagementPolicy = OPEN_PAGE; settings0.rowBufferManagementPolicy <= CLOSE_PAGE_AGGRESSIVE; settings0.rowBufferManagementPolicy++)
 													{
-														for (settings0.addressMappingScheme = Address::CLOSE_PAGE_BASELINE; settings0.addressMappingScheme <= Address::CLOSE_PAGE_HIGH_LOCALITY; settings0.addressMappingScheme++)
+														for (settings0.addressMappingScheme = Address::CLOSE_PAGE_BASELINE; settings0.addressMappingScheme < Address::INTEL845G_MAP; settings0.addressMappingScheme++)
 														{
 															System ds2(settings0);
 															ds2.runSimulations();
