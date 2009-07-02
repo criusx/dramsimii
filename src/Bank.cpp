@@ -405,6 +405,24 @@ bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 }
 
 //////////////////////////////////////////////////////////////////////////
+/// @brief reduce discrete CAS and Precharge commands to CAS+P to free up space
+//////////////////////////////////////////////////////////////////////////
+void Bank::collapse()
+{
+	for (int i = 0; i < perBankQueue.size() - 1; i++)
+	{
+		if (perBankQueue[i]->isReadOrWrite() && perBankQueue[i+1] && perBankQueue[i+1]->isPrecharge())
+		{
+			assert(!perBankQueue[i]->isPrecharge());
+			perBankQueue[i]->setAutoPrecharge(true);
+			Command *toDelete = perBankQueue.remove(i+1);
+			assert(toDelete->isPrecharge() && !toDelete->isReadOrWrite());
+			delete toDelete;
+		}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
 /// @brief see if there is room to insert a command using the Close Page Aggressive algorithm and then insert
 /// @param incomingTransaction the transaction to insert
 /// @param time the current time, used to check and prevent against starvation of commands

@@ -1251,9 +1251,34 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 
 		// open page systems may, in the best case, add a CAS command to an already open row
 		// closing the row and precharging may be pushed back one slot
-	case OPEN_PAGE:
 	case OPEN_PAGE_AGGRESSIVE:
+		// look to see if this queue or queues are getting too full and collapse CAS(W), Pre into
+		// CAS+P commands to relieve congestion
+		if (incomingTransaction->isRefresh())
+		{
+			vector<Rank>::iterator currentRank = rank.begin() + incomingTransaction->getAddress().getRank();
+			vector<Bank>::iterator bankEnd = currentRank->bank.end();
+			// evaluate every per bank queue in this rank and collapse
+			for (vector<Bank>::iterator i = currentRank->bank.begin(); i != bankEnd; i++)
+			{
+				if (i->size() > i->depth() / 2)
+				{
+					i->collapse();
+				}
+			}
+		}
+		else
+		{
+			vector<Bank>::iterator currentBank = (rank.begin() + incomingTransaction->getAddress().getRank())->bank.begin() + incomingTransaction->getAddress().getBank();
 
+			if (currentBank->size() > currentBank->depth() / 2)
+			{
+				currentBank->collapse();
+			}
+		}
+
+	case OPEN_PAGE:
+	
 		// refresh transactions become only one command and are handled differently
 		if (incomingTransaction->isRefresh())
 		{
@@ -1356,7 +1381,6 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		}
 
 		break;
-
 
 	default:
 
