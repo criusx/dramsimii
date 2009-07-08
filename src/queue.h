@@ -90,7 +90,7 @@ namespace DRAMsimII
 
 			if (preallocate)
 			{
-				while (count < size)
+				while (!isFull())
 				{
 					push(::new T());
 				}
@@ -101,13 +101,15 @@ namespace DRAMsimII
 		/// @details remove the elements and delete them before removing the rest of the queue
 		~Queue()
 		{
-			while (!isEmpty())
+			while (T* value = pop())
 			{
 				if (pool)
-					::delete pop();
+					::delete value;
 				else
-					delete pop();			
+					delete value;			
 			}
+			for (typename std::vector<T*>::iterator i = entry.begin(); i != entry.end(); i++)
+				assert(*i == NULL);
 		}	
 
 		/// @brief change the size of the queue
@@ -262,10 +264,11 @@ namespace DRAMsimII
 		/// and one would like to store them when they are not in use
 		void releaseItem(T *item)
 		{
+			assert(pool);
 			//#pragma omp critical
 			{
 
-#if 0
+#if 1
 				// look around to see if this was already in there, slows things down a lot, so use only when this might be a problem
 				for (typename std::vector<T *>::iterator i = entry.begin(); i != entry.end(); i++)
 				{

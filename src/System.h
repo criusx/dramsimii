@@ -64,7 +64,6 @@ namespace DRAMsimII
 		unsigned findOldestChannel() const;	
 		void updateSystemTime();
 
-
 		void checkStats();
 		virtual void doPowerCalculation();
 		virtual void printStatistics();	
@@ -88,8 +87,7 @@ namespace DRAMsimII
 		// constructors	
 		explicit System(const Settings& settings);
 		explicit System(const System& rhs);
-		virtual ~System();
-
+		
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const System &);	
 		bool operator==(const System &rhs) const;

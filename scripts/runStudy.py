@@ -98,7 +98,7 @@ traces = ['lbm000-trace.gz', 'mcf000-trace.gz', 'milc000-trace.gz']
 #'mase_256K_64_2G/galgel.trc.gz']
 
 # the name of the DRAMsimII executable
-dramSimExe = 'dramSimII.opt'
+dramSimExe = 'dramSimII.debug'
 
 # the path to the DRAMsimII executable
 dramSimPath = '/home/crius/m5/src/mem/DRAMsimII/build'
@@ -119,13 +119,13 @@ m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/commandStudy2'
+outputDir = '/home/crius/results/asplos'
 
 # the file that describes the base memory settings
 memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
 
 # the command line to pass to the DRAMsimII simulator to modify parameters
-commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d outfiledir %s %s"'
+commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s"'
 
 # the command line parameters for running in FS mode
 fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s outfiledir %s"
@@ -156,13 +156,14 @@ tFAW = [28]
 addressMappingPolicy = ['closepagebaselineopt','closepagebaseline','sdramhiperf']
 #addressMappingPolicy = ['closepagebaseline']
 #commandOrderingAlgorithm = ['firstAvailable', 'bankroundrobin', 'rankroundrobin', 'strict']
-commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF']
+commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop']
 #commandOrderingAlgorithm = ['firstAvailable']
+rowBufferManagementPolicy = ['openpageaggressive' , 'openpage', 'closepage', 'closepageaggressive']
 interarrivalCycleCount = [1]
 #perBankQueueDepth = range(8, 16, 4)
 perBankQueueDepth = [12]
 readWriteGrouping = ['true']
-requests = [9223372036854775808]
+requests = [5000]
 #benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
 #benchmarks = ['stream']
 #benchmarks = ['lbm', 'stream', 'bzip2']
@@ -191,52 +192,56 @@ def main():
                             for g in perBankQueueDepth:
                                 for j in tFAW:
                                     for k in readWriteGrouping:
-                                        for opt, arg in opts:
-                                            # trace file
-                                            if opt == '-t':
-                                                for t in traces:
-                                                    currentTrace = os.path.join(tracesDir, t)
-                                                    currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
-                                                    #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
-                                                    submitCommand = submitString % (currentCommandLine, outputDir, outputDir, t)
+                                        for l in rowBufferManagementPolicy:
+                                            for opt, arg in opts:
+                                                # trace file
+                                                if opt == '-t':
+                                                    for t in traces:
+                                                        currentTrace = os.path.join(tracesDir, t)
+                                                        currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
+                                                        #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
+                                                        submitCommand = submitString % (currentCommandLine, outputDir, outputDir, t)
+                                                        #print submitCommandLine
+                                                        #sys.exit(0)
+                                                        if not counting:
+                                                            os.system(submitCommand)
+                                                        else:
+                                                            count += 1
+
+                                                # syscall emulation
+                                                elif opt == '-s':
+                                                    currentCommandLine = m5SECommandLine % (executable, m5SEConfigFile, memorySettings, a, b, c, d, e, g, outputDir)
+                                                    submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
                                                     #print submitCommandLine
-                                                    #sys.exit(0)
-                                                    if not counting:
+
+                                                    os.system(submitCommandLine)
+
+                                                # random input
+                                                elif opt == '-r':
+                                                    for f in interarrivalCycleCount:
+                                                        for h in requests:
+                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, f, g, h, j, l, outputDir)
+                                                            print currentCommandLine
+                                                            os.system("gdb --args " + currentCommandLine)
+
+                                                            #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
+                                                            #print submitCommandLine
+                                                            #sys.exit(-1)
+                                                            #os.system(submitCommandLine)
+
+                                                # full system
+                                                elif opt == '-f':
+                                                    for i in benchmarks:
+                                                        currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, b, c, d, e, g, k, outputDir))
+                                                        submitCommand = submitString % (currentCommandLine, outputDir, outputDir, i)
+                                                        #print submitCommand
+                                                        #sys.exit(0)
                                                         os.system(submitCommand)
-                                                    else:
-                                                        count += 1
 
-                                            # syscall emulation
-                                            elif opt == '-s':
-                                                currentCommandLine = m5SECommandLine % (executable, m5SEConfigFile, memorySettings, a, b, c, d, e, g, outputDir)
-                                                submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
-                                                #print submitCommandLine
-
-                                                os.system(submitCommandLine)
-
-                                            # random input
-                                            elif opt == '-r':
-                                                for f in interarrivalCycleCount:
-                                                    for h in requests:
-                                                        currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, f, g, h, outputDir, requests[0])
-                                                        submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
-                                                        print submitCommandLine
-                                                        sys.exit(-1)
-                                                        os.system(submitCommandLine)
-
-                                            # full system
-                                            elif opt == '-f':
-                                                for i in benchmarks:
-                                                    currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, b, c, d, e, g, k, outputDir))
-                                                    submitCommand = submitString % (currentCommandLine, outputDir, outputDir, i)
-                                                    #print submitCommand
-                                                    #sys.exit(0)
-                                                    os.system(submitCommand)
-
-                                        #sys.exit(2)
+                                            #sys.exit(2)
 
 
-                                        #print submitCommandLine
+                                            #print submitCommandLine
 
     if counting:
         print "would be %d jobs." % count

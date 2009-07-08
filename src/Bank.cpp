@@ -361,6 +361,7 @@ bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
 /// @param time the current time, used to check and prevent against starvation of commands
 /// @return true if it is able to be inserted, false otherwise
 //////////////////////////////////////////////////////////////////////
+#if 0
 bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 {
 	if (!perBankQueue.isFull())
@@ -403,6 +404,81 @@ bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
 		return false;
 	}
 }
+#endif
+
+//////////////////////////////////////////////////////////////////////
+/// @brief check to see if this transaction can be inserted successfully via the open page aggressive insert mechanism
+/// @details goes through the per bank queue to see that there is a slot to insert into and that
+/// there is a precharge command to the same row that it can insert before
+/// also looks for CAS, Pre commands that can be compressed in order to fit this
+/// @author Joe Gross
+/// @param value the transaction to test
+/// @param time the current time, used to check and prevent against starvation of commands
+/// @return true if it is able to be inserted, false otherwise
+//////////////////////////////////////////////////////////////////////
+bool Bank::openPageAggressiveInsertCheck(const Transaction *value, const tick time) const
+{
+	if (perBankQueue.freecount() >= 3)
+	{
+		return true;
+	}
+	else 
+	{
+		unsigned availableSlots = perBankQueue.freecount();
+
+		// if a new P, R, C can collapse a
+		if (perBankQueue.back()->isReadOrWrite())
+		{
+			if (availableSlots >= 2)
+				return true;
+		}
+
+		for (int i = 0; i < perBankQueue.size() - 1; i++)
+		{
+			if (perBankQueue[i]->isReadOrWrite() && perBankQueue[i+1] && perBankQueue[i+1]->isPrecharge())
+			{
+				availableSlots++;
+				if (availableSlots >= 3)
+					return true;
+			}
+		}
+
+		if (availableSlots == 0)
+			return false;
+
+		// look in the bank_q and see if there's a precharge for this row to insert before		
+		// go from tail to head
+		for (int currentIndex = perBankQueue.size() - 1; currentIndex >= 0; --currentIndex)
+		{	
+			const Command *currentCommand = perBankQueue.read(currentIndex);
+
+			// then this command has been delayed by too many times and no more
+			// commands can preempt it
+			if (time - currentCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+			{
+				return false;
+			}
+			// channel, rank, bank, row all match, insert just before this precharge command
+			else if (currentCommand->isReadOrWrite() && (currentCommand->getAddress().getRow() == value->getAddress().getRow()))
+			{
+					return true;
+			}
+			// strict order may add to the end of the queue only
+			// if this has not happened already then this method of insertion fails
+			else if (systemConfig.getCommandOrderingAlgorithm() == STRICT_ORDER)
+			{
+				return false;
+			}
+		}
+		// if the correct row is already open, just insert there
+		// already guaranteed not to have RAW/WAR errors
+		if (activated && openRowID == value->getAddress().getRow())
+		{	
+			return true;
+		}
+		return false;
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief reduce discrete CAS and Precharge commands to CAS+P to free up space
@@ -411,7 +487,7 @@ void Bank::collapse()
 {
 	for (int i = 0; i < perBankQueue.size() - 1; i++)
 	{
-		if (perBankQueue[i]->isReadOrWrite() && perBankQueue[i+1] && perBankQueue[i+1]->isPrecharge())
+		if (perBankQueue[i]->isReadOrWrite() && perBankQueue[i+1] && perBankQueue[i+1]->isPrecharge() && !perBankQueue[i+1]->isReadOrWrite())
 		{
 			assert(!perBankQueue[i]->isPrecharge());
 			perBankQueue[i]->setAutoPrecharge(true);

@@ -100,7 +100,8 @@ namespace opt = boost::program_options;
 Settings::Settings(int argc, char **argv):
 systemType(BASELINE_CONFIG),
 cachelinesPerRow(0),
-tInternalBurst(0)
+tInternalBurst(0),
+addressMappingScheme(Address::SDRAM_BASE_MAP)
 {
 	loadSettingsFromFile(argc, argv);
 }

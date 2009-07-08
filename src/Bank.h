@@ -111,7 +111,7 @@ namespace DRAMsimII
 		unsigned freeCommandSlots() const { return perBankQueue.freecount(); }
 		bool openPageInsert(Transaction *value, const tick time);
 		bool closePageAggressiveInsert(Transaction *value, const tick time);
-		bool openPageInsertCheck(const Transaction *value, const tick time) const;
+		bool openPageAggressiveInsertCheck(const Transaction *value, const tick time) const;
 		bool closePageAggressiveInsertCheck(const Transaction *value, const tick time) const;
 		bool isFull() const { return perBankQueue.isFull(); }
 		bool isEmpty() const { return perBankQueue.isEmpty(); }
