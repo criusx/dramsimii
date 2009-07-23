@@ -108,7 +108,7 @@
 	</power>
 	<simulationParameters>
 		<shortBurstRatio>.50</shortBurstRatio>
-		<readPercentage>.75</readPercentage>
+		<readPercentage>.85</readPercentage>
 		<averageInterarrivalCycleCount>4</averageInterarrivalCycleCount>
 		<!-- type may be gz, bz, cout, uncompressed, none -->
 		<outFile type="gz" dbreporting="false">standardOutFile.gz</outFile>

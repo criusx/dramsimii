@@ -317,15 +317,23 @@ class PriorMovingAverage
 	float average;
 
 public:
-	PriorMovingAverage(unsigned size):data(size,size,0),average(0)
+	PriorMovingAverage(unsigned size):data(size),average(0)
 	{}
 
 	double getAverage() const { return average; }
 
 	void append(float x)
 	{
-		float oldestItem = data.front();
-		average = average - (oldestItem / data.size()) + (x / data.size());
+		if (!data.empty())
+		{
+			float oldestItem = data.front();
+			int size = data.size();
+			average = average - (oldestItem / size) + (x / size);
+		}
+		else
+		{
+			average = x;
+		}
 		data.push_back(x);
 	}
 
@@ -367,7 +375,7 @@ unordered_map<string,string> &setupDecoder()
 	theMap["RRR"] = "Rank Round Robin";
 	theMap["CLSO"] = "Close Page Aggressive";
 	theMap["OPEN"] = "Open Page";
-	theMap["CPAG"] = "Close Page Aggressive";
+	theMap["CPA"] = "Close Page Aggressive";
 	theMap["CLOS"] = "Close Page";
 	theMap["OPA"] = "Open Page Aggressive";
 	theMap["CPBOPT"] = "Close Page Baseline Opt";
@@ -939,7 +947,7 @@ void processStats(const string &filename)
 	l2MshrMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
 	uint64_t l2MshrMissLatencyBuffer;
 
-	vector<pair<unsigned,unsigned> > bandwidthValues;
+	vector<pair<uint64_t,uint64_t> > bandwidthValues;
 	bandwidthValues.reserve(MAXIMUM_VECTOR_SIZE);
 	pair<uint64_t,uint64_t> bandwidthValuesBuffer;
 
@@ -1191,7 +1199,7 @@ void processStats(const string &filename)
 							l2MshrMissLatency.push_back(l2MshrMissLatencyBuffer / scaleFactor);
 							l2MshrMissLatencyBuffer = 0;
 
-							bandwidthValues.push_back(pair<unsigned,unsigned>(bandwidthValuesBuffer.first / scaleFactor, bandwidthValuesBuffer.second / scaleFactor));
+							bandwidthValues.push_back(pair<uint64_t,uint64_t>(bandwidthValuesBuffer.first / scaleFactor, bandwidthValuesBuffer.second / scaleFactor));
 							bandwidthValuesBuffer.first = 0;
 							bandwidthValuesBuffer.second = 0;
 
@@ -1399,8 +1407,8 @@ void processStats(const string &filename)
 				char *position = strchr(newLine,' ');
 				*position++ = 0;
 
-				unsigned readValue = atoi(newLine);
-				unsigned writeValue = atoi(position);
+				uint64_t readValue = atol(newLine);
+				uint64_t writeValue = atol(position);
 				bandwidthValuesBuffer.first += readValue;
 				bandwidthValuesBuffer.second += writeValue;
 			}
@@ -1761,19 +1769,20 @@ void processStats(const string &filename)
 	p3 << "set multiplot title \"" << commandLine << "\""<< endl;
 	p3 << bandwidthGraph << endl;
 
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
+	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
 		p3 << 1.0 * i->first << endl;
 	p3 << "e" << endl;
 
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
+	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
 		p3 << 1.0 * i->second << endl;
 	p3 << "e" << endl;
 
 	float time = 0.0F;
 	PriorMovingAverage bandwidthTotal(WINDOW);
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
+	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
 	{
 		bandwidthTotal.append(1.0 * i->first + i->second);
+		//cerr << time << " " << bandwidthTotal.getAverage() << endl;
 		p3 << time << " " << bandwidthTotal.getAverage() << endl;
 		time += epochTime;
 	}

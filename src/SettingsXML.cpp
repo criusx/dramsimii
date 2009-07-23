@@ -312,6 +312,7 @@ bool Settings::loadSettingsFromFile(int argc, char **argv)
 	if ((extraSettings).length() > 0)
 	{
 		std::vector<string> params;
+		boost::algorithm::trim(extraSettings);
 		split(params, extraSettings, is_any_of(" "), token_compress_on);
 
 		if (params.size() > 0)

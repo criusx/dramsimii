@@ -360,7 +360,7 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			else if (nodeValue == "refreshonechanallrankallbank")
 				refreshPolicy = ONE_CHANNEL_ALL_RANK_ALL_BANK;
 			else
-				refreshPolicy = NO_REFRESH;
+				return false;
 			break;
 		case read_write_grouping_token:
 			readWriteGrouping = nodeValue == "true";
@@ -443,8 +443,10 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 				rowBufferManagementPolicy = CLOSE_PAGE_AGGRESSIVE;
 			else if (nodeValue == "openpageaggressive")
 				rowBufferManagementPolicy = OPEN_PAGE_AGGRESSIVE;
-			else
+			else if (nodeValue == "closepageaggressive")
 				rowBufferManagementPolicy = CLOSE_PAGE_AGGRESSIVE;
+			else
+				return false;
 			break;
 		case clock_granularity_token:
 			clockGranularity = lexical_cast<unsigned>(nodeValue);
@@ -570,7 +572,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const RowBufferPolicy rbp)
 		os << "CLOS";
 		break;
 	case CLOSE_PAGE_AGGRESSIVE:
-		os << "CPAG";
+		os << "CPA";
 		break;
 	default:
 		os << "UNKN";

@@ -164,7 +164,12 @@ Channel::~Channel()
 	// must remove commands this way to prevent queues from being automatically deleted, thus creating double frees on refresh commands
 	while (Command *cmd = getNextCommand())
 	{
-		delete cmd;
+		if (lastCommand)
+		{
+			delete lastCommand;
+		}
+
+		lastCommand = cmd;
 	}
 	if (lastCommand)
 	{
@@ -1597,8 +1602,8 @@ const Command *Channel::readNextCommand() const
 #ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							if (max(time + minGap, (tick)0) != max(challengerExecuteTime,time))
-								assert(max(time + minGap, (tick)0) == max(challengerExecuteTime,time));
+							if (time + minGap != challengerExecuteTime)
+								assert(time + minGap == challengerExecuteTime);
 #endif
 							if ((challengerExecuteTime < candidateExecuteTime) ||
 								(candidateExecuteTime == challengerExecuteTime && ((challengerCommand->isRead() && candidateCommand->isWrite()) ||
@@ -1621,7 +1626,7 @@ const Command *Channel::readNextCommand() const
 							{
 								cerr << time << " " << minGap << " " << challengerExecuteTime;
 
-								assert(time + minGap == max(challengerExecuteTime,time));
+								assert(time + minGap == challengerExecuteTime);
 							}
 #endif
 							// set a new candidate if the challenger can be executed sooner or execution times are the same but the challenger is older
@@ -2105,7 +2110,7 @@ const Command *Channel::readNextCommand() const
 							assert(currentBank->read(1));
 
 						const Command *secondCommand = (potentialCommand->isActivate() && currentBank->read(1)) ? currentBank->read(1) : potentialCommand;
-						assert(secondCommand->isReadOrWrite());
+						assert(secondCommand->isReadOrWrite() || secondCommand->isPrecharge());
 
 						if ((secondCommand->isRead() && readSweep) ||
 							(secondCommand->isWrite() && !readSweep))

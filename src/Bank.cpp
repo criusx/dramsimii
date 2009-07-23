@@ -435,7 +435,7 @@ bool Bank::openPageAggressiveInsertCheck(const Transaction *value, const tick ti
 
 		for (int i = 0; i < perBankQueue.size() - 1; i++)
 		{
-			if (perBankQueue[i]->isReadOrWrite() && perBankQueue[i+1] && perBankQueue[i+1]->isPrecharge())
+			if (perBankQueue[i]->isReadOrWrite() && perBankQueue[i+1] && perBankQueue[i+1]->isBasicPrecharge())
 			{
 				availableSlots++;
 				if (availableSlots >= 3)
@@ -461,7 +461,7 @@ bool Bank::openPageAggressiveInsertCheck(const Transaction *value, const tick ti
 			// channel, rank, bank, row all match, insert just before this precharge command
 			else if (currentCommand->isReadOrWrite() && (currentCommand->getAddress().getRow() == value->getAddress().getRow()))
 			{
-					return true;
+				return true;
 			}
 			// strict order may add to the end of the queue only
 			// if this has not happened already then this method of insertion fails

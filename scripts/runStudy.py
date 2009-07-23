@@ -98,7 +98,7 @@ traces = ['lbm000-trace.gz', 'mcf000-trace.gz', 'milc000-trace.gz']
 #'mase_256K_64_2G/galgel.trc.gz']
 
 # the name of the DRAMsimII executable
-dramSimExe = 'dramSimII.debug'
+dramSimExe = 'dramSimII.debugOpt'
 
 # the path to the DRAMsimII executable
 dramSimPath = '/home/crius/m5/src/mem/DRAMsimII/build'
@@ -119,13 +119,13 @@ m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/asplos'
+outputDir = '/home/crius/results/asplos/trace'
 
 # the file that describes the base memory settings
 memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
 
 # the command line to pass to the DRAMsimII simulator to modify parameters
-commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s"'
+commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
 
 # the command line parameters for running in FS mode
 fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s outfiledir %s"
@@ -153,17 +153,17 @@ tFAW = [28]
 #addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagelowlocality', 'closepagebaselineopt']
 #addressMappingPolicy = ['closepagebaseline', 'sdramhiperf']
 #addressMappingPolicy = ['closepagebaselineopt']
-addressMappingPolicy = ['closepagebaselineopt','closepagebaseline','sdramhiperf']
-#addressMappingPolicy = ['closepagebaseline']
+#addressMappingPolicy = ['closepagebaselineopt','closepagebaseline','sdramhiperf']
+addressMappingPolicy = ['closepagebaseline']
 #commandOrderingAlgorithm = ['firstAvailable', 'bankroundrobin', 'rankroundrobin', 'strict']
 commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop']
 #commandOrderingAlgorithm = ['firstAvailable']
-rowBufferManagementPolicy = ['openpageaggressive' , 'openpage', 'closepage', 'closepageaggressive']
-interarrivalCycleCount = [1]
+rowBufferManagementPolicy = ['openpageaggressive', 'openpage', 'closepage', 'closepageaggressive']
+interarrivalCycleCount = [4]
 #perBankQueueDepth = range(8, 16, 4)
 perBankQueueDepth = [12]
 readWriteGrouping = ['true']
-requests = [5000]
+requests = [5000000]
 #benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
 #benchmarks = ['stream']
 #benchmarks = ['lbm', 'stream', 'bzip2']
@@ -198,13 +198,14 @@ def main():
                                                 if opt == '-t':
                                                     for t in traces:
                                                         currentTrace = os.path.join(tracesDir, t)
-                                                        currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
+                                                        currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
                                                         #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
                                                         submitCommand = submitString % (currentCommandLine, outputDir, outputDir, t)
-                                                        #print submitCommandLine
+                                                        print currentCommandLine
                                                         #sys.exit(0)
                                                         if not counting:
-                                                            os.system(submitCommand)
+                                                            #os.system(submitCommand)
+                                                            os.system(currentCommandLine)
                                                         else:
                                                             count += 1
 
@@ -220,14 +221,20 @@ def main():
                                                 elif opt == '-r':
                                                     for f in interarrivalCycleCount:
                                                         for h in requests:
-                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, f, g, h, j, l, outputDir)
-                                                            print currentCommandLine
-                                                            os.system("gdb --args " + currentCommandLine)
+                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c , d, e, f, g, h, j, l, outputDir, "")
+                                                            #print currentCommandLine
+                                                            #os.system("gdb --args " + currentCommandLine)
+                                                            #retVal = os.system(currentCommandLine)
+                                                            #if retVal != 0:
+                                                            #    sys.exit(-1)
 
-                                                            #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
+                                                            submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
                                                             #print submitCommandLine
                                                             #sys.exit(-1)
-                                                            #os.system(submitCommandLine)
+                                                            if not counting:
+                                                                os.system(submitCommandLine)
+                                                            else:
+                                                                count += 1
 
                                                 # full system
                                                 elif opt == '-f':

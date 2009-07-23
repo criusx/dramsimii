@@ -83,6 +83,7 @@ namespace DRAMsimII
 		bool isRead() const { return ((commandType == READ) || (commandType == READ_AND_PRECHARGE)); }
 		bool isWrite() const { return ((commandType == WRITE) || (commandType == WRITE_AND_PRECHARGE)); }
 		bool isPrecharge() const { return ((commandType == READ_AND_PRECHARGE) || (commandType == WRITE_AND_PRECHARGE) || (commandType == PRECHARGE)); }
+		bool isBasicPrecharge() const { return commandType == PRECHARGE; }
 		bool isRefresh() const { return (commandType == REFRESH_ALL); }
 		bool isReadOrWrite() const { return isRead() || isWrite(); }
 
