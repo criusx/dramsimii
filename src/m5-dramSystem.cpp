@@ -117,7 +117,7 @@ void M5dramSystem::moveToTime(const tick now)
 			{			
 				assert(curTick <= static_cast<Tick>(currentValue.second * getCPURatio()));
 
-				M5_TIMING_LOG("<-T [@" << dec << static_cast<Tick>(currentValue.second * getCPURatio()) << "][+" << static_cast<Tick>(currentValue.second * getCPURatio() - curTick) << "] at" << curTick);
+				ds->getTimingStream() << "<-T [@" << dec << static_cast<Tick>(currentValue.second * getCPURatio()) << "][+" << static_cast<Tick>(currentValue.second * getCPURatio() - curTick) << "] at" << curTick << endl;
 
 				ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(currentValue.second * getCPURatio()));
 #if 0
@@ -144,7 +144,7 @@ void M5dramSystem::moveToTime(const tick now)
 	// if there is now room, allow a retry to happen
 	if (needRetry && !ds->isFull(mostRecentChannel))
 	{
-		M5_TIMING_LOG("Allow retrys");
+		ds->getTimingStream() << "Allow retrys" << endl;
 
 		needRetry = false;
 		ports[lastPortIndex]->sendRetry();
@@ -170,8 +170,8 @@ cpuRatio(0),
 transactionLookupTable(),
 currentTransactionID(0)
 {	
-	timingOutStream << "M5dramSystem constructor" << endl;
-
+	//timingOutStream << "M5dramSystem constructor" << endl;
+	
 	
 	Settings settings;
 	//Settings settings(5,const_cast<char **>(settingsMap));
@@ -223,8 +223,7 @@ currentTransactionID(0)
 	settings.setKeyValue("refreshTime",lexical_cast<string>(p->refreshTime));
 	settings.setKeyValue("tREFI",lexical_cast<string>(p->tREFI));
 	settings.setKeyValue("seniorityAgeLimit",lexical_cast<string>(p->seniorityAgeLimit));
-	//settings.setKeyValue("",p->);
-
+	
 	const char *settingsMap[] = {"m5", "--config-file", p->settingsFile.c_str(), "--modifiers",p->extraParameters.c_str()};
 
 	settings.loadSettingsFromFile(5, const_cast<char **>(settingsMap));
@@ -241,6 +240,8 @@ currentTransactionID(0)
 		ds = new fbdSystem(settings);	
 	else
 		ds = new System(settings);
+
+	ds->getTimingStream() << "M5dramSystem constructor" << endl;
 
 	//std::cerr << p->extraParameters << std::endl;
 #ifdef TRACE_GENERATE
@@ -301,7 +302,7 @@ currentTransactionID(0)
 	//invCpuRatio = (float)((double)ds->Frequency()/(Clock::Frequency));
 	//cerr << invCpuRatio << endl;
 
-	timingOutStream << *ds << endl;
+	ds->getTimingStream() << *ds << endl;
 }
 
 
@@ -337,7 +338,7 @@ Port *M5dramSystem::getPort(const string &if_name, int idx)
 
 	lastPortIndex = idx;
 	ports[idx] = port;
-	timingOutStream << "called M5dramSystem::getPort" << endl;
+	ds->getTimingStream() << "called M5dramSystem::getPort" << endl;
 	return port;
 }
 
@@ -366,7 +367,7 @@ M5dramSystem::~M5dramSystem()
 	//if (pmemAddr)
 	//	munmap(pmemAddr, params()->addrRange.size());
 
-	timingOutStream << "M5dramSystem destructor" << endl;
+	ds->getTimingStream() << "M5dramSystem destructor" << endl;
 	delete ds;
 }
 
@@ -555,7 +556,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		//static unsigned numCallsWhileBlocked = 1;
 		//if (numCallsWhileBlocked++ % 100000 == 0)
 		//	cerr << numCallsWhileBlocked << "\r";
-		M5_TIMING_LOG("warn: attempted packet send after packet is nacked");
+		memory->ds->getTimingStream() << "warn: attempted packet send after packet is nacked" << endl;
 		return false;
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -567,23 +568,23 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 #if defined(M5DEBUG) && defined(DEBUG) && !defined(NDEBUG)
 	using std::setw;
-	timingOutStream << "+recvTiming [" << std::dec << currentMemCycle << "] ";
+	memory->ds->getTimingStream() << "+recvTiming [" << std::dec << currentMemCycle << "] ";
 	// calculate the time elapsed from when the transaction started
-	timingOutStream << setw(2) << (pkt->isRead() ? "Rd" : "");
-	timingOutStream << setw(2) << (pkt->isWrite() ? "Wr" : "");
-	//timingOutStream << setw(2) << (pkt->isRequest() ? "Rq" : "");
-	timingOutStream << setw(3) << (pkt->isInvalidate() ? "Inv" : "");
-	timingOutStream << setw(3) << (pkt->isResponse() ? "Rsp" : "");
-	timingOutStream << setw(2) << (pkt->isReadWrite() ? "RW" : "");
-	timingOutStream << setw(2) << (pkt->isError() ? "Er" : "");
-	timingOutStream << setw(2) << (pkt->isPrint() ? "Pr" : "");
-	timingOutStream << setw(2) << (pkt->needsExclusive() ? "Ex" : "");
-	timingOutStream << setw(2) << (pkt->needsResponse() ? "NR" : "");
-	timingOutStream << setw(2) << (pkt->isLLSC() ? "LL" : "");
+	memory->ds->getTimingStream() << setw(2) << (pkt->isRead() ? "Rd" : "");
+	memory->ds->getTimingStream() << setw(2) << (pkt->isWrite() ? "Wr" : "");
+	//memory->getTimingStream() << setw(2) << (pkt->isRequest() ? "Rq" : "");
+	memory->ds->getTimingStream() << setw(3) << (pkt->isInvalidate() ? "Inv" : "");
+	memory->ds->getTimingStream() << setw(3) << (pkt->isResponse() ? "Rsp" : "");
+	memory->ds->getTimingStream() << setw(2) << (pkt->isReadWrite() ? "RW" : "");
+	memory->ds->getTimingStream() << setw(2) << (pkt->isError() ? "Er" : "");
+	memory->ds->getTimingStream() << setw(2) << (pkt->isPrint() ? "Pr" : "");
+	memory->ds->getTimingStream() << setw(2) << (pkt->needsExclusive() ? "Ex" : "");
+	memory->ds->getTimingStream() << setw(2) << (pkt->needsResponse() ? "NR" : "");
+	memory->ds->getTimingStream() << setw(2) << (pkt->isLLSC() ? "LL" : "");
 
-	timingOutStream << " 0x" << hex << pkt->getAddr();
+	memory->ds->getTimingStream() << " 0x" << hex << pkt->getAddr();
 
-	timingOutStream << " s[0x" << hex << pkt->getSize() << "]" << endl;
+	memory->ds->getTimingStream() << " s[0x" << hex << pkt->getSize() << "]" << endl;
 #endif
 	if (pkt->memInhibitAsserted())
 	{
@@ -659,7 +660,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			memory->mostRecentChannel = addr.getChannel();
 			//delete trans;
 
-			M5_TIMING_LOG("Wait for retry before sending more to ch[" << addr.getChannel() << "]");
+			memory->ds->getTimingStream() << "Wait for retry before sending more to ch[" << addr.getChannel() << "]" << endl;
 			return false;
 		}
 		else
@@ -715,14 +716,14 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 			memory->tickEvent.schedule(next * memory->getCPURatio());
 			
-			M5_TIMING_LOG("-recvTiming goto[" << next << "]");
+			memory->ds->getTimingStream() << "-recvTiming goto[" << next << "]" << endl;
 			
 			return true;
 		}
 	}
 	else
 	{
-		M5_TIMING_LOG("warn: packet not needing response.");
+		memory->ds->getTimingStream() << "warn: packet not needing response." << endl;
 
 		if (pkt->cmd != MemCmd::UpgradeReq)
 		{
@@ -821,7 +822,7 @@ void M5dramSystem::TickEvent::process()
 {		
 	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
 
-	M5_TIMING_LOG("+process [" << dec << currentMemCycle << "]");
+	memory->ds->getTimingStream() <<"+process [" << dec << currentMemCycle << "]" << endl;
 	
 	// move memory channels to the current time
 	memory->moveToTime(currentMemCycle);
@@ -839,7 +840,7 @@ void M5dramSystem::TickEvent::process()
 
 	schedule(next * memory->getCPURatio());
 
-	M5_TIMING_LOG("-process [" << currentMemCycle << "] sch[" << next << "]");
+	memory->ds->getTimingStream() << "-process [" << currentMemCycle << "] sch[" << next << "]" << endl;
 }
 
 //////////////////////////////////////////////////////////////////////////

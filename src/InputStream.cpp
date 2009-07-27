@@ -519,10 +519,10 @@ Transaction *InputStream::getNextIncomingTransaction()
 			//cerr << "warn: timestamp adjusted incorrectly to compensate for older trace files" << endl;
 			tick arrivalTime = (timestamp * 1E-10) * systemConfig.Frequency();
 
-			if(!traceFile.good()) /// found starting Hex address
+			if (!traceFile.good()) /// found starting Hex address
 			{
 				cerr << "Unexpected EOF, Please fix input trace file" << endl;
-				return false;
+				return NULL;
 			}
 
 			Transaction::TransactionType type;
@@ -550,6 +550,8 @@ Transaction *InputStream::getNextIncomingTransaction()
 		exit(-20);
 		break;
 	}
+
+	return NULL;
 }
 
 double InputStream::ascii2multiplier(const string &input) const

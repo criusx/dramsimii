@@ -99,9 +99,9 @@ namespace opt = boost::program_options;
 //////////////////////////////////////////////////////////////////////////
 Settings::Settings(int argc, char **argv):
 systemType(BASELINE_CONFIG),
+addressMappingScheme(Address::SDRAM_BASE_MAP),
 cachelinesPerRow(0),
-tInternalBurst(0),
-addressMappingScheme(Address::SDRAM_BASE_MAP)
+tInternalBurst(0)
 {
 	loadSettingsFromFile(argc, argv);
 }

@@ -98,7 +98,7 @@ traces = ['lbm000-trace.gz', 'mcf000-trace.gz', 'milc000-trace.gz']
 #'mase_256K_64_2G/galgel.trc.gz']
 
 # the name of the DRAMsimII executable
-dramSimExe = 'dramSimII.debugOpt'
+dramSimExe = 'dramSimII.opt'
 
 # the path to the DRAMsimII executable
 dramSimPath = '/home/crius/m5/src/mem/DRAMsimII/build'
@@ -119,7 +119,7 @@ m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/asplos/trace'
+outputDir = '/home/crius/results/asplos/full'
 
 # the file that describes the base memory settings
 memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
@@ -201,11 +201,11 @@ def main():
                                                         currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
                                                         #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
                                                         submitCommand = submitString % (currentCommandLine, outputDir, outputDir, t)
-                                                        print currentCommandLine
+                                                        #print currentCommandLine
                                                         #sys.exit(0)
                                                         if not counting:
-                                                            #os.system(submitCommand)
-                                                            os.system(currentCommandLine)
+                                                            os.system(submitCommand)
+                                                            #os.system(currentCommandLine)
                                                         else:
                                                             count += 1
 
@@ -244,6 +244,7 @@ def main():
                                                         #print submitCommand
                                                         #sys.exit(0)
                                                         os.system(submitCommand)
+                                                        #os.system(currentCommandLine)
 
                                             #sys.exit(2)
 

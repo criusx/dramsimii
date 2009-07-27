@@ -121,7 +121,7 @@ protected:
 	TickEvent tickEvent;									///< instance of TickEvent to allow the wrapper to receive/send events to the global queue
 	std::vector<MemoryPort*> ports;							///< ports to send/recv data to other simulator components
 	std::queue<std::pair<unsigned, tick> > finishedTransactions;	///< channels will return values as they finish transactions
-
+	
 	int lastPortIndex;										///< the last port accessed
 	typedef std::vector<MemoryPort*>::iterator PortIterator;
 	DRAMsimII::System *ds;									///< pointer to the DRAMsimII class
