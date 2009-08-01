@@ -117,7 +117,7 @@ void M5dramSystem::moveToTime(const tick now)
 			{			
 				assert(curTick <= static_cast<Tick>(currentValue.second * getCPURatio()));
 
-				ds->getTimingStream() << "<-T [@" << dec << static_cast<Tick>(currentValue.second * getCPURatio()) << "][+" << static_cast<Tick>(currentValue.second * getCPURatio() - curTick) << "] at" << curTick << endl;
+				M5_TIMING("<-T [@" << dec << static_cast<Tick>(currentValue.second * getCPURatio()) << "][+" << static_cast<Tick>(currentValue.second * getCPURatio() - curTick) << "] at" << curTick)
 
 				ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(currentValue.second * getCPURatio()));
 #if 0
@@ -144,7 +144,7 @@ void M5dramSystem::moveToTime(const tick now)
 	// if there is now room, allow a retry to happen
 	if (needRetry && !ds->isFull(mostRecentChannel))
 	{
-		ds->getTimingStream() << "Allow retrys" << endl;
+		M5_TIMING("Allow retrys");
 
 		needRetry = false;
 		ports[lastPortIndex]->sendRetry();
@@ -241,7 +241,7 @@ currentTransactionID(0)
 	else
 		ds = new System(settings);
 
-	ds->getTimingStream() << "M5dramSystem constructor" << endl;
+	M5_TIMING("M5dramSystem constructor")
 
 	//std::cerr << p->extraParameters << std::endl;
 #ifdef TRACE_GENERATE
@@ -302,7 +302,7 @@ currentTransactionID(0)
 	//invCpuRatio = (float)((double)ds->Frequency()/(Clock::Frequency));
 	//cerr << invCpuRatio << endl;
 
-	ds->getTimingStream() << *ds << endl;
+	M5_TIMING(*ds)
 }
 
 
@@ -338,7 +338,7 @@ Port *M5dramSystem::getPort(const string &if_name, int idx)
 
 	lastPortIndex = idx;
 	ports[idx] = port;
-	ds->getTimingStream() << "called M5dramSystem::getPort" << endl;
+	M5_TIMING("called M5dramSystem::getPort")
 	return port;
 }
 
@@ -367,7 +367,7 @@ M5dramSystem::~M5dramSystem()
 	//if (pmemAddr)
 	//	munmap(pmemAddr, params()->addrRange.size());
 
-	ds->getTimingStream() << "M5dramSystem destructor" << endl;
+	M5_TIMING("M5dramSystem destructor")
 	delete ds;
 }
 
@@ -556,7 +556,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		//static unsigned numCallsWhileBlocked = 1;
 		//if (numCallsWhileBlocked++ % 100000 == 0)
 		//	cerr << numCallsWhileBlocked << "\r";
-		memory->ds->getTimingStream() << "warn: attempted packet send after packet is nacked" << endl;
+		M5_TIMING2("warn: attempted packet send after packet is nacked")
 		return false;
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -568,23 +568,23 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 #if defined(M5DEBUG) && defined(DEBUG) && !defined(NDEBUG)
 	using std::setw;
-	memory->ds->getTimingStream() << "+recvTiming [" << std::dec << currentMemCycle << "] ";
+	M5_TIMING2("+recvTiming [" << std::dec << currentMemCycle << "] ")
 	// calculate the time elapsed from when the transaction started
-	memory->ds->getTimingStream() << setw(2) << (pkt->isRead() ? "Rd" : "");
-	memory->ds->getTimingStream() << setw(2) << (pkt->isWrite() ? "Wr" : "");
-	//memory->getTimingStream() << setw(2) << (pkt->isRequest() ? "Rq" : "");
-	memory->ds->getTimingStream() << setw(3) << (pkt->isInvalidate() ? "Inv" : "");
-	memory->ds->getTimingStream() << setw(3) << (pkt->isResponse() ? "Rsp" : "");
-	memory->ds->getTimingStream() << setw(2) << (pkt->isReadWrite() ? "RW" : "");
-	memory->ds->getTimingStream() << setw(2) << (pkt->isError() ? "Er" : "");
-	memory->ds->getTimingStream() << setw(2) << (pkt->isPrint() ? "Pr" : "");
-	memory->ds->getTimingStream() << setw(2) << (pkt->needsExclusive() ? "Ex" : "");
-	memory->ds->getTimingStream() << setw(2) << (pkt->needsResponse() ? "NR" : "");
-	memory->ds->getTimingStream() << setw(2) << (pkt->isLLSC() ? "LL" : "");
+	M5_TIMING2(setw(2) << (pkt->isRead() ? "Rd" : ""))
+	M5_TIMING2(setw(2) << (pkt->isWrite() ? "Wr" : ""))
+	//M5_TIMING2((pkt->isRequest() ? "Rq" : ""))
+	M5_TIMING2(setw(3) << (pkt->isInvalidate() ? "Inv" : ""))
+	M5_TIMING2(setw(3) << (pkt->isResponse() ? "Rsp" : ""))
+	M5_TIMING2(setw(2) << (pkt->isReadWrite() ? "RW" : ""))
+	M5_TIMING2(setw(2) << (pkt->isError() ? "Er" : ""))
+	M5_TIMING2(setw(2) << (pkt->isPrint() ? "Pr" : ""))
+	M5_TIMING2(setw(2) << (pkt->needsExclusive() ? "Ex" : ""))
+	M5_TIMING2(setw(2) << (pkt->needsResponse() ? "NR" : ""))
+	M5_TIMING2(setw(2) << (pkt->isLLSC() ? "LL" : ""))
 
-	memory->ds->getTimingStream() << " 0x" << hex << pkt->getAddr();
+	M5_TIMING2(" 0x" << hex << pkt->getAddr())
 
-	memory->ds->getTimingStream() << " s[0x" << hex << pkt->getSize() << "]" << endl;
+	M5_TIMING2(" s[0x" << hex << pkt->getSize() << "]")
 #endif
 	if (pkt->memInhibitAsserted())
 	{
@@ -660,7 +660,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			memory->mostRecentChannel = addr.getChannel();
 			//delete trans;
 
-			memory->ds->getTimingStream() << "Wait for retry before sending more to ch[" << addr.getChannel() << "]" << endl;
+			M5_TIMING2("Wait for retry before sending more to ch[" << addr.getChannel() << "]")
 			return false;
 		}
 		else
@@ -716,14 +716,14 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 			memory->tickEvent.schedule(next * memory->getCPURatio());
 			
-			memory->ds->getTimingStream() << "-recvTiming goto[" << next << "]" << endl;
+			M5_TIMING2("-recvTiming goto[" << next << "]")
 			
 			return true;
 		}
 	}
 	else
 	{
-		memory->ds->getTimingStream() << "warn: packet not needing response." << endl;
+		M5_TIMING2("warn: packet not needing response.")
 
 		if (pkt->cmd != MemCmd::UpgradeReq)
 		{
@@ -822,7 +822,7 @@ void M5dramSystem::TickEvent::process()
 {		
 	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
 
-	memory->ds->getTimingStream() <<"+process [" << dec << currentMemCycle << "]" << endl;
+	M5_TIMING2("+process [" << dec << currentMemCycle << "]")
 	
 	// move memory channels to the current time
 	memory->moveToTime(currentMemCycle);
@@ -840,7 +840,7 @@ void M5dramSystem::TickEvent::process()
 
 	schedule(next * memory->getCPURatio());
 
-	memory->ds->getTimingStream() << "-process [" << currentMemCycle << "] sch[" << next << "]" << endl;
+	M5_TIMING2("-process [" << currentMemCycle << "] sch[" << next << "]")
 }
 
 //////////////////////////////////////////////////////////////////////////

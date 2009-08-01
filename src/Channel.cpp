@@ -421,7 +421,6 @@ bool Channel::enqueue(Transaction *incomingTransaction)
 
 	bool result;
 
-	/// @todo probably should set the enqueue time = time here
 	switch (systemConfig.getTransactionOrderingAlgorithm())
 	{
 	case STRICT:
@@ -1963,7 +1962,7 @@ const Command *Channel::readNextCommand() const
 
 						if ((secondCommand->isRead() && readSweep) ||
 							(secondCommand->isWrite() && !readSweep) ||
-							secondCommand->isPrecharge())
+							secondCommand->isBasicPrecharge())
 						{
 							assert((currentRank->bank.begin() + currentBankOffset)->front() == potentialCommand);
 							return potentialCommand;
@@ -2113,7 +2112,8 @@ const Command *Channel::readNextCommand() const
 						assert(secondCommand->isReadOrWrite() || secondCommand->isPrecharge());
 
 						if ((secondCommand->isRead() && readSweep) ||
-							(secondCommand->isWrite() && !readSweep))
+							(secondCommand->isWrite() && !readSweep) ||
+							(secondCommand->isBasicPrecharge()))
 						{
 							assert(currentBank->front()->getAddress().getRank() == currentRank->getRankID());
 							assert(currentBank->front() == potentialCommand);

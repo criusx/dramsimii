@@ -128,7 +128,7 @@ memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-
 commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
 
 # the command line parameters for running in FS mode
-fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s outfiledir %s"
+fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s rowBufferPolicy %s outfiledir %s"
 
 # the name of the queue to submit these jobs to
 queueName = 'default'
@@ -156,8 +156,8 @@ tFAW = [28]
 #addressMappingPolicy = ['closepagebaselineopt','closepagebaseline','sdramhiperf']
 addressMappingPolicy = ['closepagebaseline']
 #commandOrderingAlgorithm = ['firstAvailable', 'bankroundrobin', 'rankroundrobin', 'strict']
-commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop']
-#commandOrderingAlgorithm = ['firstAvailable']
+commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop', 'strict']
+#commandOrderingAlgorithm = ['strict']
 rowBufferManagementPolicy = ['openpageaggressive', 'openpage', 'closepage', 'closepageaggressive']
 interarrivalCycleCount = [4]
 #perBankQueueDepth = range(8, 16, 4)
@@ -168,7 +168,7 @@ requests = [5000000]
 #benchmarks = ['stream']
 #benchmarks = ['lbm', 'stream', 'bzip2']
 #benchmarks = ['stream']
-benchmarks = ['stream', 'mcf', 'milc']
+benchmarks = ['stream', 'mcf', 'milc', 'lbm']
 
 def main():
     try:
@@ -194,6 +194,7 @@ def main():
                                     for k in readWriteGrouping:
                                         for l in rowBufferManagementPolicy:
                                             for opt, arg in opts:
+                                                #print opt, arg, e, g, j, k, l
                                                 # trace file
                                                 if opt == '-t':
                                                     for t in traces:
@@ -239,12 +240,13 @@ def main():
                                                 # full system
                                                 elif opt == '-f':
                                                     for i in benchmarks:
-                                                        currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, b, c, d, e, g, k, outputDir))
+                                                        currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, b, c, d, e, g, k, l,  outputDir))
                                                         submitCommand = submitString % (currentCommandLine, outputDir, outputDir, i)
+                                                        #print currentCommandLine
                                                         #print submitCommand
                                                         #sys.exit(0)
-                                                        os.system(submitCommand)
                                                         #os.system(currentCommandLine)
+                                                        os.system(submitCommand)
 
                                             #sys.exit(2)
 

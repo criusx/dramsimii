@@ -487,12 +487,12 @@ void Bank::collapse()
 {
 	for (int i = 0; i < perBankQueue.size() - 1; i++)
 	{
-		if (perBankQueue[i]->isReadOrWrite() && perBankQueue[i+1] && perBankQueue[i+1]->isPrecharge() && !perBankQueue[i+1]->isReadOrWrite())
+		if (perBankQueue[i]->isReadOrWrite() && perBankQueue[i+1] && perBankQueue[i+1]->isBasicPrecharge())
 		{
 			assert(!perBankQueue[i]->isPrecharge());
 			perBankQueue[i]->setAutoPrecharge(true);
 			Command *toDelete = perBankQueue.remove(i+1);
-			assert(toDelete->isPrecharge() && !toDelete->isReadOrWrite());
+			assert(toDelete->isPrecharge() && !toDelete->isReadOrWrite() && toDelete->isBasicPrecharge());
 			delete toDelete;
 		}
 	}
