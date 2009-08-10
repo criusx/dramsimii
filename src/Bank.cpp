@@ -288,123 +288,6 @@ void Bank::resetToTime(const tick time)
 	nextPrechargeTime = max(nextPrechargeTime, lastRASTime + timing.tRAS());
 }
 
-//////////////////////////////////////////////////////////////////////
-/// @brief attempts to insert a transaction as a single CAS command, taking advantage of existing RAS-PRE commands
-/// @details goes through the entire per bank queue to find a matching precharge command\n
-/// if one is found, then the transaction is converted into the appropriate CAS command and inserted
-/// @author Joe Gross
-/// @param value the transaction to be inserted
-/// @param time the current time, used to check and prevent against starvation of commands
-/// @return true if the transaction was converted and inserted successfully, false otherwise
-//////////////////////////////////////////////////////////////////////
-bool Bank::openPageInsert(DRAMsimII::Transaction *value, tick time)
-{
-	if (!perBankQueue.isFull())
-	{
-		// look in the bank_q and see if there's a precharge for this row to insert before		
-		// go from tail to head
-		for (int currentIndex = perBankQueue.size() - 1; currentIndex >= 0; --currentIndex)
-		{	
-			const Command *currentCommand = perBankQueue.read(currentIndex);
-
-			// then this command has been delayed by too many times and no more
-			// commands can preempt it
-			if (time - currentCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
-			{
-				return false;
-			}
-			// channel, rank, bank, row all match, insert just before this precharge command
-			else if ((currentCommand->isReadOrWrite()) && (currentCommand->getAddress().getRow() == value->getAddress().getRow()))
-			{
-#ifndef NDEBUG
-				bool result =
-#endif
-					perBankQueue.insert(new Command(value, time,  false, timing.tBurst()), currentIndex + 1);
-				assert(result);
-
-				return true;
-			}			
-			// strict order may add to the end of the queue only
-			// if this has not happened already then this method of insertion fails
-			else if (systemConfig.getCommandOrderingAlgorithm() == STRICT_ORDER)
-			{
-				return false;
-			}
-		}
-		// if the correct row is already open, just insert there
-		// already guaranteed not to have RAW/WAR errors
-		if (activated && openRowID == value->getAddress().getRow())
-		{
-#ifndef NDEBUG
-			bool result =
-#endif
-				perBankQueue.push_front(new Command(value, time, false, timing.tBurst()));
-			assert(result);
-
-			return true;
-		}
-		return false;
-	}
-	else
-	{
-		// no place to insert it
-		return false;
-	}
-}
-
-//////////////////////////////////////////////////////////////////////
-/// @brief check to see if this transaction can be inserted successfully via the open page insert mechanism
-/// @details goes through the per bank queue to see that there is a slot to insert into and that
-/// there is a precharge command to the same row that it can insert before
-/// @author Joe Gross
-/// @param value the transaction to test
-/// @param time the current time, used to check and prevent against starvation of commands
-/// @return true if it is able to be inserted, false otherwise
-//////////////////////////////////////////////////////////////////////
-#if 0
-bool Bank::openPageInsertCheck(const Transaction *value, const tick time) const
-{
-	if (!perBankQueue.isFull())
-	{
-		// look in the bank_q and see if there's a precharge for this row to insert before		
-		// go from tail to head
-		for (int currentIndex = perBankQueue.size() - 1; currentIndex >= 0; --currentIndex)
-		{	
-			const Command *currentCommand = perBankQueue.read(currentIndex);
-
-			// then this command has been delayed by too many times and no more
-			// commands can preempt it
-			if (time - currentCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
-			{
-				return false;
-			}
-			// channel, rank, bank, row all match, insert just before this precharge command
-			else if (currentCommand->isReadOrWrite() && (currentCommand->getAddress().getRow() == value->getAddress().getRow()))
-			{
-				return true;
-			}
-			// strict order may add to the end of the queue only
-			// if this has not happened already then this method of insertion fails
-			else if (systemConfig.getCommandOrderingAlgorithm() == STRICT_ORDER)
-			{
-				return false;
-			}
-		}
-		// if the correct row is already open, just insert there
-		// already guaranteed not to have RAW/WAR errors
-		if (activated && openRowID == value->getAddress().getRow())
-		{	
-			return true;
-		}
-		return false;
-	}
-	else
-	{
-		// no place to insert it
-		return false;
-	}
-}
-#endif
 
 //////////////////////////////////////////////////////////////////////
 /// @brief check to see if this transaction can be inserted successfully via the open page aggressive insert mechanism
@@ -426,7 +309,7 @@ bool Bank::openPageAggressiveInsertCheck(const Transaction *value, const tick ti
 	{
 		unsigned availableSlots = perBankQueue.freecount();
 
-		// if a new P, R, C can collapse a
+		// if the queue ends with a R/W(+P), then all that is needed is A, R/W
 		if (perBankQueue.back()->isReadOrWrite())
 		{
 			if (availableSlots >= 2)
@@ -492,7 +375,8 @@ void Bank::collapse()
 			assert(!perBankQueue[i]->isPrecharge());
 			perBankQueue[i]->setAutoPrecharge(true);
 			Command *toDelete = perBankQueue.remove(i+1);
-			assert(toDelete->isPrecharge() && !toDelete->isReadOrWrite() && toDelete->isBasicPrecharge());
+			assert(!toDelete->isReadOrWrite() && toDelete->isBasicPrecharge());
+			assert(!toDelete->getHost());
 			delete toDelete;
 		}
 	}
@@ -504,37 +388,64 @@ void Bank::collapse()
 /// @param time the current time, used to check and prevent against starvation of commands
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tick time)
+bool Bank::aggressiveInsert(Transaction *incomingTransaction, const tick time)
 {
-	// go from the end to the beginning to ensure no starvation or RAW/WAR errors
-	for (int index = perBankQueue.size() - 1; index >= 0; --index)
-	{	
-		const Command *currentItem = perBankQueue[index];
+	if (!perBankQueue.isFull())
+	{
+		const unsigned currentRow = incomingTransaction->getAddress().getRow();
 
-		// see if there is an available command to piggyback on
-		if (currentItem->isReadOrWrite() &&
-			currentItem->getAddress().getRow() == incomingTransaction->getAddress().getRow())
-		{
-			if (systemConfig.isAutoPrecharge())
+		// go from the end to the beginning to ensure no starvation or RAW/WAR errors
+		for (int currentIndex = perBankQueue.size() - 1; currentIndex >= 0; --currentIndex)
+		{	
+			const Command *currentCommand = perBankQueue.read(currentIndex);
+
+			// see if there is an available command to piggyback on
+			if (time - currentCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
 			{
-				perBankQueue[index]->setAutoPrecharge(false);
+				return false;
 			}
-			else
+			else if (currentCommand->isReadOrWrite() && currentCommand->getAddress().getRow() == currentRow)
 			{
-				// check that things are in order
-				assert(perBankQueue[index + 1]->isPrecharge());
+				assert(!currentCommand->isBasicPrecharge());
+
+				bool needsPrecharge = currentCommand->isPrecharge();
+
+				if (needsPrecharge)
+				{
+					currentCommand->setAutoPrecharge(false);
+				}			
+
+				// if the precharge was stripped from the n-1 command, add it to this one
+#ifndef NDEBUG
+				bool result = 
+#endif
+					perBankQueue.insert(new Command(incomingTransaction, time, needsPrecharge, timing.tBurst()), currentIndex + 1);
+				assert(perBankQueue[currentIndex + 1]->getAddress() == incomingTransaction->getAddress());
+				assert(result);
+				return true;
+			}// strict order may add to the end of the queue only
+			// if this has not happened already then this method of insertion fails
+			else if (systemConfig.getCommandOrderingAlgorithm() == STRICT_ORDER)
+			{
+				return false;
 			}
-
-			bool result = perBankQueue.insert(new Command(incomingTransaction,time, systemConfig.isAutoPrecharge(), timing.tBurst()), index + 1);
-			assert(perBankQueue[index + 1]->getAddress() == incomingTransaction->getAddress());
-			assert(result);
-			return result;
-
+			
 		}
-		// don't starve commands
-		if (time - currentItem->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
-			break;
+
+		// if the correct row is already open, just insert there
+		// already guaranteed not to have RAW/WAR errors
+		if (activated && openRowID == incomingTransaction->getAddress().getRow())
+		{
+#ifndef NDEBUG
+			bool result =
+#endif
+				perBankQueue.push_front(new Command(incomingTransaction, time, false, timing.tBurst()));
+			assert(result);
+
+			return true;
+		}
 	}
+	
 	return false;
 }
 
@@ -546,31 +457,39 @@ bool Bank::closePageAggressiveInsert(Transaction *incomingTransaction, const tic
 //////////////////////////////////////////////////////////////////////////
 bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction, const tick time) const
 {
-	// go from the end to the beginning to ensure no starvation or RAW/WAR errors
-	for (int index = perBankQueue.size() - 1; index >= 0; --index)
-	{	
-		const Command *currentItem = perBankQueue[index];
-		// see if there is an available command to piggyback on
-		if (currentItem->getAddress().getRow() == incomingTransaction->getAddress().getRow() &&
-			currentItem->isReadOrWrite())
-		{
-			if (!systemConfig.isAutoPrecharge())
+	if (!perBankQueue.isFull())
+	{
+		const unsigned currentRow = incomingTransaction->getAddress().getRow();
+		// go from the end to the beginning to ensure no starvation or RAW/WAR errors
+		for (int index = perBankQueue.size() - 1; index >= 0; --index)
+		{	
+			const Command *currentItem = perBankQueue[index];
+			// see if there is an available command to piggyback on
+			if (currentItem->isReadOrWrite() && currentItem->getAddress().getRow() == currentRow)
 			{
-				// check that things are in order
-				assert(perBankQueue[index + 1]->isPrecharge());
+				assert(currentItem->getAddress().getChannel() == incomingTransaction->getAddress().getChannel());
+				assert(currentItem->getAddress().getRank() == incomingTransaction->getAddress().getRank());
+				assert(currentItem->getAddress().getBank() == incomingTransaction->getAddress().getBank());
+				assert(currentItem->getAddress().getRow() == incomingTransaction->getAddress().getRow());
+
+				if (!systemConfig.isAutoPrecharge())
+				{
+					// check that things are in order
+					assert(perBankQueue[index + 1]->isPrecharge());
+				}
+				return true;
 			}
-			return true;
+			// don't starve commands
+			if (time - currentItem->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+				break;
 		}
-		// don't starve commands
-		if (time - currentItem->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
-			break;
 	}
 	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief assignment operator to copy non-reference values
-/// @param rhs the value that will be copied into this object
+/// @param rhs the incomingTransaction that will be copied into this object
 //////////////////////////////////////////////////////////////////////////
 Bank& Bank::operator =(const Bank& rhs)
 {
@@ -595,7 +514,7 @@ Bank& Bank::operator =(const Bank& rhs)
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief equality operator to check values for equality
-/// @param rhs the value that will be copied into this object
+/// @param rhs the incomingTransaction that will be copied into this object
 //////////////////////////////////////////////////////////////////////////
 bool Bank::operator==(const Bank& rhs) const
 {

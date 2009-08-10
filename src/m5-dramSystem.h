@@ -56,9 +56,11 @@ using DRAMsimII::tick;
 #if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) // compiler should declare this
 #define M5_TIMING(X) ds->getTimingStream() << X << std::endl;
 #define M5_TIMING2(X) memory->ds->getTimingStream() << X << std::endl;
+#define M5_TIMING3(X) memory->ds->getTimingStream() << X;
 #else
 #define M5_TIMING(X)
 #define M5_TIMING2(X)
+#define M5_TIMING3(X)
 #endif
 
 

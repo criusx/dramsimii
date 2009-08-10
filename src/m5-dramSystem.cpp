@@ -126,7 +126,13 @@ void M5dramSystem::moveToTime(const tick now)
 
 				if (++returnCount % 10000 == 0)
 				{
-					cerr << returnCount << "\r";
+					time_t rawtime;
+					time(&rawtime);
+					struct tm *timeinfo = localtime(&rawtime);		
+					char *timeString = asctime(timeinfo);
+					char *pos = strchr(timeString,'\n');
+					*pos = NULL;
+					cerr << returnCount << " " << asctime(timeinfo) << "\r";
 				}
 #endif
 			}
@@ -140,6 +146,8 @@ void M5dramSystem::moveToTime(const tick now)
 			cerr << "warn: no Packet found for corresponding transaction" << endl;
 		}
 	}
+
+	//cerr << transactionLookupTable.size() << "\r";
 
 	// if there is now room, allow a retry to happen
 	if (needRetry && !ds->isFull(mostRecentChannel))
@@ -568,21 +576,20 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 #if defined(M5DEBUG) && defined(DEBUG) && !defined(NDEBUG)
 	using std::setw;
-	M5_TIMING2("+recvTiming [" << std::dec << currentMemCycle << "] ")
+	M5_TIMING3("+recvTiming [" << std::dec << currentMemCycle << "] ")
 	// calculate the time elapsed from when the transaction started
-	M5_TIMING2(setw(2) << (pkt->isRead() ? "Rd" : ""))
-	M5_TIMING2(setw(2) << (pkt->isWrite() ? "Wr" : ""))
+	M5_TIMING3(setw(2) << (pkt->isRead() ? "Rd" : ""))
+	M5_TIMING3(setw(2) << (pkt->isWrite() ? "Wr" : ""))
 	//M5_TIMING2((pkt->isRequest() ? "Rq" : ""))
-	M5_TIMING2(setw(3) << (pkt->isInvalidate() ? "Inv" : ""))
-	M5_TIMING2(setw(3) << (pkt->isResponse() ? "Rsp" : ""))
-	M5_TIMING2(setw(2) << (pkt->isReadWrite() ? "RW" : ""))
-	M5_TIMING2(setw(2) << (pkt->isError() ? "Er" : ""))
-	M5_TIMING2(setw(2) << (pkt->isPrint() ? "Pr" : ""))
-	M5_TIMING2(setw(2) << (pkt->needsExclusive() ? "Ex" : ""))
-	M5_TIMING2(setw(2) << (pkt->needsResponse() ? "NR" : ""))
-	M5_TIMING2(setw(2) << (pkt->isLLSC() ? "LL" : ""))
-
-	M5_TIMING2(" 0x" << hex << pkt->getAddr())
+	M5_TIMING3(setw(3) << (pkt->isInvalidate() ? "Inv" : ""))
+	M5_TIMING3(setw(3) << (pkt->isResponse() ? "Rsp" : ""))
+	M5_TIMING3(setw(2) << (pkt->isReadWrite() ? "RW" : ""))
+	M5_TIMING3(setw(2) << (pkt->isError() ? "Er" : ""))
+	M5_TIMING3(setw(2) << (pkt->isPrint() ? "Pr" : ""))
+	M5_TIMING3(setw(2) << (pkt->needsExclusive() ? "Ex" : ""))
+	M5_TIMING3(setw(2) << (pkt->needsResponse() ? "NR" : ""))
+	M5_TIMING3(setw(2) << (pkt->isLLSC() ? "LL" : ""))
+	M5_TIMING3(" 0x" << hex << pkt->getAddr())
 
 	M5_TIMING2(" s[0x" << hex << pkt->getSize() << "]")
 #endif
@@ -695,6 +702,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 				memory->ds->enqueue(new Transaction(packetType,currentMemCycle,pkt->getSize() / 8,pkt->getAddr(), pC, threadID, memory->currentTransactionID));
 
 			assert(result == true);
+
+			assert(memory->transactionLookupTable.find(memory->currentTransactionID) == memory->transactionLookupTable.end());
 
 			memory->transactionLookupTable[memory->currentTransactionID] = pkt;
 
