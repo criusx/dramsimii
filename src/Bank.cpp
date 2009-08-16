@@ -423,7 +423,8 @@ bool Bank::aggressiveInsert(Transaction *incomingTransaction, const tick time)
 				assert(perBankQueue[currentIndex + 1]->getAddress() == incomingTransaction->getAddress());
 				assert(result);
 				return true;
-			}// strict order may add to the end of the queue only
+			}
+			// strict order may add to the end of the queue only
 			// if this has not happened already then this method of insertion fails
 			else if (systemConfig.getCommandOrderingAlgorithm() == STRICT_ORDER)
 			{
@@ -434,7 +435,7 @@ bool Bank::aggressiveInsert(Transaction *incomingTransaction, const tick time)
 
 		// if the correct row is already open, just insert there
 		// already guaranteed not to have RAW/WAR errors
-		if (activated && openRowID == incomingTransaction->getAddress().getRow())
+		if (activated && openRowID == currentRow)
 		{
 #ifndef NDEBUG
 			bool result =

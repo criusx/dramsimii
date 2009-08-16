@@ -22,8 +22,10 @@
 
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 
 using std::cerr;
+using std::pow;
 using std::endl;
 using std::setbase;
 using std::setw;
@@ -748,6 +750,12 @@ bool Address::addressTranslation()
 		cerr << "Memory address (" << std::hex << physicalAddress << ") out of range of available physical memory, max(" << highestAddress() << ")" << endl;
 		return false;
 	}
+
+// 	assert(channel < pow((int)2,(int)channelAddressDepth));
+// 	assert(rank < pow((int)2,(int)rankAddressDepth));
+// 	assert(bank < pow((int)2,(int)bankAddressDepth));
+// 	assert(row < pow((int)2,(int)rowAddressDepth));
+// 	assert(column < pow((int)2,(int)columnAddressDepth));
 
 	return true;
 }

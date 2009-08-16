@@ -132,7 +132,7 @@ outType(settings.outFileType)
 			break;
 		}
 		bf::path outDir(settings.outFileDir.c_str());
-
+		
 		if (!bf::exists(outDir))
 		{
 			if (!bf::create_directory(outDir))
@@ -233,6 +233,18 @@ statsFile(rhs.statsFile),
 outType(rhs.outType)
 {
 	setupStreams();
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief restart the streams to flush the file contents
+//////////////////////////////////////////////////////////////////////////
+bool SystemConfiguration::reset() const
+{
+	timingOutStream.reset();
+	powerOutStream.reset();
+	statsOutStream.reset();
+
+	return setupStreams();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -344,7 +356,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const SystemConfiguration &this_a)
 	return os;
 }
 
-bool SystemConfiguration::setupStreams()
+bool SystemConfiguration::setupStreams() const 
 {
 	if (!timingOutStream.is_complete())
 	{
@@ -382,6 +394,7 @@ bool SystemConfiguration::setupStreams()
 		default:
 			break;
 		}
+
 		timingOutStream.push(file_sink(timingFile.c_str()));
 		powerOutStream.push(file_sink(powerFile.c_str()));
 		statsOutStream.push(file_sink(statsFile.c_str()));
@@ -407,5 +420,5 @@ bool SystemConfiguration::setupStreams()
 		// 		exit(-12);
 		// 	}
 	}
-	return true;
+	return false;
 }

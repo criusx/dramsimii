@@ -44,6 +44,7 @@ import Simulation
 from Caches import *
 
 #update Benchmarks to support our benchmarks
+Benchmarks['shutdown'] = [SysConfig('shutdown.rcS', '256MB')]
 Benchmarks['lbm'] = [SysConfig('lbm.rcS', '1024MB')]
 Benchmarks['stream'] = [SysConfig('stream.rcS', '512MB')]
 Benchmarks['streamLong'] = [SysConfig('streamLong.rcS', '768MB')]

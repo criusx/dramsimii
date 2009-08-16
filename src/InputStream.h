@@ -100,8 +100,8 @@ namespace DRAMsimII
 		float boxMuller(float, float) const;
 		float Poisson (float) const;
 		float gammaLn(float) const;
-		Transaction *getNextIncomingTransaction();
-		Transaction *getNextRandomRequest();
+		Transaction *getNextIncomingTransaction(const unsigned transactionID);
+		Transaction *getNextRandomRequest(const unsigned transactionID);
 
 		// accessors
 		InputType getType() const { return type; }

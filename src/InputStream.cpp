@@ -373,14 +373,14 @@ InputStream::InputType InputStream::toInputToken(const string &input) const
 /// @author Joe Gross
 /// @return the next transaction, NULL if there are no more available transactions
 //////////////////////////////////////////////////////////////////////
-Transaction *InputStream::getNextIncomingTransaction()
+Transaction *InputStream::getNextIncomingTransaction(const unsigned transactionID)
 {
 	string input;
 
 	switch (type)
 	{
 	case RANDOM:
-		return getNextRandomRequest();
+		return getNextRandomRequest(transactionID);
 		break;
 	case K6_TRACE:
 		{
@@ -488,7 +488,7 @@ Transaction *InputStream::getNextIncomingTransaction()
 				break;
 			}
 
-			return new Transaction(type, timestamp, 8, tempPA, 0x0, 0x0);
+			return new Transaction(type, timestamp, 8, tempPA, 0x0, transactionID);
 		}
 		break;
 	case MAPPED:
@@ -505,7 +505,7 @@ Transaction *InputStream::getNextIncomingTransaction()
 			}
 			else
 			{
-				return new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address, 0, 0);
+				return new Transaction(newEvent.attributes,newEvent.timestamp >> COMPRESS_INCOMING_TRANSACTIONS,0,newEvent.address, 0, transactionID);
 			}
 #endif
 		}
@@ -541,7 +541,7 @@ Transaction *InputStream::getNextIncomingTransaction()
 				break;
 			}
 
-			return new Transaction(type, arrivalTime, 8, tempPA, PC, 0x0);
+			return new Transaction(type, arrivalTime, 8, tempPA, PC, 0, transactionID);
 		}
 		break;
 	case NONE:
@@ -598,7 +598,7 @@ bool InputStream::operator==(const InputStream& rhs) const
 /// @author Joe Gross
 /// @return a pointer to the transaction that was generated
 //////////////////////////////////////////////////////////////////////
-Transaction *InputStream::getNextRandomRequest()
+Transaction *InputStream::getNextRandomRequest(const unsigned transactionID)
 {
 	if (type == RANDOM)
 	{
@@ -713,7 +713,7 @@ Transaction *InputStream::getNextRandomRequest()
 		assert(nextAddress.getRow() < systemConfig.getRowCount());
 		assert(nextAddress.getColumn() < systemConfig.getColumnCount());
 
-		return new Transaction(nextType, time, burstLength, nextAddress, 0, 0);
+		return new Transaction(nextType, time, burstLength, nextAddress, 0, transactionID);
 	}
 	else
 		return NULL;

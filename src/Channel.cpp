@@ -1099,85 +1099,19 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 	}
 	// ensure that this transaction belongs on this channel
 	assert (incomingTransaction->getAddress().getChannel() == channelID || incomingTransaction->isRefresh());
+	assert(incomingTransaction->getAddress().getChannel() < systemConfig.getChannelCount());
+	assert(incomingTransaction->getAddress().getRank() < systemConfig.getRankCount());
 
 	Bank &destinationBank = rank[incomingTransaction->getAddress().getRank()].bank[incomingTransaction->getAddress().getBank()];
+	assert(incomingTransaction->getAddress().getBank() < systemConfig.getBankCount());
+	assert(incomingTransaction->getAddress().getRow() < systemConfig.getRowCount());
+	assert(incomingTransaction->getAddress().getColumn() < systemConfig.getColumnCount());
 
 	// with closed page, all transactions convert into one of the following:
 	// RAS, CAS, Precharge
 	// RAS, CAS+Precharge
 	switch (systemConfig.getRowBufferManagementPolicy())
 	{
-#if 0
-	case CLOSE_PAGE:	
-
-		// refresh transactions become only one command and are handled differently
-		if (incomingTransaction->isRefresh())
-		{
-			// check to see if every per bank command queue has room for one command
-			Rank &currentRank = rank[incomingTransaction->getAddress().getRank()];
-			// make sure that there is room in all the queues for one command
-			// refresh commands refresh a row, but kill everything currently in the sense amps
-			// therefore, we need to make sure that the refresh commands happen when all banks
-			// are available
-			for (vector<Bank>::const_iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
-			{
-				if (currentBank->isFull())
-					return false;
-			}
-			// then add the command to all queues
-			Command *refreshCommand = new Command(incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
-
-			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
-			{
-#ifndef NDEBUG
-				bool result =
-#endif
-					currentBank->push(refreshCommand);
-				assert (result);
-				assert(currentBank->back() == refreshCommand);
-			}
-		}
-		// every transaction translates into at least two commands
-		// or three commands if the CAS+Precharge command is not available
-		else if ((destinationBank.freeCommandSlots() < 2) ||
-			(!systemConfig.isAutoPrecharge() && (destinationBank.freeCommandSlots() < 3)))
-		{
-			return false;
-		}
-		// if there is enough space to insert the commands that this transaction becomes
-		else
-		{
-			// close page always misses
-			statistics.reportMiss();
-
-			// command one, the RAS command to activate the row
-#ifndef NDEBUG
-			bool result =
-#endif
-			destinationBank.push(new Command(incomingTransaction, time, false, timingSpecification.tBurst(), Command::ACTIVATE));
-			assert(result);
-
-			// command two, CAS or CAS+Precharge
-#ifndef NDEBUG
-			result =
-#endif
-			destinationBank.push(new Command(incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
-			assert(result);
-
-			// if CAS+Precharge is unavailable
-			if (!systemConfig.isAutoPrecharge())
-			{
-				// command three, the Precharge command
-				// only one of these commands has a pointer to the original transaction, thus NULL
-#ifndef NDEBUG
-				result =
-#endif
-					destinationBank.push(new Command(incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::PRECHARGE));
-				assert(result);
-			}
-		}
-		break;
-#endif
 		// will either convert a CAS+P into CAS, CAS+P by appending a new command or will add a CAS before a PRE (when autoprecharge is not available)
 	case CLOSE_PAGE:
 	case CLOSE_PAGE_AGGRESSIVE:
@@ -1360,6 +1294,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				if (((destinationBank.isEmpty() && destinationBank.isActivated()) || 
 					(!destinationBank.isEmpty() && !destinationBank.back()->isRefresh())))
 				{
+					assert(!destinationBank.back() || !destinationBank.back()->isPrecharge());
 					if (destinationBank.freeCommandSlots() < 3) 
 					{
 						if (systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE_AGGRESSIVE &&
@@ -1377,7 +1312,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					else
 					{
 						assert(!destinationBank.back() || !destinationBank.back()->isRefresh());
-						assert(!destinationBank.back() || !destinationBank.back()->isPrecharge());
+						
 #ifndef NDEBUG
 						bool result =
 #endif // NDEBUG
@@ -1394,10 +1329,18 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				statistics.reportMiss();
 
 				// RAS command
+#ifndef NDEBUG
+				bool result =
+#endif // NDEBUG
 				destinationBank.push(new Command(incomingTransaction,time, false, timingSpecification.tBurst(), Command::ACTIVATE));
+				assert(result);
 
 				// CAS/CASW command
+#ifndef NDEBUG
+				result =
+#endif // NDEBUG
 				destinationBank.push(new Command(incomingTransaction,time, false, timingSpecification.tBurst()));
+				assert(result);
 
 				return true;
 			}
@@ -1770,7 +1713,6 @@ const Command *Channel::readNextCommand() const
 	case STRICT_ORDER:
 		{
 			tick oldestCommandTime = TICK_MAX;
-			tick oldestExecutableCommandTime = TICK_MAX;
 			vector<Bank>::const_iterator oldestBank;
 			vector<Bank>::const_iterator oldestExecutableBank;
 
@@ -1787,17 +1729,19 @@ const Command *Channel::readNextCommand() const
 					if (const Command *challengerCommand = currentBank->front())
 					{
 #ifndef NDEBUG
-						const tick executeTime = earliestExecuteTime(challengerCommand);
-						if (executeTime != time + minProtocolGap(challengerCommand))
 						{
-							
-							assert(executeTime == time + minProtocolGap(challengerCommand));
-						}
+							const tick executeTime = earliestExecuteTime(challengerCommand);
+							if (executeTime != time + minProtocolGap(challengerCommand))
+							{							
+								assert(executeTime == time + minProtocolGap(challengerCommand));
+							}
+						}						
 #endif
 						// choose the oldest command that can be executed
-						if ((challengerCommand->getEnqueueTime() < oldestExecutableCommandTime) && (canIssue(challengerCommand)))
+						if (challengerCommand->getEnqueueTime() < oldestCommandTime)
 						{
-							// if it's a refresh_all command and we haven't proved that all the queues aren't refresh_all commands, search
+							// if it's a refresh_all command and
+							// we haven't proved that all the queues aren't refresh_all commands, search
 							if (challengerCommand->isRefresh())
 							{
 								if (!notAllRefresh)
@@ -1816,44 +1760,15 @@ const Command *Channel::readNextCommand() const
 									// if all are known now to be refresh commands
 									if (!notAllRefresh)
 									{
-										oldestExecutableCommandTime = challengerCommand->getEnqueueTime();
-										oldestExecutableBank = currentBank;
+										oldestCommandTime = challengerCommand->getEnqueueTime();
+										oldestBank = currentBank;
 									}
 								}
 							}
-							else if (challengerCommand->getEnqueueTime() < oldestCommandTime)
+							else
 							{
-								// if it's a refresh_all command and
-								// we haven't proved that all the queues aren't refresh_all commands, search
-								if (challengerCommand->isRefresh())
-								{
-									if (!notAllRefresh)
-									{
-										// try to show that at the head of each queue isn't a refresh command
-										for (vector<Bank>::const_iterator thisBank = currentRank->bank.begin(); thisBank != currentRank->bank.end(); thisBank++)
-										{
-											// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-											if (thisBank->nextCommandType() != Command::REFRESH_ALL)
-											{
-												notAllRefresh = true;
-												break;
-											}
-
-										}
-										// if all are known now to be refresh commands
-										if (!notAllRefresh)
-										{
-											oldestCommandTime = challengerCommand->getEnqueueTime();
-											oldestBank = currentBank;
-										}
-									}
-								}
-								else
-								{
-									oldestCommandTime = challengerCommand->getEnqueueTime();
-									oldestBank = currentBank;
-								}
-
+								oldestCommandTime = challengerCommand->getEnqueueTime();
+								oldestBank = currentBank;
 							}
 						}
 					}
@@ -1861,14 +1776,7 @@ const Command *Channel::readNextCommand() const
 			}
 
 			// if any executable command was found, prioritize it over those which must wait
-			if (oldestExecutableCommandTime < TICK_MAX)
-			{
-				assert(oldestExecutableBank->nextCommandType() == Command::REFRESH_ALL || rank[oldestExecutableBank->front()->getAddress().getRank()].bank[oldestExecutableBank->front()->getAddress().getBank()].front() == oldestExecutableBank->front());
-
-				return oldestExecutableBank->front();
-			}
-			// if there was a command found but is not yet ready to execute
-			else if (oldestCommandTime < TICK_MAX)
+			if (oldestCommandTime < TICK_MAX)
 			{
 				assert(oldestBank->front()->isRefresh() || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
 
@@ -2382,6 +2290,7 @@ void Channel::executeCommand(Command *thisCommand)
 		// should account for tAL buffering the CAS command until the right moment
 		//thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		assert(wasActivated);
+		assert(currentBank.getOpenRowID() == thisCommand->getAddress().getRow());
 		thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
@@ -2413,6 +2322,7 @@ void Channel::executeCommand(Command *thisCommand)
 		// for the CAS write command
 		//thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 		assert(wasActivated);
+		assert(currentBank.getOpenRowID() == thisCommand->getAddress().getRow());
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst());
 		//thisCommand->getHost()->setCompletionTime(time);
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());

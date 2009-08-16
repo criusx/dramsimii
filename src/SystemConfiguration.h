@@ -110,7 +110,8 @@ namespace DRAMsimII
 		unsigned getDecodeWindow() const { return decodeWindow; }
 		bool fileExists(std::stringstream& fileName) const;
 		bool createNewFile(const std::string& fileName) const;
-		bool setupStreams();
+		bool setupStreams() const;
+		bool reset() const;
 
 		// operator overloads
 		SystemConfiguration& operator =(const SystemConfiguration &rs);

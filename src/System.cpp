@@ -59,7 +59,6 @@ time(0),
 nextStats(settings.epoch)
 {
 	Address::initialize(settings);
-
 	
 	string commandLine(settings.commandLine);
 
@@ -189,6 +188,11 @@ void System::checkStats()
 		doPowerCalculation();
 
 		printStatistics();
+
+// 		bool result = systemConfig.powerOutStream.flush();
+// 		cerr << result << endl;
+// 		result = systemConfig.statsOutStream.flush();
+// 		cerr << result << endl;
 	}
 
 	while (time >= nextStats)
@@ -240,6 +244,9 @@ bool System::enqueue(Transaction *currentTransaction)
 void System::resetToTime(const tick time)
 {
 	nextStats = time + systemConfig.getEpoch();
+
+	bool result = systemConfig.reset();
+	//cerr << "reset " << result << endl;
 
 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
@@ -349,12 +356,18 @@ void System::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outpu
 //////////////////////////////////////////////////////////////////////
 void System::runSimulations(const unsigned requestCount)
 {
-	Transaction *inputTransaction = NULL;
+	unsigned outstandingTransacitonCounter = 0;
 
-	inputTransaction = inputStream.getNextIncomingTransaction();
+	Transaction *inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
+	
+	std::tr1::unordered_map<unsigned, Transaction *> outstandingTransactions;
 
+	std::queue<std::pair<unsigned, tick> > finishedTransactions;
+	
 	if (inputTransaction)
 	{
+		outstandingTransactions[inputTransaction->getOriginalTransaction()] = inputTransaction;
+
 		tick newTime = inputTransaction->getArrivalTime();// = (rand() % 65536) + 65536;
 
 		resetToTime(newTime);
@@ -365,7 +378,15 @@ void System::runSimulations(const unsigned requestCount)
 
 			if (this->pendingTransactionCount() > 0)
 			{
-				cerr << "not right, no host transactions here" << endl;
+				getPendingTransactions(finishedTransactions);
+
+				while (!finishedTransactions.empty())
+				{
+					outstandingTransactions.erase(finishedTransactions.front().first);
+
+					finishedTransactions.pop();
+				}
+				
 			}
 
 			// attempt to enqueue external transactions
@@ -379,9 +400,19 @@ void System::runSimulations(const unsigned requestCount)
 #endif
 					enqueue(inputTransaction);
 
+					outstandingTransactions[inputTransaction->getOriginalTransaction()] = inputTransaction;
+
 					assert(result);
 
-					inputTransaction = inputStream.getNextIncomingTransaction();
+					inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
+
+					if (outstandingTransacitonCounter % 10000 == 0)
+					{
+						for (std::tr1::unordered_map<unsigned, Transaction *>::const_iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
+						{
+							assert(time - i->second->getEnqueueTime() < 20000);
+						}
+					}
 
 					if (!inputTransaction)
 						break;

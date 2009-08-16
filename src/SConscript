@@ -68,11 +68,12 @@ try:
 		env.Append(
 			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops','-ffast-math', '-fomit-frame-pointer',
 			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-generate', '-mtune=native']
-			 '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-use', '-mtune=native']
-			# '-finline-functions', '-march=native','-Wno-unused-variable', '-mtune=native']
+			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-use', '-mtune=native']
+			 '-finline-functions', '-march=native','-Wno-unused-variable', '-mtune=native']
 			,CPPDEFINES = ['M5']
-			,LINKFLAGS = ['-fprofile-use'])
-			#,LINKFLAGS = ['-fprofile-generate'])
+			#,LINKFLAGS = ['-fprofile-use']
+			#,LINKFLAGS = ['-fprofile-generate']
+			)
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
 		CCFLAGS = ['-I/usr/include/libxml2', '-march=native', '-mtune=native'],
