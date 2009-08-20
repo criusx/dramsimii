@@ -1332,14 +1332,14 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 #ifndef NDEBUG
 				bool result =
 #endif // NDEBUG
-				destinationBank.push(new Command(incomingTransaction,time, false, timingSpecification.tBurst(), Command::ACTIVATE));
+				destinationBank.push(new Command(incomingTransaction, time, false, timingSpecification.tBurst(), Command::ACTIVATE));
 				assert(result);
 
 				// CAS/CASW command
 #ifndef NDEBUG
 				result =
 #endif // NDEBUG
-				destinationBank.push(new Command(incomingTransaction,time, false, timingSpecification.tBurst()));
+				destinationBank.push(new Command(incomingTransaction, time, false, timingSpecification.tBurst()));
 				assert(result);
 
 				return true;
@@ -1417,12 +1417,14 @@ Command *Channel::getNextCommand(const Command *useThisCommand)
 			assert(tempCommand && tempCommand == useThisCommand);
 
 			if ((systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE_AGGRESSIVE) &&
-				(useThisCommand->isReadOrWrite() &&
-				!currentBank.isEmpty() && currentBank.isHighUtilization() &&
-				currentBank.front()->isPrecharge()))
+				useThisCommand->isReadOrWrite() &&
+				!currentBank.isEmpty() && 
+				currentBank.isHighUtilization() &&
+				currentBank.front()->isBasicPrecharge())
 			{
 				assert(!tempCommand->isPrecharge());
 				tempCommand->setAutoPrecharge(true);
+				assert(currentBank.front()->isBasicPrecharge());
 				delete currentBank.pop();
 			}
 

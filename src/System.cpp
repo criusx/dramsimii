@@ -76,6 +76,8 @@ nextStats(settings.epoch)
 				commandLine = settings.inFile;
 		}
 	}
+
+	assert(systemConfig.statsOutStream.is_complete());
 	// else printing to these streams goes nowhere
 	systemConfig.statsOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
@@ -86,6 +88,14 @@ nextStats(settings.epoch)
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
 	systemConfig.powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
+		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
+		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
+		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
+		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
+		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
+		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
+
+	systemConfig.timingOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
@@ -244,10 +254,7 @@ bool System::enqueue(Transaction *currentTransaction)
 void System::resetToTime(const tick time)
 {
 	nextStats = time + systemConfig.getEpoch();
-
-	bool result = systemConfig.reset();
-	//cerr << "reset " << result << endl;
-
+	
 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
 		i->resetToTime(time);
@@ -319,7 +326,6 @@ void System::doPowerCalculation()
 	// waiting for OpenMP 3.0
 	//#pragma omp parallel
 
-
 	//#pragma omp for
 
 	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
@@ -360,13 +366,18 @@ void System::runSimulations(const unsigned requestCount)
 
 	Transaction *inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
 	
-	std::tr1::unordered_map<unsigned, Transaction *> outstandingTransactions;
+	std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> > outstandingTransactions;
 
 	std::queue<std::pair<unsigned, tick> > finishedTransactions;
 	
 	if (inputTransaction)
 	{
-		outstandingTransactions[inputTransaction->getOriginalTransaction()] = inputTransaction;
+		//if (inputTransaction->isRead())
+		{
+			Transaction *newTrans = new Transaction(*inputTransaction);
+
+			outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(newTrans, inputTransaction);
+		}
 
 		tick newTime = inputTransaction->getArrivalTime();// = (rand() % 65536) + 65536;
 
@@ -382,6 +393,11 @@ void System::runSimulations(const unsigned requestCount)
 
 				while (!finishedTransactions.empty())
 				{
+					if (outstandingTransactions.find(finishedTransactions.front().first) == outstandingTransactions.end())
+						assert(outstandingTransactions.find(finishedTransactions.front().first) != outstandingTransactions.end());
+
+					delete outstandingTransactions[finishedTransactions.front().first].first;
+
 					outstandingTransactions.erase(finishedTransactions.front().first);
 
 					finishedTransactions.pop();
@@ -400,17 +416,25 @@ void System::runSimulations(const unsigned requestCount)
 #endif
 					enqueue(inputTransaction);
 
-					outstandingTransactions[inputTransaction->getOriginalTransaction()] = inputTransaction;
-
 					assert(result);
+
+
+					//if (inputTransaction->isRead())
+					{
+						Transaction *newTrans = new Transaction(*inputTransaction);
+
+						outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(newTrans, inputTransaction);
+					}
 
 					inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
 
-					if (outstandingTransacitonCounter % 10000 == 0)
+					if (outstandingTransacitonCounter % 5000 == 0)
 					{
-						for (std::tr1::unordered_map<unsigned, Transaction *>::const_iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
+						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
 						{
-							assert(time - i->second->getEnqueueTime() < 20000);
+							unsigned diff = time - i->second.first->getEnqueueTime();
+							if (diff > 10000)
+								assert(time - i->second.first->getEnqueueTime() < 10000);
 						}
 					}
 

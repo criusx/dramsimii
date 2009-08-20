@@ -713,7 +713,7 @@ Transaction *InputStream::getNextRandomRequest(const unsigned transactionID)
 		assert(nextAddress.getRow() < systemConfig.getRowCount());
 		assert(nextAddress.getColumn() < systemConfig.getColumnCount());
 
-		return new Transaction(nextType, time, burstLength, nextAddress, 0, transactionID);
+		return new Transaction(nextType, time, burstLength, nextAddress, 0, 0, transactionID);
 	}
 	else
 		return NULL;

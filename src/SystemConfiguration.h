@@ -111,8 +111,7 @@ namespace DRAMsimII
 		bool fileExists(std::stringstream& fileName) const;
 		bool createNewFile(const std::string& fileName) const;
 		bool setupStreams() const;
-		bool reset() const;
-
+		
 		// operator overloads
 		SystemConfiguration& operator =(const SystemConfiguration &rs);
 		bool operator ==(const SystemConfiguration &) const;

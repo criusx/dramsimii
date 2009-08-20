@@ -146,7 +146,6 @@ protected:
 	unsigned int drain(Event *de);
 	void virtual init();
 
-
 public:
 #ifdef TRACE_GENERATE
 	boost::iostreams::filtering_ostream traceOutStream;

@@ -119,7 +119,7 @@ m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/asplos/full2'
+outputDir = '/home/crius/results/asplos/full3'
 
 # the file that describes the base memory settings
 memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
@@ -156,19 +156,20 @@ tFAW = [28]
 #addressMappingPolicy = ['closepagebaselineopt','closepagebaseline','sdramhiperf']
 addressMappingPolicy = ['closepagebaseline']
 #commandOrderingAlgorithm = ['firstAvailable', 'bankroundrobin', 'rankroundrobin', 'strict']
-commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop', 'strict']
+#commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop', 'strict']
+commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'commandPairRankHop']
 #commandOrderingAlgorithm = ['strict']
 #rowBufferManagementPolicy = ['openpageaggressive', 'openpage', 'closepage', 'closepageaggressive']
-rowBufferManagementPolicy = ['closepage']
+rowBufferManagementPolicy = ['openpageaggressive','closepage']
 interarrivalCycleCount = [4]
 #perBankQueueDepth = range(8, 16, 4)
 perBankQueueDepth = [12]
 readWriteGrouping = ['true']
 requests = [5000000]
-benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
+#benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
 #benchmarks = ['stream']
 #benchmarks = ['lbm', 'stream', 'bzip2']
-#benchmarks = ['mcf']
+benchmarks = ['milc']
 #benchmarks = ['stream', 'mcf', 'milc', 'lbm']
 
 def main():

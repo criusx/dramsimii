@@ -59,7 +59,7 @@ length(rhs.length)
 //////////////////////////////////////////////////////////////////////////
 Command::Command(Transaction *hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(addr,enqueueTime),
-hostTransaction((type == READ) ? hostTransaction : NULL),
+hostTransaction((type == READ) ? hostTransaction : 0),
 length(commandLength)
 {
 	if (type == READ)
@@ -88,12 +88,10 @@ length(commandLength)
 		commandType = type;
 	}
 
-	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
-		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
-		(commandType == READ && hostTransaction->isRead()) ||
-		(commandType == WRITE && hostTransaction->isWrite()) ||
-		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
-		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
+	assert((isWrite() && hostTransaction->isWrite()) ||
+		(isRead() && hostTransaction->isRead()) ||
+		(isActivate()) || (isPrecharge()) ||
+		(isRefresh() && hostTransaction->isRefresh())
 		);
 }
 

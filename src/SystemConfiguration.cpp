@@ -236,18 +236,6 @@ outType(rhs.outType)
 }
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief restart the streams to flush the file contents
-//////////////////////////////////////////////////////////////////////////
-bool SystemConfiguration::reset() const
-{
-	timingOutStream.reset();
-	powerOutStream.reset();
-	statsOutStream.reset();
-
-	return setupStreams();
-}
-
-//////////////////////////////////////////////////////////////////////////
 /// @brief attempt to atomically create a file with this name
 /// @return true if the file was created
 //////////////////////////////////////////////////////////////////////////
@@ -419,6 +407,7 @@ bool SystemConfiguration::setupStreams() const
 		// 		cerr << "Error writing settings file" << settingsFilename.str() << endl;
 		// 		exit(-12);
 		// 	}
+		return true;
 	}
 	return false;
 }
