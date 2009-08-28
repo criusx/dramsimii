@@ -108,7 +108,7 @@ bankLatencyUtilization(0)
 //////////////////////////////////////////////////////////////////////////
 void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 {
-//#pragma omp critical
+	//#pragma omp critical
 	{
 		if (currentTransaction->isRead() || currentTransaction->isWrite())
 		{
@@ -162,7 +162,7 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 //////////////////////////////////////////////////////////////////////////
 void Statistics::collectCommandStats(const Command *currentCommand)
 {
-//#pragma omp critical
+	//#pragma omp critical
 	{
 		if (!currentCommand->isRefresh())
 		{
@@ -222,7 +222,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	{
 		os << std::hex << (*currentValue).first << " " << std::noshowpoint << (float)(*currentValue).second.getAccumulatedLatency() / (float)(*currentValue).second.getCount() << " " << std::dec << (*currentValue).second.getCount() << endl;
 	}
-	
+
 	os << "----Row Hit/Miss Counts----" << endl << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
 
 	os << "----Utilization----" << endl;
@@ -253,7 +253,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	using Stats::Info;
 	std::list<Info *>::const_iterator i = Stats::statsList().begin();
 	std::list<Info *>::const_iterator end = Stats::statsList().end();
-	
+
 	for (;i != end;++i)
 	{
 		Info *info = *i;

@@ -223,7 +223,7 @@ void Channel::moveToTime(const tick currentTime)
 #endif
 				transaction2commands(nextTransaction);
 
-			
+
 			assert(t2cResult);
 
 			nextTransaction->setDecodeTime(time);
@@ -329,7 +329,7 @@ tick Channel::nextCommandExecuteTime() const
 
 		if (time + tempGap != tempCommandExecuteTime)
 			cerr << time << " " << tempGap << " " << tempCommandExecuteTime << " " << tempCommand->getCommandType() << " " << tempCommand->getAddress() << endl;
-;
+		;
 		assert(time + tempGap == tempCommandExecuteTime);
 #endif
 		return tempCommandExecuteTime;
@@ -347,6 +347,7 @@ tick Channel::nextCommandExecuteTime() const
 tick Channel::nextRefreshTime() const
 {
 	assert(rank.size() >= 1);
+
 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
 		return *(std::min_element(refreshCounter.begin(), refreshCounter.end()));
 	else
@@ -476,9 +477,7 @@ Transaction::TransactionType Channel::setReadWriteType(const int rankID) const
 
 	for(; currentBank != bankEnd; currentBank++)
 	{
-		const Command *currentCommand = currentBank->front();
-
-		if (currentCommand)
+		if (const Command *currentCommand = currentBank->front())
 		{
 			if (currentCommand->isActivate())
 			{
@@ -729,7 +728,7 @@ const Transaction *Channel::readTransaction(const bool bufferDelay) const
 
 	if (systemConfig.getRefreshPolicy() == NO_REFRESH)
 	{
-		if ((nextTransaction) && (time >= nextTransaction->getEnqueueTime() + timingSpecification.tBufferDelay()))
+		if ((nextTransaction) && (time >= nextTransaction->getEnqueueTime() + delay))
 		{
 			return nextTransaction;
 		}
@@ -767,6 +766,7 @@ unsigned Channel::readAvailableTransaction(const bool bufferDelay) const
 	const unsigned delay = bufferDelay ? timingSpecification.tBufferDelay() : 0;
 
 	unsigned limit = min(systemConfig.getDecodeWindow(), transactionQueue.size());
+
 	for (unsigned i = 0; i < limit; i++)
 	{
 		// if it's ready to decode
@@ -952,6 +952,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 	// RAS, CAS+Precharge
 	switch (systemConfig.getRowBufferManagementPolicy())
 	{
+	case CLOSE_PAGE_AGGRESSIVE:
 	case CLOSE_PAGE:	
 		// refresh transactions become only one command and are handled differently
 		if (incomingTransaction->isRefresh())
@@ -967,6 +968,12 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 					return false;
 			}
 		}
+		// must know that there is >0 slots open or the result may not be accurate
+		else if (systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE_AGGRESSIVE &&
+			destinationBank.closePageAggressiveInsertCheck(incomingTransaction, time))
+		{
+			return true;
+		}	
 		// every transaction translates into at least two commands
 		else if (availableCommandSlots < 2)
 		{
@@ -977,42 +984,6 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 		{
 			return false;
 		}
-		break;
-	case CLOSE_PAGE_AGGRESSIVE:
-		// refresh transactions become only one command and are handled differently
-		if (incomingTransaction->isRefresh())
-		{
-			const Rank &destinationRank = rank[incomingTransaction->getAddress().getRank()];
-			// make sure that there is room in all the queues for one command
-			// refresh commands refresh a row, but kill everything currently in the sense amps
-			// therefore, we need to make sure that the refresh commands happen when all banks
-			// are available
-			for (vector<Bank>::const_iterator currentBank = destinationRank.bank.begin(); currentBank != destinationRank.bank.end(); currentBank++)
-			{
-				if (currentBank->isFull())
-					return false;
-			}
-		}
-		// need at least one free command slot
-		else if (destinationBank.isFull())			
-		{
-			return false;
-		}
-		// must know that there is >0 slots open or the result may not be accurate
-		else if (destinationBank.closePageAggressiveInsertCheck(incomingTransaction, time))
-		{
-			return true;
-		}		
-		else if ((!systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 3) ||
-			(systemConfig.isAutoPrecharge() && destinationBank.freeCommandSlots() < 2))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-
 		break;
 
 		// open page systems may, in the best case, add a CAS command to an already open row
@@ -1098,11 +1069,14 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		return false;
 	}
 	// ensure that this transaction belongs on this channel
-	assert (incomingTransaction->getAddress().getChannel() == channelID || incomingTransaction->isRefresh());
+	assert(incomingTransaction->getAddress().getChannel() == channelID);
 	assert(incomingTransaction->getAddress().getChannel() < systemConfig.getChannelCount());
 	assert(incomingTransaction->getAddress().getRank() < systemConfig.getRankCount());
 
-	Bank &destinationBank = rank[incomingTransaction->getAddress().getRank()].bank[incomingTransaction->getAddress().getBank()];
+	vector<Rank>::iterator destinationRank = rank.begin() + incomingTransaction->getAddress().getRank();
+
+	vector<Bank>::iterator destinationBank = destinationRank->bank.begin() + incomingTransaction->getAddress().getBank();
+
 	assert(incomingTransaction->getAddress().getBank() < systemConfig.getBankCount());
 	assert(incomingTransaction->getAddress().getRow() < systemConfig.getRowCount());
 	assert(incomingTransaction->getAddress().getColumn() < systemConfig.getColumnCount());
@@ -1120,12 +1094,11 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		if (incomingTransaction->isRefresh())
 		{
 			// check to see if every per bank command queue has room for one command
-			Rank &currentRank = rank[incomingTransaction->getAddress().getRank()];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
-			for (vector<Bank>::const_iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
+			for (vector<Bank>::const_iterator currentBank = destinationRank->bank.begin(); currentBank != destinationRank->bank.end(); currentBank++)
 			{
 				if (currentBank->isFull())
 					return false;
@@ -1133,7 +1106,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// then add the command to all queues
 			Command *refreshCommand = new Command(incomingTransaction, time,  systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
 
-			for (vector<Bank>::iterator currentBank = currentRank.bank.begin(); currentBank != currentRank.bank.end(); currentBank++)
+			for (vector<Bank>::iterator currentBank = destinationRank->bank.begin(); currentBank != destinationRank->bank.end(); currentBank++)
 			{
 #ifndef NDEBUG
 				bool result =
@@ -1146,15 +1119,15 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// need at least one free command slot
 		// or three commands if the CAS+Precharge command is not available
 		else if (systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE_AGGRESSIVE &&
-			destinationBank.aggressiveInsert(incomingTransaction,time))
+			destinationBank->aggressiveInsert(incomingTransaction,time))
 		{
 			statistics.reportHit();
 			return true;
 		}
 		// every transaction translates into at least two commands
 		// or three commands if the CAS+Precharge command is not available
-		else if ((destinationBank.freeCommandSlots() < 2) ||
-			(!systemConfig.isAutoPrecharge() && (destinationBank.freeCommandSlots() < 3)))
+		else if ((destinationBank->freeCommandSlots() < 2) ||
+			(!systemConfig.isAutoPrecharge() && (destinationBank->freeCommandSlots() < 3)))
 		{
 			return false;
 		}
@@ -1172,17 +1145,17 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 #ifndef NDEBUG
 			bool result =
 #endif
-				destinationBank.push(new Command(incomingTransaction, time, false, timingSpecification.tBurst(), Command::ACTIVATE));
+				destinationBank->push(new Command(incomingTransaction, time, false, timingSpecification.tBurst(), Command::ACTIVATE));
 			assert(result);
-			assert(destinationBank.back()->getAddress() == incomingTransaction->getAddress());
+			assert(destinationBank->back()->getAddress() == incomingTransaction->getAddress());
 
 			// command two, CAS or CAS+Precharge			
 #ifndef NDEBUG
 			result =
 #endif
-				destinationBank.push(new Command(incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
+				destinationBank->push(new Command(incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst()));
 			assert(result);
-			assert(destinationBank.back()->getAddress() == incomingTransaction->getAddress());
+			assert(destinationBank->back()->getAddress() == incomingTransaction->getAddress());
 
 			// possible command three, Precharge
 			if (!systemConfig.isAutoPrecharge())
@@ -1190,9 +1163,9 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 #ifndef NDEBUG
 				result =
 #endif
-					destinationBank.push(new Command(incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst(), Command::PRECHARGE));
+					destinationBank->push(new Command(incomingTransaction, time, false, timingSpecification.tBurst(), Command::PRECHARGE));
 				assert(result);
-				assert(destinationBank.back()->getAddress() == incomingTransaction->getAddress());
+				assert(destinationBank->back()->getAddress() == incomingTransaction->getAddress());
 			}
 		}
 		break;
@@ -1204,10 +1177,9 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// CAS+P commands to relieve congestion
 		if (incomingTransaction->isRefresh())
 		{
-			vector<Rank>::iterator currentRank = rank.begin() + incomingTransaction->getAddress().getRank();
-			vector<Bank>::iterator bankEnd = currentRank->bank.end();
+			vector<Bank>::iterator bankEnd = destinationRank->bank.end();
 			// evaluate every per bank queue in this rank and collapse
-			for (vector<Bank>::iterator i = currentRank->bank.begin(); i != bankEnd; i++)
+			for (vector<Bank>::iterator i = destinationRank->bank.begin(); i != bankEnd; i++)
 			{
 				if (i->isHighUtilization())
 				{
@@ -1217,47 +1189,56 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		}
 		else
 		{
-			vector<Bank>::iterator currentBank = (rank.begin() + incomingTransaction->getAddress().getRank())->bank.begin() + incomingTransaction->getAddress().getBank();
-
-			if (currentBank->isHighUtilization())
+			if (destinationBank->isHighUtilization())
 			{
-				currentBank->collapse();
+				destinationBank->collapse();
 			}
 		}
 
+		// lack of break it intentional
 	case OPEN_PAGE:
-	
+
 		// refresh transactions become only one command and are handled differently
 		if (incomingTransaction->isRefresh())
 		{
+#if 1
 			// check to see if every per bank command queue has room for one command
-			Rank &currentRank = rank[incomingTransaction->getAddress().getRank()];
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
-			for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			vector<Bank>::const_iterator bankEnd = destinationRank->bank.end();
+			for (vector<Bank>::const_iterator i = destinationRank->bank.begin(); i != bankEnd; i++)
 			{
-				if (i->freeCommandSlots() < 2)
+				if (i->back())
+					assert(i->back()->isRefresh() || i->back()->isReadOrWrite());
+
+				// either cannot fit a single REF command or cannot fit Pre + REF
+				if (i->isFull() ||
+					(i->freeCommandSlots() < 2 && !i->back()->isPrecharge()))
 					return false;
 			}
 			// then add the command to all queues
-			Command *refreshCommand = new Command(incomingTransaction, time, systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
+			Command *refreshCommand = new Command(incomingTransaction, time, false, timingSpecification.tBurst());
 
 			Address tempAddr(incomingTransaction->getAddress());
 			unsigned j = 0;
 
-			for (vector<Bank>::iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			for (vector<Bank>::iterator i = destinationRank->bank.begin(); i != bankEnd; i++)
 			{
-				if ((i->isEmpty() && i->isActivated()) || (!i->isEmpty() && !i->back()->isRefresh()))
+				/// @TODO convert CAS(W) into CAS(W)+P instead of just adding a Pre
+				// add a Pre command before the REF to flush written data back to the banks before executing a refresh
+				if (i->isEmpty() && i->isActivated())
 				{
-					assert(i->isEmpty() || (!i->isEmpty() && i->back()->isReadOrWrite()));
+					assert(i->isEmpty() || i->back()->isReadOrWrite());
 					assert(i->isEmpty() || !i->back()->isPrecharge());
 					// then need to precharge before
-					tempAddr.setAddress(tempAddr.getChannel(),tempAddr.getRank(), j, 0, 0);
+					tempAddr.setBank(j);
 					assert(tempAddr.getChannel() == channelID);
 
-					Command *newCommand = new Command(incomingTransaction, tempAddr, time, false, timingSpecification.tBurst(), Command::PRECHARGE);
+					Command *newCommand = new Command(incomingTransaction, tempAddr, max(destinationRank->getLastCASTime(), destinationRank->getLastCASWTime()),  false, timingSpecification.tBurst(), Command::PRECHARGE);
+					//new Command(incomingTransaction, time,     false,        timingSpecification.tBurst(), Command::PRECHARGE)
+					assert(i->freeCommandSlots() >= 2);
 #ifndef NDEBUG
 					bool result =
 #endif // NDEBUG
@@ -1265,7 +1246,12 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					assert(result);
 					assert(&(rank[tempAddr.getRank()].bank[j]) == &*i);
 					assert(rank[tempAddr.getRank()].bank[j].back() == newCommand);
-
+				}
+				else if (i->back() && (!i->back()->isPrecharge() && !i->back()->isRefresh()))
+				{
+					assert(i->back()->isReadOrWrite());
+					i->back()->setAutoPrecharge(true);
+					assert(i->back()->isReadOrWrite() && i->back()->isPrecharge());
 				}
 
 #ifndef NDEBUG
@@ -1275,12 +1261,22 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				assert (result);
 				j++;
 			}
+#elif
+			delete incomingTransaction;
+#endif
+
+			for (vector<Bank>::const_iterator i = rank[incomingTransaction->getAddress().getRank()].bank.begin(); 
+				i != rank[incomingTransaction->getAddress().getRank()].bank.end(); i++)
+			{
+				assert(i->back() == refreshCommand);
+			}
+
 			return true;
 		}
-		else if (!destinationBank.isFull())
+		else if (!destinationBank->isFull())
 		{	
 			// try to do a normal open page insert on this transaction
-			if (destinationBank.aggressiveInsert(incomingTransaction, time))
+			if (destinationBank->aggressiveInsert(incomingTransaction, time))
 			{
 				// found place to insert, hit
 				statistics.reportHit();
@@ -1291,18 +1287,20 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			else
 			{
 				// first, the precharge command, if necessary
-				if (((destinationBank.isEmpty() && destinationBank.isActivated()) || 
-					(!destinationBank.isEmpty() && !destinationBank.back()->isRefresh())))
+				if (((destinationBank->isEmpty() && destinationBank->isActivated()) || 
+					(!destinationBank->isEmpty() && !destinationBank->back()->isRefresh())))
 				{
-					assert(!destinationBank.back() || !destinationBank.back()->isPrecharge());
-					if (destinationBank.freeCommandSlots() < 3) 
+					assert(!destinationBank->back() || !destinationBank->back()->isPrecharge());
+
+					if (destinationBank->freeCommandSlots() < 3) 
 					{
 						if (systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE_AGGRESSIVE &&
-							destinationBank.freeCommandSlots() == 2 && 
-							destinationBank.back()->isReadOrWrite())
+							destinationBank->freeCommandSlots() == 2 && 
+							destinationBank->back()->isReadOrWrite())
 						{
-							assert(!destinationBank.back()->isPrecharge());
-							destinationBank.back()->setAutoPrecharge(true);
+							assert(!destinationBank->back()->isPrecharge());
+							assert(destinationBank->back()->isReadOrWrite());
+							destinationBank->back()->setAutoPrecharge(true);
 						}
 						else
 						{
@@ -1311,16 +1309,16 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					}
 					else
 					{
-						assert(!destinationBank.back() || !destinationBank.back()->isRefresh());
-						
+						assert(!destinationBank->back() || !destinationBank->back()->isRefresh());
+						assert(!destinationBank->isFull());
 #ifndef NDEBUG
 						bool result =
 #endif // NDEBUG
-							destinationBank.push(new Command(incomingTransaction,time,false, timingSpecification.tBurst(), Command::PRECHARGE));
+							destinationBank->push(new Command(incomingTransaction, time, false, timingSpecification.tBurst(), Command::PRECHARGE));
 						assert(result);
 					}
 				}
-				else if (destinationBank.freeCommandSlots() < 2)
+				else if (destinationBank->freeCommandSlots() < 2)
 				{
 					return false;
 				}
@@ -1329,17 +1327,19 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				statistics.reportMiss();
 
 				// RAS command
+				assert(!destinationBank->isFull());
 #ifndef NDEBUG
 				bool result =
 #endif // NDEBUG
-				destinationBank.push(new Command(incomingTransaction, time, false, timingSpecification.tBurst(), Command::ACTIVATE));
+					destinationBank->push(new Command(incomingTransaction, time, false, timingSpecification.tBurst(), Command::ACTIVATE));
 				assert(result);
 
 				// CAS/CASW command
+				assert(!destinationBank->isFull());
 #ifndef NDEBUG
 				result =
 #endif // NDEBUG
-				destinationBank.push(new Command(incomingTransaction, time, false, timingSpecification.tBurst()));
+					destinationBank->push(new Command(incomingTransaction, time, false, timingSpecification.tBurst()));
 				assert(result);
 
 				return true;
@@ -1382,50 +1382,59 @@ Command *Channel::getNextCommand(const Command *useThisCommand)
 
 	if (useThisCommand)
 	{
-		Rank &currentRank = rank[useThisCommand->getAddress().getRank()];
+		vector<Rank>::iterator currentRank = rank.begin() + useThisCommand->getAddress().getRank();
+
+		if (rank[useThisCommand->getAddress().getRank()].bank[useThisCommand->getAddress().getBank()].front() != useThisCommand)
+			assert(rank[useThisCommand->getAddress().getRank()].bank[useThisCommand->getAddress().getBank()].front() == useThisCommand);
 
 		// if it was a refresh all command, then dequeue all n banks worth of commands
 		if (useThisCommand->isRefresh())
 		{		
-			vector<Bank>::iterator bankEnd = currentRank.bank.end();
+			if (!currentRank->refreshAllReady())
+				assert(currentRank->refreshAllReady());
 
-			vector<Bank>::iterator currentBank = currentRank.bank.begin();
+			vector<Bank>::iterator bankEnd = currentRank->bank.end();
 
-			Command *tempCommand = const_cast<Command*>(currentBank->front());
+			vector<Bank>::iterator currentBank = currentRank->bank.begin();
+
+			assert(currentBank->front() == useThisCommand);
+
+			//Command *tempCommand = const_cast<Command*>(currentBank->front());
 
 			for (;currentBank != bankEnd;currentBank++)
 			{				
 				assert(currentBank->front() != NULL);
-				assert(currentBank->front()->isRefresh());
+				if (!currentBank->front()->isRefresh())
+					assert(currentBank->front()->isRefresh());
 
 				currentBank->pop();
 			}
 
-			return tempCommand;
+			return const_cast<Command*>(useThisCommand);
 		}
 		else
 		{			
 			assert((useThisCommand->isPrecharge() && systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE) ||
-				(currentRank.bank[useThisCommand->getAddress().getBank()].front() == useThisCommand));
+				(currentRank->bank[useThisCommand->getAddress().getBank()].front() == useThisCommand));
 
-			Bank &currentBank = currentRank.bank[useThisCommand->getAddress().getBank()];
+			vector<Bank>::iterator currentBank = currentRank->bank.begin() + useThisCommand->getAddress().getBank();
 
-			assert(currentBank.front() == useThisCommand);
+			assert(currentBank->front() == useThisCommand);
 
-			Command *tempCommand = currentBank.pop();
+			Command *tempCommand = currentBank->pop();
 
 			assert(tempCommand && tempCommand == useThisCommand);
 
 			if ((systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE_AGGRESSIVE) &&
 				useThisCommand->isReadOrWrite() &&
-				!currentBank.isEmpty() && 
-				currentBank.isHighUtilization() &&
-				currentBank.front()->isBasicPrecharge())
+				!currentBank->isEmpty() && 
+				currentBank->isHighUtilization() &&
+				currentBank->front()->isBasicPrecharge())
 			{
 				assert(!tempCommand->isPrecharge());
 				tempCommand->setAutoPrecharge(true);
-				assert(currentBank.front()->isBasicPrecharge());
-				delete currentBank.pop();
+				assert(currentBank->front()->isBasicPrecharge());
+				delete currentBank->pop();
 			}
 
 			return tempCommand;
@@ -1469,7 +1478,7 @@ const Command *Channel::readNextCommand() const
 					{
 						const Command *challengerCommand = currentBank->front();
 
-						assert(challengerCommand == NULL || challengerCommand->isRefresh() || rank[challengerCommand->getAddress().getRank()].bank[challengerCommand->getAddress().getBank()].front() == challengerCommand);
+						assert(!challengerCommand || challengerCommand->isRefresh() || rank[challengerCommand->getAddress().getRank()].bank[challengerCommand->getAddress().getBank()].front() == challengerCommand);
 
 						// see if it is a refresh command
 						if (isRefreshCommand && challengerCommand->isRefresh() && currentRank->refreshAllReady())
@@ -1478,8 +1487,12 @@ const Command *Channel::readNextCommand() const
 #ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							if (max(time + minGap, (tick)0) != challengerExecuteTime)
-								assert(max(time + minGap, (tick)0) == challengerExecuteTime);
+							if (time + minGap != challengerExecuteTime)
+							{
+								cerr << "cet " << challengerExecuteTime << ", mingap " << time+minGap << endl;
+								cerr << challengerCommand << endl;
+								assert(time + minGap == challengerExecuteTime);
+							}
 #endif
 							if (challengerExecuteTime < candidateExecuteTime ||
 								(candidateExecuteTime == challengerExecuteTime && 
@@ -1654,8 +1667,8 @@ const Command *Channel::readNextCommand() const
 #ifndef NDEBUG
 							int minGap = minProtocolGap(challengerCommand);
 
-							if (max(time + minGap, (tick)0) != max(challengerExecuteTime,time))
-								assert(max(time + minGap, (tick)0) == challengerExecuteTime);
+							if (time + minGap!= max(challengerExecuteTime,time))
+								assert(time + minGap == challengerExecuteTime);
 #endif
 							// if it can execute earlier, at the same time and has greater queue pressure or it is starving
 							if ((challengerExecuteTime < candidateExecuteTime) ||
@@ -1678,7 +1691,7 @@ const Command *Channel::readNextCommand() const
 							{
 								cerr << time << " " << minGap << " " << challengerExecuteTime;
 
-								assert(time + minGap == max(challengerExecuteTime,time));
+								assert(time + minGap == challengerExecuteTime);
 							}
 #endif
 							// if it can execute earlier, at the same time and has greater queue pressure or it is starving
@@ -1715,8 +1728,7 @@ const Command *Channel::readNextCommand() const
 	case STRICT_ORDER:
 		{
 			tick oldestCommandTime = TICK_MAX;
-			vector<Bank>::const_iterator oldestBank;
-			vector<Bank>::const_iterator oldestExecutableBank;
+			const Command *oldestCommand = NULL;
 
 			vector<Rank>::const_iterator rankEnd = rank.end();
 
@@ -1742,50 +1754,37 @@ const Command *Channel::readNextCommand() const
 						// choose the oldest command that can be executed
 						if (challengerCommand->getEnqueueTime() < oldestCommandTime)
 						{
-							// if it's a refresh_all command and
+							// if it's a refresh command and
 							// we haven't proved that all the queues aren't refresh_all commands, search
 							if (challengerCommand->isRefresh())
 							{
 								if (!notAllRefresh)
 								{
-									// try to show that at the head of each queue isn't a refresh command
-									for (vector<Bank>::const_iterator thisBank = currentRank->bank.begin(); thisBank != currentRank->bank.end(); thisBank++)
-									{
-										// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
-										if (thisBank->nextCommandType() != Command::REFRESH_ALL)
-										{
-											notAllRefresh = true;
-											break;
-										}
-
-									}
 									// if all are known now to be refresh commands
-									if (!notAllRefresh)
+									if (currentRank->refreshAllReady())
 									{
 										oldestCommandTime = challengerCommand->getEnqueueTime();
-										oldestBank = currentBank;
+										oldestCommand = challengerCommand;
+										// don't need to check other banks again
+										break;
 									}
 								}
 							}
 							else
 							{
 								oldestCommandTime = challengerCommand->getEnqueueTime();
-								oldestBank = currentBank;
+								oldestCommand = challengerCommand;
 							}
 						}
 					}
+
+					notAllRefresh = true;
 				}
 			}
 
 			// if any executable command was found, prioritize it over those which must wait
-			if (oldestCommandTime < TICK_MAX)
-			{
-				assert(oldestBank->front()->isRefresh() || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
 
-				return oldestBank->front();
-			}
-			else
-				return NULL;
+			return oldestCommand;
 		}
 		break;
 
@@ -1824,16 +1823,16 @@ const Command *Channel::readNextCommand() const
 
 			case Command::READ:
 				// try to reuse open rows
-					if (lastCommand)
-					{
-						const Command *nextCommand = ((rank.begin() + lastCommand->getAddress().getRank())->bank.begin() + lastCommand->getAddress().getBank())->front();
+				if (lastCommand)
+				{
+					const Command *nextCommand = ((rank.begin() + lastCommand->getAddress().getRank())->bank.begin() + lastCommand->getAddress().getBank())->front();
 
-						if (nextCommand && (nextCommand->isReadOrWrite() || nextCommand->isBasicPrecharge()))
-						{
-							return nextCommand;
-						}
-						assert(!nextCommand || !nextCommand->isBasicPrecharge());
-					}	
+					if (nextCommand && (nextCommand->isReadOrWrite() || nextCommand->isBasicPrecharge()))
+					{
+						return nextCommand;
+					}
+					assert(!nextCommand || !nextCommand->isBasicPrecharge());
+				}	
 			case Command::READ_AND_PRECHARGE:
 			case Command::PRECHARGE:
 			case Command::REFRESH_ALL:
@@ -1864,7 +1863,7 @@ const Command *Channel::readNextCommand() const
 			}
 
 			unsigned currentBankOffset = lastCommand ? lastCommand->getAddress().getBank() : 0;
-			
+
 			vector<Rank>::const_iterator currentRank = rank.begin() + (lastCommand ? lastCommand->getAddress().getRank() : 0) + 1;
 			if (currentRank == rank.end())
 			{
@@ -2025,7 +2024,7 @@ const Command *Channel::readNextCommand() const
 				cerr << "warn: unhandled command type" << endl;
 				break;
 			}
-			
+
 			vector<Rank>::const_iterator currentRank = rank.begin() + (lastCommand ? lastCommand->getAddress().getRank() : 0);
 			vector<Bank>::const_iterator currentBank = currentRank->bank.begin() + (lastCommand ? lastCommand->getAddress().getBank() : 0) + 1;
 			if (currentBank == currentRank->bank.end())
@@ -2071,7 +2070,7 @@ const Command *Channel::readNextCommand() const
 						return potentialCommand;
 					}
 				}
-				
+
 				// then switch to the next bank
 				currentBank++;
 				if (currentBank == currentRank->bank.end())
@@ -2121,87 +2120,72 @@ const Command *Channel::readNextCommand() const
 		}
 		break;
 
-		case COMMAND_PAIR_RANK_HOPPING:
-			{	
-				// determine
-				bool isActivate;
-				unsigned nextRank, nextBank;
+	case COMMAND_PAIR_RANK_HOPPING:
+		{	
+			// determine
+			bool isActivate;
+			unsigned nextRank, nextBank;
 
-				if (lastCommand)
-				{
-					isActivate = lastCommand->isActivate();
-					nextRank = lastCommand->getAddress().getRank();
-					nextBank = lastCommand->getAddress().getBank();
-					getNextCPRHValues(nextRank, nextBank, isActivate);
-					assert(nextRank < systemConfig.getRankCount());
-					assert(nextBank < systemConfig.getBankCount());
-					isActivate = !isActivate;
-				}
-				else // special case, must reset to the first value in the pattern
-				{
-					isActivate = true;
-					nextRank = 0;
-					nextBank = systemConfig.getBankCount() / 2;
-#if 0
-					for (unsigned i = 4* systemConfig.getRankCount() * systemConfig.getBankCount(); i > 0; --i)
-					{
-						std::cerr << nextRank << " " << nextBank;
-						if (isActivate)
-							std::cerr << " , " ;
-						else
-							std::cerr << endl;
-
-						getNextCPRHValues(nextRank,nextBank,isActivate);
-						isActivate = !isActivate;
-					}
-#endif
-				}
-
-				const unsigned originalRank = nextRank;
-				const unsigned originalBank = nextBank;
-				const bool originalActivate = isActivate;
-
-				while (true)
-				{
-					const Command *potentialCommand = 						
-						((rank.begin() + nextRank)->bank.begin() + nextBank)->front();
-
-					// see if this command could be used
-					if (potentialCommand)
-					{
-						if (!potentialCommand->isRefresh())
-						{
-							if (potentialCommand->isActivate() == isActivate)
-							{							
-								return potentialCommand;
-							}
-						}
-						else
-						{
-							// look for refreshes
-							if ((rank.begin() + nextRank)->refreshAllReady())
-							{
-								return potentialCommand;
-							}
-						}
-					}
-
-					// then switch command
-					getNextCPRHValues(nextRank, nextBank, isActivate);
-					isActivate = !isActivate;	
-
-					// quit if already checked every rank/bank combination
-					if (nextRank == originalRank && nextBank == originalBank && originalActivate == isActivate)
-					{
-						return NULL;
-					}
-					
-									
-				}
+			if (lastCommand)
+			{
+				isActivate = lastCommand->isActivate();
+				nextRank = lastCommand->getAddress().getRank();
+				nextBank = lastCommand->getAddress().getBank();
+				getNextCPRHValues(nextRank, nextBank, isActivate);
+				assert(nextRank < systemConfig.getRankCount());
+				assert(nextBank < systemConfig.getBankCount());
+				isActivate = !isActivate;
 			}
-			break;
+			else // special case, must reset to the first value in the pattern
+			{
+				isActivate = true;
+				nextRank = 0;
+				nextBank = systemConfig.getBankCount() / 2;
+			}
 
-		default:
+			const unsigned originalRank = nextRank;
+			const unsigned originalBank = nextBank;
+			const bool originalActivate = isActivate;
+
+			while (true)
+			{
+				const Command *potentialCommand = 						
+					((rank.begin() + nextRank)->bank.begin() + nextBank)->front();
+
+				// see if this command could be used
+				if (potentialCommand)
+				{
+					if (!potentialCommand->isRefresh())
+					{
+						if (potentialCommand->isActivate() == isActivate)
+						{							
+							return potentialCommand;
+						}
+					}
+					else
+					{
+						// look for refreshes
+						if ((rank.begin() + nextRank)->refreshAllReady())
+						{
+							return potentialCommand;
+						}
+					}
+				}
+
+				// then switch command
+				getNextCPRHValues(nextRank, nextBank, isActivate);
+				isActivate = !isActivate;	
+
+				// quit if already checked every rank/bank combination
+				if (nextRank == originalRank && nextBank == originalBank && originalActivate == isActivate)
+				{
+					return NULL;
+				}							
+			}
+		}
+		break;
+
+	default:
 		{
 			cerr << "This configuration and algorithm combination is not supported" << endl;
 			exit(-2);
@@ -2348,6 +2332,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 		assert(currentBank.isActivated());
 
+		// issued to the rank which issues to banks
 		currentRank.issuePRE(time, thisCommand);
 
 		thisCommand->setCompletionTime(thisCommand->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRP());
@@ -2356,7 +2341,9 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case Command::REFRESH_ALL:
 
-		assert(!currentBank.isActivated());
+		for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			if (i->isActivated())
+				assert(!i->isActivated());
 
 		currentRank.issueREF(time);
 
@@ -2457,9 +2444,9 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
-			tick otherRankLastCASTime = time - 10000;
+			tick otherRankLastCASTime = time - 10000000;
 			int otherRankLastCASLength = timingSpecification.tBurst();
-			tick otherRankLastCASWTime = time - 10000;
+			tick otherRankLastCASWTime = time - 10000000;
 			int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent cas(w) time and length
@@ -2517,9 +2504,9 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			//respect last ras of same rank
 			int t_ras_gap = ((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
 
-			tick otherRankLastCASTime = time - 10000;
+			tick otherRankLastCASTime = time - 10000000;
 			int otherRankLastCASLength = timingSpecification.tBurst();
-			tick otherRankLastCASWTime = time - 10000;
+			tick otherRankLastCASWTime = time - 10000000;
 			int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent CAS/CASW time and length

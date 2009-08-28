@@ -132,7 +132,7 @@ outType(settings.outFileType)
 			break;
 		}
 		bf::path outDir(settings.outFileDir.c_str());
-		
+
 		if (!bf::exists(outDir))
 		{
 			if (!bf::create_directory(outDir))
@@ -402,11 +402,6 @@ bool SystemConfiguration::setupStreams() const
 			cerr << "Error opening file \"" << statsFile << "\" for writing" << endl;
 			exit(-12);
 		}
-		// 	else if (!settingsOutStream.good() || !settingsOutStream.is_complete())
-		// 	{
-		// 		cerr << "Error writing settings file" << settingsFilename.str() << endl;
-		// 		exit(-12);
-		// 	}
 		return true;
 	}
 	return false;

@@ -18,6 +18,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <ostream>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
@@ -59,7 +60,7 @@ time(0),
 nextStats(settings.epoch)
 {
 	Address::initialize(settings);
-	
+
 	string commandLine(settings.commandLine);
 
 	if (commandLine.length() < 1)
@@ -176,6 +177,8 @@ tick System::nextTick() const
 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 	{
 		tick channelNextWake = currentChan->nextTick();
+		assert(channelNextWake > currentChan->getTime());
+
 		if (channelNextWake < nextEvent)
 		{
 			nextEvent = channelNextWake;
@@ -198,15 +201,10 @@ void System::checkStats()
 		doPowerCalculation();
 
 		printStatistics();
-
-// 		bool result = systemConfig.powerOutStream.flush();
-// 		cerr << result << endl;
-// 		result = systemConfig.statsOutStream.flush();
-// 		cerr << result << endl;
 	}
 
 	while (time >= nextStats)
-		nextStats = time + systemConfig.getEpoch();
+		nextStats += systemConfig.getEpoch();
 }
 
 
@@ -254,7 +252,7 @@ bool System::enqueue(Transaction *currentTransaction)
 void System::resetToTime(const tick time)
 {
 	nextStats = time + systemConfig.getEpoch();
-	
+
 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 	{
 		i->resetToTime(time);
@@ -268,20 +266,28 @@ void System::resetToTime(const tick time)
 /// @param endTime the time which the channels should be moved to, finishing and queuing transactions as R/W finish
 /// @return a transaction which finished somewhere before the end time
 //////////////////////////////////////////////////////////////////////
-void System::moveToTime(const tick endTime)
+bool System::moveToTime(const tick endTime)
 {
-	//M5_TIMING_LOG("ch to [" << std::dec << endTime << "]");
-
-	//unsigned finishedTransaction = UINT_MAX;
-	//#pragma omp parallel for private(i)
 	std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime),endTime));
+	//#pragma omp parallel for private(i)
 	// 	for (i = channel.size() - 1; i >= 0; i--)
 	// 	{
 	// 		channel[i].moveToTime(endTime);
 	// 	}
 
 	updateSystemTime();
+
+	bool result = true;
+
+	if (time >= nextStats)
+	{
+		std::pair<unsigned,unsigned> rwBytes = statistics.getReadWriteBytes();
+		result =  rwBytes.first + rwBytes.second > 0;
+	}
+
 	checkStats();
+
+	return result;
 }
 
 
@@ -365,11 +371,13 @@ void System::runSimulations(const unsigned requestCount)
 	unsigned outstandingTransacitonCounter = 0;
 
 	Transaction *inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
-	
+
+	resetToTime(inputTransaction->getArrivalTime());
+
 	std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> > outstandingTransactions;
 
 	std::queue<std::pair<unsigned, tick> > finishedTransactions;
-	
+
 	if (inputTransaction)
 	{
 		//if (inputTransaction->isRead())
@@ -402,7 +410,7 @@ void System::runSimulations(const unsigned requestCount)
 
 					finishedTransactions.pop();
 				}
-				
+
 			}
 
 			// attempt to enqueue external transactions
@@ -414,7 +422,7 @@ void System::runSimulations(const unsigned requestCount)
 #ifndef NDEBUG
 					bool result =
 #endif
-					enqueue(inputTransaction);
+						enqueue(inputTransaction);
 
 					assert(result);
 
@@ -428,15 +436,24 @@ void System::runSimulations(const unsigned requestCount)
 
 					inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
 
+					bool foundOne = false;
+
 					if (outstandingTransacitonCounter % 5000 == 0)
 					{
-						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
+						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(); j != outstandingTransactions.end(); j++)
 						{
-							unsigned diff = time - i->second.first->getEnqueueTime();
+							unsigned diff = time - j->second.first->getEnqueueTime();
 							if (diff > 10000)
-								assert(time - i->second.first->getEnqueueTime() < 10000);
+							{
+								foundOne = true;
+								//assert(time - i->second.first->getEnqueueTime() < 10000);
+								std::cerr << j->first << " @ " << diff << std::endl;
+							}
 						}
 					}
+
+					if (foundOne)
+						cerr << "-----------------------------" << endl;
 
 					if (!inputTransaction)
 						break;
@@ -450,7 +467,7 @@ void System::runSimulations(const unsigned requestCount)
 			delete inputTransaction;
 
 	}
-//	moveToTime(channel[0].getTime() + 64000000);
+	//	moveToTime(channel[0].getTime() + 64000000);
 }
 
 

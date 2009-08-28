@@ -92,6 +92,12 @@ namespace DRAMsimII
 		// mutators
 		void setPhysicalAddress(PhysicalAddress pa) { physicalAddress = pa; addressTranslation(); }
 		void setAddress(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column);
+		void setAddress(const Address &rhs);
+		void setChannel(const unsigned value) { channel = value; }
+		void setRank(const unsigned value) { rank = value; }
+		void setBank(const unsigned value) { bank = value; }
+		void setRow(const unsigned value) { row = value; }
+		void setColumn(const unsigned value) { column = value; }
 
 		// constructor
 		Address();						///< the no-arg constructor
@@ -118,7 +124,7 @@ namespace DRAMsimII
 			if (version == 0)
 			{
 				ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth & columnAddressDepth & columnSizeDepth &
-				mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column & columnLowAddressDepth & columnHighAddressDepth;
+					mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column & columnLowAddressDepth & columnHighAddressDepth;
 			}
 		}
 	};

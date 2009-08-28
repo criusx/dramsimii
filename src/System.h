@@ -71,7 +71,7 @@ namespace DRAMsimII
 	public:		
 
 		// functions
-		void moveToTime(const tick endTime);
+		bool moveToTime(const tick endTime);
 		bool enqueue(Transaction* trans);
 		virtual tick nextTick() const;
 		void runSimulations(const unsigned requestCount = 0);

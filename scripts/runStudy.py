@@ -116,10 +116,10 @@ m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
 m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 
 # the executable for M5/(FS|SE)
-m5Exe = 'm5.fast'
+m5Exe = 'm5.opt'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/asplos/full3'
+outputDir = '/home/crius/results/asplos/full4'
 
 # the file that describes the base memory settings
 memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
@@ -156,20 +156,20 @@ tFAW = [28]
 #addressMappingPolicy = ['closepagebaselineopt','closepagebaseline','sdramhiperf']
 addressMappingPolicy = ['closepagebaseline']
 #commandOrderingAlgorithm = ['firstAvailable', 'bankroundrobin', 'rankroundrobin', 'strict']
-#commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop', 'strict']
-commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'commandPairRankHop']
+commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop', 'strict']
+#commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'commandPairRankHop', 'strict']
 #commandOrderingAlgorithm = ['strict']
-#rowBufferManagementPolicy = ['openpageaggressive', 'openpage', 'closepage', 'closepageaggressive']
-rowBufferManagementPolicy = ['openpageaggressive','closepage']
+rowBufferManagementPolicy = ['openpageaggressive', 'openpage', 'closepage','closepageaggressive']
+#rowBufferManagementPolicy = ['openpageaggressive','closepage','closepageaggressive','openpage']
 interarrivalCycleCount = [4]
 #perBankQueueDepth = range(8, 16, 4)
 perBankQueueDepth = [12]
 readWriteGrouping = ['true']
 requests = [5000000]
 #benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
-#benchmarks = ['stream']
+benchmarks = ['lbm']
 #benchmarks = ['lbm', 'stream', 'bzip2']
-benchmarks = ['milc']
+#benchmarks = ['milc']
 #benchmarks = ['stream', 'mcf', 'milc', 'lbm']
 
 def main():

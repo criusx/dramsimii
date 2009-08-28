@@ -141,6 +141,7 @@ namespace DRAMsimII
 		explicit Statistics(const Settings& settings);
 
 		// functions
+		std::pair<unsigned,unsigned> getReadWriteBytes() const { return std::pair<unsigned,unsigned>(readBytesTransferred,writeBytesTransferred); }
 		void clear();
 		void collectTransactionStats(const Transaction*);	
 		void collectCommandStats(const Command*);

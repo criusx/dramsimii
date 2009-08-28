@@ -784,6 +784,15 @@ void Address::setAddress(const unsigned channel, const unsigned rank, const unsi
 
 }
 
+void Address::setAddress(const Address &rhs)
+{
+	channel = rhs.channel;
+	rank = rhs.rank;
+	bank = rhs.bank;
+	column = rhs.column;
+	row = rhs.row;
+}
+
 std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address& thisAddress)
 {
 	return os << "addr[0x" << hex << thisAddress.physicalAddress <<

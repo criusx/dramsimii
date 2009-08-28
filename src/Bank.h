@@ -109,7 +109,6 @@ namespace DRAMsimII
 		unsigned depth() const { return perBankQueue.depth(); }
 		Command::CommandType nextCommandType() const { return perBankQueue.front() ? perBankQueue.front()->getCommandType() : Command::INVALID_COMMAND; }
 		unsigned freeCommandSlots() const { return perBankQueue.freecount(); }
-		//bool openPageInsert(Transaction *value, const tick time);
 		bool aggressiveInsert(Transaction *value, const tick time);
 		bool openPageAggressiveInsertCheck(const Transaction *value, const tick time) const;
 		bool closePageAggressiveInsertCheck(const Transaction *value, const tick time) const;

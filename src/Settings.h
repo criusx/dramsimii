@@ -256,6 +256,7 @@ namespace DRAMsimII
 			theMap["dramspec"]=dram_type_token;
 			theMap["tbufferdelay"]=t_buffer_delay_token;
 			theMap["inputtype"]=input_type_token;
+			theMap["infileformat"] = input_type_token;
 			theMap["infiletype"]=input_type_token;
 			theMap["inputfiletype"]=input_type_token;
 			theMap["epoch"]=epoch_token;
@@ -282,6 +283,7 @@ namespace DRAMsimII
 			theMap["commandorderingpolicy"] = command_ordering_algorithm_token;
 			theMap["requestcount"] = request_count_token;
 			theMap["inputfile"] = input_file_token;
+			theMap["infile"] = input_file_token;
 			theMap["averageinterarrivalcyclecount"] = average_interarrival_cycle_count;
 			theMap["interarrivalcyclecount"] = average_interarrival_cycle_count;
 			theMap["outfile"] = output_file_token;
