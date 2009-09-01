@@ -4,7 +4,7 @@
 <dramspec type="ddr2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema2.xsd">
 	<setup>
 		<!-- the number of beats per, so if a timing parameter is one cycle long, count it as two beats for DDR -->
-		<datarate>800000000</datarate>
+		<datarate>1000000000</datarate>
 		<!-- set to 2 for DDR, DDR2, DDR3, etc. -->
 		<clockGranularity>2</clockGranularity>
 		<channels>2</channels>

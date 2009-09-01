@@ -109,9 +109,13 @@ void M5dramSystem::moveToTime(const tick now)
 		{
 			assert(packet->isRead() || packet->isWrite());
 
-			bool needsResponse = packet->needsResponse();
-
+			bool needsResponse = 
+#ifdef PROCESS_BEFORE
+			true;
+#else
+			packet->needsResponse();
 			doAtomicAccess(packet);		
+#endif
 
 			if (needsResponse)
 			{			
@@ -119,7 +123,8 @@ void M5dramSystem::moveToTime(const tick now)
 
 				M5_TIMING("<-T [@" << dec << static_cast<Tick>(currentValue.second * getCPURatio()) << "][+" << static_cast<Tick>(currentValue.second * getCPURatio() - curTick) << "] at" << curTick)
 
-					ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(currentValue.second * getCPURatio()));
+				ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(currentValue.second * getCPURatio()));
+				assert(lastPortIndex == 0);
 #if 1
 				static tick returnCount;
 
@@ -143,7 +148,9 @@ void M5dramSystem::moveToTime(const tick now)
 		}	
 		else
 		{
+#ifndef PROCESS_BEFORE
 			cerr << "warn: no Packet found for corresponding transaction" << endl;
+#endif
 		}
 	}
 
@@ -506,38 +513,38 @@ void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
 /// @brief receive a packet and do something with it
 /// @details receive a packet, check it to make sure it's valid, then try to enqueue it in DS2
 /// @author Joe Gross
-/// @param pkt the pointer to the memory transaction packet
+/// @param packet the pointer to the memory transaction packet
 /// @return true if the packet is accepted, false otherwise
 //////////////////////////////////////////////////////////////////////
-bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
+bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 { 		
 #ifdef TRACE_GENERATE
-	bool needsResponse = pkt->needsResponse();
-	if (pkt->memInhibitAsserted())
+	bool needsResponse = packet->needsResponse();
+	if (packet->memInhibitAsserted())
 	{
 		// snooper will supply based on copy of packet
 		// still target's responsibility to delete packet
 		//cerr << "deleted memInhibitAsserted" << endl;
-		delete pkt;
+		delete packet;
 		return true;
 	}
-	memory->doAtomicAccess(pkt);
+	memory->doAtomicAccess(packet);
 
-	if (pkt->isRead() || pkt->isWrite())
-		memory->traceOutStream << std::hex << pkt->getAddr() << " " << (pkt->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 1E9 / Clock::Frequency << " " << std::hex << (pkt->req->hasPC() ? pkt->req->getPC() : 0) <<  endl;
+	if (packet->isRead() || packet->isWrite())
+		memory->traceOutStream << std::hex << packet->getAddr() << " " << (packet->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 1E9 / Clock::Frequency << " " << std::hex << (packet->req->hasPC() ? packet->req->getPC() : 0) <<  endl;
 
 	if (needsResponse)
 	{
 		//timingOutStream << "sending packet back at " << dec << static_cast<Tick>(curTick + 95996) << endl;
-		memory->ports[memory->lastPortIndex]->doSendTiming(pkt, static_cast<Tick>(curTick + 1));
-		//memory->ports[memory->lastPortIndex]->doSendTiming(pkt,curTick + 18750 + rand()%400);
-		//schedSendTiming(pkt,curTick + 20000 + rand()%20000);
-		//schedSendTiming(pkt,curTick + 200000 + randomGen.random((Tick)0, (Tick)200000));
+		memory->ports[memory->lastPortIndex]->doSendTiming(packet, static_cast<Tick>(curTick + 1));
+		//memory->ports[memory->lastPortIndex]->doSendTiming(packet,curTick + 18750 + rand()%400);
+		//schedSendTiming(packet,curTick + 20000 + rand()%20000);
+		//schedSendTiming(packet,curTick + 200000 + randomGen.random((Tick)0, (Tick)200000));
 	}
 	else
 	{
-		//delete pkt->req;
-		delete pkt;
+		//delete packet->req;
+		delete packet;
 	}
 	return true;
 #endif
@@ -550,55 +557,54 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		//if (numCallsWhileBlocked++ % 100000 == 0)
 		//	cerr << numCallsWhileBlocked << "\r";
 		M5_TIMING2("warn: attempted packet send after packet is nacked")
-			return false;
+		return false;
 	}
 	//////////////////////////////////////////////////////////////////////////
 
 	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
 
 	// everything that reaches the memory system should be a request of some sort
-	assert(pkt->isRequest());
+	assert(packet->isRequest());
 
 #if defined(M5DEBUG) && defined(DEBUG) && !defined(NDEBUG)
 	using std::setw;
 	M5_TIMING3("+recvTiming [" << std::dec << currentMemCycle << "] ")
 		// calculate the time elapsed from when the transaction started
-		M5_TIMING3(setw(2) << (pkt->isRead() ? "Rd" : ""))
-		M5_TIMING3(setw(2) << (pkt->isWrite() ? "Wr" : ""))
-		//M5_TIMING2((pkt->isRequest() ? "Rq" : ""))
-		M5_TIMING3(setw(3) << (pkt->isInvalidate() ? "Inv" : ""))
-		M5_TIMING3(setw(3) << (pkt->isResponse() ? "Rsp" : ""))
-		M5_TIMING3(setw(2) << (pkt->isReadWrite() ? "RW" : ""))
-		M5_TIMING3(setw(2) << (pkt->isError() ? "Er" : ""))
-		M5_TIMING3(setw(2) << (pkt->isPrint() ? "Pr" : ""))
-		M5_TIMING3(setw(2) << (pkt->needsExclusive() ? "Ex" : ""))
-		M5_TIMING3(setw(2) << (pkt->needsResponse() ? "NR" : ""))
-		M5_TIMING3(setw(2) << (pkt->isLLSC() ? "LL" : ""))
-		M5_TIMING3(" 0x" << hex << pkt->getAddr())
+		M5_TIMING3(setw(2) << (packet->isRead() ? "Rd" : ""))
+		M5_TIMING3(setw(2) << (packet->isWrite() ? "Wr" : ""))
+		//M5_TIMING2((packet->isRequest() ? "Rq" : ""))
+		M5_TIMING3(setw(3) << (packet->isInvalidate() ? "Inv" : ""))
+		M5_TIMING3(setw(3) << (packet->isResponse() ? "Rsp" : ""))
+		M5_TIMING3(setw(2) << (packet->isReadWrite() ? "RW" : ""))
+		M5_TIMING3(setw(2) << (packet->isError() ? "Er" : ""))
+		M5_TIMING3(setw(2) << (packet->isPrint() ? "Pr" : ""))
+		M5_TIMING3(setw(2) << (packet->needsExclusive() ? "Ex" : ""))
+		M5_TIMING3(setw(2) << (packet->needsResponse() ? "NR" : ""))
+		M5_TIMING3(setw(2) << (packet->isLLSC() ? "LL" : ""))
+		M5_TIMING3(" 0x" << hex << packet->getAddr())
 
-		M5_TIMING2(" s[0x" << hex << pkt->getSize() << "]")
+		M5_TIMING2(" s[0x" << hex << packet->getSize() << "]")
 #endif
-		if (pkt->memInhibitAsserted())
+		if (packet->memInhibitAsserted())
 		{
 			// snooper will supply based on copy of packet
 			// still target's responsibility to delete packet
-			//cerr << "deleted memInhibitAsserted" << endl;
-			delete pkt;
+			delete packet;
 			return true;
 		}
 		//upgrade or invalidate	
-		else if (!pkt->isRead() && pkt->needsResponse())
-			//else if (pkt->isInvalidate())
+		else if (!packet->isRead() && packet->needsResponse())
+			//else if (packet->isInvalidate())
 		{
 			//cerr << "Invalidate" << endl;
-			assert(pkt->cmd != MemCmd::SwapReq);
-			assert(pkt->isInvalidate());
-			if (pkt->needsResponse())
+			assert(packet->cmd != MemCmd::SwapReq);
+			assert(packet->isInvalidate());
+			if (packet->needsResponse())
 			{
-				pkt->makeAtomicResponse();
+				packet->makeAtomicResponse();
 			}
 
-			schedSendTiming(pkt,curTick + 1);			
+			schedSendTiming(packet,curTick + 1);			
 
 			return true;
 		}
@@ -610,11 +616,11 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		}
 #endif
 		// must look at packets that need to affect the memory system
-		else if (pkt->needsResponse() || pkt->isWrite())
+		else if (packet->needsResponse() || packet->isWrite())
 		{	
-			assert((pkt->isRead() && pkt->needsResponse()) ||
-				(!pkt->isRead() && !pkt->needsResponse()));
-			assert(!pkt->wasNacked());
+			assert((packet->isRead() && packet->needsResponse()) ||
+				(!packet->isRead() && !packet->needsResponse()));
+			assert(!packet->wasNacked());
 
 
 			// move channels to current time so that calculations based on current channel times work
@@ -623,7 +629,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			memory->moveToTime(currentMemCycle);
 
 			// turn packet around to go back to requester if response expected
-			Address addr(pkt->getAddr());
+			Address addr(packet->getAddr());
 
 			// attempt to add the transaction to the memory system
 			if (memory->ds->isFull(addr.getChannel()))
@@ -657,15 +663,15 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 			}
 			else
 			{
-				if (pkt->cmd == MemCmd::SwapReq)
+				if (packet->cmd == MemCmd::SwapReq)
 					cerr << "swap" << endl;
 
 				PhysicalAddress pC;
 				int threadID;
-				if (pkt->req->hasPC())
+				if (packet->req->hasPC())
 				{
-					pC = pkt->req->getPC();
-					threadID = pkt->req->threadId();
+					pC = packet->req->getPC();
+					threadID = packet->req->threadId();
 				}
 				else
 				{
@@ -674,9 +680,9 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 
 				Transaction::TransactionType packetType = Transaction::PREFETCH_TRANSACTION;
 
-				if (pkt->isRead())
+				if (packet->isRead())
 					packetType = Transaction::READ_TRANSACTION;
-				else if (pkt->isWrite())
+				else if (packet->isWrite())
 					packetType = Transaction::WRITE_TRANSACTION;
 				else
 					cerr << "warn: not read or write" << endl;
@@ -684,14 +690,22 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 #ifndef NDEBUG
 				bool result = 
 #endif
-					memory->ds->enqueue(new Transaction(packetType,currentMemCycle,pkt->getSize() / 8,pkt->getAddr(), pC, threadID, memory->currentTransactionID));
+					memory->ds->enqueue(new Transaction(packetType,currentMemCycle,packet->getSize() / 8,packet->getAddr(), pC, threadID, memory->currentTransactionID));
 
 				assert(result == true);
 
 				assert(memory->transactionLookupTable.find(memory->currentTransactionID) == memory->transactionLookupTable.end());
 
-				memory->transactionLookupTable[memory->currentTransactionID] = pkt;
-
+#ifdef PROCESS_BEFORE
+				bool needsResponse = packet->needsResponse();
+				memory->doAtomicAccess(packet);
+				memory->transactionLookupTable[memory->currentTransactionID] = needsResponse ? packet : NULL;
+				if (!needsResponse)
+					delete packet;
+#else
+				memory->transactionLookupTable[memory->currentTransactionID] = packet;			
+#endif
+	
 				// make sure not to use any that are already being used
 				while (memory->transactionLookupTable.find(memory->currentTransactionID) != memory->transactionLookupTable.end())
 				{
@@ -719,11 +733,11 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr pkt)
 		{
 			M5_TIMING2("warn: packet not needing response.")
 
-				if (pkt->cmd != MemCmd::UpgradeReq)
+				if (packet->cmd != MemCmd::UpgradeReq)
 				{
-					cerr << "warn: deleted pkt, not upgradereq, not write, needs no resp" << endl;
-					delete pkt->req;
-					delete pkt;
+					cerr << "warn: deleted packet, not upgradereq, not write, needs no resp" << endl;
+					delete packet->req;
+					delete packet;
 				}
 				else
 				{
@@ -824,7 +838,7 @@ void M5dramSystem::TickEvent::process()
 	if (!memory->movement)
 	{
 		cerr << "no r/w bytes, ";
-		cerr << memory->transactionLookupTable.size() << " outstanding transactions" << endl;
+		cerr << (memory->transactionLookupTable.empty() ? "is empty" : "has outstanding transactions") << endl;
 	}
 
 	// deschedule yourself

@@ -1122,7 +1122,6 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			destinationBank->aggressiveInsert(incomingTransaction,time))
 		{
 			statistics.reportHit();
-			return true;
 		}
 		// every transaction translates into at least two commands
 		// or three commands if the CAS+Precharge command is not available
@@ -1201,7 +1200,6 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// refresh transactions become only one command and are handled differently
 		if (incomingTransaction->isRefresh())
 		{
-#if 1
 			// check to see if every per bank command queue has room for one command
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
@@ -1222,48 +1220,49 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			Command *refreshCommand = new Command(incomingTransaction, time, false, timingSpecification.tBurst());
 
 			Address tempAddr(incomingTransaction->getAddress());
-			unsigned j = 0;
+			unsigned bankNumber = 0;
 
 			for (vector<Bank>::iterator i = destinationRank->bank.begin(); i != bankEnd; i++)
 			{
-				/// @TODO convert CAS(W) into CAS(W)+P instead of just adding a Pre
-				// add a Pre command before the REF to flush written data back to the banks before executing a refresh
-				if (i->isEmpty() && i->isActivated())
-				{
-					assert(i->isEmpty() || i->back()->isReadOrWrite());
-					assert(i->isEmpty() || !i->back()->isPrecharge());
-					// then need to precharge before
-					tempAddr.setBank(j);
-					assert(tempAddr.getChannel() == channelID);
-
-					Command *newCommand = new Command(incomingTransaction, tempAddr, max(destinationRank->getLastCASTime(), destinationRank->getLastCASWTime()),  false, timingSpecification.tBurst(), Command::PRECHARGE);
-					//new Command(incomingTransaction, time,     false,        timingSpecification.tBurst(), Command::PRECHARGE)
-					assert(i->freeCommandSlots() >= 2);
-#ifndef NDEBUG
-					bool result =
-#endif // NDEBUG
-						i->push(newCommand);
-					assert(result);
-					assert(&(rank[tempAddr.getRank()].bank[j]) == &*i);
-					assert(rank[tempAddr.getRank()].bank[j].back() == newCommand);
-				}
-				else if (i->back() && (!i->back()->isPrecharge() && !i->back()->isRefresh()))
+				// can only refresh banks that are in the precharged state
+				if (i->back() && i->back()->isReadOrWrite())
 				{
 					assert(i->back()->isReadOrWrite());
 					i->back()->setAutoPrecharge(true);
 					assert(i->back()->isReadOrWrite() && i->back()->isPrecharge());
 				}
+				// add a Pre command before the REF to flush written data back to the banks before executing a refresh
+				else if (i->isEmpty() && i->isActivated())
+				{
+					assert(i->isEmpty() || !i->back()->isPrecharge());
+					// then need to precharge before
+					tempAddr.setBank(bankNumber);
+					assert(tempAddr.getChannel() == channelID);
 
+					assert(i->freeCommandSlots() >= 2);
+#ifndef NDEBUG
+					bool result =
+#endif // NDEBUG
+						i->push(new Command(incomingTransaction, tempAddr, time,  false, timingSpecification.tBurst(), Command::PRECHARGE));
+					assert(result);
+					assert(&(rank[tempAddr.getRank()].bank[bankNumber]) == &*i);
+					assert(rank[tempAddr.getRank()].bank[bankNumber].back()->getAddress().getBank() == bankNumber);
+				}
+				else
+				{
+					if (i->isEmpty())
+						assert(!i->isActivated());
+					else 
+						assert(i->back()->isRefresh());
+				}
+				
 #ifndef NDEBUG
 				bool result =
 #endif // NDEBUG
 					i->push(refreshCommand);
 				assert (result);
-				j++;
+				bankNumber++;
 			}
-#elif
-			delete incomingTransaction;
-#endif
 
 			for (vector<Bank>::const_iterator i = rank[incomingTransaction->getAddress().getRank()].bank.begin(); 
 				i != rank[incomingTransaction->getAddress().getRank()].bank.end(); i++)
@@ -1280,9 +1279,6 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			{
 				// found place to insert, hit
 				statistics.reportHit();
-
-				incomingTransaction->setDecodeTime(time);
-				return true;
 			}
 			else
 			{
@@ -1294,6 +1290,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 
 					if (destinationBank->freeCommandSlots() < 3) 
 					{
+						// for aggressive mode, set CAS(W) to CAS(W)+P when there are only two slots left
 						if (systemConfig.getRowBufferManagementPolicy() == OPEN_PAGE_AGGRESSIVE &&
 							destinationBank->freeCommandSlots() == 2 && 
 							destinationBank->back()->isReadOrWrite())
@@ -1302,6 +1299,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 							assert(destinationBank->back()->isReadOrWrite());
 							destinationBank->back()->setAutoPrecharge(true);
 						}
+						// not enough slots left
 						else
 						{
 							return false;
@@ -1341,8 +1339,6 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 #endif // NDEBUG
 					destinationBank->push(new Command(incomingTransaction, time, false, timingSpecification.tBurst()));
 				assert(result);
-
-				return true;
 			}
 		}
 		else

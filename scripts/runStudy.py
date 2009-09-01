@@ -116,10 +116,10 @@ m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
 m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 
 # the executable for M5/(FS|SE)
-m5Exe = 'm5.opt'
+m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/asplos/full4'
+outputDir = '/home/crius/results/asplos/full5'
 
 # the file that describes the base memory settings
 memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
@@ -128,7 +128,7 @@ memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-
 commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
 
 # the command line parameters for running in FS mode
-fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s rowBufferPolicy %s outfiledir %s"
+fScommandParameters = "autorefreshpolicy none channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s rowBufferPolicy %s outfiledir %s"
 
 # the name of the queue to submit these jobs to
 queueName = 'default'
@@ -138,7 +138,7 @@ submitString = '''echo 'time %%s' | qsub -q %s -o %%s -e %%s -N "%%s"''' % (queu
 
 #m5CommandLine = '%s /home/crius/m5-stable/configs/example/dramsim.py -f %s -b mcf --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
 m5SECommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %d ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"'
-m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s outfiledir %s"'
+m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "autorefreshpolicy none channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s outfiledir %s"'
 
 # command line to setup full system runs
 m5FSCommandLine = '%s %s -b %%s -F 10000000000 --nopre --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript)
@@ -167,7 +167,7 @@ perBankQueueDepth = [12]
 readWriteGrouping = ['true']
 requests = [5000000]
 #benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
-benchmarks = ['lbm']
+benchmarks = ['stream', 'lbm']
 #benchmarks = ['lbm', 'stream', 'bzip2']
 #benchmarks = ['milc']
 #benchmarks = ['stream', 'mcf', 'milc', 'lbm']
@@ -249,7 +249,7 @@ def main():
                                                     elif opt == '-f':
                                                         currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, b, c, d, e, g, k, l,  outputDir))
                                                         submitCommand = submitString % (currentCommandLine, outputDir, outputDir, i)
-                                                        #print currentCommandLine
+                                                        print currentCommandLine
                                                         #print submitCommand
                                                         #sys.exit(0)
                                                         #os.system(currentCommandLine)

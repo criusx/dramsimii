@@ -53,6 +53,7 @@ using std::setfill;
 
 using DRAMsimII::tick;
 
+//#define PROCESS_BEFORE
 
 #if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) // compiler should declare this
 #define M5_TIMING(X) ds->getTimingStream() << X << std::endl;

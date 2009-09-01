@@ -174,13 +174,10 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 		break;
 	}
 
-	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
-		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
-		(commandType == READ && hostTransaction->isRead()) ||
-		(commandType == WRITE && hostTransaction->isWrite()) ||
-		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
-		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
-		);
+	assert(isReadOrWrite() && hostTransaction);
+
+	assert((isWrite() && hostTransaction->isWrite()) ||
+		(isRead() && hostTransaction->isRead()));
 }
 
 //////////////////////////////////////////////////////////////////////////
