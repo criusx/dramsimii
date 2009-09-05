@@ -29,7 +29,6 @@
 #include <assert.h>
 #include <boost/functional.hpp>
 
-
 #include "System.h"
 
 using std::setprecision;
@@ -79,6 +78,7 @@ nextStats(settings.epoch)
 	}
 
 	assert(systemConfig.statsOutStream.is_complete());
+
 	// else printing to these streams goes nowhere
 	systemConfig.statsOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
@@ -96,6 +96,7 @@ nextStats(settings.epoch)
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
+#ifndef NDEBUG
 	systemConfig.timingOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
@@ -103,6 +104,8 @@ nextStats(settings.epoch)
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
+#endif
+
 
 	systemConfig.statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 
@@ -378,15 +381,10 @@ void System::runSimulations(const unsigned requestCount)
 
 	std::queue<std::pair<unsigned, tick> > finishedTransactions;
 
+	bool running = true;
+
 	if (inputTransaction)
-	{
-		//if (inputTransaction->isRead())
-		{
-			Transaction *newTrans = new Transaction(*inputTransaction);
-
-			outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(newTrans, inputTransaction);
-		}
-
+	{		
 		tick newTime = inputTransaction->getArrivalTime();// = (rand() % 65536) + 65536;
 
 		resetToTime(newTime);
@@ -426,13 +424,9 @@ void System::runSimulations(const unsigned requestCount)
 
 					assert(result);
 
+					Transaction *duplicateTrans = new Transaction(*inputTransaction);
 
-					//if (inputTransaction->isRead())
-					{
-						Transaction *newTrans = new Transaction(*inputTransaction);
-
-						outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(newTrans, inputTransaction);
-					}
+					outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(duplicateTrans, inputTransaction);
 
 					inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
 
@@ -456,18 +450,32 @@ void System::runSimulations(const unsigned requestCount)
 						cerr << "-----------------------------" << endl;
 
 					if (!inputTransaction)
-						break;
+						running = false;
 
 					i--;
 				}
 			}
 		}
 
-		if (inputTransaction)
-			delete inputTransaction;
+		delete inputTransaction;
 
 	}
+	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
+	{
+		delete i->second.first;
+		delete i->second.second;
+	}
 	//	moveToTime(channel[0].getTime() + 64000000);
+}
+
+bool System::isEmpty() const
+{
+	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+	{
+		if (!i->isEmpty())
+			return false;
+	}
+	return true;
 }
 
 
@@ -522,20 +530,9 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 		os << "UNKN] ";
 		break;
 	}
-	//os << "BQD[" << this_a.systemConfig.getPerBankQueueDepth() << "] ";
-	os << "BLR[" << setprecision(0) << floor(100*(thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] ";
-	os << "RP[" << (int)(100*thisSystem.systemConfig.getReadPercentage()) << "] ";
-#if 0
-	os << thisSystem.statistics;
-
-	os << "----Command Line: " << settings.commandLine << " ch[" << thisSystem.systemConfig.getChannelCount() <<
-		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
-		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
-		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
-		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M]" << endl;
-#endif
-	os << thisSystem.systemConfig;
+	
+	os << "BLR[" << setprecision(0) << floor(100*(thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] "
+		<< "RP[" << (int)(100*thisSystem.systemConfig.getReadPercentage()) << "] "<< thisSystem.systemConfig;
 
 	return os;
 }

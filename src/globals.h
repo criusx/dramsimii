@@ -83,12 +83,7 @@ namespace DRAMsimII
 		return std::abs(nVal1 - nVal2) <= EPSILON * std::fabs(nVal1);
 		// see Knuth section 4.2.2 pages 217-218
 	}
-
-	// global var forward
-	//extern boost::iostreams::filtering_ostream timingOutStream;
-	//extern boost::iostreams::filtering_ostream powerOutStream;
-	//extern boost::iostreams::filtering_ostream statsOutStream;
-
+	
 	// converts a string to its corresponding magnitude representation
 	double ascii2multiplier(const std::string &);
 

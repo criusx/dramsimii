@@ -410,11 +410,8 @@ bool Bank::aggressiveInsert(Transaction *incomingTransaction, const tick time)
 			const Command *currentCommand = perBankQueue.read(currentIndex);
 
 			// see if there is an available command to piggyback on
-
 			if (currentCommand->isReadOrWrite() && currentCommand->getAddress().getRow() == currentRow)
 			{
-				assert(!currentCommand->isBasicPrecharge());
-
 				bool needsPrecharge = currentCommand->isPrecharge();
 
 				if (needsPrecharge)
@@ -441,7 +438,6 @@ bool Bank::aggressiveInsert(Transaction *incomingTransaction, const tick time)
 			{
 				return false;
 			}
-
 		}
 
 		// if the correct row is already open, just insert there
@@ -473,9 +469,9 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 	{
 		const unsigned currentRow = incomingTransaction->getAddress().getRow();
 		// go from the end to the beginning to ensure no starvation or RAW/WAR errors
-		for (int index = perBankQueue.size() - 1; index >= 0; --index)
+		for (int currentIndex = perBankQueue.size() - 1; currentIndex >= 0; --currentIndex)
 		{	
-			const Command *currentCommand = perBankQueue[index];
+			const Command *currentCommand = perBankQueue[currentIndex];
 			// see if there is an available command to piggyback on
 			if (currentCommand->isReadOrWrite() && currentCommand->getAddress().getRow() == currentRow)
 			{
@@ -487,7 +483,7 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 				if (!systemConfig.isAutoPrecharge())
 				{
 					// check that things are in order
-					assert(perBankQueue[index + 1]->isPrecharge());
+					assert(perBankQueue[currentIndex + 1]->isPrecharge());
 				}
 				return true;
 			}
@@ -497,7 +493,9 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 			}
 			// don't starve commands
 			else if (time - currentCommand->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
-				break;
+			{
+				return false;
+			}
 		}
 		if (activated && openRowID == currentRow)
 		{
@@ -505,6 +503,22 @@ bool Bank::closePageAggressiveInsertCheck(const Transaction *incomingTransaction
 		}
 	}
 	return false;
+}
+
+bool Bank::isEmpty() const
+{
+	return perBankQueue.isEmpty();
+}
+
+bool Bank::hasNoReadWrite() const
+{
+	for (unsigned i = 0; i < perBankQueue.size(); i++)
+	{
+		if (!perBankQueue[i]->isRefresh())
+			return false;
+	}
+	return true;
+
 }
 
 //////////////////////////////////////////////////////////////////////////

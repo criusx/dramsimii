@@ -113,7 +113,7 @@ finishedTransactions()
 /// @brief the constructor to build copies of a channel once it's been deserialized, needs further initialization before it's ready
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-Channel::Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
+Channel::Channel(const Settings& settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
 time(0),
 lastCommandIssueTime(0),
 lastCommand(NULL),
@@ -164,10 +164,7 @@ Channel::~Channel()
 	// must remove commands this way to prevent queues from being automatically deleted, thus creating double frees on refresh commands
 	while (Command *cmd = getNextCommand())
 	{
-		if (lastCommand)
-		{
-			delete lastCommand;
-		}
+		delete lastCommand;
 
 		lastCommand = cmd;
 	}
@@ -229,8 +226,8 @@ void Channel::moveToTime(const tick currentTime)
 			nextTransaction->setDecodeTime(time);
 			// checkForAvailablecommandSlots() should not have returned true if there was not enough space
 
-			DEBUG_TRANSACTION_LOG("T->C [" << time << "] Q[" << getTransactionQueueCount() << "/" << transactionQueue.depth() << "]->[" <<
-				rank[nextTransaction->getAddress().getRank()].bank[nextTransaction->getAddress().getBank()].size() << "/" <<
+			DEBUG_TRANSACTION_LOG("T->C [" << std::dec << time << "] Q[" << std::dec << getTransactionQueueCount() << "/" << std::dec << transactionQueue.depth() << "]->[" << std::dec <<
+				rank[nextTransaction->getAddress().getRank()].bank[nextTransaction->getAddress().getBank()].size() << "/" << std::dec <<
 				rank[nextTransaction->getAddress().getRank()].bank[nextTransaction->getAddress().getBank()].depth() << "] " << *nextTransaction);
 
 			//nextToDecode = readAvailableTransaction();
@@ -397,8 +394,7 @@ void Channel::retireCommand(Command *newestCommand)
 	}
 	assert(!newestCommand->getHost());
 
-	if (lastCommand)
-		delete lastCommand;
+	delete lastCommand;
 
 	lastCommand = newestCommand;
 }
@@ -1200,7 +1196,6 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		// refresh transactions become only one command and are handled differently
 		if (incomingTransaction->isRefresh())
 		{
-			// check to see if every per bank command queue has room for one command
 			// make sure that there is room in all the queues for one command
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
@@ -1227,26 +1222,21 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				// can only refresh banks that are in the precharged state
 				if (i->back() && i->back()->isReadOrWrite())
 				{
-					assert(i->back()->isReadOrWrite());
 					i->back()->setAutoPrecharge(true);
-					assert(i->back()->isReadOrWrite() && i->back()->isPrecharge());
 				}
 				// add a Pre command before the REF to flush written data back to the banks before executing a refresh
 				else if (i->isEmpty() && i->isActivated())
 				{
-					assert(i->isEmpty() || !i->back()->isPrecharge());
 					// then need to precharge before
 					tempAddr.setBank(bankNumber);
-					assert(tempAddr.getChannel() == channelID);
 
 					assert(i->freeCommandSlots() >= 2);
 #ifndef NDEBUG
 					bool result =
 #endif // NDEBUG
-						i->push(new Command(incomingTransaction, tempAddr, time,  false, timingSpecification.tBurst(), Command::PRECHARGE));
+						i->push(new Command(incomingTransaction, tempAddr, time, false, timingSpecification.tBurst(), Command::PRECHARGE));
 					assert(result);
 					assert(&(rank[tempAddr.getRank()].bank[bankNumber]) == &*i);
-					assert(rank[tempAddr.getRank()].bank[bankNumber].back()->getAddress().getBank() == bankNumber);
 				}
 				else
 				{
@@ -2769,6 +2759,16 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 		max(currentBank->next(currentCommand->getCommandType()), lastCommandIssueTime + timingSpecification.tCMD()));
 }
 
+bool Channel::isEmpty() const
+{
+	for (vector<Rank>::const_iterator i = rank.begin(); i != rank.end(); i++)
+	{
+		if (!i->isEmpty())
+			return false;
+	}
+	return transactionQueue.isEmpty();
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief Returns the soonest time that this command may execute, tracks the limiting factor
@@ -2783,9 +2783,6 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 	tick nextTime;	
 
 	const Rank &currentRank = rank[currentCommand->getAddress().getRank()];
-
-	//const unsigned rankID = currentRank.getRankID();
-	//assert (rankID == currentCommand->getAddress().getRank());
 
 	const Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
 

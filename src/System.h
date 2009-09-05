@@ -84,6 +84,7 @@ namespace DRAMsimII
 		tick getTime() const { return time; }
 		void resetToTime(const tick time);
 		boost::iostreams::filtering_ostream &getTimingStream() { return systemConfig.timingOutStream; }
+		bool isEmpty() const;
 
 		// constructors	
 		explicit System(const Settings& settings);

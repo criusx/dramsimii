@@ -131,6 +131,7 @@ outType(settings.outFileType)
 		default:
 			break;
 		}
+
 		bf::path outDir(settings.outFileDir.c_str());
 
 		if (!bf::exists(outDir))
@@ -162,12 +163,13 @@ outType(settings.outFileType)
 			int counter = 0;
 
 			stringstream settingsFilename;
-			stringstream timingFilename;
-			stringstream powerFilename;
-			stringstream statsFilename;
-
+			
 			do
 			{
+				stringstream timingFilename;
+				stringstream powerFilename;
+				stringstream statsFilename;
+
 				timingFilename.str("");
 				powerFilename.str("");
 				statsFilename.str("");
@@ -235,6 +237,13 @@ outType(rhs.outType)
 	setupStreams();
 }
 
+SystemConfiguration::~SystemConfiguration()
+{
+	boost::iostreams::close(timingOutStream,std::ios_base::out);
+	boost::iostreams::close(powerOutStream,std::ios_base::out);
+	boost::iostreams::close(statsOutStream,std::ios_base::out);
+}
+
 //////////////////////////////////////////////////////////////////////////
 /// @brief attempt to atomically create a file with this name
 /// @return true if the file was created
@@ -266,39 +275,44 @@ bool SystemConfiguration::fileExists(stringstream& fileName) const
 	return bf::exists(newPath);
 }
 
-SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConfiguration &rs)
+SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConfiguration &rhs)
 {
-	if (this == &rs)
+	if (this == &rhs)
 	{
 		return *this;
 	}
-	commandOrderingAlgorithm = rs.commandOrderingAlgorithm;
-	configType = rs.configType;
-	refreshTime = rs.refreshTime;
-	refreshPolicy = rs.refreshPolicy;
-	columnSize = rs.columnSize;
-	rowSize = rs.rowSize;
-	rowCount = rs.rowCount;
-	columnCount = rs.columnCount;
-	cachelineSize = rs.cachelineSize;
-	seniorityAgeLimit = rs.seniorityAgeLimit;
-	dramType = rs.dramType;
-	rowBufferManagementPolicy = rs.rowBufferManagementPolicy;
-	addressMappingScheme = rs.addressMappingScheme;
-	datarate = rs.datarate;
-	postedCAS = rs.postedCAS;
-	readWriteGrouping = rs.readWriteGrouping;
-	autoPrecharge = rs.autoPrecharge;
-	clockGranularity = rs.clockGranularity;
-	cachelinesPerRow = rs.cachelinesPerRow;
-	channelCount = rs.channelCount;
-	rankCount = rs.rankCount;
-	bankCount = rs.bankCount;
-	decodeWindow = rs.decodeWindow;
+	commandOrderingAlgorithm = rhs.commandOrderingAlgorithm;
+	outType = rhs.outType;
+	statsFile = rhs.statsFile;
+	powerFile = rhs.powerFile;
+	timingFile = rhs.timingFile;
+	transactionOrderingAlgorithm = rhs.transactionOrderingAlgorithm;
+	configType = rhs.configType;
+	refreshTime = rhs.refreshTime;
+	refreshPolicy = rhs.refreshPolicy;
+	columnSize = rhs.columnSize;
+	rowSize = rhs.rowSize;
+	rowCount = rhs.rowCount;
+	columnCount = rhs.columnCount;
+	cachelineSize = rhs.cachelineSize;
+	seniorityAgeLimit = rhs.seniorityAgeLimit;
+	dramType = rhs.dramType;
+	rowBufferManagementPolicy = rhs.rowBufferManagementPolicy;
+	addressMappingScheme = rhs.addressMappingScheme;
+	datarate = rhs.datarate;
+	postedCAS = rhs.postedCAS;
+	readWriteGrouping = rhs.readWriteGrouping;
+	autoPrecharge = rhs.autoPrecharge;
+	clockGranularity = rhs.clockGranularity;
+	cachelinesPerRow = rhs.cachelinesPerRow;
+	channelCount = rhs.channelCount;
+	rankCount = rhs.rankCount;
+	bankCount = rhs.bankCount;
+	decodeWindow = rhs.decodeWindow;
 	assert(decodeWindow >= 1);
-	shortBurstRatio = rs.shortBurstRatio;
-	readPercentage = rs.readPercentage;
-	sessionID = rs.sessionID;
+	shortBurstRatio = rhs.shortBurstRatio;
+	readPercentage = rhs.readPercentage;
+	sessionID = rhs.sessionID;
 
 	return *this;
 }

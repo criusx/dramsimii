@@ -119,9 +119,9 @@ void M5dramSystem::moveToTime(const tick now)
 
 			if (needsResponse)
 			{			
-				assert(curTick <= static_cast<Tick>(currentValue.second * getCPURatio()));
+				assert(curTick < static_cast<Tick>(currentValue.second * getCPURatio()));
 
-				M5_TIMING("<-T [@" << dec << static_cast<Tick>(currentValue.second * getCPURatio()) << "][+" << static_cast<Tick>(currentValue.second * getCPURatio() - curTick) << "] at" << curTick)
+				M5_TIMING("<-T [@" << dec << static_cast<Tick>(currentValue.second * getCPURatio()) << "][+" << static_cast<Tick>(currentValue.second * getCPURatio() - curTick) << "]")
 
 				ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(currentValue.second * getCPURatio()));
 				assert(lastPortIndex == 0);
@@ -142,7 +142,9 @@ void M5dramSystem::moveToTime(const tick now)
 #endif
 			}
 			else
-			{				
+			{	
+				M5_TIMING("xT [" << hex << packet->getAddr() << "][+")
+
 				delete packet;
 			}			
 		}	
@@ -153,8 +155,6 @@ void M5dramSystem::moveToTime(const tick now)
 #endif
 		}
 	}
-
-	//cerr << transactionLookupTable.size() << "\r";
 
 	// if there is now room, allow a retry to happen
 	if (needRetry && !ds->isFull(mostRecentChannel))
@@ -183,7 +183,8 @@ needRetry(false),
 mostRecentChannel(0),
 cpuRatio(0),
 transactionLookupTable(),
-currentTransactionID(0)
+currentTransactionID(0),
+movement(true)
 {	
 	Settings settings;
 
@@ -279,7 +280,6 @@ currentTransactionID(0)
 
 	if (settings.outFileType == GZ)
 	{
-		stringstream tracefilename;
 		path tracepath;
 		unsigned counter = 0;
 		//string tracefilename;
@@ -288,6 +288,8 @@ currentTransactionID(0)
 
 		do
 		{
+			stringstream tracefilename;
+
 			tracefilename.str("");
 			tracefilename << baseFilename << setfill('0') << setw(3) << counter << "-trace.gz";
 			counter++;
@@ -307,9 +309,6 @@ currentTransactionID(0)
 #endif
 
 	cpuRatio =(int)round(((float)Clock::Frequency/((float)ds->Frequency())));
-	//cerr << cpuRatio << endl;
-	//invCpuRatio = (float)((double)ds->Frequency()/(Clock::Frequency));
-	//cerr << invCpuRatio << endl;
 
 	M5_TIMING(*ds)
 }
@@ -377,12 +376,9 @@ void M5dramSystem::regStats()
 /// @brief deletes the DRAMsim object
 //////////////////////////////////////////////////////////////////////////
 M5dramSystem::~M5dramSystem()
-{
-	//if (pmemAddr)
-	//	munmap(pmemAddr, params()->addrRange.size());
-
-	M5_TIMING("M5dramSystem destructor")
-		cerr.flush();
+{	
+	M5_TIMING("M5dramSystem destructor");
+	cerr.flush();
 	delete ds;
 }
 
@@ -553,9 +549,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 	// FIXME: shouldn't need to turn away packets, the requester should hold off once NACK'd
 	if (memory->needRetry)
 	{
-		//static unsigned numCallsWhileBlocked = 1;
-		//if (numCallsWhileBlocked++ % 100000 == 0)
-		//	cerr << numCallsWhileBlocked << "\r";
 		M5_TIMING2("warn: attempted packet send after packet is nacked")
 		return false;
 	}
@@ -582,7 +575,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		M5_TIMING3(setw(2) << (packet->needsResponse() ? "NR" : ""))
 		M5_TIMING3(setw(2) << (packet->isLLSC() ? "LL" : ""))
 		M5_TIMING3(" 0x" << hex << packet->getAddr())
-
 		M5_TIMING2(" s[0x" << hex << packet->getSize() << "]")
 #endif
 		if (packet->memInhibitAsserted())
@@ -594,9 +586,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		}
 		//upgrade or invalidate	
 		else if (!packet->isRead() && packet->needsResponse())
-			//else if (packet->isInvalidate())
 		{
-			//cerr << "Invalidate" << endl;
 			assert(packet->cmd != MemCmd::SwapReq);
 			assert(packet->isInvalidate());
 			if (packet->needsResponse())
@@ -608,13 +598,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 
 			return true;
 		}
-#if 0
-		else if (!pkt->isRead() && pkt->needsResponse())
-		{
-			cerr << "didn't catch all " << endl;
-			return true;
-		}
-#endif
 		// must look at packets that need to affect the memory system
 		else if (packet->needsResponse() || packet->isWrite())
 		{	
@@ -658,16 +641,15 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 				memory->mostRecentChannel = addr.getChannel();
 				//delete trans;
 
-				M5_TIMING2("Wait for retry before sending more to ch[" << addr.getChannel() << "]")
-					return false;
+				M5_TIMING2("Wait for retry before sending more to ch[" << addr.getChannel() << "]");
+				return false;
 			}
 			else
 			{
-				if (packet->cmd == MemCmd::SwapReq)
-					cerr << "swap" << endl;
-
+	
 				PhysicalAddress pC;
 				int threadID;
+
 				if (packet->req->hasPC())
 				{
 					pC = packet->req->getPC();
@@ -681,7 +663,10 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 				Transaction::TransactionType packetType = Transaction::PREFETCH_TRANSACTION;
 
 				if (packet->isRead())
+				{
+					assert(!packet->isWrite());
 					packetType = Transaction::READ_TRANSACTION;
+				}
 				else if (packet->isWrite())
 					packetType = Transaction::WRITE_TRANSACTION;
 				else
@@ -724,26 +709,26 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 
 				memory->tickEvent.schedule(next * memory->getCPURatio());
 
-				M5_TIMING2("-recvTiming goto[" << next << "]")
+				M5_TIMING2("-recvTiming sch[" << next << "]");
 
-					return true;
+				return true;
 			}
 		}
 		else
 		{
-			M5_TIMING2("warn: packet not needing response.")
+			M5_TIMING2("warn: packet not needing response.");
 
-				if (packet->cmd != MemCmd::UpgradeReq)
-				{
-					cerr << "warn: deleted packet, not upgradereq, not write, needs no resp" << endl;
-					delete packet->req;
-					delete packet;
-				}
-				else
-				{
-					cerr << "warn: not upgrade request" << endl;
-				}
-				return true;
+			if (packet->cmd != MemCmd::UpgradeReq)
+			{
+				cerr << "warn: deleted packet, not upgradereq, not write, needs no resp" << endl;
+				delete packet->req;
+				delete packet;
+			}
+			else
+			{
+				cerr << "warn: not upgrade request" << endl;
+			}
+			return true;
 		}
 }
 
@@ -830,15 +815,16 @@ void M5dramSystem::TickEvent::process()
 {		
 	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
 
-	M5_TIMING2("+process [" << dec << currentMemCycle << "]")
+	M5_TIMING2("+process [" << dec << currentMemCycle << "]");
 
-		// move memory channels to the current time
-		memory->moveToTime(currentMemCycle);
+	// move memory channels to the current time
+	memory->moveToTime(currentMemCycle);
 
 	if (!memory->movement)
 	{
 		cerr << "no r/w bytes, ";
-		cerr << (memory->transactionLookupTable.empty() ? "is empty" : "has outstanding transactions") << endl;
+		cerr << (memory->transactionLookupTable.empty() ? "is empty," : "has outstanding transactions,");
+		cerr << (memory->ds->isEmpty() ? " reports empty" : " reports not empty") << endl;
 	}
 
 	// deschedule yourself
@@ -853,7 +839,7 @@ void M5dramSystem::TickEvent::process()
 
 	schedule(next * memory->getCPURatio());
 
-	M5_TIMING2("-process [" << currentMemCycle << "] sch[" << next << "]")
+	M5_TIMING2("-process sch[" << next << "]")
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -862,10 +848,7 @@ void M5dramSystem::TickEvent::process()
 //////////////////////////////////////////////////////////////////////////
 M5dramSystem::TickEvent::TickEvent(M5dramSystem *c)
 : Event(CPU_Tick_Pri), memory(c)
-{
-	// &mainEventQueue,
-	//this->
-}
+{}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief returns a description of this component

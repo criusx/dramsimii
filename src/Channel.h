@@ -114,6 +114,7 @@ namespace DRAMsimII
 		const std::vector<Rank>& getRank() const { return rank; }									///< get a const reference to this channel's ranks
 		tick getTime() const { return time; }														///< get the time that this channel is at
 		unsigned getLastRankID() const { return lastCommand ? lastCommand->getAddress().getRank() : systemConfig.getRankCount() - 1; }///< get the last rank id a command was issued to
+		bool isEmpty() const;
 
 
 		unsigned getTransactionQueueCount() const { return transactionQueue.size(); }				///< determine how many items are in the transaction completion queue
@@ -134,7 +135,7 @@ namespace DRAMsimII
 		bool sendPower(double PsysRD, double PsysWR, std::vector<int> rankArray, std::vector<double> PsysACTSTBYArray, std::vector<double> PsysACTArray, const tick currentTime) const;
 
 		// serialization
-		explicit Channel(const Settings settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power,const std::vector<Rank> &rank, const TimingSpecification &timing);
+		explicit Channel(const Settings& settings, const SystemConfiguration& sysConf, Statistics& stats, const PowerConfig& power,const std::vector<Rank>& rank, const TimingSpecification& timing);
 		explicit Channel();
 
 		friend class boost::serialization::access;

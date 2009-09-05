@@ -94,6 +94,7 @@ namespace DRAMsimII
 		InputStream(const Settings& settings, const SystemConfiguration &systemConfigVal, const std::vector<Channel> &systemChannel);
 		explicit InputStream(const InputStream& rhs, const SystemConfiguration &systemConfigVal, const std::vector<Channel> &systemChannel);
 		InputStream(const InputStream& rhs);
+		~InputStream();
 
 		// functions
 		InputType toInputToken(const std::string&) const;

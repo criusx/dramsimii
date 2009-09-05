@@ -249,6 +249,11 @@ rngGenerator(rhs.rngGenerator),
 rngIntGenerator(rhs.rngIntGenerator),
 arrivalGenerator(rhs.arrivalGenerator)
 {}
+
+InputStream::~InputStream()
+{
+	boost::iostreams::close(traceFile,std::ios_base::in);
+}
 
 //////////////////////////////////////////////////////////////////////
 /// @brief generates a number using a Poisson random variable
@@ -374,9 +379,7 @@ InputStream::InputType InputStream::toInputToken(const string &input) const
 /// @return the next transaction, NULL if there are no more available transactions
 //////////////////////////////////////////////////////////////////////
 Transaction *InputStream::getNextIncomingTransaction(const unsigned transactionID)
-{
-	string input;
-
+{	
 	switch (type)
 	{
 	case RANDOM:
@@ -398,6 +401,8 @@ Transaction *InputStream::getNextIncomingTransaction(const unsigned transactionI
 
 			while ((bursting == true) && traceFile.good())
 			{
+				string input;
+
 				traceFile >> hex >> address >> input >> timestamp;
 
 				if(traceFile.good())
@@ -452,6 +457,8 @@ Transaction *InputStream::getNextIncomingTransaction(const unsigned transactionI
 		break;
 	case MASE_TRACE:
 		{
+			string input;
+
 			PhysicalAddress tempPA;
 			tick timestamp;
 			traceFile >> hex >> tempPA >> input >> dec >> timestamp;

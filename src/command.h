@@ -64,7 +64,7 @@ namespace DRAMsimII
 		unsigned length;				///< the burst length
 
 		// assignment operator
-		Command &operator=(const Command &rhs) { return *this; }
+		Command &operator=(const Command &rhs);
 
 	public:
 

@@ -149,7 +149,7 @@ bool Address::reverseAddressTranslation()
 	switch (mappingScheme)
 	{
 	case SDRAM_HIPERF_MAP:
-	
+
 		physicalAddress = (PhysicalAddress)columnLow << shift;
 		shift += columnLowAddressDepth;
 		physicalAddress |= (PhysicalAddress)channel << shift;
@@ -281,7 +281,6 @@ bool Address::reverseAddressTranslation()
 //////////////////////////////////////////////////////////////////////
 bool Address::addressTranslation()
 {
-	PhysicalAddress buffer;
 
 	if (!physicalAddress)
 		return false;
@@ -289,8 +288,6 @@ bool Address::addressTranslation()
 	// strip away the byte address portion
 	PhysicalAddress tempAddress = physicalAddress >> columnSizeDepth;
 
-	unsigned columnLow;
-	unsigned columnHigh;
 
 	switch (mappingScheme)
 	{
@@ -338,32 +335,33 @@ bool Address::addressTranslation()
 		*                                            id    id        2KB * 4 / 8B       id   idlo  Byte Addr
 		*
 		*/
-		buffer = tempAddress;				
-		tempAddress >>= columnLowAddressDepth;
-		columnLow = tempAddress << columnLowAddressDepth ^ buffer;     	
+		{
+			PhysicalAddress buffer = tempAddress;				
+			tempAddress >>= columnLowAddressDepth;
+			unsigned columnLow = tempAddress << columnLowAddressDepth ^ buffer;     	
 
-		buffer = tempAddress;				
-		tempAddress >>= channelAddressDepth;
-		channel = (tempAddress << channelAddressDepth) ^ buffer;     	
+			buffer = tempAddress;				
+			tempAddress >>= channelAddressDepth;
+			channel = (tempAddress << channelAddressDepth) ^ buffer;     	
 
-		buffer = tempAddress;				
-		tempAddress >>= columnHighAddressDepth;
-		columnHigh = (tempAddress << columnHighAddressDepth) ^ buffer;
+			buffer = tempAddress;				
+			tempAddress >>= columnHighAddressDepth;
+			unsigned columnHigh = (tempAddress << columnHighAddressDepth) ^ buffer;
 
-		column = (columnHigh << columnLowAddressDepth) | columnLow;
+			column = (columnHigh << columnLowAddressDepth) | columnLow;
 
-		buffer = tempAddress;			
-		tempAddress >>= bankAddressDepth;
-		bank = (tempAddress << bankAddressDepth) ^ buffer;     	
+			buffer = tempAddress;			
+			tempAddress >>= bankAddressDepth;
+			bank = (tempAddress << bankAddressDepth) ^ buffer;     	
 
-		buffer = tempAddress;			
-		tempAddress >>= rankAddressDepth;
-		rank = (tempAddress << rankAddressDepth) ^ buffer;     	
+			buffer = tempAddress;			
+			tempAddress >>= rankAddressDepth;
+			rank = (tempAddress << rankAddressDepth) ^ buffer;     	
 
-		buffer = tempAddress;			
-		tempAddress >>= rowAddressDepth;
-		row = (tempAddress << rowAddressDepth) ^ buffer;	
-
+			buffer = tempAddress;			
+			tempAddress >>= rowAddressDepth;
+			row = (tempAddress << rowAddressDepth) ^ buffer;	
+		}
 		break;
 
 	case SDRAM_BASE_MAP:		
@@ -397,32 +395,33 @@ bool Address::addressTranslation()
 		*           id                                        id       2KB * 4 / 8B     id    low   Byte Addr
 		*
 		*/
-		buffer = tempAddress;
-		tempAddress >>= columnLowAddressDepth;
-		columnLow = (tempAddress << columnLowAddressDepth) ^ buffer;
+		{
+			PhysicalAddress buffer = tempAddress;
+			tempAddress >>= columnLowAddressDepth;
+			unsigned columnLow = (tempAddress << columnLowAddressDepth) ^ buffer;
 
-		buffer = tempAddress;				
-		tempAddress >>= channelAddressDepth;
-		channel = (tempAddress << channelAddressDepth) ^ buffer;     	
+			buffer = tempAddress;				
+			tempAddress >>= channelAddressDepth;
+			channel = (tempAddress << channelAddressDepth) ^ buffer;     	
 
-		buffer = tempAddress;				
-		tempAddress >>= columnHighAddressDepth;
-		columnHigh = (tempAddress << columnHighAddressDepth) ^ buffer;     		
+			buffer = tempAddress;				
+			tempAddress >>= columnHighAddressDepth;
+			unsigned columnHigh = (tempAddress << columnHighAddressDepth) ^ buffer;     		
 
-		column = (columnHigh << columnLowAddressDepth) | columnLow;
+			column = (columnHigh << columnLowAddressDepth) | columnLow;
 
-		buffer = tempAddress;				
-		tempAddress >>= bankAddressDepth;
-		bank = (tempAddress << bankAddressDepth) ^ buffer;     		
+			buffer = tempAddress;				
+			tempAddress >>= bankAddressDepth;
+			bank = (tempAddress << bankAddressDepth) ^ buffer;     		
 
-		buffer = tempAddress;				
-		tempAddress >>= rowAddressDepth;
-		row = (tempAddress << rowAddressDepth) ^ buffer;		
+			buffer = tempAddress;				
+			tempAddress >>= rowAddressDepth;
+			row = (tempAddress << rowAddressDepth) ^ buffer;		
 
-		buffer = tempAddress;				
-		tempAddress >>= rankAddressDepth;
-		rank = (tempAddress << rankAddressDepth) ^ buffer;     		
-
+			buffer = tempAddress;				
+			tempAddress >>= rankAddressDepth;
+			rank = (tempAddress << rankAddressDepth) ^ buffer;     		
+		}
 		break;
 
 	case CLOSE_PAGE_BASELINE:
@@ -450,39 +449,40 @@ bool Address::addressTranslation()
 		*                    row id                         Column id high     rank  bank    col_id  (8B wide)
 		*                                                   1KB     / 8B        id    id      low    Byte Addr
 		*/		
-		buffer = tempAddress;
-		tempAddress >>= columnLowAddressDepth;
+		{
+			PhysicalAddress buffer = tempAddress;
+			tempAddress >>= columnLowAddressDepth;
 
-		// strip out the column low address
-		columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
+			// strip out the column low address
+			unsigned columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
 
-		buffer = tempAddress;				/* save away original address */
-		tempAddress >>= channelAddressDepth;
-		// strip out the channel address
-		channel = buffer ^ (tempAddress << channelAddressDepth);
+			buffer = tempAddress;				/* save away original address */
+			tempAddress >>= channelAddressDepth;
+			// strip out the channel address
+			channel = buffer ^ (tempAddress << channelAddressDepth);
 
-		buffer = tempAddress;				
-		tempAddress >>= bankAddressDepth;
-		// strip out the bank address
-		bank = buffer ^ (tempAddress << bankAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= bankAddressDepth;
+			// strip out the bank address
+			bank = buffer ^ (tempAddress << bankAddressDepth);
 
-		buffer = tempAddress;				
-		tempAddress >>= rankAddressDepth;
-		// strip out the rank address
-		rank = buffer ^ (tempAddress << rankAddressDepth);		
+			buffer = tempAddress;				
+			tempAddress >>= rankAddressDepth;
+			// strip out the rank address
+			rank = buffer ^ (tempAddress << rankAddressDepth);		
 
-		buffer = tempAddress;				
-		tempAddress >>= columnHighAddressDepth;
-		// strip out the column hi address
-		columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= columnHighAddressDepth;
+			// strip out the column hi address
+			unsigned columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
 
-		column = (columnHigh << columnLowAddressDepth) | columnLow;
+			column = (columnHigh << columnLowAddressDepth) | columnLow;
 
-		buffer = tempAddress;				
-		tempAddress >>= rowAddressDepth;
-		// strip out the row address
-		row = buffer ^ (tempAddress << rowAddressDepth);
-
+			buffer = tempAddress;				
+			tempAddress >>= rowAddressDepth;
+			// strip out the row address
+			row = buffer ^ (tempAddress << rowAddressDepth);
+		}
 		break;
 
 	case CLOSE_PAGE_BASELINE_OPT:
@@ -512,11 +512,11 @@ bool Address::addressTranslation()
 			*                    row id                         Column id high     rank  bank    col_id  (8B wide)
 			*                                                   1KB     / 8B        id    id      low    Byte Addr
 			*/		
-			buffer = tempAddress;
+			PhysicalAddress buffer = tempAddress;
 			tempAddress >>= columnLowAddressDepth;
 
 			// strip out the column low address
-			columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
+			unsigned columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
 
 			buffer = tempAddress;			
 			tempAddress >>= channelAddressDepth;
@@ -540,7 +540,7 @@ bool Address::addressTranslation()
 			buffer = tempAddress;				
 			tempAddress >>= columnHighAddressDepth;
 			// strip out the column hi address
-			columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
+			unsigned columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
 
 			column = (columnHigh << columnLowAddressDepth) | columnLow;
 
@@ -563,41 +563,43 @@ bool Address::addressTranslation()
 		*                							intlog2(cacheline_size)	intlog2(channel_width)
 		*									- intlog2(channel_width)	
 		*/
-		buffer = tempAddress;				
-		tempAddress >>= channelAddressDepth;
-		// strip out the channel address
-		channel = buffer ^ (tempAddress << channelAddressDepth);
+		{
 
-		buffer = tempAddress;				
-		tempAddress >>= rankAddressDepth;
-		// strip out the rank address
-		rank = buffer ^ (tempAddress << rankAddressDepth);	
+			PhysicalAddress buffer = tempAddress;				
+			tempAddress >>= channelAddressDepth;
+			// strip out the channel address
+			channel = buffer ^ (tempAddress << channelAddressDepth);
 
-		buffer = tempAddress;				
-		tempAddress >>= bankAddressDepth;
-		// strip out the bank address
-		bank = buffer ^ (tempAddress << bankAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= rankAddressDepth;
+			// strip out the rank address
+			rank = buffer ^ (tempAddress << rankAddressDepth);	
 
-		buffer = tempAddress;				
-		tempAddress >>= columnLowAddressDepth;
-		// strip out the column low address
-		columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= bankAddressDepth;
+			// strip out the bank address
+			bank = buffer ^ (tempAddress << bankAddressDepth);
 
-		buffer = tempAddress;				
-		tempAddress >>= rowAddressDepth;
-		// strip out the row address
-		row = buffer ^ (tempAddress << rowAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= columnLowAddressDepth;
+			// strip out the column low address
+			unsigned columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
 
-		buffer = tempAddress;				
-		tempAddress >>= columnHighAddressDepth;
-		// strip out the column hi address
-		columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= rowAddressDepth;
+			// strip out the row address
+			row = buffer ^ (tempAddress << rowAddressDepth);
 
-		column = (columnHigh << columnLowAddressDepth) | columnLow;
+			buffer = tempAddress;				
+			tempAddress >>= columnHighAddressDepth;
+			// strip out the column hi address
+			unsigned columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
 
+			column = (columnHigh << columnLowAddressDepth) | columnLow;
+		}
 		break;
 
-	case CLOSE_PAGE_HIGH_LOCALITY:
+	case CLOSE_PAGE_HIGH_LOCALITY:		
 		/*
 		*               High performance closed page SDRAM Mapping scheme for streams with low locality
 		*                                                                    5
@@ -606,37 +608,39 @@ bool Address::addressTranslation()
 		*                							intlog2(cacheline_size)	intlog2(channel_width)
 		*									- intlog2(channel_width)	
 		*/
-		buffer = tempAddress;				
-		tempAddress >>= columnLowAddressDepth;
-		// strip out the column low address
-		columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
+		{
+			PhysicalAddress buffer = tempAddress;				
+			tempAddress >>= columnLowAddressDepth;
+			// strip out the column low address
+			unsigned columnLow = buffer ^ (tempAddress << columnLowAddressDepth);
 
-		buffer = tempAddress;				
-		tempAddress >>= rowAddressDepth;
-		// strip out the row address
-		row = buffer ^ (tempAddress << rowAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= rowAddressDepth;
+			// strip out the row address
+			row = buffer ^ (tempAddress << rowAddressDepth);
 
-		buffer = tempAddress;				
-		tempAddress >>= columnHighAddressDepth;
-		// strip out the column hi address
-		columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= columnHighAddressDepth;
+			// strip out the column hi address
+			unsigned columnHigh = buffer ^ (tempAddress << columnHighAddressDepth);
 
-		column = (columnHigh << columnLowAddressDepth) | columnLow;	
+			column = (columnHigh << columnLowAddressDepth) | columnLow;	
 
-		buffer = tempAddress;				
-		tempAddress >>= channelAddressDepth;
-		// strip out the channel address
-		channel = buffer ^ (tempAddress << channelAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= channelAddressDepth;
+			// strip out the channel address
+			channel = buffer ^ (tempAddress << channelAddressDepth);
 
-		buffer = tempAddress;				
-		tempAddress >>= bankAddressDepth;
-		// strip out the bank address
-		bank = buffer ^ (tempAddress << bankAddressDepth);
+			buffer = tempAddress;				
+			tempAddress >>= bankAddressDepth;
+			// strip out the bank address
+			bank = buffer ^ (tempAddress << bankAddressDepth);
 
-		buffer = tempAddress;				
-		tempAddress >>= rankAddressDepth;
-		// strip out the rank address
-		rank = buffer ^ (tempAddress << rankAddressDepth);	
+			buffer = tempAddress;				
+			tempAddress >>= rankAddressDepth;
+			// strip out the rank address
+			rank = buffer ^ (tempAddress << rankAddressDepth);	
+		}
 
 		break;
 
@@ -658,7 +662,7 @@ bool Address::addressTranslation()
 			//tempAddress = physicalAddress >> 3;
 			tempAddress = physicalAddress;
 
-			buffer = tempAddress;			
+			PhysicalAddress buffer = tempAddress;			
 			tempAddress >>= 10;
 			// 11-3
 			column = (tempAddress << 10) ^ buffer;
@@ -712,26 +716,28 @@ bool Address::addressTranslation()
 		//             |<---------------------->| |<---------->| |<------->| |<---------------->|  |<------>|
 		//                      row id                 bank         rank          Col id            16 byte
 		//                      (512 rows)              id           id           2KB/16B            packet
-		buffer = tempAddress;				
-		tempAddress >>= channelAddressDepth;
-		channel = (tempAddress << channelAddressDepth) ^ buffer;     	
+		{
+			PhysicalAddress buffer = tempAddress;				
+			tempAddress >>= channelAddressDepth;
+			channel = (tempAddress << channelAddressDepth) ^ buffer;     	
 
-		buffer = tempAddress;				
-		tempAddress >>= columnAddressDepth;
-		column = (tempAddress << columnAddressDepth) ^ buffer;     	
+			buffer = tempAddress;				
+			tempAddress >>= columnAddressDepth;
+			column = (tempAddress << columnAddressDepth) ^ buffer;     	
 
-		buffer = tempAddress;				
-		tempAddress >>= rankAddressDepth;
-		rank = (tempAddress << rankAddressDepth) ^ buffer;		
+			buffer = tempAddress;				
+			tempAddress >>= rankAddressDepth;
+			rank = (tempAddress << rankAddressDepth) ^ buffer;		
 
-		buffer = tempAddress;			
-		tempAddress >>= bankAddressDepth;
-		bank = (tempAddress << bankAddressDepth) ^ buffer;		
+			buffer = tempAddress;			
+			tempAddress >>= bankAddressDepth;
+			bank = (tempAddress << bankAddressDepth) ^ buffer;		
 
-		buffer = tempAddress;			
-		tempAddress >>= rowAddressDepth;
-		row = (tempAddress << rowAddressDepth) ^ buffer;		
+			buffer = tempAddress;			
+			tempAddress >>= rowAddressDepth;
+			row = (tempAddress << rowAddressDepth) ^ buffer;		
 
+		}
 		break;
 
 		// don't know what this policy is.. Map everything to 0
@@ -750,12 +756,6 @@ bool Address::addressTranslation()
 		cerr << "Memory address (" << std::hex << physicalAddress << ") out of range of available physical memory, max(" << highestAddress() << ")" << endl;
 		return false;
 	}
-
-// 	assert(channel < pow((int)2,(int)channelAddressDepth));
-// 	assert(rank < pow((int)2,(int)rankAddressDepth));
-// 	assert(bank < pow((int)2,(int)bankAddressDepth));
-// 	assert(row < pow((int)2,(int)rowAddressDepth));
-// 	assert(column < pow((int)2,(int)columnAddressDepth));
 
 	return true;
 }

@@ -21,7 +21,6 @@
 #include "globals.h"
 #include "Settings.h"
 #include "Address.h"
-//#include "Channel.h"
 
 #include <fstream>
 
@@ -81,6 +80,7 @@ namespace DRAMsimII
 		// constructors
 		explicit SystemConfiguration(const Settings& settings);
 		explicit SystemConfiguration(const SystemConfiguration &rhs);
+		~SystemConfiguration();
 
 		// accessors
 		RowBufferPolicy getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }

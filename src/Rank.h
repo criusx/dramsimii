@@ -56,7 +56,7 @@ namespace DRAMsimII
 		tick nextActivateTime;				///< the time at which an ACT may be sent to this rank
 		tick nextReadTime;					///< the time at which a CAS may be sent to this rank
 		tick nextWriteTime;					///< the time at which a CASW may be sent to this rank
-		tick nextPrechargeTime;				///< the time at which a Pre may be sent to this rank
+		//tick nextPrechargeTime;				///< the time at which a Pre may be sent to this rank
 		tick nextRefreshTime;				///< the time at which a Ref may be sent to this rank
 
 		tick lastCalculationTime;			///< the time at which the last power calculation was done
@@ -111,6 +111,7 @@ namespace DRAMsimII
 		unsigned getOtherLastCASWLength() const { return otherLastCASWLength; }
 		unsigned getReadCycles() const { return CASLength; }
 		unsigned getWriteCycles() const { return CASWLength; }
+		bool isEmpty() const;
 
 
 		// mutators
@@ -138,7 +139,7 @@ namespace DRAMsimII
 			{
 				ar & lastRefreshTime & lastPrechargeAnyBankTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength &
 					lastCASWLength & rankID & lastBankID & banksPrecharged & lastActivateTimes & CASWLength & CASLength & otherLastCASTime & 
-					otherLastCASWTime & otherLastCASLength & otherLastCASWLength & nextActivateTime & nextReadTime & nextWriteTime & nextPrechargeTime &
+					otherLastCASWTime & otherLastCASLength & otherLastCASWLength & nextActivateTime & nextReadTime & nextWriteTime & 
 					nextRefreshTime & lastCalculationTime;
 			}
 

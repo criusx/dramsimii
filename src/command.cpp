@@ -231,6 +231,18 @@ bool Command::operator !=(const Command& right) const
 	return !(*this == right);
 }
 
+Command &Command::operator =(const Command &rhs)
+{
+	if (this == &rhs)
+	{
+		return *this;
+	}
+	length = rhs.length;
+	hostTransaction = rhs.hostTransaction;
+	commandType = rhs.commandType;
+	return *this;
+}
+
 //////////////////////////////////////////////////////////////////////////
 /// @brief output stream operator for CommandTypes
 //////////////////////////////////////////////////////////////////////////
