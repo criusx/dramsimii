@@ -160,6 +160,7 @@ protected:
 
 public:
 	bool movement;
+	unsigned outstandingPackets;
 #ifdef TRACE_GENERATE
 	boost::iostreams::filtering_ostream traceOutStream;
 #endif

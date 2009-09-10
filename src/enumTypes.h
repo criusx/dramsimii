@@ -51,7 +51,7 @@ namespace DRAMsimII
 		RANK_ROUND_ROBIN, ///< alternate ranks
 		BANK_ROUND_ROBIN, ///< keep same ranks as long as possible, go down banks
 		FIRST_AVAILABLE_AGE, ///< prioritizes whatever may issue soonest and uses age as a tie-breaker
-		FIRST_AVAILABLE_RIFF, ///< priortizes whatever may issue soonest and uses prioritizes reads over writes
+		FIRST_AVAILABLE_RIFF, ///< prioritizes whatever may issue soonest and uses prioritizes reads over writes
 		FIRST_AVAILABLE_QUEUE, ///< prioritizes whatever may issue soonest and uses queue pressure as the tie-breaker
 		COMMAND_PAIR_RANK_HOPPING ///< Patented stuff. davewang202@yahoo.com ;)
 	};

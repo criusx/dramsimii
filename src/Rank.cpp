@@ -37,7 +37,6 @@ totalPrechargeTime(0),
 nextActivateTime(0),
 nextReadTime(0),
 nextWriteTime(0),
-//nextPrechargeTime(0),
 nextRefreshTime(0),
 lastCalculationTime(0),
 lastCASLength(0),
@@ -66,7 +65,6 @@ totalPrechargeTime(rhs.totalPrechargeTime),
 nextActivateTime(rhs.nextActivateTime),
 nextReadTime(rhs.nextReadTime),
 nextWriteTime(rhs.nextWriteTime),
-//nextPrechargeTime(rhs.nextPrechargeTime),
 nextRefreshTime(rhs.nextRefreshTime),
 lastCalculationTime(0),
 lastCASLength(rhs.lastCASLength),
@@ -95,7 +93,6 @@ totalPrechargeTime(rhs.totalPrechargeTime),
 nextActivateTime(rhs.nextActivateTime),
 nextReadTime(rhs.nextReadTime),
 nextWriteTime(rhs.nextWriteTime),
-//nextPrechargeTime(rhs.nextPrechargeTime),
 nextRefreshTime(rhs.nextRefreshTime),
 lastCalculationTime(0),
 lastCASLength(rhs.lastCASLength),
@@ -131,7 +128,6 @@ totalPrechargeTime(0),
 nextActivateTime(0),
 nextReadTime(0),
 nextWriteTime(0),
-//nextPrechargeTime(0),
 nextRefreshTime(0),
 lastCalculationTime(0),
 lastCASLength(0),
@@ -348,7 +344,7 @@ tick Rank::next(Command::CommandType nextCommandType) const
 //////////////////////////////////////////////////////////////////////
 Command *Rank::getCommand(const unsigned thisBank)
 {
-	if (bank[thisBank].nextCommandType() == Command::REFRESH_ALL)
+	if (bank[thisBank].isRefresh())
 	{
 		if (refreshAllReady())
 		{

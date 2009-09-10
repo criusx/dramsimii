@@ -104,10 +104,19 @@ void M5dramSystem::moveToTime(const tick now)
 		assert(packetIterator != transactionLookupTable.end());
 		Packet *packet = packetIterator->second;
 		transactionLookupTable.erase(packetIterator);
+		outstandingPackets--;
 
 		if (packet)
 		{
 			assert(packet->isRead() || packet->isWrite());
+
+			for (std::tr1::unordered_map<unsigned,Packet*>::const_iterator packetIt = transactionLookupTable.begin(); packetIt != transactionLookupTable.end(); packetIt++)
+			{
+				if (packet->getAddr() == packetIt->second->getAddr())
+				{
+					cerr << "match at " << std::hex << packet->getAddr() << endl;
+				}
+			}
 
 			bool needsResponse = 
 #ifdef PROCESS_BEFORE
@@ -136,14 +145,14 @@ void M5dramSystem::moveToTime(const tick now)
 					struct tm *timeinfo = localtime(&rawtime);		
 					char *timeString = asctime(timeinfo);
 					char *pos = strchr(timeString,'\n');
-					*pos = NULL;
-					cerr << returnCount << " " << asctime(timeinfo) << "\r";
+					*(pos-1) = NULL;
+					cerr << std::dec << returnCount << " " << asctime(timeinfo) << "\r";
 				}
 #endif
 			}
 			else
 			{	
-				M5_TIMING("xT [" << hex << packet->getAddr() << "][+")
+				M5_TIMING("xT [" << hex << packet->getAddr() << "]")
 
 				delete packet;
 			}			
@@ -184,7 +193,8 @@ mostRecentChannel(0),
 cpuRatio(0),
 transactionLookupTable(),
 currentTransactionID(0),
-movement(true)
+movement(true),
+outstandingPackets(0)
 {	
 	Settings settings;
 
@@ -561,7 +571,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 
 #if defined(M5DEBUG) && defined(DEBUG) && !defined(NDEBUG)
 	using std::setw;
-	M5_TIMING3("+recvTiming [" << std::dec << currentMemCycle << "] ")
+	M5_TIMING3("+recvTiming [" << std::dec << curTick << "] ")
 		// calculate the time elapsed from when the transaction started
 		M5_TIMING3(setw(2) << (packet->isRead() ? "Rd" : ""))
 		M5_TIMING3(setw(2) << (packet->isWrite() ? "Wr" : ""))
@@ -575,161 +585,170 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		M5_TIMING3(setw(2) << (packet->needsResponse() ? "NR" : ""))
 		M5_TIMING3(setw(2) << (packet->isLLSC() ? "LL" : ""))
 		M5_TIMING3(" 0x" << hex << packet->getAddr())
-		M5_TIMING2(" s[0x" << hex << packet->getSize() << "]")
+		M5_TIMING2(" s[0x" << hex << packet->getSize() << "]");
 #endif
-		if (packet->memInhibitAsserted())
+	if (packet->memInhibitAsserted())
+	{
+		// snooper will supply based on copy of packet
+		// still target's responsibility to delete packet
+		delete packet;
+		return true;
+	}	
+	// must look at packets that need to affect the memory system
+	//else if (packet->needsResponse() || packet->isWrite())
+	else if (packet->isRead() || packet->isWrite())
+	{	
+		assert((packet->isRead() && packet->needsResponse()) ||
+			(!packet->isRead() && !packet->needsResponse()));
+		assert(!packet->wasNacked());
+
+
+		// move channels to current time so that calculations based on current channel times work
+		// should also not start/finish any commands, since this would happen at a scheduled time
+		// instead of now
+		memory->moveToTime(currentMemCycle);
+		//assert(memory->ds->pendingTransactionCount() == 0);
+
+		// turn packet around to go back to requester if response expected
+		Address addr(packet->getAddr());
+
+		// attempt to add the transaction to the memory system
+		if (memory->ds->isFull(addr.getChannel()))
 		{
-			// snooper will supply based on copy of packet
-			// still target's responsibility to delete packet
-			delete packet;
-			return true;
-		}
-		//upgrade or invalidate	
-		else if (!packet->isRead() && packet->needsResponse())
-		{
-			assert(packet->cmd != MemCmd::SwapReq);
-			assert(packet->isInvalidate());
-			if (packet->needsResponse())
-			{
-				packet->makeAtomicResponse();
-			}
-
-			schedSendTiming(packet,curTick + 1);			
-
-			return true;
-		}
-		// must look at packets that need to affect the memory system
-		else if (packet->needsResponse() || packet->isWrite())
-		{	
-			assert((packet->isRead() && packet->needsResponse()) ||
-				(!packet->isRead() && !packet->needsResponse()));
-			assert(!packet->wasNacked());
-
-
-			// move channels to current time so that calculations based on current channel times work
-			// should also not start/finish any commands, since this would happen at a scheduled time
-			// instead of now
-			memory->moveToTime(currentMemCycle);
-
-			// turn packet around to go back to requester if response expected
-			Address addr(packet->getAddr());
-
-			// attempt to add the transaction to the memory system
-			if (memory->ds->isFull(addr.getChannel()))
-			{
 #ifdef M5DEBUG						
-				static tick numberOfDelays = 0;
-				if (++numberOfDelays % 100000 == 0)
-					cerr << "\r" << numberOfDelays;
+			static tick numberOfDelays = 0;
+			if (++numberOfDelays % 100000 == 0)
+				cerr << "\r" << numberOfDelays;
 #endif
 #if 0
-				// if the packet did not fit, then send a NACK
-				// tell the sender that the memory system is full until it hears otherwise
-				// and do not send packets until that time
-				pkt->result = Packet::Nacked;
-				short memID = pkt->getDest();
-				pkt->makeTimingResponse();
-				pkt->setSrc(memID);
-				doSendTiming(pkt,0);
+			// if the packet did not fit, then send a NACK
+			// tell the sender that the memory system is full until it hears otherwise
+			// and do not send packets until that time
+			pkt->result = Packet::Nacked;
+			short memID = pkt->getDest();
+			pkt->makeTimingResponse();
+			pkt->setSrc(memID);
+			doSendTiming(pkt,0);
 #endif
 
-				// http://m5.eecs.umich.edu/wiki/index.php/Memory_System
-				// keep track of the fact that the memory system is waiting to hear that it is ok to send again
-				// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
-				memory->needRetry = true;
-				//memory->mostRecentChannel = trans->getAddresses().getChannel();
-				memory->mostRecentChannel = addr.getChannel();
-				//delete trans;
+			// http://m5.eecs.umich.edu/wiki/index.php/Memory_System
+			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
+			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
+			memory->needRetry = true;
+			//memory->mostRecentChannel = trans->getAddresses().getChannel();
+			memory->mostRecentChannel = addr.getChannel();
+			//delete trans;
 
-				M5_TIMING2("Wait for retry before sending more to ch[" << addr.getChannel() << "]");
-				return false;
-			}
-			else
-			{
-	
-				PhysicalAddress pC;
-				int threadID;
-
-				if (packet->req->hasPC())
-				{
-					pC = packet->req->getPC();
-					threadID = packet->req->threadId();
-				}
-				else
-				{
-					pC = threadID = 0;
-				}
-
-				Transaction::TransactionType packetType = Transaction::PREFETCH_TRANSACTION;
-
-				if (packet->isRead())
-				{
-					assert(!packet->isWrite());
-					packetType = Transaction::READ_TRANSACTION;
-				}
-				else if (packet->isWrite())
-					packetType = Transaction::WRITE_TRANSACTION;
-				else
-					cerr << "warn: not read or write" << endl;
-
-#ifndef NDEBUG
-				bool result = 
-#endif
-					memory->ds->enqueue(new Transaction(packetType,currentMemCycle,packet->getSize() / 8,packet->getAddr(), pC, threadID, memory->currentTransactionID));
-
-				assert(result == true);
-
-				assert(memory->transactionLookupTable.find(memory->currentTransactionID) == memory->transactionLookupTable.end());
-
-#ifdef PROCESS_BEFORE
-				bool needsResponse = packet->needsResponse();
-				memory->doAtomicAccess(packet);
-				memory->transactionLookupTable[memory->currentTransactionID] = needsResponse ? packet : NULL;
-				if (!needsResponse)
-					delete packet;
-#else
-				memory->transactionLookupTable[memory->currentTransactionID] = packet;			
-#endif
-	
-				// make sure not to use any that are already being used
-				while (memory->transactionLookupTable.find(memory->currentTransactionID) != memory->transactionLookupTable.end())
-				{
-					memory->currentTransactionID = (memory->currentTransactionID + 1) % UINT_MAX;
-				}
-
-				// find out when the next event is
-				tick next = memory->ds->nextTick();
-				assert(next < TICK_MAX);
-				assert(next > currentMemCycle);
-				assert(next * memory->getCPURatio() > curTick);
-
-				// deschedule and reschedule yourself to wake at the next event time
-				if (memory->tickEvent.scheduled())
-					memory->tickEvent.deschedule();
-
-				memory->tickEvent.schedule(next * memory->getCPURatio());
-
-				M5_TIMING2("-recvTiming sch[" << next << "]");
-
-				return true;
-			}
+			M5_TIMING2("Wait for retry before sending more to ch[" << addr.getChannel() << "]");
+			return false;
 		}
 		else
 		{
-			M5_TIMING2("warn: packet not needing response.");
 
-			if (packet->cmd != MemCmd::UpgradeReq)
+			PhysicalAddress pC;
+			int threadID;
+
+			if (packet->req->hasPC())
 			{
-				cerr << "warn: deleted packet, not upgradereq, not write, needs no resp" << endl;
-				delete packet->req;
-				delete packet;
+				pC = packet->req->getPC();
+				threadID = packet->req->threadId();
 			}
 			else
 			{
-				cerr << "warn: not upgrade request" << endl;
+				pC = threadID = 0;
 			}
+
+			Transaction::TransactionType packetType = Transaction::PREFETCH_TRANSACTION;
+
+			if (packet->isRead())
+			{
+				assert(!packet->isWrite());
+				//packet->req->isInstFetch();
+				//packet->req->isPrefetch();
+
+				packetType = Transaction::READ_TRANSACTION;
+			}
+			else if (packet->isWrite())
+				packetType = Transaction::WRITE_TRANSACTION;
+			else
+				cerr << "warn: not read or write" << endl;
+
+#ifndef NDEBUG
+			bool result = 
+#endif
+				memory->ds->enqueue(new Transaction(packetType,currentMemCycle,packet->getSize() / 8,packet->getAddr(), pC, threadID, memory->currentTransactionID));
+
+			(memory->outstandingPackets)++;
+
+			assert(result == true);
+
+			assert(memory->transactionLookupTable.find(memory->currentTransactionID) == memory->transactionLookupTable.end());
+
+#ifdef PROCESS_BEFORE
+			bool needsResponse = packet->needsResponse();
+			memory->doAtomicAccess(packet);
+			memory->transactionLookupTable[memory->currentTransactionID] = needsResponse ? packet : NULL;
+			if (!needsResponse)
+				delete packet;
+#else
+			memory->transactionLookupTable[memory->currentTransactionID] = packet;			
+#endif
+
+			// make sure not to use any that are already being used
+			while (memory->transactionLookupTable.find(memory->currentTransactionID) != memory->transactionLookupTable.end())
+			{
+				memory->currentTransactionID = (memory->currentTransactionID + 1) % UINT_MAX;
+			}
+
+			// find out when the next event is
+			tick next = memory->ds->nextTick();
+			assert(next < TICK_MAX);
+			assert(next > currentMemCycle);
+			assert(next * memory->getCPURatio() > curTick);
+
+			// deschedule and reschedule yourself to wake at the next event time
+			if (memory->tickEvent.scheduled())
+				memory->tickEvent.deschedule();
+
+			memory->tickEvent.schedule(next * memory->getCPURatio());
+
+			M5_TIMING2("-recvTiming sch[" << next << "]");
+
 			return true;
 		}
+	}
+	//upgrade or invalidate	
+	//else if (!packet->isRead() && packet->needsResponse())
+	else if (packet->isInvalidate())
+	{
+		assert(packet->cmd != MemCmd::SwapReq);
+		assert(!packet->isRead() && packet->needsResponse());
+		if (packet->needsResponse())
+		{
+			packet->makeAtomicResponse();
+		}
+
+		schedSendTiming(packet,curTick + 1);			
+
+		return true;
+	}
+	else
+	{
+		assert(!packet->needsResponse());
+		M5_TIMING2("warn: packet not needing response.");
+
+		if (packet->cmd != MemCmd::UpgradeReq)
+		{
+			cerr << "warn: deleted packet, not upgradereq, not write, needs no resp" << endl;
+			delete packet->req;
+			delete packet;
+		}
+		else
+		{
+			cerr << "warn: not upgrade request" << endl;
+		}
+		return true;
+	}
 }
 
 
@@ -822,7 +841,7 @@ void M5dramSystem::TickEvent::process()
 
 	if (!memory->movement)
 	{
-		cerr << "no r/w bytes, ";
+		cerr << "no r/w bytes, outstanding: " << memory->outstandingPackets << ", ";
 		cerr << (memory->transactionLookupTable.empty() ? "is empty," : "has outstanding transactions,");
 		cerr << (memory->ds->isEmpty() ? " reports empty" : " reports not empty") << endl;
 	}

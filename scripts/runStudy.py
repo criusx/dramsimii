@@ -128,7 +128,7 @@ memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-
 commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
 
 # the command line parameters for running in FS mode
-fScommandParameters = "autorefreshpolicy none channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s rowBufferPolicy %s outfiledir %s"
+fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s rowBufferPolicy %s outfiledir %s"
 
 # the name of the queue to submit these jobs to
 queueName = 'default'
@@ -149,11 +149,13 @@ ranks = [4]
 banks = [16]
 tFAW = [28]
 #addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagebaseline', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
-addressMappingPolicy = ['closepagebaseline','closepagebaselineopt']
+addressMappingPolicy = ['closepagebaseline','closepagebaselineopt', 'closepagelowlocality']
 
-commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop', 'strict']
+#commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop', 'strict']
+commandOrderingAlgorithm = ['commandPairRankHop', 'strict']
 
 rowBufferManagementPolicy = ['openpageaggressive', 'openpage', 'closepage','closepageaggressive']
+#rowBufferManagementPolicy = ['closepage','closepageaggressive']
 
 interarrivalCycleCount = [4]
 
