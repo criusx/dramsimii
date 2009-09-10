@@ -233,7 +233,8 @@ if options.l2cache:
     else:
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='stride', prefetch_degree=2, prefetcher_size=64, prefetch_cache_check_push=True)
-        test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16)
+        #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16)
+        test_sys.l2 = L2Cache(size = '512kB', assoc=16, latency="7ns", prefetch_policy='ghb', prefetch_degree=2)
 
 
     #test_sys.l2 = L2Cache(size = '2MB')
