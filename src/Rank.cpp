@@ -344,7 +344,7 @@ tick Rank::next(Command::CommandType nextCommandType) const
 //////////////////////////////////////////////////////////////////////
 Command *Rank::getCommand(const unsigned thisBank)
 {
-	if (bank[thisBank].isRefresh())
+	if (bank[thisBank].nextCommandType() == Command::REFRESH_ALL)
 	{
 		if (refreshAllReady())
 		{

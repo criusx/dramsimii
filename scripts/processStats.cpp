@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <limits>
@@ -21,6 +22,10 @@
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/program_options/option.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/variables_map.hpp>
+#include <boost/program_options/parsers.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -38,6 +43,7 @@ namespace bf = boost::filesystem;
 
 using std::string;
 using std::cerr;
+using std::cout;
 using std::endl;
 using std::pair;
 using boost::iostreams::bzip2_decompressor;
@@ -101,6 +107,8 @@ std::string thumbnailResolution = "640";
 std::string terminal = "set terminal svg size 1920,1200 enhanced font \"Arial\" fsize 14\n";
 
 std::string extension = "svg";
+
+bool generatePngFiles = false;
 
 bool userStop = false;
 
@@ -381,6 +389,8 @@ unordered_map<string,string> &setupDecoder()
 	theMap["CPBOPT"] = "Close Page Baseline Opt";
 	theMap["FRSTA"] = "First Available (Age)";
 	theMap["FRSTR"] = "First Available (RIFF)";
+	theMap["FRSTQ"] = "First Available (Queue)";
+	theMap["CPRH"] = "Command Pair Rank Hop";
 
 	return theMap;
 }
@@ -430,11 +440,16 @@ void thumbNailWorker()
 			//second.write(baseFilename + ".png");
 
 			string commandLine0 = string(CONVERT_COMMAND) + " " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
-			string commandLine1 = string(MOGRIFY_COMMAND) + " -resize 3840 -format png " + filename;
+			// @TODO make this conditional
+			if (generatePngFiles)
+			{
+				string commandLine1 = string(MOGRIFY_COMMAND) + " -resize 3840 -format png " + filename;
+				system(commandLine1.c_str());
+			}
+
 			string commandLine2 = "gzip -c -9 -f " + filename + " > " + filename + "z";
 
 			system(commandLine0.c_str());
-			system(commandLine1.c_str());
 			system(commandLine2.c_str());
 
 			bf::remove(bf::path(filename));
@@ -2025,10 +2040,46 @@ void processStats(const string &filename)
 	return;
 }
 
+double calcRunTime(filtering_istream& input)
+{
+	int searchForEpoch = 30;
+	double epoch = 0.0;
+
+	char newLine[256];
+	int epochCounter = 0;
+	input.getline(newLine,256);
+
+	while ((newLine[0] != 0) && (!userStop))
+	{
+		if (starts_with(newLine,"-Psys(ACT_STBY) ch[0]"))
+		{
+			epochCounter++;
+		}
+		else if (searchForEpoch >= 0 && starts_with(newLine,"----Epoch"))
+		{
+			char *position = strchr(newLine,' ');
+			position++;
+			epoch = atof(position);
+			searchForEpoch = -1;
+		}
+		else if (searchForEpoch >= 0)
+		{
+			searchForEpoch--;
+			if (searchForEpoch == 0)
+				return 0.0;
+		}
+		input.getline(newLine,256);
+	}
+
+	return (double)epochCounter * epoch;
+}
+
 void sigproc(int i)
 {
 	userStop = true;
 }
+
+namespace opt = boost::program_options;
 
 int main(int argc, char** argv)
 {
@@ -2037,16 +2088,50 @@ int main(int argc, char** argv)
 
 	signal(SIGUSR1, sigproc);
 
-	bool generateResultsOnly = false;
+	opt::options_description desc("Basic options");
+	string settingsFile;
+	string extraSettings;
+	desc.add_options()
+		("help", "help message")
+		("create,f","Force creation of the index file only")
+		("png,p","Generate PNG versions of the files");
 
-	if (argc < 2)
+	opt::variables_map vm;
+
+	try
+	{
+		opt::store(opt::parse_command_line(argc, argv, desc), vm);
+	}
+	catch (opt::unknown_option uo)
+	{
+		cerr << uo.what() << endl;
 		exit(-1);
-	else if (strncmp(argv[1],"-f",2) == 0)
-		generateResultsOnly = true;
+	}
+	
+	opt::notify(vm);
+
+// 	for (opt::variables_map::iterator i = vm.begin(); i != vm.end(); i++)
+// 		cerr << i->first << endl;
+// 	
+	if (vm.count("help"))
+	{
+		cout << "Usage: " << argv[0] << "(--help | -f | -p)" << endl;
+	}
+
+// 	if (vm.count("png") > 0)
+// 		cerr << "PNG" << endl;
+
+	bool generateResultsOnly = vm.count("create") > 0;
+
+	generatePngFiles = vm.count("png") > 0;
+
+// 	cerr << generateResultsOnly << " " << generatePngFiles << endl;
+// 
+// 	exit(0);
 
 	list<string> toBeProcessed;
 
-	unordered_map<string,string> files;
+	map<string,string> files;
 
 	for (int i = 0; i < argc; i++)
 	{
@@ -2084,11 +2169,13 @@ int main(int argc, char** argv)
 					split(splitLine, modUrlString, is_any_of(" "), token_compress_on);
 
 					string outline;
+					
 					for (vector<string>::const_iterator x = splitLine.begin(); x != splitLine.end(); x++)
 					{
 						string::size_type start = x->find("[");
 						string::size_type end = x->find("]");
 						string benchmarkName;
+
 						if (start == string::npos || end == string::npos)
 							benchmarkName = *x;
 						else
@@ -2099,7 +2186,19 @@ int main(int argc, char** argv)
 
 						outline += "<td>" + ireplace_all_copy(currentUrlString,"%2",benchmarkName) + "</td>";
 					}
-					files[basefilename] = outline;
+					// then calculate the runtime for the last column
+					if (ends_with(argv[i],"stats.gz") || ends_with(argv[i],"stats.bz2"))
+					{
+						if (files.find(basefilename) == files.end())
+							files[basefilename] = outline;
+					}
+					else
+					{
+						stringstream current;
+						current << std::dec << std::fixed << std::setprecision(6) << calcRunTime(inputStream);
+						outline += "<td>" + ireplace_all_copy(currentUrlString,"%2",current.str()) + "</td>";
+						files[basefilename] = outline;
+					}
 				}
 				if (++lineCounter > 30)
 					break;
@@ -2123,7 +2222,7 @@ int main(int argc, char** argv)
 	entirefile << instream.rdbuf();
 
 	string fileList;
-	for (unordered_map<string,string>::const_iterator x = files.begin(); x != files.end(); x++)
+	for (map<string,string>::const_iterator x = files.begin(); x != files.end(); x++)
 	{
 		fileList += "<tr>";
 		fileList += x->second;
