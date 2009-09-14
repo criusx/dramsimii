@@ -941,6 +941,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\scripts\processStats.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\src\Rank.cpp"
 				>
 			</File>

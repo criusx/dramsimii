@@ -914,6 +914,10 @@ void processStats(const string &filename)
 	hitMissValues.reserve(MAXIMUM_VECTOR_SIZE);
 	double hitMissValueBuffer;
 
+	vector<unsigned> hitMissTotals;
+	hitMissTotals.reserve(MAXIMUM_VECTOR_SIZE);
+	unsigned hitMissTotalBuffer;
+
 	vector<unsigned> iCacheHits;
 	iCacheHits.reserve(MAXIMUM_VECTOR_SIZE);
 	uint64_t iCacheHitBuffer;
@@ -1177,6 +1181,9 @@ void processStats(const string &filename)
 
 							hitMissValues.push_back(hitMissValueBuffer / scaleFactor);
 							hitMissValueBuffer = 0;
+
+							hitMissTotals.push_back(hitMissTotalBuffer / scaleFactor);
+							hitMissTotalBuffer = 0;
 
 							iCacheHits.push_back(iCacheHitBuffer / scaleFactor);
 							iCacheHitBuffer = 0;
@@ -1482,6 +1489,7 @@ void processStats(const string &filename)
 				unsigned hitCount = max(atoi(newLine),1);
 				unsigned missCount = max(atoi(position),1);
 				hitMissValueBuffer += hitCount / ((double)missCount + hitCount);
+				hitMissTotalBuffer += (hitCount + missCount);
 			}
 			// channel breakdown
 			else if (writing == 11)
@@ -1950,14 +1958,15 @@ void processStats(const string &filename)
 	outFilename = outputDir / ("rowHitRate." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
-	p2 << "set title \"" << commandLine << "\\nReuse Rate of Open Rows vs. Time\"" << endl << rowHitMissGraph << endl;
-
+	p2 << "set title \"" << "Reuse Rate of Open Rows vs. Time\\n" << commandLine << "\"" << endl << rowHitMissGraph << endl;
+	
 	time = 0.0F;
 	for (vector<float>::const_iterator i = hitMissValues.begin(); i != hitMissValues.end(); i++)
 	{
 		p2 << time << " " << *i << endl;
 		time += epochTime;
 	}
+	p2 << "e" << endl;
 
 	CumulativePriorMovingAverage hitMissTotal;
 	time = 0.0F;
@@ -1969,14 +1978,13 @@ void processStats(const string &filename)
 	}
 	p2 << "e" << endl;
 
-	PriorMovingAverage hitMissBuffer(WINDOW);
 	time = 0.0F;
-	for (vector<float>::const_iterator i = hitMissValues.begin(); i != hitMissValues.end(); i++)
+	for (vector<unsigned>::const_iterator i = hitMissTotals.begin(); i != hitMissTotals.end(); i++)
 	{
-		hitMissBuffer.append(*i);
-		p2 << time << " " << hitMissBuffer.getAverage() << endl;
+		p2 << time << " " << max(*i, 1U) << endl;
 		time += epochTime;
 	}
+		
 	p2 << "e" << endl << "unset output" << endl;
 
 	// make the working set

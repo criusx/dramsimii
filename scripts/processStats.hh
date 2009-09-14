@@ -261,9 +261,14 @@ plot \
 
 std::string rowHitMissGraph = 
 "set yrange [0 : *] noreverse nowriteback\n\
+set y2range [1 : *] noreverse nowriteback\n\
 set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
 set ylabel 'Reuse Rate'\n\
-plot '-' using 1:2 sm csp title 'Hit Rate' with filledcurve below x1, '-' using 1:2 sm csp title 'Cumulative Average Hit Rate' with lines lw 1.250, '-' using 1:2 sm csp title 'Moving Average' with lines lw 1.250\n";
+set y2label 'Accesses'\n\
+set y2tics\n\
+set my2tics\n\
+set logscale y2\n\
+plot '-' using 1:2 axes x1y1 sm csp title 'Hit Rate' with filledcurve below x1 lt rgb \"#28B95A\", '-' using 1:2 axes x1y1 sm csp title 'Cumulative Average Hit Rate' with lines lw 1.250 lt rgb \"#B8283E\", '-' using 1:2 axes x1y2 t 'Accesses' sm csp with lines lw 1.250 lt rgb \"#5B28B8\"\n";
 
 std::string urlString = "<a href=\"%1/index.html\">%2</a>";
 
