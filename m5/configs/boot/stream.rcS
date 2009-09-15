@@ -2,5 +2,5 @@
 
 /sbin/m5 resetstats
 /sbin/m5 switchcpu
-/benchmarks/stream-short-opt
+/benchmarks/stream-short-opt.bak
 /sbin/m5 exit
