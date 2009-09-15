@@ -253,8 +253,8 @@ if options.caches:
 
 for i in xrange(np):
     if options.caches:
-        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB'),
-                                                L1Cache(size = '64kB'))
+        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB', tgts_per_mshr=16),
+                                                L1Cache(size = '64kB', tgts_per_mshr=16))
         #test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB', latency="500ps"),
         #                                        L1Cache(size = '64kB', latency="500ps"))
     if options.l2cache:
