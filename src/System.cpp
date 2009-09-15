@@ -243,9 +243,9 @@ bool System::enqueue(Transaction *currentTransaction)
 	// attempt to insert the transaction into the per-channel transaction queue
 	bool result = channel[currentTransaction->getAddress().getChannel()].enqueue(currentTransaction);
 
-	DEBUG_TRANSACTION_LOG((result ? "" : "!") << "+T ch[" << currentTransaction->getAddress().getChannel() << "](" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ") " << *currentTransaction)
+	DEBUG_TRANSACTION_LOG((result ? "" : "!") << "+T ch[" << currentTransaction->getAddress().getChannel() << "](" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ") " << *currentTransaction);
 
-		return result;
+	return result;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -361,7 +361,6 @@ void System::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outpu
 		i->getPendingTransactions(outputQueue);
 }
 
-
 //////////////////////////////////////////////////////////////////////
 /// @brief automatically runs the simulations according to the set parameters
 /// @details runs either until the trace file runs out or the request count reaches zero\n
@@ -468,6 +467,11 @@ void System::runSimulations(const unsigned requestCount)
 	//	moveToTime(channel[0].getTime() + 64000000);
 }
 
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief function to determine if there are any commands or transactions pending in this system
+/// @return true if there are any transactions or commands in the queues, false otherwise
+//////////////////////////////////////////////////////////////////////////
 bool System::isEmpty() const
 {
 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
@@ -478,7 +482,10 @@ bool System::isEmpty() const
 	return true;
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief equality operator for the System object
+/// @return true if the systems are equivalent
+//////////////////////////////////////////////////////////////////////////
 bool System::operator==(const System &rhs) const
 {
 	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&

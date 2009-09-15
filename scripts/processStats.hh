@@ -237,8 +237,7 @@ set style fill solid 1.00 noborder\n\
 set xrange [0 : *]\n\
 plot '-' using 1:2 title 'IPC' with impulses,\
 '-' using 1:2 sm csp title 'Moving Average IPC' with lines\n";
-
-//'-' using 1:2 sm csp title 'Cumulative Average IPC' with lines,\
+' using 1:2 sm csp title 'Cumulative Average IPC' with lines,\
 
 std::string averageTransactionLatencyScript =
 "set yrange [1 : *] noreverse nowriteback\n\
@@ -254,9 +253,6 @@ plot \
 '-' using 1:2 title 'Minimum Latency' with lines lw 1.25, \
 '-' using 1:2 title 'Average Latency' with lines lw 1.25, \
 '-' using 1:2 title \"Average + 2 std. dev.\" with lines lw 1.25\n";
-//'-' using 1:2 title \"Average + 2 {/Symbol s}\" with lines lw 1.25\n";
-//
-//'-' using 1:2 title 'Maximum Latency' with lines lw 1.25, \
 
 
 std::string rowHitMissGraph = 

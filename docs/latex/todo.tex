@@ -3,6 +3,11 @@
 \item[Member \doxyref{DRAMsimII::Bank::issueCAS}{p.}{class_d_r_a_msim_i_i_1_1_bank_1f759cc59082c2ca03271ca55f3ab1f6}(const tick currentTime, const Command $\ast$currentCommand) ]which is correct? \end{description}
 
 
+\label{todo__todo000006}
+ \begin{description}
+\item[Member \doxyref{DRAMsimII::Channel::checkForAvailableCommandSlots}{p.}{class_d_r_a_msim_i_i_1_1_channel_311f351c816f6b817e1d9e8439f439fc}(const Transaction $\ast$trans) const  ]switch to iterator arithmetic \end{description}
+
+
 \label{todo__todo000004}
  \begin{description}
 \item[Member \doxyref{DRAMsimII::Channel::doPowerCalculation}{p.}{class_d_r_a_msim_i_i_1_1_channel_0d13f91b788925a91ade7801391568d5}(const tick systemTime) ]actually simulate CKE, per rank \end{description}
@@ -13,29 +18,24 @@
 \item[Member \doxyref{DRAMsimII::Channel::doPowerCalculation}{p.}{class_d_r_a_msim_i_i_1_1_channel_0d13f91b788925a91ade7801391568d5}(const tick systemTime) ]: account for CKE \end{description}
 
 
-\label{todo__todo000003}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Channel::enqueue}{p.}{class_d_r_a_msim_i_i_1_1_channel_da774dec2e706f86d1c3364cb6b8d3bb}(Transaction $\ast$in) ]probably should set the enqueue time = time here \end{description}
-
-
-\label{todo__todo000006}
+\label{todo__todo000007}
  \begin{description}
 \item[Member \doxyref{DRAMsimII::Channel::executeCommand}{p.}{class_d_r_a_msim_i_i_1_1_channel_c70faefd9c39af71cb67096c00527331}(Command $\ast$thisCommand) ]let each rank figure out if the command is to it or not by combining issueCAS and issueCASother \end{description}
 
 
 \label{todo__todo000002}
  \begin{description}
-\item[Member \doxyref{DRAMsimII::Channel::moveToTime}{p.}{class_d_r_a_msim_i_i_1_1_channel_a9fd8570d07b881c2958be9834ccf4c5}(const tick endTime) ]continue until no events are processed, no commands issued, no transactions decoded \end{description}
+\item[Member \doxyref{DRAMsimII::Channel::moveToTime}{p.}{class_d_r_a_msim_i_i_1_1_channel_86f558398b775ae647115f2de5394563}(const tick currentTime) ]continue until no events are processed, no commands issued, no transactions decoded \end{description}
+
+
+\label{todo__todo000002}
+ \begin{description}
+\item[Member \doxyref{DRAMsimII::Channel::moveToTime}{p.}{class_d_r_a_msim_i_i_1_1_channel_86f558398b775ae647115f2de5394563}(const tick currentTime) ]verify that this is right \end{description}
 
 
 \label{todo__todo000013}
  \begin{description}
 \item[Member \doxyref{DRAMsimII::System::nextTick}{p.}{class_d_r_a_msim_i_i_1_1_system_fabcd4ee36a5d14c40f0b080f25e3225}() const  ]should always be a next event due to perpetual stats collection, could throw an exception when there are no stats being collected \end{description}
-
-
-\label{todo__todo000009}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Rank::issueCASother}{p.}{class_d_r_a_msim_i_i_1_1_rank_666ea94c63822e59cc132968ae290751}(const tick currentTime, const Command $\ast$currentCommand) ]should this not be the nominal value? \end{description}
 
 
 \label{todo__todo000011}

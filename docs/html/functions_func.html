@@ -64,6 +64,8 @@
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_address.html#63f910c09d93bdd16d3744e47d13dc0e">DRAMsimII::Address</a>
 <li>addressTranslation()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_address.html#d4039f830c5947b91ceb40b8c54503bc">DRAMsimII::Address</a>
+<li>aggressiveInsert()
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#c482cea1bc37902a208c9f848df27355">DRAMsimII::Bank</a>
 </ul>
 <h3><a class="anchor" name="index_b">- b -</a></h3><ul>
 <li>back()
@@ -80,14 +82,16 @@
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#4f2d1c8ef8f9db004ef9c8d8933037b0">DRAMsimII::System</a>
 <li>clear()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_statistics.html#4faa80fa024777d57b6fa4b3559eec0a">DRAMsimII::Statistics</a>
-<li>closePageAggressiveInsert()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#dee89b0ac82a5bff46db01da66ce67b4">DRAMsimII::Bank</a>
 <li>closePageAggressiveInsertCheck()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#a168722615032aaa2924257d78dc66a9">DRAMsimII::Bank</a>
+<li>collapse()
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#c3aa018b8b63cbc809190eadee5990cd">DRAMsimII::Bank</a>
 <li>collectCommandStats()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_statistics.html#350c117a7661cf53c5be4afdc548265d">DRAMsimII::Statistics</a>
 <li>collectTransactionStats()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_statistics.html#e435d174dc17300c38b02497751688cb">DRAMsimII::Statistics</a>
+<li>Command()
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_command.html#b8f2039baa068748fa987ae897a9510f">DRAMsimII::Command</a>
 <li>createNextRefresh()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#ad689363a5c222dbcc9cc327d1a382cb">DRAMsimII::Channel</a>
 </ul>
@@ -142,9 +146,9 @@
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#7ccb7a779c25d6eac6c3d6b7bf0d7449">DRAMsimII::Channel</a>
 , <a class="el" href="class_d_r_a_msim_i_i_1_1fbd_channel.html#3d9bc56507f1d873092c6a96bae3db56">DRAMsimII::fbdChannel</a>
 <li>getNextIncomingTransaction()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_input_stream.html#553157e2ed5ef9d1b44d9c21dd6a4464">DRAMsimII::InputStream</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_input_stream.html#0dcd689dfcc42d4fddb6bc325300a384">DRAMsimII::InputStream</a>
 <li>getNextRandomRequest()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_input_stream.html#7f583b7e3cfe92f1332fb99925a13458">DRAMsimII::InputStream</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_input_stream.html#1d09b25ce313f34a0b1034582306ccef">DRAMsimII::InputStream</a>
 <li>getOriginalTransaction()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#e7a386db95dd3b642b05029d7002a401">DRAMsimII::Transaction</a>
 <li>getPendingTransactions()
@@ -180,28 +184,29 @@
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_queue.html#6b51d06f571c13b2e81a0c51623ba54d">DRAMsimII::Queue&lt; T &gt;</a>
 <li>isEmpty()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_queue.html#7a2a856af27f9979d2d20c7e3156eb05">DRAMsimII::Queue&lt; T &gt;</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#0f7a38eb1f4710f2ea7d6058a22126cf">DRAMsimII::System</a>
 <li>isFull()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#65ae17bc6c997287f6337531ed7ef59b">DRAMsimII::Channel</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#268b8fa934e711a2dc6427cad866bf97">DRAMsimII::System</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#65ae17bc6c997287f6337531ed7ef59b">DRAMsimII::Channel</a>
 , <a class="el" href="class_d_r_a_msim_i_i_1_1_queue.html#5dd28855c0ff9c2a5b332592948ec0ef">DRAMsimII::Queue&lt; T &gt;</a>
-, <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#268b8fa934e711a2dc6427cad866bf97">DRAMsimII::System</a>
 <li>issueCAS()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#1f759cc59082c2ca03271ca55f3ab1f6">DRAMsimII::Bank</a>
 <li>issueCASother()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#666ea94c63822e59cc132968ae290751">DRAMsimII::Rank</a>
 <li>issueCASW()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#c996e22365a6a5b5725a270477c50377">DRAMsimII::Rank</a>
-, <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#3db7fb5a6064cde0b141a2adc6547538">DRAMsimII::Bank</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#3db7fb5a6064cde0b141a2adc6547538">DRAMsimII::Bank</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#c996e22365a6a5b5725a270477c50377">DRAMsimII::Rank</a>
 <li>issueCASWother()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#89bd002a9f75ea2638acb9ced38a4249">DRAMsimII::Rank</a>
 <li>issuePRE()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#aed6f0f5d0a6ee1b65ab7543a60cdf92">DRAMsimII::Rank</a>
 , <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#6ec29dfb3c6fa9a12be7057ea7878125">DRAMsimII::Bank</a>
 <li>issueRAS()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#58c189cd77508d1fdf98335554823d97">DRAMsimII::Bank</a>
-, <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#cd302ac19a7481c9dd6cce3af185fada">DRAMsimII::Rank</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#cd302ac19a7481c9dd6cce3af185fada">DRAMsimII::Rank</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#58c189cd77508d1fdf98335554823d97">DRAMsimII::Bank</a>
 <li>issueREF()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#e95c270613412c1435c931e30b6860a9">DRAMsimII::Bank</a>
-, <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#60bd1d77cbcdb576c9069f8a85355bfd">DRAMsimII::Rank</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_rank.html#60bd1d77cbcdb576c9069f8a85355bfd">DRAMsimII::Rank</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#e95c270613412c1435c931e30b6860a9">DRAMsimII::Bank</a>
 </ul>
 <h3><a class="anchor" name="index_l">- l -</a></h3><ul>
 <li>loadSettingsFromFile()
@@ -214,9 +219,9 @@
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#e530764b1ea3144c32f1ee2f15ec9c89">DRAMsimII::Channel</a>
 , <a class="el" href="class_d_r_a_msim_i_i_1_1fbd_channel.html#e00da4585914ccdeea1cff8294e9ed69">DRAMsimII::fbdChannel</a>
 <li>moveToTime()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#a9fd8570d07b881c2958be9834ccf4c5">DRAMsimII::Channel</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#86f558398b775ae647115f2de5394563">DRAMsimII::Channel</a>
 , <a class="el" href="class_m5dram_system.html#e6c0544f5199f8479bdba75cf338aa2c">M5dramSystem</a>
-, <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#0affd0b9fef178b4d82ef8409fb8442f">DRAMsimII::System</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#b82db2005e93bd298b3737e7c6381db6">DRAMsimII::System</a>
 </ul>
 <h3><a class="anchor" name="index_n">- n -</a></h3><ul>
 <li>next()
@@ -233,26 +238,29 @@
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#d3e2f574c25d524c1bc76b7948b4f1ea">DRAMsimII::Channel</a>
 </ul>
 <h3><a class="anchor" name="index_o">- o -</a></h3><ul>
-<li>openPageInsert()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#7fe0dd8db172d5a92d52beddf407f16a">DRAMsimII::Bank</a>
-<li>openPageInsertCheck()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#f792d3622101cc439c96e0ada3e84432">DRAMsimII::Bank</a>
+<li>openPageAggressiveInsertCheck()
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#ee120e04392028aace4dfa79c408e3d4">DRAMsimII::Bank</a>
 <li>operator delete()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#4161098bb071135f21c2a7f95a6d5580">DRAMsimII::Transaction</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_command.html#d4a5dbe9c559e026cda58119042946b7">DRAMsimII::Command</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#4161098bb071135f21c2a7f95a6d5580">DRAMsimII::Transaction</a>
 <li>operator new()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#d2b57bb609cc842f92e4319c555d3bf1">DRAMsimII::Transaction</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_command.html#e25604cfa43deb71cd91770ca9a83503">DRAMsimII::Command</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#d2b57bb609cc842f92e4319c555d3bf1">DRAMsimII::Transaction</a>
 <li>operator!=()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#08a3515c210fcd34a4131a2f9c0263c0">DRAMsimII::Transaction</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_command.html#7680db3aeba3b242a5e45c6d1c7f3c49">DRAMsimII::Command</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#08a3515c210fcd34a4131a2f9c0263c0">DRAMsimII::Transaction</a>
 <li>operator=()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_queue.html#d108e491b4d2b5eed585f22cba0d66e5">DRAMsimII::Queue&lt; T &gt;</a>
-, <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#a920eb2489a9724e3d2093aa7765c330">DRAMsimII::Bank</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#a920eb2489a9724e3d2093aa7765c330">DRAMsimII::Bank</a>
 , <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#7e381469d0f4eb86f98877434078a397">DRAMsimII::Channel</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_queue.html#d108e491b4d2b5eed585f22cba0d66e5">DRAMsimII::Queue&lt; T &gt;</a>
 <li>operator==()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_statistics.html#dd4ecfbdd143d3cf6a8413d395a17e58">DRAMsimII::Statistics</a>
-, <a class="el" href="class_d_r_a_msim_i_i_1_1_queue.html#5a9c567e37a285618531b6f2a6fb6aa1">DRAMsimII::Queue&lt; T &gt;</a>
-, <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#857df39abce2ca631a353b01b618fc36">DRAMsimII::Channel</a>
-, <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#b4f7300d5c8d4ef667d7f060c1e148a2">DRAMsimII::Transaction</a>
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_transaction.html#b4f7300d5c8d4ef667d7f060c1e148a2">DRAMsimII::Transaction</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_command.html#7d846b35d3cfb89c4f6f24d1806b7977">DRAMsimII::Command</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#06f2eba0211e0cc8b681ddd2c3183803">DRAMsimII::System</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_statistics.html#dd4ecfbdd143d3cf6a8413d395a17e58">DRAMsimII::Statistics</a>
 , <a class="el" href="class_d_r_a_msim_i_i_1_1_bank.html#d8aad44df9b266d6a91daa622c5d61f1">DRAMsimII::Bank</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#857df39abce2ca631a353b01b618fc36">DRAMsimII::Channel</a>
+, <a class="el" href="class_d_r_a_msim_i_i_1_1_queue.html#5a9c567e37a285618531b6f2a6fb6aa1">DRAMsimII::Queue&lt; T &gt;</a>
 </ul>
 <h3><a class="anchor" name="index_p">- p -</a></h3><ul>
 <li>pendingTransactionCount()
@@ -337,15 +345,15 @@
 <h3><a class="anchor" name="index_~">- ~ -</a></h3><ul>
 <li>~Channel()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_channel.html#5f15ebd302464069f1a9e3f0ded14482">DRAMsimII::Channel</a>
+<li>~Command()
+: <a class="el" href="class_d_r_a_msim_i_i_1_1_command.html#b552bb3a07fdd1acbfd8ea76e69b2278">DRAMsimII::Command</a>
 <li>~M5dramSystem()
 : <a class="el" href="class_m5dram_system.html#4c99c0541618888f5920e6edc7999617">M5dramSystem</a>
 <li>~Queue()
 : <a class="el" href="class_d_r_a_msim_i_i_1_1_queue.html#3b3f6d860c9b966677b4e1a195e777bf">DRAMsimII::Queue&lt; T &gt;</a>
-<li>~System()
-: <a class="el" href="class_d_r_a_msim_i_i_1_1_system.html#3be70bb338e3f062f821173fd15680d0">DRAMsimII::System</a>
 </ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Jun 2 23:59:55 2009 for DRAMSimII by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 23:56:15 2009 for DRAMSimII by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>
