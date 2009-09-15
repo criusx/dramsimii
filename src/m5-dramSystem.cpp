@@ -109,7 +109,7 @@ void M5dramSystem::moveToTime(const tick now)
 		if (packet)
 		{
 			assert(packet->isRead() || packet->isWrite());
-
+#if 0
 			for (std::tr1::unordered_map<unsigned,Packet*>::const_iterator packetIt = transactionLookupTable.begin(); packetIt != transactionLookupTable.end(); packetIt++)
 			{
 				if (packet->getAddr() == packetIt->second->getAddr())
@@ -117,6 +117,7 @@ void M5dramSystem::moveToTime(const tick now)
 					cerr << "match at " << std::hex << packet->getAddr() << endl;
 				}
 			}
+#endif
 
 			bool needsResponse = 
 #ifdef PROCESS_BEFORE
