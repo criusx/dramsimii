@@ -100,7 +100,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 // globals
 bf::path executableDirectory;
 
-std::string thumbnailResolution = "640";
+std::string thumbnailResolution = "800";
 
 //std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
 //std::string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
@@ -348,8 +348,11 @@ public:
 	void clear()
 	{
 		average = 0.0;
-		for (boost::circular_buffer<float>::iterator i = data.begin(); i != data.end(); i++)
-			*i = 0;
+		boost::circular_buffer<float>::size_type size = data.size();
+		data.clear();
+		data.resize(size, 0.0F);
+		//for (boost::circular_buffer<float>::iterator i = data.begin(); i != data.end(); i++)
+		//	*i = 0;
 	}
 };
 
@@ -440,17 +443,18 @@ void thumbNailWorker()
 			//second.write(baseFilename + ".png");
 
 			string commandLine0 = string(CONVERT_COMMAND) + " " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
-			// @TODO make this conditional
+			string commandLine2 = "gzip -c -9 -f " + filename + " > " + filename + "z";
+
+			if (system(commandLine0.c_str()) != 0)
+				cerr << "Failed to create thumbnail for " << filename << endl;
+			if (system(commandLine2.c_str()) != 0)
+				cerr << "Failed to compress " << filename << endl;
+
 			if (generatePngFiles)
 			{
 				string commandLine1 = string(MOGRIFY_COMMAND) + " -resize 3840 -format png " + filename;
 				system(commandLine1.c_str());
 			}
-
-			string commandLine2 = "gzip -c -9 -f " + filename + " > " + filename + "z";
-
-			system(commandLine0.c_str());
-			system(commandLine2.c_str());
 
 			bf::remove(bf::path(filename));
 		}
@@ -828,7 +832,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		string templateFile(entireFile);
 		string find("@@@");
 		templateFile = templateFile.replace(templateFile.find(find),find.length(),commandLine);
-		delete entireFile;
+		delete[] entireFile;
 		string distroStrings;
 		for (unsigned i = 0; i < channelCount; i++)
 			distroStrings += "<h2>Address Distribution, Channel "+ lexical_cast<string>(i) + "</h2><a rel=\"lightbox\" href=\"addressDistribution" + lexical_cast<string>(i) + ".svgz\"><img class=\"fancyzoom\" src=\"addressDistribution"+ lexical_cast<string>(i) + "-thumb.png\" alt=\"\" /></a>";
@@ -842,8 +846,8 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		out << templateFile;
 		out.close();
 	}
-	else
-		cerr << "skipping creation of html file(" << printFile.string() << "), exists" << endl;
+	//else
+		//cerr << "skipping creation of html file(" << printFile.string() << "), exists" << endl;
 
 
 	bf::path htaccessOut = outputDir / ".htaccess";
@@ -852,8 +856,8 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		bf::path htaccessFile = executableDirectory / ".htaccess";
 		bf::copy_file(htaccessFile, htaccessOut);
 	}
-	else
-		cerr << "skipping creation of htaccess file(" << htaccessOut.string() << "), exists" << endl;
+// 	else
+// 		cerr << "skipping creation of htaccess file(" << htaccessOut.string() << "), exists" << endl;
 }
 
 
@@ -1411,6 +1415,8 @@ void processStats(const string &filename)
 			if (writing == 1)
 			{
 				char *position = strchr(newLine,' ');
+				if (position == NULL)
+					break;
 				*position++ = 0;
 				unsigned latency = atoi(newLine);
 				unsigned count = atoi(position);
@@ -1427,6 +1433,8 @@ void processStats(const string &filename)
 			else if (writing == 7)
 			{
 				char *position = strchr(newLine,' ');
+				if (position == NULL)
+					break;
 				*position++ = 0;
 
 				uint64_t readValue = atol(newLine);

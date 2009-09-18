@@ -29,7 +29,7 @@ using std::endl;
 using namespace DRAMsimII;
 
 int main(int argc,char **argv, char *envp[])
-{
+{	
 	const Settings settings(argc, argv);	
 
 #ifdef DEBUG

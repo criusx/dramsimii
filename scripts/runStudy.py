@@ -113,16 +113,16 @@ m5SEConfigFile = '/home/crius/m5/configs/example/dramsim.py'
 m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
 
 # the config file for the M5/FS executable
-m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
+m5FSScript = '/home/crius/dramsimii/m5/configs/example/dramsimfs.py'
 
 # the executable for M5/(FS|SE)
-m5Exe = 'm5.fast'
+m5Exe = 'm5.opt'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/asplos/full7'
+outputDir = '/home/crius/results/test'
 
 # the file that describes the base memory settings
-memorySettings = '/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
+memorySettings = '/home/crius/dramsimii/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
 
 # the command line to pass to the DRAMsimII simulator to modify parameters
 commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
@@ -141,7 +141,7 @@ m5SECommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt
 m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s outfiledir %s"'
 
 # command line to setup full system runs
-m5FSCommandLine = '%s %s -b %%s -F 10000000000 --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript)
+m5FSCommandLine = '%s %s -f %s -b %%s -F 10000000000 --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript, memorySettings)
 
 # options for the run
 channels = [2]
@@ -246,11 +246,11 @@ def main():
                                                     elif opt == '-f':
                                                         currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, b, c, d, e, g, k, l,  outputDir))
                                                         submitCommand = submitString % (currentCommandLine, outputDir, outputDir, i)
-                                                        print currentCommandLine
-                                                        #print submitCommand
+                                                        #print currentCommandLine
+                                                        print submitCommand
                                                         #sys.exit(0)
                                                         #os.system(currentCommandLine)
-                                                        os.system(submitCommand)
+                                                        #os.system(submitCommand)
 
                                                 #sys.exit(2)
 

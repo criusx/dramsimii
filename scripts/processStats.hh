@@ -237,7 +237,8 @@ set style fill solid 1.00 noborder\n\
 set xrange [0 : *]\n\
 plot '-' using 1:2 title 'IPC' with impulses,\
 '-' using 1:2 sm csp title 'Moving Average IPC' with lines\n";
-' using 1:2 sm csp title 'Cumulative Average IPC' with lines,\
+
+//'-' using 1:2 sm csp title 'Cumulative Average IPC' with lines,\
 
 std::string averageTransactionLatencyScript =
 "set yrange [1 : *] noreverse nowriteback\n\

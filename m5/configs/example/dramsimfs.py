@@ -30,13 +30,15 @@ import optparse, os, sys
 
 import m5
 
-os.environ['M5_PATH'] = '/home/crius/m5_system_2.0b3'
+#os.environ['M5_PATH'] = '/home/crius/m5_system_2.0b3'
 
 if not m5.build_env['FULL_SYSTEM']:
     m5.panic("This script requires full-system mode (*_FS).")
 
 from m5.objects import *
 m5.AddToPath('../common')
+#adjust this to whatever directory contains m5
+m5.AddToPath('/home/crius/m5/configs/common')
 from FSConfig import *
 from SysPaths import *
 from Benchmarks import *
