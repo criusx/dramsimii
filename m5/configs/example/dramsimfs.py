@@ -50,7 +50,7 @@ Benchmarks['shutdown'] = [SysConfig('shutdown.rcS', '256MB')]
 Benchmarks['lbm'] = [SysConfig('lbm.rcS', '1024MB')]
 Benchmarks['stream'] = [SysConfig('stream.rcS', '512MB')]
 Benchmarks['streamLong'] = [SysConfig('streamLong.rcS', '768MB')]
-Benchmarks['mcf'] = [SysConfig('mcf.rcS', '2000MB')]
+Benchmarks['mcf'] = [SysConfig('mcf.rcS', '1500MB')]
 Benchmarks['soplex'] = [SysConfig('soplex.rcS', '768MB')]
 Benchmarks['bzip2'] = [SysConfig('bzip2.rcS', '512MB')]
 Benchmarks['milc'] = [SysConfig('milc.rcS', '512MB')]
@@ -86,7 +86,13 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
     self.membus = MemBus(bus_id=1, clock='2600MHz')
     self.bridge = Bridge(delay='1ns', nack_delay='1ns')
     # use the memory size established by the benchmark definition in Benchmarks.py
-    outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0]
+    jobnumber = '0'
+    if 'PBS_JOBID' in os.environ:
+        jobnumber = os.environ['PBS_JOBID'].split('.')[0]
+    else:
+        jobnumber = ''
+    outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0] + jobnumber
+
     if revert is not None:
         print "reverting to use PhysicalMemory"
         self.physmem = PhysicalMemory(range = AddrRange(mdesc.mem()))
@@ -145,7 +151,7 @@ parser.add_option("-b", "--benchmark", action="store", type="string",
 parser.add_option("--addmem", default=None, type="string", help="larger than normal memory size")
 
 parser.add_option("-f", "--DRAMsimConfig",
-		  default="/home/crius/m5/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml",
+		  default="",
 		  help="The DRAMsimII config file.")
 
 parser.add_option("--mp",

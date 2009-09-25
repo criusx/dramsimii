@@ -119,7 +119,6 @@ nextStats(settings.epoch)
 
 	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
 
-
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)
 	{
@@ -540,6 +539,91 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 	
 	os << "BLR[" << setprecision(0) << floor(100*(thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] "
 		<< "RP[" << (int)(100*thisSystem.systemConfig.getReadPercentage()) << "] "<< thisSystem.systemConfig;
+
+	return os;
+}
+
+ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::SystemConfigurationType ct)
+{
+	switch (ct)
+	{
+	case BASELINE_CONFIG:
+		os << "baseline";
+		break;
+	case FBD_CONFIG:
+		os << "fbd";
+		break;
+	default:
+		os << "unknown";
+		break;
+	}
+
+	return os;
+}
+ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::RefreshPolicy rp)
+{
+	switch (rp)
+	{
+	case NO_REFRESH:
+		os << "none";
+		break;
+	case BANK_CONCURRENT:
+		os << "bankConcurrent";
+		break;
+	case BANK_STAGGERED_HIDDEN:
+		os << "bankStaggeredHidden";
+		break;
+	case ONE_CHANNEL_ALL_RANK_ALL_BANK:
+		os << "refreshOneChanAllRankAllBank";
+		break;
+	default:
+		os << "unknown";
+		break;
+	}
+
+	return os;
+}
+
+ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::TransactionOrderingAlgorithm toa)
+{
+	switch (toa)
+	{
+	case RIFF:
+		os << "RIFF";
+		break;
+	case STRICT:
+		os << "strict";
+		break;
+	default:
+		os << "unknown";
+		break;
+	}
+	return os;
+}
+
+ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::OutputFileType ot)
+{
+	switch (ot)
+	{
+	case COUT:
+		os << "cout";
+		break;
+	case GZ:
+		os << "gz";
+		break;
+	case BZ:
+		os << "bz2";
+		break;
+	case UNCOMPRESSED:
+		os << "uncompressed";
+		break;
+	case NONE:
+		os << "none";
+		break;
+	default:
+		os << "unknown";
+		break;
+	}
 
 	return os;
 }

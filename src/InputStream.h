@@ -194,6 +194,7 @@ namespace DRAMsimII
 	};
 
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream::InputType);
 
 }
 #endif

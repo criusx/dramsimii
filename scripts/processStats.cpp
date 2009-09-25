@@ -1,7 +1,7 @@
 #include "pstream.h"
 #include <boost/circular_buffer.hpp>
 #include <cstdio>
-//#include <ImageMagick/Magick++.h>
+#include <ImageMagick/Magick++.h>
 #include <string>
 #include <list>
 #include <errno.h>
@@ -408,11 +408,10 @@ mutex fileListMutex;
 
 void thumbNailWorker()
 {
-	//using namespace Magick;
+	using namespace Magick;
 
 	string filename;
 	string baseFilename;
-	//Image first;
 	//Image second;
 
 
@@ -430,25 +429,29 @@ void thumbNailWorker()
 				baseFilename = fileList.front().substr(0,fileList.front().find(extension) - 1);
 				fileList.pop_front();
 			}
-			//string commandLine0 = "convert " + filename + "[" + thumbnailResolution + "] -limit memory 1gb " + baseFilename + "-thumb.png";
+			string commandLine0 = "convert " + filename + "[" + thumbnailResolution + "] -limit memory 1gb " + baseFilename + "-thumb.png";
 			//string commandLine1 = "mogrify -resize 3840 -format png -limit memory 1gb " + filename;
 
-			//first.read(filename);
 			//second = first;
-			
-			//first.sample(thumbnailResolution);
+
 			//second.sample("3840");
 
-			//first.write(baseFilename + "-thumb.png");
 			//second.write(baseFilename + ".png");
 
-			string commandLine0 = string(CONVERT_COMMAND) + " " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
+			//string commandLine0 = string(CONVERT_COMMAND) + " " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
 			string commandLine2 = "gzip -c -9 -f " + filename + " > " + filename + "z";
 
 			if (system(commandLine0.c_str()) != 0)
 				cerr << "Failed to create thumbnail for " << filename << endl;
 			if (system(commandLine2.c_str()) != 0)
 				cerr << "Failed to compress " << filename << endl;
+
+			//Image first(filename.c_str());
+			// 			Image first(baseFilename + "-thumb.png");
+			// 			first.magick("png");
+			// 			first.zoom(thumbnailResolution);
+			// 			first.write(baseFilename + "-thumb2.png");
+
 
 			if (generatePngFiles)
 			{
@@ -847,7 +850,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		out.close();
 	}
 	//else
-		//cerr << "skipping creation of html file(" << printFile.string() << "), exists" << endl;
+	//cerr << "skipping creation of html file(" << printFile.string() << "), exists" << endl;
 
 
 	bf::path htaccessOut = outputDir / ".htaccess";
@@ -856,8 +859,8 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		bf::path htaccessFile = executableDirectory / ".htaccess";
 		bf::copy_file(htaccessFile, htaccessOut);
 	}
-// 	else
-// 		cerr << "skipping creation of htaccess file(" << htaccessOut.string() << "), exists" << endl;
+	// 	else
+	// 		cerr << "skipping creation of htaccess file(" << htaccessOut.string() << "), exists" << endl;
 }
 
 
@@ -1967,7 +1970,7 @@ void processStats(const string &filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p2 << "set title \"" << "Reuse Rate of Open Rows vs. Time\\n" << commandLine << "\"" << endl << rowHitMissGraph << endl;
-	
+
 	time = 0.0F;
 	for (vector<float>::const_iterator i = hitMissValues.begin(); i != hitMissValues.end(); i++)
 	{
@@ -1992,7 +1995,7 @@ void processStats(const string &filename)
 		p2 << time << " " << max(*i, 1U) << endl;
 		time += epochTime;
 	}
-		
+
 	p2 << "e" << endl << "unset output" << endl;
 
 	// make the working set
@@ -2123,27 +2126,27 @@ int main(int argc, char** argv)
 		cerr << uo.what() << endl;
 		exit(-1);
 	}
-	
+
 	opt::notify(vm);
 
-// 	for (opt::variables_map::iterator i = vm.begin(); i != vm.end(); i++)
-// 		cerr << i->first << endl;
-// 	
+	// 	for (opt::variables_map::iterator i = vm.begin(); i != vm.end(); i++)
+	// 		cerr << i->first << endl;
+	// 	
 	if (vm.count("help"))
 	{
 		cout << "Usage: " << argv[0] << "(--help | -f | -p)" << endl;
 	}
 
-// 	if (vm.count("png") > 0)
-// 		cerr << "PNG" << endl;
+	// 	if (vm.count("png") > 0)
+	// 		cerr << "PNG" << endl;
 
 	bool generateResultsOnly = vm.count("create") > 0;
 
 	generatePngFiles = vm.count("png") > 0;
 
-// 	cerr << generateResultsOnly << " " << generatePngFiles << endl;
-// 
-// 	exit(0);
+	// 	cerr << generateResultsOnly << " " << generatePngFiles << endl;
+	// 
+	// 	exit(0);
 
 	list<string> toBeProcessed;
 
@@ -2185,7 +2188,7 @@ int main(int argc, char** argv)
 					split(splitLine, modUrlString, is_any_of(" "), token_compress_on);
 
 					string outline;
-					
+
 					for (vector<string>::const_iterator x = splitLine.begin(); x != splitLine.end(); x++)
 					{
 						string::size_type start = x->find("[");

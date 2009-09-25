@@ -26,6 +26,7 @@
 #include <libxml/tree.h>
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
+#include <libxml/encoding.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -103,6 +104,146 @@ cachelinesPerRow(0),
 tInternalBurst(0)
 {
 	loadSettingsFromFile(argc, argv);
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief load a default settings file, update it with current settings and then modified settings
+//////////////////////////////////////////////////////////////////////////
+bool Settings::loadSettings(vector<string> &settingsList)
+{
+	// first update the current settings with the settings list passed in
+	if (settingsList.size() > 0)
+	{
+		if (settingsList.size() % 2 != 0)
+		{
+			cerr << "Invalid memory override format, should be {<parameter name> <value>}+" << endl;
+			cerr << settingsList.size() << endl;
+			exit(-14);
+		}
+
+		for (vector<string>::size_type i = 0; i < settingsList.size(); i += 2)
+		{
+			if (!setKeyValue(settingsList[i], settingsList[i+1]) )
+				cerr << "warn: Unrecognized key/value pair (" << settingsList[i] << "," << settingsList[i+1] << ")" << endl;
+			else
+				cerr << "note: setting " << settingsList[i] << "=" << settingsList[i+1] << endl;
+		}
+	}
+
+	// then generate a valid xml document of the existing settings and store these as a string
+	xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
+	xmlNodePtr rootNode = xmlNewNode(NULL, BAD_CAST "dramspec");
+	xmlDocSetRootElement(doc,rootNode);
+	xmlNewProp(rootNode, BAD_CAST "type", BAD_CAST "ddr2");
+	xmlNodePtr node = NULL;
+
+	//xmlDtdPtr dtd = 
+		xmlCreateIntSubset(doc, BAD_CAST "dramspec", NULL, BAD_CAST "dramspec.dtd");
+
+	// create the setup parameter section
+	node = xmlNewChild(rootNode, NULL, BAD_CAST "setup", NULL);
+	xmlNewChild(node, NULL, BAD_CAST "datarate", (const xmlChar *)lexical_cast<string>(dataRate).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "clockGranularity", (const xmlChar *)lexical_cast<string>(clockGranularity).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "channels", (const xmlChar *)lexical_cast<string>(channelCount).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "ranks", (const xmlChar *)lexical_cast<string>(rankCount).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "banks", (const xmlChar *)lexical_cast<string>(bankCount).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "rows", (const xmlChar *)lexical_cast<string>(rowCount).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "columns", (const xmlChar *)lexical_cast<string>(columnCount).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "channelWidth", (const xmlChar *)lexical_cast<string>(channelWidth).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "physicalAddressMappingPolicy", (const xmlChar *)lexical_cast<string>(addressMappingScheme).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "rowBufferPolicy", (const xmlChar *)lexical_cast<string>(rowBufferManagementPolicy).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "rowSize", (const xmlChar *)lexical_cast<string>(rowSize).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "columnSize", (const xmlChar *)lexical_cast<string>(columnSize).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "postedCAS", (const xmlChar *)(postedCAS ? "true" : "false"));
+	xmlNewChild(node, NULL, BAD_CAST "autoRefreshPolicy", (const xmlChar *)lexical_cast<string>(refreshPolicy).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "commandOrderingAlgorithm", (const xmlChar *)lexical_cast<string>(commandOrderingAlgorithm).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "transactionOrderingAlgorithm", (const xmlChar *)lexical_cast<string>(transactionOrderingAlgorithm).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "perBankQueueDepth", (const xmlChar *)lexical_cast<string>(perBankQueueDepth).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "systemConfigurationType", (const xmlChar *)lexical_cast<string>(systemType).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "cacheLineSize", (const xmlChar *)lexical_cast<string>(cacheLineSize).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "historyQueueDepth", (const xmlChar *)lexical_cast<string>(historyQueueDepth).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "completionQueueDepth", (const xmlChar *)lexical_cast<string>(completionQueueDepth).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "transactionQueueDepth", (const xmlChar *)lexical_cast<string>(transactionQueueDepth).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "decodeWindow", (const xmlChar *)lexical_cast<string>(decodeWindow).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "eventQueueDepth", (const xmlChar *)lexical_cast<string>(eventQueueDepth).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "refreshQueueDepth", (const xmlChar *)lexical_cast<string>(refreshQueueDepth).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "readWriteGrouping", (const xmlChar *)(readWriteGrouping ? "true" : "false"));
+	xmlNewChild(node, NULL, BAD_CAST "autoPrecharge", (const xmlChar *)(autoPrecharge ? "true" : "false"));
+
+
+	// create the timing parameter section
+	node = xmlNewChild(rootNode, NULL, BAD_CAST "timing", NULL);
+	xmlNewChild(node, NULL, BAD_CAST "tBufferDelay", (const xmlChar *)lexical_cast<string>(tBufferDelay).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tBurst", (const xmlChar *)lexical_cast<string>(tBurst).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tCAS", (const xmlChar *)lexical_cast<string>(tCAS).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tCMD", (const xmlChar *)lexical_cast<string>(tCMD).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tCWD", (const xmlChar *)lexical_cast<string>(tCWD).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tFAW", (const xmlChar *)lexical_cast<string>(tFAW).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tRAS", (const xmlChar *)lexical_cast<string>(tRAS).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tRC", (const xmlChar *)lexical_cast<string>(tRC).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tRCD", (const xmlChar *)lexical_cast<string>(tRCD).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tRFC", (const xmlChar *)lexical_cast<string>(tRFC).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tRRD", (const xmlChar *)lexical_cast<string>(tRRD).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tRP", (const xmlChar *)lexical_cast<string>(tRP).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tRTP", (const xmlChar *)lexical_cast<string>(tRTP).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tRTRS", (const xmlChar *)lexical_cast<string>(tRTRS).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tWR", (const xmlChar *)lexical_cast<string>(tWR).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tWTR", (const xmlChar *)lexical_cast<string>(tWTR).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tAL", (const xmlChar *)lexical_cast<string>(tAL).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "refreshTime", (const xmlChar *)lexical_cast<string>(refreshTime).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "tREFI", (const xmlChar *)lexical_cast<string>(tREFI).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "seniorityAgeLimit", (const xmlChar *)lexical_cast<string>(seniorityAgeLimit).c_str());
+
+
+	// create the power parameter section
+	node = xmlNewChild(rootNode, NULL, BAD_CAST "power", NULL);
+	xmlNewChild(node, NULL, BAD_CAST "PdqRD", (const xmlChar *)lexical_cast<string>(PdqRD).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "PdqWR", (const xmlChar *)lexical_cast<string>(PdqWR).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "PdqRDoth", (const xmlChar *)lexical_cast<string>(PdqRDoth).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "PdqWRoth", (const xmlChar *)lexical_cast<string>(PdqWRoth).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "DQperDRAM", (const xmlChar *)lexical_cast<string>(DQperDRAM).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "DQSperDRAM", (const xmlChar *)lexical_cast<string>(DQSperDRAM).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "DMperDRAM", (const xmlChar *)lexical_cast<string>(DMperDRAM).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "frequencySpec", (const xmlChar *)lexical_cast<string>(frequencySpec).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "maxVCC", (const xmlChar *)lexical_cast<string>(maxVCC).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "systemVDD", (const xmlChar *)lexical_cast<string>(VDD).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "IDD0", (const xmlChar *)lexical_cast<string>(IDD0).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "IDD2P", (const xmlChar *)lexical_cast<string>(IDD2P).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "IDD2N", (const xmlChar *)lexical_cast<string>(IDD2N).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "IDD3P", (const xmlChar *)lexical_cast<string>(IDD3P).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "IDD3N", (const xmlChar *)lexical_cast<string>(IDD3N).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "IDD4R", (const xmlChar *)lexical_cast<string>(IDD4R).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "IDD4W", (const xmlChar *)lexical_cast<string>(IDD4W).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "IDD5A", (const xmlChar *)lexical_cast<string>(IDD5).c_str());
+
+
+	// create the simulation parameter section
+	node = xmlNewChild(rootNode, NULL, BAD_CAST "simulationParameters", NULL);
+	xmlNewChild(node, NULL, BAD_CAST "shortBurstRatio", (const xmlChar *)lexical_cast<string>(shortBurstRatio).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "readPercentage", (const xmlChar *)lexical_cast<string>(readPercentage).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "averageInterarrivalCycleCount", (const xmlChar *)lexical_cast<string>(averageInterarrivalCycleCount).c_str());
+	xmlNodePtr node2 = xmlNewChild(node, NULL, BAD_CAST "outFile", (const xmlChar *)lexical_cast<string>(outFile).c_str());
+	xmlNewProp(node2, BAD_CAST "type", (const xmlChar *)lexical_cast<string>(outFileType).c_str());
+	xmlNewProp(node2, BAD_CAST "dbReporting", BAD_CAST "false");
+	xmlNewChild(node, NULL, BAD_CAST "outFileDirectory", (const xmlChar *)lexical_cast<string>(outFileDir).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "requestCount", (const xmlChar *)lexical_cast<string>(requestCount).c_str());
+	node2 = xmlNewChild(node, NULL, BAD_CAST "inputFile", (const xmlChar *)lexical_cast<string>(inFile).c_str());
+	xmlNewProp(node2, BAD_CAST "type", (const xmlChar *)lexical_cast<string>(inFileType).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "cpuToMemoryClockRatio", (const xmlChar *)lexical_cast<string>(cpuToMemoryClockRatio).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "epoch", (const xmlChar *)lexical_cast<string>(epoch).c_str());
+
+
+	int len;
+	xmlChar *buffer;
+	xmlDocDumpFormatMemoryEnc(doc, &buffer, &len, "UTF-8", 1);
+	settingsOutputFile = (const char *)buffer;
+	xmlFree(buffer);
+
+	xmlFreeDoc(doc);
+
+	xmlCleanupParser();
+
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -15,6 +15,7 @@
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 #include <sstream>
 #include <stdlib.h>
 #include <cmath>
@@ -36,6 +37,9 @@ using std::pair;
 using std::queue;
 using namespace DRAMsimII;
 using boost::lexical_cast;
+using boost::is_any_of;
+using boost::token_compress_on;
+using boost::split;
 
 //#define TESTNEW
 
@@ -211,6 +215,7 @@ outstandingPackets(0)
 	settings.setKeyValue("rowBufferPolicy",p->rowBufferPolicy);
 	settings.setKeyValue("rowSize",p->rowSize);
 	settings.setKeyValue("columnSize",p->columnSize);
+	settings.setKeyValue("channelWidth", lexical_cast<string>(p->channelWidth));
 	settings.setKeyValue("postedCAS",p->postedCas);
 	settings.setKeyValue("autoRefreshPolicy",p->autoRefreshPolicy);
 	settings.setKeyValue("commandOrderingAlgorithm",p->commandOrderingAlgorithm);
@@ -226,6 +231,7 @@ outstandingPackets(0)
 	settings.setKeyValue("refreshQueueDepth",p->refreshQueueDepth);
 	settings.setKeyValue("readWriteGrouping",p->readWriteGrouping);
 	settings.setKeyValue("autoPrecharge",p->autoPrecharge);
+	// timing parameters
 	settings.setKeyValue("tBufferDelay",lexical_cast<string>(p->tBufferDelay));
 	settings.setKeyValue("tBurst",lexical_cast<string>(p->tBurst));
 	settings.setKeyValue("tCAS",lexical_cast<string>(p->tCAS));
@@ -246,10 +252,45 @@ outstandingPackets(0)
 	settings.setKeyValue("refreshTime",lexical_cast<string>(p->refreshTime));
 	settings.setKeyValue("tREFI",lexical_cast<string>(p->tREFI));
 	settings.setKeyValue("seniorityAgeLimit",lexical_cast<string>(p->seniorityAgeLimit));
+	// power settings
+	settings.setKeyValue("PdqRD",lexical_cast<string>(p->PdqRD));
+	settings.setKeyValue("PdqWR",lexical_cast<string>(p->PdqWR));
+	settings.setKeyValue("PdqRDoth",lexical_cast<string>(p->PdqRDoth));
+	settings.setKeyValue("PdqWRoth",lexical_cast<string>(p->PdqWRoth));
+	settings.setKeyValue("DQperDRAM",lexical_cast<string>(p->DQperDRAM));
+	settings.setKeyValue("DQSperDRAM",lexical_cast<string>(p->DQSperDRAM));
+	settings.setKeyValue("DMperDRAM",lexical_cast<string>(p->DMperDRAM));
+	settings.setKeyValue("frequencySpec",lexical_cast<string>(p->frequencySpec));
+	settings.setKeyValue("maxVCC",lexical_cast<string>(p->maxVCC));
+	settings.setKeyValue("systemVDD",lexical_cast<string>(p->systemVDD));
+	settings.setKeyValue("IDD0",lexical_cast<string>(p->IDD0));
+	settings.setKeyValue("IDD2P",lexical_cast<string>(p->IDD2P));
+	settings.setKeyValue("IDD2N",lexical_cast<string>(p->IDD2N));
+	settings.setKeyValue("IDD3N",lexical_cast<string>(p->IDD3N));
+	settings.setKeyValue("IDD3P",lexical_cast<string>(p->IDD3P));
+	settings.setKeyValue("IDD4R",lexical_cast<string>(p->IDD4R));
+	settings.setKeyValue("IDD4W",lexical_cast<string>(p->IDD4W));
+	settings.setKeyValue("IDD5A",lexical_cast<string>(p->IDD5A));
 
-	const char *settingsMap[] = {"m5", "--config-file", p->settingsFile.c_str(), "--modifiers",p->extraParameters.c_str()};
+	settings.setKeyValue("requestCount", lexical_cast<string>(p->requestCount));
+	settings.setKeyValue("epoch",lexical_cast<string>(p->epoch));
+	settings.setKeyValue("outFileType", p->outFileType);
 
-	settings.loadSettingsFromFile(5, const_cast<char **>(settingsMap));
+	if (p->settingsFile.length() > 0)
+	{
+		const char *settingsMap[] = {"m5", "--config-file", p->settingsFile.c_str(), "--modifiers",p->extraParameters.c_str()};
+
+		settings.loadSettingsFromFile(5, const_cast<char **>(settingsMap));
+	}
+	else if (p->extraParameters.length() > 0)
+	{
+		string params = p->extraParameters;
+		boost::algorithm::trim(params);
+		std::vector<string> paramList;
+		split(paramList, params, is_any_of(" "), token_compress_on);
+		
+		settings.loadSettings(paramList);
+	}
 
 	settings.inFile = "";
 	if (p->outFilename.length() > 0)

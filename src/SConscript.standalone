@@ -4,6 +4,8 @@ Import('env')
 
 conf = Configure(env)
 
+platform = ARGUMENTS.get("build",Platform())
+
 if not conf.CheckLib('boost_serialization'):
 	print 'Boost serialization library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-serialization*"'
@@ -43,10 +45,10 @@ if not conf.CheckLib('xml2'):
 	print "Need libxml2 to compile this."
 	print "e.g. sudo apt-get install \".*libxml2.*\""
 	Exit(1)
-#if not conf.CheckLib('gomp'):
-#	print 'need a compiler that supports OpenMP.'
-#	print 'such as gcc 4.2+, icc 11+, Visual Studio 2005+, etc.'
-#	Exit(1)
+if platform.startswith('script') and not conf.CheckLib('gomp'):
+	print 'need a compiler that supports OpenMP.'
+	print 'such as gcc 4.2+, icc 11+, Visual Studio 2005+, etc.'
+	Exit(1)
 if not conf.CheckLib('boost_regex'):
 	print 'Boost regex library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-regex*"'
@@ -81,7 +83,6 @@ sourceBase = """
 sourceFile = Split(sourceBase + "\nmain.cpp")
 sourcesTest = Split(sourceBase + "\nunitTest.cpp")
 
-platform = ARGUMENTS.get("build",Platform())
 
 if platform == 'script' or platform == 'scriptDebug':
 	if not conf.CheckLib('Magick++'):

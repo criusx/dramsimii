@@ -44,8 +44,6 @@ using boost::iostreams::gzip_params;
 #include <iostream>
 #include <iomanip>
 
-
-
 using std::ostream;
 using namespace DRAMsimII;
 using boost::iostreams::null_sink;
@@ -132,8 +130,8 @@ outType(settings.outFileType)
 			break;
 		}
 
-		bf::path outDir(settings.outFileDir.c_str());
-
+		bf::path outDir = settings.outFileDir.length() > 0 ? bf::path(settings.outFileDir.c_str()) : bf::current_path();
+		
 		if (!bf::exists(outDir))
 		{
 			if (!bf::create_directory(outDir))
@@ -191,9 +189,6 @@ outType(settings.outFileType)
 				settingsOutStream.push(file_sink(settingsFilename.str().c_str()));
 
 				settingsOutStream << settings.settingsOutputFile;
-				settingsOutStream.flush();
-				//settingsOutStream.write(settings.settingsOutputFile.c_str(),settings.settingsOutputFile.length());
-				//settingsOutStream.close();
 			}
 		}
 	}

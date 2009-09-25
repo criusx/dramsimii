@@ -19,10 +19,7 @@
 
 #include "InputStream.h"
 #include "Address.h"
-//#include "Channel.h"
 #include "enumTypes.h"
-
-//#include "globals.h"
 
 #include <string>
 #include <iostream>
@@ -493,6 +490,7 @@ namespace DRAMsimII
 		}
 
 		bool loadSettingsFromFile(int, char **);
+		bool loadSettings(std::vector<std::string> &);
 
 		// create a dramSettings from command line arguments
 		explicit Settings(int, char **);

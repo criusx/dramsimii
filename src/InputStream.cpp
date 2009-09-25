@@ -744,3 +744,36 @@ ostream& DRAMsimII::operator<<(ostream& os, const InputStream& is)
 
 	return os;
 }
+
+ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::InputStream::InputType it)
+{
+	switch (it)
+	{
+	case InputStream::K6_TRACE:
+		os << "k6";
+		break;
+	case InputStream::MASE_TRACE:
+		os << "mase";
+		break;
+	case InputStream::RANDOM:
+		os << "random";
+		break;
+	case InputStream::MAPPED:
+		os << "mapped";
+		break;
+	case InputStream::ALPHASIM:
+		os << "alphasim";
+		break;
+	case InputStream::GEMS:
+		os << "gems";
+		break;
+	case InputStream::DRAMSIM:
+		os << "ds2";
+		break;
+	default:
+		os << "unknown";
+		break;
+	}
+
+	return os;
+}
