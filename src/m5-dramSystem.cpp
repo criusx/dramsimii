@@ -151,7 +151,7 @@ void M5dramSystem::moveToTime(const tick now)
 					char *timeString = asctime(timeinfo);
 					char *pos = strchr(timeString,'\n');
 					*(pos-1) = NULL;
-					cerr << std::dec << returnCount << " " << asctime(timeinfo) << "\r";
+					cerr << std::dec << returnCount / 10000 << " " << asctime(timeinfo) << "\r";
 				}
 #endif
 			}

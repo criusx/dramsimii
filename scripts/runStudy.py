@@ -116,7 +116,7 @@ m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
 m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 
 # the executable for M5/(FS|SE)
-m5Exe = 'm5.fast'
+m5Exe = 'm5.opt'
 
 # the directory where the simulation outputs should be written
 outputDir = '/home/crius/results/asplos/full8'
@@ -141,7 +141,7 @@ m5SECommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt
 m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s outfiledir %s"'
 
 # command line to setup full system runs
-m5FSCommandLine = '%s %s -f %s -b %%s -F 10000000000 --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript, memorySettings)
+m5FSCommandLine = '%s %s -b %%s -F 10000000000 --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript)
 
 # options for the run
 channels = [2]
@@ -167,7 +167,7 @@ readWriteGrouping = ['true']
 requests = [5000000]
 
 #benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
-benchmarks = ['GemsFDTD', 'bzip2']
+benchmarks = ['bzip2', 'GemsFDTD']
 
 def main():
     try:
@@ -249,8 +249,8 @@ def main():
                                                         print currentCommandLine
                                                         #print submitCommand
                                                         #sys.exit(0)
-                                                        #os.system(currentCommandLine)
-                                                        os.system(submitCommand)
+                                                        os.system(currentCommandLine)
+                                                        #os.system(submitCommand)
 
                                                 #sys.exit(2)
 

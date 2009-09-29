@@ -29,16 +29,19 @@
 import optparse, os, sys
 
 import m5
+from m5.defines import buildEnv
+from m5.util import addToPath, fatal
+
 
 #os.environ['M5_PATH'] = '/home/crius/m5_system_2.0b3'
 
-if not m5.build_env['FULL_SYSTEM']:
+if not buildEnv['FULL_SYSTEM']:
     m5.panic("This script requires full-system mode (*_FS).")
 
 from m5.objects import *
-m5.AddToPath('../common')
+m5.util.addToPath('../common')
 #adjust this to whatever directory contains m5
-m5.AddToPath('/home/crius/m5/configs/common')
+m5.util.addToPath('/home/crius/m5/configs/common')
 from FSConfig import *
 from SysPaths import *
 from Benchmarks import *
@@ -217,13 +220,13 @@ if options.addmem:
     bm[0].memsize = options.addmem
 
 
-if m5.build_env['TARGET_ISA'] == "alpha":
+if buildEnv['TARGET_ISA'] == "alpha":
     test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig, options.revert)
-elif m5.build_env['TARGET_ISA'] == "mips":
+elif buildEnv['TARGET_ISA'] == "mips":
     test_sys = makeLinuxMipsSystem(test_mem_mode, bm[0])
-elif m5.build_env['TARGET_ISA'] == "sparc":
+elif buildEnv['TARGET_ISA'] == "sparc":
     test_sys = makeSparcSystem(test_mem_mode, bm[0])
-elif m5.build_env['TARGET_ISA'] == "x86":
+elif buildEnv['TARGET_ISA'] == "x86":
     test_sys = makeLinuxX86System(test_mem_mode, bm[0])
 else:
     m5.panic("incapable of building non-alpha or non-sparc full system!")
@@ -242,7 +245,7 @@ if options.l2cache:
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='stride', prefetch_degree=2, prefetcher_size=64, prefetch_cache_check_push=True)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16)
-        test_sys.l2 = L2Cache(size = '512kB', assoc=16, latency="7ns", prefetch_policy='ghb', prefetch_degree=2)
+        test_sys.l2 = L2Cache(size = '512kB', assoc=16, latency="6ns")
 
 
     #test_sys.l2 = L2Cache(size = '2MB')
@@ -261,8 +264,8 @@ if options.caches:
 
 for i in xrange(np):
     if options.caches:
-        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB', tgts_per_mshr=16),
-                                                L1Cache(size = '64kB', tgts_per_mshr=16))
+        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB'),
+                                                L1Cache(size = '64kB'))
         #test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB', latency="500ps"),
         #                                        L1Cache(size = '64kB', latency="500ps"))
     if options.l2cache:
@@ -273,7 +276,7 @@ for i in xrange(np):
     if options.fastmem:
         test_sys.cpu[i].physmem_port = test_sys.physmem.port
 
-if m5.build_env['TARGET_ISA'] == 'mips':
+if buildEnv['TARGET_ISA'] == 'mips':
     setMipsOptions(TestCPUClass)
 
 if len(bm) == 2:

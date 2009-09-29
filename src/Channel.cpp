@@ -2239,7 +2239,12 @@ void Channel::executeCommand(Command *thisCommand)
 	case Command::ACTIVATE:
 		{
 			assert(!currentBank.isActivated());
-			currentRank.issueRAS(time, thisCommand);
+
+			// see if this was held due to tFAW (or at least tied with other restrictions)
+			if (time - currentRank.lastActivateTimes.back() == timingSpecification.tFAW())
+				statistics.reportTFawCommand();
+			
+			currentRank.issueRAS(time, thisCommand);			
 
 			// specific for RAS command
 			thisCommand->setCompletionTime(thisCommand->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRAS());

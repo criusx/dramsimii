@@ -58,6 +58,7 @@ writeBytesTransferred(0),
 timePerEpoch((float)settings.epoch / settings.dataRate),
 rowHits(0),
 rowMisses(0),
+issuedAtTFAW(0),
 commandDelay(),
 commandExecution(),
 commandTurnaround(),
@@ -92,6 +93,7 @@ writeBytesTransferred(0),
 timePerEpoch(0),
 rowHits(0),
 rowMisses(0),
+issuedAtTFAW(0),
 commandDelay(),
 commandExecution(),
 commandTurnaround(),
@@ -248,6 +250,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			}
 		}
 	}
+
+	os << "----tFAW Limited Commands----" << endl << statsLog.issuedAtTFAW << endl;
 #ifdef M5
 
 	using Stats::Info;
@@ -315,7 +319,7 @@ void Statistics::clear()
 	transactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
-	rowHits = rowMisses = readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
+	issuedAtTFAW = rowHits = rowMisses = readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
 	for (vector<unsigned>::size_type i = 0; i < aggregateBankUtilization.size(); i++)
 		aggregateBankUtilization[i] = 0;
 	for (vector<unsigned>::size_type i = 0; i < bankLatencyUtilization.size(); i++)
@@ -339,6 +343,6 @@ bool Statistics::operator==(const Statistics& rhs) const
 		transactionDecodeDelay == rhs.transactionDecodeDelay && transactionExecution == rhs.transactionExecution &&
 		channels == rhs.channels && ranks == rhs.ranks && banks == rhs.banks && aggregateBankUtilization == rhs.aggregateBankUtilization &&
 		pcOccurrence == rhs.pcOccurrence && workingSet == rhs.workingSet && readCount == rhs.readCount && writeCount == rhs.writeCount &&
-		readBytesTransferred == rhs.readBytesTransferred && writeBytesTransferred == rhs.writeBytesTransferred);
+		readBytesTransferred == rhs.readBytesTransferred && writeBytesTransferred == rhs.writeBytesTransferred && issuedAtTFAW == rhs.issuedAtTFAW);
 }
 

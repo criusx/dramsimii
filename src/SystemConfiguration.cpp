@@ -31,6 +31,7 @@ using boost::iostreams::gzip_params;
 #ifdef WIN32
 #include <io.h> 
 #endif
+
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -40,9 +41,13 @@ using boost::iostreams::gzip_params;
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/lexical_cast.hpp>
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <locale>
 
 using std::ostream;
 using namespace DRAMsimII;
@@ -152,13 +157,18 @@ outType(settings.outFileType)
 		{
 			string baseFilename = settings.outFile;
 
+			boost::trim(baseFilename);
+
 			// strip off the file suffix
 			if (baseFilename.find("gz") != string::npos)
 				baseFilename = baseFilename.substr(0,baseFilename.find(".gz"));
 			if (baseFilename.find("bz2") != string::npos)
 				baseFilename = baseFilename.substr(0,baseFilename.find(".bz2"));
 
-			int counter = 0;
+			std::locale loc;
+			bool endsWithNumber = std::isdigit(*(baseFilename.end() - 1), loc);
+			int fileCounter = 0;
+			string counter = endsWithNumber ? "" : boost::lexical_cast<string>(fileCounter);
 
 			stringstream settingsFilename;
 			
@@ -172,14 +182,24 @@ outType(settings.outFileType)
 				powerFilename.str("");
 				statsFilename.str("");
 				settingsFilename.str("");
-				timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-timing" << suffix;
-				powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-power" << suffix;
-				statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-stats" << suffix;
-				settingsFilename << outDir.native_directory_string() << "/" << baseFilename << setfill('0') << setw(3) << counter << "-settings.xml";	
+				timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-timing" << suffix;
+				powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-power" << suffix;
+				statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-stats" << suffix;
+				settingsFilename << outDir.native_directory_string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-settings.xml";	
 				timingFile = timingFilename.str();
 				powerFile = powerFilename.str();
 				statsFile = statsFilename.str();
-				counter++;
+
+				if (!endsWithNumber)
+				{
+					fileCounter++;
+				}
+				else
+				{
+					endsWithNumber = false;
+				}
+				counter = boost::lexical_cast<string>(fileCounter);
+				
 
 			} while (!createNewFile(timingFile) || !createNewFile(powerFile) || !createNewFile(statsFile) || !createNewFile(settingsFilename.str()));
 

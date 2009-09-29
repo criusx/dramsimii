@@ -124,6 +124,7 @@ namespace DRAMsimII
 		float timePerEpoch;												///< the number of seconds that have elapsed per epoch
 		unsigned rowHits;												///< the number of row hits this epoch
 		unsigned rowMisses;												///< the number of row misses this epoch
+		unsigned issuedAtTFAW;											///< the number of commands executed at exactly tFAW
 		std::tr1::unordered_map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
 		std::tr1::unordered_map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
 		std::tr1::unordered_map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
@@ -146,6 +147,7 @@ namespace DRAMsimII
 		void collectTransactionStats(const Transaction*);	
 		void collectCommandStats(const Command*);
 		inline void setValidTransactionCount(int vtc) {validTransactionCount = vtc;}
+		inline void reportTFawCommand() { issuedAtTFAW++; }
 		void reportHit()
 		{
 			//#pragma omp atomic
@@ -176,7 +178,7 @@ namespace DRAMsimII
 				ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
 					writeCount & readBytesTransferred & writeBytesTransferred & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) &
 					const_cast<unsigned&>(banks) & rowHits & rowMisses & timePerEpoch & aggregateBankUtilization & workingSet &
-					bankLatencyUtilization & pcOccurrence;
+					bankLatencyUtilization & pcOccurrence & issuedAtTFAW;
 			}
 
 		}

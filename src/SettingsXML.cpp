@@ -224,7 +224,7 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "averageInterarrivalCycleCount", (const xmlChar *)lexical_cast<string>(averageInterarrivalCycleCount).c_str());
 	xmlNodePtr node2 = xmlNewChild(node, NULL, BAD_CAST "outFile", (const xmlChar *)lexical_cast<string>(outFile).c_str());
 	xmlNewProp(node2, BAD_CAST "type", (const xmlChar *)lexical_cast<string>(outFileType).c_str());
-	xmlNewProp(node2, BAD_CAST "dbReporting", BAD_CAST "false");
+	xmlNewProp(node2, BAD_CAST "dbreporting", BAD_CAST "false");
 	xmlNewChild(node, NULL, BAD_CAST "outFileDirectory", (const xmlChar *)lexical_cast<string>(outFileDir).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "requestCount", (const xmlChar *)lexical_cast<string>(requestCount).c_str());
 	node2 = xmlNewChild(node, NULL, BAD_CAST "inputFile", (const xmlChar *)lexical_cast<string>(inFile).c_str());

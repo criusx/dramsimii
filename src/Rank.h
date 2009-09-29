@@ -56,7 +56,6 @@ namespace DRAMsimII
 		tick nextActivateTime;				///< the time at which an ACT may be sent to this rank
 		tick nextReadTime;					///< the time at which a CAS may be sent to this rank
 		tick nextWriteTime;					///< the time at which a CASW may be sent to this rank
-		//tick nextPrechargeTime;				///< the time at which a Pre may be sent to this rank
 		tick nextRefreshTime;				///< the time at which a Ref may be sent to this rank
 
 		tick lastCalculationTime;			///< the time at which the last power calculation was done
@@ -73,7 +72,7 @@ namespace DRAMsimII
 
 	public:
 
-		boost::circular_buffer<tick> lastActivateTimes; ///< ras time queue. useful to determine if t_faw is met
+		boost::circular_buffer<tick> lastActivateTimes; ///< RAS activation history to ensure tFAW is met
 		std::vector<Bank> bank;							///< the banks within this rank
 
 		// functions

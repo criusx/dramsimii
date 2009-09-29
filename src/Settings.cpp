@@ -24,7 +24,6 @@
 #include "globals.h"
 #include "Settings.h"
 
-
 using std::map;
 using std::string;
 using std::cerr;
@@ -384,17 +383,17 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 		case command_ordering_algorithm_token:
 			if (nodeValue == "strict")
 				commandOrderingAlgorithm = STRICT_ORDER;
-			else if (nodeValue == "bankroundrobin")
+			else if (nodeValue == "bankroundrobin" || nodeValue == "brr")
 				commandOrderingAlgorithm = BANK_ROUND_ROBIN;
-			else if (nodeValue == "rankroundrobin")
+			else if (nodeValue == "rankroundrobin" || nodeValue == "rrr")
 				commandOrderingAlgorithm = RANK_ROUND_ROBIN;
 			else if (nodeValue == "cprh" || nodeValue == "commandpairrankhop" || nodeValue == "command_pair_rank_hop" || nodeValue == "commandpairrankhopping")
 				commandOrderingAlgorithm = COMMAND_PAIR_RANK_HOPPING;
-			else if (nodeValue == "firstavailableage" || nodeValue == "firstavailable")
+			else if (nodeValue == "firstavailableage" || nodeValue == "firstavailable" || nodeValue == "frsta")
 				commandOrderingAlgorithm = FIRST_AVAILABLE_AGE;
-			else if (nodeValue == "firstavailableriff")
+			else if (nodeValue == "firstavailableriff" || nodeValue == "frstr")
 				commandOrderingAlgorithm = FIRST_AVAILABLE_RIFF;
-			else if (nodeValue == "firstavailablequeue")
+			else if (nodeValue == "firstavailablequeue" || nodeValue == "frstq")
 				commandOrderingAlgorithm = FIRST_AVAILABLE_QUEUE;
 			else 
 			{
@@ -419,15 +418,15 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 					addressMappingScheme = Address::INTEL845G_MAP;
 				}				
 			}
-			else if (nodeValue == "sdrambase")
+			else if (nodeValue == "sdrambase" || nodeValue == "sdbas")
 				addressMappingScheme = Address::SDRAM_BASE_MAP;
-			else if (nodeValue == "sdramhiperf")
+			else if (nodeValue == "sdramhiperf" || nodeValue == "sdhipf")
 				addressMappingScheme = Address::SDRAM_HIPERF_MAP;
-			else if (nodeValue == "closepagehighlocality" || nodeValue == "highlocality")
+			else if (nodeValue == "closepagehighlocality" || nodeValue == "highlocality" || nodeValue == "hiloc")
 				addressMappingScheme = Address::CLOSE_PAGE_HIGH_LOCALITY;
-			else if (nodeValue == "closepagelowlocality" || nodeValue == "lowlocality")
+			else if (nodeValue == "closepagelowlocality" || nodeValue == "lowlocality"  || nodeValue == "loloc")
 				addressMappingScheme = Address::CLOSE_PAGE_LOW_LOCALITY;
-			else if (nodeValue == "closepagebaselineopt")
+			else if (nodeValue == "closepagebaselineopt"  || nodeValue == "cpbopt")
 				addressMappingScheme = Address::CLOSE_PAGE_BASELINE_OPT;
 			else
 				addressMappingScheme = Address::SDRAM_HIPERF_MAP;
@@ -436,16 +435,14 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			autoPrecharge = nodeValue == "true";
 			break;
 		case row_buffer_management_policy_token:
-			if (nodeValue == "openpage")
+			if (nodeValue == "openpage" || nodeValue == "open")
 				rowBufferManagementPolicy = OPEN_PAGE;
-			else if (nodeValue == "closepage")
+			else if (nodeValue == "closepage" || nodeValue == "clos")
 				rowBufferManagementPolicy = CLOSE_PAGE;
-			else if (nodeValue == "closepageaggressive" || nodeValue == "closepageoptimized")
+			else if (nodeValue == "closepageaggressive" || nodeValue == "closepageoptimized" || nodeValue == "cpa")
 				rowBufferManagementPolicy = CLOSE_PAGE_AGGRESSIVE;
-			else if (nodeValue == "openpageaggressive")
+			else if (nodeValue == "openpageaggressive" || nodeValue == "opa")
 				rowBufferManagementPolicy = OPEN_PAGE_AGGRESSIVE;
-			else if (nodeValue == "closepageaggressive")
-				rowBufferManagementPolicy = CLOSE_PAGE_AGGRESSIVE;
 			else
 				return false;
 			break;
@@ -502,7 +499,7 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 		case output_file_type_token:
 			if (nodeValue == "gz")
 				outFileType = GZ;
-			else if (nodeValue == "bz" || nodeValue == "bzip" || nodeValue == "bzip2")
+			else if (nodeValue == "bz" || nodeValue == "bzip" || nodeValue == "bzip2" || nodeValue == "bz2")
 				outFileType = BZ;
 			else if (nodeValue == "cout" || nodeValue == "stdout")
 				outFileType = COUT;
