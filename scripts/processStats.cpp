@@ -1,7 +1,7 @@
 #include "pstream.h"
 #include <boost/circular_buffer.hpp>
 #include <cstdio>
-#include <ImageMagick/Magick++.h>
+//#include <ImageMagick/Magick++.h>
 #include <string>
 #include <list>
 #include <errno.h>
@@ -408,7 +408,7 @@ mutex fileListMutex;
 
 void thumbNailWorker()
 {
-	using namespace Magick;
+	//using namespace Magick;
 
 	string filename;
 	string baseFilename;
@@ -429,7 +429,7 @@ void thumbNailWorker()
 				baseFilename = fileList.front().substr(0,fileList.front().find(extension) - 1);
 				fileList.pop_front();
 			}
-			string commandLine0 = "convert " + filename + "[" + thumbnailResolution + "] -limit memory 1gb " + baseFilename + "-thumb.png";
+			//string commandLine0 = CONVERT_COMMAND + " " + filename + "[" + thumbnailResolution + "] " + baseFilename + "-thumb.png";
 			//string commandLine1 = "mogrify -resize 3840 -format png -limit memory 1gb " + filename;
 
 			//second = first;
@@ -438,9 +438,11 @@ void thumbNailWorker()
 
 			//second.write(baseFilename + ".png");
 
-			//string commandLine0 = string(CONVERT_COMMAND) + " " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
+			//string commandLine0 = string(CONVERT_COMMAND) + " " + filename + "'[" + thumbnailResolution + "]' " + baseFilename + "-thumb.png";
+			string commandLine0 = string(CONVERT_COMMAND) + " " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
 			string commandLine2 = "gzip -c -9 -f " + filename + " > " + filename + "z";
 
+			cerr << commandLine0 << endl;
 			if (system(commandLine0.c_str()) != 0)
 				cerr << "Failed to create thumbnail for " << filename << endl;
 			if (system(commandLine2.c_str()) != 0)

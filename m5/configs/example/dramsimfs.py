@@ -26,22 +26,20 @@
 #
 # Authors: Ali Saidi
 
-import optparse, os, sys
+import optparse
+import os
+import sys
 
 import m5
 from m5.defines import buildEnv
+from m5.objects import *
 from m5.util import addToPath, fatal
-
-
-#os.environ['M5_PATH'] = '/home/crius/m5_system_2.0b3'
 
 if not buildEnv['FULL_SYSTEM']:
     m5.panic("This script requires full-system mode (*_FS).")
 
-from m5.objects import *
 m5.util.addToPath('../common')
-#adjust this to whatever directory contains m5
-m5.util.addToPath('/home/crius/m5/configs/common')
+
 from FSConfig import *
 from SysPaths import *
 from Benchmarks import *
@@ -87,13 +85,12 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
     self.readfile = mdesc.script()
     self.iobus = Bus(bus_id=0)
     self.membus = MemBus(bus_id=1, clock='2600MHz')
-    self.bridge = Bridge(delay='1ns', nack_delay='1ns')
+    self.bridge = Bridge(delay='5ns', nack_delay='1ns')
     # use the memory size established by the benchmark definition in Benchmarks.py
-    jobnumber = '0'
+    jobnumber = ''
     if 'PBS_JOBID' in os.environ:
         jobnumber = os.environ['PBS_JOBID'].split('.')[0]
-    else:
-        jobnumber = ''
+
     outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0] + jobnumber
 
     if revert is not None:
@@ -142,17 +139,12 @@ parser.add_option("--script", action="store", type="string")
 # Benchmark options
 parser.add_option("--dual", action="store_true",
                   help="Simulate two systems attached with an ethernet link")
-
-parser.add_option("--simple", action="store_true", help="Run in simple mode")
-
 parser.add_option("-b", "--benchmark", action="store", type="string",
                   dest="benchmark",
                   help="Specify the benchmark to run. Available benchmarks: %s"\
                   % DefinedBenchmarks)
 
 # DRAMsimII specific options
-parser.add_option("--addmem", default=None, type="string", help="larger than normal memory size")
-
 parser.add_option("-f", "--DRAMsimConfig",
 		  default="",
 		  help="The DRAMsimII config file.")
@@ -174,16 +166,9 @@ execfile(os.path.join(config_root, "common", "Options.py"))
 
 (options, args) = parser.parse_args()
 
-if options.simple:
-    options.l2cache = False
-    options.caches = False
-    options.detailed = False
-else:
-    options.l2cache = True
-    options.caches = True
-    options.detailed = True
-    #if options.fast-forward is None:
-    #    options.fast-forward = "10000000000"
+options.l2cache = True
+options.caches = True
+options.detailed = True
 
 if args:
     print "Error: script doesn't take any positional arguments"
@@ -215,11 +200,6 @@ else:
 
 np = options.num_cpus
 
-if options.addmem:
-    print 'set mem = ' + options.addmem
-    bm[0].memsize = options.addmem
-
-
 if buildEnv['TARGET_ISA'] == "alpha":
     test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig, options.revert)
 elif buildEnv['TARGET_ISA'] == "mips":
@@ -245,17 +225,15 @@ if options.l2cache:
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='stride', prefetch_degree=2, prefetcher_size=64, prefetch_cache_check_push=True)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16)
-        test_sys.l2 = L2Cache(size = '512kB', assoc=16, latency="6ns")
+        test_sys.l2 = L2Cache(size = '512kB', assoc=16, latency="6ns", mshrs = 22, tgts_per_mshr = 12)
 
-
-    #test_sys.l2 = L2Cache(size = '2MB')
     test_sys.tol2bus = Bus()
     test_sys.l2.cpu_side = test_sys.tol2bus.port
     test_sys.l2.mem_side = test_sys.membus.port
 
 test_sys.cpu = [TestCPUClass(cpu_id=i) for i in xrange(np)]
 
-if options.caches:
+if options.caches or options.l2cache:
     test_sys.bridge.filter_ranges_a=[AddrRange(0, Addr.max)]
     test_sys.bridge.filter_ranges_b=[AddrRange(0, size='8GB')]
     test_sys.iocache = IOCache(addr_range=AddrRange(0, size='8GB'))
@@ -264,8 +242,8 @@ if options.caches:
 
 for i in xrange(np):
     if options.caches:
-        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB'),
-                                                L1Cache(size = '64kB'))
+        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB', latency="500ps", mshrs = 12, tgts_per_mshr = 6),
+                                                L1Cache(size = '64kB', latency="500ps", prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16))
         #test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB', latency="500ps"),
         #                                        L1Cache(size = '64kB', latency="500ps"))
     if options.l2cache:

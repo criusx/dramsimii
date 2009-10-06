@@ -148,8 +148,6 @@ protected:
 	int lastPortIndex;										///< the last port accessed
 	typedef std::vector<MemoryPort*>::iterator PortIterator;
 	DRAMsimII::System *ds;									///< pointer to the DRAMsimII class
-	bool needRetry;											///< if the memory system needs to issue a retry statement before any more requests will come in
-	unsigned mostRecentChannel;								///< the most recent channel that a request was sent to
 	int cpuRatio;											///< the ratio of the cpu frequency to the memory frequency
 
 	std::tr1::unordered_map<unsigned,Packet*> transactionLookupTable;

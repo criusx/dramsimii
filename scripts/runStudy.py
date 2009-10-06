@@ -116,7 +116,7 @@ m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
 m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 
 # the executable for M5/(FS|SE)
-m5Exe = 'm5.opt'
+m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
 outputDir = '/home/crius/results/asplos/full8'
@@ -249,8 +249,8 @@ def main():
                                                         print currentCommandLine
                                                         #print submitCommand
                                                         #sys.exit(0)
-                                                        os.system(currentCommandLine)
-                                                        #os.system(submitCommand)
+                                                        #os.system(currentCommandLine)
+                                                        os.system(submitCommand)
 
                                                 #sys.exit(2)
 

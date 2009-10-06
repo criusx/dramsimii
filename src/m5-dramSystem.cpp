@@ -132,7 +132,8 @@ void M5dramSystem::moveToTime(const tick now)
 #endif
 
 			if (needsResponse)
-			{			
+			{	
+				assert(!packet->isWrite());
 				assert(curTick < static_cast<Tick>(currentValue.second * getCPURatio()));
 
 				M5_TIMING("<-T [@" << dec << static_cast<Tick>(currentValue.second * getCPURatio()) << "][+" << static_cast<Tick>(currentValue.second * getCPURatio() - curTick) << "]")
@@ -157,6 +158,7 @@ void M5dramSystem::moveToTime(const tick now)
 			}
 			else
 			{	
+				assert(!packet->isRead());
 				M5_TIMING("xT [" << hex << packet->getAddr() << "]")
 
 				delete packet;
@@ -168,16 +170,7 @@ void M5dramSystem::moveToTime(const tick now)
 			cerr << "warn: no Packet found for corresponding transaction" << endl;
 #endif
 		}
-	}
-
-	// if there is now room, allow a retry to happen
-	if (needRetry && !ds->isFull(mostRecentChannel))
-	{
-		M5_TIMING("Allow retrys");
-
-		needRetry = false;
-		ports[lastPortIndex]->sendRetry();
-	}
+	}	
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -193,8 +186,6 @@ tickEvent(this),
 ports(1),
 lastPortIndex(0),
 ds(NULL),
-needRetry(false),
-mostRecentChannel(0),
 cpuRatio(0),
 transactionLookupTable(),
 currentTransactionID(0),
@@ -305,7 +296,6 @@ outstandingPackets(0)
 	else
 		ds = new System(settings);
 
-	//std::cerr << p->extraParameters << std::endl;
 #ifdef TRACE_GENERATE
 	traceOutStream.push(gzip_compressor(gzip_params(9)));
 	//traceOutStream.push(cout);
@@ -597,17 +587,8 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 	return true;
 #endif
 
-	//////////////////////////////////////////////////////////////////////////
-	// FIXME: shouldn't need to turn away packets, the requester should hold off once NACK'd
-	if (memory->needRetry)
-	{
-		M5_TIMING2("warn: attempted packet send after packet is nacked")
-		return false;
-	}
-	//////////////////////////////////////////////////////////////////////////
-
-	tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
-
+	
+	
 	// everything that reaches the memory system should be a request of some sort
 	assert(packet->isRequest());
 
@@ -637,18 +618,12 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		return true;
 	}	
 	// must look at packets that need to affect the memory system
-	//else if (packet->needsResponse() || packet->isWrite())
 	else if (packet->isRead() || packet->isWrite())
 	{	
 		assert((packet->isRead() && packet->needsResponse()) ||
 			(!packet->isRead() && !packet->needsResponse()));
 		assert(!packet->wasNacked());
-
-
-		// move channels to current time so that calculations based on current channel times work
-		// should also not start/finish any commands, since this would happen at a scheduled time
-		// instead of now
-		memory->moveToTime(currentMemCycle);
+		
 		//assert(memory->ds->pendingTransactionCount() == 0);
 
 		// turn packet around to go back to requester if response expected
@@ -660,7 +635,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 #ifdef M5DEBUG						
 			static tick numberOfDelays = 0;
 			if (++numberOfDelays % 100000 == 0)
-				cerr << "\r" << numberOfDelays;
+				cerr << "\rdelays = " << numberOfDelays;
 #endif
 #if 0
 			// if the packet did not fit, then send a NACK
@@ -676,45 +651,35 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 			// http://m5.eecs.umich.edu/wiki/index.php/Memory_System
 			// keep track of the fact that the memory system is waiting to hear that it is ok to send again
 			// as well as what channel it is likely to retry to (make sure there is room before sending the OK)
-			memory->needRetry = true;
+			//memory->needRetry = true;
 			//memory->mostRecentChannel = trans->getAddresses().getChannel();
-			memory->mostRecentChannel = addr.getChannel();
+			//memory->mostRecentChannel = addr.getChannel();
 			//delete trans;
-
 			M5_TIMING2("Wait for retry before sending more to ch[" << addr.getChannel() << "]");
 			return false;
 		}
 		else
 		{
+			tick currentMemCycle = (curTick + memory->getCPURatio() - 1) / memory->getCPURatio();
 
-			PhysicalAddress pC;
-			int threadID;
+			// move channels to current time so that calculations based on current channel times work
+			// should also not start/finish any commands, since this would happen at a scheduled time
+			// instead of now
+			memory->moveToTime(currentMemCycle);
 
-			if (packet->req->hasPC())
-			{
-				pC = packet->req->getPC();
-				threadID = packet->req->threadId();
-			}
-			else
-			{
-				pC = threadID = 0;
-			}
+			int threadID = packet->req->hasContextId() ? packet->req->contextId() : 0;
 
-			Transaction::TransactionType packetType = Transaction::PREFETCH_TRANSACTION;
+			PhysicalAddress pC = packet->req->hasPC() ? packet->req->getPC() : 0;
 
-			if (packet->isRead())
-			{
-				assert(!packet->isWrite());
-				//packet->req->isInstFetch();
-				//packet->req->isPrefetch();
+			Transaction::TransactionType packetType = packet->req->isPrefetch() ? Transaction::PREFETCH_TRANSACTION :
+				(packet->req->isInstFetch() ? Transaction::READ_TRANSACTION :
+				(packet->isRead() ? Transaction::READ_TRANSACTION :
+				(packet->isWrite() ? Transaction::WRITE_TRANSACTION :
+				Transaction::READ_TRANSACTION)));
 
-				packetType = Transaction::READ_TRANSACTION;
-			}
-			else if (packet->isWrite())
-				packetType = Transaction::WRITE_TRANSACTION;
-			else
-				cerr << "warn: not read or write" << endl;
-
+			assert(packet->isRead() ^ (Transaction::WRITE_TRANSACTION == packetType));
+			assert(packet->isWrite() ^ (Transaction::READ_TRANSACTION == packetType));
+			
 #ifndef NDEBUG
 			bool result = 
 #endif
@@ -756,7 +721,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 
 			M5_TIMING2("-recvTiming sch[" << next << "]");
 
-			return true;
 		}
 	}
 	//upgrade or invalidate	
@@ -768,11 +732,9 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		if (packet->needsResponse())
 		{
 			packet->makeAtomicResponse();
+			schedSendTiming(packet,curTick + 1);			
+
 		}
-
-		schedSendTiming(packet,curTick + 1);			
-
-		return true;
 	}
 	else
 	{
@@ -788,9 +750,10 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		else
 		{
 			cerr << "warn: not upgrade request" << endl;
-		}
-		return true;
+		}		
 	}
+
+	return true;
 }
 
 
