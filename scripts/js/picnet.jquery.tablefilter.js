@@ -14,21 +14,23 @@
 		var filterColumnIndexes;
         var headers;
         var rows;
-
-        var options = jQuery.extend(jQuery.fn.tableFilter.defaults, _options);
-
+		
+        var options = _options || jQuery.fn.tableFilter.defaults;
+		if (!options.filterDelay) options.filterDelay = 200;
+		
         this.each(function() {
             grid = jQuery(this);
             initialiseFilters();
         });
 
         function initialiseFilters() {
-            filterKey = grid.attr('id') + '_filters';
+            filterKey = getGridId() + '_filters';
             initialiseControlCaches();            
-            registerListenersOnFilters();
-            setFilterWidths();
+            registerListenersOnFilters();            
             loadFiltersFromCookie();
         }
+		
+		function getGridId() { return grid.attr('id') || grid.attr('name');}
 
         function registerListenersOnFilters() {
             filters.filter('input').keyup(onTableFilterChanged);
@@ -81,9 +83,9 @@
             quickFindImpl();
         }
 
-        function initialiseControlCaches() {
-            headers = grid.children("thead tr:first th");
-            rows = jQuery('#' + grid.attr('id') + ' tbody tr');
+        function initialiseControlCaches() {			
+            headers = grid.find("thead tr:first th");			
+            rows = grid.find('tbody tr');
             buildFiltersRow();
             filters = grid.find("thead tr:last").find('input,select');
 			filterColumnIndexes = [];
@@ -93,17 +95,22 @@
         }
 
         function buildFiltersRow() {
-            var tr = $("<tr class'filters'></tr>");
+            var tr = $("<tr class='filters'></tr>");
             for (var i = 0; i < headers.length; i++) {
                 var header = $(headers[i]);				
-                var headerText = header.attr('filter') === 'false' ? '' : header.text();
-                var td = $(headerText.length > 1
-                    ? '<td>' + getFilterStr(i, header) + '</td>'
-                    : '<td>&nbsp;</td>');
-                tr.append(td);
-
-            }
-            grid.children("thead").append(tr);
+                var headerText = header.attr('filter') === 'false' ? '' : header.text();				
+				var td;
+				if (headerText.length > 1) {
+					td = $('<td/>');
+					var filter = $(getFilterStr(i, header));
+					filter.width(header.width());
+					td.append(filter);					
+				} else {
+					td = $('<td>&nbsp;</td>');
+				}
+                tr.append(td);				
+            }			
+            grid.find("thead").append(tr);
         }
 
         function getFilterStr(colIdx, header) {
@@ -127,8 +134,8 @@
                 values.push(txt);
             });
             values.sort();
-            jQuery.each(values, function() {
-                html += '<option value="' + this + '">' + this + '</option>';
+            jQuery.each(values, function() {                
+				html += '<option value="' + this.replace('"','&#034;') + '">' + this + '</option>';
             });
             html += '</select>';
             return html;
@@ -136,24 +143,16 @@
 
         function loadFiltersFromCookie() {
             if (!jQuery.cookie) { return; }
-
+			
             var filterState = jQuery.cookie(filterKey);
             if (!filterState) { return; }
             filterState = filterState.split(';');
             for (var i = 0; i < filterState.length; i++) {
                 var state = filterState[i].split(',');
                 filterState[i] = { id: state[0], value: state[3], idx: state[1], type: state[2] };
-            }
+            }			
             applyFilterStates(filterState, true);
-        }
-
-        function setFilterWidths() {
-            for (var i = 0; i < filters.length; i++) {
-                var f = jQuery(filters[i]);								
-                var width = jQuery(headers[getColumnIndexOfFilter(f)]).width();
-                f.width(width);
-            }
-        }
+        }        
 		
 		function getColumnIndexOfFilter(f) {
 			var cell = f.parent('td');
@@ -182,9 +181,9 @@
         function quickFindImpl() {
             cancelQuickFind = false;
             clearTimeout(lastTimerID);
-            var filterStates = getFilterStates();
-            applyFilterStates(filterStates, false);
-            saveFiltersToCookie(filterStates);
+            var filterStates = getFilterStates();			
+            applyFilterStates(filterStates, false);			
+            saveFiltersToCookie(filterStates);			
         }
 
         function getFilterStates() {
@@ -248,12 +247,19 @@
             jQuery.cookie(filterKey, val);
         }
 
-        function applyFilterStates(filterStates, setValueOnFilter) {
+		function applyFilterStates(filterStates, setValueOnFilter) {		
+			if (options.filteringRows) options.filteringRows(filterStates);
+			applyFilterStatesImpl(filterStates, setValueOnFilter);
+			if (options.filteredRows) options.filteredRows(filterStates);
+		}
+		
+        function applyFilterStatesImpl(filterStates, setValueOnFilter) {					
             clearRowFilteredStates();
             if ((!filterStates || filterStates.length) === 0 && (options.matchingRow === null || options.matchingCell)) {
                 hideRowsThatDoNotMatchAnyFiltres();
                 return;
-            }
+            }					
+			
             if (filterStates === null || filterStates.length === 0) { applyStateToRows(null); }
             else {
                 for (var i = 0; i < filterStates.length; i++) {
@@ -262,10 +268,10 @@
                         switch (state.type) {
                             case 'select-one':
                             case 'text':
-                                jQuery('#' + state.id).val(state.value);
+                                grid.find('#' + state.id).val(state.value);
                                 break;
                             case 'checkbox':
-                                jQuery('#' + state.id).attr('checked', state.value === 'true');
+                                grid.find('#' + state.id).attr('checked', state.value === 'true');
                                 break;
                             default:
                                 throw 'Filter type ' + state.type + ' is not supported';
@@ -275,7 +281,7 @@
                 }
             }
 
-            hideRowsThatDoNotMatchAnyFiltres();
+            hideRowsThatDoNotMatchAnyFiltres();			
         }
 
         function clearRowFilteredStates() {
@@ -348,11 +354,6 @@
             if (!doesTextMatchTokens(text, textTokens, state != null && state.type === 'select-one')) { return false; }
             return !options.matchingCell || options.matchingCell(state, td, textTokens);
         }
-
-        /*************************************************
-        SEARCH FUNCTIONS
-        TODO: Support quotes (phrases) (")
-        **************************************************/
 
         var precedences;
 
@@ -598,6 +599,8 @@
         clearFiltersControls: [],
         matchingRow: null,
         matchingCell: null,
+		filteringRows: null,
+		filteredRows: null,
         filterDelay: 200
     };
 

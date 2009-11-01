@@ -5,6 +5,13 @@
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <style type="text/css">
+        select option {
+		     background-color: #ffe;
+		}
+
+		select option.alt {
+		    background-color: #eff;
+}
             #filter
             {
                 margin-left: auto;
@@ -190,25 +197,35 @@
 
         <script type="text/javascript">
             $(document) .ready(function ()
-            {
-             	var options = {clearFiltersControls: [$('#filterClear')],};
-            	// add the column filters
-            	$("#resultsTable").tableFilter(options);
+			{
+				var options = {
+				clearFiltersControls: [$('#filterClear')],
+				filteredRows: function (node)
+					{
+						$("table").trigger("update");
+						$("table").trigger("appendCache");
+					}
+				};
+				// add the column filters
+				$("#resultsTable").tableFilter(options);
 
-                // call the tablesorter plugin
-                $("table") .tablesorter(
-                {
-                    headerClass: 'header',
-                    sortList: [[17,0]],
-                    widgets: [ 'zebra' ],
-                    // define a custom text extraction function
-                    textExtraction: function (node)
-                    {
-                        // extract data from markup and return it
-                        return node.childNodes[0].innerHTML;
-                    }
-                });
-            });</script>
+				// call the tablesorter plugin
+				$("table") .tablesorter(
+				{
+					headerClass: 'header',
+					sortList: [[17,0]],
+				//debug: true,
+					widgets: [ 'zebra' ],
+					// define a custom text extraction function
+					textExtraction: function (node)
+					{
+						// extract data from markup and return it
+						return node.childNodes[0].innerHTML;
+					}
+				});
+			});
+
+		</script>
 
         <title>Images</title>
     </head>
