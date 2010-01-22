@@ -40,8 +40,8 @@ nextActivateTime(0),
 nextReadTime(0),
 nextWriteTime(0),
 nextPrechargeTime(0),
-openRowID(0),
-activated(settings.rowBufferManagementPolicy == OPEN_PAGE), // close page starts with RAS, open page starts with Pre
+openRowID(-1),
+activated(/*settings.rowBufferManagementPolicy == OPEN_PAGE*/true), // close page starts with RAS, open page starts with Pre
 RASCount(0),
 totalRASCount(0),
 CASCount(0),

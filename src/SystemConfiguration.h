@@ -41,6 +41,7 @@ namespace DRAMsimII
 		mutable boost::iostreams::filtering_ostream timingOutStream;
 		mutable boost::iostreams::filtering_ostream powerOutStream;
 		mutable boost::iostreams::filtering_ostream statsOutStream;	
+		mutable boost::iostreams::filtering_ostream verilogOutStream;
 	protected:
 		CommandOrderingAlgorithm commandOrderingAlgorithm;				///< describes how to place commands into the per bank command queues
 		TransactionOrderingAlgorithm transactionOrderingAlgorithm;		///< the algorithm that describes how to place transactions into the queue
@@ -73,6 +74,7 @@ namespace DRAMsimII
 		std::string timingFile;
 		std::string powerFile;
 		std::string statsFile;		
+		std::string verilogFile;
 		OutputFileType outType;
 
 
@@ -98,6 +100,7 @@ namespace DRAMsimII
 		unsigned getRefreshTime() const { return refreshTime; }
 		unsigned getSeniorityAgeLimit() const { return seniorityAgeLimit; }
 		unsigned getEpoch() const { return epoch; }
+		double getDatarate() const { return datarate; }
 		RefreshPolicy getRefreshPolicy() const { return refreshPolicy; }
 		DRAMType getDRAMType() const { return dramType; }
 		bool isAutoPrecharge() const { return autoPrecharge; }

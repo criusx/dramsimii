@@ -113,12 +113,14 @@ outType(settings.outFileType)
 			timingOutStream.push(cout);
 			powerOutStream.push(cout);
 			statsOutStream.push(cout);
+			verilogOutStream.push(cout);
 			return;
 			break;
 		case NONE:
 			timingOutStream.push(null_sink());
 			powerOutStream.push(null_sink());
 			statsOutStream.push(null_sink());
+			verilogOutStream.push(null_sink());
 			return;
 			break;
 		case BZ:
@@ -177,18 +179,22 @@ outType(settings.outFileType)
 				stringstream timingFilename;
 				stringstream powerFilename;
 				stringstream statsFilename;
+				stringstream verilogFilename;
 
 				timingFilename.str("");
 				powerFilename.str("");
 				statsFilename.str("");
 				settingsFilename.str("");
+				verilogFilename.str("");
 				timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-timing" << suffix;
 				powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-power" << suffix;
 				statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-stats" << suffix;
+				verilogFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-verilog" << suffix;
 				settingsFilename << outDir.native_directory_string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-settings.xml";	
 				timingFile = timingFilename.str();
 				powerFile = powerFilename.str();
 				statsFile = statsFilename.str();
+				verilogFile = verilogFilename.str();
 
 				if (!endsWithNumber)
 				{
@@ -201,7 +207,7 @@ outType(settings.outFileType)
 				counter = boost::lexical_cast<string>(fileCounter);
 				
 
-			} while (!createNewFile(timingFile) || !createNewFile(powerFile) || !createNewFile(statsFile) || !createNewFile(settingsFilename.str()));
+			} while (!createNewFile(timingFile) || !createNewFile(powerFile) || !createNewFile(statsFile) || !createNewFile(settingsFilename.str()) || !createNewFile(verilogFile));
 
 			if (setupStreams())
 			{
@@ -257,6 +263,7 @@ SystemConfiguration::~SystemConfiguration()
 	boost::iostreams::close(timingOutStream,std::ios_base::out);
 	boost::iostreams::close(powerOutStream,std::ios_base::out);
 	boost::iostreams::close(statsOutStream,std::ios_base::out);
+	boost::iostreams::close(verilogOutStream, std::ios_base::out);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -384,12 +391,14 @@ bool SystemConfiguration::setupStreams() const
 			timingOutStream.push(cout);
 			powerOutStream.push(cout);
 			statsOutStream.push(cout);
+			verilogOutStream.push(cout);
 			return true;
 			break;
 		case NONE:
 			timingOutStream.push(null_sink());
 			powerOutStream.push(null_sink());
 			statsOutStream.push(null_sink());
+			verilogOutStream.push(null_sink());
 			return true;
 			break;
 		case BZ:
@@ -397,6 +406,7 @@ bool SystemConfiguration::setupStreams() const
 			timingOutStream.push(bzip2_compressor());
 			powerOutStream.push(bzip2_compressor());
 			statsOutStream.push(bzip2_compressor());
+			verilogOutStream.push(bzip2_compressor());
 			suffix = ".bz2";
 			break;
 #endif
@@ -405,6 +415,7 @@ bool SystemConfiguration::setupStreams() const
 			timingOutStream.push(gzip_compressor(gzip_params(9)));
 			powerOutStream.push(gzip_compressor(gzip_params(9)));
 			statsOutStream.push(gzip_compressor(gzip_params(9)));
+			verilogOutStream.push(gzip_compressor(gzip_params(9)));
 			suffix = ".gz";
 			break;
 #endif
@@ -415,6 +426,7 @@ bool SystemConfiguration::setupStreams() const
 		timingOutStream.push(file_sink(timingFile.c_str()));
 		powerOutStream.push(file_sink(powerFile.c_str()));
 		statsOutStream.push(file_sink(statsFile.c_str()));
+		verilogOutStream.push(file_sink(verilogFile.c_str()));
 
 		if (!timingOutStream.good() || !timingOutStream.is_complete())
 		{
@@ -429,6 +441,11 @@ bool SystemConfiguration::setupStreams() const
 		else if (!statsOutStream.good() || !statsOutStream.is_complete())
 		{
 			cerr << "Error opening file \"" << statsFile << "\" for writing" << endl;
+			exit(-12);
+		}
+		else if (!verilogOutStream.good() || !verilogOutStream.is_complete())
+		{
+			cerr << "Error opening file \"" << verilogFile << "\" for writing" << endl;
 			exit(-12);
 		}
 		return true;

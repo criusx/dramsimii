@@ -8,6 +8,9 @@ SRCDIR = joinpath(ROOT,'src')
 env = Environment(ENV = os.environ,  # inherit user's environment vars
                   ROOT = ROOT,
                   SRCDIR = SRCDIR)
+                  
+for key in os.environ.iterkeys():
+	env[key] = os.environ[key]
 
 Export('env')
 

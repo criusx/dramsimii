@@ -129,6 +129,7 @@ t_refi(settings.tREFI)
 		t_burst = 8;				// protocol specific, cannot be changed
 		t_cas = settings.tCAS;
 		t_cmd = 2;					// protocol specific, cannot be changed
+		assert(settings.tCWD + 2 == settings.tCAS);
 		t_cwd = t_cas - 2;			// fixed
 		t_int_burst = 8;			// protocol specific, cannot be changed
 		t_faw = settings.tFAW;
@@ -144,8 +145,11 @@ t_refi(settings.tREFI)
 		t_wtr = settings.tWTR;
 		t_ost = 5;					// 2.5 cycles to turn off, 2 to turn on
 
-		assert(t_rcd + t_burst + t_rtp - t_ccd >= t_ras);
+		// DRAM will delay internally if tRAS is not met
+		// this MHC will account for any issues
+		//assert(t_rcd + t_rtp + t_burst - t_ccd >= t_ras);
 		assert(t_rcd + t_cwd + t_burst + t_wr >= t_ras);
+		assert(t_al == t_cas - 2 || t_al == t_cas - 4);
 
 		break;
 

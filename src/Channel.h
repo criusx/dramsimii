@@ -80,6 +80,7 @@ namespace DRAMsimII
 		tick nextCommandExecuteTime() const;
 		void executeCommand(Command *thisCommand);
 		bool canIssue(const Command *thisCommand) const { return earliestExecuteTime(thisCommand) <= time; }
+		void printVerilogCommand(const Command *thisCommand);
 
 		// functions that may differ for architectures that inherit this		
 		virtual const Command *readNextCommand() const;

@@ -111,43 +111,43 @@ def make_objs(sourceFiles, env):
 
 if platform == 'script':
 	envScript = env.Clone(OBJSUFFIX='.os', CPPPATH = '/usr/include/ImageMagick')
-	envScript.Append(CCFLAGS = '-O3 -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions ')
+	envScript.Append(CCFLAGS = '-O3 -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -Wconversion -Wuninitialized')
 	script = envScript.Program('processStats',"../scripts/processStats.cpp")
 	envScript.Install(os.path.abspath('../scripts'),script)
 
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd', CPPPATH = '/usr/include/ImageMagick')
-	envScriptD.Append(CCFLAGS = '-ggdb3 -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')
+	envScriptD.Append(CCFLAGS = '-ggdb3 -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
 	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cpp")
 	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
-	envDebug.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')
+	envDebug.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
 	debug = envDebug.Program('dramSimII.debug',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugOpt':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogO')
-	envDebug.Append(CCFLAGS = '-g -O3 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')
+	envDebug.Append(CCFLAGS = '-g -O3 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
 	debug = envDebug.Program('dramSimII.debugOpt',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugsimple':
 	envDebugSimple = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogs')
-	envDebugSimple.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG')
+	envDebugSimple.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
 	debugSimple = envDebugSimple.Program('dramSimII.debugsimple',sourceFile)
 	envDebugSimple.Install(os.path.abspath('..') + "/bin", debugSimple)
 elif platform == 'test':
 	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ot')
-	envTest.Append(CCFLAGS = '-g -Wall -Wextra -Weffc++ -DDEBUG')
+	envTest.Append(CCFLAGS = '-g -Wall -Wextra -Weffc++ -DDEBUG -Wconversion -Wuninitialized')
 	test = envTest.Program('dramSimII.test',sourcesTest)
 	envTest.Install(os.path.abspath('..') + "/bin", test)
 elif platform == 'testOpt':
 	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.oto')
-	envTest.Append(CCFLAGS = '-g -Wall -Wextra -O2 -mtune=native -march=native -Weffc++ -DDEBUG')
+	envTest.Append(CCFLAGS = '-g -Wall -Wextra -O2 -mtune=native -march=native -Weffc++ -DDEBUG -Wconversion -Wuninitialized')
 	test = envTest.Program('dramSimII.testOpt',sourcesTest)
 	envTest.Install(os.path.abspath('..') + "/bin", test)
 elif platform == 'prof':
 	envProf = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.op')
-	envProf.Append(CCFLAGS = '-g -O3 -mtune=native -march=native -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -DNDEBUG')
+	envProf.Append(CCFLAGS = '-g -O3 -mtune=native -march=native -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -DNDEBUG -Wconversion -Wuninitialized')
 	prof = envProf.Program('dramSimII.prof',sourceFile)
 	envProf.Install(os.path.abspath('..') + "/bin", prof)
 elif platform == 'profgen':
@@ -172,11 +172,11 @@ elif platform == 'all':
 	test = envTest.Program('dramSimII.test',sourcesTest)
 	envTest.Install(os.path.abspath('..') + "/bin", test)
 	envProf = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.op')
-	envProf.Append(CCFLAGS = '-g -O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG')
+	envProf.Append(CCFLAGS = '-g -O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
 	prof = envProf.Program('dramSimII.prof',sourceFile)
 	envProf.Install(os.path.abspath('..') + "/bin", prof)
 	envProfgen = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opg')
-	envProfgen.Append(CCFLAGS = '-O3 -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -fprofile-generate -DNDEBUG')
+	envProfgen.Append(CCFLAGS = '-O3 -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -fprofile-generate -DNDEBUG -Wconversion -Wuninitialized')
 	profgen = envProfgen.Program('dramSimII.profgen', sourceFile)
 	envProfgen.Install(os.path.abspath('..') + "/bin", profgen)
 	envProfuse = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opu')
@@ -189,6 +189,6 @@ elif platform == 'all':
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)
 else:
 	envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
-	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -v -Wextra -Wunused -pedantic -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG')
+	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -v -Wextra -Wunused -pedantic -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
 	opt = envOpt.Program('dramSimII.opt',sourceFile)
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)

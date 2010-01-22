@@ -47,7 +47,7 @@ CASLength(0),
 CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
-banksPrecharged(settings.rowBufferManagementPolicy == OPEN_PAGE ? 0 : settings.bankCount),
+banksPrecharged(/*settings.rowBufferManagementPolicy == OPEN_PAGE ? 0 : settings.bankCount */ 0),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(systemConfig.getBankCount(),Bank(settings, timing, systemConfig))
 {}
@@ -244,7 +244,9 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 	assert(currentCommand->getAddress().getBank() == lastBankID);
 	
 	// calculate when the next few commands can happen
+	// ensure that the next read does not happen until the write is done with the I/O drivers
 	nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tWTR());
+
 	nextWriteTime = max(nextWriteTime, currentTime + timing.tBurst());
 }
 

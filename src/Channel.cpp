@@ -253,6 +253,10 @@ void Channel::moveToTime(const tick currentTime)
 
 			DEBUG_COMMAND_LOG("C " << *executingCommand);
 
+#ifndef NDEBUG
+			printVerilogCommand(executingCommand);
+#endif
+
 			nextCommand = readNextCommand();
 		}
 	}
@@ -2973,6 +2977,46 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 	return max(nextTime, max(time , lastCommandIssueTime + timingSpecification.tCMD()));
 }
 
+
+void Channel::printVerilogCommand(const Command *thisCommand)
+{
+	static tick lastTime;
+
+	systemConfig.verilogOutStream << "nop(" << (time - lastTime) / systemConfig.getDatarate() * 1.0E9 << "); //" << time - lastTime << endl;
+
+	lastTime = time;
+
+	if (thisCommand->isRead())
+	{
+		systemConfig.verilogOutStream << "read\t\t(" << thisCommand->getAddress().getRank() << ",\t"
+			<< thisCommand->getAddress().getBank() << ",\t" << thisCommand->getAddress().getColumn() <<
+			",\t" << (thisCommand->isPrecharge() ? "1" : "0") << ",\t" <<
+			(thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") << "); //" <<
+			time << endl;
+	}
+	else if (thisCommand->isWrite())
+	{
+		systemConfig.verilogOutStream << "write\t\t(" << thisCommand->getAddress().getRank() << ",\t" << thisCommand->getAddress().getBank() << ",\t" << thisCommand->getAddress().getColumn() << ",\t" << (thisCommand->isPrecharge() ? "1" : "0") << ",\t" << (thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") <<
+			",\t0,\t10); //" << time << endl;
+	}
+	else if (thisCommand->isActivate())
+	{
+		systemConfig.verilogOutStream << "activate\t(" << thisCommand->getAddress().getRank() << ",\t" << 
+			thisCommand->getAddress().getBank() << ",\t" << thisCommand->getAddress().getRow() << "); //" <<
+			time << endl;
+	}
+	else if (thisCommand->isRefresh())
+	{
+		systemConfig.verilogOutStream << "refresh(" << thisCommand->getAddress().getRank() << ");" << endl;
+	}
+	else if (thisCommand->isBasicPrecharge())
+	{
+		systemConfig.verilogOutStream << "precharge\t(" << thisCommand->getAddress().getRank() << ",\t" <<
+			thisCommand->getAddress().getBank() << ",\t" << "0" << "); //" <<
+			time << endl;
+	}
+
+}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief the assignment operator, will copy non-key items to this channel
