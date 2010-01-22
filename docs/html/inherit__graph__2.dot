@@ -1,0 +1,8 @@
+digraph G
+{
+  bgcolor="transparent";
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="DRAMsimII::Bank",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_bank.html",tooltip="this class logically represents a bank"];
+}

@@ -1,0 +1,94 @@
+\section{DRAMsimII::SystemConfiguration Class Reference}
+\label{class_d_r_a_msim_i_i_1_1_system_configuration}\index{DRAMsimII::SystemConfiguration@{DRAMsimII::SystemConfiguration}}
+stores the system configuration options for a dramSystem  
+
+
+{\tt \#include $<$SystemConfiguration.h$>$}
+
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+CommandOrderingAlgorithm {\bf commandOrderingAlgorithm}\label{class_d_r_a_msim_i_i_1_1_system_configuration_86c48c5a61c66a2529da7ee18cfbdcf4}
+
+\begin{CompactList}\small\item\em describes how to place commands into the per bank command queues \item\end{CompactList}\item 
+TransactionOrderingAlgorithm {\bf transactionOrderingAlgorithm}\label{class_d_r_a_msim_i_i_1_1_system_configuration_2e2639a70d39978c115d08854824ec05}
+
+\begin{CompactList}\small\item\em the algorithm that describes how to place transactions into the queue \item\end{CompactList}\item 
+SystemConfigurationType {\bf configType}\label{class_d_r_a_msim_i_i_1_1_system_configuration_2bc2412d43c18091191c64267a6b1a78}
+
+\begin{CompactList}\small\item\em whether the system is standard or FBD \item\end{CompactList}\item 
+unsigned {\bf refreshTime}\label{class_d_r_a_msim_i_i_1_1_system_configuration_332e207779eaf2f92bfaf4826faf9ea8}
+
+\begin{CompactList}\small\item\em the frequency at which refresh commands are scheduled \item\end{CompactList}\item 
+RefreshPolicy {\bf refreshPolicy}\label{class_d_r_a_msim_i_i_1_1_system_configuration_8f107a8becebbee1c6f792297cdc2020}
+
+\begin{CompactList}\small\item\em determines how refreshes are handled \item\end{CompactList}\item 
+unsigned {\bf columnSize}\label{class_d_r_a_msim_i_i_1_1_system_configuration_1fb6f3d7c6efdcbd25bbdf35f71204f9}
+
+\begin{CompactList}\small\item\em the size of each column, in bytes \item\end{CompactList}\item 
+unsigned {\bf rowSize}\label{class_d_r_a_msim_i_i_1_1_system_configuration_2141e7d5594b88348cbec3eee17829d5}
+
+\begin{CompactList}\small\item\em bytes per row (across one rank) \item\end{CompactList}\item 
+unsigned {\bf cachelineSize}\label{class_d_r_a_msim_i_i_1_1_system_configuration_3892be18e60da949ed702bc22b6ae8a9}
+
+\begin{CompactList}\small\item\em 32/64/128 etc \item\end{CompactList}\item 
+unsigned {\bf seniorityAgeLimit}\label{class_d_r_a_msim_i_i_1_1_system_configuration_96a8cb7630b038cb600e45851d2594b4}
+
+\begin{CompactList}\small\item\em the oldest a command may be before it takes top priority \item\end{CompactList}\item 
+RowBufferPolicy {\bf rowBufferManagementPolicy}\label{class_d_r_a_msim_i_i_1_1_system_configuration_47741b7f154444248d9dc0dbd673684b}
+
+\begin{CompactList}\small\item\em row buffer management policy? OPEN/CLOSE, etc \item\end{CompactList}\item 
+Address::AddressMappingScheme {\bf addressMappingScheme}\label{class_d_r_a_msim_i_i_1_1_system_configuration_989520b46acc6c3aa13f13f39c2e0bb2}
+
+\begin{CompactList}\small\item\em addr mapping scheme for physical to DRAM addr \item\end{CompactList}\item 
+double {\bf datarate}\label{class_d_r_a_msim_i_i_1_1_system_configuration_d883c4bc92b6a4f3750d1fde61e6c3c7}
+
+\begin{CompactList}\small\item\em the operating frequency of the system \item\end{CompactList}\item 
+bool {\bf postedCAS}\label{class_d_r_a_msim_i_i_1_1_system_configuration_9ca31c762ad14165cb6217a710b34ad8}
+
+\begin{CompactList}\small\item\em TRUE/FALSE, so the CAS command may be stored and run later. \item\end{CompactList}\item 
+bool {\bf readWriteGrouping}\label{class_d_r_a_msim_i_i_1_1_system_configuration_a81278f33bba62be976d2cb202721645}
+
+\begin{CompactList}\small\item\em whether or not reads and writes should be grouped closely \item\end{CompactList}\item 
+bool {\bf autoPrecharge}\label{class_d_r_a_msim_i_i_1_1_system_configuration_3dd04fddc806ef679c1c4bc8279eb043}
+
+\begin{CompactList}\small\item\em is CAS+P an available command for close page \item\end{CompactList}\item 
+unsigned {\bf cachelinesPerRow}\label{class_d_r_a_msim_i_i_1_1_system_configuration_d6dd64e93af4a789af60a737c606c4e7}
+
+\begin{CompactList}\small\item\em dependent variable \item\end{CompactList}\item 
+unsigned {\bf channelCount}\label{class_d_r_a_msim_i_i_1_1_system_configuration_412130db785c220ed1d2c43310e19364}
+
+\begin{CompactList}\small\item\em How many logical channels are there ? \item\end{CompactList}\item 
+unsigned {\bf rankCount}\label{class_d_r_a_msim_i_i_1_1_system_configuration_c4ac59a449547cd27fa8ed069378e7b8}
+
+\begin{CompactList}\small\item\em How many ranks are there per channel ? \item\end{CompactList}\item 
+unsigned {\bf bankCount}\label{class_d_r_a_msim_i_i_1_1_system_configuration_2f553342c595248f67602f541bae62f9}
+
+\begin{CompactList}\small\item\em How many banks per device? \item\end{CompactList}\item 
+unsigned {\bf rowCount}\label{class_d_r_a_msim_i_i_1_1_system_configuration_6b49c8001b6f9c65aeebcfca03404bd0}
+
+\begin{CompactList}\small\item\em rows per bank \item\end{CompactList}\item 
+unsigned {\bf columnCount}\label{class_d_r_a_msim_i_i_1_1_system_configuration_40ffc8cdfcd378bf864d648113f6b4b3}
+
+\begin{CompactList}\small\item\em columns per row \item\end{CompactList}\item 
+unsigned {\bf decodeWindow}\label{class_d_r_a_msim_i_i_1_1_system_configuration_c870e61295fc38f0527aca83418602e2}
+
+\begin{CompactList}\small\item\em how many transactions to consider when decoding to commands \item\end{CompactList}\item 
+const unsigned {\bf epoch}\label{class_d_r_a_msim_i_i_1_1_system_configuration_5016c31730e2cd299c3673bc3dac8f22}
+
+\begin{CompactList}\small\item\em the amount of time between stats aggregation and reporting \item\end{CompactList}\item 
+double {\bf readPercentage}\label{class_d_r_a_msim_i_i_1_1_system_configuration_7ab7f5c65f2e9221febeb4c9b0c2a9ac}
+
+\begin{CompactList}\small\item\em the percentage of transactions that are reads \item\end{CompactList}\item 
+std::string {\bf sessionID}\label{class_d_r_a_msim_i_i_1_1_system_configuration_e184c864eb50362bf6fefdeb70fc9a1c}
+
+\begin{CompactList}\small\item\em a unique identifier for this run \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+stores the system configuration options for a dramSystem 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/SystemConfiguration.h\item 
+src/SystemConfiguration.cpp\end{CompactItemize}

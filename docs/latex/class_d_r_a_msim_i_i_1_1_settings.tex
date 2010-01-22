@@ -1,0 +1,49 @@
+\section{DRAMsimII::Settings Class Reference}
+\label{class_d_r_a_msim_i_i_1_1_settings}\index{DRAMsimII::Settings@{DRAMsimII::Settings}}
+stores the settings to be used to initialize a dramSystem object  
+
+
+{\tt \#include $<$Settings.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+bool {\bf loadSettingsFromFile} (int, char $\ast$$\ast$)
+\begin{CompactList}\small\item\em load settings from an xml file \item\end{CompactList}\item 
+{\bf Settings} (int, char $\ast$$\ast$)
+\begin{CompactList}\small\item\em construct a set of settings based upon parameters passed from the command line \item\end{CompactList}\item 
+{\bf Settings} ()\label{class_d_r_a_msim_i_i_1_1_settings_b7169a6eefce79566dd07db3b1e5e967}
+
+\begin{CompactList}\small\item\em blank settings constructor \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+stores the settings to be used to initialize a dramSystem object 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{DRAMsimII::Settings@{DRAMsimII::Settings}!Settings@{Settings}}
+\index{Settings@{Settings}!DRAMsimII::Settings@{DRAMsimII::Settings}}
+\subsubsection[{Settings}]{\setlength{\rightskip}{0pt plus 5cm}Settings::Settings (int {\em argc}, \/  char $\ast$$\ast$ {\em argv})\hspace{0.3cm}{\tt  [explicit]}}\label{class_d_r_a_msim_i_i_1_1_settings_0342aceccd1cc01b125f4b44e4049116}
+
+
+construct a set of settings based upon parameters passed from the command line 
+
+will parse parameters passed from the command line without modification and print any errors that occur 
+
+\subsection{Member Function Documentation}
+\index{DRAMsimII::Settings@{DRAMsimII::Settings}!loadSettingsFromFile@{loadSettingsFromFile}}
+\index{loadSettingsFromFile@{loadSettingsFromFile}!DRAMsimII::Settings@{DRAMsimII::Settings}}
+\subsubsection[{loadSettingsFromFile}]{\setlength{\rightskip}{0pt plus 5cm}bool Settings::loadSettingsFromFile (int {\em argc}, \/  char $\ast$$\ast$ {\em argv})}\label{class_d_r_a_msim_i_i_1_1_settings_8a0bd9edcdbf024fe943a96489520049}
+
+
+load settings from an xml file 
+
+loads and populates a \doxyref{Settings}{p.}{class_d_r_a_msim_i_i_1_1_settings} object based on a particular settings file and updates the settings based upon the modifiers sent to it \begin{Desc}
+\item[Returns:]true if no errors were encountered, false otherwise \end{Desc}
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/Settings.h\item 
+src/Settings.cpp\item 
+src/SettingsXML.cpp\end{CompactItemize}

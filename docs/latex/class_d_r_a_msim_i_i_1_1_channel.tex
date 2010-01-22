@@ -1,0 +1,558 @@
+\section{DRAMsimII::Channel Class Reference}
+\label{class_d_r_a_msim_i_i_1_1_channel}\index{DRAMsimII::Channel@{DRAMsimII::Channel}}
+represents a DRAM channel, has individual timing parameters, ranks, banks, clock, etc.  
+
+
+{\tt \#include $<$Channel.h$>$}
+
+Inherited by {\bf DRAMsimII::fbdChannel}{\tt  [private]}.
+
+Collaboration diagram for DRAMsimII::Channel:\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Channel} (const {\bf Settings} \&settings, const {\bf SystemConfiguration} \&sysConfig, {\bf Statistics} \&stats)
+\begin{CompactList}\small\item\em constructs the dramChannel using this settings reference, also makes a reference to the dramSystemConfiguration object \item\end{CompactList}\item 
+{\bf Channel} (const {\bf Channel} \&)
+\begin{CompactList}\small\item\em copy constructor, reassigns the ordinal to each rank as they are duplicated \item\end{CompactList}\item 
+{\bf Channel} (const {\bf Channel} \&rhs, const {\bf SystemConfiguration} \&{\bf systemConfig}, {\bf Statistics} \&stats)
+\begin{CompactList}\small\item\em the copy constructor for building unitialized copies of a channel \item\end{CompactList}\item 
+virtual {\bf $\sim$Channel} ()
+\begin{CompactList}\small\item\em channel destructor \item\end{CompactList}\item 
+bool {\bf enqueue} ({\bf Transaction} $\ast$in)
+\begin{CompactList}\small\item\em enqueue the transaction into the transactionQueue \item\end{CompactList}\item 
+bool {\bf isFull} () const \label{class_d_r_a_msim_i_i_1_1_channel_65ae17bc6c997287f6337531ed7ef59b}
+
+\begin{CompactList}\small\item\em determines whether there is room for more transactions \item\end{CompactList}\item 
+unsigned {\bf getChannelID} () const \label{class_d_r_a_msim_i_i_1_1_channel_6686ab8add8a9c0fe1a3b3bb029e38b6}
+
+\begin{CompactList}\small\item\em return the ordinal of this channel \item\end{CompactList}\item 
+void {\bf doPowerCalculation} (const tick systemTime)
+\begin{CompactList}\small\item\em performs power calculations for this epoch and cumulative \item\end{CompactList}\item 
+virtual tick {\bf nextTick} () const 
+\begin{CompactList}\small\item\em determines when the next transaction is decoded, command ready to be executed or next refresh command arrives \item\end{CompactList}\item 
+void {\bf resetToTime} (const tick {\bf time})
+\begin{CompactList}\small\item\em reset some stats to account for the fact that fast-forwarding has moved time forward significantly \item\end{CompactList}\item 
+void {\bf getPendingTransactions} (std::queue$<$ std::pair$<$ unsigned, tick $>$ $>$ \&)
+\begin{CompactList}\small\item\em return any transactions that finished when \doxyref{moveToTime()}{p.}{class_d_r_a_msim_i_i_1_1_channel_86f558398b775ae647115f2de5394563} was called \item\end{CompactList}\item 
+virtual void {\bf moveToTime} (const tick currentTime)
+\begin{CompactList}\small\item\em Moves the specified channel to at least the time given. \item\end{CompactList}\item 
+const {\bf TimingSpecification} \& {\bf getTimingSpecification} () const \label{class_d_r_a_msim_i_i_1_1_channel_3010ef141c980c8070206174e27dc6f2}
+
+\begin{CompactList}\small\item\em returns a reference to access the timing specification \item\end{CompactList}\item 
+{\bf Rank} \& {\bf getRank} (const unsigned rankNum)\label{class_d_r_a_msim_i_i_1_1_channel_0c7d8ee5fbf5ca79dd112e3161fe56a1}
+
+\begin{CompactList}\small\item\em get a reference to this channel's rank n \item\end{CompactList}\item 
+const {\bf Rank} \& {\bf getRank} (const unsigned rankNum) const \label{class_d_r_a_msim_i_i_1_1_channel_6c9930bd4bc28c8e56712fd36c2a2366}
+
+\begin{CompactList}\small\item\em get a const reference to this channel's rank n \item\end{CompactList}\item 
+std::vector$<$ {\bf Rank} $>$ \& {\bf getRank} ()\label{class_d_r_a_msim_i_i_1_1_channel_0bff9dc2207e7d3963d57523220c6eaa}
+
+\begin{CompactList}\small\item\em get a reference to this channel's ranks \item\end{CompactList}\item 
+const std::vector$<$ {\bf Rank} $>$ \& {\bf getRank} () const \label{class_d_r_a_msim_i_i_1_1_channel_31fdce469dc9e14f2a25d87913b628fd}
+
+\begin{CompactList}\small\item\em get a const reference to this channel's ranks \item\end{CompactList}\item 
+tick {\bf getTime} () const \label{class_d_r_a_msim_i_i_1_1_channel_861366579b98a0c6071612bb8b28d72c}
+
+\begin{CompactList}\small\item\em get the time that this channel is at \item\end{CompactList}\item 
+unsigned {\bf getLastRankID} () const \label{class_d_r_a_msim_i_i_1_1_channel_6d959ab956cc8ec9853bd097c4100b58}
+
+\begin{CompactList}\small\item\em get the last rank id a command was issued to \item\end{CompactList}\item 
+unsigned {\bf getTransactionQueueCount} () const \label{class_d_r_a_msim_i_i_1_1_channel_bfc824e8625764da6d626d49e064fa0f}
+
+\begin{CompactList}\small\item\em determine how many items are in the transaction completion queue \item\end{CompactList}\item 
+unsigned {\bf getTransactionQueueDepth} () const \label{class_d_r_a_msim_i_i_1_1_channel_1729c7902d94d7107ad1c037ac48c61b}
+
+\begin{CompactList}\small\item\em determine how large the transaction completion queue is \item\end{CompactList}\item 
+void {\bf setTime} (tick value)\label{class_d_r_a_msim_i_i_1_1_channel_aff9e370a63a946599760762979f3763}
+
+\begin{CompactList}\small\item\em update the time for this channel \item\end{CompactList}\item 
+void {\bf setChannelID} (const unsigned value)\label{class_d_r_a_msim_i_i_1_1_channel_c6d32458f9e270d265fd478921a50acc}
+
+\begin{CompactList}\small\item\em set the channel ordinal \item\end{CompactList}\item 
+Transaction::TransactionType {\bf setReadWriteType} (const int) const 
+\begin{CompactList}\small\item\em counts the number of reads and writes so far and returns whichever had more \item\end{CompactList}\item 
+{\bf Channel} \& {\bf operator=} (const {\bf Channel} \&rs)
+\begin{CompactList}\small\item\em the assignment operator, will copy non-key items to this channel \item\end{CompactList}\item 
+bool {\bf operator==} (const {\bf Channel} \&right) const 
+\begin{CompactList}\small\item\em the equality operator, to determine if the channels are equal incomingTransaction value \item\end{CompactList}\end{CompactItemize}
+\subsection*{Protected Member Functions}
+\begin{CompactItemize}
+\item 
+void {\bf retireCommand} ({\bf Command} $\ast$)
+\begin{CompactList}\small\item\em adds this command to the history queue \item\end{CompactList}\item 
+bool {\bf checkForAvailableCommandSlots} (const {\bf Transaction} $\ast$trans) const 
+\begin{CompactList}\small\item\em determines if there are enough command slots for the transaction to be decoded \item\end{CompactList}\item 
+bool {\bf transaction2commands} ({\bf Transaction} $\ast$)
+\begin{CompactList}\small\item\em converts a transaction into corresponding commands \item\end{CompactList}\item 
+{\bf Command} $\ast$ {\bf getNextCommand} (const {\bf Command} $\ast$useThisCommand=NULL)
+\begin{CompactList}\small\item\em chooses and dequeues the next command to execute \item\end{CompactList}\item 
+{\bf Transaction} $\ast$ {\bf getTransaction} ()
+\begin{CompactList}\small\item\em get the next transaction, whether a refresh transaction or a normal R/W transaction \item\end{CompactList}\item 
+{\bf Transaction} $\ast$ {\bf getAvailableTransaction} (unsigned useThis=UINT\_\-MAX)
+\begin{CompactList}\small\item\em removes and returns the next decodable transaction \item\end{CompactList}\item 
+const {\bf Transaction} $\ast$ {\bf readTransaction} (bool) const 
+\begin{CompactList}\small\item\em returns a pointer to the next transaction to issue to this channel without removing it \item\end{CompactList}\item 
+unsigned {\bf readAvailableTransaction} (bool) const 
+\begin{CompactList}\small\item\em read a transaction that is ready to go, out of order possibly \item\end{CompactList}\item 
+{\bf Transaction} $\ast$ {\bf createNextRefresh} ()
+\begin{CompactList}\small\item\em get the next refresh command and remove it from the queue \item\end{CompactList}\item 
+const {\bf Transaction} $\ast$ {\bf readNextRefresh} () const 
+\begin{CompactList}\small\item\em returns a pointer to the next refresh transaction that's going to be issued to this channel \item\end{CompactList}\item 
+tick {\bf nextRefreshTime} () const 
+\begin{CompactList}\small\item\em get the next refresh time \item\end{CompactList}\item 
+tick {\bf nextTransactionDecodeTime} () const 
+\begin{CompactList}\small\item\em determine when the next transaction incomingTransaction the queue will be decoded \item\end{CompactList}\item 
+tick {\bf nextCommandExecuteTime} () const 
+\begin{CompactList}\small\item\em determines the next time available for a command to issue \item\end{CompactList}\item 
+void {\bf executeCommand} ({\bf Command} $\ast$thisCommand)
+\begin{CompactList}\small\item\em Updates the channel time to what it would be had this command been executed. \item\end{CompactList}\item 
+virtual const {\bf Command} $\ast$ {\bf readNextCommand} () const 
+\begin{CompactList}\small\item\em returns a pointer to the command which would be chosen to be executed next \item\end{CompactList}\item 
+virtual tick {\bf minProtocolGap} (const {\bf Command} $\ast$thisCommand) const 
+\begin{CompactList}\small\item\em find the protocol gap between a command and current system state \item\end{CompactList}\item 
+virtual tick {\bf earliestExecuteTime} (const {\bf Command} $\ast$thisCommand) const 
+\begin{CompactList}\small\item\em Returns the soonest time that this command may execute. \item\end{CompactList}\item 
+virtual tick {\bf earliestExecuteTimeLog} (const {\bf Command} $\ast$thisCommand) const 
+\begin{CompactList}\small\item\em Returns the soonest time that this command may execute, tracks the limiting factor. \item\end{CompactList}\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+tick {\bf time}\label{class_d_r_a_msim_i_i_1_1_channel_e9426aeb784a6a3fedcf59d8c689a254}
+
+\begin{CompactList}\small\item\em channel time, allow for channel concurrency \item\end{CompactList}\item 
+tick {\bf lastCommandIssueTime}\label{class_d_r_a_msim_i_i_1_1_channel_84a76f41ec8743a1f2f6de0c624c4909}
+
+\begin{CompactList}\small\item\em the last time a command was executed on this channel \item\end{CompactList}\item 
+const {\bf Command} $\ast$ {\bf lastCommand}\label{class_d_r_a_msim_i_i_1_1_channel_15b1e46323837bad21da9414e25415fe}
+
+\begin{CompactList}\small\item\em id of the last accessed rank of this channel \item\end{CompactList}\item 
+{\bf TimingSpecification} {\bf timingSpecification}\label{class_d_r_a_msim_i_i_1_1_channel_05d8007116bcfff6b9fb6373543bf173}
+
+\begin{CompactList}\small\item\em the timing specs for this channel \item\end{CompactList}\item 
+{\bf Queue}$<$ {\bf Transaction} $>$ {\bf transactionQueue}\label{class_d_r_a_msim_i_i_1_1_channel_eac2d37d1298f9bb4f1e34f50ee5e25d}
+
+\begin{CompactList}\small\item\em transaction queue for the channel \item\end{CompactList}\item 
+std::vector$<$ tick $>$ {\bf refreshCounter}\label{class_d_r_a_msim_i_i_1_1_channel_6a0b2f52ccac1da1447e20b9cbae29a3}
+
+\begin{CompactList}\small\item\em holds the next refresh command time for the rank \item\end{CompactList}\item 
+const {\bf SystemConfiguration} \& {\bf systemConfig}\label{class_d_r_a_msim_i_i_1_1_channel_c5133db93f637bbbd85872919e778297}
+
+\begin{CompactList}\small\item\em a pointer to common system config values \item\end{CompactList}\item 
+{\bf Statistics} \& {\bf statistics}\label{class_d_r_a_msim_i_i_1_1_channel_075b2f3a54ebade3af3e242806259200}
+
+\begin{CompactList}\small\item\em backward pointer to the stats engine \item\end{CompactList}\item 
+{\bf PowerConfig} {\bf powerModel}\label{class_d_r_a_msim_i_i_1_1_channel_cbbcf58fdd8d251002465261d2a72873}
+
+\begin{CompactList}\small\item\em the power model for this channel, retains power stats \item\end{CompactList}\item 
+unsigned {\bf channelID}\label{class_d_r_a_msim_i_i_1_1_channel_4fdc981bf6ca993921be2e394d852efa}
+
+\begin{CompactList}\small\item\em the ordinal value of this channel (0..n) \item\end{CompactList}\item 
+bool {\bf dbReporting}\label{class_d_r_a_msim_i_i_1_1_channel_686a09d238007aac28ad7f790c5489a4}
+
+\begin{CompactList}\small\item\em whether or not to report results to a db \item\end{CompactList}\item 
+std::vector$<$ {\bf Rank} $>$ {\bf rank}\label{class_d_r_a_msim_i_i_1_1_channel_d298e9b41a4bc083b4d20d1635c3e829}
+
+\begin{CompactList}\small\item\em vector of the array of ranks \item\end{CompactList}\item 
+std::queue$<$ std::pair$<$ unsigned, tick $>$ $>$ {\bf finishedTransactions}\label{class_d_r_a_msim_i_i_1_1_channel_80c78098ea16fcfa2d3099f02c6c37ce}
+
+\begin{CompactList}\small\item\em the transactions finished this time \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+represents a DRAM channel, has individual timing parameters, ranks, banks, clock, etc. 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!Channel@{Channel}}
+\index{Channel@{Channel}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{Channel}]{\setlength{\rightskip}{0pt plus 5cm}Channel::Channel (const {\bf Settings} \& {\em settings}, \/  const {\bf SystemConfiguration} \& {\em sysConfig}, \/  {\bf Statistics} \& {\em stats})\hspace{0.3cm}{\tt  [explicit]}}\label{class_d_r_a_msim_i_i_1_1_channel_14a707920dfcf559abd1c48fad84866a}
+
+
+constructs the dramChannel using this settings reference, also makes a reference to the dramSystemConfiguration object 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em settings}]the settings file that defines the number of ranks, refresh policy, etc. \item[{\em sysConfig}]a const reference is made to this for some functions to grab parameters from \item[{\em stats}]a reference to the stats object that will be collecting data \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!Channel@{Channel}}
+\index{Channel@{Channel}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{Channel}]{\setlength{\rightskip}{0pt plus 5cm}Channel::Channel (const {\bf Channel} \& {\em rhs})}\label{class_d_r_a_msim_i_i_1_1_channel_ee673bcc93a9984513a0efb3c42d2d2f}
+
+
+copy constructor, reassigns the ordinal to each rank as they are duplicated 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em rhs}]the dramChannel object to be copied \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!Channel@{Channel}}
+\index{Channel@{Channel}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{Channel}]{\setlength{\rightskip}{0pt plus 5cm}Channel::Channel (const {\bf Channel} \& {\em rhs}, \/  const {\bf SystemConfiguration} \& {\em systemConfig}, \/  {\bf Statistics} \& {\em stats})\hspace{0.3cm}{\tt  [explicit]}}\label{class_d_r_a_msim_i_i_1_1_channel_45a28d42cc3099f5d967b9a6d298badf}
+
+
+the copy constructor for building unitialized copies of a channel 
+
+normal copy constructor \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!$\sim$Channel@{$\sim$Channel}}
+\index{$\sim$Channel@{$\sim$Channel}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{$\sim$Channel}]{\setlength{\rightskip}{0pt plus 5cm}Channel::$\sim$Channel ()\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_msim_i_i_1_1_channel_5f15ebd302464069f1a9e3f0ded14482}
+
+
+channel destructor 
+
+need to remove all the commands in the queues before destructing the channel because some refresh commands are simultaneously in two or more queues and will be duplicated in the command pool if they are not removed properly 
+
+\subsection{Member Function Documentation}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!checkForAvailableCommandSlots@{checkForAvailableCommandSlots}}
+\index{checkForAvailableCommandSlots@{checkForAvailableCommandSlots}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{checkForAvailableCommandSlots}]{\setlength{\rightskip}{0pt plus 5cm}bool Channel::checkForAvailableCommandSlots (const {\bf Transaction} $\ast$ {\em incomingTransaction}) const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_311f351c816f6b817e1d9e8439f439fc}
+
+
+determines if there are enough command slots for the transaction to be decoded 
+
+this will ensure that a given transaction can be broken into and inserted as commands in this channel if there is not enough room according to a given algorithm, then it will indicate that this is not possible \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em incomingTransaction}]trans the transaction to be considered \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]true if there is enough room, false otherwise \end{Desc}
+
+
+\begin{Desc}
+\item[{\bf Todo}]switch to iterator arithmetic \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!createNextRefresh@{createNextRefresh}}
+\index{createNextRefresh@{createNextRefresh}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{createNextRefresh}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Transaction} $\ast$ Channel::createNextRefresh ()\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_ad689363a5c222dbcc9cc327d1a382cb}
+
+
+get the next refresh command and remove it from the queue 
+
+returns a pointer to a refresh transaction that represents what the next refresh \par
+ transaction would be. this should not be enqueued as it has not been removed yet \begin{Desc}
+\item[Returns:]the next possible refresh transaction \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!doPowerCalculation@{doPowerCalculation}}
+\index{doPowerCalculation@{doPowerCalculation}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{doPowerCalculation}]{\setlength{\rightskip}{0pt plus 5cm}void Channel::doPowerCalculation (const tick {\em systemTime})}\label{class_d_r_a_msim_i_i_1_1_channel_0d13f91b788925a91ade7801391568d5}
+
+
+performs power calculations for this epoch and cumulative 
+
+calculates the power according to Micron technical note TN-47-04\par
+ also does breakdowns of power consumed per channel and per epoch as well as averaged over time \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+
+
+\begin{Desc}
+\item[{\bf Todo}]actually simulate CKE, per rank \end{Desc}
+
+
+\begin{Desc}
+\item[{\bf Todo}]: account for CKE \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!earliestExecuteTime@{earliestExecuteTime}}
+\index{earliestExecuteTime@{earliestExecuteTime}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{earliestExecuteTime}]{\setlength{\rightskip}{0pt plus 5cm}tick Channel::earliestExecuteTime (const {\bf Command} $\ast$ {\em currentCommand}) const\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_msim_i_i_1_1_channel_4465dd17290100fa458caa6390ae0a0f}
+
+
+Returns the soonest time that this command may execute. 
+
+refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk by Jacob/Wang Looks at all of the timing parameters and decides when the this command may soonest execute \index{DRAMsimII::Channel@{DRAMsimII::Channel}!earliestExecuteTimeLog@{earliestExecuteTimeLog}}
+\index{earliestExecuteTimeLog@{earliestExecuteTimeLog}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{earliestExecuteTimeLog}]{\setlength{\rightskip}{0pt plus 5cm}tick Channel::earliestExecuteTimeLog (const {\bf Command} $\ast$ {\em currentCommand}) const\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_msim_i_i_1_1_channel_0c8eefcbd0952de5631c22608cc2b7fd}
+
+
+Returns the soonest time that this command may execute, tracks the limiting factor. 
+
+refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk by Jacob/Wang Looks at all of the timing parameters and decides when the this command may execute soonest \index{DRAMsimII::Channel@{DRAMsimII::Channel}!enqueue@{enqueue}}
+\index{enqueue@{enqueue}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{enqueue}]{\setlength{\rightskip}{0pt plus 5cm}bool Channel::enqueue ({\bf Transaction} $\ast$ {\em incomingTransaction})}\label{class_d_r_a_msim_i_i_1_1_channel_da774dec2e706f86d1c3364cb6b8d3bb}
+
+
+enqueue the transaction into the transactionQueue 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em incomingTransaction}]the transaction to be put into the queue \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]true if there was room incomingTransaction the queue for this command and the algorithm allowed it, false otherwise \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!executeCommand@{executeCommand}}
+\index{executeCommand@{executeCommand}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{executeCommand}]{\setlength{\rightskip}{0pt plus 5cm}void Channel::executeCommand ({\bf Command} $\ast$ {\em thisCommand})\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_c70faefd9c39af71cb67096c00527331}
+
+
+Updates the channel time to what it would be had this command been executed. 
+
+Updates the rank and bank records of the most recent RAS, CAS, etc. times Enqueues RAS times to allow t\_\-faw to be determined later Updates rank and bank records of CAS, RAS lengths for later calculations in min\_\-protocol\_\-gap() \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em thisCommand}]the command to execute at this time \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+
+
+\begin{Desc}
+\item[{\bf Todo}]let each rank figure out if the command is to it or not by combining issueCAS and issueCASother \end{Desc}
+
+
+\begin{Desc}
+\item[{\bf Todo}]let each rank figure out if the command is to it or not by combining issueCAS and issueCASother \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!getAvailableTransaction@{getAvailableTransaction}}
+\index{getAvailableTransaction@{getAvailableTransaction}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{getAvailableTransaction}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Transaction} $\ast$ Channel::getAvailableTransaction (unsigned {\em useThis} = {\tt UINT\_\-MAX})\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_0cc52c572e890e714452bf9fe7dcf524}
+
+
+removes and returns the next decodable transaction 
+
+\begin{Desc}
+\item[See also:]\doxyref{readAvailableTransaction()}{p.}{class_d_r_a_msim_i_i_1_1_channel_7887227e2915a92fa0e2861f85146600} returns a transaction that can be decoded right now in the same way as \doxyref{readAvailableTransaction()}{p.}{class_d_r_a_msim_i_i_1_1_channel_7887227e2915a92fa0e2861f85146600}, but actually removes it \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!getNextCommand@{getNextCommand}}
+\index{getNextCommand@{getNextCommand}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{getNextCommand}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} $\ast$ Channel::getNextCommand (const {\bf Command} $\ast$ {\em useThisCommand} = {\tt NULL})\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_7ccb7a779c25d6eac6c3d6b7bf0d7449}
+
+
+chooses and dequeues the next command to execute 
+
+Chooses the command which should be executed next from the given channel Choice is made based on command\_\-ordering\_\-algorithm from system config \doxyref{Command}{p.}{class_d_r_a_msim_i_i_1_1_command} returned has already been removed from the per\_\-bank\_\-command\_\-queue from which it was selected \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Returns:]a pointer to the next command \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!getPendingTransactions@{getPendingTransactions}}
+\index{getPendingTransactions@{getPendingTransactions}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{getPendingTransactions}]{\setlength{\rightskip}{0pt plus 5cm}void Channel::getPendingTransactions (std::queue$<$ std::pair$<$ unsigned, tick $>$ $>$ \& {\em outputQueue})}\label{class_d_r_a_msim_i_i_1_1_channel_45aa0482ce88a84d0ad46b12aa5f762e}
+
+
+return any transactions that finished when \doxyref{moveToTime()}{p.}{class_d_r_a_msim_i_i_1_1_channel_86f558398b775ae647115f2de5394563} was called 
+
+moves results from the internal queue to the given queue \begin{Desc}
+\item[Returns:]a queue that has the results in transactionID, finished time pairs \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!getTransaction@{getTransaction}}
+\index{getTransaction@{getTransaction}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{getTransaction}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Transaction} $\ast$ Channel::getTransaction ()\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_5476d2960d9e14e5e6481f6d33709df8}
+
+
+get the next transaction, whether a refresh transaction or a normal R/W transaction 
+
+gets the next transaction for this channel and removes it, always returns a transaction that is able to decode \begin{Desc}
+\item[Returns:]the next transaction for this channel \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!minProtocolGap@{minProtocolGap}}
+\index{minProtocolGap@{minProtocolGap}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{minProtocolGap}]{\setlength{\rightskip}{0pt plus 5cm}tick Channel::minProtocolGap (const {\bf Command} $\ast$ {\em currentCommand}) const\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_msim_i_i_1_1_channel_e530764b1ea3144c32f1ee2f15ec9c89}
+
+
+find the protocol gap between a command and current system state 
+
+old version of the function to check the next available command time, now used to check newer functions and ensure changes don't break timing requirements 
+
+Reimplemented in {\bf DRAMsimII::fbdChannel} \doxyref{}{p.}{class_d_r_a_msim_i_i_1_1fbd_channel_e00da4585914ccdeea1cff8294e9ed69}.\index{DRAMsimII::Channel@{DRAMsimII::Channel}!moveToTime@{moveToTime}}
+\index{moveToTime@{moveToTime}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{moveToTime}]{\setlength{\rightskip}{0pt plus 5cm}void Channel::moveToTime (const tick {\em currentTime})\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_msim_i_i_1_1_channel_86f558398b775ae647115f2de5394563}
+
+
+Moves the specified channel to at least the time given. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em currentTime}]issue all events up to and including this time \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+
+
+\begin{Desc}
+\item[{\bf Todo}]continue until no events are processed, no commands issued, no transactions decoded \end{Desc}
+
+
+\begin{Desc}
+\item[{\bf Todo}]verify that this is right \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!nextCommandExecuteTime@{nextCommandExecuteTime}}
+\index{nextCommandExecuteTime@{nextCommandExecuteTime}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{nextCommandExecuteTime}]{\setlength{\rightskip}{0pt plus 5cm}tick Channel::nextCommandExecuteTime () const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_0e0ba95b7cbf831ee1fda9fd91901906}
+
+
+determines the next time available for a command to issue 
+
+\begin{Desc}
+\item[Returns:]the next time an event occurs on this channel \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!nextRefreshTime@{nextRefreshTime}}
+\index{nextRefreshTime@{nextRefreshTime}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{nextRefreshTime}]{\setlength{\rightskip}{0pt plus 5cm}tick Channel::nextRefreshTime () const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_00ad45bd632d212ded9605f5488ee147}
+
+
+get the next refresh time 
+
+\begin{Desc}
+\item[Returns:]the time at which the next refresh should be issued for this channel \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!nextTick@{nextTick}}
+\index{nextTick@{nextTick}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{nextTick}]{\setlength{\rightskip}{0pt plus 5cm}tick Channel::nextTick () const\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_msim_i_i_1_1_channel_600b15ceb9c7c06e75f26a3cf969577b}
+
+
+determines when the next transaction is decoded, command ready to be executed or next refresh command arrives 
+
+\begin{Desc}
+\item[Returns:]the time when the next event happens \end{Desc}
+\begin{Desc}
+\item[See also:]readTransactionSimple() \doxyref{readNextCommand()}{p.}{class_d_r_a_msim_i_i_1_1_channel_4f4b7e6a327ff6a00713a4a8124d6c89} \doxyref{earliestExecuteTime()}{p.}{class_d_r_a_msim_i_i_1_1_channel_4465dd17290100fa458caa6390ae0a0f} \doxyref{checkForAvailableCommandSlots()}{p.}{class_d_r_a_msim_i_i_1_1_channel_311f351c816f6b817e1d9e8439f439fc} \doxyref{nextRefreshTime()}{p.}{class_d_r_a_msim_i_i_1_1_channel_00ad45bd632d212ded9605f5488ee147} \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!nextTransactionDecodeTime@{nextTransactionDecodeTime}}
+\index{nextTransactionDecodeTime@{nextTransactionDecodeTime}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{nextTransactionDecodeTime}]{\setlength{\rightskip}{0pt plus 5cm}tick Channel::nextTransactionDecodeTime () const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_d3e2f574c25d524c1bc76b7948b4f1ea}
+
+
+determine when the next transaction incomingTransaction the queue will be decoded 
+
+\begin{Desc}
+\item[Returns:]the time when the decoding will be complete \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!operator=@{operator=}}
+\index{operator=@{operator=}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Channel} \& Channel::operator= (const {\bf Channel} \& {\em rhs})}\label{class_d_r_a_msim_i_i_1_1_channel_7e381469d0f4eb86f98877434078a397}
+
+
+the assignment operator, will copy non-key items to this channel 
+
+copies the non-reference items over, should be used for deserialization \begin{Desc}
+\item[Returns:]a reference to this channel, for chaining \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!operator==@{operator==}}
+\index{operator==@{operator==}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool Channel::operator== (const {\bf Channel} \& {\em rhs}) const}\label{class_d_r_a_msim_i_i_1_1_channel_857df39abce2ca631a353b01b618fc36}
+
+
+the equality operator, to determine if the channels are equal incomingTransaction value 
+
+\begin{Desc}
+\item[Returns:]true if the channels are equal \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!readAvailableTransaction@{readAvailableTransaction}}
+\index{readAvailableTransaction@{readAvailableTransaction}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{readAvailableTransaction}]{\setlength{\rightskip}{0pt plus 5cm}unsigned Channel::readAvailableTransaction (bool {\em bufferDelay}) const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_7887227e2915a92fa0e2861f85146600}
+
+
+read a transaction that is ready to go, out of order possibly 
+
+searches from the head to the end or the decode window to find a transaction that is able to be decoded at the current time \begin{Desc}
+\item[Returns:]a pointer to the next transaction that can currently be decoded \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!readNextCommand@{readNextCommand}}
+\index{readNextCommand@{readNextCommand}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{readNextCommand}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Command} $\ast$ Channel::readNextCommand () const\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_msim_i_i_1_1_channel_4f4b7e6a327ff6a00713a4a8124d6c89}
+
+
+returns a pointer to the command which would be chosen to be executed next 
+
+chooses a command according to the command ordering algorithm, tries to choose a command which can execute the command returned may not be able to be executed yet, so it is important to check this command is not actually removed from the per bank queues \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Returns:]a const pointer to the next available command \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!readNextRefresh@{readNextRefresh}}
+\index{readNextRefresh@{readNextRefresh}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{readNextRefresh}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Transaction} $\ast$ Channel::readNextRefresh () const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_134ad422666cce6800373f85bf349725}
+
+
+returns a pointer to the next refresh transaction that's going to be issued to this channel 
+
+returns a pointer to a representative object for the next refresh that this channel will see \begin{Desc}
+\item[Returns:]a pointer to a representative copy of the next refresh transaction \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!readTransaction@{readTransaction}}
+\index{readTransaction@{readTransaction}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{readTransaction}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Transaction} $\ast$ Channel::readTransaction (bool {\em bufferDelay}) const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_11346a2c4a644e97da954e01a2b664fe}
+
+
+returns a pointer to the next transaction to issue to this channel without removing it 
+
+read the next available transaction for this channel without actually removing it from the queue \par
+ if bufferDelay is set, then only transactions that have been incomingTransaction the queue long enough to decode are considered \begin{Desc}
+\item[Returns:]the next transaction that should be issued to this channel \end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!resetToTime@{resetToTime}}
+\index{resetToTime@{resetToTime}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{resetToTime}]{\setlength{\rightskip}{0pt plus 5cm}void Channel::resetToTime (const tick {\em time})}\label{class_d_r_a_msim_i_i_1_1_channel_7c5c87ed9b458d23a0482410f89536a9}
+
+
+reset some stats to account for the fact that fast-forwarding has moved time forward significantly 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em time}]the time at which the timing model begins \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!retireCommand@{retireCommand}}
+\index{retireCommand@{retireCommand}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{retireCommand}]{\setlength{\rightskip}{0pt plus 5cm}void Channel::retireCommand ({\bf Command} $\ast$ {\em newestCommand})\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_1b45dcd1a06bee01673f50f6b3b3e380}
+
+
+adds this command to the history queue 
+
+this allows other groups to view a recent history of commands that were issued to decide what to execute next \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!setReadWriteType@{setReadWriteType}}
+\index{setReadWriteType@{setReadWriteType}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{setReadWriteType}]{\setlength{\rightskip}{0pt plus 5cm}Transaction::TransactionType Channel::setReadWriteType (const int {\em rankID}) const}\label{class_d_r_a_msim_i_i_1_1_channel_270aa3d8611e3f390b9fcde7498f79ea}
+
+
+counts the number of reads and writes so far and returns whichever had more 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em rankID}]which rank to look at when determining which transaction type to choose \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\index{DRAMsimII::Channel@{DRAMsimII::Channel}!transaction2commands@{transaction2commands}}
+\index{transaction2commands@{transaction2commands}!DRAMsimII::Channel@{DRAMsimII::Channel}}
+\subsubsection[{transaction2commands}]{\setlength{\rightskip}{0pt plus 5cm}bool Channel::transaction2commands ({\bf Transaction} $\ast$ {\em incomingTransaction})\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_channel_c3e345bcc7bbe92151f9369638c18dd8}
+
+
+converts a transaction into corresponding commands 
+
+takes a transaction and divides it into a number of commands, depending which row buffer management policy is chosen\par
+ currently will divide it into RAS, CAS, Pre or RAS, CAS+P and insert these commands into the per bank queues\par
+ the CAS command will contain a pointer to the host transaction to indicate that a read transaction has available data \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em incomingTransaction}]the transaction which is divided up \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]true if the transaction was able to be divided up and put into per bank queues \end{Desc}
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/Channel.h\item 
+src/Channel.cpp\end{CompactItemize}

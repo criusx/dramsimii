@@ -1,0 +1,186 @@
+\section{DRAMsimII::Queue$<$ T $>$ Class Template Reference}
+\label{class_d_r_a_msim_i_i_1_1_queue}\index{DRAMsimII::Queue@{DRAMsimII::Queue}}
+the queue template class, rhs circular queue  
+
+
+{\tt \#include $<$queue.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Queue} (const {\bf Queue}$<$ T $>$ \&rhs)
+\begin{CompactList}\small\item\em copy constructor \item\end{CompactList}\item 
+{\bf Queue} (const unsigned size, const bool preallocate=false)
+\begin{CompactList}\small\item\em constructor \item\end{CompactList}\item 
+{\bf $\sim$Queue} ()
+\begin{CompactList}\small\item\em destructor \item\end{CompactList}\item 
+void {\bf resize} (unsigned size, bool preallocate=false)
+\begin{CompactList}\small\item\em change the size of the queue \item\end{CompactList}\item 
+bool {\bf push} (T $\ast$item)
+\begin{CompactList}\small\item\em add an item to the back of the queue \item\end{CompactList}\item 
+bool {\bf push\_\-front} (T $\ast$item)\label{class_d_r_a_msim_i_i_1_1_queue_b115d3b196706625ccd45f536acf3c9f}
+
+\begin{CompactList}\small\item\em add an item to the front of the queue efficiently \item\end{CompactList}\item 
+T $\ast$ {\bf pop} ()
+\begin{CompactList}\small\item\em remove the item at the front of the queue \item\end{CompactList}\item 
+T $\ast$ {\bf popback} ()
+\begin{CompactList}\small\item\em remove the item from the tail of the queue \item\end{CompactList}\item 
+const T $\ast$ {\bf front} () const 
+\begin{CompactList}\small\item\em get rhs pointer to the item at the head of the queue \item\end{CompactList}\item 
+const T $\ast$ {\bf back} () const \label{class_d_r_a_msim_i_i_1_1_queue_e4969b401ba2c7b37f0becdcce115390}
+
+\begin{CompactList}\small\item\em to get rhs pointer to the item most recently inserted into the queue \item\end{CompactList}\item 
+unsigned {\bf size} () const \label{class_d_r_a_msim_i_i_1_1_queue_52a5a98afc0edac59cfcd4efac0569c4}
+
+\begin{CompactList}\small\item\em get the number of entries currently in this queue \item\end{CompactList}\item 
+unsigned {\bf depth} () const \label{class_d_r_a_msim_i_i_1_1_queue_193465ae95b739f1d55206fa6630856f}
+
+\begin{CompactList}\small\item\em get the number of entries this queue can hold \item\end{CompactList}\item 
+T $\ast$ {\bf read} (const int offset) const \label{class_d_r_a_msim_i_i_1_1_queue_594030f83e50b8b97a3c1633394d5715}
+
+\begin{CompactList}\small\item\em get rhs pointer to the item at this offset without removing it \item\end{CompactList}\item 
+void {\bf releaseItem} (T $\ast$item)
+\begin{CompactList}\small\item\em release item into pool \item\end{CompactList}\item 
+T $\ast$ {\bf acquireItem} ()
+\begin{CompactList}\small\item\em treat this queue like an object pool and retrieve an item \item\end{CompactList}\item 
+bool {\bf insert} (T $\ast$item, const int offset)
+\begin{CompactList}\small\item\em this function makes this queue rhs non-FIFO queue. \item\end{CompactList}\item 
+unsigned {\bf freecount} () const \label{class_d_r_a_msim_i_i_1_1_queue_22574a49b87fd67dda5a0c1cea9235a8}
+
+\begin{CompactList}\small\item\em the number of entries still available in this queue \item\end{CompactList}\item 
+bool {\bf isFull} () const \label{class_d_r_a_msim_i_i_1_1_queue_5dd28855c0ff9c2a5b332592948ec0ef}
+
+\begin{CompactList}\small\item\em whether or not there is room for any more entries in this queue \item\end{CompactList}\item 
+bool {\bf isEmpty} () const \label{class_d_r_a_msim_i_i_1_1_queue_7a2a856af27f9979d2d20c7e3156eb05}
+
+\begin{CompactList}\small\item\em whether or not this queue has no entries in it \item\end{CompactList}\item 
+bool {\bf operator==} (const {\bf Queue}$<$ T $>$ \&rhs) const \label{class_d_r_a_msim_i_i_1_1_queue_5a9c567e37a285618531b6f2a6fb6aa1}
+
+\begin{CompactList}\small\item\em do rhs comparison to see if the queues are equal \item\end{CompactList}\item 
+{\bf Queue}$<$ T $>$ \& {\bf operator=} (const {\bf Queue}$<$ T $>$ \&rhs)
+\begin{CompactList}\small\item\em assignment operator overload \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$ class DRAMsimII::Queue$<$ T $>$}
+
+the queue template class, rhs circular queue 
+
+push/pop are O(1) operations, while random insertions are O(n) operations 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{DRAMsimII::Queue@{DRAMsimII::Queue}!Queue@{Queue}}
+\index{Queue@{Queue}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{Queue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ {\bf DRAMsimII::Queue}$<$ T $>$::{\bf Queue} (const {\bf Queue}$<$ T $>$ \& {\em rhs})\hspace{0.3cm}{\tt  [inline, explicit]}}\label{class_d_r_a_msim_i_i_1_1_queue_a43f7ac274a3432a36b8f275ce27d67c}
+
+
+copy constructor 
+
+copy the existing queue, making copies of each element \index{DRAMsimII::Queue@{DRAMsimII::Queue}!Queue@{Queue}}
+\index{Queue@{Queue}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{Queue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ {\bf DRAMsimII::Queue}$<$ T $>$::{\bf Queue} (const unsigned {\em size}, \/  const bool {\em preallocate} = {\tt false})\hspace{0.3cm}{\tt  [inline, explicit]}}\label{class_d_r_a_msim_i_i_1_1_queue_166d590604d089637db1304f11167b5a}
+
+
+constructor 
+
+create rhs queue of rhs certain size and optionally fill it with empty elements \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em size}]the depth of the circular queue \item[{\em preallocate}]whether or not to fill the queue with blank elements, defaults to false \end{description}
+\end{Desc}
+\index{DRAMsimII::Queue@{DRAMsimII::Queue}!$\sim$Queue@{$\sim$Queue}}
+\index{$\sim$Queue@{$\sim$Queue}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{$\sim$Queue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ {\bf DRAMsimII::Queue}$<$ T $>$::$\sim${\bf Queue} ()\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_3b3f6d860c9b966677b4e1a195e777bf}
+
+
+destructor 
+
+remove the elements and delete them before removing the rest of the queue 
+
+\subsection{Member Function Documentation}
+\index{DRAMsimII::Queue@{DRAMsimII::Queue}!acquireItem@{acquireItem}}
+\index{acquireItem@{acquireItem}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{acquireItem}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ T$\ast$ {\bf DRAMsimII::Queue}$<$ T $>$::acquireItem ()\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_b54786763992c459ad787749a01ba545}
+
+
+treat this queue like an object pool and retrieve an item 
+
+if there is no available object, then create one \begin{Desc}
+\item[Returns:]rhs new item which may or may not be initialized \end{Desc}
+\index{DRAMsimII::Queue@{DRAMsimII::Queue}!front@{front}}
+\index{front@{front}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{front}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ const T$\ast$ {\bf DRAMsimII::Queue}$<$ T $>$::front () const\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_850213fe5d31d3b2f6edc194d6e72b3d}
+
+
+get rhs pointer to the item at the head of the queue 
+
+similar to peek() \begin{Desc}
+\item[Returns:]rhs pointer to the item at the front of the queue, or NULL if the queue is empty \end{Desc}
+\index{DRAMsimII::Queue@{DRAMsimII::Queue}!insert@{insert}}
+\index{insert@{insert}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{insert}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ bool {\bf DRAMsimII::Queue}$<$ T $>$::insert (T $\ast$ {\em item}, \/  const int {\em offset})\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_6b51d06f571c13b2e81a0c51623ba54d}
+
+
+this function makes this queue rhs non-FIFO queue. 
+
+Allows insertion into the middle or at any end \index{DRAMsimII::Queue@{DRAMsimII::Queue}!operator=@{operator=}}
+\index{operator=@{operator=}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ {\bf Queue}$<$T$>$\& {\bf DRAMsimII::Queue}$<$ T $>$::operator= (const {\bf Queue}$<$ T $>$ \& {\em rhs})\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_d108e491b4d2b5eed585f22cba0d66e5}
+
+
+assignment operator overload 
+
+moves all the objects from the rhs object to the lhs object \index{DRAMsimII::Queue@{DRAMsimII::Queue}!pop@{pop}}
+\index{pop@{pop}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{pop}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ T$\ast$ {\bf DRAMsimII::Queue}$<$ T $>$::pop ()\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_f25337ce05c231a10809f6b3f3344e4d}
+
+
+remove the item at the front of the queue 
+
+\begin{Desc}
+\item[Returns:]the item at the head of the queue, NULL if the queue is empty \end{Desc}
+\index{DRAMsimII::Queue@{DRAMsimII::Queue}!popback@{popback}}
+\index{popback@{popback}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{popback}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ T$\ast$ {\bf DRAMsimII::Queue}$<$ T $>$::popback ()\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_33d70a6d9462359c8539401ad45b4c3f}
+
+
+remove the item from the tail of the queue 
+
+\begin{Desc}
+\item[Returns:]the item formerly at the tail of the queue, or NULL if the queue is empty TODO untested \end{Desc}
+\index{DRAMsimII::Queue@{DRAMsimII::Queue}!push@{push}}
+\index{push@{push}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{push}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ bool {\bf DRAMsimII::Queue}$<$ T $>$::push (T $\ast$ {\em item})\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_617e50de4a77b5bc1e7ec3368bb132ac}
+
+
+add an item to the back of the queue 
+
+issue rhs warning if the element is null return false if the queue is already full add to the tail pointer position and remove from the head \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em item}]the item to be inserted into the queue \end{description}
+\end{Desc}
+\index{DRAMsimII::Queue@{DRAMsimII::Queue}!releaseItem@{releaseItem}}
+\index{releaseItem@{releaseItem}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{releaseItem}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ void {\bf DRAMsimII::Queue}$<$ T $>$::releaseItem (T $\ast$ {\em item})\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_b9035bfc5f1a6db6ab697a5058642f38}
+
+
+release item into pool 
+
+This is useful for when the queue holds preallocated pieces of memory and one would like to store them when they are not in use \index{DRAMsimII::Queue@{DRAMsimII::Queue}!resize@{resize}}
+\index{resize@{resize}!DRAMsimII::Queue@{DRAMsimII::Queue}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ void {\bf DRAMsimII::Queue}$<$ T $>$::resize (unsigned {\em size}, \/  bool {\em preallocate} = {\tt false})\hspace{0.3cm}{\tt  [inline]}}\label{class_d_r_a_msim_i_i_1_1_queue_ba5258156502bfb99cff932324a71412}
+
+
+change the size of the queue 
+
+remove all existing elements and create rhs new queue of rhs different size \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em size}]the depth to set the queue to \item[{\em preallocate}]whether or not to fill the queue with blank elements, defaults to false \end{description}
+\end{Desc}
+
+
+The documentation for this class was generated from the following file:\begin{CompactItemize}
+\item 
+src/queue.h\end{CompactItemize}

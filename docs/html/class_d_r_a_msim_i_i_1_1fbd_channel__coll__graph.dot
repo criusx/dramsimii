@@ -1,0 +1,34 @@
+digraph G
+{
+  bgcolor="transparent";
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="DRAMsimII::fbdChannel",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node2 -> Node1 [dir=back,color="firebrick4",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="DRAMsimII::Channel",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_channel.html",tooltip="represents a DRAM channel, has individual timing parameters, ranks, banks, clock..."];
+  Node3 -> Node2 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="lastCommand",fontname="FreeSans"];
+  Node3 [label="DRAMsimII::Command",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_command.html",tooltip="represents a DRAM command from the memory controller to the DRAMs"];
+  Node4 -> Node3 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node4 [label="DRAMsimII::Event",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_event.html",tooltip="pending event queue"];
+  Node5 -> Node4 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="address",fontname="FreeSans"];
+  Node5 [label="DRAMsimII::Address",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_address.html",tooltip="This class logically represents several interpretations of a memory address."];
+  Node6 -> Node3 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="hostTransaction",fontname="FreeSans"];
+  Node6 [label="DRAMsimII::Transaction",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_transaction.html",tooltip="a request to read or write some portion of memory, atomically"];
+  Node4 -> Node6 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node7 -> Node6 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="freeTransactionPool",fontname="FreeSans"];
+  Node7 [label="DRAMsimII::Queue\< Transaction \>",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_queue.html"];
+  Node8 -> Node3 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="freeCommandPool",fontname="FreeSans"];
+  Node8 [label="DRAMsimII::Queue\< Command \>",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_queue.html"];
+  Node9 -> Node2 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="systemConfig",fontname="FreeSans"];
+  Node9 [label="DRAMsimII::SystemConfiguration",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_system_configuration.html",tooltip="stores the system configuration options for a dramSystem"];
+  Node10 -> Node2 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="timingSpecification",fontname="FreeSans"];
+  Node10 [label="DRAMsimII::TimingSpecification",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_timing_specification.html",tooltip="contains all the specs for this channel&#39;s DIMMs"];
+  Node11 -> Node2 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="powerModel",fontname="FreeSans"];
+  Node11 [label="DRAMsimII::PowerConfig",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_power_config.html",tooltip="stores power configuration parameters for this DRAM system necessary to calculate..."];
+  Node7 -> Node2 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="transactionQueue",fontname="FreeSans"];
+  Node12 -> Node2 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="statistics",fontname="FreeSans"];
+  Node12 [label="DRAMsimII::Statistics",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_statistics.html",tooltip="stores statistics about this memory system, primarily relating to counts of transactions/commands..."];
+  Node13 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="frameQueue",fontname="FreeSans"];
+  Node13 [label="DRAMsimII::Queue\< fbdFrame \>",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_queue.html"];
+}

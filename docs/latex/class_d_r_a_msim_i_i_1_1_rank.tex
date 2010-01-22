@@ -1,0 +1,188 @@
+\section{DRAMsimII::Rank Class Reference}
+\label{class_d_r_a_msim_i_i_1_1_rank}\index{DRAMsimII::Rank@{DRAMsimII::Rank}}
+represents a logical rank and associated statistics  
+
+
+{\tt \#include $<$Rank.h$>$}
+
+Collaboration diagram for DRAMsimII::Rank:\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+bool {\bf refreshAllReady} () const 
+\begin{CompactList}\small\item\em is there a refresh command ready at each per bank queue \item\end{CompactList}\item 
+{\bf Command} $\ast$ {\bf getCommand} (const unsigned {\bf bank})
+\begin{CompactList}\small\item\em get the next command in the queue for this bank \item\end{CompactList}\item 
+void {\bf issueRAS} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_rank_cd302ac19a7481c9dd6cce3af185fada}
+
+\begin{CompactList}\small\item\em this logically issues a RAS command and updates all variables to reflect this \item\end{CompactList}\item 
+void {\bf issuePRE} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_rank_aed6f0f5d0a6ee1b65ab7543a60cdf92}
+
+\begin{CompactList}\small\item\em issue a precharge command to this rank \item\end{CompactList}\item 
+void {\bf issueCASother} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_rank_666ea94c63822e59cc132968ae290751}
+
+\begin{CompactList}\small\item\em issue a read command to another rank at this time \item\end{CompactList}\item 
+void {\bf issueCASW} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_rank_c996e22365a6a5b5725a270477c50377}
+
+\begin{CompactList}\small\item\em issue a CASW command to this rank \item\end{CompactList}\item 
+void {\bf issueCASWother} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_rank_89bd002a9f75ea2638acb9ced38a4249}
+
+\begin{CompactList}\small\item\em issue a write command to another rank at this time \item\end{CompactList}\item 
+void {\bf issueREF} (const tick currentTime)\label{class_d_r_a_msim_i_i_1_1_rank_60bd1d77cbcdb576c9069f8a85355bfd}
+
+\begin{CompactList}\small\item\em issue a refresh command to this rank \item\end{CompactList}\item 
+void {\bf resetToTime} (const tick time)
+\begin{CompactList}\small\item\em update this rank to seem like time started at a nonzero time \item\end{CompactList}\item 
+tick {\bf next} ({\bf Command::CommandType} nextCommandType) const \label{class_d_r_a_msim_i_i_1_1_rank_6b32d7bde7506fce22151d4d9fbfc404}
+
+\begin{CompactList}\small\item\em returns the next time this command type may be issued \item\end{CompactList}\item 
+tick {\bf getTotalPrechargeTime} (const tick currentTime) const 
+\begin{CompactList}\small\item\em get the total length of time that this rank had all banks precharged \item\end{CompactList}\item 
+tick {\bf getPrechargeTime} (const tick currentTime) const 
+\begin{CompactList}\small\item\em get the total length of time that this rank had all banks precharged since the last reset \item\end{CompactList}\item 
+void {\bf resetPrechargeTime} (const tick time)\label{class_d_r_a_msim_i_i_1_1_rank_322fa6968838e2c07924131af8b5b187}
+
+\begin{CompactList}\small\item\em reset the accumulated precharge time for this rank \item\end{CompactList}\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+boost::circular\_\-buffer$<$ tick $>$ {\bf lastActivateTimes}\label{class_d_r_a_msim_i_i_1_1_rank_4f99ad980186f688ca96c255b5c91942}
+
+\begin{CompactList}\small\item\em ras time queue. useful to determine if t\_\-faw is met \item\end{CompactList}\item 
+std::vector$<$ {\bf Bank} $>$ {\bf bank}\label{class_d_r_a_msim_i_i_1_1_rank_f1ecef74d5e6a979ab3fef7fafca907e}
+
+\begin{CompactList}\small\item\em the banks within this rank \item\end{CompactList}\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+tick {\bf lastRefreshTime}\label{class_d_r_a_msim_i_i_1_1_rank_578cb670379069e5da1d4c6adfb8b9a2}
+
+\begin{CompactList}\small\item\em the time of the last refresh \item\end{CompactList}\item 
+tick {\bf lastPrechargeAnyBankTime}\label{class_d_r_a_msim_i_i_1_1_rank_23d9e3d09a3e91d61836dee2e03417d9}
+
+\begin{CompactList}\small\item\em the time of the last precharge \item\end{CompactList}\item 
+tick {\bf lastCASTime}\label{class_d_r_a_msim_i_i_1_1_rank_ca702047caedeece756f58cd22bcf643}
+
+\begin{CompactList}\small\item\em the time of the last CAS \item\end{CompactList}\item 
+tick {\bf lastCASWTime}\label{class_d_r_a_msim_i_i_1_1_rank_d25621bb78bc5740af9c467022ad5ff1}
+
+\begin{CompactList}\small\item\em the time of the last CASW \item\end{CompactList}\item 
+tick {\bf otherLastCASTime}\label{class_d_r_a_msim_i_i_1_1_rank_793b3e2860f080b65859b8c64722182a}
+
+\begin{CompactList}\small\item\em the time of the most recent CAS from any other rank on this channel \item\end{CompactList}\item 
+tick {\bf otherLastCASWTime}\label{class_d_r_a_msim_i_i_1_1_rank_77dd4d8609b160c5ec6db3191a4d87d3}
+
+\begin{CompactList}\small\item\em the time of the most recent CASW from any other rank on this channel \item\end{CompactList}\item 
+tick {\bf prechargeTime}\label{class_d_r_a_msim_i_i_1_1_rank_eb77e015a3b99f650532de70c07b2d93}
+
+\begin{CompactList}\small\item\em total time that all banks in this rank are precharged in this epoch \item\end{CompactList}\item 
+tick {\bf totalPrechargeTime}\label{class_d_r_a_msim_i_i_1_1_rank_ab3ff3515ed5cfef8ed24f76ac3ea274}
+
+\begin{CompactList}\small\item\em total time that all banks are precharged, all time \item\end{CompactList}\item 
+tick {\bf nextActivateTime}\label{class_d_r_a_msim_i_i_1_1_rank_59ed61cd8b6c9e274497c437adecac49}
+
+\begin{CompactList}\small\item\em the time at which an ACT may be sent to this rank \item\end{CompactList}\item 
+tick {\bf nextReadTime}\label{class_d_r_a_msim_i_i_1_1_rank_b8293011ad2fd602dd30e43f7cca510e}
+
+\begin{CompactList}\small\item\em the time at which a CAS may be sent to this rank \item\end{CompactList}\item 
+tick {\bf nextWriteTime}\label{class_d_r_a_msim_i_i_1_1_rank_56124c95faffa161c4e37f6db65f943c}
+
+\begin{CompactList}\small\item\em the time at which a CASW may be sent to this rank \item\end{CompactList}\item 
+tick {\bf nextRefreshTime}\label{class_d_r_a_msim_i_i_1_1_rank_3a9afe5766794463fd312f978d207bcb}
+
+\begin{CompactList}\small\item\em the time at which a Ref may be sent to this rank \item\end{CompactList}\item 
+tick {\bf lastCalculationTime}\label{class_d_r_a_msim_i_i_1_1_rank_6f7af9163075b15ab345b29a0be875ce}
+
+\begin{CompactList}\small\item\em the time at which the last power calculation was done \item\end{CompactList}\item 
+unsigned {\bf lastCASLength}\label{class_d_r_a_msim_i_i_1_1_rank_1e62f84cb1dfb615c3609112b5bb4222}
+
+\begin{CompactList}\small\item\em the length of the last CAS \item\end{CompactList}\item 
+unsigned {\bf lastCASWLength}\label{class_d_r_a_msim_i_i_1_1_rank_11af9792fcf7e48ec2df25c807e4708f}
+
+\begin{CompactList}\small\item\em the length of the last CASW \item\end{CompactList}\item 
+unsigned {\bf otherLastCASLength}\label{class_d_r_a_msim_i_i_1_1_rank_581c24fba006c13b3acf0ed056cf1914}
+
+\begin{CompactList}\small\item\em the length of the last CAS on any other rank \item\end{CompactList}\item 
+unsigned {\bf otherLastCASWLength}\label{class_d_r_a_msim_i_i_1_1_rank_126e34b8d0835a4fe61c2236fa2a3f2c}
+
+\begin{CompactList}\small\item\em the length of the last CASW on any other rank \item\end{CompactList}\item 
+unsigned {\bf CASLength}\label{class_d_r_a_msim_i_i_1_1_rank_884e8a2f3771a545733a308dde5dd13f}
+
+\begin{CompactList}\small\item\em total cycles the bus spent sending data \item\end{CompactList}\item 
+unsigned {\bf CASWLength}\label{class_d_r_a_msim_i_i_1_1_rank_b86c1fae4862cef50536b50b5cc3723f}
+
+\begin{CompactList}\small\item\em the total cycles the bus spent receiving data \item\end{CompactList}\item 
+unsigned {\bf rankID}\label{class_d_r_a_msim_i_i_1_1_rank_ffbf67886f2bc55eaf601710c63f5152}
+
+\begin{CompactList}\small\item\em the ordinal number of this rank \item\end{CompactList}\item 
+unsigned {\bf lastBankID}\label{class_d_r_a_msim_i_i_1_1_rank_0180a5d1ab8f4ba541caa7409ab5b533}
+
+\begin{CompactList}\small\item\em id of the last accessed bank of this rank \item\end{CompactList}\item 
+unsigned {\bf banksPrecharged}\label{class_d_r_a_msim_i_i_1_1_rank_86ddad92c9314e053da64c8d9ae89f46}
+
+\begin{CompactList}\small\item\em the number of banks in the precharge state \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+represents a logical rank and associated statistics 
+
+\subsection{Member Function Documentation}
+\index{DRAMsimII::Rank@{DRAMsimII::Rank}!getCommand@{getCommand}}
+\index{getCommand@{getCommand}!DRAMsimII::Rank@{DRAMsimII::Rank}}
+\subsubsection[{getCommand}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} $\ast$ Rank::getCommand (const unsigned {\em thisBank})}\label{class_d_r_a_msim_i_i_1_1_rank_213753498fc0af7dea14cbfa5e53e3df}
+
+
+get the next command in the queue for this bank 
+
+simply return the command for this bank if it is not a refresh all command otherwise remove the refresh all commands from all the other queues, assuming there is a refresh all command at the head of each, else return null \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em thisBank}]the ordinal of the bank to get the next command for (0..n) \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]the next command to be issued for this bank \end{Desc}
+\index{DRAMsimII::Rank@{DRAMsimII::Rank}!getPrechargeTime@{getPrechargeTime}}
+\index{getPrechargeTime@{getPrechargeTime}!DRAMsimII::Rank@{DRAMsimII::Rank}}
+\subsubsection[{getPrechargeTime}]{\setlength{\rightskip}{0pt plus 5cm}tick Rank::getPrechargeTime (const tick {\em currentTime}) const}\label{class_d_r_a_msim_i_i_1_1_rank_6826601315567089a09b6a53023672d9}
+
+
+get the total length of time that this rank had all banks precharged since the last reset 
+
+\begin{Desc}
+\item[Returns:]cycles all banks are precharged \end{Desc}
+\index{DRAMsimII::Rank@{DRAMsimII::Rank}!getTotalPrechargeTime@{getTotalPrechargeTime}}
+\index{getTotalPrechargeTime@{getTotalPrechargeTime}!DRAMsimII::Rank@{DRAMsimII::Rank}}
+\subsubsection[{getTotalPrechargeTime}]{\setlength{\rightskip}{0pt plus 5cm}tick Rank::getTotalPrechargeTime (const tick {\em currentTime}) const}\label{class_d_r_a_msim_i_i_1_1_rank_cedcb11333dd8281488e440ffc6a8711}
+
+
+get the total length of time that this rank had all banks precharged 
+
+\begin{Desc}
+\item[Returns:]cycles all banks are precharged \end{Desc}
+\index{DRAMsimII::Rank@{DRAMsimII::Rank}!refreshAllReady@{refreshAllReady}}
+\index{refreshAllReady@{refreshAllReady}!DRAMsimII::Rank@{DRAMsimII::Rank}}
+\subsubsection[{refreshAllReady}]{\setlength{\rightskip}{0pt plus 5cm}bool Rank::refreshAllReady () const}\label{class_d_r_a_msim_i_i_1_1_rank_4d4cff8cd255d95b088a6d70cc07570d}
+
+
+is there a refresh command ready at each per bank queue 
+
+if there is a refresh all command at the head of each per bank queue, then the next command for this rank is a refresh all banks command\par
+ this is signified by inserting a refresh all command into the tail of each queue and removing them when they all reach the front\par
+ this is done to ensure that a refresh command will never disturb an open row that has a waiting CAS, as the refresh command will ruin the row \begin{Desc}
+\item[Author:]Joe Gross \end{Desc}
+\begin{Desc}
+\item[Returns:]true if all queue heads have refresh all commands \end{Desc}
+\index{DRAMsimII::Rank@{DRAMsimII::Rank}!resetToTime@{resetToTime}}
+\index{resetToTime@{resetToTime}!DRAMsimII::Rank@{DRAMsimII::Rank}}
+\subsubsection[{resetToTime}]{\setlength{\rightskip}{0pt plus 5cm}void Rank::resetToTime (const tick {\em time})}\label{class_d_r_a_msim_i_i_1_1_rank_a9de29dd0e1e1acc4d13f4232ab59088}
+
+
+update this rank to seem like time started at a nonzero time 
+
+used when the simulator has fast forwarded to a certain time and then begun detailed simulation. this function will avoid giving too large/small values after a simple-$>$detailed switch 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/Rank.h\item 
+src/Rank.cpp\end{CompactItemize}
