@@ -23,6 +23,8 @@
 #include "Settings.h"
 #include "TimingSpecification.h"
 
+#include "cache/lru.hh"
+
 #include <vector>
 
 #include <boost/circular_buffer.hpp>
@@ -33,7 +35,7 @@
 
 namespace DRAMsimII
 {
-	/// @brief represents a logical rank and associated statistics
+	/// @brief represents a logical rank 
 	class Rank
 	{
 	private:
@@ -69,6 +71,8 @@ namespace DRAMsimII
 		unsigned rankID;					///< the ordinal number of this rank
 		unsigned lastBankID;				///< id of the last accessed bank of this rank
 		unsigned banksPrecharged;			///< the number of banks in the precharge state
+
+		LRU tags;							///< the tagstore of the emulated cache
 
 	public:
 

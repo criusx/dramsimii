@@ -48,6 +48,7 @@ CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
 banksPrecharged(/*settings.rowBufferManagementPolicy == OPEN_PAGE ? 0 : settings.bankCount */ 0),
+tags(1024,64,8,5),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(systemConfig.getBankCount(),Bank(settings, timing, systemConfig))
 {}
@@ -76,6 +77,7 @@ CASWLength(rhs.CASWLength),
 rankID(rhs.rankID),
 lastBankID(rhs.lastBankID),
 banksPrecharged(rhs.banksPrecharged),
+tags(rhs.tags),
 lastActivateTimes(rhs.lastActivateTimes),
 bank(rhs.bank)
 {}
@@ -104,6 +106,7 @@ CASWLength(rhs.CASWLength),
 rankID(rhs.rankID),
 lastBankID(rhs.lastBankID),
 banksPrecharged(rhs.banksPrecharged),
+tags(rhs.tags),
 lastActivateTimes(rhs.lastActivateTimes),
 bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConfig))
 {
@@ -139,6 +142,7 @@ CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(0),
 banksPrecharged(0),
+tags(1024,64,8,5),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(newBank)
 {}

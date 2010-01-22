@@ -865,6 +865,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cache\lru.cc"
+				>
+			</File>
+			<File
 				RelativePath=".\src\m5-dramSystem.cpp"
 				>
 				<FileConfiguration

@@ -1938,8 +1938,8 @@ __RTC_InitBase.rtc$IMZ DD FLAT:__RTC_InitBase
 rtc$IMZ	ENDS
 ;	COMDAT _main
 _TEXT	SEGMENT
-$T169148 = -12192					; size = 4
-_ds$145584 = -11988					; size = 11464
+$T170523 = -12192					; size = 4
+_ds$146504 = -11988					; size = 11464
 _settings$ = -516					; size = 496
 __$ArrayPad$ = -16					; size = 4
 __$EHRec$ = -12						; size = 12
@@ -2007,20 +2007,20 @@ $LN2@main:
 
 	lea	eax, DWORD PTR _settings$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _ds$145584[ebp]
+	lea	ecx, DWORD PTR _ds$146504[ebp]
 	call	??0System@DRAMsimII@@QAE@ABVSettings@1@@Z ; DRAMsimII::System::System
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 
 ; 48   : 		ds.runSimulations();
 
 	push	0
-	lea	ecx, DWORD PTR _ds$145584[ebp]
+	lea	ecx, DWORD PTR _ds$146504[ebp]
 	call	?runSimulations@System@DRAMsimII@@QAEXI@Z ; DRAMsimII::System::runSimulations
 
 ; 49   : 	}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _ds$145584[ebp]
+	lea	ecx, DWORD PTR _ds$146504[ebp]
 	call	??1System@DRAMsimII@@QAE@XZ
 $LN1@main:
 
@@ -2031,11 +2031,11 @@ $LN1@main:
 ; 54   : 	//_CrtDumpMemoryLeaks();
 ; 55   : 	return 0;
 
-	mov	DWORD PTR $T169148[ebp], 0
+	mov	DWORD PTR $T170523[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR _settings$[ebp]
 	call	??1Settings@DRAMsimII@@QAE@XZ
-	mov	eax, DWORD PTR $T169148[ebp]
+	mov	eax, DWORD PTR $T170523[ebp]
 
 ; 56   : }
 
@@ -2093,7 +2093,7 @@ __unwindfunclet$_main$0:
 	lea	ecx, DWORD PTR _settings$[ebp]
 	jmp	??1Settings@DRAMsimII@@QAE@XZ
 __unwindfunclet$_main$1:
-	lea	ecx, DWORD PTR _ds$145584[ebp]
+	lea	ecx, DWORD PTR _ds$146504[ebp]
 	jmp	??1System@DRAMsimII@@QAE@XZ
 __ehhandler$_main:
 	mov	edx, DWORD PTR [esp+8]
@@ -3754,11 +3754,11 @@ tv189 = -316						; size = 4
 tv198 = -312						; size = 4
 tv187 = -308						; size = 4
 tv197 = -304						; size = 4
-$T169341 = -296						; size = 4
-$T169342 = -284						; size = 12
-$T169343 = -264						; size = 4
-$T169344 = -252						; size = 12
-$T169345 = -232						; size = 12
+$T170716 = -296						; size = 4
+$T170717 = -284						; size = 12
+$T170718 = -264						; size = 4
+$T170719 = -252						; size = 12
+$T170720 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Tidy, COMDAT
@@ -3791,7 +3791,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 1421 : 		erase(begin(), end());
 
-	lea	eax, DWORD PTR $T169342[ebp]
+	lea	eax, DWORD PTR $T170717[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::end
@@ -3801,7 +3801,7 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T169341[ebp], esp
+	mov	DWORD PTR $T170716[ebp], esp
 	mov	edx, DWORD PTR tv187[ebp]
 	push	edx
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -3809,7 +3809,7 @@ __$EHRec$ = -12						; size = 12
 	mov	eax, DWORD PTR tv198[ebp]
 	mov	DWORD PTR tv189[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T169344[ebp]
+	lea	ecx, DWORD PTR $T170719[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::begin
@@ -3819,24 +3819,24 @@ __$EHRec$ = -12						; size = 12
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T169343[ebp], esp
+	mov	DWORD PTR $T170718[ebp], esp
 	mov	eax, DWORD PTR tv192[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
 	mov	DWORD PTR tv195[ebp], eax
-	lea	ecx, DWORD PTR $T169345[ebp]
+	lea	ecx, DWORD PTR $T170720[ebp]
 	push	ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::erase
 	mov	DWORD PTR tv190[ebp], eax
-	lea	ecx, DWORD PTR $T169345[ebp]
+	lea	ecx, DWORD PTR $T170720[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T169344[ebp]
+	lea	ecx, DWORD PTR $T170719[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T169342[ebp]
+	lea	ecx, DWORD PTR $T170717[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 
 ; 1422 : 		this->_Alptr.destroy(&_Left(_Myhead));
@@ -3910,13 +3910,13 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ$0:
-	lea	ecx, DWORD PTR $T169342[ebp]
+	lea	ecx, DWORD PTR $T170717[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ$1:
-	mov	ecx, DWORD PTR $T169341[ebp]
+	mov	ecx, DWORD PTR $T170716[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ$2:
-	lea	ecx, DWORD PTR $T169344[ebp]
+	lea	ecx, DWORD PTR $T170719[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __ehhandler$?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -4008,11 +4008,11 @@ tv189 = -316						; size = 4
 tv198 = -312						; size = 4
 tv187 = -308						; size = 4
 tv197 = -304						; size = 4
-$T169362 = -296						; size = 4
-$T169363 = -284						; size = 12
-$T169364 = -264						; size = 4
-$T169365 = -252						; size = 12
-$T169366 = -232						; size = 12
+$T170737 = -296						; size = 4
+$T170738 = -284						; size = 12
+$T170739 = -264						; size = 4
+$T170740 = -252						; size = 12
+$T170741 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Tidy, COMDAT
@@ -4045,7 +4045,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 1421 : 		erase(begin(), end());
 
-	lea	eax, DWORD PTR $T169363[ebp]
+	lea	eax, DWORD PTR $T170738[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::end
@@ -4055,7 +4055,7 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T169362[ebp], esp
+	mov	DWORD PTR $T170737[ebp], esp
 	mov	edx, DWORD PTR tv187[ebp]
 	push	edx
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -4063,7 +4063,7 @@ __$EHRec$ = -12						; size = 12
 	mov	eax, DWORD PTR tv198[ebp]
 	mov	DWORD PTR tv189[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T169365[ebp]
+	lea	ecx, DWORD PTR $T170740[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::begin
@@ -4073,24 +4073,24 @@ __$EHRec$ = -12						; size = 12
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T169364[ebp], esp
+	mov	DWORD PTR $T170739[ebp], esp
 	mov	eax, DWORD PTR tv192[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
 	mov	DWORD PTR tv195[ebp], eax
-	lea	ecx, DWORD PTR $T169366[ebp]
+	lea	ecx, DWORD PTR $T170741[ebp]
 	push	ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::erase
 	mov	DWORD PTR tv190[ebp], eax
-	lea	ecx, DWORD PTR $T169366[ebp]
+	lea	ecx, DWORD PTR $T170741[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T169365[ebp]
+	lea	ecx, DWORD PTR $T170740[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T169363[ebp]
+	lea	ecx, DWORD PTR $T170738[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 
 ; 1422 : 		this->_Alptr.destroy(&_Left(_Myhead));
@@ -4164,13 +4164,13 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ$0:
-	lea	ecx, DWORD PTR $T169363[ebp]
+	lea	ecx, DWORD PTR $T170738[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ$1:
-	mov	ecx, DWORD PTR $T169362[ebp]
+	mov	ecx, DWORD PTR $T170737[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ$2:
-	lea	ecx, DWORD PTR $T169365[ebp]
+	lea	ecx, DWORD PTR $T170740[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __ehhandler$?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -6238,7 +6238,7 @@ PUBLIC	?_Lmost@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ
 _TEXT	SEGMENT
-$T169509 = -212						; size = 4
+$T170884 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::begin, COMDAT
@@ -6259,7 +6259,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169509[ebp], 0
+	mov	DWORD PTR $T170884[ebp], 0
 
 ; 556  : 		return (_TREE_ITERATOR(_Lmost()));
 
@@ -6271,9 +6271,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::iterator::iterator
-	mov	edx, DWORD PTR $T169509[ebp]
+	mov	edx, DWORD PTR $T170884[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T169509[ebp], edx
+	mov	DWORD PTR $T170884[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 557  : 		}
@@ -6292,7 +6292,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ
 _TEXT	SEGMENT
-$T169514 = -212						; size = 4
+$T170889 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::end, COMDAT
@@ -6313,7 +6313,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169514[ebp], 0
+	mov	DWORD PTR $T170889[ebp], 0
 
 ; 566  : 		return (_TREE_ITERATOR(_Myhead));
 
@@ -6324,9 +6324,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::iterator::iterator
-	mov	eax, DWORD PTR $T169514[ebp]
+	mov	eax, DWORD PTR $T170889[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T169514[ebp], eax
+	mov	DWORD PTR $T170889[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 567  : 		}
@@ -6381,13 +6381,13 @@ tv183 = -332						; size = 4
 tv209 = -328						; size = 4
 tv204 = -328						; size = 4
 tv200 = -328						; size = 4
-$T169518 = -317						; size = 1
-$T169519 = -308						; size = 12
-$T169520 = -288						; size = 12
-$T169523 = -268						; size = 4
-$T169524 = -256						; size = 12
-$T169525 = -236						; size = 4
-$T169528 = -224						; size = 4
+$T170893 = -317						; size = 1
+$T170894 = -308						; size = 12
+$T170895 = -288						; size = 12
+$T170898 = -268						; size = 4
+$T170899 = -256						; size = 12
+$T170900 = -236						; size = 4
+$T170903 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -6420,12 +6420,12 @@ __Last$ = 24						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169528[ebp], 0
+	mov	DWORD PTR $T170903[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
 
 ; 935  : 		if (_First == begin() && _Last == end())
 
-	lea	eax, DWORD PTR $T169519[ebp]
+	lea	eax, DWORD PTR $T170894[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::begin
@@ -6433,9 +6433,9 @@ __Last$ = 24						; size = 12
 	mov	ecx, DWORD PTR tv209[ebp]
 	mov	DWORD PTR tv183[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	mov	edx, DWORD PTR $T169528[ebp]
+	mov	edx, DWORD PTR $T170903[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T169528[ebp], edx
+	mov	DWORD PTR $T170903[ebp], edx
 	mov	eax, DWORD PTR tv183[ebp]
 	push	eax
 	lea	ecx, DWORD PTR __First$[ebp]
@@ -6443,7 +6443,7 @@ __Last$ = 24						; size = 12
 	movzx	ecx, al
 	test	ecx, ecx
 	je	SHORT $LN7@erase
-	lea	edx, DWORD PTR $T169520[ebp]
+	lea	edx, DWORD PTR $T170895[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::end
@@ -6451,9 +6451,9 @@ __Last$ = 24						; size = 12
 	mov	eax, DWORD PTR tv211[ebp]
 	mov	DWORD PTR tv188[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 4
-	mov	ecx, DWORD PTR $T169528[ebp]
+	mov	ecx, DWORD PTR $T170903[ebp]
 	or	ecx, 2
-	mov	DWORD PTR $T169528[ebp], ecx
+	mov	DWORD PTR $T170903[ebp], ecx
 	mov	edx, DWORD PTR tv188[ebp]
 	push	edx
 	lea	ecx, DWORD PTR __Last$[ebp]
@@ -6468,24 +6468,24 @@ $LN7@erase:
 $LN8@erase:
 	mov	ecx, DWORD PTR tv94[ebp]
 	call	@_RTC_Check_4_to_1@4
-	mov	BYTE PTR $T169518[ebp], al
+	mov	BYTE PTR $T170893[ebp], al
 	mov	DWORD PTR __$EHRec$[ebp+8], 3
-	mov	ecx, DWORD PTR $T169528[ebp]
+	mov	ecx, DWORD PTR $T170903[ebp]
 	and	ecx, 2
 	je	SHORT $LN15@erase
-	and	DWORD PTR $T169528[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T169520[ebp]
+	and	DWORD PTR $T170903[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T170895[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN15@erase:
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
-	mov	edx, DWORD PTR $T169528[ebp]
+	mov	edx, DWORD PTR $T170903[ebp]
 	and	edx, 1
 	je	SHORT $LN16@erase
-	and	DWORD PTR $T169528[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T169519[ebp]
+	and	DWORD PTR $T170903[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T170894[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN16@erase:
-	movzx	eax, BYTE PTR $T169518[ebp]
+	movzx	eax, BYTE PTR $T170893[ebp]
 	test	eax, eax
 	je	SHORT $LN2@erase
 
@@ -6501,9 +6501,9 @@ $LN16@erase:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::begin
-	mov	ecx, DWORD PTR $T169528[ebp]
+	mov	ecx, DWORD PTR $T170903[ebp]
 	or	ecx, 4
-	mov	DWORD PTR $T169528[ebp], ecx
+	mov	DWORD PTR $T170903[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
@@ -6534,18 +6534,18 @@ $LN2@erase:
 
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T169523[ebp], esp
+	mov	DWORD PTR $T170898[ebp], esp
 	push	0
 	push	eax
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AV012@H@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::const_iterator::operator++
 	mov	DWORD PTR tv200[ebp], eax
-	lea	ecx, DWORD PTR $T169524[ebp]
+	lea	ecx, DWORD PTR $T170899[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::erase
 	mov	DWORD PTR tv201[ebp], eax
-	lea	ecx, DWORD PTR $T169524[ebp]
+	lea	ecx, DWORD PTR $T170899[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 	jmp	SHORT $LN2@erase
 $LN1@erase:
@@ -6554,7 +6554,7 @@ $LN1@erase:
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T169525[ebp], esp
+	mov	DWORD PTR $T170900[ebp], esp
 	lea	eax, DWORD PTR __First$[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -6564,9 +6564,9 @@ $LN1@erase:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Make_iter
 	mov	DWORD PTR tv205[ebp], eax
-	mov	edx, DWORD PTR $T169528[ebp]
+	mov	edx, DWORD PTR $T170903[ebp]
 	or	edx, 4
-	mov	DWORD PTR $T169528[ebp], edx
+	mov	DWORD PTR $T170903[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
@@ -6609,28 +6609,28 @@ __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsi
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$2:
-	mov	eax, DWORD PTR $T169528[ebp]
+	mov	eax, DWORD PTR $T170903[ebp]
 	and	eax, 1
 	je	$LN12@erase
-	and	DWORD PTR $T169528[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T169519[ebp]
+	and	DWORD PTR $T170903[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T170894[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN12@erase:
 	ret	0
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$3:
-	mov	eax, DWORD PTR $T169528[ebp]
+	mov	eax, DWORD PTR $T170903[ebp]
 	and	eax, 2
 	je	$LN14@erase
-	and	DWORD PTR $T169528[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T169520[ebp]
+	and	DWORD PTR $T170903[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T170895[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN14@erase:
 	ret	0
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$4:
-	mov	eax, DWORD PTR $T169528[ebp]
+	mov	eax, DWORD PTR $T170903[ebp]
 	and	eax, 4
 	je	$LN18@erase
-	and	DWORD PTR $T169528[ebp], -5		; fffffffbH
+	and	DWORD PTR $T170903[ebp], -5		; fffffffbH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN18@erase:
@@ -6844,7 +6844,7 @@ PUBLIC	?_Lmost@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ
 _TEXT	SEGMENT
-$T169560 = -212						; size = 4
+$T170935 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::begin, COMDAT
@@ -6865,7 +6865,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169560[ebp], 0
+	mov	DWORD PTR $T170935[ebp], 0
 
 ; 556  : 		return (_TREE_ITERATOR(_Lmost()));
 
@@ -6877,9 +6877,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::iterator::iterator
-	mov	edx, DWORD PTR $T169560[ebp]
+	mov	edx, DWORD PTR $T170935[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T169560[ebp], edx
+	mov	DWORD PTR $T170935[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 557  : 		}
@@ -6898,7 +6898,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ
 _TEXT	SEGMENT
-$T169565 = -212						; size = 4
+$T170940 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::end, COMDAT
@@ -6919,7 +6919,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169565[ebp], 0
+	mov	DWORD PTR $T170940[ebp], 0
 
 ; 566  : 		return (_TREE_ITERATOR(_Myhead));
 
@@ -6930,9 +6930,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::iterator::iterator
-	mov	eax, DWORD PTR $T169565[ebp]
+	mov	eax, DWORD PTR $T170940[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T169565[ebp], eax
+	mov	DWORD PTR $T170940[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 567  : 		}
@@ -6986,13 +6986,13 @@ tv183 = -332						; size = 4
 tv209 = -328						; size = 4
 tv204 = -328						; size = 4
 tv200 = -328						; size = 4
-$T169569 = -317						; size = 1
-$T169570 = -308						; size = 12
-$T169571 = -288						; size = 12
-$T169574 = -268						; size = 4
-$T169575 = -256						; size = 12
-$T169576 = -236						; size = 4
-$T169579 = -224						; size = 4
+$T170944 = -317						; size = 1
+$T170945 = -308						; size = 12
+$T170946 = -288						; size = 12
+$T170949 = -268						; size = 4
+$T170950 = -256						; size = 12
+$T170951 = -236						; size = 4
+$T170954 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -7025,12 +7025,12 @@ __Last$ = 24						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169579[ebp], 0
+	mov	DWORD PTR $T170954[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
 
 ; 935  : 		if (_First == begin() && _Last == end())
 
-	lea	eax, DWORD PTR $T169570[ebp]
+	lea	eax, DWORD PTR $T170945[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::begin
@@ -7038,9 +7038,9 @@ __Last$ = 24						; size = 12
 	mov	ecx, DWORD PTR tv209[ebp]
 	mov	DWORD PTR tv183[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	mov	edx, DWORD PTR $T169579[ebp]
+	mov	edx, DWORD PTR $T170954[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T169579[ebp], edx
+	mov	DWORD PTR $T170954[ebp], edx
 	mov	eax, DWORD PTR tv183[ebp]
 	push	eax
 	lea	ecx, DWORD PTR __First$[ebp]
@@ -7048,7 +7048,7 @@ __Last$ = 24						; size = 12
 	movzx	ecx, al
 	test	ecx, ecx
 	je	SHORT $LN7@erase@2
-	lea	edx, DWORD PTR $T169571[ebp]
+	lea	edx, DWORD PTR $T170946[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::end
@@ -7056,9 +7056,9 @@ __Last$ = 24						; size = 12
 	mov	eax, DWORD PTR tv211[ebp]
 	mov	DWORD PTR tv188[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 4
-	mov	ecx, DWORD PTR $T169579[ebp]
+	mov	ecx, DWORD PTR $T170954[ebp]
 	or	ecx, 2
-	mov	DWORD PTR $T169579[ebp], ecx
+	mov	DWORD PTR $T170954[ebp], ecx
 	mov	edx, DWORD PTR tv188[ebp]
 	push	edx
 	lea	ecx, DWORD PTR __Last$[ebp]
@@ -7073,24 +7073,24 @@ $LN7@erase@2:
 $LN8@erase@2:
 	mov	ecx, DWORD PTR tv94[ebp]
 	call	@_RTC_Check_4_to_1@4
-	mov	BYTE PTR $T169569[ebp], al
+	mov	BYTE PTR $T170944[ebp], al
 	mov	DWORD PTR __$EHRec$[ebp+8], 3
-	mov	ecx, DWORD PTR $T169579[ebp]
+	mov	ecx, DWORD PTR $T170954[ebp]
 	and	ecx, 2
 	je	SHORT $LN15@erase@2
-	and	DWORD PTR $T169579[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T169571[ebp]
+	and	DWORD PTR $T170954[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T170946[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN15@erase@2:
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
-	mov	edx, DWORD PTR $T169579[ebp]
+	mov	edx, DWORD PTR $T170954[ebp]
 	and	edx, 1
 	je	SHORT $LN16@erase@2
-	and	DWORD PTR $T169579[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T169570[ebp]
+	and	DWORD PTR $T170954[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T170945[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN16@erase@2:
-	movzx	eax, BYTE PTR $T169569[ebp]
+	movzx	eax, BYTE PTR $T170944[ebp]
 	test	eax, eax
 	je	SHORT $LN2@erase@2
 
@@ -7106,9 +7106,9 @@ $LN16@erase@2:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::begin
-	mov	ecx, DWORD PTR $T169579[ebp]
+	mov	ecx, DWORD PTR $T170954[ebp]
 	or	ecx, 4
-	mov	DWORD PTR $T169579[ebp], ecx
+	mov	DWORD PTR $T170954[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
@@ -7139,18 +7139,18 @@ $LN2@erase@2:
 
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T169574[ebp], esp
+	mov	DWORD PTR $T170949[ebp], esp
 	push	0
 	push	eax
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AV012@H@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::const_iterator::operator++
 	mov	DWORD PTR tv200[ebp], eax
-	lea	ecx, DWORD PTR $T169575[ebp]
+	lea	ecx, DWORD PTR $T170950[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::erase
 	mov	DWORD PTR tv201[ebp], eax
-	lea	ecx, DWORD PTR $T169575[ebp]
+	lea	ecx, DWORD PTR $T170950[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 	jmp	SHORT $LN2@erase@2
 $LN1@erase@2:
@@ -7159,7 +7159,7 @@ $LN1@erase@2:
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T169576[ebp], esp
+	mov	DWORD PTR $T170951[ebp], esp
 	lea	eax, DWORD PTR __First$[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -7169,9 +7169,9 @@ $LN1@erase@2:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Make_iter
 	mov	DWORD PTR tv205[ebp], eax
-	mov	edx, DWORD PTR $T169579[ebp]
+	mov	edx, DWORD PTR $T170954[ebp]
 	or	edx, 4
-	mov	DWORD PTR $T169579[ebp], edx
+	mov	DWORD PTR $T170954[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
@@ -7214,28 +7214,28 @@ __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$2:
-	mov	eax, DWORD PTR $T169579[ebp]
+	mov	eax, DWORD PTR $T170954[ebp]
 	and	eax, 1
 	je	$LN12@erase@2
-	and	DWORD PTR $T169579[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T169570[ebp]
+	and	DWORD PTR $T170954[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T170945[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN12@erase@2:
 	ret	0
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$3:
-	mov	eax, DWORD PTR $T169579[ebp]
+	mov	eax, DWORD PTR $T170954[ebp]
 	and	eax, 2
 	je	$LN14@erase@2
-	and	DWORD PTR $T169579[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T169571[ebp]
+	and	DWORD PTR $T170954[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T170946[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN14@erase@2:
 	ret	0
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$4:
-	mov	eax, DWORD PTR $T169579[ebp]
+	mov	eax, DWORD PTR $T170954[ebp]
 	and	eax, 4
 	je	$LN18@erase@2
-	and	DWORD PTR $T169579[ebp], -5		; fffffffbH
+	and	DWORD PTR $T170954[ebp], -5		; fffffffbH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN18@erase@2:
@@ -8050,8 +8050,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv77 = -256						; size = 4
 tv83 = -252						; size = 4
-$T169629 = -244						; size = 12
-$T169633 = -224						; size = 4
+$T171008 = -244						; size = 4
+$T171004 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -8083,7 +8083,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169633[ebp], 0
+	mov	DWORD PTR $T171008[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 576  : 		return (iterator(_TREE_ITERATOR(_Where._Ptr)));
@@ -8092,7 +8092,7 @@ __Where$ = 12						; size = 12
 	push	eax
 	mov	ecx, DWORD PTR __Where$[ebp+8]
 	push	ecx
-	lea	ecx, DWORD PTR $T169629[ebp]
+	lea	ecx, DWORD PTR $T171004[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::iterator::iterator
 	mov	DWORD PTR tv83[ebp], eax
 	mov	edx, DWORD PTR tv83[ebp]
@@ -8102,11 +8102,11 @@ __Where$ = 12						; size = 12
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T169633[ebp]
+	mov	ecx, DWORD PTR $T171008[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T169633[ebp], ecx
+	mov	DWORD PTR $T171008[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T169629[ebp]
+	lea	ecx, DWORD PTR $T171004[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
@@ -8134,13 +8134,13 @@ __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@D
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z$1:
-	lea	ecx, DWORD PTR $T169629[ebp]
+	lea	ecx, DWORD PTR $T171004[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z$2:
-	mov	eax, DWORD PTR $T169633[ebp]
+	mov	eax, DWORD PTR $T171008[ebp]
 	and	eax, 1
 	je	$LN6@Make_iter
-	and	DWORD PTR $T169633[ebp], -2		; fffffffeH
+	and	DWORD PTR $T171008[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN6@Make_iter:
@@ -8215,8 +8215,8 @@ tv423 = -296						; size = 4
 tv422 = -292						; size = 4
 tv186 = -292						; size = 4
 tv174 = -292						; size = 4
-$T169647 = -284						; size = 4
-$T169651 = -272						; size = 4
+$T171022 = -284						; size = 4
+$T171026 = -272						; size = 4
 __Pnode$ = -68						; size = 4
 __Fixnodeparent$ = -56					; size = 4
 __Fixnode$ = -44					; size = 4
@@ -8252,7 +8252,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169651[ebp], 0
+	mov	DWORD PTR $T171026[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 765  : 
@@ -9324,7 +9324,7 @@ $LN1@erase@3:
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T169647[ebp], esp
+	mov	DWORD PTR $T171022[ebp], esp
 	lea	eax, DWORD PTR __Where$[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -9334,9 +9334,9 @@ $LN1@erase@3:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Make_iter
 	mov	DWORD PTR tv423[ebp], eax
-	mov	edx, DWORD PTR $T169651[ebp]
+	mov	edx, DWORD PTR $T171026[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T169651[ebp], edx
+	mov	DWORD PTR $T171026[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
@@ -9363,10 +9363,10 @@ __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsi
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@@Z$2:
-	mov	eax, DWORD PTR $T169651[ebp]
+	mov	eax, DWORD PTR $T171026[ebp]
 	and	eax, 1
 	je	$LN51@erase@3
-	and	DWORD PTR $T169651[ebp], -2		; fffffffeH
+	and	DWORD PTR $T171026[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN51@erase@3:
@@ -9528,8 +9528,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv77 = -256						; size = 4
 tv83 = -252						; size = 4
-$T169665 = -244						; size = 12
-$T169669 = -224						; size = 4
+$T171040 = -244						; size = 12
+$T171044 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -9561,7 +9561,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169669[ebp], 0
+	mov	DWORD PTR $T171044[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 576  : 		return (iterator(_TREE_ITERATOR(_Where._Ptr)));
@@ -9570,7 +9570,7 @@ __Where$ = 12						; size = 12
 	push	eax
 	mov	ecx, DWORD PTR __Where$[ebp+8]
 	push	ecx
-	lea	ecx, DWORD PTR $T169665[ebp]
+	lea	ecx, DWORD PTR $T171040[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::iterator::iterator
 	mov	DWORD PTR tv83[ebp], eax
 	mov	edx, DWORD PTR tv83[ebp]
@@ -9580,11 +9580,11 @@ __Where$ = 12						; size = 12
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T169669[ebp]
+	mov	ecx, DWORD PTR $T171044[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T169669[ebp], ecx
+	mov	DWORD PTR $T171044[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T169665[ebp]
+	lea	ecx, DWORD PTR $T171040[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
@@ -9612,13 +9612,13 @@ __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$alloca
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z$1:
-	lea	ecx, DWORD PTR $T169665[ebp]
+	lea	ecx, DWORD PTR $T171040[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z$2:
-	mov	eax, DWORD PTR $T169669[ebp]
+	mov	eax, DWORD PTR $T171044[ebp]
 	and	eax, 1
 	je	$LN6@Make_iter@2
-	and	DWORD PTR $T169669[ebp], -2		; fffffffeH
+	and	DWORD PTR $T171044[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN6@Make_iter@2:
@@ -9666,8 +9666,8 @@ tv423 = -296						; size = 4
 tv422 = -292						; size = 4
 tv186 = -292						; size = 4
 tv174 = -292						; size = 4
-$T169683 = -284						; size = 4
-$T169687 = -272						; size = 4
+$T171058 = -284						; size = 4
+$T171062 = -272						; size = 4
 __Pnode$ = -68						; size = 4
 __Fixnodeparent$ = -56					; size = 4
 __Fixnode$ = -44					; size = 4
@@ -9703,7 +9703,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169687[ebp], 0
+	mov	DWORD PTR $T171062[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 765  : 
@@ -10775,7 +10775,7 @@ $LN1@erase@4:
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T169683[ebp], esp
+	mov	DWORD PTR $T171058[ebp], esp
 	lea	eax, DWORD PTR __Where$[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -10785,9 +10785,9 @@ $LN1@erase@4:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Make_iter
 	mov	DWORD PTR tv423[ebp], eax
-	mov	edx, DWORD PTR $T169687[ebp]
+	mov	edx, DWORD PTR $T171062[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T169687[ebp], edx
+	mov	DWORD PTR $T171062[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
@@ -10814,10 +10814,10 @@ __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@@Z$2:
-	mov	eax, DWORD PTR $T169687[ebp]
+	mov	eax, DWORD PTR $T171062[ebp]
 	and	eax, 1
 	je	$LN51@erase@4
-	and	DWORD PTR $T169687[ebp], -2		; fffffffeH
+	and	DWORD PTR $T171062[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN51@erase@4:
@@ -11020,7 +11020,7 @@ __ehfuncinfo$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistic
 xdata$x	ENDS
 ;	COMDAT ??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AV012@H@Z
 _TEXT	SEGMENT
-$T169706 = -244						; size = 4
+$T171081 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -11053,7 +11053,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169706[ebp], 0
+	mov	DWORD PTR $T171081[ebp], 0
 
 ; 280  : 			const_iterator _Tmp = *this;
 
@@ -11074,9 +11074,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T169706[ebp]
+	mov	ecx, DWORD PTR $T171081[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T169706[ebp], ecx
+	mov	DWORD PTR $T171081[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
@@ -11124,10 +11124,10 @@ __unwindfunclet$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statis
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AV012@H@Z$1:
-	mov	eax, DWORD PTR $T169706[ebp]
+	mov	eax, DWORD PTR $T171081[ebp]
 	and	eax, 1
 	je	$LN5@operator@2
-	and	DWORD PTR $T169706[ebp], -2		; fffffffeH
+	and	DWORD PTR $T171081[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN5@operator@2:
@@ -11443,7 +11443,7 @@ __ehfuncinfo$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$all
 xdata$x	ENDS
 ;	COMDAT ??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AV012@H@Z
 _TEXT	SEGMENT
-$T169729 = -244						; size = 4
+$T171104 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -11476,7 +11476,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T169729[ebp], 0
+	mov	DWORD PTR $T171104[ebp], 0
 
 ; 280  : 			const_iterator _Tmp = *this;
 
@@ -11497,9 +11497,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T169729[ebp]
+	mov	ecx, DWORD PTR $T171104[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T169729[ebp], ecx
+	mov	DWORD PTR $T171104[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
@@ -11547,10 +11547,10 @@ __unwindfunclet$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AV012@H@Z$1:
-	mov	eax, DWORD PTR $T169729[ebp]
+	mov	eax, DWORD PTR $T171104[ebp]
 	and	eax, 1
 	je	$LN5@operator@4
-	and	DWORD PTR $T169729[ebp], -2		; fffffffeH
+	and	DWORD PTR $T171104[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN5@operator@4:
@@ -12090,7 +12090,7 @@ __Pnode$ = 8						; size = 4
 _TEXT	ENDS
 ;	COMDAT ?_Erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@@Z
 _TEXT	SEGMENT
-__Pnode$155063 = -20					; size = 4
+__Pnode$156286 = -20					; size = 4
 _this$ = -8						; size = 4
 __Rootnode$ = 8						; size = 4
 ?_Erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@@Z PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Erase, COMDAT
@@ -12115,13 +12115,13 @@ __Rootnode$ = 8						; size = 4
 ; 1167 : 		for (_Nodeptr _Pnode = _Rootnode; !_Isnil(_Pnode); _Rootnode = _Pnode)
 
 	mov	eax, DWORD PTR __Rootnode$[ebp]
-	mov	DWORD PTR __Pnode$155063[ebp], eax
+	mov	DWORD PTR __Pnode$156286[ebp], eax
 	jmp	SHORT $LN3@Erase
 $LN2@Erase:
-	mov	eax, DWORD PTR __Pnode$155063[ebp]
+	mov	eax, DWORD PTR __Pnode$156286[ebp]
 	mov	DWORD PTR __Rootnode$[ebp], eax
 $LN3@Erase:
-	mov	eax, DWORD PTR __Pnode$155063[ebp]
+	mov	eax, DWORD PTR __Pnode$156286[ebp]
 	push	eax
 	call	?_Isnil@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAADPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Isnil
 	add	esp, 4
@@ -12132,7 +12132,7 @@ $LN3@Erase:
 ; 1168 : 			{	// free subtrees, then node
 ; 1169 : 			_Erase(_Right(_Pnode));
 
-	mov	eax, DWORD PTR __Pnode$155063[ebp]
+	mov	eax, DWORD PTR __Pnode$156286[ebp]
 	push	eax
 	call	?_Right@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Right
 	add	esp, 4
@@ -12143,12 +12143,12 @@ $LN3@Erase:
 
 ; 1170 : 			_Pnode = _Left(_Pnode);
 
-	mov	eax, DWORD PTR __Pnode$155063[ebp]
+	mov	eax, DWORD PTR __Pnode$156286[ebp]
 	push	eax
 	call	?_Left@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Left
 	add	esp, 4
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR __Pnode$155063[ebp], ecx
+	mov	DWORD PTR __Pnode$156286[ebp], ecx
 
 ; 1171 : 			this->_Alnod.destroy(_Rootnode);	// destroy, free erased node
 
@@ -13027,7 +13027,7 @@ __Pnode$ = 8						; size = 4
 _TEXT	ENDS
 ;	COMDAT ?_Erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@@Z
 _TEXT	SEGMENT
-__Pnode$155120 = -20					; size = 4
+__Pnode$156343 = -20					; size = 4
 _this$ = -8						; size = 4
 __Rootnode$ = 8						; size = 4
 ?_Erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@@Z PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Erase, COMDAT
@@ -13052,13 +13052,13 @@ __Rootnode$ = 8						; size = 4
 ; 1167 : 		for (_Nodeptr _Pnode = _Rootnode; !_Isnil(_Pnode); _Rootnode = _Pnode)
 
 	mov	eax, DWORD PTR __Rootnode$[ebp]
-	mov	DWORD PTR __Pnode$155120[ebp], eax
+	mov	DWORD PTR __Pnode$156343[ebp], eax
 	jmp	SHORT $LN3@Erase@2
 $LN2@Erase@2:
-	mov	eax, DWORD PTR __Pnode$155120[ebp]
+	mov	eax, DWORD PTR __Pnode$156343[ebp]
 	mov	DWORD PTR __Rootnode$[ebp], eax
 $LN3@Erase@2:
-	mov	eax, DWORD PTR __Pnode$155120[ebp]
+	mov	eax, DWORD PTR __Pnode$156343[ebp]
 	push	eax
 	call	?_Isnil@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAADPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Isnil
 	add	esp, 4
@@ -13069,7 +13069,7 @@ $LN3@Erase@2:
 ; 1168 : 			{	// free subtrees, then node
 ; 1169 : 			_Erase(_Right(_Pnode));
 
-	mov	eax, DWORD PTR __Pnode$155120[ebp]
+	mov	eax, DWORD PTR __Pnode$156343[ebp]
 	push	eax
 	call	?_Right@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Right
 	add	esp, 4
@@ -13080,12 +13080,12 @@ $LN3@Erase@2:
 
 ; 1170 : 			_Pnode = _Left(_Pnode);
 
-	mov	eax, DWORD PTR __Pnode$155120[ebp]
+	mov	eax, DWORD PTR __Pnode$156343[ebp]
 	push	eax
 	call	?_Left@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Left
 	add	esp, 4
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR __Pnode$155120[ebp], ecx
+	mov	DWORD PTR __Pnode$156343[ebp], ecx
 
 ; 1171 : 			this->_Alnod.destroy(_Rootnode);	// destroy, free erased node
 
@@ -14502,7 +14502,7 @@ CONST	SEGMENT
 CONST	ENDS
 ;	COMDAT ?_Inc@const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAEXXZ
 _TEXT	SEGMENT
-__Pnode$155295 = -20					; size = 4
+__Pnode$156585 = -20					; size = 4
 _this$ = -8						; size = 4
 ?_Inc@const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAEXXZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::const_iterator::_Inc, COMDAT
 ; _this$ = ecx
@@ -14643,15 +14643,15 @@ $LN2@Inc:
 	call	?_Parent@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Parent
 	add	esp, 4
 	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR __Pnode$155295[ebp], edx
-	mov	eax, DWORD PTR __Pnode$155295[ebp]
+	mov	DWORD PTR __Pnode$156585[ebp], edx
+	mov	eax, DWORD PTR __Pnode$156585[ebp]
 	push	eax
 	call	?_Isnil@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAADPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Isnil
 	add	esp, 4
 	movsx	ecx, BYTE PTR [eax]
 	test	ecx, ecx
 	jne	SHORT $LN1@Inc
-	mov	eax, DWORD PTR __Pnode$155295[ebp]
+	mov	eax, DWORD PTR __Pnode$156585[ebp]
 	push	eax
 	call	?_Right@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Right
 	add	esp, 4
@@ -14663,7 +14663,7 @@ $LN2@Inc:
 ; 403  : 					_Ptr = _Pnode;	// ==> parent while right subtree
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Pnode$155295[ebp]
+	mov	ecx, DWORD PTR __Pnode$156585[ebp]
 	mov	DWORD PTR [eax+8], ecx
 	jmp	SHORT $LN2@Inc
 $LN1@Inc:
@@ -14671,7 +14671,7 @@ $LN1@Inc:
 ; 404  : 				_Ptr = _Pnode;	// ==> parent (head if end())
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Pnode$155295[ebp]
+	mov	ecx, DWORD PTR __Pnode$156585[ebp]
 	mov	DWORD PTR [eax+8], ecx
 $LN8@Inc:
 
@@ -14729,7 +14729,7 @@ CONST	SEGMENT
 CONST	ENDS
 ;	COMDAT ?_Inc@const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAEXXZ
 _TEXT	SEGMENT
-__Pnode$155308 = -20					; size = 4
+__Pnode$156598 = -20					; size = 4
 _this$ = -8						; size = 4
 ?_Inc@const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAEXXZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::const_iterator::_Inc, COMDAT
 ; _this$ = ecx
@@ -14870,15 +14870,15 @@ $LN2@Inc@2:
 	call	?_Parent@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Parent
 	add	esp, 4
 	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR __Pnode$155308[ebp], edx
-	mov	eax, DWORD PTR __Pnode$155308[ebp]
+	mov	DWORD PTR __Pnode$156598[ebp], edx
+	mov	eax, DWORD PTR __Pnode$156598[ebp]
 	push	eax
 	call	?_Isnil@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAADPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Isnil
 	add	esp, 4
 	movsx	ecx, BYTE PTR [eax]
 	test	ecx, ecx
 	jne	SHORT $LN1@Inc@2
-	mov	eax, DWORD PTR __Pnode$155308[ebp]
+	mov	eax, DWORD PTR __Pnode$156598[ebp]
 	push	eax
 	call	?_Right@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Right
 	add	esp, 4
@@ -14890,7 +14890,7 @@ $LN2@Inc@2:
 ; 403  : 					_Ptr = _Pnode;	// ==> parent while right subtree
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Pnode$155308[ebp]
+	mov	ecx, DWORD PTR __Pnode$156598[ebp]
 	mov	DWORD PTR [eax+8], ecx
 	jmp	SHORT $LN2@Inc@2
 $LN1@Inc@2:
@@ -14898,7 +14898,7 @@ $LN1@Inc@2:
 ; 404  : 				_Ptr = _Pnode;	// ==> parent (head if end())
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Pnode$155308[ebp]
+	mov	ecx, DWORD PTR __Pnode$156598[ebp]
 	mov	DWORD PTR [eax+8], ecx
 $LN8@Inc@2:
 
@@ -14982,7 +14982,7 @@ PUBLIC	??$_Ptr_cat@PAIPAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAI0@Z ; std::_
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Destroy_range@V?$allocator@I@std@@@std@@YAXPAI0AAV?$allocator@I@0@@Z
 _TEXT	SEGMENT
-$T169863 = -197						; size = 1
+$T171238 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -15009,8 +15009,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PAIPAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAI0@Z ; std::_Ptr_cat<unsigned int *,unsigned int *>
 	add	esp, 8
-	mov	BYTE PTR $T169863[ebp], al
-	movzx	edx, BYTE PTR $T169863[ebp]
+	mov	BYTE PTR $T171238[ebp], al
+	movzx	edx, BYTE PTR $T171238[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax
@@ -15039,7 +15039,7 @@ PUBLIC	??$_Ptr_cat@PA_JPA_J@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPA_J0@Z ; std
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Destroy_range@V?$allocator@_J@std@@@std@@YAXPA_J0AAV?$allocator@_J@0@@Z
 _TEXT	SEGMENT
-$T169866 = -197						; size = 1
+$T171241 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -15066,8 +15066,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PA_JPA_J@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPA_J0@Z ; std::_Ptr_cat<__int64 *,__int64 *>
 	add	esp, 8
-	mov	BYTE PTR $T169866[ebp], al
-	movzx	edx, BYTE PTR $T169866[ebp]
+	mov	BYTE PTR $T171241[ebp], al
+	movzx	edx, BYTE PTR $T171241[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax
@@ -15096,7 +15096,7 @@ PUBLIC	??$_Ptr_cat@PAVChannel@DRAMsimII@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterato
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Destroy_range@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAXPAVChannel@DRAMsimII@@0AAV?$allocator@VChannel@DRAMsimII@@@0@@Z
 _TEXT	SEGMENT
-$T169869 = -197						; size = 1
+$T171244 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -15123,8 +15123,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PAVChannel@DRAMsimII@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAVChannel@DRAMsimII@@0@Z ; std::_Ptr_cat<DRAMsimII::Channel *,DRAMsimII::Channel *>
 	add	esp, 8
-	mov	BYTE PTR $T169869[ebp], al
-	movzx	edx, BYTE PTR $T169869[ebp]
+	mov	BYTE PTR $T171244[ebp], al
+	movzx	edx, BYTE PTR $T171244[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax
@@ -15152,7 +15152,7 @@ __Al$ = 16						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$swap@D@std@@YAXAAD0@Z
 _TEXT	SEGMENT
-__Tmp$157366 = -5					; size = 1
+__Tmp$158670 = -5					; size = 1
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$swap@D@std@@YAXAAD0@Z PROC				; std::swap<char>, COMDAT
@@ -15181,7 +15181,7 @@ __Right$ = 12						; size = 4
 
 	mov	eax, DWORD PTR __Left$[ebp]
 	mov	cl, BYTE PTR [eax]
-	mov	BYTE PTR __Tmp$157366[ebp], cl
+	mov	BYTE PTR __Tmp$158670[ebp], cl
 
 ; 21   : 
 ; 22   : 		_Left = _Right;
@@ -15194,7 +15194,7 @@ __Right$ = 12						; size = 4
 ; 23   : 		_Right = _Tmp;
 
 	mov	eax, DWORD PTR __Right$[ebp]
-	mov	cl, BYTE PTR __Tmp$157366[ebp]
+	mov	cl, BYTE PTR __Tmp$158670[ebp]
 	mov	BYTE PTR [eax], cl
 $LN2@swap:
 
@@ -15245,7 +15245,7 @@ PUBLIC	??$_Ptr_cat@PAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Destroy_range@V?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@@std@@YAXPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@0@0AAV?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@0@@Z
 _TEXT	SEGMENT
-$T169876 = -197						; size = 1
+$T171251 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -15272,8 +15272,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@PAV123@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@0@0@Z ; std::_Ptr_cat<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> *,std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> *>
 	add	esp, 8
-	mov	BYTE PTR $T169876[ebp], al
-	movzx	edx, BYTE PTR $T169876[ebp]
+	mov	BYTE PTR $T171251[ebp], al
+	movzx	edx, BYTE PTR $T171251[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax

@@ -79,6 +79,33 @@ namespace DRAMsimII
 		return l2;
 	}
 
+	template <class T>
+	inline T leastSigBit(T n)
+	{
+		return n & ~(n - 1);
+	}
+
+	template <class T>
+	inline bool isPowerOf2(T n)
+	{
+		return n != 0 && leastSigBit(n) == n;
+	}
+
+	inline int floorLog2(unsigned x)
+	{
+		assert(x > 0);
+
+		int y = 0;
+
+		if (x & 0xffff0000) { y += 16; x >>= 16; }
+		if (x & 0x0000ff00) { y +=  8; x >>=  8; }
+		if (x & 0x000000f0) { y +=  4; x >>=  4; }
+		if (x & 0x0000000c) { y +=  2; x >>=  2; }
+		if (x & 0x00000002) { y +=  1; }
+
+		return y;
+	}
+
 #define EPSILON 1E-5
 
 	template <class T>
@@ -145,6 +172,7 @@ namespace DRAMsimII
 #define DEBUG_LOG(X)
 #endif
 
+	
 	typedef boost::int64_t tick;
 #define TICK_MAX static_cast<tick>(boost::integer_traits<tick>::const_max)
 #define TICK_MIN static_cast<tick>(boost::integer_traits<tick>::const_min)

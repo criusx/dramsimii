@@ -239,7 +239,7 @@ namespace DRAMsimII
 		}
 
 		/// @brief get the number of entries currently in this queue
-		inline unsigned size() const
+		inline size_t size() const
 		{
 			return count;
 		}
@@ -358,7 +358,7 @@ namespace DRAMsimII
 		}
 
 		/// @brief the number of entries still available in this queue
-		unsigned freecount() const
+		size_t freecount() const
 		{
 			return entry.size() - count;
 		}

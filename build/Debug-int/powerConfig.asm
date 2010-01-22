@@ -2565,11 +2565,11 @@ tv136 = -324						; size = 4
 tv134 = -324						; size = 4
 tv289 = -321						; size = 1
 tv282 = -321						; size = 1
-$T138371 = -316						; size = 4
-$T138372 = -304						; size = 4
-$T138373 = -292						; size = 4
-$T138374 = -280						; size = 4
-$T138375 = -268						; size = 4
+$T138391 = -316						; size = 4
+$T138392 = -304						; size = 4
+$T138393 = -292						; size = 4
+$T138394 = -280						; size = 4
+$T138395 = -268						; size = 4
 __Ok$ = -64						; size = 8
 __Pad$ = -48						; size = 4
 __Count$ = -36						; size = 4
@@ -2756,18 +2756,18 @@ $LN10@operator@2:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv284[ebp], eax
 	mov	ecx, DWORD PTR tv284[ebp]
-	mov	DWORD PTR $T138371[ebp], ecx
+	mov	DWORD PTR $T138391[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv285[ebp], eax
 	mov	edx, DWORD PTR tv285[ebp]
-	mov	DWORD PTR $T138372[ebp], edx
+	mov	DWORD PTR $T138392[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T138371[ebp]
+	lea	eax, DWORD PTR $T138391[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T138372[ebp]
+	lea	ecx, DWORD PTR $T138392[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -2881,18 +2881,18 @@ $LN4@operator@2:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv291[ebp], eax
 	mov	ecx, DWORD PTR tv291[ebp]
-	mov	DWORD PTR $T138373[ebp], ecx
+	mov	DWORD PTR $T138393[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv292[ebp], eax
 	mov	edx, DWORD PTR tv292[ebp]
-	mov	DWORD PTR $T138374[ebp], edx
+	mov	DWORD PTR $T138394[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T138373[ebp]
+	lea	eax, DWORD PTR $T138393[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T138374[ebp]
+	lea	ecx, DWORD PTR $T138394[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -2974,11 +2974,11 @@ $LN13@operator@2:
 ; 781  : 	return (_Ostr);
 
 	mov	eax, DWORD PTR __Ostr$[ebp]
-	mov	DWORD PTR $T138375[ebp], eax
+	mov	DWORD PTR $T138395[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	lea	ecx, DWORD PTR __Ok$[ebp]
 	call	??1sentry@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAE@XZ ; std::basic_ostream<char,std::char_traits<char> >::sentry::~sentry
-	mov	eax, DWORD PTR $T138375[ebp]
+	mov	eax, DWORD PTR $T138395[ebp]
 
 ; 782  : 	}
 
@@ -3482,7 +3482,7 @@ _nVal1$ = 8						; size = 4
 _nVal2$ = 12						; size = 4
 ??$AlmostEqual@M@DRAMsimII@@YA_NMM@Z PROC		; DRAMsimII::AlmostEqual<float>, COMDAT
 
-; 86   : 	{
+; 113  : 	{
 
 	push	ebp
 	mov	ebp, esp
@@ -3495,7 +3495,7 @@ _nVal2$ = 12						; size = 4
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
 
-; 87   : 		return std::abs(nVal1 - nVal2) <= EPSILON * std::fabs(nVal1);
+; 114  : 		return std::abs(nVal1 - nVal2) <= EPSILON * std::fabs(nVal1);
 
 	fld	DWORD PTR _nVal1$[ebp]
 	fsub	DWORD PTR _nVal2$[ebp]
@@ -3522,8 +3522,8 @@ $LN4@AlmostEqua:
 	mov	ecx, DWORD PTR tv76[ebp]
 	call	@_RTC_Check_4_to_1@4
 
-; 88   : 		// see Knuth section 4.2.2 pages 217-218
-; 89   : 	}
+; 115  : 		// see Knuth section 4.2.2 pages 217-218
+; 116  : 	}
 
 	pop	edi
 	pop	esi
@@ -3655,7 +3655,7 @@ _nVal1$ = 8						; size = 8
 _nVal2$ = 16						; size = 8
 ??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z PROC		; DRAMsimII::AlmostEqual<double>, COMDAT
 
-; 86   : 	{
+; 113  : 	{
 
 	push	ebp
 	mov	ebp, esp
@@ -3668,7 +3668,7 @@ _nVal2$ = 16						; size = 8
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
 
-; 87   : 		return std::abs(nVal1 - nVal2) <= EPSILON * std::fabs(nVal1);
+; 114  : 		return std::abs(nVal1 - nVal2) <= EPSILON * std::fabs(nVal1);
 
 	fld	QWORD PTR _nVal1$[ebp]
 	fsub	QWORD PTR _nVal2$[ebp]
@@ -3693,8 +3693,8 @@ $LN4@AlmostEqua@2:
 	mov	ecx, DWORD PTR tv71[ebp]
 	call	@_RTC_Check_4_to_1@4
 
-; 88   : 		// see Knuth section 4.2.2 pages 217-218
-; 89   : 	}
+; 115  : 		// see Knuth section 4.2.2 pages 217-218
+; 116  : 	}
 
 	pop	edi
 	pop	esi

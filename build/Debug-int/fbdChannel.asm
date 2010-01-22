@@ -2277,29 +2277,29 @@ EXTRN	@_RTC_Check_8_to_4@8:PROC
 ;	COMDAT ?minProtocolGap@fbdChannel@DRAMsimII@@MBE_JPBVCommand@2@@Z
 _TEXT	SEGMENT
 tv133 = -556						; size = 4
-$T170265 = -548						; size = 4
-$T170266 = -536						; size = 4
-$T170267 = -524						; size = 4
-$T170268 = -512						; size = 4
-$T170269 = -500						; size = 4
-$T170270 = -488						; size = 4
-$T170271 = -476						; size = 4
-$T170272 = -464						; size = 4
-$T170273 = -452						; size = 4
-_t_cas_gap$145726 = -248				; size = 4
-_t_ras_gap$145724 = -236				; size = 4
-_t_cas_gap$145718 = -224				; size = 4
-_t_ras_gap$145716 = -212				; size = 4
-_t_cas_gap$145711 = -200				; size = 4
-_t_ras_gap$145709 = -188				; size = 4
-_tRFCGap$145701 = -176					; size = 4
-_fourth_ras_time$145699 = -164				; size = 8
-_tFAWGap$145696 = -148					; size = 4
-_tRCGap$145694 = -136					; size = 4
-_lastRASTime$145692 = -124				; size = 8
-_tRRDGap$145689 = -108					; size = 4
-_ras_q_count$145688 = -96				; size = 4
-_tRPGap$145686 = -84					; size = 4
+$T171640 = -548						; size = 4
+$T171641 = -536						; size = 4
+$T171642 = -524						; size = 4
+$T171643 = -512						; size = 4
+$T171644 = -500						; size = 4
+$T171645 = -488						; size = 4
+$T171646 = -476						; size = 4
+$T171647 = -464						; size = 4
+$T171648 = -452						; size = 4
+_t_cas_gap$146646 = -248				; size = 4
+_t_ras_gap$146644 = -236				; size = 4
+_t_cas_gap$146638 = -224				; size = 4
+_t_ras_gap$146636 = -212				; size = 4
+_t_cas_gap$146631 = -200				; size = 4
+_t_ras_gap$146629 = -188				; size = 4
+_tRFCGap$146621 = -176					; size = 4
+_fourth_ras_time$146619 = -164				; size = 8
+_tFAWGap$146616 = -148					; size = 4
+_tRCGap$146614 = -136					; size = 4
+_lastRASTime$146612 = -124				; size = 8
+_tRRDGap$146609 = -108					; size = 4
+_ras_q_count$146608 = -96				; size = 4
+_tRPGap$146606 = -84					; size = 4
 _t_al$ = -72						; size = 4
 _currentBank$ = -60					; size = 4
 _currentRank$ = -48					; size = 4
@@ -2358,7 +2358,7 @@ _this_c$ = 8						; size = 4
 	call	?getBank@Address@DRAMsimII@@QBEIXZ	; DRAMsimII::Address::getBank
 	push	eax
 	mov	ecx, DWORD PTR _currentRank$[ebp]
-	add	ecx, 176				; 000000b0H
+	add	ecx, 340				; 00000154H
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	DWORD PTR _currentBank$[ebp], eax
 
@@ -2401,15 +2401,15 @@ $LN12@minProtoco:
 	add	ecx, 28					; 0000001cH
 	call	?tRP@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tRP
 	add	esi, eax
-	mov	DWORD PTR _tRPGap$145686[ebp], esi
+	mov	DWORD PTR _tRPGap$146606[ebp], esi
 
 ; 50   : 
 ; 51   : 			int ras_q_count = currentRank.lastActivateTimes.size();
 
 	mov	ecx, DWORD PTR _currentRank$[ebp]
-	add	ecx, 148				; 00000094H
+	add	ecx, 312				; 00000138H
 	call	?size@?$circular_buffer@_JV?$allocator@_J@std@@@boost@@QBEIXZ ; boost::circular_buffer<__int64,std::allocator<__int64> >::size
-	mov	DWORD PTR _ras_q_count$145688[ebp], eax
+	mov	DWORD PTR _ras_q_count$146608[ebp], eax
 
 ; 52   : 
 ; 53   : 			// respect tRRD and tRC of all other banks of same rank
@@ -2417,13 +2417,13 @@ $LN12@minProtoco:
 ; 55   : 
 ; 56   : 			if (ras_q_count == 0)
 
-	cmp	DWORD PTR _ras_q_count$145688[ebp], 0
+	cmp	DWORD PTR _ras_q_count$146608[ebp], 0
 	jne	SHORT $LN11@minProtoco
 
 ; 57   : 			{
 ; 58   : 				tRRDGap = 0;
 
-	mov	DWORD PTR _tRRDGap$145689[ebp], 0
+	mov	DWORD PTR _tRRDGap$146609[ebp], 0
 
 ; 59   : 			}
 ; 60   : 			else
@@ -2437,20 +2437,20 @@ $LN11@minProtoco:
 ; 64   : 				const tick lastRASTime = currentRank.lastActivateTimes.back();
 
 	mov	ecx, DWORD PTR _currentRank$[ebp]
-	add	ecx, 148				; 00000094H
+	add	ecx, 312				; 00000138H
 	call	?back@?$circular_buffer@_JV?$allocator@_J@std@@@boost@@QBEAB_JXZ ; boost::circular_buffer<__int64,std::allocator<__int64> >::back
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR _lastRASTime$145692[ebp], ecx
+	mov	DWORD PTR _lastRASTime$146612[ebp], ecx
 	mov	edx, DWORD PTR [eax+4]
-	mov	DWORD PTR _lastRASTime$145692[ebp+4], edx
+	mov	DWORD PTR _lastRASTime$146612[ebp+4], edx
 
 ; 65   : 				// respect the row-to-row activation delay
 ; 66   : 				tRRDGap = (int)(lastRASTime - time) + timingSpecification.tRRD();				
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _lastRASTime$145692[ebp]
+	mov	ecx, DWORD PTR _lastRASTime$146612[ebp]
 	sub	ecx, DWORD PTR [eax+8]
-	mov	edx, DWORD PTR _lastRASTime$145692[ebp+4]
+	mov	edx, DWORD PTR _lastRASTime$146612[ebp+4]
 	sbb	edx, DWORD PTR [eax+12]
 	push	edx
 	push	ecx
@@ -2460,7 +2460,7 @@ $LN11@minProtoco:
 	add	ecx, 28					; 0000001cH
 	call	?tRRD@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tRRD
 	add	esi, eax
-	mov	DWORD PTR _tRRDGap$145689[ebp], esi
+	mov	DWORD PTR _tRRDGap$146609[ebp], esi
 $LN10@minProtoco:
 
 ; 67   : 			}
@@ -2481,7 +2481,7 @@ $LN10@minProtoco:
 	add	ecx, 28					; 0000001cH
 	call	?tRC@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tRC
 	add	esi, eax
-	mov	DWORD PTR _tRCGap$145694[ebp], esi
+	mov	DWORD PTR _tRCGap$146614[ebp], esi
 
 ; 71   : 
 ; 72   : 			// respect the t_faw value for DDR2 and beyond
@@ -2489,13 +2489,13 @@ $LN10@minProtoco:
 ; 74   : 
 ; 75   : 			if (ras_q_count < 4)
 
-	cmp	DWORD PTR _ras_q_count$145688[ebp], 4
+	cmp	DWORD PTR _ras_q_count$146608[ebp], 4
 	jge	SHORT $LN9@minProtoco
 
 ; 76   : 			{
 ; 77   : 				tFAWGap = 0;
 
-	mov	DWORD PTR _tFAWGap$145696[ebp], 0
+	mov	DWORD PTR _tFAWGap$146616[ebp], 0
 
 ; 78   : 			}
 ; 79   : 			else
@@ -2508,19 +2508,19 @@ $LN9@minProtoco:
 ; 82   : 				const tick fourth_ras_time = currentRank.lastActivateTimes.back();
 
 	mov	ecx, DWORD PTR _currentRank$[ebp]
-	add	ecx, 148				; 00000094H
+	add	ecx, 312				; 00000138H
 	call	?back@?$circular_buffer@_JV?$allocator@_J@std@@@boost@@QBEAB_JXZ ; boost::circular_buffer<__int64,std::allocator<__int64> >::back
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR _fourth_ras_time$145699[ebp], ecx
+	mov	DWORD PTR _fourth_ras_time$146619[ebp], ecx
 	mov	edx, DWORD PTR [eax+4]
-	mov	DWORD PTR _fourth_ras_time$145699[ebp+4], edx
+	mov	DWORD PTR _fourth_ras_time$146619[ebp+4], edx
 
 ; 83   : 				tFAWGap = (int)(fourth_ras_time - time) + timingSpecification.tFAW();
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _fourth_ras_time$145699[ebp]
+	mov	ecx, DWORD PTR _fourth_ras_time$146619[ebp]
 	sub	ecx, DWORD PTR [eax+8]
-	mov	edx, DWORD PTR _fourth_ras_time$145699[ebp+4]
+	mov	edx, DWORD PTR _fourth_ras_time$146619[ebp+4]
 	sbb	edx, DWORD PTR [eax+12]
 	push	edx
 	push	ecx
@@ -2530,7 +2530,7 @@ $LN9@minProtoco:
 	add	ecx, 28					; 0000001cH
 	call	?tFAW@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tFAW
 	add	esi, eax
-	mov	DWORD PTR _tFAWGap$145696[ebp], esi
+	mov	DWORD PTR _tFAWGap$146616[ebp], esi
 $LN8@minProtoco:
 
 ; 84   : 			}
@@ -2551,23 +2551,23 @@ $LN8@minProtoco:
 	add	ecx, 28					; 0000001cH
 	call	?tRFC@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tRFC
 	add	esi, eax
-	mov	DWORD PTR _tRFCGap$145701[ebp], esi
+	mov	DWORD PTR _tRFCGap$146621[ebp], esi
 
 ; 88   : 
 ; 89   : 			min_gap = max(max(max(tRFCGap,tRCGap) , tRPGap) , max(tRRDGap , tFAWGap));
 
-	lea	eax, DWORD PTR _tFAWGap$145696[ebp]
+	lea	eax, DWORD PTR _tFAWGap$146616[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _tRRDGap$145689[ebp]
+	lea	ecx, DWORD PTR _tRRDGap$146609[ebp]
 	push	ecx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
 	push	eax
-	lea	edx, DWORD PTR _tRPGap$145686[ebp]
+	lea	edx, DWORD PTR _tRPGap$146606[ebp]
 	push	edx
-	lea	eax, DWORD PTR _tRCGap$145694[ebp]
+	lea	eax, DWORD PTR _tRCGap$146614[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _tRFCGap$145701[ebp]
+	lea	ecx, DWORD PTR _tRFCGap$146621[ebp]
 	push	ecx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
@@ -2619,7 +2619,7 @@ $LN7@minProtoco:
 	push	edi
 	push	esi
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR _t_ras_gap$145709[ebp], eax
+	mov	DWORD PTR _t_ras_gap$146629[ebp], eax
 
 ; 102  : 
 ; 103  : 			// ensure that if no other rank has issued a CAS command that it will treat
@@ -2671,7 +2671,7 @@ $LN7@minProtoco:
 	push	edi
 	push	esi
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR _t_cas_gap$145711[ebp], eax
+	mov	DWORD PTR _t_cas_gap$146631[ebp], eax
 
 ; 135  : 
 ; 136  : 			//respect last cas write of same rank
@@ -2707,15 +2707,15 @@ $LN7@minProtoco:
 	push	edi
 	push	esi
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR $T170265[ebp], eax
-	lea	ecx, DWORD PTR $T170265[ebp]
+	mov	DWORD PTR $T171640[ebp], eax
+	lea	ecx, DWORD PTR $T171640[ebp]
 	push	ecx
-	lea	edx, DWORD PTR _t_cas_gap$145711[ebp]
+	lea	edx, DWORD PTR _t_cas_gap$146631[ebp]
 	push	edx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
 	mov	eax, DWORD PTR [eax]
-	mov	DWORD PTR _t_cas_gap$145711[ebp], eax
+	mov	DWORD PTR _t_cas_gap$146631[ebp], eax
 
 ; 140  : 
 ; 141  : 			//if (rank.size() > 1)
@@ -2727,9 +2727,9 @@ $LN7@minProtoco:
 ; 147  : 			//}
 ; 148  : 			min_gap = max(t_ras_gap,t_cas_gap);
 
-	lea	eax, DWORD PTR _t_cas_gap$145711[ebp]
+	lea	eax, DWORD PTR _t_cas_gap$146631[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _t_ras_gap$145709[ebp]
+	lea	ecx, DWORD PTR _t_ras_gap$146629[ebp]
 	push	ecx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
@@ -2778,7 +2778,7 @@ $LN6@minProtoco:
 	push	edi
 	push	esi
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR _t_ras_gap$145716[ebp], eax
+	mov	DWORD PTR _t_ras_gap$146636[ebp], eax
 
 ; 164  : 
 ; 165  : 			/*tick other_r_last_cas_time = time - 1000;
@@ -2833,7 +2833,7 @@ $LN6@minProtoco:
 	add	ecx, 28					; 0000001cH
 	call	?tCWD@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tCWD
 	sub	esi, eax
-	mov	DWORD PTR _t_cas_gap$145718[ebp], esi
+	mov	DWORD PTR _t_cas_gap$146638[ebp], esi
 
 ; 191  : 
 ; 192  : 			// respect last cas to different ranks
@@ -2856,15 +2856,15 @@ $LN6@minProtoco:
 	add	ecx, 28					; 0000001cH
 	call	?tBurst@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tBurst
 	add	esi, eax
-	mov	DWORD PTR $T170266[ebp], esi
-	lea	edx, DWORD PTR $T170266[ebp]
+	mov	DWORD PTR $T171641[ebp], esi
+	lea	edx, DWORD PTR $T171641[ebp]
 	push	edx
-	lea	eax, DWORD PTR _t_cas_gap$145718[ebp]
+	lea	eax, DWORD PTR _t_cas_gap$146638[ebp]
 	push	eax
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR _t_cas_gap$145718[ebp], ecx
+	mov	DWORD PTR _t_cas_gap$146638[ebp], ecx
 
 ; 198  : 
 ; 199  : 			// respect last cas write to different ranks
@@ -2873,9 +2873,9 @@ $LN6@minProtoco:
 ; 202  : 
 ; 203  : 			min_gap = max(t_ras_gap,t_cas_gap);
 
-	lea	eax, DWORD PTR _t_cas_gap$145718[ebp]
+	lea	eax, DWORD PTR _t_cas_gap$146638[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _t_ras_gap$145716[ebp]
+	lea	ecx, DWORD PTR _t_ras_gap$146636[ebp]
 	push	ecx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
@@ -2916,7 +2916,7 @@ $LN4@minProtoco:
 	add	ecx, 28					; 0000001cH
 	call	?tRAS@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tRAS
 	add	esi, eax
-	mov	DWORD PTR _t_ras_gap$145724[ebp], esi
+	mov	DWORD PTR _t_ras_gap$146644[ebp], esi
 
 ; 214  : 
 ; 215  : 			// respect t_cas of same bank
@@ -2930,8 +2930,8 @@ $LN4@minProtoco:
 	add	ecx, 28					; 0000001cH
 	call	?tCMD@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tCMD
 	sub	esi, eax
-	mov	DWORD PTR $T170268[ebp], esi
-	mov	DWORD PTR $T170269[ebp], 0
+	mov	DWORD PTR $T171643[ebp], esi
+	mov	DWORD PTR $T171644[ebp], 0
 	mov	ecx, DWORD PTR _currentBank$[ebp]
 	call	?getLastCASTime@Bank@DRAMsimII@@QBE_JXZ	; DRAMsimII::Bank::getLastCASTime
 	mov	esi, eax
@@ -2955,9 +2955,9 @@ $LN4@minProtoco:
 	cdq
 	add	esi, eax
 	adc	edi, edx
-	lea	ecx, DWORD PTR $T170268[ebp]
+	lea	ecx, DWORD PTR $T171643[ebp]
 	push	ecx
-	lea	edx, DWORD PTR $T170269[ebp]
+	lea	edx, DWORD PTR $T171644[ebp]
 	push	edx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
@@ -2968,16 +2968,16 @@ $LN4@minProtoco:
 	push	edi
 	push	esi
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR $T170267[ebp], eax
-	mov	DWORD PTR $T170270[ebp], 0
-	lea	eax, DWORD PTR $T170267[ebp]
+	mov	DWORD PTR $T171642[ebp], eax
+	mov	DWORD PTR $T171645[ebp], 0
+	lea	eax, DWORD PTR $T171642[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T170270[ebp]
+	lea	ecx, DWORD PTR $T171645[ebp]
 	push	ecx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
 	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR _t_cas_gap$145726[ebp], edx
+	mov	DWORD PTR _t_cas_gap$146646[ebp], edx
 
 ; 217  : 
 ; 218  : 			// respect t_casw of same bank
@@ -3015,22 +3015,22 @@ $LN4@minProtoco:
 	push	edi
 	push	esi
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR $T170271[ebp], eax
-	lea	ecx, DWORD PTR $T170271[ebp]
+	mov	DWORD PTR $T171646[ebp], eax
+	lea	ecx, DWORD PTR $T171646[ebp]
 	push	ecx
-	lea	edx, DWORD PTR _t_cas_gap$145726[ebp]
+	lea	edx, DWORD PTR _t_cas_gap$146646[ebp]
 	push	edx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
 	mov	eax, DWORD PTR [eax]
-	mov	DWORD PTR _t_cas_gap$145726[ebp], eax
+	mov	DWORD PTR _t_cas_gap$146646[ebp], eax
 
 ; 220  : 
 ; 221  : 			min_gap = max(t_ras_gap,t_cas_gap);
 
-	lea	eax, DWORD PTR _t_cas_gap$145726[ebp]
+	lea	eax, DWORD PTR _t_cas_gap$146646[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _t_ras_gap$145724[ebp]
+	lea	ecx, DWORD PTR _t_ras_gap$146644[ebp]
 	push	ecx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
@@ -3077,7 +3077,7 @@ $LN2@minProtoco:
 	push	edi
 	push	esi
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR $T170272[ebp], eax
+	mov	DWORD PTR $T171647[ebp], eax
 	mov	ecx, DWORD PTR _currentRank$[ebp]
 	call	?getLastRefreshTime@Rank@DRAMsimII@@QBE_JXZ ; DRAMsimII::Rank::getLastRefreshTime
 	mov	esi, eax
@@ -3094,10 +3094,10 @@ $LN2@minProtoco:
 	push	edi
 	push	esi
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR $T170273[ebp], eax
-	lea	edx, DWORD PTR $T170272[ebp]
+	mov	DWORD PTR $T171648[ebp], eax
+	lea	edx, DWORD PTR $T171647[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T170273[ebp]
+	lea	eax, DWORD PTR $T171648[ebp]
 	push	eax
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
@@ -4103,7 +4103,7 @@ _this$ = -8						; size = 4
 ?getLastRefreshTime@Rank@DRAMsimII@@QBE_JXZ PROC	; DRAMsimII::Rank::getLastRefreshTime, COMDAT
 ; _this$ = ecx
 
-; 100  : 		tick getLastRefreshTime() const { return lastRefreshTime; }
+; 104  : 		tick getLastRefreshTime() const { return lastRefreshTime; }
 
 	push	ebp
 	mov	ebp, esp
@@ -4136,7 +4136,7 @@ _this$ = -8						; size = 4
 ?getLastCASTime@Rank@DRAMsimII@@QBE_JXZ PROC		; DRAMsimII::Rank::getLastCASTime, COMDAT
 ; _this$ = ecx
 
-; 101  : 		tick getLastCASTime() const { return lastCASTime; }
+; 105  : 		tick getLastCASTime() const { return lastCASTime; }
 
 	push	ebp
 	mov	ebp, esp
@@ -4169,7 +4169,7 @@ _this$ = -8						; size = 4
 ?getLastCASWTime@Rank@DRAMsimII@@QBE_JXZ PROC		; DRAMsimII::Rank::getLastCASWTime, COMDAT
 ; _this$ = ecx
 
-; 102  : 		tick getLastCASWTime() const { return lastCASWTime; }
+; 106  : 		tick getLastCASWTime() const { return lastCASWTime; }
 
 	push	ebp
 	mov	ebp, esp
@@ -4202,7 +4202,7 @@ _this$ = -8						; size = 4
 ?getLastPrechargeTime@Rank@DRAMsimII@@QBE_JXZ PROC	; DRAMsimII::Rank::getLastPrechargeTime, COMDAT
 ; _this$ = ecx
 
-; 105  : 		tick getLastPrechargeTime() const { return lastPrechargeAnyBankTime; }
+; 109  : 		tick getLastPrechargeTime() const { return lastPrechargeAnyBankTime; }
 
 	push	ebp
 	mov	ebp, esp
@@ -4382,19 +4382,19 @@ tv376 = -396						; size = 4
 tv299 = -396						; size = 4
 tv222 = -396						; size = 4
 tv154 = -396						; size = 4
-$T170351 = -388						; size = 8
-$T170352 = -372						; size = 8
-$T170355 = -356						; size = 8
-$T170356 = -340						; size = 8
-$T170359 = -324						; size = 8
-$T170360 = -308						; size = 8
-$T170363 = -292						; size = 4
-$T170364 = -280						; size = 4
-_nextFrameTime$145822 = -76				; size = 8
-_nextDecodeTime$145819 = -60				; size = 8
-_nextFrame$145764 = -44					; size = 4
-_t2cResult$145751 = -29					; size = 1
-_decodedTransaction$145750 = -20			; size = 4
+$T171726 = -388						; size = 8
+$T171727 = -372						; size = 8
+$T171730 = -356						; size = 8
+$T171731 = -340						; size = 8
+$T171734 = -324						; size = 8
+$T171735 = -308						; size = 8
+$T171738 = -292						; size = 4
+$T171739 = -280						; size = 4
+_nextFrameTime$146742 = -76				; size = 8
+_nextDecodeTime$146739 = -60				; size = 8
+_nextFrame$146684 = -44					; size = 4
+_t2cResult$146671 = -29					; size = 1
+_decodedTransaction$146670 = -20			; size = 4
 _this$ = -8						; size = 4
 _endTime$ = 8						; size = 8
 _transFinishTime$ = 16					; size = 4
@@ -4453,22 +4453,22 @@ $LN25@moveToTime:
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?getTransaction@Channel@DRAMsimII@@IAEPAVTransaction@2@XZ ; DRAMsimII::Channel::getTransaction
-	mov	DWORD PTR _decodedTransaction$145750[ebp], eax
+	mov	DWORD PTR _decodedTransaction$146670[ebp], eax
 
 ; 263  : 
 ; 264  : 			// then break into commands and insert into per bank command queues
 ; 265  : 			bool t2cResult = transaction2commands(decodedTransaction);
 
-	mov	eax, DWORD PTR _decodedTransaction$145750[ebp]
+	mov	eax, DWORD PTR _decodedTransaction$146670[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?transaction2commands@Channel@DRAMsimII@@IAE_NPAVTransaction@2@@Z ; DRAMsimII::Channel::transaction2commands
-	mov	BYTE PTR _t2cResult$145751[ebp], al
+	mov	BYTE PTR _t2cResult$146671[ebp], al
 
 ; 266  : 
 ; 267  : 			assert(t2cResult == true);
 
-	movzx	eax, BYTE PTR _t2cResult$145751[ebp]
+	movzx	eax, BYTE PTR _t2cResult$146671[ebp]
 	cmp	eax, 1
 	je	SHORT $LN11@moveToTime
 	mov	ecx, DWORD PTR ?__LINE__Var@?1??moveToTime@fbdChannel@DRAMsimII@@IAEI_JAA_J@Z@4JA
@@ -4502,7 +4502,7 @@ $LN13@moveToTime:
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
 	push	eax
 	mov	edi, esp
-	mov	ecx, DWORD PTR _decodedTransaction$145750[ebp]
+	mov	ecx, DWORD PTR _decodedTransaction$146670[ebp]
 	push	ecx
 	push	OFFSET ??_C@_01LBDDMOBJ@?$FN?$AA@
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -4559,20 +4559,20 @@ $LN6@moveToTime:
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?getNextFrame@fbdChannel@DRAMsimII@@IAEPAVfbdFrame@2@XZ ; DRAMsimII::fbdChannel::getNextFrame
-	mov	DWORD PTR _nextFrame$145764[ebp], eax
+	mov	DWORD PTR _nextFrame$146684[ebp], eax
 
 ; 276  : 
 ; 277  : 			// if there's a frame at this time
 ; 278  : 			if (nextFrame)
 
-	cmp	DWORD PTR _nextFrame$145764[ebp], 0
+	cmp	DWORD PTR _nextFrame$146684[ebp], 0
 	je	$LN4@moveToTime
 
 ; 279  : 			{
 ; 280  : 				// execute any commands in this frame
 ; 281  : 				if (nextFrame->getCommandAType() != Command::INVALID_COMMAND)
 
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandAType@fbdFrame@DRAMsimII@@QBE?AW4CommandType@Command@2@XZ ; DRAMsimII::fbdFrame::getCommandAType
 	cmp	eax, 16					; 00000010H
 	je	$LN3@moveToTime
@@ -4580,7 +4580,7 @@ $LN6@moveToTime:
 ; 282  : 				{
 ; 283  : 					statistics.collectCommandStats(nextFrame->getCommandA());
 
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandA@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandA
 	push	eax
 	mov	eax, DWORD PTR _this$[ebp]
@@ -4604,7 +4604,7 @@ $LN15@moveToTime:
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
 	push	eax
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandA@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandA
 	mov	edi, esp
 	push	eax
@@ -4613,7 +4613,7 @@ $LN15@moveToTime:
 	push	0
 	mov	eax, esp
 	push	2
-	lea	ecx, DWORD PTR $T170351[ebp]
+	lea	ecx, DWORD PTR $T171726[ebp]
 	push	ecx
 	mov	DWORD PTR tv753[ebp], eax
 	call	DWORD PTR __imp_?setw@std@@YA?AU?$_Smanip@H@1@H@Z
@@ -4631,7 +4631,7 @@ $LN15@moveToTime:
 	push	edx
 	mov	ecx, esp
 	push	8
-	lea	edx, DWORD PTR $T170352[ebp]
+	lea	edx, DWORD PTR $T171727[ebp]
 	push	edx
 	mov	DWORD PTR tv755[ebp], eax
 	mov	DWORD PTR tv757[ebp], ecx
@@ -4686,7 +4686,7 @@ $LN15@moveToTime:
 
 ; 285  : 					executeCommand(nextFrame->getCommandA());
 
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandA@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandA
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -4696,11 +4696,11 @@ $LN3@moveToTime:
 ; 286  : 				}
 ; 287  : 				if (nextFrame->getCommandBType() != Command::INVALID_COMMAND && nextFrame->getCommandBType() != Command::DATA_COMMAND)
 
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandBType@fbdFrame@DRAMsimII@@QBE?AW4CommandType@Command@2@XZ ; DRAMsimII::fbdFrame::getCommandBType
 	cmp	eax, 16					; 00000010H
 	je	$LN2@moveToTime
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandBType@fbdFrame@DRAMsimII@@QBE?AW4CommandType@Command@2@XZ ; DRAMsimII::fbdFrame::getCommandBType
 	cmp	eax, 10					; 0000000aH
 	je	$LN2@moveToTime
@@ -4708,7 +4708,7 @@ $LN3@moveToTime:
 ; 288  : 				{
 ; 289  : 					statistics.collectCommandStats(nextFrame->getCommandB());
 
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandB@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandB
 	push	eax
 	mov	eax, DWORD PTR _this$[ebp]
@@ -4732,7 +4732,7 @@ $LN17@moveToTime:
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
 	push	eax
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandB@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandB
 	mov	edi, esp
 	push	eax
@@ -4741,7 +4741,7 @@ $LN17@moveToTime:
 	push	0
 	mov	eax, esp
 	push	2
-	lea	ecx, DWORD PTR $T170355[ebp]
+	lea	ecx, DWORD PTR $T171730[ebp]
 	push	ecx
 	mov	DWORD PTR tv761[ebp], eax
 	call	DWORD PTR __imp_?setw@std@@YA?AU?$_Smanip@H@1@H@Z
@@ -4759,7 +4759,7 @@ $LN17@moveToTime:
 	push	edx
 	mov	ecx, esp
 	push	8
-	lea	edx, DWORD PTR $T170356[ebp]
+	lea	edx, DWORD PTR $T171731[ebp]
 	push	edx
 	mov	DWORD PTR tv763[ebp], eax
 	mov	DWORD PTR tv765[ebp], ecx
@@ -4814,7 +4814,7 @@ $LN17@moveToTime:
 
 ; 291  : 					executeCommand(nextFrame->getCommandB());
 
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandB@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandB
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -4824,11 +4824,11 @@ $LN2@moveToTime:
 ; 292  : 				}
 ; 293  : 				if (nextFrame->getCommandCType() != Command::INVALID_COMMAND && nextFrame->getCommandCType() != Command::DATA_COMMAND)
 
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandCType@fbdFrame@DRAMsimII@@QBE?AW4CommandType@Command@2@XZ ; DRAMsimII::fbdFrame::getCommandCType
 	cmp	eax, 16					; 00000010H
 	je	$LN4@moveToTime
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandCType@fbdFrame@DRAMsimII@@QBE?AW4CommandType@Command@2@XZ ; DRAMsimII::fbdFrame::getCommandCType
 	cmp	eax, 10					; 0000000aH
 	je	$LN4@moveToTime
@@ -4836,7 +4836,7 @@ $LN2@moveToTime:
 ; 294  : 				{
 ; 295  : 					statistics.collectCommandStats(nextFrame->getCommandC());
 
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandC@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandC
 	push	eax
 	mov	eax, DWORD PTR _this$[ebp]
@@ -4860,7 +4860,7 @@ $LN19@moveToTime:
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
 	push	eax
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandC@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandC
 	mov	edi, esp
 	push	eax
@@ -4869,7 +4869,7 @@ $LN19@moveToTime:
 	push	0
 	mov	eax, esp
 	push	2
-	lea	ecx, DWORD PTR $T170359[ebp]
+	lea	ecx, DWORD PTR $T171734[ebp]
 	push	ecx
 	mov	DWORD PTR tv769[ebp], eax
 	call	DWORD PTR __imp_?setw@std@@YA?AU?$_Smanip@H@1@H@Z
@@ -4887,7 +4887,7 @@ $LN19@moveToTime:
 	push	edx
 	mov	ecx, esp
 	push	8
-	lea	edx, DWORD PTR $T170360[ebp]
+	lea	edx, DWORD PTR $T171735[ebp]
 	push	edx
 	mov	DWORD PTR tv771[ebp], eax
 	mov	DWORD PTR tv773[ebp], ecx
@@ -4942,7 +4942,7 @@ $LN19@moveToTime:
 
 ; 297  : 					executeCommand(nextFrame->getCommandC());
 
-	mov	ecx, DWORD PTR _nextFrame$145764[ebp]
+	mov	ecx, DWORD PTR _nextFrame$146684[ebp]
 	call	?getCommandC@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandC
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -4954,14 +4954,14 @@ $LN4@moveToTime:
 ; 300  : 
 ; 301  : 			delete nextFrame;
 
-	mov	eax, DWORD PTR _nextFrame$145764[ebp]
-	mov	DWORD PTR $T170364[ebp], eax
-	mov	ecx, DWORD PTR $T170364[ebp]
-	mov	DWORD PTR $T170363[ebp], ecx
-	cmp	DWORD PTR $T170363[ebp], 0
+	mov	eax, DWORD PTR _nextFrame$146684[ebp]
+	mov	DWORD PTR $T171739[ebp], eax
+	mov	ecx, DWORD PTR $T171739[ebp]
+	mov	DWORD PTR $T171738[ebp], ecx
+	cmp	DWORD PTR $T171738[ebp], 0
 	je	SHORT $LN20@moveToTime
 	push	1
-	mov	ecx, DWORD PTR $T170363[ebp]
+	mov	ecx, DWORD PTR $T171738[ebp]
 	call	??_GfbdFrame@DRAMsimII@@QAEPAXI@Z
 	mov	DWORD PTR tv416[ebp], eax
 	jmp	SHORT $LN21@moveToTime
@@ -4987,20 +4987,20 @@ $LN21@moveToTime:
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?nextTransactionDecodeTime@Channel@DRAMsimII@@IBE_JXZ ; DRAMsimII::Channel::nextTransactionDecodeTime
-	mov	DWORD PTR _nextDecodeTime$145819[ebp], eax
-	mov	DWORD PTR _nextDecodeTime$145819[ebp+4], edx
+	mov	DWORD PTR _nextDecodeTime$146739[ebp], eax
+	mov	DWORD PTR _nextDecodeTime$146739[ebp+4], edx
 
 ; 308  : 			assert(nextDecodeTime > time);
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR tv684[ebp], eax
 	mov	ecx, DWORD PTR tv684[ebp]
-	mov	edx, DWORD PTR _nextDecodeTime$145819[ebp+4]
+	mov	edx, DWORD PTR _nextDecodeTime$146739[ebp+4]
 	cmp	edx, DWORD PTR [ecx+12]
 	jg	SHORT $LN22@moveToTime
 	jl	SHORT $LN26@moveToTime
 	mov	eax, DWORD PTR tv684[ebp]
-	mov	ecx, DWORD PTR _nextDecodeTime$145819[ebp]
+	mov	ecx, DWORD PTR _nextDecodeTime$146739[ebp]
 	cmp	ecx, DWORD PTR [eax+8]
 	ja	SHORT $LN22@moveToTime
 $LN26@moveToTime:
@@ -5020,20 +5020,20 @@ $LN22@moveToTime:
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?nextFrameExecuteTime@fbdChannel@DRAMsimII@@IBE_JXZ ; DRAMsimII::fbdChannel::nextFrameExecuteTime
-	mov	DWORD PTR _nextFrameTime$145822[ebp], eax
-	mov	DWORD PTR _nextFrameTime$145822[ebp+4], edx
+	mov	DWORD PTR _nextFrameTime$146742[ebp], eax
+	mov	DWORD PTR _nextFrameTime$146742[ebp+4], edx
 
 ; 310  : 			assert(nextFrameTime > time);
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR tv701[ebp], eax
 	mov	ecx, DWORD PTR tv701[ebp]
-	mov	edx, DWORD PTR _nextFrameTime$145822[ebp+4]
+	mov	edx, DWORD PTR _nextFrameTime$146742[ebp+4]
 	cmp	edx, DWORD PTR [ecx+12]
 	jg	SHORT $LN23@moveToTime
 	jl	SHORT $LN27@moveToTime
 	mov	eax, DWORD PTR tv701[ebp]
-	mov	ecx, DWORD PTR _nextFrameTime$145822[ebp]
+	mov	ecx, DWORD PTR _nextFrameTime$146742[ebp]
 	cmp	ecx, DWORD PTR [eax+8]
 	ja	SHORT $LN23@moveToTime
 $LN27@moveToTime:
@@ -5053,9 +5053,9 @@ $LN23@moveToTime:
 ; 312  : 
 ; 313  : 			time = min(endTime, min(nextDecodeTime, nextFrameTime));
 
-	lea	eax, DWORD PTR _nextFrameTime$145822[ebp]
+	lea	eax, DWORD PTR _nextFrameTime$146742[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _nextDecodeTime$145819[ebp]
+	lea	ecx, DWORD PTR _nextDecodeTime$146739[ebp]
 	push	ecx
 	call	??$min@_J@std@@YAAB_JAB_J0@Z		; std::min<__int64>
 	add	esp, 8
@@ -5789,14 +5789,14 @@ tv280 = -332						; size = 8
 tv263 = -332						; size = 8
 tv215 = -328						; size = 4
 tv155 = -328						; size = 4
-$T170409 = -320						; size = 4
-$T170410 = -308						; size = 4
-$T170413 = -296						; size = 4
-$T170414 = -284						; size = 4
-_extraFrame$145871 = -80				; size = 4
-_i$145867 = -68						; size = 4
-_newCommand$145864 = -56				; size = 4
-_newCommand$145857 = -44				; size = 4
+$T171784 = -320						; size = 4
+$T171785 = -308						; size = 4
+$T171788 = -296						; size = 4
+$T171789 = -284						; size = 4
+_extraFrame$146791 = -80				; size = 4
+_i$146787 = -68						; size = 4
+_newCommand$146784 = -56				; size = 4
+_newCommand$146777 = -44				; size = 4
 _newFrame$ = -32					; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -5895,15 +5895,15 @@ $LN14@makeFrame:
 	push	0
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z ; DRAMsimII::fbdChannel::readNextCommand
-	mov	DWORD PTR _newCommand$145857[ebp], eax
+	mov	DWORD PTR _newCommand$146777[ebp], eax
 
 ; 359  : 		// if the command can be issued on the next tick
 ; 360  : 		if (newCommand && (minProtocolGap(newCommand) - timingSpecification.tCMD() < 1))
 
-	cmp	DWORD PTR _newCommand$145857[ebp], 0
+	cmp	DWORD PTR _newCommand$146777[ebp], 0
 	je	SHORT $LN10@makeFrame
 	mov	esi, esp
-	mov	eax, DWORD PTR _newCommand$145857[ebp]
+	mov	eax, DWORD PTR _newCommand$146777[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx]
@@ -5954,15 +5954,15 @@ $LN11@makeFrame:
 	push	48					; 00000030H
 	call	??2fbdFrame@DRAMsimII@@SAPAXI@Z		; DRAMsimII::fbdFrame::operator new
 	add	esp, 4
-	mov	DWORD PTR $T170410[ebp], eax
+	mov	DWORD PTR $T171785[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	cmp	DWORD PTR $T170410[ebp], 0
+	cmp	DWORD PTR $T171785[ebp], 0
 	je	SHORT $LN15@makeFrame
 	mov	eax, DWORD PTR _currentTime$[ebp+4]
 	push	eax
 	mov	ecx, DWORD PTR _currentTime$[ebp]
 	push	ecx
-	mov	ecx, DWORD PTR $T170410[ebp]
+	mov	ecx, DWORD PTR $T171785[ebp]
 	call	??0fbdFrame@DRAMsimII@@QAE@_J@Z		; DRAMsimII::fbdFrame::fbdFrame
 	mov	DWORD PTR tv155[ebp], eax
 	jmp	SHORT $LN16@makeFrame
@@ -5970,9 +5970,9 @@ $LN15@makeFrame:
 	mov	DWORD PTR tv155[ebp], 0
 $LN16@makeFrame:
 	mov	edx, DWORD PTR tv155[ebp]
-	mov	DWORD PTR $T170409[ebp], edx
+	mov	DWORD PTR $T171784[ebp], edx
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	mov	eax, DWORD PTR $T170409[ebp]
+	mov	eax, DWORD PTR $T171784[ebp]
 	mov	DWORD PTR _newFrame$[ebp], eax
 
 ; 368  : 		frameQueue.push(newFrame);
@@ -5993,15 +5993,15 @@ $LN16@makeFrame:
 	push	0
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z ; DRAMsimII::fbdChannel::readNextCommand
-	mov	DWORD PTR _newCommand$145864[ebp], eax
+	mov	DWORD PTR _newCommand$146784[ebp], eax
 
 ; 374  : 		// if the command can be issued on the next tick
 ; 375  : 		if (newCommand && (minProtocolGap(newCommand) - timingSpecification.tCMD() < 1))
 
-	cmp	DWORD PTR _newCommand$145864[ebp], 0
+	cmp	DWORD PTR _newCommand$146784[ebp], 0
 	je	$LN9@makeFrame
 	mov	esi, esp
-	mov	eax, DWORD PTR _newCommand$145864[ebp]
+	mov	eax, DWORD PTR _newCommand$146784[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx]
@@ -6042,7 +6042,7 @@ $LN22@makeFrame:
 ; 379  : 			// if this was a CAS+W then the frame type will be CMD+D
 ; 380  : 			if (newCommand->isReadOrWrite())
 
-	mov	ecx, DWORD PTR _newCommand$145864[ebp]
+	mov	ecx, DWORD PTR _newCommand$146784[ebp]
 	call	?isReadOrWrite@Command@DRAMsimII@@QBE_NXZ ; DRAMsimII::Command::isReadOrWrite
 	movzx	eax, al
 	test	eax, eax
@@ -6064,17 +6064,17 @@ $LN22@makeFrame:
 ; 384  : 				// create some new frames for the remainder of the data
 ; 385  : 				for (int i = 1; i < timingSpecification.tBurst(); ++i)
 
-	mov	DWORD PTR _i$145867[ebp], 1
+	mov	DWORD PTR _i$146787[ebp], 1
 	jmp	SHORT $LN6@makeFrame
 $LN5@makeFrame:
-	mov	eax, DWORD PTR _i$145867[ebp]
+	mov	eax, DWORD PTR _i$146787[ebp]
 	add	eax, 1
-	mov	DWORD PTR _i$145867[ebp], eax
+	mov	DWORD PTR _i$146787[ebp], eax
 $LN6@makeFrame:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 28					; 0000001cH
 	call	?tBurst@TimingSpecification@DRAMsimII@@QBEHXZ ; DRAMsimII::TimingSpecification::tBurst
-	cmp	DWORD PTR _i$145867[ebp], eax
+	cmp	DWORD PTR _i$146787[ebp], eax
 	jge	$LN4@makeFrame
 
 ; 386  : 				{
@@ -6083,18 +6083,18 @@ $LN6@makeFrame:
 	push	48					; 00000030H
 	call	??2fbdFrame@DRAMsimII@@SAPAXI@Z		; DRAMsimII::fbdFrame::operator new
 	add	esp, 4
-	mov	DWORD PTR $T170414[ebp], eax
+	mov	DWORD PTR $T171789[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	cmp	DWORD PTR $T170414[ebp], 0
+	cmp	DWORD PTR $T171789[ebp], 0
 	je	SHORT $LN17@makeFrame
-	mov	eax, DWORD PTR _i$145867[ebp]
+	mov	eax, DWORD PTR _i$146787[ebp]
 	cdq
 	add	eax, DWORD PTR _currentTime$[ebp]
 	mov	ecx, DWORD PTR _currentTime$[ebp+4]
 	adc	ecx, edx
 	push	ecx
 	push	eax
-	mov	ecx, DWORD PTR $T170414[ebp]
+	mov	ecx, DWORD PTR $T171789[ebp]
 	call	??0fbdFrame@DRAMsimII@@QAE@_J@Z		; DRAMsimII::fbdFrame::fbdFrame
 	mov	DWORD PTR tv215[ebp], eax
 	jmp	SHORT $LN18@makeFrame
@@ -6102,32 +6102,32 @@ $LN17@makeFrame:
 	mov	DWORD PTR tv215[ebp], 0
 $LN18@makeFrame:
 	mov	edx, DWORD PTR tv215[ebp]
-	mov	DWORD PTR $T170413[ebp], edx
+	mov	DWORD PTR $T171788[ebp], edx
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	mov	eax, DWORD PTR $T170413[ebp]
-	mov	DWORD PTR _extraFrame$145871[ebp], eax
+	mov	eax, DWORD PTR $T171788[ebp]
+	mov	DWORD PTR _extraFrame$146791[ebp], eax
 
 ; 388  : 					extraFrame->setCommandA(NULL);
 
 	push	0
-	mov	ecx, DWORD PTR _extraFrame$145871[ebp]
+	mov	ecx, DWORD PTR _extraFrame$146791[ebp]
 	call	?setCommandA@fbdFrame@DRAMsimII@@QAEXPBVCommand@2@@Z ; DRAMsimII::fbdFrame::setCommandA
 
 ; 389  : 					extraFrame->setCommandB(NULL);
 
 	push	0
-	mov	ecx, DWORD PTR _extraFrame$145871[ebp]
+	mov	ecx, DWORD PTR _extraFrame$146791[ebp]
 	call	?setCommandB@fbdFrame@DRAMsimII@@QAEXPBVCommand@2@@Z ; DRAMsimII::fbdFrame::setCommandB
 
 ; 390  : 					extraFrame->setCommandC(NULL);
 
 	push	0
-	mov	ecx, DWORD PTR _extraFrame$145871[ebp]
+	mov	ecx, DWORD PTR _extraFrame$146791[ebp]
 	call	?setCommandC@fbdFrame@DRAMsimII@@QAEXPBVCommand@2@@Z ; DRAMsimII::fbdFrame::setCommandC
 
 ; 391  : 					frameQueue.push(extraFrame);
 
-	mov	eax, DWORD PTR _extraFrame$145871[ebp]
+	mov	eax, DWORD PTR _extraFrame$146791[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 408				; 00000198H
@@ -6150,7 +6150,7 @@ $LN7@makeFrame:
 ; 398  : 				if (readNextCommand(newCommand, NULL))
 
 	push	0
-	mov	eax, DWORD PTR _newCommand$145864[ebp]
+	mov	eax, DWORD PTR _newCommand$146784[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z ; DRAMsimII::fbdChannel::readNextCommand
@@ -6161,7 +6161,7 @@ $LN7@makeFrame:
 ; 400  : 					newFrame->setCommandB(getNextCommand(newCommand, NULL));
 
 	push	0
-	mov	eax, DWORD PTR _newCommand$145864[ebp]
+	mov	eax, DWORD PTR _newCommand$146784[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?getNextCommand@fbdChannel@DRAMsimII@@IAEPAVCommand@2@PBV32@0@Z ; DRAMsimII::fbdChannel::getNextCommand
@@ -6176,7 +6176,7 @@ $LN2@makeFrame:
 	mov	ecx, DWORD PTR _newFrame$[ebp]
 	call	?getCommandB@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandB
 	push	eax
-	mov	eax, DWORD PTR _newCommand$145864[ebp]
+	mov	eax, DWORD PTR _newCommand$146784[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z ; DRAMsimII::fbdChannel::readNextCommand
@@ -6189,7 +6189,7 @@ $LN2@makeFrame:
 	mov	ecx, DWORD PTR _newFrame$[ebp]
 	call	?getCommandB@fbdFrame@DRAMsimII@@QBEPAVCommand@2@XZ ; DRAMsimII::fbdFrame::getCommandB
 	push	eax
-	mov	eax, DWORD PTR _newCommand$145864[ebp]
+	mov	eax, DWORD PTR _newCommand$146784[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?getNextCommand@fbdChannel@DRAMsimII@@IAEPAVCommand@2@PBV32@0@Z ; DRAMsimII::fbdChannel::getNextCommand
@@ -6225,13 +6225,13 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?makeFrame@fbdChannel@DRAMsimII@@IAE_N_J@Z$0:
-	mov	eax, DWORD PTR $T170410[ebp]
+	mov	eax, DWORD PTR $T171785[ebp]
 	push	eax
 	call	??3fbdFrame@DRAMsimII@@SAXPAX@Z		; DRAMsimII::fbdFrame::operator delete
 	pop	ecx
 	ret	0
 __unwindfunclet$?makeFrame@fbdChannel@DRAMsimII@@IAE_N_J@Z$1:
-	mov	eax, DWORD PTR $T170414[ebp]
+	mov	eax, DWORD PTR $T171789[ebp]
 	push	eax
 	call	??3fbdFrame@DRAMsimII@@SAXPAX@Z		; DRAMsimII::fbdFrame::operator delete
 	pop	ecx
@@ -6662,12 +6662,12 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv198 = -332						; size = 4
 tv90 = -328						; size = 4
-$T170448 = -320						; size = 12
-$T170449 = -297						; size = 1
-$T170450 = -288						; size = 12
-_cur_bank$146061 = -76					; size = 12
-_tempCommand$145888 = -56				; size = 4
-_currentRank$145886 = -44				; size = 4
+$T171823 = -320						; size = 12
+$T171824 = -297						; size = 1
+$T171825 = -288						; size = 12
+_cur_bank$146981 = -76					; size = 12
+_tempCommand$146808 = -56				; size = 4
+_currentRank$146806 = -44				; size = 4
 _nextCommand$ = -32					; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -6728,7 +6728,7 @@ _slotBCommand$ = 12					; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAEAAVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	mov	DWORD PTR _currentRank$145886[ebp], eax
+	mov	DWORD PTR _currentRank$146806[ebp], eax
 
 ; 427  : 
 ; 428  : 		// if it was a refresh all command, then dequeue all n banks worth of commands
@@ -6742,31 +6742,31 @@ _slotBCommand$ = 12					; size = 4
 ; 430  : 		{
 ; 431  : 			Command *tempCommand = NULL;
 
-	mov	DWORD PTR _tempCommand$145888[ebp], 0
+	mov	DWORD PTR _tempCommand$146808[ebp], 0
 
 ; 432  : 
 ; 433  : 			for (vector<Bank>::iterator cur_bank = currentRank.bank.begin(); cur_bank != currentRank.bank.end(); cur_bank++)
 
-	lea	eax, DWORD PTR _cur_bank$146061[ebp]
+	lea	eax, DWORD PTR _cur_bank$146981[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _currentRank$145886[ebp]
-	add	ecx, 176				; 000000b0H
+	mov	ecx, DWORD PTR _currentRank$146806[ebp]
+	add	ecx, 340				; 00000154H
 	call	?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	jmp	SHORT $LN5@getNextCom
 $LN4@getNextCom:
 	push	0
-	lea	eax, DWORD PTR $T170448[ebp]
+	lea	eax, DWORD PTR $T171823[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _cur_bank$146061[ebp]
+	lea	ecx, DWORD PTR _cur_bank$146981[ebp]
 	call	??E?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator++
-	lea	ecx, DWORD PTR $T170448[ebp]
+	lea	ecx, DWORD PTR $T171823[ebp]
 	call	??1?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN5@getNextCom:
-	lea	eax, DWORD PTR $T170450[ebp]
+	lea	eax, DWORD PTR $T171825[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _currentRank$145886[ebp]
-	add	ecx, 176				; 000000b0H
+	mov	ecx, DWORD PTR _currentRank$146806[ebp]
+	add	ecx, 340				; 00000154H
 	call	?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end
 	mov	DWORD PTR tv90[ebp], eax
 	mov	ecx, DWORD PTR tv90[ebp]
@@ -6774,13 +6774,13 @@ $LN5@getNextCom:
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	edx, DWORD PTR tv198[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _cur_bank$146061[ebp]
+	lea	ecx, DWORD PTR _cur_bank$146981[ebp]
 	call	??9?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator!=
-	mov	BYTE PTR $T170449[ebp], al
+	mov	BYTE PTR $T171824[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T170450[ebp]
+	lea	ecx, DWORD PTR $T171825[ebp]
 	call	??1?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170449[ebp]
+	movzx	eax, BYTE PTR $T171824[ebp]
 	test	eax, eax
 	je	SHORT $LN3@getNextCom
 
@@ -6789,15 +6789,15 @@ $LN5@getNextCom:
 ; 436  : 				//delete tempCommand;
 ; 437  : 				tempCommand = cur_bank->pop();
 
-	lea	ecx, DWORD PTR _cur_bank$146061[ebp]
+	lea	ecx, DWORD PTR _cur_bank$146981[ebp]
 	call	??C?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPAVBank@DRAMsimII@@XZ ; std::_Vector_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?pop@Bank@DRAMsimII@@QAEPAVCommand@2@XZ	; DRAMsimII::Bank::pop
-	mov	DWORD PTR _tempCommand$145888[ebp], eax
+	mov	DWORD PTR _tempCommand$146808[ebp], eax
 
 ; 438  : 				assert(tempCommand->getCommandType() == Command::REFRESH_ALL);
 
-	mov	ecx, DWORD PTR _tempCommand$145888[ebp]
+	mov	ecx, DWORD PTR _tempCommand$146808[ebp]
 	call	?getCommandType@Command@DRAMsimII@@QBE?AW4CommandType@12@XZ ; DRAMsimII::Command::getCommandType
 	cmp	eax, 12					; 0000000cH
 	je	SHORT $LN10@getNextCom
@@ -6818,13 +6818,13 @@ $LN10@getNextCom:
 	jmp	$LN4@getNextCom
 $LN3@getNextCom:
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _cur_bank$146061[ebp]
+	lea	ecx, DWORD PTR _cur_bank$146981[ebp]
 	call	??1?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 440  : 
 ; 441  : 			return tempCommand;
 
-	mov	eax, DWORD PTR _tempCommand$145888[ebp]
+	mov	eax, DWORD PTR _tempCommand$146808[ebp]
 	jmp	SHORT $LN8@getNextCom
 
 ; 442  : 
@@ -6843,8 +6843,8 @@ $LN6@getNextCom:
 	mov	ecx, eax
 	call	?getBank@Address@DRAMsimII@@QBEIXZ	; DRAMsimII::Address::getBank
 	push	eax
-	mov	ecx, DWORD PTR _currentRank$145886[ebp]
-	add	ecx, 176				; 000000b0H
+	mov	ecx, DWORD PTR _currentRank$146806[ebp]
+	add	ecx, 340				; 00000154H
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAEAAVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -6869,8 +6869,8 @@ $LN11@getNextCom:
 	mov	ecx, eax
 	call	?getBank@Address@DRAMsimII@@QBEIXZ	; DRAMsimII::Address::getBank
 	push	eax
-	mov	ecx, DWORD PTR _currentRank$145886[ebp]
-	add	ecx, 176				; 000000b0H
+	mov	ecx, DWORD PTR _currentRank$146806[ebp]
+	add	ecx, 340				; 00000154H
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAEAAVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?pop@Bank@DRAMsimII@@QAEPAVCommand@2@XZ	; DRAMsimII::Bank::pop
@@ -6933,10 +6933,10 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?getNextCommand@fbdChannel@DRAMsimII@@IAEPAVCommand@2@PBV32@0@Z$0:
-	lea	ecx, DWORD PTR _cur_bank$146061[ebp]
+	lea	ecx, DWORD PTR _cur_bank$146981[ebp]
 	jmp	??1?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?getNextCommand@fbdChannel@DRAMsimII@@IAEPAVCommand@2@PBV32@0@Z$2:
-	lea	ecx, DWORD PTR $T170450[ebp]
+	lea	ecx, DWORD PTR $T171825[ebp]
 	jmp	??1?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$?getNextCommand@fbdChannel@DRAMsimII@@IAEPAVCommand@2@PBV32@0@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -7779,84 +7779,84 @@ tv175 = -1504						; size = 4
 tv165 = -1504						; size = 4
 tv151 = -1504						; size = 4
 tv91 = -1504						; size = 4
-$T170509 = -1496					; size = 12
-$T170510 = -1473					; size = 1
-$T170511 = -1464					; size = 12
-$T170512 = -1444					; size = 12
-$T170513 = -1421					; size = 1
-$T170514 = -1412					; size = 12
-$T170515 = -1392					; size = 12
-$T170516 = -1369					; size = 1
-$T170517 = -1360					; size = 12
-$T170518 = -1340					; size = 12
-$T170519 = -1317					; size = 1
-$T170520 = -1308					; size = 12
-$T170522 = -1288					; size = 4
-$T170524 = -1276					; size = 4
-$T170525 = -1264					; size = 4
-$T170526 = -1252					; size = 12
-$T170527 = -1229					; size = 1
-$T170528 = -1220					; size = 12
-$T170529 = -1200					; size = 12
-$T170530 = -1177					; size = 1
-$T170531 = -1168					; size = 12
-$T170532 = -1148					; size = 4
-$T170535 = -1136					; size = 12
-$T170536 = -1113					; size = 1
-$T170537 = -1104					; size = 12
-$T170538 = -1084					; size = 12
-$T170539 = -1061					; size = 1
-$T170540 = -1052					; size = 12
-$T170541 = -1032					; size = 4
-$T170544 = -1020					; size = 12
-$T170545 = -997						; size = 1
-$T170546 = -988						; size = 12
-$T170547 = -968						; size = 12
-$T170548 = -945						; size = 1
-$T170549 = -936						; size = 12
-$T170550 = -916						; size = 12
-$T170551 = -893						; size = 1
-$T170552 = -884						; size = 12
-_thisBank$146511 = -672					; size = 12
-_challengerGap$146502 = -652				; size = 4
-_challengerCommand$146500 = -640			; size = 4
-_currentBank$146492 = -628				; size = 12
-_notAllRefresh$146487 = -605				; size = 1
-_currentRank$146479 = -596				; size = 12
-_candidateGap$146474 = -576				; size = 4
-_candidateCommand$146473 = -564				; size = 4
-_next_c$146465 = -552					; size = 4
-_temp_c$146461 = -540					; size = 4
-_currentBank$146447 = -528				; size = 12
-_notAllRefresh$146442 = -505				; size = 1
-_currentRank$146434 = -496				; size = 12
-_noPendingRefreshes$146424 = -473			; size = 1
-_originalTransactionType$146423 = -464			; size = 4
-_originalLastBankID$146422 = -452			; size = 4
-_originalLastRankID$146421 = -440			; size = 4
-_temp_c$146406 = -428					; size = 4
-_transactionType$146400 = -416				; size = 4
-_next_c$146390 = -404					; size = 4
-_temp_c$146386 = -392					; size = 4
-_currentBank$146372 = -380				; size = 12
-_notAllRefresh$146367 = -357				; size = 1
-_currentRank$146359 = -348				; size = 12
-_noPendingRefreshes$146349 = -325			; size = 1
-_originalTransactionType$146348 = -316			; size = 4
-_originalLastBankID$146347 = -304			; size = 4
-_originalLastRankID$146346 = -292			; size = 4
-_temp_c$146330 = -280					; size = 4
-_transactionType$146324 = -268				; size = 4
-_currentBank$146294 = -256				; size = 12
-_currentBank$146275 = -236				; size = 12
-_temp_c$146266 = -216					; size = 4
-_bank_id$146258 = -204					; size = 12
-_notAllRefresh$146253 = -181				; size = 1
-_currentRank$146243 = -172				; size = 12
-_oldestExecutableBank$146118 = -152			; size = 12
-_oldestBank$146113 = -132				; size = 12
-_oldestExecutableCommandTime$146106 = -112		; size = 8
-_oldestCommandTime$146103 = -96				; size = 8
+$T171884 = -1496					; size = 12
+$T171885 = -1473					; size = 1
+$T171886 = -1464					; size = 12
+$T171887 = -1444					; size = 12
+$T171888 = -1421					; size = 1
+$T171889 = -1412					; size = 12
+$T171890 = -1392					; size = 12
+$T171891 = -1369					; size = 1
+$T171892 = -1360					; size = 12
+$T171893 = -1340					; size = 12
+$T171894 = -1317					; size = 1
+$T171895 = -1308					; size = 12
+$T171897 = -1288					; size = 4
+$T171899 = -1276					; size = 4
+$T171900 = -1264					; size = 4
+$T171901 = -1252					; size = 12
+$T171902 = -1229					; size = 1
+$T171903 = -1220					; size = 12
+$T171904 = -1200					; size = 12
+$T171905 = -1177					; size = 1
+$T171906 = -1168					; size = 12
+$T171907 = -1148					; size = 4
+$T171910 = -1136					; size = 12
+$T171911 = -1113					; size = 1
+$T171912 = -1104					; size = 12
+$T171913 = -1084					; size = 12
+$T171914 = -1061					; size = 1
+$T171915 = -1052					; size = 12
+$T171916 = -1032					; size = 4
+$T171919 = -1020					; size = 12
+$T171920 = -997						; size = 1
+$T171921 = -988						; size = 12
+$T171922 = -968						; size = 12
+$T171923 = -945						; size = 1
+$T171924 = -936						; size = 12
+$T171925 = -916						; size = 12
+$T171926 = -893						; size = 1
+$T171927 = -884						; size = 12
+_thisBank$147431 = -672					; size = 12
+_challengerGap$147422 = -652				; size = 4
+_challengerCommand$147420 = -640			; size = 4
+_currentBank$147412 = -628				; size = 12
+_notAllRefresh$147407 = -605				; size = 1
+_currentRank$147399 = -596				; size = 12
+_candidateGap$147394 = -576				; size = 4
+_candidateCommand$147393 = -564				; size = 4
+_next_c$147385 = -552					; size = 4
+_temp_c$147381 = -540					; size = 4
+_currentBank$147367 = -528				; size = 12
+_notAllRefresh$147362 = -505				; size = 1
+_currentRank$147354 = -496				; size = 12
+_noPendingRefreshes$147344 = -473			; size = 1
+_originalTransactionType$147343 = -464			; size = 4
+_originalLastBankID$147342 = -452			; size = 4
+_originalLastRankID$147341 = -440			; size = 4
+_temp_c$147326 = -428					; size = 4
+_transactionType$147320 = -416				; size = 4
+_next_c$147310 = -404					; size = 4
+_temp_c$147306 = -392					; size = 4
+_currentBank$147292 = -380				; size = 12
+_notAllRefresh$147287 = -357				; size = 1
+_currentRank$147279 = -348				; size = 12
+_noPendingRefreshes$147269 = -325			; size = 1
+_originalTransactionType$147268 = -316			; size = 4
+_originalLastBankID$147267 = -304			; size = 4
+_originalLastRankID$147266 = -292			; size = 4
+_temp_c$147250 = -280					; size = 4
+_transactionType$147244 = -268				; size = 4
+_currentBank$147214 = -256				; size = 12
+_currentBank$147195 = -236				; size = 12
+_temp_c$147186 = -216					; size = 4
+_bank_id$147178 = -204					; size = 12
+_notAllRefresh$147173 = -181				; size = 1
+_currentRank$147163 = -172				; size = 12
+_oldestExecutableBank$147038 = -152			; size = 12
+_oldestBank$147033 = -132				; size = 12
+_oldestExecutableCommandTime$147026 = -112		; size = 8
+_oldestCommandTime$147023 = -96				; size = 8
 _slotBRank$ = -80					; size = 4
 _slotARank$ = -68					; size = 4
 _lastCommandType$ = -56					; size = 4
@@ -8012,30 +8012,30 @@ $LN118@readNextCo:
 ; 492  : 		{
 ; 493  : 			tick oldestCommandTime = TICK_MAX;
 
-	mov	DWORD PTR _oldestCommandTime$146103[ebp], -1
-	mov	DWORD PTR _oldestCommandTime$146103[ebp+4], 2147483647 ; 7fffffffH
+	mov	DWORD PTR _oldestCommandTime$147023[ebp], -1
+	mov	DWORD PTR _oldestCommandTime$147023[ebp+4], 2147483647 ; 7fffffffH
 
 ; 494  : 			tick oldestExecutableCommandTime = TICK_MAX;
 
-	mov	DWORD PTR _oldestExecutableCommandTime$146106[ebp], -1
-	mov	DWORD PTR _oldestExecutableCommandTime$146106[ebp+4], 2147483647 ; 7fffffffH
+	mov	DWORD PTR _oldestExecutableCommandTime$147026[ebp], -1
+	mov	DWORD PTR _oldestExecutableCommandTime$147026[ebp+4], 2147483647 ; 7fffffffH
 
 ; 495  : 			vector<Bank>::const_iterator oldestBank;
 
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??0?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 
 ; 496  : 			vector<Bank>::const_iterator oldestExecutableBank;
 
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??0?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 
 ; 497  : 
 ; 498  : 			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 
-	lea	eax, DWORD PTR _currentRank$146243[ebp]
+	lea	eax, DWORD PTR _currentRank$147163[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
@@ -8044,14 +8044,14 @@ $LN118@readNextCo:
 	jmp	SHORT $LN117@readNextCo
 $LN116@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170509[ebp]
+	lea	eax, DWORD PTR $T171884[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??E?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator++
-	lea	ecx, DWORD PTR $T170509[ebp]
+	lea	ecx, DWORD PTR $T171884[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN117@readNextCo:
-	lea	eax, DWORD PTR $T170511[ebp]
+	lea	eax, DWORD PTR $T171886[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
@@ -8062,13 +8062,13 @@ $LN117@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	edx, DWORD PTR tv1414[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??9?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator!=
-	mov	BYTE PTR $T170510[ebp], al
+	mov	BYTE PTR $T171885[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	lea	ecx, DWORD PTR $T170511[ebp]
+	lea	ecx, DWORD PTR $T171886[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170510[ebp]
+	movzx	eax, BYTE PTR $T171885[ebp]
 	test	eax, eax
 	je	$LN115@readNextCo
 
@@ -8076,13 +8076,13 @@ $LN117@readNextCo:
 ; 500  : 				// do not consider ranks which have already had a command chosen from them
 ; 501  : 				if (currentRank->getRankID() == slotARank || currentRank->getRankID() == slotBRank)
 
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
 	mov	ecx, eax
 	call	?getRankID@Rank@DRAMsimII@@QBEIXZ	; DRAMsimII::Rank::getRankID
 	cmp	eax, DWORD PTR _slotARank$[ebp]
 	je	SHORT $LN113@readNextCo
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
 	mov	ecx, eax
 	call	?getRankID@Rank@DRAMsimII@@QBEIXZ	; DRAMsimII::Rank::getRankID
@@ -8098,34 +8098,34 @@ $LN114@readNextCo:
 ; 503  : 
 ; 504  : 				bool notAllRefresh = false;
 
-	mov	BYTE PTR _notAllRefresh$146253[ebp], 0
+	mov	BYTE PTR _notAllRefresh$147173[ebp], 0
 
 ; 505  : 
 ; 506  : 				for (vector<Bank>::const_iterator bank_id = currentRank->bank.begin(); bank_id != currentRank->bank.end(); bank_id++)
 
-	lea	eax, DWORD PTR _bank_id$146258[ebp]
+	lea	eax, DWORD PTR _bank_id$147178[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	jmp	SHORT $LN112@readNextCo
 $LN111@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170512[ebp]
+	lea	eax, DWORD PTR $T171887[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _bank_id$146258[ebp]
+	lea	ecx, DWORD PTR _bank_id$147178[ebp]
 	call	??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator++
-	lea	ecx, DWORD PTR $T170512[ebp]
+	lea	ecx, DWORD PTR $T171887[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN112@readNextCo:
-	lea	eax, DWORD PTR $T170514[ebp]
+	lea	eax, DWORD PTR $T171889[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end
 	mov	DWORD PTR tv243[ebp], eax
@@ -8134,44 +8134,44 @@ $LN112@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	mov	edx, DWORD PTR tv1418[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _bank_id$146258[ebp]
+	lea	ecx, DWORD PTR _bank_id$147178[ebp]
 	call	??9?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator!=
-	mov	BYTE PTR $T170513[ebp], al
+	mov	BYTE PTR $T171888[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
-	lea	ecx, DWORD PTR $T170514[ebp]
+	lea	ecx, DWORD PTR $T171889[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170513[ebp]
+	movzx	eax, BYTE PTR $T171888[ebp]
 	test	eax, eax
 	je	$LN110@readNextCo
 
 ; 507  : 				{
 ; 508  : 					if (const Command *temp_c = bank_id->front())
 
-	lea	ecx, DWORD PTR _bank_id$146258[ebp]
+	lea	ecx, DWORD PTR _bank_id$147178[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR _temp_c$146266[ebp], eax
-	cmp	DWORD PTR _temp_c$146266[ebp], 0
+	mov	DWORD PTR _temp_c$147186[ebp], eax
+	cmp	DWORD PTR _temp_c$147186[ebp], 0
 	je	$LN109@readNextCo
 
 ; 509  : 					{
 ; 510  : 						if ((temp_c->getEnqueueTime() < oldestExecutableCommandTime) && (minProtocolGap(temp_c) <= timingSpecification.tCMD()))
 
-	mov	ecx, DWORD PTR _temp_c$146266[ebp]
+	mov	ecx, DWORD PTR _temp_c$147186[ebp]
 	call	?getEnqueueTime@Event@DRAMsimII@@QBE_JXZ ; DRAMsimII::Event::getEnqueueTime
 	mov	DWORD PTR tv1510[ebp], eax
 	mov	DWORD PTR tv1510[ebp+4], edx
 	mov	eax, DWORD PTR tv1510[ebp+4]
-	cmp	eax, DWORD PTR _oldestExecutableCommandTime$146106[ebp+4]
+	cmp	eax, DWORD PTR _oldestExecutableCommandTime$147026[ebp+4]
 	jg	$LN109@readNextCo
 	jl	SHORT $LN177@readNextCo
 	mov	ecx, DWORD PTR tv1510[ebp]
-	cmp	ecx, DWORD PTR _oldestExecutableCommandTime$146106[ebp]
+	cmp	ecx, DWORD PTR _oldestExecutableCommandTime$147026[ebp]
 	jae	$LN109@readNextCo
 $LN177@readNextCo:
 	mov	esi, esp
-	mov	eax, DWORD PTR _temp_c$146266[ebp]
+	mov	eax, DWORD PTR _temp_c$147186[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx]
@@ -8204,7 +8204,7 @@ $LN178@readNextCo:
 ; 513  : 							// we haven't proved that all the queues aren't Command::REFRESH_ALL commands, search
 ; 514  : 							if (temp_c->getCommandType() == Command::REFRESH_ALL)
 
-	mov	ecx, DWORD PTR _temp_c$146266[ebp]
+	mov	ecx, DWORD PTR _temp_c$147186[ebp]
 	call	?getCommandType@Command@DRAMsimII@@QBE?AW4CommandType@12@XZ ; DRAMsimII::Command::getCommandType
 	cmp	eax, 12					; 0000000cH
 	jne	$LN107@readNextCo
@@ -8212,7 +8212,7 @@ $LN178@readNextCo:
 ; 515  : 							{
 ; 516  : 								if (!notAllRefresh)
 
-	movzx	eax, BYTE PTR _notAllRefresh$146253[ebp]
+	movzx	eax, BYTE PTR _notAllRefresh$147173[ebp]
 	test	eax, eax
 	jne	$LN106@readNextCo
 
@@ -8220,29 +8220,29 @@ $LN178@readNextCo:
 ; 518  : 									// try to show that at the head of each queue isn't a refresh command
 ; 519  : 									for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 
-	lea	eax, DWORD PTR _currentBank$146275[ebp]
+	lea	eax, DWORD PTR _currentBank$147195[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin
 	mov	BYTE PTR __$EHRec$[ebp+8], 6
 	jmp	SHORT $LN105@readNextCo
 $LN104@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170515[ebp]
+	lea	eax, DWORD PTR $T171890[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentBank$146275[ebp]
+	lea	ecx, DWORD PTR _currentBank$147195[ebp]
 	call	??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator++
-	lea	ecx, DWORD PTR $T170515[ebp]
+	lea	ecx, DWORD PTR $T171890[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN105@readNextCo:
-	lea	eax, DWORD PTR $T170517[ebp]
+	lea	eax, DWORD PTR $T171892[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end
 	mov	DWORD PTR tv303[ebp], eax
@@ -8251,13 +8251,13 @@ $LN105@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 7
 	mov	edx, DWORD PTR tv1422[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _currentBank$146275[ebp]
+	lea	ecx, DWORD PTR _currentBank$147195[ebp]
 	call	??9?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator!=
-	mov	BYTE PTR $T170516[ebp], al
+	mov	BYTE PTR $T171891[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 6
-	lea	ecx, DWORD PTR $T170517[ebp]
+	lea	ecx, DWORD PTR $T171892[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170516[ebp]
+	movzx	eax, BYTE PTR $T171891[ebp]
 	test	eax, eax
 	je	SHORT $LN103@readNextCo
 
@@ -8265,19 +8265,19 @@ $LN105@readNextCo:
 ; 521  : 										// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
 ; 522  : 										if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != Command::REFRESH_ALL)))
 
-	lea	ecx, DWORD PTR _currentBank$146275[ebp]
+	lea	ecx, DWORD PTR _currentBank$147195[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?size@Bank@DRAMsimII@@QBEIXZ		; DRAMsimII::Bank::size
 	test	eax, eax
 	je	SHORT $LN101@readNextCo
-	lea	ecx, DWORD PTR _currentBank$146275[ebp]
+	lea	ecx, DWORD PTR _currentBank$147195[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
 	test	eax, eax
 	je	SHORT $LN102@readNextCo
-	lea	ecx, DWORD PTR _currentBank$146275[ebp]
+	lea	ecx, DWORD PTR _currentBank$147195[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -8290,7 +8290,7 @@ $LN101@readNextCo:
 ; 523  : 										{
 ; 524  : 											notAllRefresh = true;
 
-	mov	BYTE PTR _notAllRefresh$146253[ebp], 1
+	mov	BYTE PTR _notAllRefresh$147173[ebp], 1
 
 ; 525  : 											break;
 
@@ -8306,29 +8306,29 @@ $LN103@readNextCo:
 ; 528  : 									}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
-	lea	ecx, DWORD PTR _currentBank$146275[ebp]
+	lea	ecx, DWORD PTR _currentBank$147195[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 529  : 									// if all are known now to be refresh commands
 ; 530  : 									if (!notAllRefresh)
 
-	movzx	eax, BYTE PTR _notAllRefresh$146253[ebp]
+	movzx	eax, BYTE PTR _notAllRefresh$147173[ebp]
 	test	eax, eax
 	jne	SHORT $LN106@readNextCo
 
 ; 531  : 									{
 ; 532  : 										oldestExecutableCommandTime = temp_c->getEnqueueTime();
 
-	mov	ecx, DWORD PTR _temp_c$146266[ebp]
+	mov	ecx, DWORD PTR _temp_c$147186[ebp]
 	call	?getEnqueueTime@Event@DRAMsimII@@QBE_JXZ ; DRAMsimII::Event::getEnqueueTime
-	mov	DWORD PTR _oldestExecutableCommandTime$146106[ebp], eax
-	mov	DWORD PTR _oldestExecutableCommandTime$146106[ebp+4], edx
+	mov	DWORD PTR _oldestExecutableCommandTime$147026[ebp], eax
+	mov	DWORD PTR _oldestExecutableCommandTime$147026[ebp+4], edx
 
 ; 533  : 										oldestExecutableBank = bank_id;
 
-	lea	eax, DWORD PTR _bank_id$146258[ebp]
+	lea	eax, DWORD PTR _bank_id$147178[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??4?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAEAAV01@ABV01@@Z
 $LN106@readNextCo:
 
@@ -8341,16 +8341,16 @@ $LN107@readNextCo:
 
 ; 537  : 							else if (temp_c->getEnqueueTime() < oldestCommandTime)
 
-	mov	ecx, DWORD PTR _temp_c$146266[ebp]
+	mov	ecx, DWORD PTR _temp_c$147186[ebp]
 	call	?getEnqueueTime@Event@DRAMsimII@@QBE_JXZ ; DRAMsimII::Event::getEnqueueTime
 	mov	DWORD PTR tv1574[ebp], eax
 	mov	DWORD PTR tv1574[ebp+4], edx
 	mov	eax, DWORD PTR tv1574[ebp+4]
-	cmp	eax, DWORD PTR _oldestCommandTime$146103[ebp+4]
+	cmp	eax, DWORD PTR _oldestCommandTime$147023[ebp+4]
 	jg	$LN98@readNextCo
 	jl	SHORT $LN179@readNextCo
 	mov	ecx, DWORD PTR tv1574[ebp]
-	cmp	ecx, DWORD PTR _oldestCommandTime$146103[ebp]
+	cmp	ecx, DWORD PTR _oldestCommandTime$147023[ebp]
 	jae	$LN98@readNextCo
 $LN179@readNextCo:
 
@@ -8359,7 +8359,7 @@ $LN179@readNextCo:
 ; 540  : 								// we haven't proved that all the queues aren't Command::REFRESH_ALL commands, search
 ; 541  : 								if (temp_c->getCommandType() == Command::REFRESH_ALL)
 
-	mov	ecx, DWORD PTR _temp_c$146266[ebp]
+	mov	ecx, DWORD PTR _temp_c$147186[ebp]
 	call	?getCommandType@Command@DRAMsimII@@QBE?AW4CommandType@12@XZ ; DRAMsimII::Command::getCommandType
 	cmp	eax, 12					; 0000000cH
 	jne	$LN97@readNextCo
@@ -8367,7 +8367,7 @@ $LN179@readNextCo:
 ; 542  : 								{
 ; 543  : 									if (!notAllRefresh)
 
-	movzx	eax, BYTE PTR _notAllRefresh$146253[ebp]
+	movzx	eax, BYTE PTR _notAllRefresh$147173[ebp]
 	test	eax, eax
 	jne	$LN96@readNextCo
 
@@ -8375,29 +8375,29 @@ $LN179@readNextCo:
 ; 545  : 										// try to show that at the head of each queue isn't a refresh command
 ; 546  : 										for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 
-	lea	eax, DWORD PTR _currentBank$146294[ebp]
+	lea	eax, DWORD PTR _currentBank$147214[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin
 	mov	BYTE PTR __$EHRec$[ebp+8], 8
 	jmp	SHORT $LN95@readNextCo
 $LN94@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170518[ebp]
+	lea	eax, DWORD PTR $T171893[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentBank$146294[ebp]
+	lea	ecx, DWORD PTR _currentBank$147214[ebp]
 	call	??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator++
-	lea	ecx, DWORD PTR $T170518[ebp]
+	lea	ecx, DWORD PTR $T171893[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN95@readNextCo:
-	lea	eax, DWORD PTR $T170520[ebp]
+	lea	eax, DWORD PTR $T171895[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end
 	mov	DWORD PTR tv367[ebp], eax
@@ -8406,13 +8406,13 @@ $LN95@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 9
 	mov	edx, DWORD PTR tv1426[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _currentBank$146294[ebp]
+	lea	ecx, DWORD PTR _currentBank$147214[ebp]
 	call	??9?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator!=
-	mov	BYTE PTR $T170519[ebp], al
+	mov	BYTE PTR $T171894[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 8
-	lea	ecx, DWORD PTR $T170520[ebp]
+	lea	ecx, DWORD PTR $T171895[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170519[ebp]
+	movzx	eax, BYTE PTR $T171894[ebp]
 	test	eax, eax
 	je	SHORT $LN93@readNextCo
 
@@ -8420,19 +8420,19 @@ $LN95@readNextCo:
 ; 548  : 											// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
 ; 549  : 											if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != Command::REFRESH_ALL)))
 
-	lea	ecx, DWORD PTR _currentBank$146294[ebp]
+	lea	ecx, DWORD PTR _currentBank$147214[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?size@Bank@DRAMsimII@@QBEIXZ		; DRAMsimII::Bank::size
 	test	eax, eax
 	je	SHORT $LN91@readNextCo
-	lea	ecx, DWORD PTR _currentBank$146294[ebp]
+	lea	ecx, DWORD PTR _currentBank$147214[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
 	test	eax, eax
 	je	SHORT $LN92@readNextCo
-	lea	ecx, DWORD PTR _currentBank$146294[ebp]
+	lea	ecx, DWORD PTR _currentBank$147214[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -8445,7 +8445,7 @@ $LN91@readNextCo:
 ; 550  : 											{
 ; 551  : 												notAllRefresh = true;
 
-	mov	BYTE PTR _notAllRefresh$146253[ebp], 1
+	mov	BYTE PTR _notAllRefresh$147173[ebp], 1
 
 ; 552  : 												break;
 
@@ -8461,29 +8461,29 @@ $LN93@readNextCo:
 ; 555  : 										}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
-	lea	ecx, DWORD PTR _currentBank$146294[ebp]
+	lea	ecx, DWORD PTR _currentBank$147214[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 556  : 										// if all are known now to be refresh commands
 ; 557  : 										if (!notAllRefresh)
 
-	movzx	eax, BYTE PTR _notAllRefresh$146253[ebp]
+	movzx	eax, BYTE PTR _notAllRefresh$147173[ebp]
 	test	eax, eax
 	jne	SHORT $LN96@readNextCo
 
 ; 558  : 										{
 ; 559  : 											oldestCommandTime = temp_c->getEnqueueTime();
 
-	mov	ecx, DWORD PTR _temp_c$146266[ebp]
+	mov	ecx, DWORD PTR _temp_c$147186[ebp]
 	call	?getEnqueueTime@Event@DRAMsimII@@QBE_JXZ ; DRAMsimII::Event::getEnqueueTime
-	mov	DWORD PTR _oldestCommandTime$146103[ebp], eax
-	mov	DWORD PTR _oldestCommandTime$146103[ebp+4], edx
+	mov	DWORD PTR _oldestCommandTime$147023[ebp], eax
+	mov	DWORD PTR _oldestCommandTime$147023[ebp+4], edx
 
 ; 560  : 											oldestBank = bank_id;
 
-	lea	eax, DWORD PTR _bank_id$146258[ebp]
+	lea	eax, DWORD PTR _bank_id$147178[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??4?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAEAAV01@ABV01@@Z
 $LN96@readNextCo:
 
@@ -8498,16 +8498,16 @@ $LN97@readNextCo:
 ; 565  : 								{
 ; 566  : 									oldestCommandTime = temp_c->getEnqueueTime();
 
-	mov	ecx, DWORD PTR _temp_c$146266[ebp]
+	mov	ecx, DWORD PTR _temp_c$147186[ebp]
 	call	?getEnqueueTime@Event@DRAMsimII@@QBE_JXZ ; DRAMsimII::Event::getEnqueueTime
-	mov	DWORD PTR _oldestCommandTime$146103[ebp], eax
-	mov	DWORD PTR _oldestCommandTime$146103[ebp+4], edx
+	mov	DWORD PTR _oldestCommandTime$147023[ebp], eax
+	mov	DWORD PTR _oldestCommandTime$147023[ebp+4], edx
 
 ; 567  : 									oldestBank = bank_id;
 
-	lea	eax, DWORD PTR _bank_id$146258[ebp]
+	lea	eax, DWORD PTR _bank_id$147178[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??4?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAEAAV01@ABV01@@Z
 $LN89@readNextCo:
 
@@ -8523,16 +8523,16 @@ $LN98@readNextCo:
 ; 573  : 							{
 ; 574  : 								oldestExecutableCommandTime = temp_c->getEnqueueTime();
 
-	mov	ecx, DWORD PTR _temp_c$146266[ebp]
+	mov	ecx, DWORD PTR _temp_c$147186[ebp]
 	call	?getEnqueueTime@Event@DRAMsimII@@QBE_JXZ ; DRAMsimII::Event::getEnqueueTime
-	mov	DWORD PTR _oldestExecutableCommandTime$146106[ebp], eax
-	mov	DWORD PTR _oldestExecutableCommandTime$146106[ebp+4], edx
+	mov	DWORD PTR _oldestExecutableCommandTime$147026[ebp], eax
+	mov	DWORD PTR _oldestExecutableCommandTime$147026[ebp+4], edx
 
 ; 575  : 								oldestExecutableBank = bank_id;
 
-	lea	eax, DWORD PTR _bank_id$146258[ebp]
+	lea	eax, DWORD PTR _bank_id$147178[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??4?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAEAAV01@ABV01@@Z
 $LN109@readNextCo:
 
@@ -8546,7 +8546,7 @@ $LN110@readNextCo:
 ; 579  : 				}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	lea	ecx, DWORD PTR _bank_id$146258[ebp]
+	lea	ecx, DWORD PTR _bank_id$147178[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 	jmp	$LN116@readNextCo
 $LN115@readNextCo:
@@ -8554,30 +8554,30 @@ $LN115@readNextCo:
 ; 580  : 			}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 581  : 
 ; 582  : 			// if any executable command was found, prioritize it over those which must wait
 ; 583  : 			if (oldestExecutableCommandTime < TICK_MAX)
 
-	cmp	DWORD PTR _oldestExecutableCommandTime$146106[ebp+4], 2147483647 ; 7fffffffH
+	cmp	DWORD PTR _oldestExecutableCommandTime$147026[ebp+4], 2147483647 ; 7fffffffH
 	jg	$LN87@readNextCo
 	jl	SHORT $LN180@readNextCo
-	cmp	DWORD PTR _oldestExecutableCommandTime$146106[ebp], -1
+	cmp	DWORD PTR _oldestExecutableCommandTime$147026[ebp], -1
 	jae	$LN87@readNextCo
 $LN180@readNextCo:
 
 ; 584  : 			{
 ; 585  : 				assert(oldestExecutableBank->nextCommandType() == Command::REFRESH_ALL || rank[oldestExecutableBank->front()->getAddress().getRank()].bank[oldestExecutableBank->front()->getAddress().getBank()].front() == oldestExecutableBank->front());
 
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?nextCommandType@Bank@DRAMsimII@@QBE?AW4CommandType@Command@2@XZ ; DRAMsimII::Bank::nextCommandType
 	cmp	eax, 12					; 0000000cH
 	je	$LN133@readNextCo
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -8586,7 +8586,7 @@ $LN180@readNextCo:
 	mov	ecx, eax
 	call	?getBank@Address@DRAMsimII@@QBEIXZ	; DRAMsimII::Address::getBank
 	push	eax
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -8598,13 +8598,13 @@ $LN180@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
 	mov	esi, eax
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -8625,18 +8625,18 @@ $LN133@readNextCo:
 ; 586  : 
 ; 587  : 				return oldestExecutableBank->front();
 
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR $T170522[ebp], eax
+	mov	DWORD PTR $T171897[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T170522[ebp]
+	mov	eax, DWORD PTR $T171897[ebp]
 	jmp	$LN122@readNextCo
 	jmp	$LN86@readNextCo
 $LN87@readNextCo:
@@ -8645,17 +8645,17 @@ $LN87@readNextCo:
 ; 589  : 			// if there was a command found
 ; 590  : 			else if (oldestCommandTime < TICK_MAX)
 
-	cmp	DWORD PTR _oldestCommandTime$146103[ebp+4], 2147483647 ; 7fffffffH
+	cmp	DWORD PTR _oldestCommandTime$147023[ebp+4], 2147483647 ; 7fffffffH
 	jg	$LN85@readNextCo
 	jl	SHORT $LN181@readNextCo
-	cmp	DWORD PTR _oldestCommandTime$146103[ebp], -1
+	cmp	DWORD PTR _oldestCommandTime$147023[ebp], -1
 	jae	$LN85@readNextCo
 $LN181@readNextCo:
 
 ; 591  : 			{
 ; 592  : 				assert(oldestBank->front()->getCommandType() == Command::REFRESH_ALL || rank[oldestBank->front()->getAddress().getRank()].bank[oldestBank->front()->getAddress().getBank()].front() == oldestBank->front());
 
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -8663,7 +8663,7 @@ $LN181@readNextCo:
 	call	?getCommandType@Command@DRAMsimII@@QBE?AW4CommandType@12@XZ ; DRAMsimII::Command::getCommandType
 	cmp	eax, 12					; 0000000cH
 	je	$LN134@readNextCo
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -8672,7 +8672,7 @@ $LN181@readNextCo:
 	mov	ecx, eax
 	call	?getBank@Address@DRAMsimII@@QBEIXZ	; DRAMsimII::Address::getBank
 	push	eax
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -8684,13 +8684,13 @@ $LN181@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
 	mov	esi, eax
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -8711,18 +8711,18 @@ $LN134@readNextCo:
 ; 593  : 
 ; 594  : 				return oldestBank->front();
 
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR $T170524[ebp], eax
+	mov	DWORD PTR $T171899[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T170524[ebp]
+	mov	eax, DWORD PTR $T171899[ebp]
 	jmp	$LN122@readNextCo
 
 ; 595  : 			}
@@ -8733,24 +8733,24 @@ $LN85@readNextCo:
 
 ; 597  : 				return NULL;
 
-	mov	DWORD PTR $T170525[ebp], 0
+	mov	DWORD PTR $T171900[ebp], 0
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T170525[ebp]
+	mov	eax, DWORD PTR $T171900[ebp]
 	jmp	$LN122@readNextCo
 $LN86@readNextCo:
 
 ; 598  : 		}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 599  : 		break;
@@ -8788,19 +8788,19 @@ $LN80@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR _temp_c$146330[ebp], eax
+	mov	DWORD PTR _temp_c$147250[ebp], eax
 
 ; 612  : 
 ; 613  : 					if (temp_c && temp_c->isReadOrWrite())
 
-	cmp	DWORD PTR _temp_c$146330[ebp], 0
+	cmp	DWORD PTR _temp_c$147250[ebp], 0
 	je	SHORT $LN79@readNextCo
-	mov	ecx, DWORD PTR _temp_c$146330[ebp]
+	mov	ecx, DWORD PTR _temp_c$147250[ebp]
 	call	?isReadOrWrite@Command@DRAMsimII@@QBE_NXZ ; DRAMsimII::Command::isReadOrWrite
 	movzx	eax, al
 	test	eax, eax
@@ -8816,7 +8816,7 @@ $LN80@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
@@ -8867,7 +8867,7 @@ $LN77@readNextCo:
 ; 627  : 			case Command::PRECHARGE:
 ; 628  : 				transactionType = Transaction::READ_TRANSACTION;
 
-	mov	DWORD PTR _transactionType$146324[ebp], 2
+	mov	DWORD PTR _transactionType$147244[ebp], 2
 
 ; 629  : 				break;
 
@@ -8880,7 +8880,7 @@ $LN76@readNextCo:
 ; 633  : 			case Command::WRITE_AND_PRECHARGE:
 ; 634  : 				transactionType = Transaction::WRITE_TRANSACTION;
 
-	mov	DWORD PTR _transactionType$146324[ebp], 1
+	mov	DWORD PTR _transactionType$147244[ebp], 1
 
 ; 635  : 				break;	
 
@@ -8891,7 +8891,7 @@ $LN75@readNextCo:
 ; 637  : 			default:
 ; 638  : 				transactionType = Transaction::READ_TRANSACTION;
 
-	mov	DWORD PTR _transactionType$146324[ebp], 2
+	mov	DWORD PTR _transactionType$147244[ebp], 2
 
 ; 639  : 				cerr << "Did not find a CAS or RAS command when it was expected" << endl;
 
@@ -8915,21 +8915,21 @@ $LN81@readNextCo:
 ; 643  : 			unsigned originalLastRankID = lastRankID;
 
 	mov	eax, DWORD PTR _lastRankID$[ebp]
-	mov	DWORD PTR _originalLastRankID$146346[ebp], eax
+	mov	DWORD PTR _originalLastRankID$147266[ebp], eax
 
 ; 644  : 			unsigned originalLastBankID = lastBankID;
 
 	mov	eax, DWORD PTR _lastBankID$[ebp]
-	mov	DWORD PTR _originalLastBankID$146347[ebp], eax
+	mov	DWORD PTR _originalLastBankID$147267[ebp], eax
 
 ; 645  : 			Transaction::TransactionType originalTransactionType = transactionType;
 
-	mov	eax, DWORD PTR _transactionType$146324[ebp]
-	mov	DWORD PTR _originalTransactionType$146348[ebp], eax
+	mov	eax, DWORD PTR _transactionType$147244[ebp]
+	mov	DWORD PTR _originalTransactionType$147268[ebp], eax
 
 ; 646  : 			bool noPendingRefreshes = false;
 
-	mov	BYTE PTR _noPendingRefreshes$146349[ebp], 0
+	mov	BYTE PTR _noPendingRefreshes$147269[ebp], 0
 $LN74@readNextCo:
 
 ; 647  : 
@@ -8959,13 +8959,13 @@ $LN74@readNextCo:
 ; 654  : 				if (lastRankID == originalLastRankID)
 
 	mov	eax, DWORD PTR _lastRankID$[ebp]
-	cmp	eax, DWORD PTR _originalLastRankID$146346[ebp]
+	cmp	eax, DWORD PTR _originalLastRankID$147266[ebp]
 	jne	$LN72@readNextCo
 
 ; 655  : 				{
 ; 656  : 					if (!noPendingRefreshes)
 
-	movzx	eax, BYTE PTR _noPendingRefreshes$146349[ebp]
+	movzx	eax, BYTE PTR _noPendingRefreshes$147269[ebp]
 	test	eax, eax
 	jne	$LN71@readNextCo
 
@@ -8973,7 +8973,7 @@ $LN74@readNextCo:
 ; 658  : 						// before switching to the next bank, see if all the queues are refreshes in any rank
 ; 659  : 						for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 
-	lea	eax, DWORD PTR _currentRank$146359[ebp]
+	lea	eax, DWORD PTR _currentRank$147279[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
@@ -8982,14 +8982,14 @@ $LN74@readNextCo:
 	jmp	SHORT $LN70@readNextCo
 $LN69@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170526[ebp]
+	lea	eax, DWORD PTR $T171901[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146359[ebp]
+	lea	ecx, DWORD PTR _currentRank$147279[ebp]
 	call	??E?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator++
-	lea	ecx, DWORD PTR $T170526[ebp]
+	lea	ecx, DWORD PTR $T171901[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN70@readNextCo:
-	lea	eax, DWORD PTR $T170528[ebp]
+	lea	eax, DWORD PTR $T171903[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
@@ -9000,46 +9000,46 @@ $LN70@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
 	mov	edx, DWORD PTR tv1436[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _currentRank$146359[ebp]
+	lea	ecx, DWORD PTR _currentRank$147279[ebp]
 	call	??9?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator!=
-	mov	BYTE PTR $T170527[ebp], al
+	mov	BYTE PTR $T171902[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 10		; 0000000aH
-	lea	ecx, DWORD PTR $T170528[ebp]
+	lea	ecx, DWORD PTR $T171903[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170527[ebp]
+	movzx	eax, BYTE PTR $T171902[ebp]
 	test	eax, eax
 	je	$LN68@readNextCo
 
 ; 660  : 						{
 ; 661  : 							bool notAllRefresh = false;
 
-	mov	BYTE PTR _notAllRefresh$146367[ebp], 0
+	mov	BYTE PTR _notAllRefresh$147287[ebp], 0
 
 ; 662  : 							for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 
-	lea	eax, DWORD PTR _currentBank$146372[ebp]
+	lea	eax, DWORD PTR _currentBank$147292[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146359[ebp]
+	lea	ecx, DWORD PTR _currentRank$147279[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin
 	mov	BYTE PTR __$EHRec$[ebp+8], 12		; 0000000cH
 	jmp	SHORT $LN67@readNextCo
 $LN66@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170529[ebp]
+	lea	eax, DWORD PTR $T171904[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentBank$146372[ebp]
+	lea	ecx, DWORD PTR _currentBank$147292[ebp]
 	call	??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator++
-	lea	ecx, DWORD PTR $T170529[ebp]
+	lea	ecx, DWORD PTR $T171904[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN67@readNextCo:
-	lea	eax, DWORD PTR $T170531[ebp]
+	lea	eax, DWORD PTR $T171906[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146359[ebp]
+	lea	ecx, DWORD PTR _currentRank$147279[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end
 	mov	DWORD PTR tv673[ebp], eax
@@ -9048,13 +9048,13 @@ $LN67@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 13		; 0000000dH
 	mov	edx, DWORD PTR tv1440[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _currentBank$146372[ebp]
+	lea	ecx, DWORD PTR _currentBank$147292[ebp]
 	call	??9?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator!=
-	mov	BYTE PTR $T170530[ebp], al
+	mov	BYTE PTR $T171905[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 12		; 0000000cH
-	lea	ecx, DWORD PTR $T170531[ebp]
+	lea	ecx, DWORD PTR $T171906[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170530[ebp]
+	movzx	eax, BYTE PTR $T171905[ebp]
 	test	eax, eax
 	je	SHORT $LN65@readNextCo
 
@@ -9062,19 +9062,19 @@ $LN67@readNextCo:
 ; 664  : 								// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
 ; 665  : 								if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != Command::REFRESH_ALL)))
 
-	lea	ecx, DWORD PTR _currentBank$146372[ebp]
+	lea	ecx, DWORD PTR _currentBank$147292[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?size@Bank@DRAMsimII@@QBEIXZ		; DRAMsimII::Bank::size
 	test	eax, eax
 	je	SHORT $LN63@readNextCo
-	lea	ecx, DWORD PTR _currentBank$146372[ebp]
+	lea	ecx, DWORD PTR _currentBank$147292[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
 	test	eax, eax
 	je	SHORT $LN64@readNextCo
-	lea	ecx, DWORD PTR _currentBank$146372[ebp]
+	lea	ecx, DWORD PTR _currentBank$147292[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -9087,7 +9087,7 @@ $LN63@readNextCo:
 ; 666  : 								{
 ; 667  : 									notAllRefresh = true;
 
-	mov	BYTE PTR _notAllRefresh$146367[ebp], 1
+	mov	BYTE PTR _notAllRefresh$147287[ebp], 1
 
 ; 668  : 									break;
 
@@ -9102,13 +9102,13 @@ $LN65@readNextCo:
 ; 670  : 							}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 10		; 0000000aH
-	lea	ecx, DWORD PTR _currentBank$146372[ebp]
+	lea	ecx, DWORD PTR _currentBank$147292[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 671  : 							// are all the commands refreshes? if so then return this
 ; 672  : 							if (!notAllRefresh)
 
-	movzx	eax, BYTE PTR _notAllRefresh$146367[ebp]
+	movzx	eax, BYTE PTR _notAllRefresh$147287[ebp]
 	test	eax, eax
 	jne	SHORT $LN62@readNextCo
 
@@ -9116,18 +9116,18 @@ $LN65@readNextCo:
 
 	mov	eax, DWORD PTR _lastBankID$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146359[ebp]
+	lea	ecx, DWORD PTR _currentRank$147279[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR $T170532[ebp], eax
+	mov	DWORD PTR $T171907[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _currentRank$146359[ebp]
+	lea	ecx, DWORD PTR _currentRank$147279[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T170532[ebp]
+	mov	eax, DWORD PTR $T171907[ebp]
 	jmp	$LN122@readNextCo
 $LN62@readNextCo:
 
@@ -9136,12 +9136,12 @@ $LN62@readNextCo:
 	jmp	$LN69@readNextCo
 $LN68@readNextCo:
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _currentRank$146359[ebp]
+	lea	ecx, DWORD PTR _currentRank$147279[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 675  : 						noPendingRefreshes = true;
 
-	mov	BYTE PTR _noPendingRefreshes$146349[ebp], 1
+	mov	BYTE PTR _noPendingRefreshes$147269[ebp], 1
 $LN71@readNextCo:
 
 ; 676  : 					}
@@ -9164,25 +9164,25 @@ $LN71@readNextCo:
 ; 681  : 					if (lastBankID == originalLastBankID)
 
 	mov	eax, DWORD PTR _lastBankID$[ebp]
-	cmp	eax, DWORD PTR _originalLastBankID$146347[ebp]
+	cmp	eax, DWORD PTR _originalLastBankID$147267[ebp]
 	jne	SHORT $LN72@readNextCo
 
 ; 682  : 					{
 ; 683  : 
 ; 684  : 						transactionType = (transactionType == Transaction::WRITE_TRANSACTION) ? Transaction::READ_TRANSACTION : Transaction::WRITE_TRANSACTION;
 
-	mov	eax, DWORD PTR _transactionType$146324[ebp]
+	mov	eax, DWORD PTR _transactionType$147244[ebp]
 	sub	eax, 1
 	neg	eax
 	sbb	eax, eax
 	add	eax, 2
-	mov	DWORD PTR _transactionType$146324[ebp], eax
+	mov	DWORD PTR _transactionType$147244[ebp], eax
 
 ; 685  : 						// however, if this type has already been searched for, then there are no commands, so quit
 ; 686  : 						if (transactionType == originalTransactionType)
 
-	mov	eax, DWORD PTR _transactionType$146324[ebp]
-	cmp	eax, DWORD PTR _originalTransactionType$146348[ebp]
+	mov	eax, DWORD PTR _transactionType$147244[ebp]
+	cmp	eax, DWORD PTR _originalTransactionType$147268[ebp]
 	jne	SHORT $LN72@readNextCo
 
 ; 687  : 							break;
@@ -9202,19 +9202,19 @@ $LN72@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR _temp_c$146386[ebp], eax
+	mov	DWORD PTR _temp_c$147306[ebp], eax
 
 ; 692  : 
 ; 693  : 				if (temp_c && !temp_c->isRefresh())
 
-	cmp	DWORD PTR _temp_c$146386[ebp], 0
+	cmp	DWORD PTR _temp_c$147306[ebp], 0
 	je	$LN59@readNextCo
-	mov	ecx, DWORD PTR _temp_c$146386[ebp]
+	mov	ecx, DWORD PTR _temp_c$147306[ebp]
 	call	?isRefresh@Command@DRAMsimII@@QBE_NXZ	; DRAMsimII::Command::isRefresh
 	movzx	eax, al
 	test	eax, eax
@@ -9233,7 +9233,7 @@ $LN72@readNextCo:
 ; 696  : 					{
 ; 697  : 						return temp_c;
 
-	mov	eax, DWORD PTR _temp_c$146386[ebp]
+	mov	eax, DWORD PTR _temp_c$147306[ebp]
 	jmp	$LN122@readNextCo
 
 ; 698  : 					}
@@ -9254,36 +9254,36 @@ $LN58@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?read@Bank@DRAMsimII@@QBEPBVCommand@2@I@Z ; DRAMsimII::Bank::read
-	mov	DWORD PTR _next_c$146390[ebp], eax
+	mov	DWORD PTR _next_c$147310[ebp], eax
 
 ; 703  : 
 ; 704  : 						if (next_c)
 
-	cmp	DWORD PTR _next_c$146390[ebp], 0
+	cmp	DWORD PTR _next_c$147310[ebp], 0
 	je	$LN59@readNextCo
 
 ; 705  : 							if ((next_c->isRead() && (transactionType == Transaction::READ_TRANSACTION)) ||
 ; 706  : 								(next_c->isWrite() && (transactionType == Transaction::WRITE_TRANSACTION)))
 
-	mov	ecx, DWORD PTR _next_c$146390[ebp]
+	mov	ecx, DWORD PTR _next_c$147310[ebp]
 	call	?isRead@Command@DRAMsimII@@QBE_NXZ	; DRAMsimII::Command::isRead
 	movzx	eax, al
 	test	eax, eax
 	je	SHORT $LN53@readNextCo
-	cmp	DWORD PTR _transactionType$146324[ebp], 2
+	cmp	DWORD PTR _transactionType$147244[ebp], 2
 	je	SHORT $LN54@readNextCo
 $LN53@readNextCo:
-	mov	ecx, DWORD PTR _next_c$146390[ebp]
+	mov	ecx, DWORD PTR _next_c$147310[ebp]
 	call	?isWrite@Command@DRAMsimII@@QBE_NXZ	; DRAMsimII::Command::isWrite
 	movzx	eax, al
 	test	eax, eax
 	je	$LN59@readNextCo
-	cmp	DWORD PTR _transactionType$146324[ebp], 1
+	cmp	DWORD PTR _transactionType$147244[ebp], 1
 	jne	$LN59@readNextCo
 $LN54@readNextCo:
 
@@ -9297,7 +9297,7 @@ $LN54@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
@@ -9329,7 +9329,7 @@ $LN135@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
@@ -9361,7 +9361,7 @@ $LN136@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
@@ -9426,19 +9426,19 @@ $LN49@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR _temp_c$146406[ebp], eax
+	mov	DWORD PTR _temp_c$147326[ebp], eax
 
 ; 742  : 
 ; 743  : 					if ((temp_c) && temp_c->isReadOrWrite())
 
-	cmp	DWORD PTR _temp_c$146406[ebp], 0
+	cmp	DWORD PTR _temp_c$147326[ebp], 0
 	je	SHORT $LN48@readNextCo
-	mov	ecx, DWORD PTR _temp_c$146406[ebp]
+	mov	ecx, DWORD PTR _temp_c$147326[ebp]
 	call	?isReadOrWrite@Command@DRAMsimII@@QBE_NXZ ; DRAMsimII::Command::isReadOrWrite
 	movzx	eax, al
 	test	eax, eax
@@ -9454,7 +9454,7 @@ $LN49@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
@@ -9504,7 +9504,7 @@ $LN46@readNextCo:
 ; 756  : 			case Command::PRECHARGE:
 ; 757  : 				transactionType = Transaction::READ_TRANSACTION;
 
-	mov	DWORD PTR _transactionType$146400[ebp], 2
+	mov	DWORD PTR _transactionType$147320[ebp], 2
 
 ; 758  : 				break;
 
@@ -9517,7 +9517,7 @@ $LN45@readNextCo:
 ; 762  : 			case Command::WRITE_AND_PRECHARGE:
 ; 763  : 				transactionType = Transaction::WRITE_TRANSACTION;
 
-	mov	DWORD PTR _transactionType$146400[ebp], 1
+	mov	DWORD PTR _transactionType$147320[ebp], 1
 
 ; 764  : 				break;
 
@@ -9527,7 +9527,7 @@ $LN44@readNextCo:
 ; 765  : 			default:
 ; 766  : 				transactionType = Transaction::WRITE_TRANSACTION; // FIXME: added this to ensure no uninit vars
 
-	mov	DWORD PTR _transactionType$146400[ebp], 1
+	mov	DWORD PTR _transactionType$147320[ebp], 1
 
 ; 767  : 				cerr << "Did not find a CAS or RAS command when it was expected" << endl;
 
@@ -9551,21 +9551,21 @@ $LN50@readNextCo:
 ; 771  : 			unsigned originalLastRankID = lastRankID;
 
 	mov	eax, DWORD PTR _lastRankID$[ebp]
-	mov	DWORD PTR _originalLastRankID$146421[ebp], eax
+	mov	DWORD PTR _originalLastRankID$147341[ebp], eax
 
 ; 772  : 			unsigned originalLastBankID = lastBankID;
 
 	mov	eax, DWORD PTR _lastBankID$[ebp]
-	mov	DWORD PTR _originalLastBankID$146422[ebp], eax
+	mov	DWORD PTR _originalLastBankID$147342[ebp], eax
 
 ; 773  : 			Transaction::TransactionType originalTransactionType = transactionType;
 
-	mov	eax, DWORD PTR _transactionType$146400[ebp]
-	mov	DWORD PTR _originalTransactionType$146423[ebp], eax
+	mov	eax, DWORD PTR _transactionType$147320[ebp]
+	mov	DWORD PTR _originalTransactionType$147343[ebp], eax
 
 ; 774  : 			bool noPendingRefreshes = false;
 
-	mov	BYTE PTR _noPendingRefreshes$146424[ebp], 0
+	mov	BYTE PTR _noPendingRefreshes$147344[ebp], 0
 $LN43@readNextCo:
 
 ; 775  : 
@@ -9594,13 +9594,13 @@ $LN43@readNextCo:
 ; 781  : 				if (lastBankID == originalLastBankID)
 
 	mov	eax, DWORD PTR _lastBankID$[ebp]
-	cmp	eax, DWORD PTR _originalLastBankID$146422[ebp]
+	cmp	eax, DWORD PTR _originalLastBankID$147342[ebp]
 	jne	$LN41@readNextCo
 
 ; 782  : 				{
 ; 783  : 					if (!noPendingRefreshes)
 
-	movzx	eax, BYTE PTR _noPendingRefreshes$146424[ebp]
+	movzx	eax, BYTE PTR _noPendingRefreshes$147344[ebp]
 	test	eax, eax
 	jne	$LN40@readNextCo
 
@@ -9608,7 +9608,7 @@ $LN43@readNextCo:
 ; 785  : 						// before switching to the next bank, see if all the queues are refreshes in any rank
 ; 786  : 						for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 
-	lea	eax, DWORD PTR _currentRank$146434[ebp]
+	lea	eax, DWORD PTR _currentRank$147354[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
@@ -9617,14 +9617,14 @@ $LN43@readNextCo:
 	jmp	SHORT $LN39@readNextCo
 $LN38@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170535[ebp]
+	lea	eax, DWORD PTR $T171910[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146434[ebp]
+	lea	ecx, DWORD PTR _currentRank$147354[ebp]
 	call	??E?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator++
-	lea	ecx, DWORD PTR $T170535[ebp]
+	lea	ecx, DWORD PTR $T171910[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN39@readNextCo:
-	lea	eax, DWORD PTR $T170537[ebp]
+	lea	eax, DWORD PTR $T171912[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
@@ -9635,46 +9635,46 @@ $LN39@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 15		; 0000000fH
 	mov	edx, DWORD PTR tv1445[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _currentRank$146434[ebp]
+	lea	ecx, DWORD PTR _currentRank$147354[ebp]
 	call	??9?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator!=
-	mov	BYTE PTR $T170536[ebp], al
+	mov	BYTE PTR $T171911[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 14		; 0000000eH
-	lea	ecx, DWORD PTR $T170537[ebp]
+	lea	ecx, DWORD PTR $T171912[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170536[ebp]
+	movzx	eax, BYTE PTR $T171911[ebp]
 	test	eax, eax
 	je	$LN37@readNextCo
 
 ; 787  : 						{
 ; 788  : 							bool notAllRefresh = false;
 
-	mov	BYTE PTR _notAllRefresh$146442[ebp], 0
+	mov	BYTE PTR _notAllRefresh$147362[ebp], 0
 
 ; 789  : 							for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 
-	lea	eax, DWORD PTR _currentBank$146447[ebp]
+	lea	eax, DWORD PTR _currentBank$147367[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146434[ebp]
+	lea	ecx, DWORD PTR _currentRank$147354[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin
 	mov	BYTE PTR __$EHRec$[ebp+8], 16		; 00000010H
 	jmp	SHORT $LN36@readNextCo
 $LN35@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170538[ebp]
+	lea	eax, DWORD PTR $T171913[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentBank$146447[ebp]
+	lea	ecx, DWORD PTR _currentBank$147367[ebp]
 	call	??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator++
-	lea	ecx, DWORD PTR $T170538[ebp]
+	lea	ecx, DWORD PTR $T171913[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN36@readNextCo:
-	lea	eax, DWORD PTR $T170540[ebp]
+	lea	eax, DWORD PTR $T171915[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146434[ebp]
+	lea	ecx, DWORD PTR _currentRank$147354[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end
 	mov	DWORD PTR tv950[ebp], eax
@@ -9683,13 +9683,13 @@ $LN36@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
 	mov	edx, DWORD PTR tv1449[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _currentBank$146447[ebp]
+	lea	ecx, DWORD PTR _currentBank$147367[ebp]
 	call	??9?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator!=
-	mov	BYTE PTR $T170539[ebp], al
+	mov	BYTE PTR $T171914[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 16		; 00000010H
-	lea	ecx, DWORD PTR $T170540[ebp]
+	lea	ecx, DWORD PTR $T171915[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170539[ebp]
+	movzx	eax, BYTE PTR $T171914[ebp]
 	test	eax, eax
 	je	SHORT $LN34@readNextCo
 
@@ -9697,19 +9697,19 @@ $LN36@readNextCo:
 ; 791  : 								// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
 ; 792  : 								if ((currentBank->size() == 0) || ((currentBank->front()) && (currentBank->front()->getCommandType() != Command::REFRESH_ALL)))
 
-	lea	ecx, DWORD PTR _currentBank$146447[ebp]
+	lea	ecx, DWORD PTR _currentBank$147367[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?size@Bank@DRAMsimII@@QBEIXZ		; DRAMsimII::Bank::size
 	test	eax, eax
 	je	SHORT $LN32@readNextCo
-	lea	ecx, DWORD PTR _currentBank$146447[ebp]
+	lea	ecx, DWORD PTR _currentBank$147367[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
 	test	eax, eax
 	je	SHORT $LN33@readNextCo
-	lea	ecx, DWORD PTR _currentBank$146447[ebp]
+	lea	ecx, DWORD PTR _currentBank$147367[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -9722,7 +9722,7 @@ $LN32@readNextCo:
 ; 793  : 								{
 ; 794  : 									notAllRefresh = true;
 
-	mov	BYTE PTR _notAllRefresh$146442[ebp], 1
+	mov	BYTE PTR _notAllRefresh$147362[ebp], 1
 
 ; 795  : 									break;
 
@@ -9737,13 +9737,13 @@ $LN34@readNextCo:
 ; 797  : 							}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 14		; 0000000eH
-	lea	ecx, DWORD PTR _currentBank$146447[ebp]
+	lea	ecx, DWORD PTR _currentBank$147367[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 798  : 							// are all the commands refreshes? if so then return this
 ; 799  : 							if (!notAllRefresh)
 
-	movzx	eax, BYTE PTR _notAllRefresh$146442[ebp]
+	movzx	eax, BYTE PTR _notAllRefresh$147362[ebp]
 	test	eax, eax
 	jne	SHORT $LN31@readNextCo
 
@@ -9751,18 +9751,18 @@ $LN34@readNextCo:
 
 	mov	eax, DWORD PTR _lastBankID$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146434[ebp]
+	lea	ecx, DWORD PTR _currentRank$147354[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR $T170541[ebp], eax
+	mov	DWORD PTR $T171916[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _currentRank$146434[ebp]
+	lea	ecx, DWORD PTR _currentRank$147354[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T170541[ebp]
+	mov	eax, DWORD PTR $T171916[ebp]
 	jmp	$LN122@readNextCo
 $LN31@readNextCo:
 
@@ -9771,12 +9771,12 @@ $LN31@readNextCo:
 	jmp	$LN38@readNextCo
 $LN37@readNextCo:
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _currentRank$146434[ebp]
+	lea	ecx, DWORD PTR _currentRank$147354[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 802  : 						noPendingRefreshes = true;
 
-	mov	BYTE PTR _noPendingRefreshes$146424[ebp], 1
+	mov	BYTE PTR _noPendingRefreshes$147344[ebp], 1
 $LN40@readNextCo:
 
 ; 803  : 					}
@@ -9798,24 +9798,24 @@ $LN40@readNextCo:
 ; 807  : 					if (lastRankID == originalLastRankID)
 
 	mov	eax, DWORD PTR _lastRankID$[ebp]
-	cmp	eax, DWORD PTR _originalLastRankID$146421[ebp]
+	cmp	eax, DWORD PTR _originalLastRankID$147341[ebp]
 	jne	SHORT $LN41@readNextCo
 
 ; 808  : 					{
 ; 809  : 						transactionType = (transactionType == Transaction::WRITE_TRANSACTION) ? Transaction::READ_TRANSACTION : Transaction::WRITE_TRANSACTION;
 
-	mov	eax, DWORD PTR _transactionType$146400[ebp]
+	mov	eax, DWORD PTR _transactionType$147320[ebp]
 	sub	eax, 1
 	neg	eax
 	sbb	eax, eax
 	add	eax, 2
-	mov	DWORD PTR _transactionType$146400[ebp], eax
+	mov	DWORD PTR _transactionType$147320[ebp], eax
 
 ; 810  : 						// however, if this type has already been searched for, then there are no commands, so quit
 ; 811  : 						if (transactionType == originalTransactionType)
 
-	mov	eax, DWORD PTR _transactionType$146400[ebp]
-	cmp	eax, DWORD PTR _originalTransactionType$146423[ebp]
+	mov	eax, DWORD PTR _transactionType$147320[ebp]
+	cmp	eax, DWORD PTR _originalTransactionType$147343[ebp]
 	jne	SHORT $LN41@readNextCo
 
 ; 812  : 							break;
@@ -9835,19 +9835,19 @@ $LN41@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR _temp_c$146461[ebp], eax
+	mov	DWORD PTR _temp_c$147381[ebp], eax
 
 ; 817  : 
 ; 818  : 				if (temp_c && temp_c->getCommandType() != Command::REFRESH_ALL)
 
-	cmp	DWORD PTR _temp_c$146461[ebp], 0
+	cmp	DWORD PTR _temp_c$147381[ebp], 0
 	je	$LN28@readNextCo
-	mov	ecx, DWORD PTR _temp_c$146461[ebp]
+	mov	ecx, DWORD PTR _temp_c$147381[ebp]
 	call	?getCommandType@Command@DRAMsimII@@QBE?AW4CommandType@12@XZ ; DRAMsimII::Command::getCommandType
 	cmp	eax, 12					; 0000000cH
 	je	$LN28@readNextCo
@@ -9865,7 +9865,7 @@ $LN41@readNextCo:
 ; 821  : 					{
 ; 822  : 						return temp_c;
 
-	mov	eax, DWORD PTR _temp_c$146461[ebp]
+	mov	eax, DWORD PTR _temp_c$147381[ebp]
 	jmp	$LN122@readNextCo
 
 ; 823  : 					}
@@ -9886,36 +9886,36 @@ $LN27@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?read@Bank@DRAMsimII@@QBEPBVCommand@2@I@Z ; DRAMsimII::Bank::read
-	mov	DWORD PTR _next_c$146465[ebp], eax
+	mov	DWORD PTR _next_c$147385[ebp], eax
 
 ; 828  : 
 ; 829  : 						if (next_c)
 
-	cmp	DWORD PTR _next_c$146465[ebp], 0
+	cmp	DWORD PTR _next_c$147385[ebp], 0
 	je	$LN28@readNextCo
 
 ; 830  : 							if ((next_c->isRead() && (transactionType == Transaction::READ_TRANSACTION)) ||
 ; 831  : 								(next_c->isWrite() && (transactionType == Transaction::WRITE_TRANSACTION)))
 
-	mov	ecx, DWORD PTR _next_c$146465[ebp]
+	mov	ecx, DWORD PTR _next_c$147385[ebp]
 	call	?isRead@Command@DRAMsimII@@QBE_NXZ	; DRAMsimII::Command::isRead
 	movzx	eax, al
 	test	eax, eax
 	je	SHORT $LN22@readNextCo
-	cmp	DWORD PTR _transactionType$146400[ebp], 2
+	cmp	DWORD PTR _transactionType$147320[ebp], 2
 	je	SHORT $LN23@readNextCo
 $LN22@readNextCo:
-	mov	ecx, DWORD PTR _next_c$146465[ebp]
+	mov	ecx, DWORD PTR _next_c$147385[ebp]
 	call	?isWrite@Command@DRAMsimII@@QBE_NXZ	; DRAMsimII::Command::isWrite
 	movzx	eax, al
 	test	eax, eax
 	je	$LN28@readNextCo
-	cmp	DWORD PTR _transactionType$146400[ebp], 1
+	cmp	DWORD PTR _transactionType$147320[ebp], 1
 	jne	$LN28@readNextCo
 $LN23@readNextCo:
 
@@ -9929,7 +9929,7 @@ $LN23@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
@@ -9961,7 +9961,7 @@ $LN137@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
@@ -9993,7 +9993,7 @@ $LN138@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
@@ -10034,17 +10034,17 @@ $LN21@readNextCo:
 ; 858  : 		{
 ; 859  : 			const Command *candidateCommand = NULL;
 
-	mov	DWORD PTR _candidateCommand$146473[ebp], 0
+	mov	DWORD PTR _candidateCommand$147393[ebp], 0
 
 ; 860  : 
 ; 861  : 			int candidateGap = INT_MAX;
 
-	mov	DWORD PTR _candidateGap$146474[ebp], 2147483647 ; 7fffffffH
+	mov	DWORD PTR _candidateGap$147394[ebp], 2147483647 ; 7fffffffH
 
 ; 862  : 
 ; 863  : 			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 
-	lea	eax, DWORD PTR _currentRank$146479[ebp]
+	lea	eax, DWORD PTR _currentRank$147399[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
@@ -10053,14 +10053,14 @@ $LN21@readNextCo:
 	jmp	SHORT $LN20@readNextCo
 $LN19@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170544[ebp]
+	lea	eax, DWORD PTR $T171919[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146479[ebp]
+	lea	ecx, DWORD PTR _currentRank$147399[ebp]
 	call	??E?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator++
-	lea	ecx, DWORD PTR $T170544[ebp]
+	lea	ecx, DWORD PTR $T171919[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN20@readNextCo:
-	lea	eax, DWORD PTR $T170546[ebp]
+	lea	eax, DWORD PTR $T171921[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
@@ -10071,47 +10071,47 @@ $LN20@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 19		; 00000013H
 	mov	edx, DWORD PTR tv1454[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _currentRank$146479[ebp]
+	lea	ecx, DWORD PTR _currentRank$147399[ebp]
 	call	??9?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator!=
-	mov	BYTE PTR $T170545[ebp], al
+	mov	BYTE PTR $T171920[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 18		; 00000012H
-	lea	ecx, DWORD PTR $T170546[ebp]
+	lea	ecx, DWORD PTR $T171921[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170545[ebp]
+	movzx	eax, BYTE PTR $T171920[ebp]
 	test	eax, eax
 	je	$LN18@readNextCo
 
 ; 864  : 			{
 ; 865  : 				bool notAllRefresh = false;
 
-	mov	BYTE PTR _notAllRefresh$146487[ebp], 0
+	mov	BYTE PTR _notAllRefresh$147407[ebp], 0
 
 ; 866  : 
 ; 867  : 				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != currentRank->bank.end(); currentBank++)
 
-	lea	eax, DWORD PTR _currentBank$146492[ebp]
+	lea	eax, DWORD PTR _currentBank$147412[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146479[ebp]
+	lea	ecx, DWORD PTR _currentRank$147399[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin
 	mov	BYTE PTR __$EHRec$[ebp+8], 20		; 00000014H
 	jmp	SHORT $LN17@readNextCo
 $LN16@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170547[ebp]
+	lea	eax, DWORD PTR $T171922[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentBank$146492[ebp]
+	lea	ecx, DWORD PTR _currentBank$147412[ebp]
 	call	??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator++
-	lea	ecx, DWORD PTR $T170547[ebp]
+	lea	ecx, DWORD PTR $T171922[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN17@readNextCo:
-	lea	eax, DWORD PTR $T170549[ebp]
+	lea	eax, DWORD PTR $T171924[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146479[ebp]
+	lea	ecx, DWORD PTR _currentRank$147399[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end
 	mov	DWORD PTR tv1199[ebp], eax
@@ -10120,36 +10120,36 @@ $LN17@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 21		; 00000015H
 	mov	edx, DWORD PTR tv1458[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _currentBank$146492[ebp]
+	lea	ecx, DWORD PTR _currentBank$147412[ebp]
 	call	??9?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator!=
-	mov	BYTE PTR $T170548[ebp], al
+	mov	BYTE PTR $T171923[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 20		; 00000014H
-	lea	ecx, DWORD PTR $T170549[ebp]
+	lea	ecx, DWORD PTR $T171924[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170548[ebp]
+	movzx	eax, BYTE PTR $T171923[ebp]
 	test	eax, eax
 	je	$LN15@readNextCo
 
 ; 868  : 				{
 ; 869  : 					const Command *challengerCommand = currentBank->front();
 
-	lea	ecx, DWORD PTR _currentBank$146492[ebp]
+	lea	ecx, DWORD PTR _currentBank$147412[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	mov	DWORD PTR _challengerCommand$146500[ebp], eax
+	mov	DWORD PTR _challengerCommand$147420[ebp], eax
 
 ; 870  : 
 ; 871  : 					if (challengerCommand)
 
-	cmp	DWORD PTR _challengerCommand$146500[ebp], 0
+	cmp	DWORD PTR _challengerCommand$147420[ebp], 0
 	je	$LN14@readNextCo
 
 ; 872  : 					{
 ; 873  : 						int challengerGap = minProtocolGap(challengerCommand);
 
 	mov	esi, esp
-	mov	eax, DWORD PTR _challengerCommand$146500[ebp]
+	mov	eax, DWORD PTR _challengerCommand$147420[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx]
@@ -10161,22 +10161,22 @@ $LN17@readNextCo:
 	push	edx
 	push	eax
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR _challengerGap$146502[ebp], eax
+	mov	DWORD PTR _challengerGap$147422[ebp], eax
 
 ; 874  : 
 ; 875  : 						if (challengerGap < candidateGap || (candidateGap == challengerGap && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
 
-	mov	eax, DWORD PTR _challengerGap$146502[ebp]
-	cmp	eax, DWORD PTR _candidateGap$146474[ebp]
+	mov	eax, DWORD PTR _challengerGap$147422[ebp]
+	cmp	eax, DWORD PTR _candidateGap$147394[ebp]
 	jl	SHORT $LN12@readNextCo
-	mov	eax, DWORD PTR _candidateGap$146474[ebp]
-	cmp	eax, DWORD PTR _challengerGap$146502[ebp]
+	mov	eax, DWORD PTR _candidateGap$147394[ebp]
+	cmp	eax, DWORD PTR _challengerGap$147422[ebp]
 	jne	$LN14@readNextCo
-	mov	ecx, DWORD PTR _challengerCommand$146500[ebp]
+	mov	ecx, DWORD PTR _challengerCommand$147420[ebp]
 	call	?getEnqueueTime@Event@DRAMsimII@@QBE_JXZ ; DRAMsimII::Event::getEnqueueTime
 	mov	esi, eax
 	mov	edi, edx
-	mov	ecx, DWORD PTR _candidateCommand$146473[ebp]
+	mov	ecx, DWORD PTR _candidateCommand$147393[ebp]
 	call	?getEnqueueTime@Event@DRAMsimII@@QBE_JXZ ; DRAMsimII::Event::getEnqueueTime
 	mov	DWORD PTR tv1984[ebp], esi
 	mov	DWORD PTR tv1984[ebp+4], edi
@@ -10194,7 +10194,7 @@ $LN12@readNextCo:
 ; 876  : 						{
 ; 877  : 							if (challengerCommand->getCommandType() == Command::REFRESH_ALL)
 
-	mov	ecx, DWORD PTR _challengerCommand$146500[ebp]
+	mov	ecx, DWORD PTR _challengerCommand$147420[ebp]
 	call	?getCommandType@Command@DRAMsimII@@QBE?AW4CommandType@12@XZ ; DRAMsimII::Command::getCommandType
 	cmp	eax, 12					; 0000000cH
 	jne	$LN11@readNextCo
@@ -10203,36 +10203,36 @@ $LN12@readNextCo:
 ; 879  : 								// if it hasn't been proven to be all refreshes or not yet
 ; 880  : 								if (!notAllRefresh)
 
-	movzx	eax, BYTE PTR _notAllRefresh$146487[ebp]
+	movzx	eax, BYTE PTR _notAllRefresh$147407[ebp]
 	test	eax, eax
 	jne	$LN10@readNextCo
 
 ; 881  : 								{
 ; 882  : 									for (vector<Bank>::const_iterator thisBank = currentRank->bank.begin(); thisBank != currentRank->bank.end(); thisBank++)
 
-	lea	eax, DWORD PTR _thisBank$146511[ebp]
+	lea	eax, DWORD PTR _thisBank$147431[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146479[ebp]
+	lea	ecx, DWORD PTR _currentRank$147399[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin
 	mov	BYTE PTR __$EHRec$[ebp+8], 22		; 00000016H
 	jmp	SHORT $LN9@readNextCo
 $LN8@readNextCo:
 	push	0
-	lea	eax, DWORD PTR $T170550[ebp]
+	lea	eax, DWORD PTR $T171925[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _thisBank$146511[ebp]
+	lea	ecx, DWORD PTR _thisBank$147431[ebp]
 	call	??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator++
-	lea	ecx, DWORD PTR $T170550[ebp]
+	lea	ecx, DWORD PTR $T171925[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN9@readNextCo:
-	lea	eax, DWORD PTR $T170552[ebp]
+	lea	eax, DWORD PTR $T171927[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _currentRank$146479[ebp]
+	lea	ecx, DWORD PTR _currentRank$147399[ebp]
 	call	??C?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEPBVRank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator->
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end
 	mov	DWORD PTR tv1259[ebp], eax
@@ -10241,13 +10241,13 @@ $LN9@readNextCo:
 	mov	BYTE PTR __$EHRec$[ebp+8], 23		; 00000017H
 	mov	edx, DWORD PTR tv1462[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _thisBank$146511[ebp]
+	lea	ecx, DWORD PTR _thisBank$147431[ebp]
 	call	??9?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator!=
-	mov	BYTE PTR $T170551[ebp], al
+	mov	BYTE PTR $T171926[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 22		; 00000016H
-	lea	ecx, DWORD PTR $T170552[ebp]
+	lea	ecx, DWORD PTR $T171927[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170551[ebp]
+	movzx	eax, BYTE PTR $T171926[ebp]
 	test	eax, eax
 	je	SHORT $LN7@readNextCo
 
@@ -10255,13 +10255,13 @@ $LN9@readNextCo:
 ; 884  : 										// if any queue is empty or the head of any queue isn't a refresh command, mark this fact and do not choose refresh
 ; 885  : 										if ((thisBank->size() == 0) || (thisBank->front()->getCommandType() != Command::REFRESH_ALL))
 
-	lea	ecx, DWORD PTR _thisBank$146511[ebp]
+	lea	ecx, DWORD PTR _thisBank$147431[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?size@Bank@DRAMsimII@@QBEIXZ		; DRAMsimII::Bank::size
 	test	eax, eax
 	je	SHORT $LN5@readNextCo
-	lea	ecx, DWORD PTR _thisBank$146511[ebp]
+	lea	ecx, DWORD PTR _thisBank$147431[ebp]
 	call	??C?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEPBVBank@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator->
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
@@ -10274,7 +10274,7 @@ $LN5@readNextCo:
 ; 886  : 										{
 ; 887  : 											notAllRefresh = true;
 
-	mov	BYTE PTR _notAllRefresh$146487[ebp], 1
+	mov	BYTE PTR _notAllRefresh$147407[ebp], 1
 
 ; 888  : 											break;
 
@@ -10289,26 +10289,26 @@ $LN7@readNextCo:
 ; 890  : 									}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 20		; 00000014H
-	lea	ecx, DWORD PTR _thisBank$146511[ebp]
+	lea	ecx, DWORD PTR _thisBank$147431[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 891  : 									// are all the commands refreshes? if so then choose this
 ; 892  : 									if (!notAllRefresh)
 
-	movzx	eax, BYTE PTR _notAllRefresh$146487[ebp]
+	movzx	eax, BYTE PTR _notAllRefresh$147407[ebp]
 	test	eax, eax
 	jne	SHORT $LN10@readNextCo
 
 ; 893  : 									{
 ; 894  : 										candidateGap = challengerGap;
 
-	mov	eax, DWORD PTR _challengerGap$146502[ebp]
-	mov	DWORD PTR _candidateGap$146474[ebp], eax
+	mov	eax, DWORD PTR _challengerGap$147422[ebp]
+	mov	DWORD PTR _candidateGap$147394[ebp], eax
 
 ; 895  : 										candidateCommand = challengerCommand;
 
-	mov	eax, DWORD PTR _challengerCommand$146500[ebp]
-	mov	DWORD PTR _candidateCommand$146473[ebp], eax
+	mov	eax, DWORD PTR _challengerCommand$147420[ebp]
+	mov	DWORD PTR _candidateCommand$147393[ebp], eax
 $LN10@readNextCo:
 
 ; 896  : 									}
@@ -10322,13 +10322,13 @@ $LN11@readNextCo:
 ; 900  : 							{
 ; 901  : 								candidateGap = challengerGap;
 
-	mov	eax, DWORD PTR _challengerGap$146502[ebp]
-	mov	DWORD PTR _candidateGap$146474[ebp], eax
+	mov	eax, DWORD PTR _challengerGap$147422[ebp]
+	mov	DWORD PTR _candidateGap$147394[ebp], eax
 
 ; 902  : 								candidateCommand = challengerCommand;
 
-	mov	eax, DWORD PTR _challengerCommand$146500[ebp]
-	mov	DWORD PTR _candidateCommand$146473[ebp], eax
+	mov	eax, DWORD PTR _challengerCommand$147420[ebp]
+	mov	DWORD PTR _candidateCommand$147393[ebp], eax
 $LN14@readNextCo:
 
 ; 903  : 							}							
@@ -10341,7 +10341,7 @@ $LN15@readNextCo:
 ; 906  : 				}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 18		; 00000012H
-	lea	ecx, DWORD PTR _currentBank$146492[ebp]
+	lea	ecx, DWORD PTR _currentBank$147412[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 	jmp	$LN19@readNextCo
 $LN18@readNextCo:
@@ -10349,28 +10349,28 @@ $LN18@readNextCo:
 ; 907  : 			}
 
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _currentRank$146479[ebp]
+	lea	ecx, DWORD PTR _currentRank$147399[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 908  : 
 ; 909  : 			if (candidateCommand)
 
-	cmp	DWORD PTR _candidateCommand$146473[ebp], 0
+	cmp	DWORD PTR _candidateCommand$147393[ebp], 0
 	je	$LN2@readNextCo
 
 ; 910  : 			{
 ; 911  : 				assert(candidateCommand->getCommandType() == Command::REFRESH_ALL || rank[candidateCommand->getAddress().getRank()].bank[candidateCommand->getAddress().getBank()].front() == candidateCommand);
 
-	mov	ecx, DWORD PTR _candidateCommand$146473[ebp]
+	mov	ecx, DWORD PTR _candidateCommand$147393[ebp]
 	call	?getCommandType@Command@DRAMsimII@@QBE?AW4CommandType@12@XZ ; DRAMsimII::Command::getCommandType
 	cmp	eax, 12					; 0000000cH
 	je	SHORT $LN139@readNextCo
-	mov	ecx, DWORD PTR _candidateCommand$146473[ebp]
+	mov	ecx, DWORD PTR _candidateCommand$147393[ebp]
 	call	?getAddress@Event@DRAMsimII@@QBEABVAddress@2@XZ ; DRAMsimII::Event::getAddress
 	mov	ecx, eax
 	call	?getBank@Address@DRAMsimII@@QBEIXZ	; DRAMsimII::Address::getBank
 	push	eax
-	mov	ecx, DWORD PTR _candidateCommand$146473[ebp]
+	mov	ecx, DWORD PTR _candidateCommand$147393[ebp]
 	call	?getAddress@Event@DRAMsimII@@QBEABVAddress@2@XZ ; DRAMsimII::Event::getAddress
 	mov	ecx, eax
 	call	?getRank@Address@DRAMsimII@@QBEIXZ	; DRAMsimII::Address::getRank
@@ -10378,12 +10378,12 @@ $LN18@readNextCo:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 360				; 00000168H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
-	add	eax, 176				; 000000b0H
+	add	eax, 340				; 00000154H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?front@Bank@DRAMsimII@@QBEPBVCommand@2@XZ ; DRAMsimII::Bank::front
-	cmp	eax, DWORD PTR _candidateCommand$146473[ebp]
+	cmp	eax, DWORD PTR _candidateCommand$147393[ebp]
 	je	SHORT $LN139@readNextCo
 	mov	eax, DWORD PTR ?__LINE__Var@?1??readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@3@PBV43@0@Z@4JA
 	add	eax, 437				; 000001b5H
@@ -10424,14 +10424,14 @@ $LN141@readNextCo:
 	push	eax
 	push	OFFSET ??_C@_06GKILHJPD@?$FN?5now?$FL?$AA@
 	mov	ebx, esp
-	mov	ecx, DWORD PTR _candidateGap$146474[ebp]
+	mov	ecx, DWORD PTR _candidateGap$147394[ebp]
 	push	ecx
 	push	OFFSET ??_C@_04JMOLNPBG@gap?$FL?$AA@
 	mov	eax, esp
-	mov	edx, DWORD PTR _candidateCommand$146473[ebp]
+	mov	edx, DWORD PTR _candidateCommand$147393[ebp]
 	push	edx
 	push	OFFSET ??_C@_0L@MHDLOPIJ@?$FN?7Winner?3?5?$AA@
-	mov	ecx, DWORD PTR _candidateCommand$146473[ebp]
+	mov	ecx, DWORD PTR _candidateCommand$147393[ebp]
 	mov	DWORD PTR tv2079[ebp], eax
 	call	?getAddress@Event@DRAMsimII@@QBEABVAddress@2@XZ ; DRAMsimII::Event::getAddress
 	mov	ecx, eax
@@ -10440,7 +10440,7 @@ $LN141@readNextCo:
 	push	eax
 	push	OFFSET ??_C@_04HDDNHBJH@?$FN?5B?$FL?$AA@
 	mov	DWORD PTR tv2081[ebp], ecx
-	mov	ecx, DWORD PTR _candidateCommand$146473[ebp]
+	mov	ecx, DWORD PTR _candidateCommand$147393[ebp]
 	call	?getAddress@Event@DRAMsimII@@QBEABVAddress@2@XZ ; DRAMsimII::Event::getAddress
 	mov	ecx, eax
 	call	?getRank@Address@DRAMsimII@@QBEIXZ	; DRAMsimII::Address::getRank
@@ -10500,7 +10500,7 @@ $LN2@readNextCo:
 ; 915  : 
 ; 916  : 			return candidateCommand;
 
-	mov	eax, DWORD PTR _candidateCommand$146473[ebp]
+	mov	eax, DWORD PTR _candidateCommand$147393[ebp]
 	jmp	SHORT $LN122@readNextCo
 
 ; 917  : 		}
@@ -10827,76 +10827,76 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$0:
-	lea	ecx, DWORD PTR _oldestBank$146113[ebp]
+	lea	ecx, DWORD PTR _oldestBank$147033[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$1:
-	lea	ecx, DWORD PTR _oldestExecutableBank$146118[ebp]
+	lea	ecx, DWORD PTR _oldestExecutableBank$147038[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$2:
-	lea	ecx, DWORD PTR _currentRank$146243[ebp]
+	lea	ecx, DWORD PTR _currentRank$147163[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$4:
-	lea	ecx, DWORD PTR $T170511[ebp]
+	lea	ecx, DWORD PTR $T171886[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$5:
-	lea	ecx, DWORD PTR _bank_id$146258[ebp]
+	lea	ecx, DWORD PTR _bank_id$147178[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$7:
-	lea	ecx, DWORD PTR $T170514[ebp]
+	lea	ecx, DWORD PTR $T171889[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$8:
-	lea	ecx, DWORD PTR _currentBank$146275[ebp]
+	lea	ecx, DWORD PTR _currentBank$147195[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$10:
-	lea	ecx, DWORD PTR $T170517[ebp]
+	lea	ecx, DWORD PTR $T171892[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$11:
-	lea	ecx, DWORD PTR _currentBank$146294[ebp]
+	lea	ecx, DWORD PTR _currentBank$147214[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$13:
-	lea	ecx, DWORD PTR $T170520[ebp]
+	lea	ecx, DWORD PTR $T171895[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$14:
-	lea	ecx, DWORD PTR _currentRank$146359[ebp]
+	lea	ecx, DWORD PTR _currentRank$147279[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$16:
-	lea	ecx, DWORD PTR $T170528[ebp]
+	lea	ecx, DWORD PTR $T171903[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$17:
-	lea	ecx, DWORD PTR _currentBank$146372[ebp]
+	lea	ecx, DWORD PTR _currentBank$147292[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$19:
-	lea	ecx, DWORD PTR $T170531[ebp]
+	lea	ecx, DWORD PTR $T171906[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$20:
-	lea	ecx, DWORD PTR _currentRank$146434[ebp]
+	lea	ecx, DWORD PTR _currentRank$147354[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$22:
-	lea	ecx, DWORD PTR $T170537[ebp]
+	lea	ecx, DWORD PTR $T171912[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$23:
-	lea	ecx, DWORD PTR _currentBank$146447[ebp]
+	lea	ecx, DWORD PTR _currentBank$147367[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$25:
-	lea	ecx, DWORD PTR $T170540[ebp]
+	lea	ecx, DWORD PTR $T171915[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$26:
-	lea	ecx, DWORD PTR _currentRank$146479[ebp]
+	lea	ecx, DWORD PTR _currentRank$147399[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$28:
-	lea	ecx, DWORD PTR $T170546[ebp]
+	lea	ecx, DWORD PTR $T171921[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$29:
-	lea	ecx, DWORD PTR _currentBank$146492[ebp]
+	lea	ecx, DWORD PTR _currentBank$147412[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$31:
-	lea	ecx, DWORD PTR $T170549[ebp]
+	lea	ecx, DWORD PTR $T171924[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$32:
-	lea	ecx, DWORD PTR _thisBank$146511[ebp]
+	lea	ecx, DWORD PTR _thisBank$147431[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z$34:
-	lea	ecx, DWORD PTR $T170552[ebp]
+	lea	ecx, DWORD PTR $T171927[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$?readNextCommand@fbdChannel@DRAMsimII@@IBEPBVCommand@2@PBV32@0@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -11246,7 +11246,7 @@ _this$ = -8						; size = 4
 ?getRankID@Rank@DRAMsimII@@QBEIXZ PROC			; DRAMsimII::Rank::getRankID, COMDAT
 ; _this$ = ecx
 
-; 97   : 		unsigned getRankID() const { return rankID; }		
+; 101  : 		unsigned getRankID() const { return rankID; }		
 
 	push	ebp
 	mov	ebp, esp
@@ -11843,7 +11843,7 @@ PUBLIC	??A?$vector@PAVCommand@DRAMsimII@@V?$allocator@PAVCommand@DRAMsimII@@@std
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?pop@?$Queue@VCommand@DRAMsimII@@@DRAMsimII@@QAEPAVCommand@2@XZ
 _TEXT	SEGMENT
-_item$149064 = -20					; size = 4
+_item$149984 = -20					; size = 4
 _this$ = -8						; size = 4
 ?pop@?$Queue@VCommand@DRAMsimII@@@DRAMsimII@@QAEPAVCommand@2@XZ PROC ; DRAMsimII::Queue<DRAMsimII::Command>::pop, COMDAT
 ; _this$ = ecx
@@ -11899,7 +11899,7 @@ $LN2@pop:
 	add	ecx, 12					; 0000000cH
 	call	??A?$vector@PAVCommand@DRAMsimII@@V?$allocator@PAVCommand@DRAMsimII@@@std@@@std@@QAEAAPAVCommand@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Command *,std::allocator<DRAMsimII::Command *> >::operator[]
 	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR _item$149064[ebp], edx
+	mov	DWORD PTR _item$149984[ebp], edx
 
 ; 196  : 
 ; 197  : 				entry[head] = NULL; // ensure this item isn't rhs part of the queue anymore
@@ -11931,7 +11931,7 @@ $LN2@pop:
 ; 200  : 
 ; 201  : 				return item;
 
-	mov	eax, DWORD PTR _item$149064[ebp]
+	mov	eax, DWORD PTR _item$149984[ebp]
 $LN3@pop:
 
 ; 202  : 			}
@@ -12207,8 +12207,8 @@ xdata$x	ENDS
 ;	COMDAT ??0?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAE@I_N@Z
 _TEXT	SEGMENT
 tv92 = -244						; size = 4
-$T170699 = -236						; size = 4
-$T170700 = -224						; size = 4
+$T172074 = -236						; size = 4
+$T172075 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _size$ = 8						; size = 4
@@ -12287,13 +12287,13 @@ $LN2@Queue:
 	push	48					; 00000030H
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
-	mov	DWORD PTR $T170700[ebp], eax
+	mov	DWORD PTR $T172075[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	cmp	DWORD PTR $T170700[ebp], 0
+	cmp	DWORD PTR $T172075[ebp], 0
 	je	SHORT $LN6@Queue
 	push	0
 	push	0
-	mov	ecx, DWORD PTR $T170700[ebp]
+	mov	ecx, DWORD PTR $T172075[ebp]
 	call	??0fbdFrame@DRAMsimII@@QAE@_J@Z		; DRAMsimII::fbdFrame::fbdFrame
 	mov	DWORD PTR tv92[ebp], eax
 	jmp	SHORT $LN7@Queue
@@ -12301,9 +12301,9 @@ $LN6@Queue:
 	mov	DWORD PTR tv92[ebp], 0
 $LN7@Queue:
 	mov	eax, DWORD PTR tv92[ebp]
-	mov	DWORD PTR $T170699[ebp], eax
+	mov	DWORD PTR $T172074[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	mov	ecx, DWORD PTR $T170699[ebp]
+	mov	ecx, DWORD PTR $T172074[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAE_NPAVfbdFrame@2@@Z ; DRAMsimII::Queue<DRAMsimII::fbdFrame>::push
@@ -12338,7 +12338,7 @@ __unwindfunclet$??0?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAE@I_N@Z$0:
 	add	ecx, 12					; 0000000cH
 	jmp	??1?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ ; std::vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::~vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >
 __unwindfunclet$??0?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAE@I_N@Z$1:
-	mov	eax, DWORD PTR $T170700[ebp]
+	mov	eax, DWORD PTR $T172075[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -12389,15 +12389,15 @@ tv156 = -356						; size = 4
 tv85 = -352						; size = 4
 tv82 = -352						; size = 4
 tv76 = -352						; size = 4
-$T170713 = -344						; size = 4
-$T170714 = -332						; size = 4
-$T170717 = -320						; size = 4
-$T170718 = -308						; size = 4
-$T170721 = -296						; size = 12
-$T170722 = -273						; size = 1
-$T170723 = -264						; size = 12
-_i$149297 = -52						; size = 12
-_value$149118 = -32					; size = 4
+$T172088 = -344						; size = 4
+$T172089 = -332						; size = 4
+$T172092 = -320						; size = 4
+$T172093 = -308						; size = 4
+$T172096 = -296						; size = 12
+$T172097 = -273						; size = 1
+$T172098 = -264						; size = 12
+_i$150217 = -52						; size = 12
+_value$150038 = -32					; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ??1?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAE@XZ PROC	; DRAMsimII::Queue<DRAMsimII::fbdFrame>::~Queue<DRAMsimII::fbdFrame>, COMDAT
@@ -12434,8 +12434,8 @@ $LN7@Queue@2:
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pop@?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAEPAVfbdFrame@2@XZ ; DRAMsimII::Queue<DRAMsimII::fbdFrame>::pop
-	mov	DWORD PTR _value$149118[ebp], eax
-	cmp	DWORD PTR _value$149118[ebp], 0
+	mov	DWORD PTR _value$150038[ebp], eax
+	cmp	DWORD PTR _value$150038[ebp], 0
 	je	$LN6@Queue@2
 
 ; 105  : 			{
@@ -12448,14 +12448,14 @@ $LN7@Queue@2:
 
 ; 107  : 					::delete value;
 
-	mov	eax, DWORD PTR _value$149118[ebp]
-	mov	DWORD PTR $T170714[ebp], eax
-	mov	ecx, DWORD PTR $T170714[ebp]
-	mov	DWORD PTR $T170713[ebp], ecx
-	cmp	DWORD PTR $T170713[ebp], 0
+	mov	eax, DWORD PTR _value$150038[ebp]
+	mov	DWORD PTR $T172089[ebp], eax
+	mov	ecx, DWORD PTR $T172089[ebp]
+	mov	DWORD PTR $T172088[ebp], ecx
+	cmp	DWORD PTR $T172088[ebp], 0
 	je	SHORT $LN10@Queue@2
 	push	0
-	mov	ecx, DWORD PTR $T170713[ebp]
+	mov	ecx, DWORD PTR $T172088[ebp]
 	call	??_GfbdFrame@DRAMsimII@@QAEPAXI@Z
 	mov	DWORD PTR tv76[ebp], eax
 	jmp	SHORT $LN11@Queue@2
@@ -12474,14 +12474,14 @@ $LN5@Queue@2:
 
 ; 109  : 					delete value;			
 
-	mov	eax, DWORD PTR _value$149118[ebp]
-	mov	DWORD PTR $T170718[ebp], eax
-	mov	ecx, DWORD PTR $T170718[ebp]
-	mov	DWORD PTR $T170717[ebp], ecx
-	cmp	DWORD PTR $T170717[ebp], 0
+	mov	eax, DWORD PTR _value$150038[ebp]
+	mov	DWORD PTR $T172093[ebp], eax
+	mov	ecx, DWORD PTR $T172093[ebp]
+	mov	DWORD PTR $T172092[ebp], ecx
+	cmp	DWORD PTR $T172092[ebp], 0
 	je	SHORT $LN12@Queue@2
 	push	1
-	mov	ecx, DWORD PTR $T170717[ebp]
+	mov	ecx, DWORD PTR $T172092[ebp]
 	call	??_GfbdFrame@DRAMsimII@@QAEPAXI@Z
 	mov	DWORD PTR tv82[ebp], eax
 	jmp	SHORT $LN4@Queue@2
@@ -12496,7 +12496,7 @@ $LN6@Queue@2:
 
 ; 111  : 			for (typename std::vector<T*>::iterator i = entry.begin(); i != entry.end(); i++)
 
-	lea	eax, DWORD PTR _i$149297[ebp]
+	lea	eax, DWORD PTR _i$150217[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 12					; 0000000cH
@@ -12505,14 +12505,14 @@ $LN6@Queue@2:
 	jmp	SHORT $LN3@Queue@2
 $LN2@Queue@2:
 	push	0
-	lea	eax, DWORD PTR $T170721[ebp]
+	lea	eax, DWORD PTR $T172096[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _i$149297[ebp]
+	lea	ecx, DWORD PTR _i$150217[ebp]
 	call	??E?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::operator++
-	lea	ecx, DWORD PTR $T170721[ebp]
+	lea	ecx, DWORD PTR $T172096[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN3@Queue@2:
-	lea	eax, DWORD PTR $T170723[ebp]
+	lea	eax, DWORD PTR $T172098[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 12					; 0000000cH
@@ -12523,19 +12523,19 @@ $LN3@Queue@2:
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	edx, DWORD PTR tv156[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _i$149297[ebp]
+	lea	ecx, DWORD PTR _i$150217[ebp]
 	call	??9?$_Vector_const_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::operator!=
-	mov	BYTE PTR $T170722[ebp], al
+	mov	BYTE PTR $T172097[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T170723[ebp]
+	lea	ecx, DWORD PTR $T172098[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T170722[ebp]
+	movzx	eax, BYTE PTR $T172097[ebp]
 	test	eax, eax
 	je	SHORT $LN1@Queue@2
 
 ; 112  : 				assert(*i == NULL);
 
-	lea	ecx, DWORD PTR _i$149297[ebp]
+	lea	ecx, DWORD PTR _i$150217[ebp]
 	call	??D?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QBEAAPAVfbdFrame@DRAMsimII@@XZ ; std::_Vector_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::operator*
 	cmp	DWORD PTR [eax], 0
 	je	SHORT $LN14@Queue@2
@@ -12551,7 +12551,7 @@ $LN14@Queue@2:
 	jmp	$LN2@Queue@2
 $LN1@Queue@2:
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _i$149297[ebp]
+	lea	ecx, DWORD PTR _i$150217[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 113  : 		}	
@@ -12598,10 +12598,10 @@ __unwindfunclet$??1?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAE@XZ$0:
 	add	ecx, 12					; 0000000cH
 	jmp	??1?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ ; std::vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::~vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >
 __unwindfunclet$??1?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAE@XZ$1:
-	lea	ecx, DWORD PTR _i$149297[ebp]
+	lea	ecx, DWORD PTR _i$150217[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??1?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAE@XZ$3:
-	lea	ecx, DWORD PTR $T170723[ebp]
+	lea	ecx, DWORD PTR $T172098[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??1?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -12771,7 +12771,7 @@ $LN5@push:
 _TEXT	ENDS
 ;	COMDAT ?pop@?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAEPAVfbdFrame@2@XZ
 _TEXT	SEGMENT
-_item$149322 = -20					; size = 4
+_item$150242 = -20					; size = 4
 _this$ = -8						; size = 4
 ?pop@?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAEPAVfbdFrame@2@XZ PROC ; DRAMsimII::Queue<DRAMsimII::fbdFrame>::pop, COMDAT
 ; _this$ = ecx
@@ -12827,7 +12827,7 @@ $LN2@pop@2:
 	add	ecx, 12					; 0000000cH
 	call	??A?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAEAAPAVfbdFrame@DRAMsimII@@I@Z ; std::vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::operator[]
 	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR _item$149322[ebp], edx
+	mov	DWORD PTR _item$150242[ebp], edx
 
 ; 196  : 
 ; 197  : 				entry[head] = NULL; // ensure this item isn't rhs part of the queue anymore
@@ -12859,7 +12859,7 @@ $LN2@pop@2:
 ; 200  : 
 ; 201  : 				return item;
 
-	mov	eax, DWORD PTR _item$149322[ebp]
+	mov	eax, DWORD PTR _item$150242[ebp]
 $LN3@pop@2:
 
 ; 202  : 			}
@@ -13243,7 +13243,7 @@ PUBLIC	??0?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std
 ; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 ;	COMDAT ?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T170764 = -212						; size = 4
+$T172139 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin, COMDAT
@@ -13264,7 +13264,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170764[ebp], 0
+	mov	DWORD PTR $T172139[ebp], 0
 
 ; 641  : 		return (iterator(_Myfirst, this));
 
@@ -13275,9 +13275,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@PAVBank@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::_Vector_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >
-	mov	eax, DWORD PTR $T170764[ebp]
+	mov	eax, DWORD PTR $T172139[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170764[ebp], eax
+	mov	DWORD PTR $T172139[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 642  : 		}
@@ -13297,7 +13297,7 @@ PUBLIC	??0?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T170769 = -212						; size = 4
+$T172144 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::begin, COMDAT
@@ -13318,7 +13318,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170769[ebp], 0
+	mov	DWORD PTR $T172144[ebp], 0
 
 ; 646  : 		return (const_iterator(_Myfirst, this));
 
@@ -13329,9 +13329,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@PAVBank@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >
-	mov	eax, DWORD PTR $T170769[ebp]
+	mov	eax, DWORD PTR $T172144[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170769[ebp], eax
+	mov	DWORD PTR $T172144[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 647  : 		}
@@ -13350,7 +13350,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T170774 = -212						; size = 4
+$T172149 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end, COMDAT
@@ -13371,7 +13371,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170774[ebp], 0
+	mov	DWORD PTR $T172149[ebp], 0
 
 ; 651  : 		return (iterator(_Mylast, this));
 
@@ -13382,9 +13382,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@PAVBank@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::_Vector_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >
-	mov	eax, DWORD PTR $T170774[ebp]
+	mov	eax, DWORD PTR $T172149[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170774[ebp], eax
+	mov	DWORD PTR $T172149[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 652  : 		}
@@ -13403,7 +13403,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T170779 = -212						; size = 4
+$T172154 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::end, COMDAT
@@ -13424,7 +13424,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170779[ebp], 0
+	mov	DWORD PTR $T172154[ebp], 0
 
 ; 656  : 		return (const_iterator(_Mylast, this));
 
@@ -13435,9 +13435,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@PAVBank@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::_Vector_const_iterator<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >
-	mov	eax, DWORD PTR $T170779[ebp]
+	mov	eax, DWORD PTR $T172154[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170779[ebp], eax
+	mov	DWORD PTR $T172154[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 657  : 		}
@@ -13798,7 +13798,7 @@ PUBLIC	??0?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?begin@?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T170792 = -212						; size = 4
+$T172167 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::begin, COMDAT
@@ -13819,7 +13819,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170792[ebp], 0
+	mov	DWORD PTR $T172167[ebp], 0
 
 ; 646  : 		return (const_iterator(_Myfirst, this));
 
@@ -13830,9 +13830,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@PAVRank@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >
-	mov	eax, DWORD PTR $T170792[ebp]
+	mov	eax, DWORD PTR $T172167[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170792[ebp], eax
+	mov	DWORD PTR $T172167[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 647  : 		}
@@ -13851,7 +13851,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T170797 = -212						; size = 4
+$T172172 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::end, COMDAT
@@ -13872,7 +13872,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170797[ebp], 0
+	mov	DWORD PTR $T172172[ebp], 0
 
 ; 656  : 		return (const_iterator(_Mylast, this));
 
@@ -13883,9 +13883,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@PAVRank@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::_Vector_const_iterator<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >
-	mov	eax, DWORD PTR $T170797[ebp]
+	mov	eax, DWORD PTR $T172172[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170797[ebp], eax
+	mov	DWORD PTR $T172172[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 657  : 		}
@@ -14037,7 +14037,7 @@ $LN1@operator@4:
 ; 770  : 		return (*(_Myfirst + _Pos));
 
 	mov	eax, DWORD PTR __Pos$[ebp]
-	imul	eax, 200				; 000000c8H
+	imul	eax, 360				; 00000168H
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	eax, DWORD PTR [ecx+8]
 
@@ -14169,7 +14169,7 @@ $LN1@operator@5:
 ; 785  : 		return (*(_Myfirst + _Pos));
 
 	mov	eax, DWORD PTR __Pos$[ebp]
-	imul	eax, 200				; 000000c8H
+	imul	eax, 360				; 00000168H
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	eax, DWORD PTR [ecx+8]
 
@@ -14247,7 +14247,7 @@ __ehfuncinfo$??E?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII
 xdata$x	ENDS
 ;	COMDAT ??E?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z
 _TEXT	SEGMENT
-$T170813 = -244						; size = 4
+$T172188 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -14280,7 +14280,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170813[ebp], 0
+	mov	DWORD PTR $T172188[ebp], 0
 
 ; 355  : 		_Myt _Tmp = *this;
 
@@ -14301,9 +14301,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T170813[ebp]
+	mov	ecx, DWORD PTR $T172188[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T170813[ebp], ecx
+	mov	DWORD PTR $T172188[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -14351,10 +14351,10 @@ __unwindfunclet$??E?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsi
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??E?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z$1:
-	mov	eax, DWORD PTR $T170813[ebp]
+	mov	eax, DWORD PTR $T172188[ebp]
 	and	eax, 1
 	je	$LN5@operator@6
-	and	DWORD PTR $T170813[ebp], -2		; fffffffeH
+	and	DWORD PTR $T172188[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Vector_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN5@operator@6:
@@ -14476,7 +14476,7 @@ __ehfuncinfo$??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRA
 xdata$x	ENDS
 ;	COMDAT ??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z
 _TEXT	SEGMENT
-$T170833 = -244						; size = 4
+$T172208 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -14509,7 +14509,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170833[ebp], 0
+	mov	DWORD PTR $T172208[ebp], 0
 
 ; 131  : 		_Myt _Tmp = *this;
 
@@ -14530,9 +14530,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T170833[ebp]
+	mov	ecx, DWORD PTR $T172208[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T170833[ebp], ecx
+	mov	DWORD PTR $T172208[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -14580,10 +14580,10 @@ __unwindfunclet$??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??E?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z$1:
-	mov	eax, DWORD PTR $T170833[ebp]
+	mov	eax, DWORD PTR $T172208[ebp]
 	and	eax, 1
 	je	$LN5@operator@7
-	and	DWORD PTR $T170833[ebp], -2		; fffffffeH
+	and	DWORD PTR $T172208[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Vector_const_iterator@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN5@operator@7:
@@ -14709,7 +14709,7 @@ __ehfuncinfo$??E?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRA
 xdata$x	ENDS
 ;	COMDAT ??E?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z
 _TEXT	SEGMENT
-$T170852 = -244						; size = 4
+$T172227 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -14742,7 +14742,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170852[ebp], 0
+	mov	DWORD PTR $T172227[ebp], 0
 
 ; 131  : 		_Myt _Tmp = *this;
 
@@ -14763,9 +14763,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T170852[ebp]
+	mov	ecx, DWORD PTR $T172227[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T170852[ebp], ecx
+	mov	DWORD PTR $T172227[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -14813,10 +14813,10 @@ __unwindfunclet$??E?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??E?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z$1:
-	mov	eax, DWORD PTR $T170852[ebp]
+	mov	eax, DWORD PTR $T172227[ebp]
 	and	eax, 1
 	je	$LN5@operator@8
-	and	DWORD PTR $T170852[ebp], -2		; fffffffeH
+	and	DWORD PTR $T172227[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Vector_const_iterator@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN5@operator@8:
@@ -15829,8 +15829,8 @@ __ehfuncinfo$??0?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsim
 xdata$x	ENDS
 ;	COMDAT ??0?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@I@Z
 _TEXT	SEGMENT
-$T170922 = -236						; size = 4
-$T170923 = -224						; size = 4
+$T172297 = -236						; size = 4
+$T172298 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 __Count$ = 8						; size = 4
@@ -15863,7 +15863,7 @@ __Count$ = 8						; size = 4
 	mov	DWORD PTR _this$[ebp], ecx
 	push	ecx
 	mov	ecx, esp
-	mov	DWORD PTR $T170922[ebp], esp
+	mov	DWORD PTR $T172297[ebp], esp
 	call	??0?$allocator@PAVfbdFrame@DRAMsimII@@@std@@QAE@XZ ; std::allocator<DRAMsimII::fbdFrame *>::allocator<DRAMsimII::fbdFrame *>
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??0?$_Vector_val@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@IAE@V?$allocator@PAVfbdFrame@DRAMsimII@@@1@@Z ; std::_Vector_val<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::_Vector_val<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >
@@ -15871,8 +15871,8 @@ __Count$ = 8						; size = 4
 
 ; 483  : 		_Construct_n(_Count, _Ty());
 
-	mov	DWORD PTR $T170923[ebp], 0
-	lea	eax, DWORD PTR $T170923[ebp]
+	mov	DWORD PTR $T172298[ebp], 0
+	lea	eax, DWORD PTR $T172298[ebp]
 	push	eax
 	mov	ecx, DWORD PTR __Count$[ebp]
 	push	ecx
@@ -16037,10 +16037,10 @@ _TEXT	SEGMENT
 tv188 = -280						; size = 4
 tv185 = -276						; size = 4
 tv190 = -272						; size = 4
-$T170942 = -264						; size = 4
-$T170943 = -252						; size = 4
-__Size$152602 = -48					; size = 4
-__Ptr$152591 = -36					; size = 4
+$T172317 = -264						; size = 4
+$T172318 = -252						; size = 4
+__Size$153532 = -48					; size = 4
+__Ptr$153521 = -36					; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 __Count$ = 8						; size = 4
@@ -16102,7 +16102,7 @@ $LN5@reserve:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
 	call	?allocate@?$allocator@PAVfbdFrame@DRAMsimII@@@std@@QAEPAPAVfbdFrame@DRAMsimII@@I@Z ; std::allocator<DRAMsimII::fbdFrame *>::allocate
-	mov	DWORD PTR __Ptr$152591[ebp], eax
+	mov	DWORD PTR __Ptr$153521[ebp], eax
 
 ; 608  : 
 ; 609  : 			_TRY_BEGIN
@@ -16111,11 +16111,11 @@ $LN5@reserve:
 
 ; 610  : 			_Umove(begin(), end(), _Ptr);
 
-	mov	eax, DWORD PTR __Ptr$152591[ebp]
+	mov	eax, DWORD PTR __Ptr$153521[ebp]
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T170942[ebp], esp
+	mov	DWORD PTR $T172317[ebp], esp
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::end
@@ -16125,7 +16125,7 @@ $LN5@reserve:
 	mov	BYTE PTR __$EHRec$[ebp+12], 1
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T170943[ebp], esp
+	mov	DWORD PTR $T172318[ebp], esp
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::begin
@@ -16141,7 +16141,7 @@ __catch$?reserve@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsi
 
 	mov	eax, DWORD PTR __Count$[ebp]
 	push	eax
-	mov	ecx, DWORD PTR __Ptr$152591[ebp]
+	mov	ecx, DWORD PTR __Ptr$153521[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
@@ -16167,7 +16167,7 @@ __tryend$?reserve@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMs
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?size@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QBEIXZ ; std::vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::size
-	mov	DWORD PTR __Size$152602[ebp], eax
+	mov	DWORD PTR __Size$153532[ebp], eax
 
 ; 617  : 			if (_Myfirst != 0)
 
@@ -16219,15 +16219,15 @@ $LN1@reserve:
 ; 627  : 			_Myend = _Ptr + _Count;
 
 	mov	eax, DWORD PTR __Count$[ebp]
-	mov	ecx, DWORD PTR __Ptr$152591[ebp]
+	mov	ecx, DWORD PTR __Ptr$153521[ebp]
 	lea	edx, DWORD PTR [ecx+eax*4]
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+16], edx
 
 ; 628  : 			_Mylast = _Ptr + _Size;
 
-	mov	eax, DWORD PTR __Size$152602[ebp]
-	mov	ecx, DWORD PTR __Ptr$152591[ebp]
+	mov	eax, DWORD PTR __Size$153532[ebp]
+	mov	ecx, DWORD PTR __Ptr$153521[ebp]
 	lea	edx, DWORD PTR [ecx+eax*4]
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+12], edx
@@ -16235,7 +16235,7 @@ $LN1@reserve:
 ; 629  : 			_Myfirst = _Ptr;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Ptr$152591[ebp]
+	mov	ecx, DWORD PTR __Ptr$153521[ebp]
 	mov	DWORD PTR [eax+8], ecx
 $LN7@reserve:
 
@@ -16258,7 +16258,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?reserve@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAEXI@Z$2:
-	mov	ecx, DWORD PTR $T170942[ebp]
+	mov	ecx, DWORD PTR $T172317[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$?reserve@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAEXI@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -16274,7 +16274,7 @@ PUBLIC	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRA
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?begin@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T170963 = -212						; size = 4
+$T172338 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::begin, COMDAT
@@ -16295,7 +16295,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170963[ebp], 0
+	mov	DWORD PTR $T172338[ebp], 0
 
 ; 641  : 		return (iterator(_Myfirst, this));
 
@@ -16306,9 +16306,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@PAPAVfbdFrame@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::_Vector_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >
-	mov	eax, DWORD PTR $T170963[ebp]
+	mov	eax, DWORD PTR $T172338[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170963[ebp], eax
+	mov	DWORD PTR $T172338[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 642  : 		}
@@ -16327,7 +16327,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T170968 = -212						; size = 4
+$T172343 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::end, COMDAT
@@ -16348,7 +16348,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170968[ebp], 0
+	mov	DWORD PTR $T172343[ebp], 0
 
 ; 651  : 		return (iterator(_Mylast, this));
 
@@ -16359,9 +16359,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@PAPAVfbdFrame@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::_Vector_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >
-	mov	eax, DWORD PTR $T170968[ebp]
+	mov	eax, DWORD PTR $T172343[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170968[ebp], eax
+	mov	DWORD PTR $T172343[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 652  : 		}
@@ -16819,7 +16819,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR [eax+12]
 	sub	eax, DWORD PTR [ecx+8]
 	cdq
-	mov	ecx, 200				; 000000c8H
+	mov	ecx, 360				; 00000168H
 	idiv	ecx
 
 ; 727  : 		}
@@ -18099,7 +18099,7 @@ $LN2@operator@16:
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+8]
-	add	ecx, 200				; 000000c8H
+	add	ecx, 360				; 00000168H
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [edx+8], ecx
 
@@ -18243,7 +18243,7 @@ __ehfuncinfo$??E?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFra
 xdata$x	ENDS
 ;	COMDAT ??E?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z
 _TEXT	SEGMENT
-$T171041 = -244						; size = 4
+$T172416 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -18276,7 +18276,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T171041[ebp], 0
+	mov	DWORD PTR $T172416[ebp], 0
 
 ; 355  : 		_Myt _Tmp = *this;
 
@@ -18297,9 +18297,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T171041[ebp]
+	mov	ecx, DWORD PTR $T172416[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T171041[ebp], ecx
+	mov	DWORD PTR $T172416[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -18347,10 +18347,10 @@ __unwindfunclet$??E?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbd
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??E?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z$1:
-	mov	eax, DWORD PTR $T171041[ebp]
+	mov	eax, DWORD PTR $T172416[ebp]
 	and	eax, 1
 	je	$LN5@operator@17
-	and	DWORD PTR $T171041[ebp], -2		; fffffffeH
+	and	DWORD PTR $T172416[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN5@operator@17:
@@ -19147,8 +19147,8 @@ __ehfuncinfo$?_Xlen@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRA
 xdata$x	ENDS
 ;	COMDAT ?_Xlen@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@KAXXZ
 _TEXT	SEGMENT
-$T171102 = -292						; size = 44
-$T171103 = -240						; size = 32
+$T172477 = -292						; size = 44
+$T172478 = -240						; size = 32
 __$EHRec$ = -12						; size = 12
 ?_Xlen@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@KAXXZ PROC ; std::vector<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::_Xlen, COMDAT
 
@@ -19178,22 +19178,22 @@ __$EHRec$ = -12						; size = 12
 
 	mov	esi, esp
 	push	OFFSET ??_C@_0BD@OLBABOEK@vector?$DMT?$DO?5too?5long?$AA@
-	lea	ecx, DWORD PTR $T171103[ebp]
+	lea	ecx, DWORD PTR $T172478[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	lea	eax, DWORD PTR $T171103[ebp]
+	lea	eax, DWORD PTR $T172478[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T171102[ebp]
+	lea	ecx, DWORD PTR $T172477[ebp]
 	call	??0length_error@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z ; std::length_error::length_error
 	push	OFFSET __TI3?AVlength_error@std@@
-	lea	ecx, DWORD PTR $T171102[ebp]
+	lea	ecx, DWORD PTR $T172477[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T171103[ebp]
+	lea	ecx, DWORD PTR $T172478[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -19218,7 +19218,7 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?_Xlen@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@KAXXZ$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T171103[ebp]
+	lea	ecx, DWORD PTR $T172478[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
@@ -19809,7 +19809,7 @@ PUBLIC	??0?$allocator@PAVfbdFrame@DRAMsimII@@@std@@QAE@ABV01@@Z ; std::allocator
 ; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 ;	COMDAT ??0?$_Vector_val@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@IAE@V?$allocator@PAVfbdFrame@DRAMsimII@@@1@@Z
 _TEXT	SEGMENT
-$T171146 = -212						; size = 4
+$T172521 = -212						; size = 4
 _this$ = -8						; size = 4
 __Al$ = 8						; size = 1
 ??0?$_Vector_val@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@IAE@V?$allocator@PAVfbdFrame@DRAMsimII@@@1@@Z PROC ; std::_Vector_val<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >::_Vector_val<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >, COMDAT
@@ -19832,7 +19832,7 @@ __Al$ = 8						; size = 1
 	mov	DWORD PTR _this$[ebp], ecx
 	push	ecx
 	mov	ecx, esp
-	mov	DWORD PTR $T171146[ebp], esp
+	mov	DWORD PTR $T172521[ebp], esp
 	lea	eax, DWORD PTR __Al$[ebp]
 	push	eax
 	call	??0?$allocator@PAVfbdFrame@DRAMsimII@@@std@@QAE@ABV01@@Z ; std::allocator<DRAMsimII::fbdFrame *>::allocator<DRAMsimII::fbdFrame *>
@@ -21481,11 +21481,11 @@ tv136 = -324						; size = 4
 tv134 = -324						; size = 4
 tv289 = -321						; size = 1
 tv282 = -321						; size = 1
-$T171216 = -316						; size = 4
-$T171217 = -304						; size = 4
-$T171218 = -292						; size = 4
-$T171219 = -280						; size = 4
-$T171220 = -268						; size = 4
+$T172591 = -316						; size = 4
+$T172592 = -304						; size = 4
+$T172593 = -292						; size = 4
+$T172594 = -280						; size = 4
+$T172595 = -268						; size = 4
 __Ok$ = -64						; size = 8
 __Pad$ = -48						; size = 4
 __Count$ = -36						; size = 4
@@ -21672,18 +21672,18 @@ $LN10@operator@20:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv284[ebp], eax
 	mov	ecx, DWORD PTR tv284[ebp]
-	mov	DWORD PTR $T171216[ebp], ecx
+	mov	DWORD PTR $T172591[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv285[ebp], eax
 	mov	edx, DWORD PTR tv285[ebp]
-	mov	DWORD PTR $T171217[ebp], edx
+	mov	DWORD PTR $T172592[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T171216[ebp]
+	lea	eax, DWORD PTR $T172591[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T171217[ebp]
+	lea	ecx, DWORD PTR $T172592[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -21797,18 +21797,18 @@ $LN4@operator@20:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv291[ebp], eax
 	mov	ecx, DWORD PTR tv291[ebp]
-	mov	DWORD PTR $T171218[ebp], ecx
+	mov	DWORD PTR $T172593[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv292[ebp], eax
 	mov	edx, DWORD PTR tv292[ebp]
-	mov	DWORD PTR $T171219[ebp], edx
+	mov	DWORD PTR $T172594[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T171218[ebp]
+	lea	eax, DWORD PTR $T172593[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T171219[ebp]
+	lea	ecx, DWORD PTR $T172594[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -21890,11 +21890,11 @@ $LN13@operator@20:
 ; 781  : 	return (_Ostr);
 
 	mov	eax, DWORD PTR __Ostr$[ebp]
-	mov	DWORD PTR $T171220[ebp], eax
+	mov	DWORD PTR $T172595[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	lea	ecx, DWORD PTR __Ok$[ebp]
 	call	??1sentry@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAE@XZ ; std::basic_ostream<char,std::char_traits<char> >::sentry::~sentry
-	mov	eax, DWORD PTR $T171220[ebp]
+	mov	eax, DWORD PTR $T172595[ebp]
 
 ; 782  : 	}
 
@@ -22386,7 +22386,7 @@ PUBLIC	??$_Debug_lt@HH@std@@YA_NABH0PB_WI@Z		; std::_Debug_lt<int,int>
 ;	COMDAT ??$max@H@std@@YAABHABH0@Z
 _TEXT	SEGMENT
 tv71 = -208						; size = 4
-$T171264 = -200						; size = 4
+$T172639 = -200						; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$max@H@std@@YAABHABH0@Z PROC				; std::max<int>, COMDAT
@@ -22425,8 +22425,8 @@ $LN3@max:
 	mov	DWORD PTR tv71[ebp], ecx
 $LN4@max:
 	mov	edx, DWORD PTR tv71[ebp]
-	mov	DWORD PTR $T171264[ebp], edx
-	mov	eax, DWORD PTR $T171264[ebp]
+	mov	DWORD PTR $T172639[ebp], edx
+	mov	eax, DWORD PTR $T172639[ebp]
 
 ; 3385 : 	}
 
@@ -22512,7 +22512,7 @@ PUBLIC	??$_Debug_lt@_J_J@std@@YA_NAB_J0PB_WI@Z		; std::_Debug_lt<__int64,__int64
 ;	COMDAT ??$min@_J@std@@YAAB_JAB_J0@Z
 _TEXT	SEGMENT
 tv71 = -208						; size = 4
-$T171273 = -200						; size = 4
+$T172648 = -200						; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$min@_J@std@@YAAB_JAB_J0@Z PROC			; std::min<__int64>, COMDAT
@@ -22551,8 +22551,8 @@ $LN3@min:
 	mov	DWORD PTR tv71[ebp], ecx
 $LN4@min:
 	mov	edx, DWORD PTR tv71[ebp]
-	mov	DWORD PTR $T171273[ebp], edx
-	mov	eax, DWORD PTR $T171273[ebp]
+	mov	DWORD PTR $T172648[ebp], edx
+	mov	eax, DWORD PTR $T172648[ebp]
 
 ; 3400 : 	}
 
@@ -22592,9 +22592,9 @@ tv139 = -268						; size = 4
 tv142 = -264						; size = 4
 tv138 = -260						; size = 4
 tv145 = -256						; size = 4
-$T171278 = -248						; size = 4
-$T171279 = -236						; size = 4
-$T171280 = -224						; size = 4
+$T172653 = -248						; size = 4
+$T172654 = -236						; size = 4
+$T172655 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
@@ -22640,7 +22640,7 @@ __Ptr$ = 32						; size = 4
 	push	ecx
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171279[ebp], esp
+	mov	DWORD PTR $T172654[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -22650,7 +22650,7 @@ __Ptr$ = 32						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171280[ebp], esp
+	mov	DWORD PTR $T172655[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -22660,14 +22660,14 @@ __Ptr$ = 32						; size = 4
 	add	esp, 32					; 00000020H
 	mov	DWORD PTR tv139[ebp], eax
 	mov	eax, DWORD PTR tv139[ebp]
-	mov	DWORD PTR $T171278[ebp], eax
+	mov	DWORD PTR $T172653[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T171278[ebp]
+	mov	eax, DWORD PTR $T172653[ebp]
 
 ; 1149 : 		}
 
@@ -22693,7 +22693,7 @@ __unwindfunclet$??$_Umove@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocato
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Umove@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@IAEPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@1@0PAPAV23@@Z$2:
-	mov	ecx, DWORD PTR $T171279[ebp]
+	mov	ecx, DWORD PTR $T172654[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Umove@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@@?$vector@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@IAEPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@1@0PAPAV23@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -22711,7 +22711,7 @@ PUBLIC	??$_Ptr_cat@PAPAVfbdFrame@DRAMsimII@@PAPAV12@@std@@YA?AU_Scalar_ptr_itera
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
 ;	COMDAT ??$_Destroy_range@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@YAXPAPAVfbdFrame@DRAMsimII@@0AAV?$allocator@PAVfbdFrame@DRAMsimII@@@0@@Z
 _TEXT	SEGMENT
-$T171293 = -197						; size = 1
+$T172668 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -22738,8 +22738,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PAPAVfbdFrame@DRAMsimII@@PAPAV12@@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAPAVfbdFrame@DRAMsimII@@0@Z ; std::_Ptr_cat<DRAMsimII::fbdFrame * *,DRAMsimII::fbdFrame * *>
 	add	esp, 8
-	mov	BYTE PTR $T171293[ebp], al
-	movzx	edx, BYTE PTR $T171293[ebp]
+	mov	BYTE PTR $T172668[ebp], al
+	movzx	edx, BYTE PTR $T172668[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax
@@ -22802,7 +22802,7 @@ __TI2?AVbad_alloc@std@@ DD 00H
 xdata$x	ENDS
 ;	COMDAT ??$_Allocate@PAVfbdFrame@DRAMsimII@@@std@@YAPAPAVfbdFrame@DRAMsimII@@IPAPAV12@@Z
 _TEXT	SEGMENT
-$T171296 = -208						; size = 12
+$T172671 = -208						; size = 12
 __Count$ = 8						; size = 4
 ___formal$ = 12						; size = 4
 ??$_Allocate@PAVfbdFrame@DRAMsimII@@@std@@YAPAPAVfbdFrame@DRAMsimII@@IPAPAV12@@Z PROC ; std::_Allocate<DRAMsimII::fbdFrame *>, COMDAT
@@ -22842,10 +22842,10 @@ $LN3@Allocate:
 ; 40   : 		_THROW_NCEE(std::bad_alloc, NULL);
 
 	push	0
-	lea	ecx, DWORD PTR $T171296[ebp]
+	lea	ecx, DWORD PTR $T172671[ebp]
 	call	??0bad_alloc@std@@QAE@PBD@Z		; std::bad_alloc::bad_alloc
 	push	OFFSET __TI2?AVbad_alloc@std@@
-	lea	eax, DWORD PTR $T171296[ebp]
+	lea	eax, DWORD PTR $T172671[ebp]
 	push	eax
 	call	__CxxThrowException@8
 $LN2@Allocate:
@@ -23097,8 +23097,8 @@ PUBLIC	??$_Uninit_fill_n@PAPAVfbdFrame@DRAMsimII@@IPAV12@V?$allocator@PAVfbdFram
 ; File c:\program files\microsoft visual studio 9.0\vc\include\memory
 ;	COMDAT ??$unchecked_uninitialized_fill_n@PAPAVfbdFrame@DRAMsimII@@IPAV12@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@stdext@@YAXPAPAVfbdFrame@DRAMsimII@@IABQAV12@AAV?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@Z
 _TEXT	SEGMENT
-$T171308 = -209						; size = 1
-$T171309 = -197						; size = 1
+$T172683 = -209						; size = 1
+$T172684 = -197						; size = 1
 __First$ = 8						; size = 4
 __Count$ = 12						; size = 4
 __Val$ = 16						; size = 4
@@ -23122,17 +23122,17 @@ __Al$ = 20						; size = 4
 ; 942  : 		_STD _Ptr_cat(_First, _First), _STD _Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T171308[ebp], al
+	mov	BYTE PTR $T172683[ebp], al
 	lea	ecx, DWORD PTR __First$[ebp]
 	push	ecx
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??$_Ptr_cat@PAPAVfbdFrame@DRAMsimII@@PAPAV12@@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAPAVfbdFrame@DRAMsimII@@0@Z ; std::_Ptr_cat<DRAMsimII::fbdFrame * *,DRAMsimII::fbdFrame * *>
 	add	esp, 8
-	mov	BYTE PTR $T171309[ebp], al
-	movzx	eax, BYTE PTR $T171308[ebp]
+	mov	BYTE PTR $T172684[ebp], al
+	movzx	eax, BYTE PTR $T172683[ebp]
 	push	eax
-	movzx	ecx, BYTE PTR $T171309[ebp]
+	movzx	ecx, BYTE PTR $T172684[ebp]
 	push	ecx
 	mov	edx, DWORD PTR __Al$[ebp]
 	push	edx
@@ -23374,11 +23374,11 @@ tv143 = -280						; size = 4
 tv146 = -276						; size = 4
 tv142 = -272						; size = 4
 tv149 = -268						; size = 4
-$T171318 = -260						; size = 4
-$T171319 = -245						; size = 1
-$T171320 = -233						; size = 1
-$T171321 = -224						; size = 4
-$T171322 = -212						; size = 4
+$T172693 = -260						; size = 4
+$T172694 = -245						; size = 1
+$T172695 = -233						; size = 1
+$T172696 = -224						; size = 4
+$T172697 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
 __Last$ = 20						; size = 12
@@ -23414,15 +23414,15 @@ __Al$ = 36						; size = 4
 ; 864  : 		_STD _Move_cat(_Dest), _STD _Range_checked_iterator_tag()));
 
 	xor	eax, eax
-	mov	BYTE PTR $T171319[ebp], al
+	mov	BYTE PTR $T172694[ebp], al
 	lea	ecx, DWORD PTR __Dest$[ebp]
 	push	ecx
 	call	??$_Move_cat@PAPAVfbdFrame@DRAMsimII@@@std@@YA?AU_Undefined_move_tag@0@ABQAPAVfbdFrame@DRAMsimII@@@Z ; std::_Move_cat<DRAMsimII::fbdFrame * *>
 	add	esp, 4
-	mov	BYTE PTR $T171320[ebp], al
-	movzx	edx, BYTE PTR $T171319[ebp]
+	mov	BYTE PTR $T172695[ebp], al
+	movzx	edx, BYTE PTR $T172694[ebp]
 	push	edx
-	movzx	eax, BYTE PTR $T171320[ebp]
+	movzx	eax, BYTE PTR $T172695[ebp]
 	push	eax
 	mov	ecx, DWORD PTR __Al$[ebp]
 	push	ecx
@@ -23430,7 +23430,7 @@ __Al$ = 36						; size = 4
 	push	edx
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T171321[ebp], esp
+	mov	DWORD PTR $T172696[ebp], esp
 	lea	ecx, DWORD PTR __Last$[ebp]
 	push	ecx
 	push	eax
@@ -23442,7 +23442,7 @@ __Al$ = 36						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T171322[ebp], esp
+	mov	DWORD PTR $T172697[ebp], esp
 	lea	ecx, DWORD PTR __First$[ebp]
 	push	ecx
 	push	eax
@@ -23454,14 +23454,14 @@ __Al$ = 36						; size = 4
 	add	esp, 40					; 00000028H
 	mov	DWORD PTR tv143[ebp], eax
 	mov	edx, DWORD PTR tv143[ebp]
-	mov	DWORD PTR $T171318[ebp], edx
+	mov	DWORD PTR $T172693[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T171318[ebp]
+	mov	eax, DWORD PTR $T172693[ebp]
 
 ; 865  : 	}
 
@@ -23487,7 +23487,7 @@ __unwindfunclet$??$_Unchecked_uninitialized_move@V?$_Vector_iterator@PAVfbdFrame
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Unchecked_uninitialized_move@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@PAPAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@2@@stdext@@YAPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@0PAPAV12@AAV?$allocator@PAVfbdFrame@DRAMsimII@@@4@@Z$2:
-	mov	ecx, DWORD PTR $T171321[ebp]
+	mov	ecx, DWORD PTR $T172696[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Unchecked_uninitialized_move@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@PAPAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@2@@stdext@@YAPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@0PAPAV12@AAV?$allocator@PAVfbdFrame@DRAMsimII@@@4@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -23645,7 +23645,7 @@ PUBLIC	??$_Checked_base@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 ;	COMDAT ??$_Checked_base@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@@std@@YA?AV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@AAV10@@Z
 _TEXT	SEGMENT
-$T171345 = -212						; size = 4
+$T172720 = -212						; size = 4
 __Base_tag$ = -5					; size = 1
 ___$ReturnUdt$ = 8					; size = 4
 __It$ = 12						; size = 4
@@ -23663,7 +23663,7 @@ __It$ = 12						; size = 4
 	mov	ecx, 54					; 00000036H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T171345[ebp], 0
+	mov	DWORD PTR $T172720[ebp], 0
 
 ; 1164 : 		typename _Checked_iterator_base_helper<_Iter>::_Checked_iterator_base_type_tag _Base_tag;
 ; 1165 : 		return _Checked_base(_It, _Base_tag);
@@ -23676,9 +23676,9 @@ __It$ = 12						; size = 4
 	push	edx
 	call	??$_Checked_base@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@@std@@YA?AV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@AAV10@U_Unchanged_checked_iterator_base_type_tag@0@@Z ; std::_Checked_base<std::_Vector_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> > >
 	add	esp, 12					; 0000000cH
-	mov	eax, DWORD PTR $T171345[ebp]
+	mov	eax, DWORD PTR $T172720[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T171345[ebp], eax
+	mov	DWORD PTR $T172720[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1166 : 	}
@@ -23800,9 +23800,9 @@ tv134 = -256						; size = 4
 tv137 = -252						; size = 4
 tv133 = -248						; size = 4
 tv140 = -244						; size = 4
-$T171357 = -236						; size = 4
-$T171358 = -224						; size = 4
-$T171359 = -212						; size = 4
+$T172732 = -236						; size = 4
+$T172733 = -224						; size = 4
+$T172734 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
 __Last$ = 20						; size = 12
@@ -23843,7 +23843,7 @@ ___formal$ = 44						; size = 1
 	push	ecx
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171358[ebp], esp
+	mov	DWORD PTR $T172733[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -23853,7 +23853,7 @@ ___formal$ = 44						; size = 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171359[ebp], esp
+	mov	DWORD PTR $T172734[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -23863,14 +23863,14 @@ ___formal$ = 44						; size = 1
 	add	esp, 32					; 00000020H
 	mov	DWORD PTR tv134[ebp], eax
 	mov	eax, DWORD PTR tv134[ebp]
-	mov	DWORD PTR $T171357[ebp], eax
+	mov	DWORD PTR $T172732[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T171357[ebp]
+	mov	eax, DWORD PTR $T172732[ebp]
 
 ; 208  : 	}
 
@@ -23896,7 +23896,7 @@ __unwindfunclet$??$_Uninit_move@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$al
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Uninit_move@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@PAPAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@2@U_Undefined_move_tag@2@@std@@YAPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@0PAPAV12@AAV?$allocator@PAVfbdFrame@DRAMsimII@@@0@U_Undefined_move_tag@0@U_Range_checked_iterator_tag@0@@Z$2:
-	mov	ecx, DWORD PTR $T171358[ebp]
+	mov	ecx, DWORD PTR $T172733[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Uninit_move@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@PAPAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@2@U_Undefined_move_tag@2@@std@@YAPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@0PAPAV12@AAV?$allocator@PAVfbdFrame@DRAMsimII@@@0@U_Undefined_move_tag@0@U_Range_checked_iterator_tag@0@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -23914,8 +23914,8 @@ PUBLIC	??$_Iter_cat@PAPAVfbdFrame@DRAMsimII@@@std@@YA?AUrandom_access_iterator_t
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 ;	COMDAT ??$unchecked_fill_n@PAPAVfbdFrame@DRAMsimII@@IPAV12@@stdext@@YAXPAPAVfbdFrame@DRAMsimII@@IABQAV12@@Z
 _TEXT	SEGMENT
-$T171372 = -209						; size = 1
-$T171373 = -197						; size = 1
+$T172747 = -209						; size = 1
+$T172748 = -197						; size = 1
 __First$ = 8						; size = 4
 __Count$ = 12						; size = 4
 __Val$ = 16						; size = 4
@@ -23937,12 +23937,12 @@ __Val$ = 16						; size = 4
 ; 3721 : 		_STD _Fill_n(_First, _Count, _Val, _STD _Iter_cat(_First), _STD _Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T171372[ebp], al
-	movzx	ecx, BYTE PTR $T171372[ebp]
+	mov	BYTE PTR $T172747[ebp], al
+	movzx	ecx, BYTE PTR $T172747[ebp]
 	push	ecx
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T171373[ebp]
+	lea	eax, DWORD PTR $T172748[ebp]
 	push	eax
 	call	??$_Iter_cat@PAPAVfbdFrame@DRAMsimII@@@std@@YA?AUrandom_access_iterator_tag@0@ABQAPAVfbdFrame@DRAMsimII@@@Z ; std::_Iter_cat<DRAMsimII::fbdFrame * *>
 	add	esp, 8
@@ -23973,7 +23973,7 @@ __Val$ = 16						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$_Checked_base@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@@std@@YA?AV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@AAV10@U_Unchanged_checked_iterator_base_type_tag@0@@Z
 _TEXT	SEGMENT
-$T171377 = -200						; size = 4
+$T172752 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 __It$ = 12						; size = 4
 ___formal$ = 16						; size = 1
@@ -23991,7 +23991,7 @@ ___formal$ = 16						; size = 1
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T171377[ebp], 0
+	mov	DWORD PTR $T172752[ebp], 0
 
 ; 1147 : 		return _It;
 
@@ -23999,9 +23999,9 @@ ___formal$ = 16						; size = 1
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T171377[ebp]
+	mov	ecx, DWORD PTR $T172752[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T171377[ebp], ecx
+	mov	DWORD PTR $T172752[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1148 : 	}
@@ -24043,11 +24043,11 @@ tv144 = -280						; size = 4
 tv147 = -276						; size = 4
 tv143 = -272						; size = 4
 tv150 = -268						; size = 4
-$T171381 = -260						; size = 4
-$T171382 = -245						; size = 1
-$T171383 = -233						; size = 1
-$T171384 = -224						; size = 4
-$T171385 = -212						; size = 4
+$T172756 = -260						; size = 4
+$T172757 = -245						; size = 1
+$T172758 = -233						; size = 1
+$T172759 = -224						; size = 4
+$T172760 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
 __Last$ = 20						; size = 12
@@ -24083,17 +24083,17 @@ __Al$ = 36						; size = 4
 ; 822  : 		_STD _Ptr_cat(_First, _Dest), _STD _Range_checked_iterator_tag()));
 
 	xor	eax, eax
-	mov	BYTE PTR $T171382[ebp], al
+	mov	BYTE PTR $T172757[ebp], al
 	lea	ecx, DWORD PTR __Dest$[ebp]
 	push	ecx
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??$_Ptr_cat@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@PAPAVfbdFrame@DRAMsimII@@@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@AAPAPAVfbdFrame@DRAMsimII@@@Z ; std::_Ptr_cat<std::_Vector_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> >,DRAMsimII::fbdFrame * *>
 	add	esp, 8
-	mov	BYTE PTR $T171383[ebp], al
-	movzx	eax, BYTE PTR $T171382[ebp]
+	mov	BYTE PTR $T172758[ebp], al
+	movzx	eax, BYTE PTR $T172757[ebp]
 	push	eax
-	movzx	ecx, BYTE PTR $T171383[ebp]
+	movzx	ecx, BYTE PTR $T172758[ebp]
 	push	ecx
 	mov	edx, DWORD PTR __Al$[ebp]
 	push	edx
@@ -24101,7 +24101,7 @@ __Al$ = 36						; size = 4
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171384[ebp], esp
+	mov	DWORD PTR $T172759[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	push	ecx
@@ -24113,7 +24113,7 @@ __Al$ = 36						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171385[ebp], esp
+	mov	DWORD PTR $T172760[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	push	ecx
@@ -24125,14 +24125,14 @@ __Al$ = 36						; size = 4
 	add	esp, 40					; 00000028H
 	mov	DWORD PTR tv144[ebp], eax
 	mov	eax, DWORD PTR tv144[ebp]
-	mov	DWORD PTR $T171381[ebp], eax
+	mov	DWORD PTR $T172756[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T171381[ebp]
+	mov	eax, DWORD PTR $T172756[ebp]
 
 ; 823  : 	}
 
@@ -24158,7 +24158,7 @@ __unwindfunclet$??$unchecked_uninitialized_copy@V?$_Vector_iterator@PAVfbdFrame@
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$unchecked_uninitialized_copy@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@PAPAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@2@@stdext@@YAPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@0PAPAV12@AAV?$allocator@PAVfbdFrame@DRAMsimII@@@4@@Z$2:
-	mov	ecx, DWORD PTR $T171384[ebp]
+	mov	ecx, DWORD PTR $T172759[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$unchecked_uninitialized_copy@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@PAPAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@2@@stdext@@YAPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@0PAPAV12@AAV?$allocator@PAVfbdFrame@DRAMsimII@@@4@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -24232,7 +24232,7 @@ PUBLIC	??$_Checked_base@PAPAVfbdFrame@DRAMsimII@@@std@@YAPAPAVfbdFrame@DRAMsimII
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Fill_n@PAPAVfbdFrame@DRAMsimII@@IPAV12@@std@@YAXPAPAVfbdFrame@DRAMsimII@@IABQAV12@Urandom_access_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
 _TEXT	SEGMENT
-$T171403 = -209						; size = 1
+$T172778 = -209						; size = 1
 __Last$ = -8						; size = 4
 __First$ = 8						; size = 4
 __Count$ = 12						; size = 4
@@ -24266,8 +24266,8 @@ ___formal$ = 24						; size = 1
 ; 3254 : 			_Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T171403[ebp], al
-	movzx	ecx, BYTE PTR $T171403[ebp]
+	mov	BYTE PTR $T172778[ebp], al
+	movzx	ecx, BYTE PTR $T172778[ebp]
 	push	ecx
 	mov	edx, DWORD PTR __Val$[ebp]
 	push	edx
@@ -24393,9 +24393,9 @@ _TEXT	SEGMENT
 tv156 = -276						; size = 4
 tv153 = -272						; size = 4
 tv159 = -268						; size = 4
-$T171411 = -260						; size = 4
-$T171412 = -248						; size = 4
-$T171413 = -236						; size = 4
+$T172786 = -260						; size = 4
+$T172787 = -248						; size = 4
+$T172788 = -236						; size = 4
 __Result$ = -32						; size = 4
 __Count$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -24436,7 +24436,7 @@ ___formal$ = 44						; size = 1
 	push	OFFSET ??_C@_1HO@FAAIACEF@?$AAc?$AA?3?$AA?2?$AAp?$AAr?$AAo?$AAg?$AAr?$AAa?$AAm?$AA?5?$AAf?$AAi?$AAl?$AAe?$AAs?$AA?2?$AAm?$AAi?$AAc?$AAr?$AAo?$AAs?$AAo?$AAf?$AAt?$AA?5?$AAv?$AAi?$AAs?$AAu?$AAa@
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171411[ebp], esp
+	mov	DWORD PTR $T172786[ebp], esp
 	lea	eax, DWORD PTR __Last$[ebp]
 	push	eax
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -24446,7 +24446,7 @@ ___formal$ = 44						; size = 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171412[ebp], esp
+	mov	DWORD PTR $T172787[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -24507,14 +24507,14 @@ $LN1@Uninit_cop:
 ; 152  : 	return (_Result);
 
 	mov	eax, DWORD PTR __Result$[ebp]
-	mov	DWORD PTR $T171413[ebp], eax
+	mov	DWORD PTR $T172788[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T171413[ebp]
+	mov	eax, DWORD PTR $T172788[ebp]
 
 ; 153  : 	}
 
@@ -24540,7 +24540,7 @@ __unwindfunclet$??$_Uninit_copy@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$al
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Uninit_copy@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@PAPAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@2@@std@@YAPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@0PAPAV12@AAV?$allocator@PAVfbdFrame@DRAMsimII@@@0@U_Scalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2:
-	mov	ecx, DWORD PTR $T171411[ebp]
+	mov	ecx, DWORD PTR $T172786[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Uninit_copy@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@PAPAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@2@@std@@YAPAPAVfbdFrame@DRAMsimII@@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@0PAPAV12@AAV?$allocator@PAVfbdFrame@DRAMsimII@@@0@U_Scalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -24806,9 +24806,9 @@ _TEXT	SEGMENT
 tv140 = -252						; size = 4
 tv137 = -248						; size = 4
 tv143 = -244						; size = 4
-$T171437 = -233						; size = 1
-$T171438 = -224						; size = 4
-$T171439 = -212						; size = 4
+$T172812 = -233						; size = 1
+$T172813 = -224						; size = 4
+$T172814 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
 __Last$ = 20						; size = 12
@@ -24843,7 +24843,7 @@ __Line$ = 36						; size = 4
 
 	lea	eax, DWORD PTR __First$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T171437[ebp]
+	lea	ecx, DWORD PTR $T172812[ebp]
 	push	ecx
 	call	??$_Iter_cat@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@@std@@YA?AUrandom_access_iterator_tag@0@ABV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@@Z ; std::_Iter_cat<std::_Vector_iterator<DRAMsimII::fbdFrame *,std::allocator<DRAMsimII::fbdFrame *> > >
 	add	esp, 8
@@ -24855,7 +24855,7 @@ __Line$ = 36						; size = 4
 	push	ecx
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171438[ebp], esp
+	mov	DWORD PTR $T172813[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -24865,7 +24865,7 @@ __Line$ = 36						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171439[ebp], esp
+	mov	DWORD PTR $T172814[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -24904,7 +24904,7 @@ __unwindfunclet$??$_Debug_range@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$al
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Debug_range@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@@std@@YAXV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@0PB_WI@Z$2:
-	mov	ecx, DWORD PTR $T171438[ebp]
+	mov	ecx, DWORD PTR $T172813[ebp]
 	jmp	??1?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Debug_range@V?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@std@@@std@@YAXV?$_Vector_iterator@PAVfbdFrame@DRAMsimII@@V?$allocator@PAVfbdFrame@DRAMsimII@@@std@@@0@0PB_WI@Z:
 	mov	edx, DWORD PTR [esp+8]

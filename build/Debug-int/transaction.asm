@@ -2772,12 +2772,12 @@ _TEXT	SEGMENT
 tv166 = -320						; size = 4
 tv161 = -316						; size = 4
 tv73 = -316						; size = 4
-$T115167 = -308						; size = 12
-$T115168 = -285						; size = 1
-$T115169 = -276						; size = 12
-$T115172 = -256						; size = 4
-$T115173 = -244						; size = 4
-_i$107187 = -40						; size = 12
+$T115187 = -308						; size = 12
+$T115188 = -285						; size = 1
+$T115189 = -276						; size = 12
+$T115192 = -256						; size = 4
+$T115193 = -244						; size = 4
+_i$107204 = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _item$ = 8						; size = 4
@@ -2832,7 +2832,7 @@ $LN7@releaseIte:
 ; 272  : 				// look around to see if this was already in there, slows things down a lot, so use only when this might be a problem
 ; 273  : 				for (typename std::vector<T *>::iterator i = entry.begin(); i != entry.end(); i++)
 
-	lea	eax, DWORD PTR _i$107187[ebp]
+	lea	eax, DWORD PTR _i$107204[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 12					; 0000000cH
@@ -2841,14 +2841,14 @@ $LN7@releaseIte:
 	jmp	SHORT $LN4@releaseIte
 $LN3@releaseIte:
 	push	0
-	lea	eax, DWORD PTR $T115167[ebp]
+	lea	eax, DWORD PTR $T115187[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _i$107187[ebp]
+	lea	ecx, DWORD PTR _i$107204[ebp]
 	call	??E?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::operator++
-	lea	ecx, DWORD PTR $T115167[ebp]
+	lea	ecx, DWORD PTR $T115187[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN4@releaseIte:
-	lea	eax, DWORD PTR $T115169[ebp]
+	lea	eax, DWORD PTR $T115189[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 12					; 0000000cH
@@ -2859,20 +2859,20 @@ $LN4@releaseIte:
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	edx, DWORD PTR tv166[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _i$107187[ebp]
+	lea	ecx, DWORD PTR _i$107204[ebp]
 	call	??9?$_Vector_const_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::operator!=
-	mov	BYTE PTR $T115168[ebp], al
+	mov	BYTE PTR $T115188[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T115169[ebp]
+	lea	ecx, DWORD PTR $T115189[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T115168[ebp]
+	movzx	eax, BYTE PTR $T115188[ebp]
 	test	eax, eax
 	je	SHORT $LN2@releaseIte
 
 ; 274  : 				{
 ; 275  : 					assert(item != *i);
 
-	lea	ecx, DWORD PTR _i$107187[ebp]
+	lea	ecx, DWORD PTR _i$107204[ebp]
 	call	??D?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QBEAAPAVTransaction@DRAMsimII@@XZ ; std::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::operator*
 	mov	ecx, DWORD PTR _item$[ebp]
 	cmp	ecx, DWORD PTR [eax]
@@ -2892,7 +2892,7 @@ $LN8@releaseIte:
 	jmp	$LN3@releaseIte
 $LN2@releaseIte:
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _i$107187[ebp]
+	lea	ecx, DWORD PTR _i$107204[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 277  : #endif
@@ -2926,16 +2926,16 @@ $LN9@releaseIte:
 ; 281  : 					::delete item;
 
 	mov	eax, DWORD PTR _item$[ebp]
-	mov	DWORD PTR $T115173[ebp], eax
-	mov	ecx, DWORD PTR $T115173[ebp]
-	mov	DWORD PTR $T115172[ebp], ecx
-	cmp	DWORD PTR $T115172[ebp], 0
+	mov	DWORD PTR $T115193[ebp], eax
+	mov	ecx, DWORD PTR $T115193[ebp]
+	mov	DWORD PTR $T115192[ebp], ecx
+	cmp	DWORD PTR $T115192[ebp], 0
 	je	SHORT $LN10@releaseIte
 	mov	esi, esp
 	push	0
-	mov	edx, DWORD PTR $T115172[ebp]
+	mov	edx, DWORD PTR $T115192[ebp]
 	mov	eax, DWORD PTR [edx]
-	mov	ecx, DWORD PTR $T115172[ebp]
+	mov	ecx, DWORD PTR $T115192[ebp]
 	mov	edx, DWORD PTR [eax]
 	call	edx
 	cmp	esi, esp
@@ -2993,10 +2993,10 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?releaseItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEXPAVTransaction@2@@Z$0:
-	lea	ecx, DWORD PTR _i$107187[ebp]
+	lea	ecx, DWORD PTR _i$107204[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$?releaseItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEXPAVTransaction@2@@Z$2:
-	lea	ecx, DWORD PTR $T115169[ebp]
+	lea	ecx, DWORD PTR $T115189[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$?releaseItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEXPAVTransaction@2@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -3034,8 +3034,8 @@ xdata$x	ENDS
 ;	COMDAT ?acquireItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTransaction@2@XZ
 _TEXT	SEGMENT
 tv79 = -256						; size = 4
-$T115197 = -248						; size = 4
-$T115198 = -236						; size = 4
+$T115217 = -248						; size = 4
+$T115218 = -236						; size = 4
 _newItem$ = -32						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -3098,11 +3098,11 @@ $LN5@acquireIte:
 	push	112					; 00000070H
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
-	mov	DWORD PTR $T115198[ebp], eax
+	mov	DWORD PTR $T115218[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	cmp	DWORD PTR $T115198[ebp], 0
+	cmp	DWORD PTR $T115218[ebp], 0
 	je	SHORT $LN6@acquireIte
-	mov	ecx, DWORD PTR $T115198[ebp]
+	mov	ecx, DWORD PTR $T115218[ebp]
 	call	??0Transaction@DRAMsimII@@QAE@XZ	; DRAMsimII::Transaction::Transaction
 	mov	DWORD PTR tv79[ebp], eax
 	jmp	SHORT $LN7@acquireIte
@@ -3110,9 +3110,9 @@ $LN6@acquireIte:
 	mov	DWORD PTR tv79[ebp], 0
 $LN7@acquireIte:
 	mov	eax, DWORD PTR tv79[ebp]
-	mov	DWORD PTR $T115197[ebp], eax
+	mov	DWORD PTR $T115217[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	mov	ecx, DWORD PTR $T115197[ebp]
+	mov	ecx, DWORD PTR $T115217[ebp]
 	mov	DWORD PTR _newItem$[ebp], ecx
 
 ; 299  : 					assert(newItem != NULL);
@@ -3165,7 +3165,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?acquireItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTransaction@2@XZ$0:
-	mov	eax, DWORD PTR $T115198[ebp]
+	mov	eax, DWORD PTR $T115218[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -3733,7 +3733,7 @@ $LN5@push:
 _TEXT	ENDS
 ;	COMDAT ?pop@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTransaction@2@XZ
 _TEXT	SEGMENT
-_item$109182 = -20					; size = 4
+_item$109199 = -20					; size = 4
 _this$ = -8						; size = 4
 ?pop@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTransaction@2@XZ PROC ; DRAMsimII::Queue<DRAMsimII::Transaction>::pop, COMDAT
 ; _this$ = ecx
@@ -3789,7 +3789,7 @@ $LN2@pop:
 	add	ecx, 12					; 0000000cH
 	call	??A?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAEAAPAVTransaction@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::operator[]
 	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR _item$109182[ebp], edx
+	mov	DWORD PTR _item$109199[ebp], edx
 
 ; 196  : 
 ; 197  : 				entry[head] = NULL; // ensure this item isn't rhs part of the queue anymore
@@ -3821,7 +3821,7 @@ $LN2@pop:
 ; 200  : 
 ; 201  : 				return item;
 
-	mov	eax, DWORD PTR _item$109182[ebp]
+	mov	eax, DWORD PTR _item$109199[ebp]
 $LN3@pop:
 
 ; 202  : 			}
@@ -3843,7 +3843,7 @@ PUBLIC	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransacti
 ; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 ;	COMDAT ?begin@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T115243 = -212						; size = 4
+$T115263 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::begin, COMDAT
@@ -3864,7 +3864,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T115243[ebp], 0
+	mov	DWORD PTR $T115263[ebp], 0
 
 ; 641  : 		return (iterator(_Myfirst, this));
 
@@ -3875,9 +3875,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@PAPAVTransaction@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >
-	mov	eax, DWORD PTR $T115243[ebp]
+	mov	eax, DWORD PTR $T115263[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T115243[ebp], eax
+	mov	DWORD PTR $T115263[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 642  : 		}
@@ -3896,7 +3896,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T115248 = -212						; size = 4
+$T115268 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::end, COMDAT
@@ -3917,7 +3917,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T115248[ebp], 0
+	mov	DWORD PTR $T115268[ebp], 0
 
 ; 651  : 		return (iterator(_Mylast, this));
 
@@ -3928,9 +3928,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@PAPAVTransaction@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >
-	mov	eax, DWORD PTR $T115248[ebp]
+	mov	eax, DWORD PTR $T115268[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T115248[ebp], eax
+	mov	DWORD PTR $T115268[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 652  : 		}
@@ -4007,7 +4007,7 @@ __ehfuncinfo$??E?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTra
 xdata$x	ENDS
 ;	COMDAT ??E?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z
 _TEXT	SEGMENT
-$T115256 = -244						; size = 4
+$T115276 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -4040,7 +4040,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T115256[ebp], 0
+	mov	DWORD PTR $T115276[ebp], 0
 
 ; 355  : 		_Myt _Tmp = *this;
 
@@ -4061,9 +4061,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T115256[ebp]
+	mov	ecx, DWORD PTR $T115276[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T115256[ebp], ecx
+	mov	DWORD PTR $T115276[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -4111,10 +4111,10 @@ __unwindfunclet$??E?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAV
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??E?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z$1:
-	mov	eax, DWORD PTR $T115256[ebp]
+	mov	eax, DWORD PTR $T115276[ebp]
 	and	eax, 1
 	je	$LN5@operator@5
-	and	DWORD PTR $T115256[ebp], -2		; fffffffeH
+	and	DWORD PTR $T115276[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN5@operator@5:
@@ -6044,11 +6044,11 @@ tv136 = -324						; size = 4
 tv134 = -324						; size = 4
 tv289 = -321						; size = 1
 tv282 = -321						; size = 1
-$T115356 = -316						; size = 4
-$T115357 = -304						; size = 4
-$T115358 = -292						; size = 4
-$T115359 = -280						; size = 4
-$T115360 = -268						; size = 4
+$T115376 = -316						; size = 4
+$T115377 = -304						; size = 4
+$T115378 = -292						; size = 4
+$T115379 = -280						; size = 4
+$T115380 = -268						; size = 4
 __Ok$ = -64						; size = 8
 __Pad$ = -48						; size = 4
 __Count$ = -36						; size = 4
@@ -6235,18 +6235,18 @@ $LN10@operator@10:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv284[ebp], eax
 	mov	ecx, DWORD PTR tv284[ebp]
-	mov	DWORD PTR $T115356[ebp], ecx
+	mov	DWORD PTR $T115376[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv285[ebp], eax
 	mov	edx, DWORD PTR tv285[ebp]
-	mov	DWORD PTR $T115357[ebp], edx
+	mov	DWORD PTR $T115377[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T115356[ebp]
+	lea	eax, DWORD PTR $T115376[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T115357[ebp]
+	lea	ecx, DWORD PTR $T115377[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -6360,18 +6360,18 @@ $LN4@operator@10:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv291[ebp], eax
 	mov	ecx, DWORD PTR tv291[ebp]
-	mov	DWORD PTR $T115358[ebp], ecx
+	mov	DWORD PTR $T115378[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv292[ebp], eax
 	mov	edx, DWORD PTR tv292[ebp]
-	mov	DWORD PTR $T115359[ebp], edx
+	mov	DWORD PTR $T115379[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T115358[ebp]
+	lea	eax, DWORD PTR $T115378[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T115359[ebp]
+	lea	ecx, DWORD PTR $T115379[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -6453,11 +6453,11 @@ $LN13@operator@10:
 ; 781  : 	return (_Ostr);
 
 	mov	eax, DWORD PTR __Ostr$[ebp]
-	mov	DWORD PTR $T115360[ebp], eax
+	mov	DWORD PTR $T115380[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	lea	ecx, DWORD PTR __Ok$[ebp]
 	call	??1sentry@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAE@XZ ; std::basic_ostream<char,std::char_traits<char> >::sentry::~sentry
-	mov	eax, DWORD PTR $T115360[ebp]
+	mov	eax, DWORD PTR $T115380[ebp]
 
 ; 782  : 	}
 
@@ -7004,8 +7004,8 @@ xdata$x	ENDS
 ;	COMDAT ??0?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAE@I_N@Z
 _TEXT	SEGMENT
 tv91 = -244						; size = 4
-$T115407 = -236						; size = 4
-$T115408 = -224						; size = 4
+$T115427 = -236						; size = 4
+$T115428 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _size$ = 8						; size = 4
@@ -7084,11 +7084,11 @@ $LN2@Queue:
 	push	112					; 00000070H
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
-	mov	DWORD PTR $T115408[ebp], eax
+	mov	DWORD PTR $T115428[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	cmp	DWORD PTR $T115408[ebp], 0
+	cmp	DWORD PTR $T115428[ebp], 0
 	je	SHORT $LN6@Queue
-	mov	ecx, DWORD PTR $T115408[ebp]
+	mov	ecx, DWORD PTR $T115428[ebp]
 	call	??0Transaction@DRAMsimII@@QAE@XZ	; DRAMsimII::Transaction::Transaction
 	mov	DWORD PTR tv91[ebp], eax
 	jmp	SHORT $LN7@Queue
@@ -7096,9 +7096,9 @@ $LN6@Queue:
 	mov	DWORD PTR tv91[ebp], 0
 $LN7@Queue:
 	mov	eax, DWORD PTR tv91[ebp]
-	mov	DWORD PTR $T115407[ebp], eax
+	mov	DWORD PTR $T115427[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	mov	ecx, DWORD PTR $T115407[ebp]
+	mov	ecx, DWORD PTR $T115427[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAE_NPAVTransaction@2@@Z ; DRAMsimII::Queue<DRAMsimII::Transaction>::push
@@ -7133,7 +7133,7 @@ __unwindfunclet$??0?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAE@I_N@Z$0:
 	add	ecx, 12					; 0000000cH
 	jmp	??1?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ ; std::vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::~vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >
 __unwindfunclet$??0?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAE@I_N@Z$1:
-	mov	eax, DWORD PTR $T115408[ebp]
+	mov	eax, DWORD PTR $T115428[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -7216,8 +7216,8 @@ __ehfuncinfo$??0?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@D
 xdata$x	ENDS
 ;	COMDAT ??0?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@I@Z
 _TEXT	SEGMENT
-$T115423 = -236						; size = 4
-$T115424 = -224						; size = 4
+$T115443 = -236						; size = 4
+$T115444 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 __Count$ = 8						; size = 4
@@ -7250,7 +7250,7 @@ __Count$ = 8						; size = 4
 	mov	DWORD PTR _this$[ebp], ecx
 	push	ecx
 	mov	ecx, esp
-	mov	DWORD PTR $T115423[ebp], esp
+	mov	DWORD PTR $T115443[ebp], esp
 	call	??0?$allocator@PAVTransaction@DRAMsimII@@@std@@QAE@XZ ; std::allocator<DRAMsimII::Transaction *>::allocator<DRAMsimII::Transaction *>
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??0?$_Vector_val@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@IAE@V?$allocator@PAVTransaction@DRAMsimII@@@1@@Z ; std::_Vector_val<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::_Vector_val<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >
@@ -7258,8 +7258,8 @@ __Count$ = 8						; size = 4
 
 ; 483  : 		_Construct_n(_Count, _Ty());
 
-	mov	DWORD PTR $T115424[ebp], 0
-	lea	eax, DWORD PTR $T115424[ebp]
+	mov	DWORD PTR $T115444[ebp], 0
+	lea	eax, DWORD PTR $T115444[ebp]
 	push	eax
 	mov	ecx, DWORD PTR __Count$[ebp]
 	push	ecx
@@ -7424,10 +7424,10 @@ _TEXT	SEGMENT
 tv188 = -280						; size = 4
 tv185 = -276						; size = 4
 tv190 = -272						; size = 4
-$T115443 = -264						; size = 4
-$T115444 = -252						; size = 4
-__Size$109214 = -48					; size = 4
-__Ptr$109203 = -36					; size = 4
+$T115463 = -264						; size = 4
+$T115464 = -252						; size = 4
+__Size$109231 = -48					; size = 4
+__Ptr$109220 = -36					; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 __Count$ = 8						; size = 4
@@ -7489,7 +7489,7 @@ $LN5@reserve:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
 	call	?allocate@?$allocator@PAVTransaction@DRAMsimII@@@std@@QAEPAPAVTransaction@DRAMsimII@@I@Z ; std::allocator<DRAMsimII::Transaction *>::allocate
-	mov	DWORD PTR __Ptr$109203[ebp], eax
+	mov	DWORD PTR __Ptr$109220[ebp], eax
 
 ; 608  : 
 ; 609  : 			_TRY_BEGIN
@@ -7498,11 +7498,11 @@ $LN5@reserve:
 
 ; 610  : 			_Umove(begin(), end(), _Ptr);
 
-	mov	eax, DWORD PTR __Ptr$109203[ebp]
+	mov	eax, DWORD PTR __Ptr$109220[ebp]
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115443[ebp], esp
+	mov	DWORD PTR $T115463[ebp], esp
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::end
@@ -7512,7 +7512,7 @@ $LN5@reserve:
 	mov	BYTE PTR __$EHRec$[ebp+12], 1
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T115444[ebp], esp
+	mov	DWORD PTR $T115464[ebp], esp
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::begin
@@ -7528,7 +7528,7 @@ __catch$?reserve@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@
 
 	mov	eax, DWORD PTR __Count$[ebp]
 	push	eax
-	mov	ecx, DWORD PTR __Ptr$109203[ebp]
+	mov	ecx, DWORD PTR __Ptr$109220[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
@@ -7554,7 +7554,7 @@ __tryend$?reserve@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?size@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QBEIXZ ; std::vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::size
-	mov	DWORD PTR __Size$109214[ebp], eax
+	mov	DWORD PTR __Size$109231[ebp], eax
 
 ; 617  : 			if (_Myfirst != 0)
 
@@ -7606,15 +7606,15 @@ $LN1@reserve:
 ; 627  : 			_Myend = _Ptr + _Count;
 
 	mov	eax, DWORD PTR __Count$[ebp]
-	mov	ecx, DWORD PTR __Ptr$109203[ebp]
+	mov	ecx, DWORD PTR __Ptr$109220[ebp]
 	lea	edx, DWORD PTR [ecx+eax*4]
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+16], edx
 
 ; 628  : 			_Mylast = _Ptr + _Size;
 
-	mov	eax, DWORD PTR __Size$109214[ebp]
-	mov	ecx, DWORD PTR __Ptr$109203[ebp]
+	mov	eax, DWORD PTR __Size$109231[ebp]
+	mov	ecx, DWORD PTR __Ptr$109220[ebp]
 	lea	edx, DWORD PTR [ecx+eax*4]
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+12], edx
@@ -7622,7 +7622,7 @@ $LN1@reserve:
 ; 629  : 			_Myfirst = _Ptr;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Ptr$109203[ebp]
+	mov	ecx, DWORD PTR __Ptr$109220[ebp]
 	mov	DWORD PTR [eax+8], ecx
 $LN7@reserve:
 
@@ -7645,7 +7645,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?reserve@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAEXI@Z$2:
-	mov	ecx, DWORD PTR $T115443[ebp]
+	mov	ecx, DWORD PTR $T115463[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$?reserve@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAEXI@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -8171,8 +8171,8 @@ __ehfuncinfo$?_Xlen@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransacti
 xdata$x	ENDS
 ;	COMDAT ?_Xlen@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@KAXXZ
 _TEXT	SEGMENT
-$T115491 = -292						; size = 44
-$T115492 = -240						; size = 32
+$T115511 = -292						; size = 44
+$T115512 = -240						; size = 32
 __$EHRec$ = -12						; size = 12
 ?_Xlen@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@KAXXZ PROC ; std::vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::_Xlen, COMDAT
 
@@ -8202,22 +8202,22 @@ __$EHRec$ = -12						; size = 12
 
 	mov	esi, esp
 	push	OFFSET ??_C@_0BD@OLBABOEK@vector?$DMT?$DO?5too?5long?$AA@
-	lea	ecx, DWORD PTR $T115492[ebp]
+	lea	ecx, DWORD PTR $T115512[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	lea	eax, DWORD PTR $T115492[ebp]
+	lea	eax, DWORD PTR $T115512[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T115491[ebp]
+	lea	ecx, DWORD PTR $T115511[ebp]
 	call	??0length_error@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z ; std::length_error::length_error
 	push	OFFSET __TI3?AVlength_error@std@@
-	lea	ecx, DWORD PTR $T115491[ebp]
+	lea	ecx, DWORD PTR $T115511[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T115492[ebp]
+	lea	ecx, DWORD PTR $T115512[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -8242,7 +8242,7 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?_Xlen@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@KAXXZ$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T115492[ebp]
+	lea	ecx, DWORD PTR $T115512[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
@@ -8833,7 +8833,7 @@ PUBLIC	??0?$allocator@PAVTransaction@DRAMsimII@@@std@@QAE@ABV01@@Z ; std::alloca
 ; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 ;	COMDAT ??0?$_Vector_val@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@IAE@V?$allocator@PAVTransaction@DRAMsimII@@@1@@Z
 _TEXT	SEGMENT
-$T115535 = -212						; size = 4
+$T115555 = -212						; size = 4
 _this$ = -8						; size = 4
 __Al$ = 8						; size = 1
 ??0?$_Vector_val@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@IAE@V?$allocator@PAVTransaction@DRAMsimII@@@1@@Z PROC ; std::_Vector_val<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::_Vector_val<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >, COMDAT
@@ -8856,7 +8856,7 @@ __Al$ = 8						; size = 1
 	mov	DWORD PTR _this$[ebp], ecx
 	push	ecx
 	mov	ecx, esp
-	mov	DWORD PTR $T115535[ebp], esp
+	mov	DWORD PTR $T115555[ebp], esp
 	lea	eax, DWORD PTR __Al$[ebp]
 	push	eax
 	call	??0?$allocator@PAVTransaction@DRAMsimII@@@std@@QAE@ABV01@@Z ; std::allocator<DRAMsimII::Transaction *>::allocator<DRAMsimII::Transaction *>
@@ -9411,9 +9411,9 @@ tv139 = -268						; size = 4
 tv142 = -264						; size = 4
 tv138 = -260						; size = 4
 tv145 = -256						; size = 4
-$T115564 = -248						; size = 4
-$T115565 = -236						; size = 4
-$T115566 = -224						; size = 4
+$T115584 = -248						; size = 4
+$T115585 = -236						; size = 4
+$T115586 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
@@ -9459,7 +9459,7 @@ __Ptr$ = 32						; size = 4
 	push	ecx
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115565[ebp], esp
+	mov	DWORD PTR $T115585[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -9469,7 +9469,7 @@ __Ptr$ = 32						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115566[ebp], esp
+	mov	DWORD PTR $T115586[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -9479,14 +9479,14 @@ __Ptr$ = 32						; size = 4
 	add	esp, 32					; 00000020H
 	mov	DWORD PTR tv139[ebp], eax
 	mov	eax, DWORD PTR tv139[ebp]
-	mov	DWORD PTR $T115564[ebp], eax
+	mov	DWORD PTR $T115584[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T115564[ebp]
+	mov	eax, DWORD PTR $T115584[ebp]
 
 ; 1149 : 		}
 
@@ -9512,7 +9512,7 @@ __unwindfunclet$??$_Umove@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$alloc
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Umove@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@IAEPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@1@0PAPAV23@@Z$2:
-	mov	ecx, DWORD PTR $T115565[ebp]
+	mov	ecx, DWORD PTR $T115585[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Umove@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@@?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@IAEPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@1@0PAPAV23@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -9530,7 +9530,7 @@ PUBLIC	??$_Ptr_cat@PAPAVTransaction@DRAMsimII@@PAPAV12@@std@@YA?AU_Scalar_ptr_it
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
 ;	COMDAT ??$_Destroy_range@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@YAXPAPAVTransaction@DRAMsimII@@0AAV?$allocator@PAVTransaction@DRAMsimII@@@0@@Z
 _TEXT	SEGMENT
-$T115579 = -197						; size = 1
+$T115599 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -9557,8 +9557,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PAPAVTransaction@DRAMsimII@@PAPAV12@@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAPAVTransaction@DRAMsimII@@0@Z ; std::_Ptr_cat<DRAMsimII::Transaction * *,DRAMsimII::Transaction * *>
 	add	esp, 8
-	mov	BYTE PTR $T115579[ebp], al
-	movzx	edx, BYTE PTR $T115579[ebp]
+	mov	BYTE PTR $T115599[ebp], al
+	movzx	edx, BYTE PTR $T115599[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax
@@ -9621,7 +9621,7 @@ __TI2?AVbad_alloc@std@@ DD 00H
 xdata$x	ENDS
 ;	COMDAT ??$_Allocate@PAVTransaction@DRAMsimII@@@std@@YAPAPAVTransaction@DRAMsimII@@IPAPAV12@@Z
 _TEXT	SEGMENT
-$T115582 = -208						; size = 12
+$T115602 = -208						; size = 12
 __Count$ = 8						; size = 4
 ___formal$ = 12						; size = 4
 ??$_Allocate@PAVTransaction@DRAMsimII@@@std@@YAPAPAVTransaction@DRAMsimII@@IPAPAV12@@Z PROC ; std::_Allocate<DRAMsimII::Transaction *>, COMDAT
@@ -9661,10 +9661,10 @@ $LN3@Allocate:
 ; 40   : 		_THROW_NCEE(std::bad_alloc, NULL);
 
 	push	0
-	lea	ecx, DWORD PTR $T115582[ebp]
+	lea	ecx, DWORD PTR $T115602[ebp]
 	call	??0bad_alloc@std@@QAE@PBD@Z		; std::bad_alloc::bad_alloc
 	push	OFFSET __TI2?AVbad_alloc@std@@
-	lea	eax, DWORD PTR $T115582[ebp]
+	lea	eax, DWORD PTR $T115602[ebp]
 	push	eax
 	call	__CxxThrowException@8
 $LN2@Allocate:
@@ -9916,8 +9916,8 @@ PUBLIC	??$_Uninit_fill_n@PAPAVTransaction@DRAMsimII@@IPAV12@V?$allocator@PAVTran
 ; File c:\program files\microsoft visual studio 9.0\vc\include\memory
 ;	COMDAT ??$unchecked_uninitialized_fill_n@PAPAVTransaction@DRAMsimII@@IPAV12@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@stdext@@YAXPAPAVTransaction@DRAMsimII@@IABQAV12@AAV?$allocator@PAVTransaction@DRAMsimII@@@std@@@Z
 _TEXT	SEGMENT
-$T115594 = -209						; size = 1
-$T115595 = -197						; size = 1
+$T115614 = -209						; size = 1
+$T115615 = -197						; size = 1
 __First$ = 8						; size = 4
 __Count$ = 12						; size = 4
 __Val$ = 16						; size = 4
@@ -9941,17 +9941,17 @@ __Al$ = 20						; size = 4
 ; 942  : 		_STD _Ptr_cat(_First, _First), _STD _Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T115594[ebp], al
+	mov	BYTE PTR $T115614[ebp], al
 	lea	ecx, DWORD PTR __First$[ebp]
 	push	ecx
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??$_Ptr_cat@PAPAVTransaction@DRAMsimII@@PAPAV12@@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAPAVTransaction@DRAMsimII@@0@Z ; std::_Ptr_cat<DRAMsimII::Transaction * *,DRAMsimII::Transaction * *>
 	add	esp, 8
-	mov	BYTE PTR $T115595[ebp], al
-	movzx	eax, BYTE PTR $T115594[ebp]
+	mov	BYTE PTR $T115615[ebp], al
+	movzx	eax, BYTE PTR $T115614[ebp]
 	push	eax
-	movzx	ecx, BYTE PTR $T115595[ebp]
+	movzx	ecx, BYTE PTR $T115615[ebp]
 	push	ecx
 	mov	edx, DWORD PTR __Al$[ebp]
 	push	edx
@@ -10003,11 +10003,11 @@ tv143 = -280						; size = 4
 tv146 = -276						; size = 4
 tv142 = -272						; size = 4
 tv149 = -268						; size = 4
-$T115598 = -260						; size = 4
-$T115599 = -245						; size = 1
-$T115600 = -233						; size = 1
-$T115601 = -224						; size = 4
-$T115602 = -212						; size = 4
+$T115618 = -260						; size = 4
+$T115619 = -245						; size = 1
+$T115620 = -233						; size = 1
+$T115621 = -224						; size = 4
+$T115622 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
 __Last$ = 20						; size = 12
@@ -10043,15 +10043,15 @@ __Al$ = 36						; size = 4
 ; 864  : 		_STD _Move_cat(_Dest), _STD _Range_checked_iterator_tag()));
 
 	xor	eax, eax
-	mov	BYTE PTR $T115599[ebp], al
+	mov	BYTE PTR $T115619[ebp], al
 	lea	ecx, DWORD PTR __Dest$[ebp]
 	push	ecx
 	call	??$_Move_cat@PAPAVTransaction@DRAMsimII@@@std@@YA?AU_Undefined_move_tag@0@ABQAPAVTransaction@DRAMsimII@@@Z ; std::_Move_cat<DRAMsimII::Transaction * *>
 	add	esp, 4
-	mov	BYTE PTR $T115600[ebp], al
-	movzx	edx, BYTE PTR $T115599[ebp]
+	mov	BYTE PTR $T115620[ebp], al
+	movzx	edx, BYTE PTR $T115619[ebp]
 	push	edx
-	movzx	eax, BYTE PTR $T115600[ebp]
+	movzx	eax, BYTE PTR $T115620[ebp]
 	push	eax
 	mov	ecx, DWORD PTR __Al$[ebp]
 	push	ecx
@@ -10059,7 +10059,7 @@ __Al$ = 36						; size = 4
 	push	edx
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T115601[ebp], esp
+	mov	DWORD PTR $T115621[ebp], esp
 	lea	ecx, DWORD PTR __Last$[ebp]
 	push	ecx
 	push	eax
@@ -10071,7 +10071,7 @@ __Al$ = 36						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T115602[ebp], esp
+	mov	DWORD PTR $T115622[ebp], esp
 	lea	ecx, DWORD PTR __First$[ebp]
 	push	ecx
 	push	eax
@@ -10083,14 +10083,14 @@ __Al$ = 36						; size = 4
 	add	esp, 40					; 00000028H
 	mov	DWORD PTR tv143[ebp], eax
 	mov	edx, DWORD PTR tv143[ebp]
-	mov	DWORD PTR $T115598[ebp], edx
+	mov	DWORD PTR $T115618[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T115598[ebp]
+	mov	eax, DWORD PTR $T115618[ebp]
 
 ; 865  : 	}
 
@@ -10116,7 +10116,7 @@ __unwindfunclet$??$_Unchecked_uninitialized_move@V?$_Vector_iterator@PAVTransact
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Unchecked_uninitialized_move@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@PAPAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@2@@stdext@@YAPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@0PAPAV12@AAV?$allocator@PAVTransaction@DRAMsimII@@@4@@Z$2:
-	mov	ecx, DWORD PTR $T115601[ebp]
+	mov	ecx, DWORD PTR $T115621[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Unchecked_uninitialized_move@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@PAPAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@2@@stdext@@YAPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@0PAPAV12@AAV?$allocator@PAVTransaction@DRAMsimII@@@4@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -10274,7 +10274,7 @@ PUBLIC	??$_Checked_base@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocat
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 ;	COMDAT ??$_Checked_base@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@@std@@YA?AV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@AAV10@@Z
 _TEXT	SEGMENT
-$T115625 = -212						; size = 4
+$T115645 = -212						; size = 4
 __Base_tag$ = -5					; size = 1
 ___$ReturnUdt$ = 8					; size = 4
 __It$ = 12						; size = 4
@@ -10292,7 +10292,7 @@ __It$ = 12						; size = 4
 	mov	ecx, 54					; 00000036H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T115625[ebp], 0
+	mov	DWORD PTR $T115645[ebp], 0
 
 ; 1164 : 		typename _Checked_iterator_base_helper<_Iter>::_Checked_iterator_base_type_tag _Base_tag;
 ; 1165 : 		return _Checked_base(_It, _Base_tag);
@@ -10305,9 +10305,9 @@ __It$ = 12						; size = 4
 	push	edx
 	call	??$_Checked_base@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@@std@@YA?AV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@AAV10@U_Unchanged_checked_iterator_base_type_tag@0@@Z ; std::_Checked_base<std::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> > >
 	add	esp, 12					; 0000000cH
-	mov	eax, DWORD PTR $T115625[ebp]
+	mov	eax, DWORD PTR $T115645[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T115625[ebp], eax
+	mov	DWORD PTR $T115645[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1166 : 	}
@@ -10429,9 +10429,9 @@ tv134 = -256						; size = 4
 tv137 = -252						; size = 4
 tv133 = -248						; size = 4
 tv140 = -244						; size = 4
-$T115637 = -236						; size = 4
-$T115638 = -224						; size = 4
-$T115639 = -212						; size = 4
+$T115657 = -236						; size = 4
+$T115658 = -224						; size = 4
+$T115659 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
 __Last$ = 20						; size = 12
@@ -10472,7 +10472,7 @@ ___formal$ = 44						; size = 1
 	push	ecx
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115638[ebp], esp
+	mov	DWORD PTR $T115658[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -10482,7 +10482,7 @@ ___formal$ = 44						; size = 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115639[ebp], esp
+	mov	DWORD PTR $T115659[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -10492,14 +10492,14 @@ ___formal$ = 44						; size = 1
 	add	esp, 32					; 00000020H
 	mov	DWORD PTR tv134[ebp], eax
 	mov	eax, DWORD PTR tv134[ebp]
-	mov	DWORD PTR $T115637[ebp], eax
+	mov	DWORD PTR $T115657[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T115637[ebp]
+	mov	eax, DWORD PTR $T115657[ebp]
 
 ; 208  : 	}
 
@@ -10525,7 +10525,7 @@ __unwindfunclet$??$_Uninit_move@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Uninit_move@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@PAPAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@2@U_Undefined_move_tag@2@@std@@YAPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@0PAPAV12@AAV?$allocator@PAVTransaction@DRAMsimII@@@0@U_Undefined_move_tag@0@U_Range_checked_iterator_tag@0@@Z$2:
-	mov	ecx, DWORD PTR $T115638[ebp]
+	mov	ecx, DWORD PTR $T115658[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Uninit_move@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@PAPAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@2@U_Undefined_move_tag@2@@std@@YAPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@0PAPAV12@AAV?$allocator@PAVTransaction@DRAMsimII@@@0@U_Undefined_move_tag@0@U_Range_checked_iterator_tag@0@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -10543,8 +10543,8 @@ PUBLIC	??$_Iter_cat@PAPAVTransaction@DRAMsimII@@@std@@YA?AUrandom_access_iterato
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 ;	COMDAT ??$unchecked_fill_n@PAPAVTransaction@DRAMsimII@@IPAV12@@stdext@@YAXPAPAVTransaction@DRAMsimII@@IABQAV12@@Z
 _TEXT	SEGMENT
-$T115652 = -209						; size = 1
-$T115653 = -197						; size = 1
+$T115672 = -209						; size = 1
+$T115673 = -197						; size = 1
 __First$ = 8						; size = 4
 __Count$ = 12						; size = 4
 __Val$ = 16						; size = 4
@@ -10566,12 +10566,12 @@ __Val$ = 16						; size = 4
 ; 3721 : 		_STD _Fill_n(_First, _Count, _Val, _STD _Iter_cat(_First), _STD _Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T115652[ebp], al
-	movzx	ecx, BYTE PTR $T115652[ebp]
+	mov	BYTE PTR $T115672[ebp], al
+	movzx	ecx, BYTE PTR $T115672[ebp]
 	push	ecx
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T115653[ebp]
+	lea	eax, DWORD PTR $T115673[ebp]
 	push	eax
 	call	??$_Iter_cat@PAPAVTransaction@DRAMsimII@@@std@@YA?AUrandom_access_iterator_tag@0@ABQAPAVTransaction@DRAMsimII@@@Z ; std::_Iter_cat<DRAMsimII::Transaction * *>
 	add	esp, 8
@@ -10602,7 +10602,7 @@ __Val$ = 16						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$_Checked_base@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@@std@@YA?AV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@AAV10@U_Unchanged_checked_iterator_base_type_tag@0@@Z
 _TEXT	SEGMENT
-$T115657 = -200						; size = 4
+$T115677 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 __It$ = 12						; size = 4
 ___formal$ = 16						; size = 1
@@ -10620,7 +10620,7 @@ ___formal$ = 16						; size = 1
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T115657[ebp], 0
+	mov	DWORD PTR $T115677[ebp], 0
 
 ; 1147 : 		return _It;
 
@@ -10628,9 +10628,9 @@ ___formal$ = 16						; size = 1
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T115657[ebp]
+	mov	ecx, DWORD PTR $T115677[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T115657[ebp], ecx
+	mov	DWORD PTR $T115677[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1148 : 	}
@@ -10672,11 +10672,11 @@ tv144 = -280						; size = 4
 tv147 = -276						; size = 4
 tv143 = -272						; size = 4
 tv150 = -268						; size = 4
-$T115661 = -260						; size = 4
-$T115662 = -245						; size = 1
-$T115663 = -233						; size = 1
-$T115664 = -224						; size = 4
-$T115665 = -212						; size = 4
+$T115681 = -260						; size = 4
+$T115682 = -245						; size = 1
+$T115683 = -233						; size = 1
+$T115684 = -224						; size = 4
+$T115685 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
 __Last$ = 20						; size = 12
@@ -10712,17 +10712,17 @@ __Al$ = 36						; size = 4
 ; 822  : 		_STD _Ptr_cat(_First, _Dest), _STD _Range_checked_iterator_tag()));
 
 	xor	eax, eax
-	mov	BYTE PTR $T115662[ebp], al
+	mov	BYTE PTR $T115682[ebp], al
 	lea	ecx, DWORD PTR __Dest$[ebp]
 	push	ecx
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??$_Ptr_cat@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@PAPAVTransaction@DRAMsimII@@@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@AAPAPAVTransaction@DRAMsimII@@@Z ; std::_Ptr_cat<std::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >,DRAMsimII::Transaction * *>
 	add	esp, 8
-	mov	BYTE PTR $T115663[ebp], al
-	movzx	eax, BYTE PTR $T115662[ebp]
+	mov	BYTE PTR $T115683[ebp], al
+	movzx	eax, BYTE PTR $T115682[ebp]
 	push	eax
-	movzx	ecx, BYTE PTR $T115663[ebp]
+	movzx	ecx, BYTE PTR $T115683[ebp]
 	push	ecx
 	mov	edx, DWORD PTR __Al$[ebp]
 	push	edx
@@ -10730,7 +10730,7 @@ __Al$ = 36						; size = 4
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115664[ebp], esp
+	mov	DWORD PTR $T115684[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	push	ecx
@@ -10742,7 +10742,7 @@ __Al$ = 36						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115665[ebp], esp
+	mov	DWORD PTR $T115685[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	push	ecx
@@ -10754,14 +10754,14 @@ __Al$ = 36						; size = 4
 	add	esp, 40					; 00000028H
 	mov	DWORD PTR tv144[ebp], eax
 	mov	eax, DWORD PTR tv144[ebp]
-	mov	DWORD PTR $T115661[ebp], eax
+	mov	DWORD PTR $T115681[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T115661[ebp]
+	mov	eax, DWORD PTR $T115681[ebp]
 
 ; 823  : 	}
 
@@ -10787,7 +10787,7 @@ __unwindfunclet$??$unchecked_uninitialized_copy@V?$_Vector_iterator@PAVTransacti
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$unchecked_uninitialized_copy@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@PAPAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@2@@stdext@@YAPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@0PAPAV12@AAV?$allocator@PAVTransaction@DRAMsimII@@@4@@Z$2:
-	mov	ecx, DWORD PTR $T115664[ebp]
+	mov	ecx, DWORD PTR $T115684[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$unchecked_uninitialized_copy@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@PAPAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@2@@stdext@@YAPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@0PAPAV12@AAV?$allocator@PAVTransaction@DRAMsimII@@@4@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -10861,7 +10861,7 @@ PUBLIC	??$_Checked_base@PAPAVTransaction@DRAMsimII@@@std@@YAPAPAVTransaction@DRA
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Fill_n@PAPAVTransaction@DRAMsimII@@IPAV12@@std@@YAXPAPAVTransaction@DRAMsimII@@IABQAV12@Urandom_access_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
 _TEXT	SEGMENT
-$T115683 = -209						; size = 1
+$T115703 = -209						; size = 1
 __Last$ = -8						; size = 4
 __First$ = 8						; size = 4
 __Count$ = 12						; size = 4
@@ -10895,8 +10895,8 @@ ___formal$ = 24						; size = 1
 ; 3254 : 			_Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T115683[ebp], al
-	movzx	ecx, BYTE PTR $T115683[ebp]
+	mov	BYTE PTR $T115703[ebp], al
+	movzx	ecx, BYTE PTR $T115703[ebp]
 	push	ecx
 	mov	edx, DWORD PTR __Val$[ebp]
 	push	edx
@@ -11022,9 +11022,9 @@ _TEXT	SEGMENT
 tv156 = -276						; size = 4
 tv153 = -272						; size = 4
 tv159 = -268						; size = 4
-$T115691 = -260						; size = 4
-$T115692 = -248						; size = 4
-$T115693 = -236						; size = 4
+$T115712 = -260						; size = 4
+$T115713 = -248						; size = 4
+$T115711 = -236						; size = 4
 __Result$ = -32						; size = 4
 __Count$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -11065,7 +11065,7 @@ ___formal$ = 44						; size = 1
 	push	OFFSET ??_C@_1HO@FAAIACEF@?$AAc?$AA?3?$AA?2?$AAp?$AAr?$AAo?$AAg?$AAr?$AAa?$AAm?$AA?5?$AAf?$AAi?$AAl?$AAe?$AAs?$AA?2?$AAm?$AAi?$AAc?$AAr?$AAo?$AAs?$AAo?$AAf?$AAt?$AA?5?$AAv?$AAi?$AAs?$AAu?$AAa@
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115691[ebp], esp
+	mov	DWORD PTR $T115711[ebp], esp
 	lea	eax, DWORD PTR __Last$[ebp]
 	push	eax
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -11075,7 +11075,7 @@ ___formal$ = 44						; size = 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115692[ebp], esp
+	mov	DWORD PTR $T115712[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -11136,14 +11136,14 @@ $LN1@Uninit_cop:
 ; 152  : 	return (_Result);
 
 	mov	eax, DWORD PTR __Result$[ebp]
-	mov	DWORD PTR $T115693[ebp], eax
+	mov	DWORD PTR $T115713[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Last$[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T115693[ebp]
+	mov	eax, DWORD PTR $T115713[ebp]
 
 ; 153  : 	}
 
@@ -11169,7 +11169,7 @@ __unwindfunclet$??$_Uninit_copy@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Uninit_copy@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@PAPAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@2@@std@@YAPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@0PAPAV12@AAV?$allocator@PAVTransaction@DRAMsimII@@@0@U_Scalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2:
-	mov	ecx, DWORD PTR $T115691[ebp]
+	mov	ecx, DWORD PTR $T115711[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Uninit_copy@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@PAPAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@2@@std@@YAPAPAVTransaction@DRAMsimII@@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@0PAPAV12@AAV?$allocator@PAVTransaction@DRAMsimII@@@0@U_Scalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -11435,9 +11435,9 @@ _TEXT	SEGMENT
 tv140 = -252						; size = 4
 tv137 = -248						; size = 4
 tv143 = -244						; size = 4
-$T115717 = -233						; size = 1
-$T115718 = -224						; size = 4
-$T115719 = -212						; size = 4
+$T115737 = -233						; size = 1
+$T115738 = -224						; size = 4
+$T115739 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
 __Last$ = 20						; size = 12
@@ -11472,7 +11472,7 @@ __Line$ = 36						; size = 4
 
 	lea	eax, DWORD PTR __First$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T115717[ebp]
+	lea	ecx, DWORD PTR $T115737[ebp]
 	push	ecx
 	call	??$_Iter_cat@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@@std@@YA?AUrandom_access_iterator_tag@0@ABV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@@Z ; std::_Iter_cat<std::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> > >
 	add	esp, 8
@@ -11484,7 +11484,7 @@ __Line$ = 36						; size = 4
 	push	ecx
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115718[ebp], esp
+	mov	DWORD PTR $T115738[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -11494,7 +11494,7 @@ __Line$ = 36						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T115719[ebp], esp
+	mov	DWORD PTR $T115739[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -11533,7 +11533,7 @@ __unwindfunclet$??$_Debug_range@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Debug_range@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@@std@@YAXV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@0PB_WI@Z$2:
-	mov	ecx, DWORD PTR $T115718[ebp]
+	mov	ecx, DWORD PTR $T115738[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Debug_range@V?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@@std@@YAXV?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@0@0PB_WI@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -12006,15 +12006,15 @@ tv168 = -356						; size = 4
 tv129 = -352						; size = 4
 tv94 = -352						; size = 4
 tv82 = -352						; size = 4
-$T115757 = -344						; size = 4
-$T115758 = -332						; size = 4
-$T115761 = -320						; size = 4
-$T115762 = -308						; size = 4
-$T115765 = -296						; size = 12
-$T115766 = -273						; size = 1
-$T115767 = -264						; size = 12
-_i$107168 = -52						; size = 12
-_value$106989 = -32					; size = 4
+$T115777 = -344						; size = 4
+$T115778 = -332						; size = 4
+$T115781 = -320						; size = 4
+$T115782 = -308						; size = 4
+$T115785 = -296						; size = 12
+$T115786 = -273						; size = 1
+$T115787 = -264						; size = 12
+_i$107185 = -52						; size = 12
+_value$107006 = -32					; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ??1?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAE@XZ PROC ; DRAMsimII::Queue<DRAMsimII::Transaction>::~Queue<DRAMsimII::Transaction>, COMDAT
@@ -12051,8 +12051,8 @@ $LN7@Queue@2:
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pop@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTransaction@2@XZ ; DRAMsimII::Queue<DRAMsimII::Transaction>::pop
-	mov	DWORD PTR _value$106989[ebp], eax
-	cmp	DWORD PTR _value$106989[ebp], 0
+	mov	DWORD PTR _value$107006[ebp], eax
+	cmp	DWORD PTR _value$107006[ebp], 0
 	je	$LN6@Queue@2
 
 ; 105  : 			{
@@ -12065,17 +12065,17 @@ $LN7@Queue@2:
 
 ; 107  : 					::delete value;
 
-	mov	eax, DWORD PTR _value$106989[ebp]
-	mov	DWORD PTR $T115758[ebp], eax
-	mov	ecx, DWORD PTR $T115758[ebp]
-	mov	DWORD PTR $T115757[ebp], ecx
-	cmp	DWORD PTR $T115757[ebp], 0
+	mov	eax, DWORD PTR _value$107006[ebp]
+	mov	DWORD PTR $T115778[ebp], eax
+	mov	ecx, DWORD PTR $T115778[ebp]
+	mov	DWORD PTR $T115777[ebp], ecx
+	cmp	DWORD PTR $T115777[ebp], 0
 	je	SHORT $LN10@Queue@2
 	mov	esi, esp
 	push	0
-	mov	edx, DWORD PTR $T115757[ebp]
+	mov	edx, DWORD PTR $T115777[ebp]
 	mov	eax, DWORD PTR [edx]
-	mov	ecx, DWORD PTR $T115757[ebp]
+	mov	ecx, DWORD PTR $T115777[ebp]
 	mov	edx, DWORD PTR [eax]
 	call	edx
 	cmp	esi, esp
@@ -12097,17 +12097,17 @@ $LN5@Queue@2:
 
 ; 109  : 					delete value;			
 
-	mov	eax, DWORD PTR _value$106989[ebp]
-	mov	DWORD PTR $T115762[ebp], eax
-	mov	ecx, DWORD PTR $T115762[ebp]
-	mov	DWORD PTR $T115761[ebp], ecx
-	cmp	DWORD PTR $T115761[ebp], 0
+	mov	eax, DWORD PTR _value$107006[ebp]
+	mov	DWORD PTR $T115782[ebp], eax
+	mov	ecx, DWORD PTR $T115782[ebp]
+	mov	DWORD PTR $T115781[ebp], ecx
+	cmp	DWORD PTR $T115781[ebp], 0
 	je	SHORT $LN12@Queue@2
 	mov	esi, esp
 	push	1
-	mov	edx, DWORD PTR $T115761[ebp]
+	mov	edx, DWORD PTR $T115781[ebp]
 	mov	eax, DWORD PTR [edx]
-	mov	ecx, DWORD PTR $T115761[ebp]
+	mov	ecx, DWORD PTR $T115781[ebp]
 	mov	edx, DWORD PTR [eax]
 	call	edx
 	cmp	esi, esp
@@ -12125,7 +12125,7 @@ $LN6@Queue@2:
 
 ; 111  : 			for (typename std::vector<T*>::iterator i = entry.begin(); i != entry.end(); i++)
 
-	lea	eax, DWORD PTR _i$107168[ebp]
+	lea	eax, DWORD PTR _i$107185[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 12					; 0000000cH
@@ -12134,14 +12134,14 @@ $LN6@Queue@2:
 	jmp	SHORT $LN3@Queue@2
 $LN2@Queue@2:
 	push	0
-	lea	eax, DWORD PTR $T115765[ebp]
+	lea	eax, DWORD PTR $T115785[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _i$107168[ebp]
+	lea	ecx, DWORD PTR _i$107185[ebp]
 	call	??E?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::operator++
-	lea	ecx, DWORD PTR $T115765[ebp]
+	lea	ecx, DWORD PTR $T115785[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN3@Queue@2:
-	lea	eax, DWORD PTR $T115767[ebp]
+	lea	eax, DWORD PTR $T115787[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 12					; 0000000cH
@@ -12152,19 +12152,19 @@ $LN3@Queue@2:
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	edx, DWORD PTR tv168[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _i$107168[ebp]
+	lea	ecx, DWORD PTR _i$107185[ebp]
 	call	??9?$_Vector_const_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::operator!=
-	mov	BYTE PTR $T115766[ebp], al
+	mov	BYTE PTR $T115786[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T115767[ebp]
+	lea	ecx, DWORD PTR $T115787[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T115766[ebp]
+	movzx	eax, BYTE PTR $T115786[ebp]
 	test	eax, eax
 	je	SHORT $LN1@Queue@2
 
 ; 112  : 				assert(*i == NULL);
 
-	lea	ecx, DWORD PTR _i$107168[ebp]
+	lea	ecx, DWORD PTR _i$107185[ebp]
 	call	??D?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QBEAAPAVTransaction@DRAMsimII@@XZ ; std::_Vector_iterator<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::operator*
 	cmp	DWORD PTR [eax], 0
 	je	SHORT $LN14@Queue@2
@@ -12180,7 +12180,7 @@ $LN14@Queue@2:
 	jmp	$LN2@Queue@2
 $LN1@Queue@2:
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _i$107168[ebp]
+	lea	ecx, DWORD PTR _i$107185[ebp]
 	call	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 113  : 		}	
@@ -12227,10 +12227,10 @@ __unwindfunclet$??1?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAE@XZ$0:
 	add	ecx, 12					; 0000000cH
 	jmp	??1?$vector@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ ; std::vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >::~vector<DRAMsimII::Transaction *,std::allocator<DRAMsimII::Transaction *> >
 __unwindfunclet$??1?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAE@XZ$1:
-	lea	ecx, DWORD PTR _i$107168[ebp]
+	lea	ecx, DWORD PTR _i$107185[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??1?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAE@XZ$3:
-	lea	ecx, DWORD PTR $T115767[ebp]
+	lea	ecx, DWORD PTR $T115787[ebp]
 	jmp	??1?$_Vector_iterator@PAVTransaction@DRAMsimII@@V?$allocator@PAVTransaction@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??1?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]

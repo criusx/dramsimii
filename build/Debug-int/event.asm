@@ -1440,11 +1440,11 @@ tv136 = -324						; size = 4
 tv134 = -324						; size = 4
 tv289 = -321						; size = 1
 tv282 = -321						; size = 1
-$T107943 = -316						; size = 4
-$T107944 = -304						; size = 4
-$T107945 = -292						; size = 4
-$T107946 = -280						; size = 4
-$T107947 = -268						; size = 4
+$T107964 = -316						; size = 4
+$T107965 = -304						; size = 4
+$T107966 = -292						; size = 4
+$T107967 = -280						; size = 4
+$T107968 = -268						; size = 4
 __Ok$ = -64						; size = 8
 __Pad$ = -48						; size = 4
 __Count$ = -36						; size = 4
@@ -1631,18 +1631,18 @@ $LN10@operator:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv284[ebp], eax
 	mov	ecx, DWORD PTR tv284[ebp]
-	mov	DWORD PTR $T107943[ebp], ecx
+	mov	DWORD PTR $T107964[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv285[ebp], eax
 	mov	edx, DWORD PTR tv285[ebp]
-	mov	DWORD PTR $T107944[ebp], edx
+	mov	DWORD PTR $T107965[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T107943[ebp]
+	lea	eax, DWORD PTR $T107964[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T107944[ebp]
+	lea	ecx, DWORD PTR $T107965[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -1756,18 +1756,18 @@ $LN4@operator:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv291[ebp], eax
 	mov	ecx, DWORD PTR tv291[ebp]
-	mov	DWORD PTR $T107945[ebp], ecx
+	mov	DWORD PTR $T107966[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv292[ebp], eax
 	mov	edx, DWORD PTR tv292[ebp]
-	mov	DWORD PTR $T107946[ebp], edx
+	mov	DWORD PTR $T107967[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T107945[ebp]
+	lea	eax, DWORD PTR $T107966[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T107946[ebp]
+	lea	ecx, DWORD PTR $T107967[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -1849,11 +1849,11 @@ $LN13@operator:
 ; 781  : 	return (_Ostr);
 
 	mov	eax, DWORD PTR __Ostr$[ebp]
-	mov	DWORD PTR $T107947[ebp], eax
+	mov	DWORD PTR $T107968[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	lea	ecx, DWORD PTR __Ok$[ebp]
 	call	??1sentry@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAE@XZ ; std::basic_ostream<char,std::char_traits<char> >::sentry::~sentry
-	mov	eax, DWORD PTR $T107947[ebp]
+	mov	eax, DWORD PTR $T107968[ebp]
 
 ; 782  : 	}
 
