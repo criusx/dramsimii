@@ -215,6 +215,13 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
+	if (currentCommand->isRead())
+	{
+		int latency;
+		LRUBlk *block = tags.accessBlock(currentCommand->getAddress().getPhysicalAddress(), latency, 0, (LRU::tick)time);
+		if (block)
+			cerr << "hit" << endl;
+	}
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
 
